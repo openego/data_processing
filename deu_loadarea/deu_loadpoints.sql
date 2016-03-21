@@ -2,19 +2,175 @@
 -- "Load Points"
 ---------- ---------- ---------- ---------- ---------- ----------
 
--- 1. Zensus Punkte, die nicht in LA liegen
--- 2. LA, die nur "residential" haben und kein Zensus
--- 3. LA, die kleiner 2ha sind und nur "residential" haben
+-- Zensus Punkte, die nicht in LA liegen
 
-SELECT	SUM(zensus.population) AS people
+-- "Population in Load Points"   (OK!) 1.000ms =2
+SELECT	'zensus_deu' AS name,
+	SUM(zensus.population) AS people
 FROM	orig_destatis.zensus_population_per_ha_mview AS zensus
-
-UNION ALL
-
-SELECT	SUM(lp.population) AS people
+	UNION ALL
+SELECT	'zensus_loadpoints' AS name,
+	SUM(lp.population) AS people
 FROM	orig_geo_rli.rli_deu_loadpoints AS lp
+	UNION ALL
+SELECT	'zensus_loadpoints_cluster' AS name,
+	SUM(cl.zensus_sum) AS people
+FROM	orig_geo_rli.rli_deu_loadpoints_cluster AS cl
 
 ---------- ---------- ----------
+
+-- "Create Table" (OK!) 2.000ms =3.177.723
+DROP TABLE IF EXISTS	orig_geo_rli.rli_deu_loadpoints_zensus;
+CREATE TABLE 		orig_geo_rli.rli_deu_loadpoints_zensus AS
+	SELECT	zensus.gid ::integer AS gid,
+		zensus.population ::integer AS population,
+		zensus.geom ::geometry(Point,3035) AS geom
+	FROM	orig_destatis.zensus_population_per_ha_mview AS zensus;
+
+-- "Extend Table"   (OK!) 10.000ms =0
+ALTER TABLE	orig_geo_rli.rli_deu_loadpoints_zensus
+	ADD COLUMN lp_id serial,
+	ADD COLUMN inside_la boolean,
+	ADD PRIMARY KEY (lp_id);
+
+-- "Grant oeuser"   (OK!) -> 100ms =0
+GRANT ALL ON TABLE 	orig_geo_rli.rli_deu_loadpoints_zensus TO oeuser WITH GRANT OPTION;
+ALTER TABLE		orig_geo_rli.rli_deu_loadpoints_zensus OWNER TO oeuser;
+
+-- "Create Index GIST (geom)"   (OK!) -> 40.000ms =0
+CREATE INDEX  	rli_deu_loadpoints_zensus_geom_idx
+	ON	orig_geo_rli.rli_deu_loadpoints_zensus
+	USING	GIST (geom);
+
+---------- ---------- ----------
+
+-- "Calculate Inside LA"   (OK!) -> 216.000ms =2.846.657
+UPDATE 	orig_geo_rli.rli_deu_loadpoints_zensus AS t1
+SET  	inside_la = t2.inside_la
+FROM    (
+	SELECT	lp.lp_id AS lp_id,
+		TRUE AS inside_la
+	FROM	orig_geo_rli.rli_deu_loadpoints_zensus AS lp,
+		orig_geo_rli.rli_deu_loadarea AS la
+	WHERE  	la.geom_buffer && lp.geom AND
+		ST_CONTAINS(la.geom_buffer,lp.geom)
+	) AS t2
+WHERE  	t1.lp_id = t2.lp_id;
+
+-- "Create Table"   (OK!) 2.000ms =331.066
+DROP TABLE IF EXISTS	orig_geo_rli.rli_deu_loadpoints;
+CREATE TABLE 		orig_geo_rli.rli_deu_loadpoints AS
+	SELECT	lp.*
+	FROM	orig_geo_rli.rli_deu_loadpoints_zensus AS lp
+	WHERE	inside_la IS NOT TRUE;
+
+-- "Extend Table"   (OK!) 2.000ms =0
+ALTER TABLE	orig_geo_rli.rli_deu_loadpoints
+	ADD PRIMARY KEY (lp_id);
+
+-- "Grant oeuser"   (OK!) -> 100ms =0
+GRANT ALL ON TABLE 	orig_geo_rli.rli_deu_loadpoints TO oeuser WITH GRANT OPTION;
+ALTER TABLE		orig_geo_rli.rli_deu_loadpoints OWNER TO oeuser;
+
+-- "Create Index GIST (geom)"   (OK!) -> 8.000ms =0
+CREATE INDEX  	rli_deu_loadpoints_geom_idx
+	ON	orig_geo_rli.rli_deu_loadpoints
+	USING	GIST (geom);
+
+
+---------- ---------- ---------- ---------- ---------- ----------
+-- Create a regular grid from points
+---------- ---------- ---------- ---------- ---------- ----------
+
+-- "Create Table"   (OK!) 100ms =0
+DROP TABLE IF EXISTS	orig_geo_rli.rli_deu_loadpoints_grid;
+CREATE TABLE		orig_geo_rli.rli_deu_loadpoints_grid (
+	lp_id INT,
+	gid INT,
+	population INT,
+	geom geometry(Polygon, 3035),
+	CONSTRAINT rli_deu_loadpoints_grid_pkey PRIMARY KEY (lp_id));
+
+
+-- "Insert Grid"   (OK!) 3.000ms =331.066
+INSERT INTO	orig_geo_rli.rli_deu_loadpoints_grid
+	SELECT	pts.lp_id AS lp_id,
+		pts.gid AS gid,
+		pts.population AS population,
+		ST_SetSRID((ST_MakeEnvelope(ST_X(pts.geom)-50,ST_Y(pts.geom)-50,ST_X(pts.geom)+50,ST_Y(pts.geom)+50)),3035) AS geom    
+	FROM	orig_geo_rli.rli_deu_loadpoints AS pts;
+
+-- 		ST_SetSRID((ST_MakeEnvelope(pts.x_mp-50,pts.y_mp-50,pts.x_mp+50,pts.y_mp+50)),3035) AS geom    
+
+-- "Create Index GIST (geom)"   (OK!) -> 4.000ms =0
+CREATE INDEX	rli_deu_loadpoints_grid_geom_idx
+	ON	orig_geo_rli.rli_deu_loadpoints_grid
+	USING	GIST (geom);
+
+---------- ---------- ---------- ---------- ---------- ----------
+-- "Create Cluster From Load Points"
+---------- ---------- ---------- ---------- ---------- ----------
+
+-- "Create Table"   (OK!) -> 100ms =0
+DROP TABLE IF EXISTS	orig_geo_rli.rli_deu_loadpoints_cluster CASCADE;
+CREATE TABLE         	orig_geo_rli.rli_deu_loadpoints_cluster (
+    cid serial,
+    zensus_sum INT,
+    area_ha INT,
+    geom geometry(Polygon,3035),
+    geom_centroid geometry(Point,3035),
+    geom_surfacepoint geometry(Point,3035),
+CONSTRAINT zensus_population_per_ha_grid_cluster_pkey PRIMARY KEY (cid));
+
+
+-- "Insert Cluster"   (OK!) -> 43.000ms =176.957
+INSERT INTO	orig_geo_rli.rli_deu_loadpoints_cluster(geom)
+	SELECT	(ST_DUMP(ST_MULTI(ST_UNION(grid.geom)))).geom ::geometry(Polygon,3035) AS geom
+	FROM    orig_geo_rli.rli_deu_loadpoints_grid AS grid
+
+
+-- "Create Index GIST (geom)"   (OK!) 2.000ms =0
+CREATE INDEX	rli_deu_loadpoints_cluster_geom_idx
+	ON	orig_geo_rli.rli_deu_loadpoints_cluster
+	USING	GIST (geom);
+
+-- "Calculate Inside Cluster"   (OK!) -> 21.000ms =176.957
+UPDATE 	orig_geo_rli.rli_deu_loadpoints_cluster AS t1
+SET  	zensus_sum = t2.zensus_sum,
+	area_ha = t2.area_ha,
+	geom_centroid = t2.geom_centroid,
+	geom_surfacepoint = t2.geom_surfacepoint
+FROM    (
+	SELECT	cl.cid AS cid,
+		SUM(lp.population) AS zensus_sum,
+		COUNT(lp.geom) AS area_ha,
+		ST_Centroid(cl.geom) AS geom_centroid,
+		ST_PointOnSurface(cl.geom) AS geom_surfacepoint
+	FROM	orig_geo_rli.rli_deu_loadpoints AS lp,
+		orig_geo_rli.rli_deu_loadpoints_cluster AS cl
+	WHERE  	cl.geom && lp.geom AND
+		ST_CONTAINS(cl.geom,lp.geom)
+	GROUP BY	cl.cid
+	ORDER BY	cl.cid
+	) AS t2
+WHERE  	t1.cid = t2.cid;
+
+
+-- "Create Index GIST (geom)"   (OK!) 2.000ms =0
+CREATE INDEX	rli_deu_loadpoints_cluster_geom_centroid_idx
+	ON	orig_geo_rli.rli_deu_loadpoints_cluster
+	USING	GIST (geom_centroid);
+
+-- "Create Index GIST (geom)"   (OK!) 2.000ms =0
+CREATE INDEX	rli_deu_loadpoints_cluster_geom_surfacepoint_idx
+	ON	orig_geo_rli.rli_deu_loadpoints_cluster
+	USING	GIST (geom_surfacepoint);
+
+
+
+
+---------- ---------- ---------- TESTS
+
 
 
 -- -- "Union Load Area"   (OK!) 2.109.000ms =1
@@ -53,69 +209,6 @@ FROM	orig_geo_rli.rli_deu_loadpoints AS lp
 -- 	USING	GIST (geom);
 
 ---------- ---------- ----------
-
-
--- "Create Table" (OK!) 2.000ms =3.177.723
-DROP TABLE IF EXISTS	orig_geo_rli.rli_deu_loadpoints_zensus;
-CREATE TABLE 		orig_geo_rli.rli_deu_loadpoints_zensus AS
-	SELECT	zensus.gid ::integer AS gid,
-		zensus.population ::integer AS population,
-		zensus.geom ::geometry(Point,3035) AS geom
-	FROM	orig_destatis.zensus_population_per_ha_mview AS zensus;
-
--- "Extend Table"   (OK!) 10.000ms =0
-ALTER TABLE	orig_geo_rli.rli_deu_loadpoints_zensus
-	ADD COLUMN lp_id serial,
-	ADD COLUMN inside_la boolean,
-	ADD PRIMARY KEY (lp_id);
-
--- "Grant oeuser"   (OK!) -> 100ms =0
-GRANT ALL ON TABLE 	orig_geo_rli.rli_deu_loadpoints_zensus TO oeuser WITH GRANT OPTION;
-ALTER TABLE		orig_geo_rli.rli_deu_loadpoints_zensus OWNER TO oeuser;
-
--- "Create Index GIST (geom)"   (OK!) -> 40.000ms =0
-CREATE INDEX  	rli_deu_loadpoints_zensus_geom_idx
-	ON	orig_geo_rli.rli_deu_loadpoints_zensus
-	USING	GIST (geom);
-
----------- ---------- ----------
-
--- "Calculate Inside LA"   (OK!) -> 210.000ms =2.873.049
-UPDATE 	orig_geo_rli.rli_deu_loadpoints_zensus AS t1
-SET  	inside_la = t2.inside_la
-FROM    (
-	SELECT	lp.lp_id AS lp_id,
-		TRUE AS inside_la
-	FROM	orig_geo_rli.rli_deu_loadpoints_zensus AS lp,
-		orig_geo_rli.rli_deu_loadarea AS la
-	WHERE  	la.geom_buffer && lp.geom AND
-		ST_CONTAINS(la.geom_buffer,lp.geom)
-	) AS t2
-WHERE  	t1.lp_id = t2.lp_id;
-
--- "Create Table"   (OK!) 2.000ms =304.674
-DROP TABLE IF EXISTS	orig_geo_rli.rli_deu_loadpoints;
-CREATE TABLE 		orig_geo_rli.rli_deu_loadpoints AS
-	SELECT	lp.*
-	FROM	orig_geo_rli.rli_deu_loadpoints_zensus AS lp
-	WHERE	inside_la IS NOT TRUE;
-
--- "Extend Table"   (OK!) 2.000ms =0
-ALTER TABLE	orig_geo_rli.rli_deu_loadpoints
-	ADD PRIMARY KEY (lp_id);
-
--- "Grant oeuser"   (OK!) -> 100ms =0
-GRANT ALL ON TABLE 	orig_geo_rli.rli_deu_loadpoints TO oeuser WITH GRANT OPTION;
-ALTER TABLE		orig_geo_rli.rli_deu_loadpoints OWNER TO oeuser;
-
--- "Create Index GIST (geom)"   (OK!) -> 8.000ms =0
-CREATE INDEX  	rli_deu_loadpoints_geom_idx
-	ON	orig_geo_rli.rli_deu_loadpoints
-	USING	GIST (geom);
-
-
-
----------- ---------- ---------- TESTS
 
 -- -- "Create Table" (OK!) 100ms =0
 -- DROP TABLE IF EXISTS	orig_geo_rli.rli_deu_loadpoints;
@@ -162,14 +255,14 @@ CREATE INDEX  	rli_deu_loadpoints_geom_idx
 -- 	WHERE	ST_CONTAINS(lg.geom_lg, zensus.geom) = 'f';
 ---------------
 
--- Zensus Punkte außerhalb der LG SPF (OK!) 2.000ms =477
-DROP MATERIALIZED VIEW IF EXISTS	orig_destatis.zensus_population_per_ha_spf_satelliten;
-CREATE MATERIALIZED VIEW 		orig_destatis.zensus_population_per_ha_spf_satelliten AS 
-	SELECT 	zensus.*
-	FROM 	orig_geo_rli_spf.zensus_population_per_ha_spf_pop AS zensus,
-		(SELECT	ST_Union(geom_buffer) AS geom_lg
-		FROM	orig_geo_rli_spf.rli_deu_lastgebiete_spf) AS lg
-	WHERE	ST_CONTAINS(lg.geom_lg, zensus.geom) = 'f'
+-- -- Zensus Punkte außerhalb der LG SPF (OK!) 2.000ms =477
+-- DROP MATERIALIZED VIEW IF EXISTS	orig_destatis.zensus_population_per_ha_spf_satelliten;
+-- CREATE MATERIALIZED VIEW 		orig_destatis.zensus_population_per_ha_spf_satelliten AS 
+-- 	SELECT 	zensus.*
+-- 	FROM 	orig_geo_rli_spf.zensus_population_per_ha_spf_pop AS zensus,
+-- 		(SELECT	ST_Union(geom_buffer) AS geom_lg
+-- 		FROM	orig_geo_rli_spf.rli_deu_lastgebiete_spf) AS lg
+-- 	WHERE	ST_CONTAINS(lg.geom_lg, zensus.geom) = 'f'
 
 ---------------
 
