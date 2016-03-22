@@ -335,10 +335,6 @@ ALTER TABLE	orig_geo_rli.osm_deu_polygon_urban_buffer100_unbuffer
 	ADD COLUMN sector_count_retail integer,
 	ADD COLUMN sector_count_industrial integer,
 	ADD COLUMN sector_count_agricultural integer,
-	ADD COLUMN sector_consumption_residential numeric,
-	ADD COLUMN sector_consumption_retail numeric,
-	ADD COLUMN sector_consumption_industrial numeric,
-	ADD COLUMN sector_consumption_agricultural numeric,
 	ADD COLUMN mv_poly_id integer,
 	ADD COLUMN nuts varchar(5),
 	ADD COLUMN rs varchar(12),
@@ -538,7 +534,7 @@ CREATE INDEX  	osm_deu_polygon_urban_buffer100_unbuffer_geom_centroid_idx
 
 ---------- ---------- ----------
 
--- "Update Buffer [100m]"   (OK!) -> 80.000ms =168.670
+-- "Update Buffer [100m]"   (OK!) -> 155.000ms =168.670
 UPDATE 	orig_geo_rli.osm_deu_polygon_urban_buffer100_unbuffer AS t1
 SET  	geom_buffer = t2.geom_buffer
 FROM    (
@@ -592,36 +588,7 @@ CREATE INDEX  	osm_deu_polygon_urban_buffer100_unbuffer_geom_buffer_idx
 -- "Calculate Zensus2011 Population"
 ---------- ---------- ----------
 
--- -- Zensus SPF ohne population '-1' (OK!) -> 7.500ms =3.177.723
--- DROP MATERIALIZED VIEW IF EXISTS	orig_destatis.zensus_population_per_ha_mview;
--- CREATE MATERIALIZED VIEW		orig_destatis.zensus_population_per_ha_mview AS
--- 	SELECT	pts.*
--- 	FROM	orig_destatis.zensus_population_per_ha AS pts
--- 	WHERE	population > '-1';
-
--- -- CALC POP (OK!) ms =
--- DROP TABLE IF EXISTS	orig_geo_rli.osm_deu_polygon_urban_buffer100_unbuff_catch_zensus;
--- CREATE TABLE 		orig_geo_rli.osm_deu_polygon_urban_buffer100_unbuff_catch_zensus AS
--- 	SELECT	lg.uid AS uid,
--- 		SUM(pts.population)::integer AS zensus_sum,
--- 		COUNT(pts.geom)::integer AS zensus_count,
--- 		(SUM(pts.population)/COUNT(pts.geom))::numeric AS zensus_density
--- 	FROM	orig_geo_rli.osm_deu_polygon_urban_buffer100_unbuff AS lg,
--- 		orig_destatis.zensus_population_per_ha_mview AS pts
--- 	WHERE  	ST_TRANSFORM(lg.geom_buffer,3035) && ST_TRANSFORM(pts.geom,3035) AND 
--- 		ST_CONTAINS(ST_TRANSFORM(lg.geom_buffer,3035),ST_TRANSFORM(pts.geom,3035))
--- 	GROUP BY lg.uid;
--- 
--- -- UPDATE counts (OK!) -> ms =
--- UPDATE 	orig_geo_rli.osm_deu_polygon_urban_buffer100_unbuff AS t1
--- SET  	zensus_sum = t2.zensus_sum,
--- 	zensus_count = t2.zensus_count,
--- 	zensus_density = t2.zensus_density
--- FROM    orig_geo_rli.osm_deu_polygon_urban_buffer100_unbuff_catch_zensus AS t2
--- JOIN    orig_geo_rli.osm_deu_polygon_urban_buffer100_unbuff USING (uid)
--- WHERE  	t1.uid = t2.uid;
-
--- "Zensus2011 Population"   (OK!) -> 166.000ms =140.604
+-- "Zensus2011 Population"   (OK!) -> 175.000ms =141.962
 UPDATE 	orig_geo_rli.osm_deu_polygon_urban_buffer100_unbuffer AS t1
 SET  	zensus_sum = t2.zensus_sum,
 	zensus_count = t2.zensus_count,
@@ -643,29 +610,7 @@ WHERE  	t1.uid = t2.uid;
 -- "Calculate IÖR Industry Share"
 ---------- ---------- ----------
 
--- -- CALC IOER (OK!) ms =
--- DROP TABLE IF EXISTS	orig_geo_rli.osm_deu_polygon_urban_buffer100_unbuff_catch_ioer;
--- CREATE TABLE 		orig_geo_rli.osm_deu_polygon_urban_buffer100_unbuff_catch_ioer AS
--- 	SELECT	lg.uid AS uid,
--- 		SUM(pts.ioer_share) AS ioer_sum,
--- 		COUNT(pts.geom)::integer AS ioer_count,
--- 		(SUM(pts.ioer_share)/COUNT(pts.geom))::numeric AS ioer_density
--- 	FROM	orig_geo_rli.osm_deu_polygon_urban_buffer100_unbuff AS lg,
--- 		orig_ioer.ioer_urban_share_industrial_centroid AS pts
--- 	WHERE  	ST_TRANSFORM(lg.geom_buffer,3035) && ST_TRANSFORM(pts.geom,3035) AND 
--- 		ST_CONTAINS(ST_TRANSFORM(lg.geom_buffer,3035),ST_TRANSFORM(pts.geom,3035))
--- 	GROUP BY lg.uid;
---  
--- -- UPDATE counts (OK!) -> ms =
--- UPDATE 	orig_geo_rli.osm_deu_polygon_urban_buffer100_unbuff AS t1
--- SET  	ioer_sum = t2.ioer_sum,
--- 	ioer_count = t2.ioer_count,
--- 	ioer_density = t2.ioer_density
--- FROM    orig_geo_rli.osm_deu_polygon_urban_buffer100_unbuff_catch_ioer AS t2
--- JOIN    orig_geo_rli.osm_deu_polygon_urban_buffer100_unbuff USING (uid)
--- WHERE  	t1.uid = t2.uid;
-
--- "IÖR Industry Share"   (OK!) -> 84.000ms =47.774
+-- "IÖR Industry Share"   (OK!) -> 82.000ms =51.050
 UPDATE 	orig_geo_rli.osm_deu_polygon_urban_buffer100_unbuffer AS t1
 SET  	ioer_sum = t2.ioer_sum,
 	ioer_count = t2.ioer_count,
@@ -923,14 +868,14 @@ WHERE	sector_share_agricultural 	IS NULL;
 -- "Write Results"
 ---------- ---------- ---------- ---------- ---------- ----------
 
--- "Create Table"   (OK!) 18.000ms =168.670
+-- "Create Table"   (OK!) 20.000ms =168.670
 DROP TABLE IF EXISTS	orig_geo_rli.rli_deu_loadarea CASCADE;
 CREATE TABLE 		orig_geo_rli.rli_deu_loadarea AS
 	SELECT	la.*
 	FROM	orig_geo_rli.osm_deu_polygon_urban_buffer100_unbuffer AS la
 ORDER BY 	la.uid;
 
--- "Add ID (la_id)"   (OK!) 16.000ms =0
+-- "Add ID (la_id)"   (OK!) 13.000ms =0
 ALTER TABLE 	orig_geo_rli.rli_deu_loadarea
 	ADD COLUMN la_id SERIAL;
 
@@ -1031,7 +976,7 @@ DELETE FROM	orig_geo_rli.rli_deu_loadarea AS la
 
 ---------- ---------- ----------
 
--- "Residential Combination"   (OK!) -> 500ms =29.180
+-- "Residential Combination"   (OK!) -> 500ms =28.649
 DROP MATERIALIZED VIEW IF EXISTS	orig_geo_rli.rli_deu_loadarea_check_res_combination_mview CASCADE;
 CREATE MATERIALIZED VIEW		orig_geo_rli.rli_deu_loadarea_check_res_combination_mview AS
 	SELECT	la.la_id,
@@ -1048,7 +993,7 @@ CREATE MATERIALIZED VIEW		orig_geo_rli.rli_deu_loadarea_check_res_combination_mv
 		la.ioer_sum = 0 AND
 		la.area_ha < 1;
 
--- "Remove Residential Combination"   (OK!) 2.500ms =29.180
+-- "Remove Residential Combination"   (OK!) 2.500ms =28.649
 DELETE FROM	orig_geo_rli.rli_deu_loadarea AS la
 	WHERE	(la.sector_area_retail IS NULL AND
 		la.sector_area_industrial IS NULL AND
@@ -1060,13 +1005,13 @@ DELETE FROM	orig_geo_rli.rli_deu_loadarea AS la
 -- "Consumption (Ilka)"
 ---------- ---------- ---------- ---------- ---------- ----------
 
-CREATE TABLE orig_geo_rli.rli_deu_consumption_spf AS
-	SELECT	la_id,
-		sector_consumption_residential,
-		sector_consumption_retail,
-		sector_consumption_industrial,
-		sector_consumption_agricultural
-	FROM	orig_geo_rli.rli_deu_loadarea;
-
-ALTER TABLE orig_geo_rli.rli_deu_consumption_spf
-	ADD PRIMARY KEY (la_id);
+-- CREATE TABLE orig_geo_rli.rli_deu_consumption_spf AS
+-- 	SELECT	la_id,
+-- 		sector_consumption_residential,
+-- 		sector_consumption_retail,
+-- 		sector_consumption_industrial,
+-- 		sector_consumption_agricultural
+-- 	FROM	orig_geo_rli.rli_deu_loadarea;
+-- 
+-- ALTER TABLE orig_geo_rli.rli_deu_consumption_spf
+-- 	ADD PRIMARY KEY (la_id);
