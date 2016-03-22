@@ -538,12 +538,12 @@ CREATE INDEX  	osm_deu_polygon_urban_buffer100_unbuffer_geom_centroid_idx
 
 ---------- ---------- ----------
 
--- "Update Buffer [50m]"   (OK!) -> 80.000ms =168.670
+-- "Update Buffer [100m]"   (OK!) -> 80.000ms =168.670
 UPDATE 	orig_geo_rli.osm_deu_polygon_urban_buffer100_unbuffer AS t1
 SET  	geom_buffer = t2.geom_buffer
 FROM    (
 	SELECT	la.uid AS uid,
-		ST_BUFFER(ST_TRANSFORM(la.geom,3035), 50) AS geom_buffer
+		ST_BUFFER(ST_TRANSFORM(la.geom,3035), 100) AS geom_buffer
 	FROM	orig_geo_rli.osm_deu_polygon_urban_buffer100_unbuffer AS la	
 	GROUP BY la.uid
 	) AS t2
