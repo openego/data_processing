@@ -947,15 +947,6 @@ CREATE INDEX  	rli_deu_loadarea_spf_geom_buffer_idx
     ON    	orig_geo_rli.rli_deu_loadarea_spf
     USING     	GIST (geom_buffer);
 
--- "Update Consumption"   (OK!) -> 112.000ms =168.537
-UPDATE 	orig_geo_rli.rli_deu_loadarea_spf AS t1
-SET  	sector_consumption_residential = t2.sector_consumption_residential,
-	sector_consumption_retail = t2.sector_consumption_retail,
-	sector_consumption_industrial = t2.sector_consumption_industrial,
-	sector_consumption_agricultural = t2.sector_consumption_agricultural
-FROM    orig_geo_rli.rli_deu_consumption_spf AS t2
-WHERE  	t1.la_id = t2.la_id;
-
 
 ---------- ---------- ---------- ---------- ---------- ----------
 -- "Load Area Processing"
