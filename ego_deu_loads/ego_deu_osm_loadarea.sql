@@ -38,7 +38,11 @@ CREATE UNIQUE INDEX  	osm_deu_polygon_urban_mview_gid_idx
 GRANT ALL ON TABLE	orig_geo_rli.osm_deu_polygon_urban_mview TO oeuser WITH GRANT OPTION;
 ALTER TABLE		orig_geo_rli.osm_deu_polygon_urban_mview OWNER TO oeuser;
 
----------- ---------- ----------
+
+---------- ---------- ---------- ---------- ---------- ----------
+-- "(Geo) Data Validation"
+---------- ---------- ---------- ---------- ---------- ----------
+
 
 -- "Validate (geom)"   (OK!) -> 20.000ms =0
 DROP MATERIALIZED VIEW IF EXISTS	orig_geo_rli.osm_deu_polygon_urban_mview_error_geom_mview CASCADE;
@@ -72,6 +76,7 @@ CREATE MATERIALIZED VIEW		orig_geo_rli.osm_deu_polygon_urban_mview_error_gid_mvi
 -- "Grant oeuser"   (OK!) -> 100ms =0
 GRANT ALL ON TABLE	orig_geo_rli.osm_deu_polygon_urban_mview_error_gid_mview TO oeuser WITH GRANT OPTION;
 ALTER TABLE		orig_geo_rli.osm_deu_polygon_urban_mview_error_gid_mview OWNER TO oeuser;
+
 
 -- No doubles on Germany! Skip next!
 ---------- ---------- ----------
