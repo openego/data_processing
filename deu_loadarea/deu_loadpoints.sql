@@ -5,7 +5,7 @@
 
 
 ---------- ---------- ---------- ---------- ---------- ----------
--- "Zensus Points"
+-- "Zensus Points"   2016-03-24 11:55
 ---------- ---------- ---------- ---------- ---------- ----------
 
 -- "Create Table" (OK!) 2.000ms =3.177.723
@@ -22,16 +22,6 @@ ALTER TABLE	orig_geo_rli.rli_deu_loadpoints_zensus
 	ADD COLUMN inside_la boolean,
 	ADD PRIMARY KEY (lp_id);
 
--- "Create Index GIST (geom)"   (OK!) -> 40.000ms =0
-CREATE INDEX  	rli_deu_loadpoints_zensus_geom_idx
-	ON	orig_geo_rli.rli_deu_loadpoints_zensus
-	USING	GIST (geom);
-
--- "Grant oeuser"   (OK!) -> 100ms =0
-GRANT ALL ON TABLE 	orig_geo_rli.rli_deu_loadpoints_zensus TO oeuser WITH GRANT OPTION;
-ALTER TABLE		orig_geo_rli.rli_deu_loadpoints_zensus OWNER TO oeuser;
-
-
 -- "Calculate Inside Load Area"   (OK!) -> 187.000ms =2.888.446
 UPDATE 	orig_geo_rli.rli_deu_loadpoints_zensus AS t1
 SET  	inside_la = t2.inside_la
@@ -45,6 +35,18 @@ FROM    (
 	) AS t2
 WHERE  	t1.lp_id = t2.lp_id;
 
+-- "Create Index GIST (geom)"   (OK!) -> 40.000ms =0
+CREATE INDEX  	rli_deu_loadpoints_zensus_geom_idx
+	ON	orig_geo_rli.rli_deu_loadpoints_zensus
+	USING	GIST (geom);
+
+-- "Grant oeuser"   (OK!) -> 100ms =0
+GRANT ALL ON TABLE 	orig_geo_rli.rli_deu_loadpoints_zensus TO oeuser WITH GRANT OPTION;
+ALTER TABLE		orig_geo_rli.rli_deu_loadpoints_zensus OWNER TO oeuser;
+
+---------- ---------- ----------
+
+
 -- "Create Table"   (OK!) 2.000ms =289.277
 DROP TABLE IF EXISTS	orig_geo_rli.rli_deu_loadpoints;
 CREATE TABLE 		orig_geo_rli.rli_deu_loadpoints AS
@@ -54,6 +56,7 @@ CREATE TABLE 		orig_geo_rli.rli_deu_loadpoints AS
 
 -- "Extend Table"   (OK!) 2.000ms =0
 ALTER TABLE	orig_geo_rli.rli_deu_loadpoints
+	ADD COLUMN geom_grid geometry(Polygon,3035),
 	ADD PRIMARY KEY (lp_id);
 
 -- "Create Index GIST (geom)"   (OK!) -> 3.000ms =0
@@ -67,34 +70,53 @@ ALTER TABLE		orig_geo_rli.rli_deu_loadpoints OWNER TO oeuser;
 
 
 ---------- ---------- ---------- ---------- ---------- ----------
--- "Load Point Grid"
+-- "Load Point Grid"   2016-03-24 12:02
 ---------- ---------- ---------- ---------- ---------- ----------
 
--- "Create Table"   (OK!) 100ms =0
-DROP TABLE IF EXISTS	orig_geo_rli.rli_deu_loadpoints_grid;
-CREATE TABLE		orig_geo_rli.rli_deu_loadpoints_grid (
-	lp_id INT,
-	gid INT,
-	population INT,
-	geom geometry(Polygon, 3035),
-	CONSTRAINT rli_deu_loadpoints_grid_pkey PRIMARY KEY (lp_id));
+-- "Calculate Load Point Grid"   (OK!) -> 187.000ms =2.888.446
+UPDATE 	orig_geo_rli.rli_deu_loadpoints AS t1
+SET  	geom_grid = t2.geom_grid
+FROM    (
+	SELECT	lp.lp_id AS lp_id,
+		ST_SetSRID((ST_MakeEnvelope(
+			ST_X(lp.geom)-50,
+			ST_Y(lp.geom)-50,
+			ST_X(lp.geom)+50,
+			ST_Y(lp.geom)+50)),3035) AS geom_grid
+	FROM	orig_geo_rli.rli_deu_loadpoints AS lp
+	) AS t2
+WHERE  	t1.lp_id = t2.lp_id;
 
--- "Insert Grid"   (OK!) 3.000ms =289.277
-INSERT INTO	orig_geo_rli.rli_deu_loadpoints_grid
-	SELECT	pts.lp_id AS lp_id,
-		pts.gid AS gid,
-		pts.population AS population,
-		ST_SetSRID((ST_MakeEnvelope(ST_X(pts.geom)-50,ST_Y(pts.geom)-50,ST_X(pts.geom)+50,ST_Y(pts.geom)+50)),3035) AS geom    
-	FROM	orig_geo_rli.rli_deu_loadpoints AS pts;  
+-- "Create Index GIST (geom_grid)"   (OK!) -> 3.000ms =0
+CREATE INDEX	rli_deu_loadpoints_geom_grid_idx
+	ON	orig_geo_rli.rli_deu_loadpoints
+	USING	GIST (geom_grid);
 
--- "Create Index GIST (geom)"   (OK!) -> 3.000ms =0
-CREATE INDEX	rli_deu_loadpoints_grid_geom_idx
-	ON	orig_geo_rli.rli_deu_loadpoints_grid
-	USING	GIST (geom);
-
--- "Grant oeuser"   (OK!) -> 100ms =0
-GRANT ALL ON TABLE 	orig_geo_rli.rli_deu_loadpoints_grid TO oeuser WITH GRANT OPTION;
-ALTER TABLE		orig_geo_rli.rli_deu_loadpoints_grid OWNER TO oeuser;
+-- -- "Create Table"   (OK!) 100ms =0
+-- DROP TABLE IF EXISTS	orig_geo_rli.rli_deu_loadpoints_grid;
+-- CREATE TABLE		orig_geo_rli.rli_deu_loadpoints_grid (
+-- 	lp_id INT,
+-- 	gid INT,
+-- 	population INT,
+-- 	geom geometry(Polygon, 3035),
+-- 	CONSTRAINT rli_deu_loadpoints_grid_pkey PRIMARY KEY (lp_id));
+-- 
+-- -- "Insert Grid"   (OK!) 3.000ms =289.277
+-- INSERT INTO	orig_geo_rli.rli_deu_loadpoints_grid
+-- 	SELECT	pts.lp_id AS lp_id,
+-- 		pts.gid AS gid,
+-- 		pts.population AS population,
+-- 		ST_SetSRID((ST_MakeEnvelope(ST_X(pts.geom)-50,ST_Y(pts.geom)-50,ST_X(pts.geom)+50,ST_Y(pts.geom)+50)),3035) AS geom    
+-- 	FROM	orig_geo_rli.rli_deu_loadpoints AS pts;  
+-- 
+-- -- "Create Index GIST (geom)"   (OK!) -> 3.000ms =0
+-- CREATE INDEX	rli_deu_loadpoints_grid_geom_idx
+-- 	ON	orig_geo_rli.rli_deu_loadpoints_grid
+-- 	USING	GIST (geom);
+-- 
+-- -- "Grant oeuser"   (OK!) -> 100ms =0
+-- GRANT ALL ON TABLE 	orig_geo_rli.rli_deu_loadpoints_grid TO oeuser WITH GRANT OPTION;
+-- ALTER TABLE		orig_geo_rli.rli_deu_loadpoints_grid OWNER TO oeuser;
 
 ---------- ---------- ---------- ---------- ---------- ----------
 -- "Cluster From Load Points"
@@ -171,6 +193,7 @@ FROM	orig_geo_rli.rli_deu_loadpoints AS lp
 SELECT	'zensus_loadpoints_cluster' AS name,
 	SUM(cl.zensus_sum) AS people
 FROM	orig_geo_rli.rli_deu_loadpoints_cluster AS cl
+
 
 
 ---------- ---------- ---------- TESTS
