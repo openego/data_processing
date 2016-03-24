@@ -909,10 +909,10 @@ CREATE INDEX  	rli_deu_loadarea_geom_buffer_idx
 
 
 ---------- ---------- ----------
--- "Create SPF"
+-- "Create SPF"   2016-03-24 11:30
 ---------- ---------- ----------
 
--- "Create Table SPF"   (OK!) 1.000ms =796
+-- "Create Table SPF"   (OK!) 1.000ms =719
 DROP TABLE IF EXISTS  	orig_geo_rli.rli_deu_loadarea_spf;
 CREATE TABLE         	orig_geo_rli.rli_deu_loadarea_spf AS
 	SELECT	la.*
@@ -922,10 +922,6 @@ CREATE TABLE         	orig_geo_rli.rli_deu_loadarea_spf AS
 -- "Ad PK"   (OK!) 150ms =0
 ALTER TABLE	orig_geo_rli.rli_deu_loadarea_spf
 	ADD PRIMARY KEY (la_id);
-
--- "Grant oeuser"   (OK!) -> 100ms =0
-GRANT ALL ON TABLE 	orig_geo_rli.rli_deu_loadarea_spf TO oeuser WITH GRANT OPTION;
-ALTER TABLE		orig_geo_rli.rli_deu_loadarea_spf OWNER TO oeuser;
 
 -- "Create Index GIST (geom)"   (OK!) -> 100ms =0
 CREATE INDEX  	rli_deu_loadarea_spf_geom_idx
@@ -947,6 +943,9 @@ CREATE INDEX  	rli_deu_loadarea_spf_geom_buffer_idx
     ON    	orig_geo_rli.rli_deu_loadarea_spf
     USING     	GIST (geom_buffer);
 
+-- "Grant oeuser"   (OK!) -> 100ms =0
+GRANT ALL ON TABLE 	orig_geo_rli.rli_deu_loadarea_spf TO oeuser WITH GRANT OPTION;
+ALTER TABLE		orig_geo_rli.rli_deu_loadarea_spf OWNER TO oeuser;
 
 ---------- ---------- ---------- ---------- ---------- ----------
 -- "Load Area Processing"
@@ -960,6 +959,15 @@ CREATE MATERIALIZED VIEW		orig_geo_rli.rli_deu_loadarea_check_germany_mview AS
 		la.geom_buffer
 	FROM	orig_geo_rli.rli_deu_loadarea AS la
 	WHERE	la.nuts IS NULL;
+
+-- "Create Index GIST (geom_buffer)"   (OK!) -> 150ms =0
+CREATE INDEX  	rli_deu_loadarea_check_germany_mview_geom_buffer_idx
+    ON    	orig_geo_rli.rli_deu_loadarea_check_germany_mview
+    USING     	GIST (geom_buffer);
+
+-- "Grant oeuser"   (OK!) -> 100ms =0
+GRANT ALL ON TABLE 	orig_geo_rli.rli_deu_loadarea_check_germany_mview TO oeuser WITH GRANT OPTION;
+ALTER TABLE		orig_geo_rli.rli_deu_loadarea_check_germany_mview OWNER TO oeuser;
 
 -- "Remove Load Areas Outside Germany"   (OK!) 700ms =575
 DELETE FROM	orig_geo_rli.rli_deu_loadarea AS la
@@ -984,6 +992,15 @@ CREATE MATERIALIZED VIEW		orig_geo_rli.rli_deu_loadarea_check_res_combination_mv
 		la.ioer_sum = 0 AND
 		la.area_ha < 1;
 
+-- "Create Index GIST (geom_buffer)"   (OK!) -> 150ms =0
+CREATE INDEX  	rli_deu_loadarea_check_res_combination_mview_geom_buffer_idx
+    ON    	orig_geo_rli.rli_deu_loadarea_check_res_combination_mview
+    USING     	GIST (geom_buffer);
+
+-- "Grant oeuser"   (OK!) -> 100ms =0
+GRANT ALL ON TABLE 	orig_geo_rli.rli_deu_loadarea_check_res_combination_mview TO oeuser WITH GRANT OPTION;
+ALTER TABLE		orig_geo_rli.rli_deu_loadarea_check_res_combination_mview OWNER TO oeuser;
+
 -- "Remove Residential Combination"   (OK!) 2.500ms =28.649
 DELETE FROM	orig_geo_rli.rli_deu_loadarea AS la
 	WHERE	(la.sector_area_retail IS NULL AND
@@ -996,7 +1013,7 @@ DELETE FROM	orig_geo_rli.rli_deu_loadarea AS la
 -- "Consumption (Ilka)"
 ---------- ---------- ---------- ---------- ---------- ----------
 
--- CREATE TABLE orig_geo_rli.rli_deu_consumption_spf AS
+-- CREATE TABLE orig_geo_rli.znes_deu_consumption_spf AS
 -- 	SELECT	la_id,
 -- 		sector_consumption_residential,
 -- 		sector_consumption_retail,
@@ -1006,3 +1023,7 @@ DELETE FROM	orig_geo_rli.rli_deu_loadarea AS la
 -- 
 -- ALTER TABLE orig_geo_rli.rli_deu_consumption_spf
 -- 	ADD PRIMARY KEY (la_id);
+-- 
+-- -- "Grant oeuser"   (OK!) -> 100ms =0
+-- GRANT ALL ON TABLE 	orig_geo_rli.znes_deu_consumption_spf TO oeuser WITH GRANT OPTION;
+-- ALTER TABLE		orig_geo_rli.znes_deu_consumption_spf OWNER TO oeuser;

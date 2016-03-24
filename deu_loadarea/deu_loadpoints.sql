@@ -32,7 +32,7 @@ GRANT ALL ON TABLE 	orig_geo_rli.rli_deu_loadpoints_zensus TO oeuser WITH GRANT 
 ALTER TABLE		orig_geo_rli.rli_deu_loadpoints_zensus OWNER TO oeuser;
 
 
--- "Calculate Inside LA"   (OK!) -> 187.000ms =2.888.446
+-- "Calculate Inside Load Area"   (OK!) -> 187.000ms =2.888.446
 UPDATE 	orig_geo_rli.rli_deu_loadpoints_zensus AS t1
 SET  	inside_la = t2.inside_la
 FROM    (
@@ -91,6 +91,10 @@ INSERT INTO	orig_geo_rli.rli_deu_loadpoints_grid
 CREATE INDEX	rli_deu_loadpoints_grid_geom_idx
 	ON	orig_geo_rli.rli_deu_loadpoints_grid
 	USING	GIST (geom);
+
+-- "Grant oeuser"   (OK!) -> 100ms =0
+GRANT ALL ON TABLE 	orig_geo_rli.rli_deu_loadpoints_grid TO oeuser WITH GRANT OPTION;
+ALTER TABLE		orig_geo_rli.rli_deu_loadpoints_grid OWNER TO oeuser;
 
 ---------- ---------- ---------- ---------- ---------- ----------
 -- "Cluster From Load Points"
