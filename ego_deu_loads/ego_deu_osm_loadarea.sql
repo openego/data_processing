@@ -640,7 +640,7 @@ SET  	ioer_sum = t2.ioer_sum,
 	ioer_count = t2.ioer_count,
 	ioer_density = t2.ioer_density
 FROM    (SELECT	la.uid AS uid,
-		SUM(pts.ioer_share) AS ioer_sum,
+		SUM(pts.ioer_share)/100::numeric AS ioer_sum,
 		COUNT(pts.geom)::integer AS ioer_count,
 		(SUM(pts.ioer_share)/COUNT(pts.geom))::numeric AS ioer_density
 	FROM	orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer AS la,
@@ -884,6 +884,8 @@ DELETE FROM	orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer AS la
 -- "Set Zeros"
 ---------- ---------- ----------
 
+---------- ---------- ---------- zensus
+
 -- "Add NULL"   (OK!) -> 4.000ms =28.066
 UPDATE 	orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer
 SET	zensus_sum 	= 0
@@ -899,7 +901,7 @@ UPDATE 	orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer
 SET	zensus_density 	= 0
 WHERE	zensus_density 	IS NULL;
 
----------- ---------- ----------
+---------- ---------- ---------- ioer
 
 -- "Add NULL"   (OK!) ->  19.000ms =120.896
 UPDATE 	orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer
@@ -916,31 +918,74 @@ UPDATE 	orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer
 SET	ioer_density 	= 0
 WHERE	ioer_density 	IS NULL;
 
----------- ---------- ----------
+---------- ---------- ---------- area
 
--- "Add NULL"   (OK!) ->  16.000ms =57.330
+-- "Add NULL"   (OK!) ->  18.000ms =57.131
+UPDATE 	orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer
+SET	sector_area_residential 	= 0
+WHERE	sector_area_residential 	IS NULL;
+
+-- "Add NULL"   (OK!) ->  43.000ms =129.356
+UPDATE 	orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer
+SET	sector_area_retail 	= 0
+WHERE	sector_area_retail 	IS NULL;
+
+-- "Add NULL"   (OK!) ->  45.000ms =118.526
+UPDATE 	orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer
+SET	sector_area_industrial 	= 0
+WHERE	sector_area_industrial 	IS NULL;
+
+-- "Add NULL"   (OK!) ->  32.000ms =68.215
+UPDATE 	orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer
+SET	sector_area_agricultural 	= 0
+WHERE	sector_area_agricultural 	IS NULL;
+
+---------- ---------- ---------- share
+
+-- "Add NULL"   (OK!) ->  16.000ms =57.131
 UPDATE 	orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer
 SET	sector_share_residential 	= 0
 WHERE	sector_share_residential 	IS NULL;
 
--- "Add NULL"   (OK!) ->  39.000ms =158.513
+-- "Add NULL"   (OK!) ->  39.000ms =129.356
 UPDATE 	orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer
 SET	sector_share_retail 	= 0
 WHERE	sector_share_retail 	IS NULL;
 
--- "Add NULL"   (OK!) ->  43.000ms =147.637
+-- "Add NULL"   (OK!) ->  43.000ms =118.526
 UPDATE 	orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer
 SET	sector_share_industrial 	= 0
 WHERE	sector_share_industrial 	IS NULL;
 
--- "Add NULL"   (OK!) ->  54.000ms =168.670
+-- "Add NULL"   (OK!) ->  54.000ms =68.215
 UPDATE 	orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer
 SET	sector_share_agricultural 	= 0
 WHERE	sector_share_agricultural 	IS NULL;
 
+---------- ---------- ---------- count
+
+-- "Add NULL"   (OK!) ->  17.000ms =57.131
+UPDATE 	orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer
+SET	sector_count_residential 	= 0
+WHERE	sector_count_residential 	IS NULL;
+
+-- "Add NULL"   (OK!) ->  43.000ms =129.356
+UPDATE 	orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer
+SET	sector_count_retail 	= 0
+WHERE	sector_count_retail 	IS NULL;
+
+-- "Add NULL"   (OK!) ->  43.000ms =118.526
+UPDATE 	orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer
+SET	sector_count_industrial 	= 0
+WHERE	sector_count_industrial 	IS NULL;
+
+-- "Add NULL"   (OK!) ->  30.000ms =68.215
+UPDATE 	orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer
+SET	sector_count_agricultural 	= 0
+WHERE	sector_count_agricultural 	IS NULL;
 
 ---------- ---------- ---------- ---------- ---------- ----------
--- "Write Results"
+-- "Write Results"   2016-03-30 15:55   45s
 ---------- ---------- ---------- ---------- ---------- ----------
 
 -- "Create Table"   (OK!) 20.000ms =168.670
@@ -984,7 +1029,7 @@ CREATE INDEX  	ego_deu_osm_loadarea_geom_buffer_idx
 
 
 ---------- ---------- ----------
--- "Create SPF"   2016-03-24 11:30
+-- "Create SPF"   2016-03-30 15:55   1s
 ---------- ---------- ----------
 
 -- "Create Table SPF"   (OK!) 1.000ms =719
