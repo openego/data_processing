@@ -97,13 +97,14 @@ CREATE TABLE	orig_geo_ego.ego_deu_loads_collect_buffer100_unbuffer_cut (
 		geom geometry(Polygon,3035),
 CONSTRAINT	ego_deu_loads_collect_buffer100_unbuffer_cut_pkey PRIMARY KEY (id));
 
+-- "Cut"   (OK!) 350.000ms =
+
+
 -- "Insert Cut"   (OK!) 350.000ms =
 INSERT INTO	orig_geo_ego.ego_deu_loads_collect_buffer100_unbuffer_cut (geom)
 	SELECT	ST_INTERSECTION(poly.geom,cut.geom) ::geometry(Polygon,3035) AS geom
 	FROM	orig_geo_ego.ego_deu_loads_collect_buffer100_unbuffer AS poly,
-		calc_gridcells_znes.znes_deu_gridcells_qgis AS cut
-	GROUP BY poly.id, cut.geom
-	ORDER BY poly.id, cut.geom;
+		calc_gridcells_znes.znes_deu_gridcells_qgis AS cut;
 
 -- "Create Index GIST (geom)"   (OK!) 2.000ms =0
 CREATE INDEX	ego_deu_loads_collect_buffer100_unbuffer_cut_geom_idx
