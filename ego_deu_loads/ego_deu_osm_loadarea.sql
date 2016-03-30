@@ -3,9 +3,9 @@
 -- "Setup"
 ---------- ---------- ----------
 
--- "Create Schema"
-CREATE SCHEMA orig_geo_ego;
-GRANT ALL ON SCHEMA orig_geo_ego TO oeuser WITH GRANT OPTION;
+-- -- "Create Schema"
+-- CREATE SCHEMA orig_geo_ego;
+-- GRANT ALL ON SCHEMA orig_geo_ego TO oeuser WITH GRANT OPTION;
 
 ---------- ---------- ---------- ---------- ---------- ----------
 -- "Filter Urban Landuse"
@@ -284,28 +284,51 @@ ALTER TABLE		orig_geo_ego.osm_deu_polygon_urban_sector_4_agricultural_mview OWNE
 -- "Urban Buffer (100m)"
 ---------- ---------- ---------- ---------- ---------- ----------
 
--- "Create Table"   (OK!) 200ms =0
-DROP TABLE IF EXISTS  	orig_geo_ego.osm_deu_polygon_urban_buffer100;
-CREATE TABLE         	orig_geo_ego.osm_deu_polygon_urban_buffer100 (
-		id SERIAL,
-		geom geometry(Polygon,3035),
-CONSTRAINT 	osm_deu_polygon_urban_buffer100_pkey PRIMARY KEY (id));
+-- -- "Create Table"   (OK!) 200ms =0
+-- DROP TABLE IF EXISTS  	orig_geo_ego.osm_deu_polygon_urban_buffer100;
+-- CREATE TABLE         	orig_geo_ego.osm_deu_polygon_urban_buffer100 (
+-- 		id SERIAL,
+-- 		geom geometry(Polygon,3035),
+-- CONSTRAINT 	osm_deu_polygon_urban_buffer100_pkey PRIMARY KEY (id));
+-- 
+-- -- "Insert Buffer"   (OK!) 1.216.000ms =129.322
+-- INSERT INTO     orig_geo_ego.osm_deu_polygon_urban_buffer100(geom)
+-- 	SELECT	(ST_DUMP(ST_MULTI(ST_UNION(
+-- 			ST_BUFFER(ST_TRANSFORM(osm.geom,3035), 100)
+-- 		)))).geom ::geometry(Polygon,3035) AS geom
+-- 	FROM	orig_geo_ego.osm_deu_polygon_urban_mview AS osm;
+-- 
+-- -- "Create Index GIST (geom)"   (OK!) 2.000ms =0
+-- CREATE INDEX  	osm_deu_polygon_urban_buffer100_geom_idx
+--     ON    	orig_geo_ego.osm_deu_polygon_urban_buffer100
+--     USING     	GIST (geom);
+--     
+-- -- "Grant oeuser"   (OK!) -> 100ms =0
+-- GRANT ALL ON TABLE 	orig_geo_ego.osm_deu_polygon_urban_buffer100 TO oeuser WITH GRANT OPTION;
+-- ALTER TABLE		orig_geo_ego.osm_deu_polygon_urban_buffer100 OWNER TO oeuser;
 
--- "Insert Buffer"   (OK!) 1.216.000ms =129.322
-INSERT INTO     orig_geo_ego.osm_deu_polygon_urban_buffer100(geom)
-	SELECT	(ST_DUMP(ST_MULTI(ST_UNION(
+---------- ---------- ----------
+
+DROP SEQUENCE IF EXISTS buffer100_id;
+CREATE TEMP SEQUENCE buffer100_id;
+
+-- "Create Buffer"   (OK!) 1.240.000ms =129.322
+DROP MATERIALIZED VIEW IF EXISTS	orig_geo_ego.osm_deu_polygon_urban_buffer100_mview CASCADE;
+CREATE MATERIALIZED VIEW		orig_geo_ego.osm_deu_polygon_urban_buffer100_mview AS
+	SELECT	 nextval('buffer100_id') AS id,
+		(ST_DUMP(ST_MULTI(ST_UNION(
 			ST_BUFFER(ST_TRANSFORM(osm.geom,3035), 100)
 		)))).geom ::geometry(Polygon,3035) AS geom
 	FROM	orig_geo_ego.osm_deu_polygon_urban_mview AS osm;
 
 -- "Create Index GIST (geom)"   (OK!) 2.000ms =0
-CREATE INDEX  	osm_deu_polygon_urban_buffer100_geom_idx
-    ON    	orig_geo_ego.osm_deu_polygon_urban_buffer100
+CREATE INDEX  	osm_deu_polygon_urban_buffer100_mview_geom_idx
+    ON    	orig_geo_ego.osm_deu_polygon_urban_buffer100_mview
     USING     	GIST (geom);
     
 -- "Grant oeuser"   (OK!) -> 100ms =0
-GRANT ALL ON TABLE 	orig_geo_ego.osm_deu_polygon_urban_buffer100 TO oeuser WITH GRANT OPTION;
-ALTER TABLE		orig_geo_ego.osm_deu_polygon_urban_buffer100 OWNER TO oeuser;
+GRANT ALL ON TABLE 	orig_geo_ego.osm_deu_polygon_urban_buffer100_mview TO oeuser WITH GRANT OPTION;
+ALTER TABLE		orig_geo_ego.osm_deu_polygon_urban_buffer100_mview OWNER TO oeuser;
 
 ---------- ---------- ---------- ---------- ---------- ----------
 -- "Unbuffer (-100m)"
@@ -323,7 +346,7 @@ INSERT INTO     orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer(geom)
 	SELECT	(ST_DUMP(ST_MULTI(ST_UNION(
 			ST_BUFFER(ST_TRANSFORM(osm.geom,3035), -100)
 		)))).geom ::geometry(Polygon,3035) AS geom
-	FROM	orig_geo_ego.osm_deu_polygon_urban_buffer100 AS osm
+	FROM	orig_geo_ego.osm_deu_polygon_urban_buffer100_mview AS osm
 	GROUP BY osm.id
 	ORDER BY osm.id;
 
@@ -1066,6 +1089,14 @@ CREATE INDEX  	ego_deu_osm_loadarea_spf_geom_buffer_idx
 -- "Grant oeuser"   (OK!) -> 100ms =0
 GRANT ALL ON TABLE 	orig_geo_ego.ego_deu_osm_loadarea_spf TO oeuser WITH GRANT OPTION;
 ALTER TABLE		orig_geo_ego.ego_deu_osm_loadarea_spf OWNER TO oeuser;
+
+---------- ---------- ---------- ---------- ---------- ----------
+-- "Drops"
+---------- ---------- ---------- ---------- ---------- ----------
+
+DROP TABLE IF EXISTS	orig_geo_ego.osm_deu_polygon_urban_buffer100;
+DROP TABLE IF EXISTS	orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer;
+
 
 
 ---------- ---------- ---------- ---------- ---------- ----------
