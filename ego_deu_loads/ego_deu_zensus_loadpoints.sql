@@ -136,6 +136,48 @@ GRANT ALL ON TABLE 	orig_geo_ego.ego_deu_zensus_loadpoints_cluster TO oeuser WIT
 ALTER TABLE		orig_geo_ego.ego_deu_zensus_loadpoints_cluster OWNER TO oeuser;
 
 ---------- ---------- ----------
+-- "Create SPF"   2016-03-30 15:55   1s
+---------- ---------- ----------
+
+-- "Create Table SPF"   (OK!) 2.000ms =406
+DROP TABLE IF EXISTS  	orig_geo_ego.ego_deu_zensus_loadpoints_cluster_spf;
+CREATE TABLE         	orig_geo_ego.ego_deu_zensus_loadpoints_cluster_spf AS
+	SELECT	lp.*
+	FROM	orig_geo_ego.ego_deu_zensus_loadpoints_cluster AS lp,
+		orig_geo_vg250.vg250_4_krs_spf_mview AS spf
+	WHERE	ST_TRANSFORM(spf.geom,3035) && lp.geom_centroid  AND  
+		ST_CONTAINS(ST_TRANSFORM(spf.geom,3035), lp.geom_centroid);
+
+-- "Ad PK"   (OK!) 150ms =0
+ALTER TABLE	orig_geo_ego.ego_deu_zensus_loadpoints_cluster_spf
+	ADD PRIMARY KEY (cid);
+
+-- "Create Index GIST (geom)"   (OK!) -> 100ms =0
+CREATE INDEX  	ego_deu_zensus_loadpoints_cluster_spf_geom_idx
+	ON	orig_geo_ego.ego_deu_zensus_loadpoints_cluster_spf
+	USING	GIST (geom);
+
+-- "Create Index GIST (geom_surfacepoint)"   (OK!) -> 150ms =0
+CREATE INDEX  	ego_deu_zensus_loadpoints_cluster_spf_geom_surfacepoint_idx
+    ON    	orig_geo_ego.ego_deu_zensus_loadpoints_cluster_spf
+    USING     	GIST (geom_surfacepoint);
+
+-- "Create Index GIST (geom_centroid)"   (OK!) -> 150ms =0
+CREATE INDEX  	ego_deu_zensus_loadpoints_cluster_spf_geom_centroid_idx
+    ON    	orig_geo_ego.ego_deu_zensus_loadpoints_cluster_spf
+    USING     	GIST (geom_centroid);
+
+-- "Create Index GIST (geom_buffer)"   (OK!) -> 150ms =0
+CREATE INDEX  	ego_deu_zensus_loadpoints_cluster_spf_geom_buffer_idx
+    ON    	orig_geo_ego.ego_deu_zensus_loadpoints_cluster_spf
+    USING     	GIST (geom_buffer);
+
+-- "Grant oeuser"   (OK!) -> 100ms =0
+GRANT ALL ON TABLE 	orig_geo_ego.ego_deu_zensus_loadpoints_cluster_spf TO oeuser WITH GRANT OPTION;
+ALTER TABLE		orig_geo_ego.ego_deu_zensus_loadpoints_cluster_spf OWNER TO oeuser;
+
+
+---------- ---------- ----------
 
 -- Zensus Punkte, die nicht in LA liegen
 

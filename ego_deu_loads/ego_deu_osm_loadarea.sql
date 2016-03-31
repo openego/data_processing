@@ -1094,8 +1094,7 @@ ALTER TABLE		orig_geo_ego.ego_deu_osm_loadarea_spf OWNER TO oeuser;
 -- "Drops"
 ---------- ---------- ---------- ---------- ---------- ----------
 
-DROP TABLE IF EXISTS	orig_geo_ego.osm_deu_polygon_urban_buffer100;
-DROP TABLE IF EXISTS	orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer;
+
 
 
 
