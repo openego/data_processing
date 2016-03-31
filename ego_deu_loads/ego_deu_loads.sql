@@ -162,6 +162,23 @@ CREATE MATERIALIZED VIEW		orig_geo_ego.ego_deu_mv_gridcell_mview AS
 	FROM	calc_gridcells_znes.znes_deu_gridcells_qgis AS poly;
 
 
+-- "Cutter"   (OK!) 100ms =3.711
+DROP MATERIALIZED VIEW IF EXISTS	orig_geo_ego.ego_deu_mv_gridcell_full_mview CASCADE;
+CREATE MATERIALIZED VIEW		orig_geo_ego.ego_deu_mv_gridcell_full_mview AS
+	SELECT	poly.id AS id,
+		(ST_DUMP(ST_TRANSFORM(poly.geom,3035))).geom ::geometry(Polygon,3035) AS geom
+	FROM	orig_geo_ego.ego_deu_mv_gridcell_full AS poly;
+
+-- "Create Index GIST (geom)"   (OK!) -> 100ms =0
+CREATE INDEX  	ego_deu_mv_gridcell_full_mview_geom_idx
+	ON	orig_geo_ego.ego_deu_mv_gridcell_full_mview
+	USING	GIST (geom);
+
+-- "Grant oeuser"   (OK!) -> 100ms =0
+GRANT ALL ON TABLE 	orig_geo_ego.ego_deu_mv_gridcell_full_mview TO oeuser WITH GRANT OPTION;
+ALTER TABLE		orig_geo_ego.ego_deu_mv_gridcell_full_mview OWNER TO oeuser;
+
+
 -- "Validate (geom)"   (OK!) -> 22.000ms =0
 DROP MATERIALIZED VIEW IF EXISTS	orig_geo_ego.ego_deu_mv_gridcell_mview_error_geom_mview CASCADE;
 CREATE MATERIALIZED VIEW		orig_geo_ego.ego_deu_mv_gridcell_mview_error_geom_mview AS 
@@ -213,7 +230,7 @@ CONSTRAINT	ego_deu_loads_collect_buffer100_unbuffer_cut_spf_pkey PRIMARY KEY (id
 INSERT INTO	orig_geo_ego.ego_deu_loads_collect_buffer100_unbuffer_cut_spf (geom)
 	SELECT	(ST_DUMP(ST_INTERSECTION(poly.geom,ST_TRANSFORM(cut.geom,3035)))).geom AS geom
 	FROM	orig_geo_ego.ego_deu_loads_collect_buffer100_unbuffer_spf AS poly,
-		orig_geo_ego.ego_deu_mv_gridcell_mview AS cut;
+		orig_geo_ego.ego_deu_mv_gridcell_full_mview AS cut;
 
 -- "Create Index GIST (geom)"   (OK!) 2.000ms =0
 CREATE INDEX	ego_deu_loads_collect_buffer100_unbuffer_cut_spf_geom_idx
@@ -241,7 +258,7 @@ CONSTRAINT	ego_deu_loads_collect_buffer100_unbuffer_cut_pkey PRIMARY KEY (id));
 INSERT INTO	orig_geo_ego.ego_deu_loads_collect_buffer100_unbuffer_cut (geom)
 	SELECT	(ST_DUMP(ST_INTERSECTION(poly.geom,cut.geom))).geom ::geometry(Polygon,3035) AS geom
 	FROM	orig_geo_ego.ego_deu_loads_collect_buffer100_unbuffer AS poly,
-		orig_geo_ego.ego_deu_mv_gridcell_mview AS cut;
+		orig_geo_ego.ego_deu_mv_gridcell_full_mview AS cut;
 
 -- "Create Index GIST (geom)"   (OK!) 2.000ms =0
 CREATE INDEX	ego_deu_loads_collect_buffer100_unbuffer_cut_geom_idx
