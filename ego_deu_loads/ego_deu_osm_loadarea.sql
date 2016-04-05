@@ -439,7 +439,7 @@ FROM    (
 	) AS t2
 WHERE  	t1.uid = t2.uid;
 
--- "Validate Area (area_ha)"   (OK!) 500ms =1.418
+-- "Validate Area (area_ha) kleiner 100m²"   (OK!) 500ms =1.418
 DROP MATERIALIZED VIEW IF EXISTS	orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer_error_area_ha_mview CASCADE;
 CREATE MATERIALIZED VIEW 		orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer_error_area_ha_mview AS 
 	SELECT 	la.uid AS uid,
