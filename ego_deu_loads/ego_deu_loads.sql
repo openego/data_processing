@@ -127,29 +127,13 @@ ALTER TABLE		orig_geo_ego.ego_deu_loads_collect_buffer100_unbuffer OWNER TO oeus
 
 ---------------------------
 
--- "Validate (geom)"   (OK!) -> 28.000ms =0
+-- "Validate (geom)"   (OK!) -> 28.000ms =6
 DROP MATERIALIZED VIEW IF EXISTS	orig_geo_ego.ego_deu_loads_collect_buffer100_unbuffer_error_geom_mview CASCADE;
 CREATE MATERIALIZED VIEW		orig_geo_ego.ego_deu_loads_collect_buffer100_unbuffer_error_geom_mview AS 
-	SELECT	test.id,
-		test.error,
+	SELECT	test.id AS id,
+		test.error AS error,
 		reason(ST_IsValidDetail(test.geom)) AS error_reason,
-		location(ST_IsValidDetail(test.geom)) ::geometry(Point) AS error_location,
-		ST_TRANSFORM(test.geom,3035) ::geometry(Polygon,3035) AS geom
-	FROM	(
-		SELECT	source.id AS id,
-			ST_IsValid(source.geom) AS error,
-			source.geom ::geometry(Polygon,3035) AS geom
-		FROM	orig_geo_ego.ego_deu_loads_collect_buffer100_unbuffer AS source
-		) AS test
-	WHERE	test.error = FALSE;
-
--- "Validate (geom)"   (???) -> 22.000ms =0
-DROP MATERIALIZED VIEW IF EXISTS	orig_geo_ego.ego_deu_loads_collect_buffer100_unbuffer_error_geom_mview CASCADE;
-CREATE MATERIALIZED VIEW		orig_geo_ego.ego_deu_loads_collect_buffer100_unbuffer_error_geom_mview AS 
-	SELECT	test.id,
-		test.error,
-		reason(ST_IsValidDetail(test.geom)) AS error_reason,
-		location(ST_IsValidDetail(test.geom)) ::geometry(Point,3035) AS error_location,
+		ST_SetSRID(location(ST_IsValidDetail(test.geom)),3035) ::geometry(Point,3035) AS error_location,
 		ST_TRANSFORM(test.geom,3035) ::geometry(Polygon,3035) AS geom
 	FROM	(
 		SELECT	source.id AS id,
@@ -160,8 +144,8 @@ CREATE MATERIALIZED VIEW		orig_geo_ego.ego_deu_loads_collect_buffer100_unbuffer_
 	WHERE	test.error = FALSE;
 
 -- "Grant oeuser"   (OK!) -> 100ms =0
-GRANT ALL ON TABLE	orig_geo_ego.ego_deu_loads_collect_buffer100_unbuffer TO oeuser WITH GRANT OPTION;
-ALTER TABLE		orig_geo_ego.ego_deu_loads_collect_buffer100_unbuffer OWNER TO oeuser;
+GRANT ALL ON TABLE	orig_geo_ego.ego_deu_loads_collect_buffer100_unbuffer_error_geom_mview TO oeuser WITH GRANT OPTION;
+ALTER TABLE		orig_geo_ego.ego_deu_loads_collect_buffer100_unbuffer_error_geom_mview OWNER TO oeuser;
 
 ---------- ---------- ----------
 
@@ -180,55 +164,58 @@ ALTER TABLE		orig_geo_ego.ego_deu_loads_collect_buffer100_unbuffer_error_gid_mvi
 
 
 ---------- ---------- ---------- ---------- ---------- ----------
--- "Fehlerbehebung"
+-- "Fehlerbehebung"   2016-04-05 13:55   s
 ---------- ---------- ---------- ---------- ---------- ----------
 
--- Fix geoms (OK!) 320.000ms =201.319
-DROP MATERIALIZED VIEW IF EXISTS	orig_geo_ego.ego_deu_loads_collect_buffer100_unbuffer_error_fix;
-CREATE MATERIALIZED VIEW 		orig_geo_ego.ego_deu_loads_collect_buffer100_unbuffer_error_fix AS 
+-- Fix geoms with error (OK!) 100ms =6
+DROP MATERIALIZED VIEW IF EXISTS	orig_geo_ego.ego_deu_loads_collect_buffer100_unbuffer_error_geom_fix_mview CASCADE;
+CREATE MATERIALIZED VIEW 		orig_geo_ego.ego_deu_loads_collect_buffer100_unbuffer_error_geom_fix_mview AS 
 	SELECT	fix.id AS id,
 		ST_IsValid(fix.geom) AS error,
 		GeometryType(fix.geom) AS geom_type,
 		ST_AREA(fix.geom) AS area,
-		fix.geom_buffer,
-		fix.geom
+		fix.geom_buffer ::geometry(POLYGON,3035) AS geom_buffer,
+		fix.geom ::geometry(POLYGON,3035) AS geom
 	FROM	(
 		SELECT	fehler.id AS id,
-			ST_BUFFER(fehler.geom, -1)  AS geom_buffer,
-			(ST_DUMP(ST_BUFFER(ST_BUFFER(fehler.geom, -1), 1))).geom ::geometry(POLYGON,3035) AS geom
-		FROM	orig_geo_ego.ego_deu_loads_collect_buffer100_unbuffer AS fehler
+			ST_BUFFER(fehler.geom, -1) AS geom_buffer,
+			(ST_DUMP(ST_BUFFER(ST_BUFFER(fehler.geom, -1), 1))).geom AS geom
+		FROM	orig_geo_ego.ego_deu_loads_collect_buffer100_unbuffer_error_geom_mview AS fehler
 		) AS fix
 	ORDER BY fix.id;
 
+-- "Grant oeuser"   (OK!) -> 100ms =0
+GRANT ALL ON TABLE	orig_geo_ego.ego_deu_loads_collect_buffer100_unbuffer_error_geom_fix_mview TO oeuser WITH GRANT OPTION;
+ALTER TABLE		orig_geo_ego.ego_deu_loads_collect_buffer100_unbuffer_error_geom_fix_mview OWNER TO oeuser;
 
--- Update Fixed geoms (OK!) 1.000ms =157
-UPDATE 	orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuff AS t1
+
+-- Update Fixed geoms (OK!) 200ms =6
+UPDATE 	orig_geo_ego.ego_deu_loads_collect_buffer100_unbuffer AS t1
 SET	geom = t2.geom
 FROM	(
-	SELECT	fix.uid AS uid,
-		fix.geom AS geom,
-		fix.geom_type AS geom_type
-	FROM	orig_geo_ego.rli_deu_lastgebiete_fehler_2_fix AS fix
+	SELECT	fix.id AS id,
+		fix.geom AS geom
+	FROM	orig_geo_ego.ego_deu_loads_collect_buffer100_unbuffer_error_geom_fix_mview AS fix
 	) AS t2
-JOIN	orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuff USING (uid)
-WHERE  	t1.uid = t2.uid;
+WHERE  	t1.id = t2.id;
 
 -- Check for errors again! (OK!) 20.000ms =0
-SELECT	test.uid,
-	test.error,
+SELECT	test.id AS id,
+	test.error AS error,
 	reason(ST_IsValidDetail(test.geom)) AS error_reason,
-	location(ST_IsValidDetail(test.geom)) AS error_location,
-	test.geom
+	ST_SetSRID(location(ST_IsValidDetail(test.geom)),3035) ::geometry(Point,3035) AS error_location,
+	ST_TRANSFORM(test.geom,3035) ::geometry(Polygon,3035) AS geom
 FROM	(
-	SELECT	lg.uid AS uid,
-		ST_IsValid(lg.geom) AS error,
-		lg.geom AS geom
-	FROM	orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuff AS lg
+	SELECT	source.id AS id,
+		ST_IsValid(source.geom) AS error,
+		source.geom ::geometry(Polygon,3035) AS geom
+	FROM	orig_geo_ego.ego_deu_loads_collect_buffer100_unbuffer AS source
 	) AS test
 WHERE	test.error = FALSE;
 
+
 ---------- ---------- ----------
--- "Create SPF"   2016-03-30 15:55   1s
+-- "Create SPF"   2016-04-05 13:55   3s
 ---------- ---------- ----------
 
 -- "Create Table SPF"   (OK!) 3.000ms =956
