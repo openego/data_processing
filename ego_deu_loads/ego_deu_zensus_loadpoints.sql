@@ -1,6 +1,6 @@
 ﻿
 ---------- ---------- ---------- ---------- ---------- ----------
--- "Load Points Zensus"   2016-03-30 17:36
+-- "Load Points Zensus"   2016-04-06 11:09   
 ---------- ---------- ---------- ---------- ---------- ----------
 
 -- "Create Table" (OK!) 4.000ms =3.177.723
@@ -13,7 +13,7 @@ CREATE TABLE 		orig_geo_ego.ego_deu_zensus_loadpoints AS
 		zensus.geom ::geometry(Point,3035) AS geom
 	FROM	orig_destatis.zensus_population_per_ha_mview AS zensus;
 
--- "Extend Table"   (OK!) 4.000ms =0
+-- "Extend Table"   (OK!) 3.000ms =0
 ALTER TABLE	orig_geo_ego.ego_deu_zensus_loadpoints
 	ADD PRIMARY KEY (id);
 
@@ -22,7 +22,7 @@ CREATE INDEX  	ego_deu_zensus_loadpoints_geom_idx
 	ON	orig_geo_ego.ego_deu_zensus_loadpoints
 	USING	GIST (geom);
 
--- "Calculate Inside Load Area"   (OK!) -> 187.000ms =2.888.446
+-- "Calculate Inside Load Area"   (OK!) -> 160.000ms =2.473.342
 UPDATE 	orig_geo_ego.ego_deu_zensus_loadpoints AS t1
 SET  	inside_la = t2.inside_la
 FROM    (
@@ -30,29 +30,29 @@ FROM    (
 		'TRUE' ::boolean AS inside_la
 	FROM	orig_geo_ego.ego_deu_zensus_loadpoints AS lp,
 		orig_geo_ego.ego_deu_osm_loadarea AS la
-	WHERE  	la.geom_buffer && lp.geom AND
-		ST_CONTAINS(la.geom_buffer,lp.geom)
+	WHERE  	la.geom && lp.geom AND
+		ST_CONTAINS(la.geom,lp.geom)
 	) AS t2
 WHERE  	t1.id = t2.id;
 
--- "Remove Inside Load Area"   (OK!) 5.000ms =2.888.446
+-- "Remove Inside Load Area"   (OK!) 5.000ms =2.473.342
 DELETE FROM	orig_geo_ego.ego_deu_zensus_loadpoints AS lp
 	WHERE	lp.inside_la IS TRUE;
 
--- "Grant oeuser"   (OK!) -> 1.000ms =289.277
+-- "Grant oeuser"   (OK!) -> 1.000ms =704.381 (289.277)
 GRANT ALL ON TABLE 	orig_geo_ego.ego_deu_zensus_loadpoints TO oeuser WITH GRANT OPTION;
 ALTER TABLE		orig_geo_ego.ego_deu_zensus_loadpoints OWNER TO oeuser;
 
 
 ---------- ---------- ----------
--- "Load Points Grid"   2016-03-30 17:40
+-- "Load Points Grid"   2016-04-06 11:30
 ---------- ---------- ----------
 
--- "Extend Table"   (OK!) 100ms =0
+-- "Extend Table"   (OK!) 1.000ms =0
 ALTER TABLE	orig_geo_ego.ego_deu_zensus_loadpoints
 	ADD COLUMN geom_grid geometry(Polygon,3035);
 
--- "Load Point Grid"   (OK!) -> 6.000ms =289.277
+-- "Load Point Grid"   (OK!) -> 12.000ms =704.381
 UPDATE 	orig_geo_ego.ego_deu_zensus_loadpoints AS t1
 SET  	geom_grid = t2.geom_grid
 FROM    (
@@ -66,14 +66,15 @@ FROM    (
 	) AS t2
 WHERE  	t1.id = t2.id;
 
--- "Create Index GIST (geom_grid)"   (OK!) -> 5.000ms =0
+-- "Create Index GIST (geom_grid)"   (OK!) -> 9.000ms =0
 CREATE INDEX  	ego_deu_loadcluster_geom_grid_idx
 	ON	orig_geo_ego.ego_deu_zensus_loadpoints
 	USING	GIST (geom_grid);
 
 
+
 ---------- ---------- ---------- ---------- ---------- ----------
--- "Cluster From Load Points"   2016-03-24 14:05
+-- "Cluster from Load Points"   2016-04-06 11:35
 ---------- ---------- ---------- ---------- ---------- ----------
 
 -- "Create Table"   (OK!) -> 100ms =0
@@ -88,17 +89,17 @@ CREATE TABLE         	orig_geo_ego.ego_deu_zensus_loadpoints_cluster (
 	geom_surfacepoint geometry(Point,3035),
 CONSTRAINT ego_deu_zensus_loadpoints_cluster_pkey PRIMARY KEY (cid));
 
--- "Insert Cluster"   (OK!) -> 34.000ms =153.267
+-- "Insert Cluster"   (OK!) -> 140.000ms =461.380 (153.267)
 INSERT INTO	orig_geo_ego.ego_deu_zensus_loadpoints_cluster(geom)
 	SELECT	(ST_DUMP(ST_MULTI(ST_UNION(grid.geom_grid)))).geom ::geometry(Polygon,3035) AS geom
 	FROM    orig_geo_ego.ego_deu_zensus_loadpoints AS grid;
 
--- "Create Index GIST (geom)"   (OK!) 2.000ms =0
+-- "Create Index GIST (geom)"   (OK!) 5.000ms =0
 CREATE INDEX	ego_deu_zensus_loadpoints_cluster_geom_idx
 	ON	orig_geo_ego.ego_deu_zensus_loadpoints_cluster
 	USING	GIST (geom);
 
--- "Calculate Inside Cluster"   (OK!) -> 28.000ms =153.267
+-- "Calculate Inside Cluster"   (OK!) -> 81.000ms =461.380
 UPDATE 	orig_geo_ego.ego_deu_zensus_loadpoints_cluster AS t1
 SET  	zensus_sum = t2.zensus_sum,
 	area_ha = t2.area_ha,
@@ -121,12 +122,12 @@ FROM    (
 	) AS t2
 WHERE  	t1.cid = t2.cid;
 
--- "Create Index GIST (geom)"   (OK!) 2.000ms =0
+-- "Create Index GIST (geom)"   (OK!) 8.000ms =0
 CREATE INDEX	ego_deu_zensus_loadpoints_cluster_geom_centroid_idx
 	ON	orig_geo_ego.ego_deu_zensus_loadpoints_cluster
 	USING	GIST (geom_centroid);
 
--- "Create Index GIST (geom)"   (OK!) 2.000ms =0
+-- "Create Index GIST (geom)"   (OK!) 5.000ms =0
 CREATE INDEX	ego_deu_zensus_loadpoints_cluster_geom_surfacepoint_idx
 	ON	orig_geo_ego.ego_deu_zensus_loadpoints_cluster
 	USING	GIST (geom_surfacepoint);
@@ -136,7 +137,7 @@ GRANT ALL ON TABLE 	orig_geo_ego.ego_deu_zensus_loadpoints_cluster TO oeuser WIT
 ALTER TABLE		orig_geo_ego.ego_deu_zensus_loadpoints_cluster OWNER TO oeuser;
 
 ---------- ---------- ----------
--- "Create SPF"   2016-03-30 15:55   1s
+-- "Create SPF"   2016-04-06 11:37  5s
 ---------- ---------- ----------
 
 -- "Create Table SPF"   (OK!) 2.000ms =406
@@ -181,7 +182,7 @@ ALTER TABLE		orig_geo_ego.ego_deu_zensus_loadpoints_cluster_spf OWNER TO oeuser;
 
 -- Zensus Punkte, die nicht in LA liegen
 
--- "Population in Load Points"   (OK!) 1.000ms =80.324.282 / 4.112.902
+-- "Population in Load Points"   (OK!) 1.000ms = 80.324.282 / 8.087.068 (4.112.902)
 SELECT	'zensus_deu' AS name,
 	SUM(zensus.population) AS people
 FROM	orig_destatis.zensus_population_per_ha_mview AS zensus
