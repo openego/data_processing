@@ -12,8 +12,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # Connection to database which includes data on 110 kV substations
-con = sqlalchemy.create_engine('postgresql+psycopg2://user:password@localhost:5432/eGo')
-sql = """SELECT subst_id, lon, lat FROM voronoi.substations_excldbahn"""
+con = sqlalchemy.create_engine('postgresql+psycopg2://user:password@localhost:5432/db')
+sql = """SELECT subst_id, lon, lat FROM calc_gridcells_znes.substations_filtered"""
 df = pd.read_sql_query(sql, con)
 df.sort('subst_id')
 
@@ -35,9 +35,9 @@ rel=[]
 reg_vert=[]
 
 # Create table to drop data
-sql= """DROP TABLE IF EXISTS voronoi.polygons"""
+sql= """DROP TABLE IF EXISTS calc_gridcells_znes.voronoi_polygons"""
 con.engine.execute(sql)
-sql=""" CREATE TABLE voronoi.polygons (
+sql=""" CREATE TABLE calc_gridcells_znes.voronoi_polygons (
             region_id             serial PRIMARY KEY NOT NULL,
             vertices              text,
             polygon_geom          geometry);"""
@@ -61,20 +61,20 @@ for j in range(len(regions)):
     str1 = str1.replace('[','(')  
     str1 = str1.replace(']',')')
     str2 = "LINESTRING"+str1
-    sql = """INSERT INTO voronoi.polygons (vertices) VALUES ('{0}')""".format(str2)
+    sql = """INSERT INTO calc_gridcells_znes.voronoi_polygons (vertices) VALUES ('{0}')""".format(str2)
     con.engine.execute(sql)
     reg_vert.append(vel)
             
 
-sql = """Update voronoi.polygons b
+sql = """Update calc_gridcells_znes.voronoi_polygons b
              set polygon_geom = ST_MakePolygon(ST_AddPoint(foo.open_line, ST_StartPoint(foo.open_line)))
              FROM (
-             SELECT region_id , ST_GeomFromText(vertices,4326) As open_line from voronoi.polygons) As foo
+             SELECT region_id , ST_GeomFromText(vertices,4326) As open_line from calc_gridcells_znes.voronoi_polygons) As foo
              WHERE foo.region_id = b.region_id;"""
              
 con.engine.execute(sql)
 
-sql = """ALTER TABLE voronoi.polygons
+sql = """ALTER TABLE calc_gridcells_znes.voronoi_polygons
          ALTER COLUMN polygon_geom TYPE geometry(POLYGON, 4326) USING ST_Transform(ST_SetSRID(polygon_geom,4326),4326);"""
 con.engine.execute(sql) 
 
