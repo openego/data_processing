@@ -908,3 +908,37 @@ CREATE MATERIALIZED VIEW 		orig_geo_ego.ego_deu_loads_error_nomv_mview AS
 		loads.geom
 	FROM	orig_geo_ego.ego_deu_loads AS loads
 	WHERE  	loads.mv_poly_id IS NULL;
+
+
+
+---------- ---------- ----------
+-- "Create SPF"   2016-04-07 11:34   3s
+---------- ---------- ----------
+
+-- "Create Table SPF"   (OK!) 3.000ms =884
+DROP TABLE IF EXISTS  	orig_geo_ego.ego_deu_loads_spf;
+CREATE TABLE         	orig_geo_ego.ego_deu_loads_spf AS
+	SELECT	loads.*
+	FROM	orig_geo_ego.ego_deu_loads AS loads,
+		orig_geo_vg250.vg250_4_krs_spf_mview AS spf
+	WHERE	ST_TRANSFORM(spf.geom,3035) && loads.geom  AND  
+		ST_CONTAINS(ST_TRANSFORM(spf.geom,3035), loads.geom_centre)
+	ORDER BY loads.id;
+
+-- "Ad PK"   (OK!) 150ms =0
+ALTER TABLE	orig_geo_ego.ego_deu_loads_spf
+	ADD PRIMARY KEY (id);
+
+-- "Create Index GIST (geom)"   (OK!) -> 100ms =0
+CREATE INDEX  	ego_deu_loads_spf_geom_idx
+	ON	orig_geo_ego.ego_deu_loads_spf
+	USING	GIST (geom);
+
+-- "Create Index GIST (geom_centre)"   (OK!) -> 150ms =0
+CREATE INDEX  	ego_deu_loads_spf_geom_centre_idx
+    ON    	orig_geo_ego.ego_deu_loads_spf
+    USING     	GIST (geom_centre);
+
+-- "Grant oeuser"   (OK!) -> 100ms =0
+GRANT ALL ON TABLE 	orig_geo_ego.ego_deu_loads_spf TO oeuser WITH GRANT OPTION;
+ALTER TABLE		orig_geo_ego.ego_deu_loads_spf OWNER TO oeuser;
