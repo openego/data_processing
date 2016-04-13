@@ -10,7 +10,7 @@
 
 
 ---------- ---------- ----------
--- "vg250_1_sta_mview"   2016-04-13 10:12 1s
+-- "vg250_1_sta_mview"   2016-04-13 11:47 1s
 ---------- ---------- ----------
 
 -- "Transform VG250 State"   (OK!) -> 200ms =11
@@ -36,31 +36,31 @@ ALTER TABLE		orig_geo_vg250.vg250_1_sta_mview OWNER TO oeuser;
 
 ---------- ---------- ----------
 
--- "Validate (geom)"   (OK!) -> 500ms =1
-DROP VIEW IF EXISTS	orig_geo_vg250.vg250_1_sta_mview_error_geom_view CASCADE;
-CREATE VIEW		orig_geo_vg250.vg250_1_sta_mview_error_geom_view AS 
-	SELECT	test.id AS id,
-		test.error AS error,
-		reason(ST_IsValidDetail(test.geom)) AS error_reason,
-		ST_SetSRID(location(ST_IsValidDetail(test.geom)),3035) ::geometry(Point,3035) AS error_location
-	FROM	(
-		SELECT	source.gid AS id,				-- PK
-			ST_IsValid(source.geom) AS error,
-			source.geom ::geometry(MultiPolygon,3035) AS geom
-		FROM	orig_geo_vg250.vg250_1_sta_mview AS source	-- Table
-		) AS test
-	WHERE	test.error = FALSE;
-
--- "Grant oeuser"   (OK!) -> 100ms =0
-GRANT ALL ON TABLE	orig_geo_vg250.vg250_1_sta_mview_error_geom_view TO oeuser WITH GRANT OPTION;
-ALTER TABLE		orig_geo_vg250.vg250_1_sta_mview_error_geom_view OWNER TO oeuser;
-
--- "Drop empty view"   (OK!) -> 100ms =1
-SELECT f_drop_view('{vg250_1_sta_mview_error_geom_view}', 'orig_geo_vg250');
+-- -- "Validate (geom)"   (OK!) -> 500ms =1
+-- DROP VIEW IF EXISTS	orig_geo_vg250.vg250_1_sta_mview_error_geom_view CASCADE;
+-- CREATE VIEW		orig_geo_vg250.vg250_1_sta_mview_error_geom_view AS 
+-- 	SELECT	test.id AS id,
+-- 		test.error AS error,
+-- 		reason(ST_IsValidDetail(test.geom)) AS error_reason,
+-- 		ST_SetSRID(location(ST_IsValidDetail(test.geom)),3035) ::geometry(Point,3035) AS error_location
+-- 	FROM	(
+-- 		SELECT	source.gid AS id,				-- PK
+-- 			ST_IsValid(source.geom) AS error,
+-- 			source.geom ::geometry(MultiPolygon,3035) AS geom
+-- 		FROM	orig_geo_vg250.vg250_1_sta_mview AS source	-- Table
+-- 		) AS test
+-- 	WHERE	test.error = FALSE;
+-- 
+-- -- "Grant oeuser"   (OK!) -> 100ms =0
+-- GRANT ALL ON TABLE	orig_geo_vg250.vg250_1_sta_mview_error_geom_view TO oeuser WITH GRANT OPTION;
+-- ALTER TABLE		orig_geo_vg250.vg250_1_sta_mview_error_geom_view OWNER TO oeuser;
+-- 
+-- -- "Drop empty view"   (OK!) -> 100ms =1
+-- SELECT f_drop_view('{vg250_1_sta_mview_error_geom_view}', 'orig_geo_vg250');
 
 
 ---------- ---------- ----------
--- "vg250_1_sta_union_mview"   2016-04-13 09:55 2s
+-- "vg250_1_sta_union_mview"   2016-04-13 11:47 2s
 ---------- ---------- ----------
 
 -- "Transform VG250 State UNION"   (OK!) -> 2.000ms =1
@@ -85,31 +85,31 @@ ALTER TABLE		orig_geo_vg250.vg250_1_sta_union_mview OWNER TO oeuser;
 
 ---------- ---------- ----------
 
--- "Validate (geom)"   (OK!) -> 22.000ms =0
-DROP VIEW IF EXISTS	orig_geo_vg250.vg250_1_sta_union_mview_error_geom_view CASCADE;
-CREATE VIEW		orig_geo_vg250.vg250_1_sta_union_mview_error_geom_view AS 
-	SELECT	test.id AS id,
-		test.error AS error,
-		reason(ST_IsValidDetail(test.geom)) AS error_reason,
-		ST_SetSRID(location(ST_IsValidDetail(test.geom)),3035) ::geometry(Point,3035) AS error_location
-	FROM	(
-		SELECT	source.id AS id,					-- PK
-			ST_IsValid(source.geom) AS error,
-			source.geom ::geometry(MultiPolygon,3035) AS geom
-		FROM	orig_geo_vg250.vg250_1_sta_union_mview AS source	-- Table
-		) AS test
-	WHERE	test.error = FALSE;
-
--- "Grant oeuser"   (OK!) -> 100ms =0
-GRANT ALL ON TABLE	orig_geo_vg250.vg250_1_sta_union_mview_error_geom_view TO oeuser WITH GRANT OPTION;
-ALTER TABLE		orig_geo_vg250.vg250_1_sta_union_mview_error_geom_view OWNER TO oeuser;
-
--- "Drop empty view"   (OK!) -> 100ms =1
-SELECT f_drop_view('{vg250_1_sta_union_mview_error_geom_view}', 'orig_geo_vg250');
+-- -- "Validate (geom)"   (OK!) -> 22.000ms =0
+-- DROP VIEW IF EXISTS	orig_geo_vg250.vg250_1_sta_union_mview_error_geom_view CASCADE;
+-- CREATE VIEW		orig_geo_vg250.vg250_1_sta_union_mview_error_geom_view AS 
+-- 	SELECT	test.id AS id,
+-- 		test.error AS error,
+-- 		reason(ST_IsValidDetail(test.geom)) AS error_reason,
+-- 		ST_SetSRID(location(ST_IsValidDetail(test.geom)),3035) ::geometry(Point,3035) AS error_location
+-- 	FROM	(
+-- 		SELECT	source.id AS id,					-- PK
+-- 			ST_IsValid(source.geom) AS error,
+-- 			source.geom ::geometry(MultiPolygon,3035) AS geom
+-- 		FROM	orig_geo_vg250.vg250_1_sta_union_mview AS source	-- Table
+-- 		) AS test
+-- 	WHERE	test.error = FALSE;
+-- 
+-- -- "Grant oeuser"   (OK!) -> 100ms =0
+-- GRANT ALL ON TABLE	orig_geo_vg250.vg250_1_sta_union_mview_error_geom_view TO oeuser WITH GRANT OPTION;
+-- ALTER TABLE		orig_geo_vg250.vg250_1_sta_union_mview_error_geom_view OWNER TO oeuser;
+-- 
+-- -- "Drop empty view"   (OK!) -> 100ms =1
+-- SELECT f_drop_view('{vg250_1_sta_union_mview_error_geom_view}', 'orig_geo_vg250');
 
 
 ---------- ---------- ----------
--- "orig_geo_vg250.vg250_4_krs_mview"   2016-04-13 09:55 2s
+-- "orig_geo_vg250.vg250_4_krs_mview"   2016-04-13 11:47 2s
 ---------- ---------- ----------
 
 -- "Transform VG250 Gemeinden"   (OK!) -> 1.000ms =432
@@ -139,31 +139,31 @@ ALTER TABLE		orig_geo_vg250.vg250_4_krs_mview OWNER TO oeuser;
 
 ---------- ---------- ----------
 
--- "Validate (geom)"   (OK!) -> 22.000ms =0
-DROP VIEW IF EXISTS	orig_geo_vg250.vg250_4_krs_mview_error_geom_view CASCADE;
-CREATE VIEW		orig_geo_vg250.vg250_4_krs_mview_error_geom_view AS 
-	SELECT	test.id AS id,
-		test.error AS error,
-		reason(ST_IsValidDetail(test.geom)) AS error_reason,
-		ST_SetSRID(location(ST_IsValidDetail(test.geom)),3035) ::geometry(Point,3035) AS error_location
-	FROM	(
-		SELECT	source.gid AS id,				-- PK
-			ST_IsValid(source.geom) AS error,
-			source.geom ::geometry(MultiPolygon,3035) AS geom
-		FROM	orig_geo_vg250.vg250_4_krs_mview AS source	-- Table
-		) AS test
-	WHERE	test.error = FALSE;
-
--- "Grant oeuser"   (OK!) -> 100ms =0
-GRANT ALL ON TABLE	orig_geo_vg250.vg250_4_krs_mview_error_geom_view TO oeuser WITH GRANT OPTION;
-ALTER TABLE		orig_geo_vg250.vg250_4_krs_mview_error_geom_view OWNER TO oeuser;
-
--- "Drop empty view"   (OK!) -> 100ms =1
-SELECT f_drop_view('{vg250_4_krs_mview_error_geom_view}', 'orig_geo_vg250');
+-- -- "Validate (geom)"   (OK!) -> 22.000ms =0
+-- DROP VIEW IF EXISTS	orig_geo_vg250.vg250_4_krs_mview_error_geom_view CASCADE;
+-- CREATE VIEW		orig_geo_vg250.vg250_4_krs_mview_error_geom_view AS 
+-- 	SELECT	test.id AS id,
+-- 		test.error AS error,
+-- 		reason(ST_IsValidDetail(test.geom)) AS error_reason,
+-- 		ST_SetSRID(location(ST_IsValidDetail(test.geom)),3035) ::geometry(Point,3035) AS error_location
+-- 	FROM	(
+-- 		SELECT	source.gid AS id,				-- PK
+-- 			ST_IsValid(source.geom) AS error,
+-- 			source.geom ::geometry(MultiPolygon,3035) AS geom
+-- 		FROM	orig_geo_vg250.vg250_4_krs_mview AS source	-- Table
+-- 		) AS test
+-- 	WHERE	test.error = FALSE;
+-- 
+-- -- "Grant oeuser"   (OK!) -> 100ms =0
+-- GRANT ALL ON TABLE	orig_geo_vg250.vg250_4_krs_mview_error_geom_view TO oeuser WITH GRANT OPTION;
+-- ALTER TABLE		orig_geo_vg250.vg250_4_krs_mview_error_geom_view OWNER TO oeuser;
+-- 
+-- -- "Drop empty view"   (OK!) -> 100ms =1
+-- SELECT f_drop_view('{vg250_4_krs_mview_error_geom_view}', 'orig_geo_vg250');
 
 
 ---------- ---------- ----------
--- "vg250_6_gem_mview"   2016-04-13 09:55 2s
+-- "vg250_6_gem_mview"   2016-04-13 11:47 2s
 ---------- ---------- ----------
 
 -- "Transform VG250 Gemeinden"   (OK!) -> 2.000ms =11.438
@@ -215,8 +215,10 @@ ALTER TABLE		orig_geo_vg250.vg250_6_gem_mview_error_geom_view OWNER TO oeuser;
 -- "Drop empty view"   (OK!) -> 100ms =1
 SELECT f_drop_view('{vg250_6_gem_mview_error_geom_view}', 'orig_geo_vg250');
 
+
+
 ---------- ---------- ---------- ---------- ---------- ----------
--- "Filter OSM Urban Landuse"
+-- "Filter OSM Urban Landuse"   2016-04-13 11:49 184s
 ---------- ---------- ---------- ---------- ---------- ----------	
 
 -- "Filter Urban"   (OK!) -> 31.000ms =494.696
@@ -226,6 +228,7 @@ CREATE TABLE		orig_geo_ego.osm_deu_polygon_urban AS
 		osm.osm_id,
 		osm.landuse,
 		osm.man_made,
+		osm.aeroway,
 		osm.name,
 		osm.way_area,
 		ST_AREA(ST_TRANSFORM(osm.geom,3035))/10000 AS area_ha,
@@ -325,6 +328,7 @@ CREATE MATERIALIZED VIEW		orig_geo_ego.osm_deu_polygon_urban_vg250_cut_mview AS
 		cut.osm_id AS osm_id,
 		cut.landuse AS landuse,
 		cut.man_made AS man_made,
+		cut.aeroway AS aeroway,
 		cut.name AS name,
 		cut.way_area AS way_area,
 		cut.area_ha AS area_ha,
@@ -370,6 +374,7 @@ CREATE MATERIALIZED VIEW		orig_geo_ego.osm_deu_polygon_urban_vg250_clean_cut_mul
 		cut.osm_id AS osm_id,
 		cut.landuse AS landuse,
 		cut.man_made AS man_made,
+		cut.aeroway AS aeroway,
 		cut.name AS name,
 		cut.way_area AS way_area,
 		cut.area_ha AS area_ha,
@@ -407,6 +412,7 @@ CREATE MATERIALIZED VIEW		orig_geo_ego.osm_deu_polygon_urban_vg250_clean_cut_mvi
 		cut.osm_id AS osm_id,
 		cut.landuse AS landuse,
 		cut.man_made AS man_made,
+		cut.aeroway AS aeroway,
 		cut.name AS name,
 		cut.way_area AS way_area,
 		cut.area_ha AS area_ha,
@@ -444,42 +450,48 @@ INSERT INTO	orig_geo_ego.osm_deu_polygon_urban
 
 
 ---------- ---------- ---------- ---------- ---------- ----------
--- "(Geo) Data Validation"
+-- "(Geo) Data Validation"   2016-04-13 11:53 2s
 ---------- ---------- ---------- ---------- ---------- ----------
 
--- "Validate (geom)"   (OK!) -> 22.000ms =1
-DROP MATERIALIZED VIEW IF EXISTS	orig_geo_ego.osm_deu_polygon_urban_error_geom_mview CASCADE;
-CREATE MATERIALIZED VIEW		orig_geo_ego.osm_deu_polygon_urban_error_geom_mview AS 
-	SELECT	test.gid,
+-- "Validate (geom)"   (OK!) -> 22.000ms =0
+DROP VIEW IF EXISTS	orig_geo_ego.osm_deu_polygon_urban_error_geom_view CASCADE;
+CREATE VIEW		orig_geo_ego.osm_deu_polygon_urban_error_geom_view AS 
+	SELECT	test.id,
 		test.error,
 		reason(ST_IsValidDetail(test.geom)) AS error_reason,
-		location(ST_IsValidDetail(test.geom)) ::geometry(Point) AS error_location
+		ST_SetSRID(location(ST_IsValidDetail(test.geom)),3035) ::geometry(Point,3035) AS error_location
 	FROM	(
-		SELECT	source.gid AS gid,
+		SELECT	source.gid AS id,				-- PK
 			ST_IsValid(source.geom) AS error,
 			source.geom AS geom
-		FROM	orig_geo_ego.osm_deu_polygon_urban AS source
+		FROM	orig_geo_ego.osm_deu_polygon_urban AS source	-- Table
 		) AS test
 	WHERE	test.error = FALSE;
 
 -- "Grant oeuser"   (OK!) -> 100ms =0
-GRANT ALL ON TABLE	orig_geo_ego.osm_deu_polygon_urban_error_geom_mview TO oeuser WITH GRANT OPTION;
-ALTER TABLE		orig_geo_ego.osm_deu_polygon_urban_error_geom_mview OWNER TO oeuser;
+GRANT ALL ON TABLE	orig_geo_ego.osm_deu_polygon_urban_error_geom_view TO oeuser WITH GRANT OPTION;
+ALTER TABLE		orig_geo_ego.osm_deu_polygon_urban_error_geom_view OWNER TO oeuser;
+
+-- "Drop empty view"   (OK!) -> 100ms =1
+SELECT f_drop_view('{osm_deu_polygon_urban_error_geom_view}', 'orig_geo_ego');
 
 ---------- ---------- ----------
 
 -- "Validate (gid)"   (OK!) -> 500ms =0
-DROP MATERIALIZED VIEW IF EXISTS	orig_geo_ego.osm_deu_polygon_urban_mview_error_gid_mview CASCADE;
-CREATE MATERIALIZED VIEW		orig_geo_ego.osm_deu_polygon_urban_mview_error_gid_mview AS 
-	SELECT 		gid,
-			count(*)
-	FROM 		orig_geo_ego.osm_deu_polygon_urban_mview
-	GROUP BY 	gid
-	HAVING 		count(*) > 1;
+DROP VIEW IF EXISTS	orig_geo_ego.osm_deu_polygon_urban_mview_error_gid_view CASCADE;
+CREATE VIEW		orig_geo_ego.osm_deu_polygon_urban_mview_error_gid_view AS 
+	SELECT 		source.gid AS id,				-- PK
+			count(source.*) AS duplicates
+	FROM		orig_geo_ego.osm_deu_polygon_urban AS source	-- Table
+	GROUP BY 	source.gid
+	HAVING 		count(source.*) > 1;
 
 -- "Grant oeuser"   (OK!) -> 100ms =0
-GRANT ALL ON TABLE	orig_geo_ego.osm_deu_polygon_urban_mview_error_gid_mview TO oeuser WITH GRANT OPTION;
-ALTER TABLE		orig_geo_ego.osm_deu_polygon_urban_mview_error_gid_mview OWNER TO oeuser;
+GRANT ALL ON TABLE	orig_geo_ego.osm_deu_polygon_urban_mview_error_gid_view TO oeuser WITH GRANT OPTION;
+ALTER TABLE		orig_geo_ego.osm_deu_polygon_urban_mview_error_gid_view OWNER TO oeuser;
+
+-- "Drop empty view"   (OK!) -> 100ms =1
+SELECT f_drop_view('{osm_deu_polygon_urban_mview_error_gid_view}', 'orig_geo_ego');
 
 
 -- No doubles on Germany! Skip next!
@@ -535,35 +547,36 @@ ALTER TABLE		orig_geo_ego.osm_deu_polygon_urban_mview_error_gid_mview OWNER TO o
 
 
 ---------- ---------- ---------- ---------- ---------- ----------
--- "Filter by Sector"
+-- "Filter by Sector"   2016-04-13 13:09 s
 ---------- ---------- ---------- ---------- ---------- ----------
 
 -- "Sector 1. Residential"
 
--- "Filter Residential"   (OK!) -> 12.000ms =277.423
+-- "Filter Residential"   (OK!) -> 3.000ms =276.513
 DROP MATERIALIZED VIEW IF EXISTS	orig_geo_ego.osm_deu_polygon_urban_sector_1_residential_mview CASCADE;
 CREATE MATERIALIZED VIEW		orig_geo_ego.osm_deu_polygon_urban_sector_1_residential_mview AS
 	SELECT	osm.gid,
 		osm.osm_id,
 		osm.landuse,
 		osm.man_made,
+		osm.aeroway,
 		osm.name,
 		osm.way_area,
-		ST_AREA(ST_TRANSFORM(osm.geom,3035))/10000 AS area_ha,
+		osm.area_ha AS area_ha,
 		osm.tags,
-		ST_TRANSFORM(osm.geom,3035) ::geometry(MultiPolygon,3035) AS geom
-	FROM	orig_geo_ego.osm_deu_polygon_urban_mview AS osm
+		osm.geom ::geometry(MultiPolygon,3035) AS geom
+	FROM	orig_geo_ego.osm_deu_polygon_urban AS osm
 	WHERE	osm.landuse='residential'
 ORDER BY	osm.gid;
-    
+
+-- "Create Index (gid)"   (OK!) -> 1.000ms =0
+CREATE UNIQUE INDEX  	osm_deu_polygon_urban_sector_1_residential_mview_gid_idx
+		ON	orig_geo_ego.osm_deu_polygon_urban_sector_1_residential_mview (gid);
+
 -- "Create Index GIST (geom)"   (OK!) -> 4.000ms =0
 CREATE INDEX  	osm_deu_polygon_urban_sector_1_residential_mview_geom_idx
 	ON	orig_geo_ego.osm_deu_polygon_urban_sector_1_residential_mview
 	USING	GIST (geom);
-
--- "Create Index B-tree (gid)"   (OK!) -> 400ms =0
-CREATE UNIQUE INDEX  	osm_deu_polygon_urban_sector_1_residential_mview_gid_idx
-	ON		orig_geo_ego.osm_deu_polygon_urban_sector_1_residential_mview (gid);
 	
 -- "Grant oeuser"   (OK!) -> 100ms =0
 GRANT ALL ON TABLE 	orig_geo_ego.osm_deu_polygon_urban_sector_1_residential_mview TO oeuser WITH GRANT OPTION;
@@ -573,32 +586,33 @@ ALTER TABLE		orig_geo_ego.osm_deu_polygon_urban_sector_1_residential_mview OWNER
 
 -- "Sector 2. Retail"
 
--- "Filter Retail"   (OK!) -> 1.000ms =35.750
+-- "Filter Retail"   (OK!) -> 1.000ms =35.527
 DROP MATERIALIZED VIEW IF EXISTS	orig_geo_ego.osm_deu_polygon_urban_sector_2_retail_mview CASCADE;
 CREATE MATERIALIZED VIEW		orig_geo_ego.osm_deu_polygon_urban_sector_2_retail_mview AS
 	SELECT	osm.gid,
 		osm.osm_id,
 		osm.landuse,
 		osm.man_made,
+		osm.aeroway,
 		osm.name,
 		osm.way_area,
-		ST_AREA(ST_TRANSFORM(osm.geom,3035))/10000 AS area_ha,
+		osm.area_ha AS area_ha,
 		osm.tags,
-		ST_TRANSFORM(osm.geom,3035) ::geometry(MultiPolygon,3035) AS geom
-	FROM	orig_geo_ego.osm_deu_polygon_urban_mview AS osm
+		osm.geom ::geometry(MultiPolygon,3035) AS geom
+	FROM	orig_geo_ego.osm_deu_polygon_urban AS osm
 	WHERE	osm.landuse='commercial' OR 
 		osm.landuse='retail' OR
 		osm.landuse='industrial;retail'
 ORDER BY	osm.gid;
     
--- "Create Index GIST (geom)"   (OK!) -> 2.000ms =0
+-- "Create Index (gid)"   (OK!) -> 1.000ms =0
+CREATE UNIQUE INDEX  	osm_deu_polygon_urban_sector_2_retail_mview_gid_idx
+		ON	orig_geo_ego.osm_deu_polygon_urban_sector_2_retail_mview (gid);
+
+-- "Create Index GIST (geom)"   (OK!) -> 1.000ms =0
 CREATE INDEX  	osm_deu_polygon_urban_sector_2_retail_mview_geom_idx
 	ON	orig_geo_ego.osm_deu_polygon_urban_sector_2_retail_mview
 	USING	GIST (geom);
-
--- "Create Index B-tree (gid)"   (OK!) -> 100ms =0
-CREATE UNIQUE INDEX  	osm_deu_polygon_urban_sector_2_retail_mview_gid_idx
-	ON		orig_geo_ego.osm_deu_polygon_urban_sector_2_retail_mview (gid);
 	
 -- "Grant oeuser"   (OK!) -> 100ms =0
 GRANT ALL ON TABLE 	orig_geo_ego.osm_deu_polygon_urban_sector_2_retail_mview TO oeuser WITH GRANT OPTION;
@@ -608,34 +622,35 @@ ALTER TABLE		orig_geo_ego.osm_deu_polygon_urban_sector_2_retail_mview OWNER TO o
 
 -- "Sector 3. Industrial"
 
--- "Filter Industrial"   (OK!) -> 1.000ms =59.110
+-- "Filter Industrial"   (OK!) -> 1.000ms =58.870
 DROP MATERIALIZED VIEW IF EXISTS	orig_geo_ego.osm_deu_polygon_urban_sector_3_industrial_mview CASCADE;
 CREATE MATERIALIZED VIEW		orig_geo_ego.osm_deu_polygon_urban_sector_3_industrial_mview AS
 	SELECT	osm.gid,
 		osm.osm_id,
 		osm.landuse,
 		osm.man_made,
+		osm.aeroway,
 		osm.name,
 		osm.way_area,
-		ST_AREA(ST_TRANSFORM(osm.geom,3035))/10000 AS area_ha,
+		osm.area_ha AS area_ha,
 		osm.tags,
-		ST_TRANSFORM(osm.geom,3035) ::geometry(MultiPolygon,3035) AS geom
-	FROM	orig_geo_ego.osm_deu_polygon_urban_mview AS osm
+		osm.geom ::geometry(MultiPolygon,3035) AS geom
+	FROM	orig_geo_ego.osm_deu_polygon_urban AS osm
 	WHERE	osm.landuse='industrial' OR 
 		osm.landuse='port' OR
 		osm.man_made='wastewater_plant' OR
 		osm.aeroway='terminal' OR osm.aeroway='gate' OR
 		osm.man_made='works'
 ORDER BY	osm.gid;
-    
+
+-- "Create Index (gid)"   (OK!) -> 1.000ms =0
+CREATE UNIQUE INDEX  	osm_deu_polygon_urban_sector_3_industrial_mview_gid_idx
+		ON	orig_geo_ego.osm_deu_polygon_urban_sector_3_industrial_mview (gid);
+
 -- "Create Index GIST (geom)"   (OK!) -> 1.000ms =0
 CREATE INDEX  	osm_deu_polygon_urban_sector_3_industrial_mview_geom_idx
 	ON	orig_geo_ego.osm_deu_polygon_urban_sector_3_industrial_mview
 	USING	GIST (geom);
-
--- "Create Index B-tree (gid)"   (OK!) -> 1.000ms =0
-CREATE UNIQUE INDEX  	osm_deu_polygon_urban_sector_3_industrial_mview_gid_idx
-	ON		orig_geo_ego.osm_deu_polygon_urban_sector_3_industrial_mview (gid);
 	
 -- "Grant oeuser"   (OK!) -> 100ms =0
 GRANT ALL ON TABLE 	orig_geo_ego.osm_deu_polygon_urban_sector_3_industrial_mview TO oeuser WITH GRANT OPTION;
@@ -645,31 +660,32 @@ ALTER TABLE		orig_geo_ego.osm_deu_polygon_urban_sector_3_industrial_mview OWNER 
 
 -- "Sector 4. Agricultural"
 
--- "Filter Agricultural"   (OK!) -> 2.000ms =122.549
+-- "Filter Agricultural"   (OK!) -> 2.000ms =122.406
 DROP MATERIALIZED VIEW IF EXISTS	orig_geo_ego.osm_deu_polygon_urban_sector_4_agricultural_mview CASCADE;
 CREATE MATERIALIZED VIEW		orig_geo_ego.osm_deu_polygon_urban_sector_4_agricultural_mview AS
 	SELECT	osm.gid,
 		osm.osm_id,
 		osm.landuse,
 		osm.man_made,
+		osm.aeroway,
 		osm.name,
 		osm.way_area,
-		ST_AREA(ST_TRANSFORM(osm.geom,3035))/10000 AS area_ha,
+		osm.area_ha AS area_ha,
 		osm.tags,
-		ST_TRANSFORM(osm.geom,3035) ::geometry(MultiPolygon,3035) AS geom
-	FROM	orig_geo_ego.osm_deu_polygon_urban_mview AS osm
+		osm.geom ::geometry(MultiPolygon,3035) AS geom
+	FROM	orig_geo_ego.osm_deu_polygon_urban AS osm
 	WHERE	osm.landuse='farmyard' OR 
 		osm.landuse='greenhouse_horticulture'
 ORDER BY	osm.gid;
+
+-- "Create Index (gid)"   (OK!) -> 1.000ms =0
+CREATE UNIQUE INDEX  	osm_deu_polygon_urban_sector_4_agricultural_mview_gid_idx
+		ON	orig_geo_ego.osm_deu_polygon_urban_sector_4_agricultural_mview (gid);
     
 -- "Create Index GIST (geom)"   (OK!) -> 1.000ms =0
 CREATE INDEX  	osm_deu_polygon_urban_sector_4_agricultural_mview_geom_idx
 	ON	orig_geo_ego.osm_deu_polygon_urban_sector_4_agricultural_mview
 	USING	GIST (geom);
-
--- "Create Index B-tree (gid)"   (OK!) -> 1.000ms =0
-CREATE UNIQUE INDEX  	osm_deu_polygon_urban_sector_4_agricultural_mview_gid_idx
-	ON		orig_geo_ego.osm_deu_polygon_urban_sector_4_agricultural_mview (gid);
 	
 -- "Grant oeuser"   (OK!) -> 100ms =0
 GRANT ALL ON TABLE 	orig_geo_ego.osm_deu_polygon_urban_sector_4_agricultural_mview TO oeuser WITH GRANT OPTION;
@@ -705,17 +721,22 @@ ALTER TABLE		orig_geo_ego.osm_deu_polygon_urban_sector_4_agricultural_mview OWNE
 
 ---------- ---------- ----------
 
-DROP SEQUENCE IF EXISTS buffer100_id;
-CREATE TEMP SEQUENCE buffer100_id;
+-- "Sequence"   (OK!) 100ms =0
+DROP SEQUENCE IF EXISTS 	buffer100_id;
+CREATE TEMP SEQUENCE 		buffer100_id;
 
--- "Create Buffer"   (OK!) 1.240.000ms =129.322
+-- "Create Buffer"   (OK!) 1.600.000ms =128.931
 DROP MATERIALIZED VIEW IF EXISTS	orig_geo_ego.osm_deu_polygon_urban_buffer100_mview CASCADE;
 CREATE MATERIALIZED VIEW		orig_geo_ego.osm_deu_polygon_urban_buffer100_mview AS
 	SELECT	 nextval('buffer100_id') AS id,
 		(ST_DUMP(ST_MULTI(ST_UNION(
 			ST_BUFFER(ST_TRANSFORM(osm.geom,3035), 100)
 		)))).geom ::geometry(Polygon,3035) AS geom
-	FROM	orig_geo_ego.osm_deu_polygon_urban_mview AS osm;
+	FROM	orig_geo_ego.osm_deu_polygon_urban AS osm;
+
+-- "Create Index (gid)"   (OK!) -> 1.000ms =0
+CREATE UNIQUE INDEX  	osm_deu_polygon_urban_buffer100_mview_gid_idx
+		ON	orig_geo_ego.osm_deu_polygon_urban_buffer100_mview (id);
 
 -- "Create Index GIST (geom)"   (OK!) 2.000ms =0
 CREATE INDEX  	osm_deu_polygon_urban_buffer100_mview_geom_idx
@@ -731,13 +752,13 @@ ALTER TABLE		orig_geo_ego.osm_deu_polygon_urban_buffer100_mview OWNER TO oeuser;
 ---------- ---------- ---------- ---------- ---------- ----------
 
 -- "Create Table"   (OK!) 200ms =0
-DROP TABLE IF EXISTS  	orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer;
+DROP TABLE IF EXISTS  	orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer CASCADE;
 CREATE TABLE         	orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer (
 		uid SERIAL NOT NULL,
 		geom geometry(Polygon,3035),
 CONSTRAINT 	osm_deu_polygon_urban_buffer100_unbuffer_pkey PRIMARY KEY (uid));
 
--- "Insert Buffer"   (OK!) 93.000ms =170.088
+-- "Insert Buffer"   (OK!) 100.000ms =169.639
 INSERT INTO     orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer(geom)
 	SELECT	(ST_DUMP(ST_MULTI(ST_UNION(
 			ST_BUFFER(ST_TRANSFORM(osm.geom,3035), -100)
@@ -789,43 +810,48 @@ ALTER TABLE		orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer OWNER TO oeus
 ---------- ---------- ---------- ---------- ---------- ----------
 
 -- "Validate (geom)"   (OK!) -> 22.000ms =0
-DROP MATERIALIZED VIEW IF EXISTS	orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer_error_geom_mview CASCADE;
-CREATE MATERIALIZED VIEW		orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer_error_geom_mview AS 
-	SELECT	test.uid,
+DROP VIEW IF EXISTS	orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer_error_geom_view CASCADE;
+CREATE VIEW		orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer_error_geom_view AS 
+	SELECT	test.id,
 		test.error,
 		reason(ST_IsValidDetail(test.geom)) AS error_reason,
-		location(ST_IsValidDetail(test.geom)) ::geometry(Point,3035) AS error_location,
-		test.geom ::geometry(Polygon,3035) AS geom
+		ST_SetSRID(location(ST_IsValidDetail(test.geom)),3035) ::geometry(Point,3035) AS error_location
 	FROM	(
-		SELECT	source.uid AS uid,
+		SELECT	source.uid AS id,						-- PK
 			ST_IsValid(source.geom) AS error,
 			source.geom AS geom
-		FROM	orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer AS source
+		FROM	orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer AS source	-- Table
 		) AS test
 	WHERE	test.error = FALSE;
 
 -- "Grant oeuser"   (OK!) -> 100ms =0
-GRANT ALL ON TABLE	orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer_error_geom_mview TO oeuser WITH GRANT OPTION;
-ALTER TABLE		orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer_error_geom_mview OWNER TO oeuser;
+GRANT ALL ON TABLE	orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer_error_geom_view TO oeuser WITH GRANT OPTION;
+ALTER TABLE		orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer_error_geom_view OWNER TO oeuser;
+
+-- "Drop empty view"   (OK!) -> 100ms =1
+SELECT f_drop_view('{osm_deu_polygon_urban_buffer100_unbuffer_error_geom_view}', 'orig_geo_ego');
 
 ---------- ---------- ----------
 
 -- "Validate (uid)"   (OK!) -> 100ms =0
-DROP MATERIALIZED VIEW IF EXISTS	orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer_error_gid_mview CASCADE;
-CREATE MATERIALIZED VIEW		orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer_error_gid_mview AS 
-	SELECT 		source.uid AS uid,
+DROP VIEW IF EXISTS	orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer_error_gid_view CASCADE;
+CREATE VIEW		orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer_error_gid_view AS 
+	SELECT 		source.uid AS id,						-- PK
 			count(source.*) AS count
-	FROM 		orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer AS source
+	FROM 		orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer AS source	-- Table
 	GROUP BY 	source.uid
 	HAVING 		count(source.*) > 1;
 
 -- "Grant oeuser"   (OK!) -> 100ms =0
-GRANT ALL ON TABLE	orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer_error_gid_mview TO oeuser WITH GRANT OPTION;
-ALTER TABLE		orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer_error_gid_mview OWNER TO oeuser;
+GRANT ALL ON TABLE	orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer_error_gid_view TO oeuser WITH GRANT OPTION;
+ALTER TABLE		orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer_error_gid_view OWNER TO oeuser;
+
+-- "Drop empty view"   (OK!) -> 100ms =1
+SELECT f_drop_view('{osm_deu_polygon_urban_buffer100_unbuffer_error_gid_view}', 'orig_geo_ego');
 
 ---------- ---------- ----------
 
--- "Update Area (area_ha)"   (OK!) -> 10.000ms :170.088
+-- "Update Area (area_ha)"   (OK!) -> 10.000ms =169.639
 UPDATE 	orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer AS t1
 SET  	area_ha = t2.area
 FROM    (
@@ -941,7 +967,7 @@ WHERE	la.area_ha < 0.01;
 -- "Geometries"
 ---------- ---------- ----------
 
--- "Update PointOnSurface"   (OK!) -> 34.000ms =168.670
+-- "Update PointOnSurface"   (OK!) -> 35.000ms =168.205
 UPDATE 	orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer AS t1
 SET  	geom_surfacepoint = t2.geom_surfacepoint
 FROM    (
@@ -977,7 +1003,7 @@ CREATE INDEX  	osm_deu_polygon_urban_buffer100_unbuffer_geom_centroid_idx
 
 ---------- ---------- ----------
 
--- "Update Buffer (100m)"   (OK!) -> 155.000ms =168.670
+-- "Update Buffer (100m)"   (OK!) -> 100.000ms =168.205
 UPDATE 	orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer AS t1
 SET  	geom_buffer = t2.geom_buffer
 FROM    (
@@ -988,7 +1014,7 @@ FROM    (
 	) AS t2
 WHERE  	t1.uid = t2.uid;
 
--- "Create Index GIST (geom_buffer)"   (OK!) -> 14.000ms =0
+-- "Create Index GIST (geom_buffer)"   (OK!) -> 4.000ms =0
 CREATE INDEX  	osm_deu_polygon_urban_buffer100_unbuffer_geom_buffer_idx
     ON    	orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer
     USING     	GIST (geom_buffer);
@@ -1031,7 +1057,7 @@ CREATE INDEX  	osm_deu_polygon_urban_buffer100_unbuffer_geom_buffer_idx
 -- "Calculate Zensus2011 Population"
 ---------- ---------- ----------
 
--- "Zensus2011 Population"   (OK!) -> 175.000ms =141.962
+-- "Zensus2011 Population"   (OK!) -> 142.000ms =141.973
 UPDATE 	orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer AS t1
 SET  	zensus_sum = t2.zensus_sum,
 	zensus_count = t2.zensus_count,
@@ -1053,7 +1079,7 @@ WHERE  	t1.uid = t2.uid;
 -- "Calculate IÖR Industry Share"
 ---------- ---------- ----------
 
--- "IÖR Industry Share"   (OK!) -> 82.000ms =51.050
+-- "IÖR Industry Share"   (OK!) -> 60.000ms =51,052
 UPDATE 	orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer AS t1
 SET  	ioer_sum = t2.ioer_sum,
 	ioer_count = t2.ioer_count,
@@ -1075,7 +1101,7 @@ WHERE  	t1.uid = t2.uid;
 -- "Calculate Sectors"
 ---------- ---------- ----------
 
--- "Calculate Sector Residential"   (OK!) -> 70.000ms =111.340
+-- "Calculate Sector Residential"   (OK!) -> 740.000ms =111.028
 UPDATE 	orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer AS t1
 SET  	sector_area_residential = t2.sector_area,
 	sector_count_residential = t2.sector_count,
@@ -1095,7 +1121,7 @@ WHERE  	t1.uid = t2.uid;
 
 ---------- ---------- ----------
 
--- "Calculate Sector Retail"   (OK!) -> 177.000ms =10.157
+-- "Calculate Sector Retail"   (OK!) -> 156.000ms =10.095
 UPDATE 	orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer AS t1
 SET  	sector_area_retail = t2.sector_area,
 	sector_count_retail = t2.sector_count,
@@ -1115,7 +1141,7 @@ WHERE  	t1.uid = t2.uid;
 
 ---------- ---------- ----------
 
--- "Calculate Sector Industrial"   (OK!) -> 35.000ms =21.033
+-- "Calculate Sector Industrial"   (OK!) -> 155.000ms =20.936
 UPDATE 	orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer AS t1
 SET  	sector_area_industrial = t2.sector_area,
 	sector_count_industrial = t2.sector_count,
@@ -1135,7 +1161,7 @@ WHERE  	t1.uid = t2.uid;
 
 ---------- ---------- ----------
 
--- "Calculate Sector Agricultural"   (OK!) -> 203.000ms =71.358
+-- "Calculate Sector Agricultural"   (OK!) -> 200.000ms =71.248
 UPDATE 	orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer AS t1
 SET  	sector_area_agricultural = t2.sector_area,
 	sector_count_agricultural = t2.sector_count,
@@ -1220,28 +1246,28 @@ WHERE  	t1.uid = t2.uid;
 ---------- ---------- ---------- ---------- ---------- ----------
 -- "Criterion for Exclusion"
 ---------- ---------- ---------- ---------- ---------- ----------
-
--- "Areas Outside Germany"   (OK!) -> 500ms =575
-DROP MATERIALIZED VIEW IF EXISTS	orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer_check_germany_mview CASCADE;
-CREATE MATERIALIZED VIEW		orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer_check_germany_mview AS
-	SELECT	la.uid,
-		la.area_ha,
-		la.geom_buffer
-	FROM	orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer AS la
-	WHERE	la.nuts IS NULL;
-
--- "Remove Areas Outside Germany"   (OK!) 700ms =575
-DELETE FROM	orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer AS la
-	WHERE	la.nuts IS NULL;
-
--- "Create Index GIST (geom_buffer)"   (OK!) -> 150ms =0
-CREATE INDEX  	osm_deu_polygon_urban_buffer100_unbuffer_check_germany_mview_geom_buffer_idx
-    ON    	orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer_check_germany_mview
-    USING     	GIST (geom_buffer);
-
--- "Grant oeuser"   (OK!) -> 100ms =0
-GRANT ALL ON TABLE 	orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer_check_germany_mview TO oeuser WITH GRANT OPTION;
-ALTER TABLE		orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer_check_germany_mview OWNER TO oeuser;
+-- 
+-- -- "Areas Outside Germany"   (OK!) -> 500ms =575
+-- DROP MATERIALIZED VIEW IF EXISTS	orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer_check_germany_mview CASCADE;
+-- CREATE MATERIALIZED VIEW		orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer_check_germany_mview AS
+-- 	SELECT	la.uid,
+-- 		la.area_ha,
+-- 		la.geom_buffer
+-- 	FROM	orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer AS la
+-- 	WHERE	la.nuts IS NULL;
+-- 
+-- -- "Remove Areas Outside Germany"   (OK!) 700ms =575
+-- DELETE FROM	orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer AS la
+-- 	WHERE	la.nuts IS NULL;
+-- 
+-- -- "Create Index GIST (geom_buffer)"   (OK!) -> 150ms =0
+-- CREATE INDEX  	osm_deu_polygon_urban_buffer100_unbuffer_check_germany_mview_geom_buffer_idx
+--     ON    	orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer_check_germany_mview
+--     USING     	GIST (geom_buffer);
+-- 
+-- -- "Grant oeuser"   (OK!) -> 100ms =0
+-- GRANT ALL ON TABLE 	orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer_check_germany_mview TO oeuser WITH GRANT OPTION;
+-- ALTER TABLE		orig_geo_ego.osm_deu_polygon_urban_buffer100_unbuffer_check_germany_mview OWNER TO oeuser;
 
 ---------- ---------- ----------
 

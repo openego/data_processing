@@ -1,6 +1,6 @@
 ﻿
 ---------- ---------- ---------- ---------- ---------- ----------
--- "Collect Loads"   2016-04-06 11:39 10s
+-- "Collect Loads"   2016-04-06 11:39 15s
 ---------- ---------- ---------- ---------- ---------- ----------
 
 -- "Load Area & Load Point Cluster"   (OK!) 100ms =0
@@ -56,7 +56,7 @@ CREATE INDEX	ego_deu_loads_collect_buffer100_geom_idx
 GRANT ALL ON TABLE	orig_geo_ego.ego_deu_loads_collect_buffer100 TO oeuser WITH GRANT OPTION;
 ALTER TABLE		orig_geo_ego.ego_deu_loads_collect_buffer100 OWNER TO oeuser;
 
----------------------------
+--------------------------- bishier
 
 -- "Validate (geom)"   (OK!) -> 28.000ms =0
 DROP MATERIALIZED VIEW IF EXISTS	orig_geo_ego.ego_deu_loads_collect_buffer100_error_geom_mview CASCADE;
