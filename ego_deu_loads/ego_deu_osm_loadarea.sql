@@ -139,8 +139,8 @@ CREATE TABLE		orig_geo_ego.osm_deu_polygon_urban AS
 		osm.way_area,
 		ST_AREA(ST_TRANSFORM(osm.geom,3035))/10000 AS area_ha,
 		osm.tags,
-		ST_TRANSFORM(osm.geom,3035) ::geometry(MultiPolygon,3035) AS geom,
-		'FALSE' ::boolean AS inside_deu
+		'outside' ::text AS vg250,
+		ST_TRANSFORM(osm.geom,3035) ::geometry(MultiPolygon,3035) AS geom		
 	FROM	orig_osm.osm_deu_polygon AS osm
 	WHERE	osm.landuse='residential' OR
 
@@ -167,12 +167,18 @@ CREATE INDEX  	osm_deu_polygon_urban_geom_idx
 	ON	orig_geo_ego.osm_deu_polygon_urban
 	USING	GIST (geom);
 
--- "Calculate Inside DEU"   (OK!) -> 122.000ms =492.890
+	-- "Grant oeuser"   (OK!) -> 100ms =0
+GRANT ALL ON TABLE	orig_geo_ego.osm_deu_polygon_urban TO oeuser WITH GRANT OPTION;
+ALTER TABLE		orig_geo_ego.osm_deu_polygon_urban OWNER TO oeuser;
+
+---------- ---------- ----------
+	
+-- "Calculate 'inside' vg250"   (OK!) -> 122.000ms =492.890
 UPDATE 	orig_geo_ego.osm_deu_polygon_urban AS t1
-SET  	inside_deu = t2.inside_deu
+SET  	vg250 = t2.vg250
 FROM    (
 	SELECT	osm.gid AS gid,
-		'TRUE' ::boolean AS inside_deu
+		'inside' ::text AS vg250
 	FROM	orig_geo_vg250.vg250_1_sta_union_mview AS vg,
 		orig_geo_ego.osm_deu_polygon_urban AS osm
 	WHERE  	vg.geom && osm.geom AND
@@ -180,37 +186,49 @@ FROM    (
 	) AS t2
 WHERE  	t1.gid = t2.gid;
 
--- "Grant oeuser"   (OK!) -> 100ms =0
-GRANT ALL ON TABLE	orig_geo_ego.osm_deu_polygon_urban TO oeuser WITH GRANT OPTION;
-ALTER TABLE		orig_geo_ego.osm_deu_polygon_urban OWNER TO oeuser;
+---------- ---------- ----------
+	
+-- "Calculate 'crossing' vg250"   (OK!) -> 17.000ms =291
+UPDATE 	orig_geo_ego.osm_deu_polygon_urban AS t1
+SET  	vg250 = t2.vg250
+FROM    (
+	SELECT	osm.gid AS gid,
+		'crossing' ::text AS vg250
+	FROM	orig_geo_vg250.vg250_1_sta_union_mview AS vg,
+		orig_geo_ego.osm_deu_polygon_urban AS osm
+	WHERE  	osm.vg250 = 'outside' AND
+		vg.geom && osm.geom AND
+		ST_Overlaps(vg.geom,osm.geom)
+	) AS t2
+WHERE  	t1.gid = t2.gid;
 
 ---------- ---------- ----------
 
--- "OSM outside DEU"   (OK!) -> 200ms =1.806
-DROP MATERIALIZED VIEW IF EXISTS	orig_geo_ego.osm_deu_polygon_urban_error_geom_deu_mview CASCADE;
-CREATE MATERIALIZED VIEW		orig_geo_ego.osm_deu_polygon_urban_error_geom_deu_mview AS
+-- "OSM error vg250"   (OK!) -> 400ms =1.806
+DROP MATERIALIZED VIEW IF EXISTS	orig_geo_ego.osm_deu_polygon_urban_error_geom_vg250_mview CASCADE;
+CREATE MATERIALIZED VIEW		orig_geo_ego.osm_deu_polygon_urban_error_geom_vg250_mview AS
 	SELECT	osm.*
 	FROM	orig_geo_ego.osm_deu_polygon_urban AS osm
-	WHERE	osm.inside_deu IS FALSE;
+	WHERE	osm.vg250 = 'outside' OR osm.vg250 = 'crossing';
 
 -- "Create Index (gid)"   (OK!) -> 100ms =0
-CREATE UNIQUE INDEX  	osm_deu_polygon_urban_error_geom_deu_mview_gid_idx
-		ON	orig_geo_ego.osm_deu_polygon_urban_error_geom_deu_mview (gid);
+CREATE UNIQUE INDEX  	osm_deu_polygon_urban_error_geom_vg250_mview_gid_idx
+		ON	orig_geo_ego.osm_deu_polygon_urban_error_geom_vg250_mview (gid);
 
 -- "Create Index GIST (geom)"   (OK!) -> 150ms =0
-CREATE INDEX  	osm_deu_polygon_urban_error_geom_deu_mview_geom_idx
-	ON	orig_geo_ego.osm_deu_polygon_urban_error_geom_deu_mview
+CREATE INDEX  	osm_deu_polygon_urban_error_geom_vg250_mview_geom_idx
+	ON	orig_geo_ego.osm_deu_polygon_urban_error_geom_vg250_mview
 	USING	GIST (geom);
 
 -- "Grant oeuser"   (OK!) -> 100ms =0
-GRANT ALL ON TABLE	orig_geo_ego.osm_deu_polygon_urban_error_geom_deu_mview TO oeuser WITH GRANT OPTION;
-ALTER TABLE		orig_geo_ego.osm_deu_polygon_urban_error_geom_deu_mview OWNER TO oeuser;	
+GRANT ALL ON TABLE	orig_geo_ego.osm_deu_polygon_urban_error_geom_vg250_mview TO oeuser WITH GRANT OPTION;
+ALTER TABLE		orig_geo_ego.osm_deu_polygon_urban_error_geom_vg250_mview OWNER TO oeuser;	
 
 ---------- ---------- ----------
 
--- "Cutting OSM with DEU"   (OK!) 77.000ms =1.806
-DROP MATERIALIZED VIEW IF EXISTS	orig_geo_ego.osm_deu_polygon_urban_deu_cut_mview;
-CREATE MATERIALIZED VIEW		orig_geo_ego.osm_deu_polygon_urban_deu_cut_mview AS
+-- "Cutting 'crossing' with vg250"   (OK!) 12.000ms =291
+DROP MATERIALIZED VIEW IF EXISTS	orig_geo_ego.osm_deu_polygon_urban_vg250_cut_mview;
+CREATE MATERIALIZED VIEW		orig_geo_ego.osm_deu_polygon_urban_vg250_cut_mview AS
 	SELECT	ROW_NUMBER() OVER () AS id,
 		cut.gid AS gid,
 		cut.osm_id AS osm_id,
@@ -220,75 +238,142 @@ CREATE MATERIALIZED VIEW		orig_geo_ego.osm_deu_polygon_urban_deu_cut_mview AS
 		cut.way_area AS way_area,
 		cut.area_ha AS area_ha,
 		cut.tags AS tags,
-		GeometryType(cut.geom) AS geom_type,
-		'TRUE' ::boolean AS inside_deu,
-		cut.geom AS geom
-	FROM	(SELECT	poly.gid AS gid,
-			poly.osm_id AS osm_id,
-			poly.landuse AS landuse,
-			poly.man_made AS man_made,
-			poly.name AS name,
-			poly.way_area AS way_area,
-			poly.area_ha AS area_ha,
-			poly.tags AS tags,
-			ST_INTERSECTION(poly.geom,cut.geom) AS geom
-		FROM	orig_geo_ego.osm_deu_polygon_urban_error_geom_deu_mview AS poly,
+		cut.vg250 AS vg250,
+		GeometryType(cut.geom_new) AS geom_type,
+		cut.geom_new AS geom
+	FROM	(SELECT	poly.*,
+			ST_INTERSECTION(poly.geom,cut.geom) AS geom_new
+		FROM	orig_geo_ego.osm_deu_polygon_urban_error_geom_vg250_mview AS poly,
 			orig_geo_vg250.vg250_1_sta_union_mview AS cut
+		WHERE	poly.vg250 = 'crossing'
 		) AS cut
 	ORDER BY 	cut.gid;
 
-
-
-
-
 -- "Create Index (gid)"   (OK!) -> 1.000ms =0
-CREATE UNIQUE INDEX  	osm_deu_polygon_urban_deu_cut_mview_gid_idx
-		ON	orig_geo_ego.osm_deu_polygon_urban_deu_cut_mview (gid);
+CREATE UNIQUE INDEX  	osm_deu_polygon_urban_vg250_cut_mview_gid_idx
+		ON	orig_geo_ego.osm_deu_polygon_urban_vg250_cut_mview (gid);
 
 -- "Create Index GIST (geom)"   (OK!) -> 100ms =0
-CREATE INDEX  	osm_deu_polygon_urban_deu_cut_mview_geom_idx
-	ON	orig_geo_ego.osm_deu_polygon_urban_deu_cut_mview
+CREATE INDEX  	osm_deu_polygon_urban_vg250_cut_mview_geom_idx
+	ON	orig_geo_ego.osm_deu_polygon_urban_vg250_cut_mview
 	USING	GIST (geom);
 
 -- "Grant oeuser"   (OK!) -> 100ms =0
-GRANT ALL ON TABLE	orig_geo_ego.osm_deu_polygon_urban_deu_cut_mview TO oeuser WITH GRANT OPTION;
-ALTER TABLE		orig_geo_ego.osm_deu_polygon_urban_deu_cut_mview OWNER TO oeuser;
+GRANT ALL ON TABLE	orig_geo_ego.osm_deu_polygon_urban_vg250_cut_mview TO oeuser WITH GRANT OPTION;
+ALTER TABLE		orig_geo_ego.osm_deu_polygon_urban_vg250_cut_mview OWNER TO oeuser;
+
+-- Find double entries (OK!) -> =0
+SELECT 		gid, count(*)
+FROM 		orig_geo_ego.osm_deu_polygon_urban_vg250_cut_mview
+GROUP BY 	gid
+HAVING 		count(*) > 1;
 
 ---------- ---------- ----------
 
--- "Remove Outside DEU"   (OK!) 300ms =1.806
-DELETE FROM	orig_geo_ego.osm_deu_polygon_urban AS osm
-	WHERE	osm.inside_deu IS FALSE;
+-- POLYGON von MULTIPOLYGON Trennen
 
--- "Insert Cuttings"   (OK!) 300ms =1.806
+-- "'crossing' polgon to multi"   (OK!) 100ms =255
+DROP MATERIALIZED VIEW IF EXISTS	orig_geo_ego.osm_deu_polygon_urban_vg250_clean_cut_multi_mview;
+CREATE MATERIALIZED VIEW		orig_geo_ego.osm_deu_polygon_urban_vg250_clean_cut_multi_mview AS
+	SELECT	nextval('orig_osm.osm_deu_polygon_gid_seq'::regclass)  AS gid,
+		cut.osm_id AS osm_id,
+		cut.landuse AS landuse,
+		cut.man_made AS man_made,
+		cut.name AS name,
+		cut.way_area AS way_area,
+		cut.area_ha AS area_ha,
+		cut.tags AS tags,
+		cut.vg250 AS vg250,
+		ST_MULTI(cut.geom) ::geometry(MultiPolygon,3035) AS geom
+	FROM	orig_geo_ego.osm_deu_polygon_urban_vg250_cut_mview AS cut
+	WHERE	cut.geom_type = 'POLYGON';
+
+-- "Create Index (gid)"   (OK!) -> 1.000ms =0
+CREATE UNIQUE INDEX  	osm_deu_polygon_urban_vg250_clean_cut_multi_mview_gid_idx
+		ON	orig_geo_ego.osm_deu_polygon_urban_vg250_clean_cut_multi_mview (gid);
+
+-- "Create Index GIST (geom)"   (OK!) -> 100ms =0
+CREATE INDEX  	osm_deu_polygon_urban_vg250_clean_cut_multi_mview_geom_idx
+	ON	orig_geo_ego.osm_deu_polygon_urban_vg250_clean_cut_multi_mview
+	USING	GIST (geom);
+
+-- "Grant oeuser"   (OK!) -> 100ms =0
+GRANT ALL ON TABLE	orig_geo_ego.osm_deu_polygon_urban_vg250_clean_cut_multi_mview TO oeuser WITH GRANT OPTION;
+ALTER TABLE		orig_geo_ego.osm_deu_polygon_urban_vg250_clean_cut_multi_mview OWNER TO oeuser;
+
+-- Find double entries (OK!) -> =0
+SELECT 		gid, count(*)
+FROM 		orig_geo_ego.osm_deu_polygon_urban_vg250_clean_cut_multi_mview
+GROUP BY 	gid
+HAVING 		count(*) > 1;
+
+---------- ---------- ----------
+
+-- "clean cut"   (OK!) 100ms =36
+DROP MATERIALIZED VIEW IF EXISTS	orig_geo_ego.osm_deu_polygon_urban_vg250_clean_cut_mview;
+CREATE MATERIALIZED VIEW		orig_geo_ego.osm_deu_polygon_urban_vg250_clean_cut_mview AS
+	SELECT	nextval('orig_osm.osm_deu_polygon_gid_seq'::regclass) AS gid,
+		cut.osm_id AS osm_id,
+		cut.landuse AS landuse,
+		cut.man_made AS man_made,
+		cut.name AS name,
+		cut.way_area AS way_area,
+		cut.area_ha AS area_ha,
+		cut.tags AS tags,
+		cut.vg250 AS vg250,
+		cut.geom ::geometry(MultiPolygon,3035) AS geom
+	FROM	orig_geo_ego.osm_deu_polygon_urban_vg250_cut_mview AS cut
+	WHERE	cut.geom_type = 'MULTIPOLYGON';
+
+-- "Create Index (gid)"   (OK!) -> 1.000ms =0
+CREATE UNIQUE INDEX  	osm_deu_polygon_urban_vg250_clean_cut_mview_gid_idx
+		ON	orig_geo_ego.osm_deu_polygon_urban_vg250_clean_cut_mview (gid);
+
+---------- ---------- ----------
+
+-- "Remove 'outside' vg250"   (OK!) 300ms =1515
+DELETE FROM	orig_geo_ego.osm_deu_polygon_urban AS osm
+	WHERE	osm.vg250 = 'outside';
+
+-- "Remove 'outside' vg250"   (OK!) 300ms =618
+DELETE FROM	orig_geo_ego.osm_deu_polygon_urban AS osm
+	WHERE	osm.vg250 = 'crossing';
+
+-- "Insert cut"   (OK!) 300ms =36
 INSERT INTO	orig_geo_ego.osm_deu_polygon_urban
-	SELECT	osm.*
-	FROM	orig_geo_ego.osm_deu_polygon_urban_error_geom_deu_cut_mview AS osm
-ORDER BY 	gid;
+	SELECT	clean.*
+	FROM	orig_geo_ego.osm_deu_polygon_urban_vg250_clean_cut_mview AS clean
+	ORDER BY 	clean.gid;
+
+-- "Insert cut multi"   (ungleiche spalten!) 300ms =255
+INSERT INTO	orig_geo_ego.osm_deu_polygon_urban
+	SELECT	clean.*
+	FROM	orig_geo_ego.osm_deu_polygon_urban_vg250_clean_cut_multi_mview AS clean
+	ORDER BY 	clean.gid;
+
 
 ---------- ---------- ---------- ---------- ---------- ----------
 -- "(Geo) Data Validation"
 ---------- ---------- ---------- ---------- ---------- ----------
 
--- "Validate (geom)"   (OK!) -> 22.000ms =0
-DROP MATERIALIZED VIEW IF EXISTS	orig_geo_ego.osm_deu_polygon_urban_mview_error_geom_mview CASCADE;
-CREATE MATERIALIZED VIEW		orig_geo_ego.osm_deu_polygon_urban_mview_error_geom_mview AS 
+-- "Validate (geom)"   (OK!) -> 22.000ms =1
+DROP MATERIALIZED VIEW IF EXISTS	orig_geo_ego.osm_deu_polygon_urban_error_geom_mview CASCADE;
+CREATE MATERIALIZED VIEW		orig_geo_ego.osm_deu_polygon_urban_error_geom_mview AS 
 	SELECT	test.gid,
 		test.error,
 		reason(ST_IsValidDetail(test.geom)) AS error_reason,
-		location(ST_IsValidDetail(test.geom)) ::geometry(Point,3035) AS error_location,
-		ST_TRANSFORM(test.geom,3035) ::geometry(Polygon,3035) AS geom
+		location(ST_IsValidDetail(test.geom)) ::geometry(Point) AS error_location
 	FROM	(
 		SELECT	source.gid AS gid,
 			ST_IsValid(source.geom) AS error,
 			source.geom AS geom
-		FROM	orig_geo_ego.osm_deu_polygon_urban_mview AS source
+		FROM	orig_geo_ego.osm_deu_polygon_urban AS source
 		) AS test
 	WHERE	test.error = FALSE;
 
 -- "Grant oeuser"   (OK!) -> 100ms =0
-GRANT ALL ON TABLE	orig_geo_ego.osm_deu_polygon_urban_mview_error_geom_mview TO oeuser WITH GRANT OPTION;
-ALTER TABLE		orig_geo_ego.osm_deu_polygon_urban_mview_error_geom_mview OWNER TO oeuser;
+GRANT ALL ON TABLE	orig_geo_ego.osm_deu_polygon_urban_error_geom_mview TO oeuser WITH GRANT OPTION;
+ALTER TABLE		orig_geo_ego.osm_deu_polygon_urban_error_geom_mview OWNER TO oeuser;
 
 ---------- ---------- ----------
 
