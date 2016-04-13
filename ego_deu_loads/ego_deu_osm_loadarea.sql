@@ -5,9 +5,12 @@
 
 -- -- "Create Schema"
 -- DROP SCHEMA IF EXISTS	orig_geo_ego;
--- CREATE SCHEMA 			orig_geo_ego;
--- GRANT ALL ON SCHEMA orig_geo_ego TO oeuser WITH GRANT OPTION;
+-- CREATE SCHEMA 		orig_geo_ego;
+-- GRANT ALL ON SCHEMA 		orig_geo_ego TO oeuser WITH GRANT OPTION;
 
+
+---------- ---------- ----------
+-- "vg250_1_sta_mview"   2016-04-13 10:12 1s
 ---------- ---------- ----------
 
 -- "Transform VG250 State"   (OK!) -> 200ms =11
@@ -33,25 +36,31 @@ ALTER TABLE		orig_geo_vg250.vg250_1_sta_mview OWNER TO oeuser;
 
 ---------- ---------- ----------
 
--- -- "Validate (geom)"   (OK!) -> 500ms =1
--- DROP MATERIALIZED VIEW IF EXISTS	orig_geo_vg250.vg250_1_sta_mview_error_geom_mview CASCADE;
--- CREATE MATERIALIZED VIEW		orig_geo_vg250.vg250_1_sta_mview_error_geom_mview AS 
--- 	SELECT	test.id AS id,
--- 		test.error AS error,
--- 		reason(ST_IsValidDetail(test.geom)) AS error_reason,
--- 		ST_SetSRID(location(ST_IsValidDetail(test.geom)),3035) ::geometry(Point,3035) AS error_location
--- 	FROM	(
--- 		SELECT	source.gid AS id,
--- 			ST_IsValid(source.geom) AS error,
--- 			source.geom ::geometry(MultiPolygon,3035) AS geom
--- 		FROM	orig_geo_vg250.vg250_1_sta_mview AS source
--- 		) AS test
--- 	WHERE	test.error = FALSE;
--- 
--- -- "Grant oeuser"   (OK!) -> 100ms =0
--- GRANT ALL ON TABLE	orig_geo_vg250.vg250_1_sta_mview_error_geom_mview TO oeuser WITH GRANT OPTION;
--- ALTER TABLE		orig_geo_vg250.vg250_1_sta_mview_error_geom_mview OWNER TO oeuser;
+-- "Validate (geom)"   (OK!) -> 500ms =1
+DROP VIEW IF EXISTS	orig_geo_vg250.vg250_1_sta_mview_error_geom_view CASCADE;
+CREATE VIEW		orig_geo_vg250.vg250_1_sta_mview_error_geom_view AS 
+	SELECT	test.id AS id,
+		test.error AS error,
+		reason(ST_IsValidDetail(test.geom)) AS error_reason,
+		ST_SetSRID(location(ST_IsValidDetail(test.geom)),3035) ::geometry(Point,3035) AS error_location
+	FROM	(
+		SELECT	source.gid AS id,				-- PK
+			ST_IsValid(source.geom) AS error,
+			source.geom ::geometry(MultiPolygon,3035) AS geom
+		FROM	orig_geo_vg250.vg250_1_sta_mview AS source	-- Table
+		) AS test
+	WHERE	test.error = FALSE;
 
+-- "Grant oeuser"   (OK!) -> 100ms =0
+GRANT ALL ON TABLE	orig_geo_vg250.vg250_1_sta_mview_error_geom_view TO oeuser WITH GRANT OPTION;
+ALTER TABLE		orig_geo_vg250.vg250_1_sta_mview_error_geom_view OWNER TO oeuser;
+
+-- "Drop empty view"   (OK!) -> 100ms =1
+SELECT f_drop_view('{vg250_1_sta_mview_error_geom_view}', 'orig_geo_vg250');
+
+
+---------- ---------- ----------
+-- "vg250_1_sta_union_mview"   2016-04-13 09:55 2s
 ---------- ---------- ----------
 
 -- "Transform VG250 State UNION"   (OK!) -> 2.000ms =1
@@ -76,25 +85,85 @@ ALTER TABLE		orig_geo_vg250.vg250_1_sta_union_mview OWNER TO oeuser;
 
 ---------- ---------- ----------
 
--- -- "Validate (geom)"   (OK!) -> 22.000ms =0
--- DROP MATERIALIZED VIEW IF EXISTS	orig_geo_vg250.vg250_1_sta_union_mview_error_geom_mview CASCADE;
--- CREATE MATERIALIZED VIEW		orig_geo_vg250.vg250_1_sta_union_mview_error_geom_mview AS 
--- 	SELECT	test.id AS id,
--- 		test.error AS error,
--- 		reason(ST_IsValidDetail(test.geom)) AS error_reason,
--- 		ST_SetSRID(location(ST_IsValidDetail(test.geom)),3035) ::geometry(Point,3035) AS error_location
--- 	FROM	(
--- 		SELECT	source.id AS id,
--- 			ST_IsValid(source.geom) AS error,
--- 			source.geom ::geometry(MultiPolygon,3035) AS geom
--- 		FROM	orig_geo_vg250.vg250_1_sta_union_mview AS source
--- 		) AS test
--- 	WHERE	test.error = FALSE;
--- 
--- -- "Grant oeuser"   (OK!) -> 100ms =0
--- GRANT ALL ON TABLE	orig_geo_ego.osm_deu_polygon_urban_mview_error_geom_mview TO oeuser WITH GRANT OPTION;
--- ALTER TABLE		orig_geo_ego.osm_deu_polygon_urban_mview_error_geom_mview OWNER TO oeuser;
+-- "Validate (geom)"   (OK!) -> 22.000ms =0
+DROP VIEW IF EXISTS	orig_geo_vg250.vg250_1_sta_union_mview_error_geom_view CASCADE;
+CREATE VIEW		orig_geo_vg250.vg250_1_sta_union_mview_error_geom_view AS 
+	SELECT	test.id AS id,
+		test.error AS error,
+		reason(ST_IsValidDetail(test.geom)) AS error_reason,
+		ST_SetSRID(location(ST_IsValidDetail(test.geom)),3035) ::geometry(Point,3035) AS error_location
+	FROM	(
+		SELECT	source.id AS id,					-- PK
+			ST_IsValid(source.geom) AS error,
+			source.geom ::geometry(MultiPolygon,3035) AS geom
+		FROM	orig_geo_vg250.vg250_1_sta_union_mview AS source	-- Table
+		) AS test
+	WHERE	test.error = FALSE;
 
+-- "Grant oeuser"   (OK!) -> 100ms =0
+GRANT ALL ON TABLE	orig_geo_vg250.vg250_1_sta_union_mview_error_geom_view TO oeuser WITH GRANT OPTION;
+ALTER TABLE		orig_geo_vg250.vg250_1_sta_union_mview_error_geom_view OWNER TO oeuser;
+
+-- "Drop empty view"   (OK!) -> 100ms =1
+SELECT f_drop_view('{vg250_1_sta_union_mview_error_geom_view}', 'orig_geo_vg250');
+
+
+---------- ---------- ----------
+-- "orig_geo_vg250.vg250_4_krs_mview"   2016-04-13 09:55 2s
+---------- ---------- ----------
+
+-- "Transform VG250 Gemeinden"   (OK!) -> 1.000ms =432
+DROP MATERIALIZED VIEW IF EXISTS	orig_geo_vg250.vg250_4_krs_mview CASCADE;
+CREATE MATERIALIZED VIEW		orig_geo_vg250.vg250_4_krs_mview AS
+	SELECT	vg.gid,
+		vg.gen,
+		vg.nuts,
+		vg.rs,
+		ags_0,
+		ST_TRANSFORM(vg.geom,3035) ::geometry(MultiPolygon,3035) AS geom
+	FROM	orig_geo_vg250.vg250_4_krs AS vg
+	ORDER BY vg.gid;
+
+-- "Create Index (id)"   (OK!) -> 100ms =0
+CREATE UNIQUE INDEX  	vg250_4_krs_mview_gid_idx
+		ON	orig_geo_vg250.vg250_4_krs_mview (gid);
+
+-- "Create Index GIST (geom)"   (OK!) -> 200ms =0
+CREATE INDEX  	vg250_4_krs_mview_geom_idx
+	ON	orig_geo_vg250.vg250_4_krs_mview
+	USING	GIST (geom);
+
+-- "Grant oeuser"   (OK!) -> 100ms =0
+GRANT ALL ON TABLE	orig_geo_vg250.vg250_4_krs_mview TO oeuser WITH GRANT OPTION;
+ALTER TABLE		orig_geo_vg250.vg250_4_krs_mview OWNER TO oeuser;
+
+---------- ---------- ----------
+
+-- "Validate (geom)"   (OK!) -> 22.000ms =0
+DROP VIEW IF EXISTS	orig_geo_vg250.vg250_4_krs_mview_error_geom_view CASCADE;
+CREATE VIEW		orig_geo_vg250.vg250_4_krs_mview_error_geom_view AS 
+	SELECT	test.id AS id,
+		test.error AS error,
+		reason(ST_IsValidDetail(test.geom)) AS error_reason,
+		ST_SetSRID(location(ST_IsValidDetail(test.geom)),3035) ::geometry(Point,3035) AS error_location
+	FROM	(
+		SELECT	source.gid AS id,				-- PK
+			ST_IsValid(source.geom) AS error,
+			source.geom ::geometry(MultiPolygon,3035) AS geom
+		FROM	orig_geo_vg250.vg250_4_krs_mview AS source	-- Table
+		) AS test
+	WHERE	test.error = FALSE;
+
+-- "Grant oeuser"   (OK!) -> 100ms =0
+GRANT ALL ON TABLE	orig_geo_vg250.vg250_4_krs_mview_error_geom_view TO oeuser WITH GRANT OPTION;
+ALTER TABLE		orig_geo_vg250.vg250_4_krs_mview_error_geom_view OWNER TO oeuser;
+
+-- "Drop empty view"   (OK!) -> 100ms =1
+SELECT f_drop_view('{vg250_4_krs_mview_error_geom_view}', 'orig_geo_vg250');
+
+
+---------- ---------- ----------
+-- "vg250_6_gem_mview"   2016-04-13 09:55 2s
 ---------- ---------- ----------
 
 -- "Transform VG250 Gemeinden"   (OK!) -> 2.000ms =11.438
@@ -122,7 +191,29 @@ CREATE INDEX  	vg250_6_gem_mview_geom_idx
 GRANT ALL ON TABLE	orig_geo_vg250.vg250_6_gem_mview TO oeuser WITH GRANT OPTION;
 ALTER TABLE		orig_geo_vg250.vg250_6_gem_mview OWNER TO oeuser;
 
+---------- ---------- ----------
 
+-- "Validate (geom)"   (OK!) -> 22.000ms =0
+DROP VIEW IF EXISTS	orig_geo_vg250.vg250_6_gem_mview_error_geom_view CASCADE;
+CREATE VIEW		orig_geo_vg250.vg250_6_gem_mview_error_geom_view AS 
+	SELECT	test.id AS id,
+		test.error AS error,
+		reason(ST_IsValidDetail(test.geom)) AS error_reason,
+		ST_SetSRID(location(ST_IsValidDetail(test.geom)),3035) ::geometry(Point,3035) AS error_location
+	FROM	(
+		SELECT	source.gid AS id,				-- PK
+			ST_IsValid(source.geom) AS error,
+			source.geom ::geometry(MultiPolygon,3035) AS geom
+		FROM	orig_geo_vg250.vg250_6_gem_mview AS source	-- Table
+		) AS test
+	WHERE	test.error = FALSE;
+
+-- "Grant oeuser"   (OK!) -> 100ms =0
+GRANT ALL ON TABLE	orig_geo_vg250.vg250_6_gem_mview_error_geom_view TO oeuser WITH GRANT OPTION;
+ALTER TABLE		orig_geo_vg250.vg250_6_gem_mview_error_geom_view OWNER TO oeuser;
+
+-- "Drop empty view"   (OK!) -> 100ms =1
+SELECT f_drop_view('{vg250_6_gem_mview_error_geom_view}', 'orig_geo_vg250');
 
 ---------- ---------- ---------- ---------- ---------- ----------
 -- "Filter OSM Urban Landuse"
@@ -167,7 +258,7 @@ CREATE INDEX  	osm_deu_polygon_urban_geom_idx
 	ON	orig_geo_ego.osm_deu_polygon_urban
 	USING	GIST (geom);
 
-	-- "Grant oeuser"   (OK!) -> 100ms =0
+-- "Grant oeuser"   (OK!) -> 100ms =0
 GRANT ALL ON TABLE	orig_geo_ego.osm_deu_polygon_urban TO oeuser WITH GRANT OPTION;
 ALTER TABLE		orig_geo_ego.osm_deu_polygon_urban OWNER TO oeuser;
 
