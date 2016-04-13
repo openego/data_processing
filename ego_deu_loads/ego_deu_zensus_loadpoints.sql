@@ -1,6 +1,6 @@
 ﻿
 ---------- ---------- ---------- ---------- ---------- ----------
--- "Load Points Zensus"   2016-04-06 11:09   
+-- "Load Points Zensus"   2016-04-13 15:55   s
 ---------- ---------- ---------- ---------- ---------- ----------
 
 -- "Create Table" (OK!) 4.000ms =3.177.723
@@ -44,9 +44,9 @@ GRANT ALL ON TABLE 	orig_geo_ego.ego_deu_zensus_loadpoints TO oeuser WITH GRANT 
 ALTER TABLE		orig_geo_ego.ego_deu_zensus_loadpoints OWNER TO oeuser;
 
 
----------- ---------- ----------
--- "Load Points Grid"   2016-04-06 11:30
----------- ---------- ----------
+---------- ---------- ---------- ---------- ---------- ----------
+-- "Load Points Grid"   2016-04-13 16:16   75s
+---------- ---------- ---------- ---------- ---------- ----------
 
 -- "Extend Table"   (OK!) 1.000ms =0
 ALTER TABLE	orig_geo_ego.ego_deu_zensus_loadpoints
@@ -74,7 +74,7 @@ CREATE INDEX  	ego_deu_loadcluster_geom_grid_idx
 
 
 ---------- ---------- ---------- ---------- ---------- ----------
--- "Cluster from Load Points"   2016-04-06 11:35
+-- "Cluster from Load Points"   2016-04-13 16:17   275s
 ---------- ---------- ---------- ---------- ---------- ----------
 
 -- "Create Table"   (OK!) -> 100ms =0
@@ -136,9 +136,9 @@ CREATE INDEX	ego_deu_zensus_loadpoints_cluster_geom_surfacepoint_idx
 GRANT ALL ON TABLE 	orig_geo_ego.ego_deu_zensus_loadpoints_cluster TO oeuser WITH GRANT OPTION;
 ALTER TABLE		orig_geo_ego.ego_deu_zensus_loadpoints_cluster OWNER TO oeuser;
 
----------- ---------- ----------
--- "Create SPF"   2016-04-06 11:37  5s
----------- ---------- ----------
+---------- ---------- ---------- ---------- ---------- ----------
+-- "Create SPF"   2016-04-13 16:22  5s
+---------- ---------- ---------- ---------- ---------- ----------
 
 -- "Create Table SPF"   (OK!) 2.000ms =406
 DROP TABLE IF EXISTS  	orig_geo_ego.ego_deu_zensus_loadpoints_cluster_spf;
@@ -182,7 +182,7 @@ ALTER TABLE		orig_geo_ego.ego_deu_zensus_loadpoints_cluster_spf OWNER TO oeuser;
 
 -- Zensus Punkte, die nicht in LA liegen
 
--- "Population in Load Points"   (OK!) 1.000ms = 80.324.282 / 8.087.068 (4.112.902)
+-- "Population in Load Points"   (OK!) 1.000ms = 80.324.282 / 8.013.797
 SELECT	'zensus_deu' AS name,
 	SUM(zensus.population) AS people
 FROM	orig_destatis.zensus_population_per_ha_mview AS zensus
