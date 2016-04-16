@@ -1,6 +1,6 @@
 ﻿
-DROP TYPE voronoi;
-DROP FUNCTION r_voronoi(text, text, text);
+-- DROP TYPE voronoi;
+-- DROP FUNCTION r_voronoi(text, text, text);
 
  
 CREATE TYPE voronoi AS (id integer, polygon geometry);
