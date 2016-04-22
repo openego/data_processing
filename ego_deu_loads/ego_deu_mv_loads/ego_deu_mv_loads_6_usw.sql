@@ -9,8 +9,8 @@
 ---------- ---------- ----------
 
 -- "Substations"   (OK!) 100ms =3.716
-DROP MATERIALIZED VIEW IF EXISTS	orig_ego.ego_deu_mv_substations_mview CASCADE;
-CREATE MATERIALIZED VIEW		orig_ego.ego_deu_mv_substations_mview AS
+DROP TABLE IF EXISTS	orig_ego.ego_deu_mv_substations CASCADE;
+CREATE TABLE		orig_ego.ego_deu_mv_substations AS
 	SELECT	pts.subst_id ::integer AS subst_id,
 		pts.name ::text AS subst_name,
 		pts.voltage ::text AS subst_voltage,
@@ -19,20 +19,21 @@ CREATE MATERIALIZED VIEW		orig_ego.ego_deu_mv_substations_mview AS
 		pts.operator ::text AS subst_operator,
 		pts.status ::text AS subst_status,
 		ST_TRANSFORM(pts.geom,3035) ::geometry(Point,3035) AS geom
-	FROM	calc_gridcells_znes.znes_deu_substations_filtered AS pts;
+	FROM	calc_gridcells_znes.znes_deu_substations_filtered AS pts
+	WHERE	ST_CONTAINS(gem.geom,ST_TRANSFORM(pts.geom,3035));
 
 -- "Create Index (subst_id)"   (OK!) -> 1.000ms =0
-CREATE UNIQUE INDEX  	ego_deu_mv_substations_mview_gid_idx
-		ON	orig_ego.ego_deu_mv_substations_mview (subst_id);
+CREATE UNIQUE INDEX  	ego_deu_mv_substations_gid_idx
+		ON	orig_ego.ego_deu_mv_substations (subst_id);
 
 -- "Create Index GIST (geom)"   (OK!) -> 100ms =0
-CREATE INDEX  	ego_deu_mv_substations_mview_geom_idx
-	ON	orig_ego.ego_deu_mv_substations_mview
+CREATE INDEX  	ego_deu_mv_substations_geom_idx
+	ON	orig_ego.ego_deu_mv_substations
 	USING	GIST (geom);
 
 -- "Grant oeuser"   (OK!) -> 100ms =0
-GRANT ALL ON TABLE 	orig_ego.ego_deu_mv_substations_mview TO oeuser WITH GRANT OPTION;
-ALTER TABLE		orig_ego.ego_deu_mv_substations_mview OWNER TO oeuser;
+GRANT ALL ON TABLE 	orig_ego.ego_deu_mv_substations TO oeuser WITH GRANT OPTION;
+ALTER TABLE		orig_ego.ego_deu_mv_substations OWNER TO oeuser;
 
 
 
@@ -95,8 +96,7 @@ UPDATE 	orig_ego.vg250_6_gem_dump_usw AS t1
 SET  	usw_cat = t2.usw_cat
 FROM	(SELECT	gem.id AS id,
 		'1'::integer AS usw_cat
-	FROM	orig_ego.vg250_6_gem_dump_usw_1_mview AS gem
-	)AS t2
+	FROM	orig_ego.vg250_6_gem_dump_usw_1_mview AS gem )AS t2
 WHERE  	t1.id = t2.id;
 
 ---------- ---------- ----------
@@ -117,8 +117,7 @@ UPDATE 	orig_ego.vg250_6_gem_dump_usw AS t1
 SET  	usw_cat = t2.usw_cat
 FROM	(SELECT	gem.id AS id,
 		'2'::integer AS usw_cat
-	FROM	orig_ego.vg250_6_gem_dump_usw_2_mview AS gem
-	)AS t2
+	FROM	orig_ego.vg250_6_gem_dump_usw_2_mview AS gem )AS t2
 WHERE  	t1.id = t2.id;
 
 ----------
@@ -163,26 +162,26 @@ WHERE  	t1.id = t2.id;
 
 
 ---------- ---------- ----------
--- "Netzbezirke"
+-- "Grid Districs"
 ---------- ---------- ----------
 
 -- "Table Netzbezirke"   (OK!) -> 100ms =3.716
-DROP TABLE IF EXISTS	orig_ego.ego_ms_netzbezirke CASCADE;
-CREATE TABLE		orig_ego.ego_ms_netzbezirke AS
-	SELECT	usw.subst_id AS id,
+DROP TABLE IF EXISTS	orig_ego.ego_grid_districs CASCADE;
+CREATE TABLE		orig_ego.ego_grid_districs AS
+	SELECT	usw.subst_id AS sub_id,
 		ST_TRANSFORM(usw.geom,3035) ::geometry(Point,3035) AS geom_subst
 	FROM	orig_ego.ego_deu_mv_substations_mview AS usw;
 
 -- "Set PK"   (OK!) -> 100ms =0
-ALTER TABLE orig_ego.ego_ms_netzbezirke
+ALTER TABLE orig_ego.ego_grid_districs
 	ADD COLUMN usw_sum integer,
 	ADD COLUMN usw_cat integer,
 	ADD COLUMN geom_gem geometry(Polygon,3035),
-	ADD PRIMARY KEY (id);
+	ADD PRIMARY KEY (sub_id);
 
 -- "Create Index GIST (geom_subst)"   (OK!) -> 100ms =0
-CREATE INDEX  	ego_ms_netzbezirke_geom_subst_idx
-	ON	orig_ego.ego_ms_netzbezirke
+CREATE INDEX  	ego_grid_districs_geom_subst_idx
+	ON	orig_ego.ego_grid_districs
 	USING	GIST (geom_subst);
 
 
@@ -190,9 +189,9 @@ CREATE INDEX  	ego_ms_netzbezirke_geom_subst_idx
 ---------- ---------- ----------
 -- "I. Gemeinden mit genau einem USW"
 ---------- ---------- ----------
-	
--- "usw geom"   (OK!) -> 1.000ms =292
-UPDATE 	orig_ego.ego_ms_netzbezirke AS t1
+-- sub_id = gem.id
+-- "update usw geom gem1"   (OK!) -> 1.000ms =292
+UPDATE 	orig_ego.ego_grid_districs AS t1
 SET  	usw_sum  = t2.usw_sum,
 	usw_cat = t2.usw_cat,
 	geom_gem = t2.geom_gem
@@ -200,10 +199,8 @@ FROM	(SELECT	gem.id AS id,
 		gem.usw_sum ::integer AS usw_sum,
 		gem.usw_cat ::integer AS usw_cat,
 		gem.geom ::geometry(Polygon,3035) AS geom_gem
-	FROM	orig_ego.vg250_6_gem_dump_usw AS gem
-	WHERE  	gem.usw_cat = '1'
-	)AS t2
-WHERE  	t1.id = t2.id;
+	FROM	orig_ego.vg250_6_gem_dump_usw_1_mview AS gem )AS t2
+WHERE  	t1.sub_id = t2.id;
 
 
 
@@ -263,11 +260,13 @@ DROP SEQUENCE IF EXISTS 	orig_ego.ego_deu_usw_voi_cut_id CASCADE;
 CREATE SEQUENCE 		orig_ego.ego_deu_usw_voi_cut_id;
 
 -- "Cutting GEM II."   (OK!) 3.000ms =4.981
-DROP TABLE IF EXISTS	orig_ego.ego_deu_usw_voi_cut;
+DROP TABLE IF EXISTS	orig_ego.ego_deu_usw_voi_cut CASCADE;
 CREATE TABLE		orig_ego.ego_deu_usw_voi_cut AS
 	SELECT	nextval('orig_ego.ego_deu_usw_voi_cut_id') AS id,
 		gem.id AS gid,
 		voi.id AS vid,
+		gem.ags_0 AS ags_0,
+		gem.usw_cat AS usw_cat,
 		(ST_DUMP(ST_INTERSECTION(gem.geom,voi.geom))).geom ::geometry(Polygon,3035) AS geom
 	FROM	orig_ego.vg250_6_gem_dump_usw_2_mview AS gem,
 		orig_ego.ego_deu_usw_voi_mview AS voi
@@ -276,7 +275,6 @@ CREATE TABLE		orig_ego.ego_deu_usw_voi_cut AS
 -- "Ad PK"   (OK!) 150ms =0
 ALTER TABLE	orig_ego.ego_deu_usw_voi_cut
 	ADD COLUMN voi_usw_sum integer,
-	ADD COLUMN ags_0 varchar(12),
 	ADD PRIMARY KEY (id);
 
 -- "Create Index GIST (geom)"   (OK!) 2.500ms =0
@@ -300,24 +298,36 @@ FROM	(SELECT	gem.id AS id,
 	)AS t2
 WHERE  	t1.id = t2.id;
 
--- "Calculate Gemeindeschlüssel"   (OK!) -> 3.000ms =4.981
-UPDATE 	orig_ego.ego_deu_usw_voi_cut AS t1
-SET  	ags_0 = t2.ags_0
-FROM    (
-	SELECT	cut.id AS id,
-		vg.ags_0 AS ags_0
-	FROM	orig_ego.ego_deu_usw_voi_cut AS cut,
-		orig_geo_vg250.vg250_6_gem_mview AS vg
-	WHERE  	vg.geom && ST_POINTONSURFACE(cut.geom) AND
-		ST_CONTAINS(vg.geom,ST_POINTONSURFACE(cut.geom))
-	) AS t2
-WHERE  	t1.id = t2.id;
+-- -- "Calculate Gemeindeschlüssel"   (OK!) -> 3.000ms =4.981
+-- UPDATE 	orig_ego.ego_deu_usw_voi_cut AS t1
+-- SET  	ags_0 = t2.ags_0
+-- FROM    (
+-- 	SELECT	cut.id AS id,
+-- 		vg.ags_0 AS ags_0
+-- 	FROM	orig_ego.ego_deu_usw_voi_cut AS cut,
+-- 		orig_geo_vg250.vg250_6_gem_mview AS vg
+-- 	WHERE  	vg.geom && ST_POINTONSURFACE(cut.geom) AND
+-- 		ST_CONTAINS(vg.geom,ST_POINTONSURFACE(cut.geom))
+-- 	) AS t2
+-- WHERE  	t1.id = t2.id;
 
 ---------- ---------- ----------
 
-
-
-
+-- sub_id = id
+-- "update usw geom gem2"   (OK!) -> 1.000ms =1.741
+UPDATE 	orig_ego.ego_grid_districs AS t1
+SET  	usw_sum  = t2.usw_sum,
+	usw_cat = t2.usw_cat,
+	geom_gem = t2.geom_gem
+FROM	(SELECT	gem.id AS id,
+		gem.gid AS gid,
+		gem.vid AS vid,
+		gem.ags_0 AS ags_0,
+		gem.usw_cat AS usw_cat,
+		gem.voi_usw_sum ::integer AS usw_sum,
+		gem.geom ::geometry(Polygon,3035) AS geom_gem
+	FROM	orig_ego.ego_deu_usw_voi_cut AS gem )AS t2
+WHERE  	t1.sub_id = t2.id;
 
 ---------- ---------- ----------
 
@@ -346,56 +356,125 @@ WHERE  	t1.id = t2.id;
 -- gem WHERE usw_sum=0		orig_geo_ego.vg250_6_gem_usw_3_mview
 -- usw				orig_geo_ego.ego_deu_mv_substations_mview
 
--- "Next Neighbor"   (OK!) 50.000ms =9.172
-DROP MATERIALIZED VIEW IF EXISTS	orig_ego.vg250_6_gem_dump_usw_3_nn_mview;
-CREATE MATERIALIZED VIEW 		orig_ego.vg250_6_gem_dump_usw_3_nn_mview AS 
-SELECT DISTINCT ON (g1.gid)
-	g1.gid As gref_gid,
-	g1.ags_0 As gref_ags_0,
-	g1.geom AS gref_geom,
-	g2.subst_id As gnn_gid, 
-        g2.subst_name As gnn_subst_name,
-	g2.geom AS gnn_geom
-FROM 	orig_geo_ego.vg250_6_gem_usw_3_mview As g1, 
-	orig_geo_ego.ego_deu_mv_substations_mview As g2   
-WHERE 	g1.gid <> g2.subst_id
-	AND ST_DWithin(g1.geom, g2.geom, 100000)
-ORDER BY 	g1.gid, 
-		ST_Distance(g1.geom,g2.geom);
+-- "Sequence"   (OK!) 100ms =0
+DROP SEQUENCE IF EXISTS 	orig_ego.vg250_6_gem_dump_usw_3_nn_id CASCADE;
+CREATE SEQUENCE 		orig_ego.vg250_6_gem_dump_usw_3_nn_id;
+
+-- "Next Neighbor"   (OK!) 53.000ms =9.318
+DROP TABLE IF EXISTS	orig_ego.vg250_6_gem_dump_usw_3_nn CASCADE;
+CREATE TABLE 		orig_ego.vg250_6_gem_dump_usw_3_nn AS 
+SELECT DISTINCT ON (gem.gid)
+	nextval('orig_ego.vg250_6_gem_dump_usw_3_nn_id') AS id,
+	gem.gid As gem_gid,
+	gem.ags_0 As gem_ags_0,
+	gem.geom ::geometry(Polygon,3035) AS gem_geom,
+	sub.subst_id As sub_id, 
+        sub.subst_name As sub_subst_name,
+	sub.geom ::geometry(Point,3035) AS sub_geom,
+	gem.ags_0 AS ags_0,
+	gem.usw_cat AS usw_cat,
+	gem.usw_sum ::integer AS usw_sum
+FROM 	orig_ego.vg250_6_gem_dump_usw_3_mview As gem, 
+	orig_ego.ego_deu_mv_substations_mview As sub   
+WHERE 	gem.gid <> sub.subst_id
+	AND ST_DWithin(gem.geom, sub.geom, 100000)
+ORDER BY 	gem.gid, 
+		ST_Distance(gem.geom,sub.geom);
+
+-- "Ad PK"   (OK!) 150ms =0
+ALTER TABLE	orig_ego.vg250_6_gem_dump_usw_3_nn
+	ADD PRIMARY KEY (id);
+
+-- "Create Index GIST (gem_geom)"   (OK!) 2.500ms =0
+DROP INDEX IF EXISTS 	vg250_6_gem_dump_usw_3_nn_gem_geom_idx;
+CREATE INDEX		vg250_6_gem_dump_usw_3_nn_gem_geom_idx
+	ON	orig_ego.vg250_6_gem_dump_usw_3_nn
+	USING	GIST (gem_geom);
+
+-- "Create Index GIST (sub_geom)"   (OK!) 2.500ms =0
+DROP INDEX IF EXISTS 	vg250_6_gem_dump_usw_3_nn_sub_geom_idx;
+CREATE INDEX		vg250_6_gem_dump_usw_3_nn_sub_geom_idx
+	ON	orig_ego.vg250_6_gem_dump_usw_3_nn
+	USING	GIST (sub_geom);
+
+---------- ---------- ----------
+-- NN Line
+---------- ---------- ----------
 
 -- "Sequence"   (OK!) 100ms =0
-DROP SEQUENCE IF EXISTS 	vg250_6_gem_dump_usw_3_nn_line_mview_id CASCADE;
-CREATE SEQUENCE 		vg250_6_gem_dump_usw_3_nn_line_mview_id;
+DROP SEQUENCE IF EXISTS 	orig_ego.vg250_6_gem_dump_usw_3_nn_line_id CASCADE;
+CREATE SEQUENCE 		orig_ego.vg250_6_gem_dump_usw_3_nn_line_id;
 
--- "connect points"   (OK!) 1.000ms =9.172
-DROP MATERIALIZED VIEW IF EXISTS	orig_ego.vg250_6_gem_dump_usw_3_nn_line_mview;
-CREATE MATERIALIZED VIEW 		orig_ego.vg250_6_gem_dump_usw_3_nn_line_mview AS 
-	SELECT 	nextval('vg250_6_gem_dump_usw_3_nn_line_mview_id') AS id,
-		nn.gref_gid,
-		nn.gnn_gid,
-		(ST_Dump(ST_Centroid(nn.gref_geom))).geom ::geometry(Point,3035) AS geom_centre,
-		ST_ShortestLine(	(ST_Dump(ST_Centroid(nn.gref_geom))).geom ::geometry(Point,3035),
-					nn.gnn_geom ::geometry(Point,3035)
+-- "connect points"   (OK!) 1.000ms =9.318
+DROP MATERIALIZED VIEW IF EXISTS	orig_ego.vg250_6_gem_dump_usw_3_nn_line;
+CREATE MATERIALIZED VIEW 		orig_ego.vg250_6_gem_dump_usw_3_nn_line AS 
+	SELECT 	nextval('orig_ego.vg250_6_gem_dump_usw_3_nn_line_id') AS id,
+		nn.gem_gid,
+		nn.sub_id,
+		(ST_Dump(ST_Centroid(nn.gem_geom))).geom ::geometry(Point,3035) AS geom_centre,
+		ST_ShortestLine(	(ST_Dump(ST_Centroid(nn.gem_geom))).geom ::geometry(Point,3035),
+					nn.sub_geom ::geometry(Point,3035)
 		) ::geometry(LineString,3035) AS geom
-	FROM	orig_ego.vg250_6_gem_dump_usw_3_nn_mview AS nn;
+	FROM	orig_ego.vg250_6_gem_dump_usw_3_nn AS nn;
 
 -- "Create Index (id)"   (OK!) -> 100ms =0
-CREATE UNIQUE INDEX  	vg250_6_gem_dump_usw_3_nn_line_mview_id_idx
-		ON	orig_ego.vg250_6_gem_dump_usw_3_nn_line_mview (id);
+CREATE UNIQUE INDEX  	vg250_6_gem_dump_usw_3_nn_line_id_idx
+		ON	orig_ego.vg250_6_gem_dump_usw_3_nn_line (id);
 
 -- "Create Index GIST (geom_centre)"   (OK!) 2.500ms =0
-CREATE INDEX	vg250_6_gem_dump_usw_3_nn_line_mview_geom_centre_idx
-	ON	orig_ego.vg250_6_gem_dump_usw_3_nn_line_mview
+CREATE INDEX	vg250_6_gem_dump_usw_3_nn_line_geom_centre_idx
+	ON	orig_ego.vg250_6_gem_dump_usw_3_nn_line
 	USING	GIST (geom_centre);
 
 -- "Create Index GIST (geom)"   (OK!) 2.500ms =0
-CREATE INDEX	vg250_6_gem_dump_usw_3_nn_line_mview_geom_idx
-	ON	orig_ego.vg250_6_gem_dump_usw_3_nn_line_mview
+CREATE INDEX	vg250_6_gem_dump_usw_3_nn_line_geom_idx
+	ON	orig_ego.vg250_6_gem_dump_usw_3_nn_line
 	USING	GIST (geom);
 
 ---------- ---------- ----------
 
+-- UNION
 
+-- "union gem"   (OK!) 5.000ms =2.111
+DROP MATERIALIZED VIEW IF EXISTS	orig_ego.vg250_6_gem_dump_usw_3_nn_union CASCADE;
+CREATE MATERIALIZED VIEW 		orig_ego.vg250_6_gem_dump_usw_3_nn_union AS 
+	SELECT	un.sub_id ::integer AS sub_id,
+		un.usw_cat ::integer AS usw_cat,
+		un.usw_sum ::integer AS usw_sum,
+		un.geom ::geometry(Polygon,3035) AS geom
+	FROM	(SELECT DISTINCT ON (nn.sub_id)
+			nn.sub_id AS sub_id,
+			nn.usw_cat AS usw_cat,
+			nn.usw_sum AS usw_sum,
+			(ST_DUMP(ST_UNION(nn.gem_geom))).geom AS geom
+		FROM	orig_ego.vg250_6_gem_dump_usw_3_nn AS nn
+		GROUP BY nn.sub_id, nn.usw_cat, nn.usw_sum) AS un;
+
+-- "Create Index (sub_id)"   (OK!) -> 100ms =0
+CREATE UNIQUE INDEX  	vg250_6_gem_dump_usw_3_nn_union_sub_id_idx
+		ON	orig_ego.vg250_6_gem_dump_usw_3_nn_union (sub_id);
+
+-- "Create Index GIST (geom)"   (OK!) 2.500ms =0
+CREATE INDEX	vg250_6_gem_dump_usw_3_nn_union_geom_idx
+	ON	orig_ego.vg250_6_gem_dump_usw_3_nn_union
+	USING	GIST (geom);
+
+---------- ---------- ----------
+
+-- "update usw geom gem2"   (OK!) -> 1.000ms =1741
+UPDATE 	orig_ego.ego_grid_districs AS t1
+SET  	usw_sum  = t2.usw_sum,
+	usw_cat = t2.usw_cat,
+	geom_gem = t2.geom_gem
+FROM	(SELECT	gem.id AS id,
+		gem.gid AS gid,
+		gem.vid AS vid,
+		gem.ags_0 AS ags_0,
+		gem.usw_cat ::integer AS usw_cat,
+		gem.voi_usw_sum ::integer AS usw_sum,
+		gem.geom ::geometry(Polygon,3035) AS geom_gem
+	FROM	orig_ego.vg250_6_gem_dump_usw_3_nn_union AS gem )AS t2
+WHERE  	t1.id = t2.id;
 
 
 
