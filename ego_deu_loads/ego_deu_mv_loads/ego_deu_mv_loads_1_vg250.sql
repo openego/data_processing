@@ -1,16 +1,16 @@
 ﻿
 ---------- ---------- ---------- ---------- ---------- ----------
--- "1. Data Setup vg250"   2016-04-18 10:00 11s
+-- "1. Data Setup vg250"   2016-04-18 10:00 36s
 ---------- ---------- ---------- ---------- ---------- ----------
 
 ---------- ---------- ----------
 -- "Schema"   2016-04-17 21:00 1s
 ---------- ---------- ----------
 
--- -- "Create Schema"
--- DROP SCHEMA IF EXISTS	orig_ego;
--- CREATE SCHEMA 		orig_ego;
--- GRANT ALL ON SCHEMA 	orig_ego TO oeuser WITH GRANT OPTION;
+-- "Create Schema"
+DROP SCHEMA IF EXISTS	orig_ego;
+CREATE SCHEMA 		orig_ego;
+GRANT ALL ON SCHEMA 	orig_ego TO oeuser WITH GRANT OPTION;
 
 
 ---------- ---------- ----------
@@ -22,13 +22,12 @@ DROP MATERIALIZED VIEW IF EXISTS	orig_geo_vg250.vg250_1_sta_mview CASCADE;
 CREATE MATERIALIZED VIEW		orig_geo_vg250.vg250_1_sta_mview AS
 	SELECT	vg.gid ::integer AS gid,
 		vg.bez ::text AS bez,
-		vg.water ::boolean AS water,
 		ST_AREA(ST_TRANSFORM(vg.geom, 3035)) / 10000 ::double precision AS area_km2,
 		ST_TRANSFORM(vg.geom,3035) ::geometry(MultiPolygon,3035) AS geom
 	FROM	orig_geo_vg250.vg250_1_sta AS vg
 	ORDER BY vg.gid;
 
--- "Create Index (id)"   (OK!) -> 100ms =0
+-- "Create Index (gid)"   (OK!) -> 100ms =0
 CREATE UNIQUE INDEX  	vg250_1_sta_mview_gid_idx
 		ON	orig_geo_vg250.vg250_1_sta_mview (gid);
 
@@ -336,27 +335,27 @@ ALTER TABLE		orig_geo_vg250.vg250_6_gem_dump_mview OWNER TO oeuser;
 
 ---------- ---------- ----------
 
--- "Validate (geom)"   (OK!) -> 22.000ms =0
-DROP VIEW IF EXISTS	orig_geo_vg250.vg250_6_gem_dump_mview_error_geom_view CASCADE;
-CREATE VIEW		orig_geo_vg250.vg250_6_gem_dump_mview_error_geom_view AS 
-	SELECT	test.id AS id,
-		test.error AS error,
-		reason(ST_IsValidDetail(test.geom)) AS error_reason,
-		ST_SetSRID(location(ST_IsValidDetail(test.geom)),3035) ::geometry(Point,3035) AS error_location,
-		test.geom ::geometry(Polygon,3035) AS geom
-	FROM	(
-		SELECT	source.id AS id,				-- PK
-			ST_IsValid(source.geom) AS error,
-			source.geom ::geometry(Polygon,3035) AS geom
-		FROM	orig_geo_vg250.vg250_6_gem_dump_mview AS source	-- Table
-		) AS test
-	WHERE	test.error = FALSE;
-
--- "Grant oeuser"   (OK!) -> 100ms =0
-GRANT ALL ON TABLE	orig_geo_vg250.vg250_6_gem_dump_mview_error_geom_view TO oeuser WITH GRANT OPTION;
-ALTER TABLE		orig_geo_vg250.vg250_6_gem_dump_mview_error_geom_view OWNER TO oeuser;
-
--- "Drop empty view"   (OK!) -> 100ms =1
-SELECT f_drop_view('{vg250_6_gem_dump_mview_error_geom_view}', 'orig_geo_vg250');
+-- -- "Validate (geom)"   (OK!) -> 22.000ms =0
+-- DROP VIEW IF EXISTS	orig_geo_vg250.vg250_6_gem_dump_mview_error_geom_view CASCADE;
+-- CREATE VIEW		orig_geo_vg250.vg250_6_gem_dump_mview_error_geom_view AS 
+-- 	SELECT	test.id AS id,
+-- 		test.error AS error,
+-- 		reason(ST_IsValidDetail(test.geom)) AS error_reason,
+-- 		ST_SetSRID(location(ST_IsValidDetail(test.geom)),3035) ::geometry(Point,3035) AS error_location,
+-- 		test.geom ::geometry(Polygon,3035) AS geom
+-- 	FROM	(
+-- 		SELECT	source.id AS id,				-- PK
+-- 			ST_IsValid(source.geom) AS error,
+-- 			source.geom ::geometry(Polygon,3035) AS geom
+-- 		FROM	orig_geo_vg250.vg250_6_gem_dump_mview AS source	-- Table
+-- 		) AS test
+-- 	WHERE	test.error = FALSE;
+-- 
+-- -- "Grant oeuser"   (OK!) -> 100ms =0
+-- GRANT ALL ON TABLE	orig_geo_vg250.vg250_6_gem_dump_mview_error_geom_view TO oeuser WITH GRANT OPTION;
+-- ALTER TABLE		orig_geo_vg250.vg250_6_gem_dump_mview_error_geom_view OWNER TO oeuser;
+-- 
+-- -- "Drop empty view"   (OK!) -> 100ms =1
+-- SELECT f_drop_view('{vg250_6_gem_dump_mview_error_geom_view}', 'orig_geo_vg250');
 
 ---------- ---------- ----------

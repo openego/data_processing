@@ -88,27 +88,27 @@ ALTER TABLE		orig_ego.ego_deu_loads_collect_buffer100_mview OWNER TO oeuser;
 
 ---------------------------
 
--- "Validate (geom)"   (OK!) -> 100ms =0
-DROP VIEW IF EXISTS	orig_ego.ego_deu_loads_collect_buffer100_mview_error_geom_view CASCADE;
-CREATE VIEW		orig_ego.ego_deu_loads_collect_buffer100_mview_error_geom_view AS 
-	SELECT	test.id,
-		test.error,
-		reason(ST_IsValidDetail(test.geom)) AS error_reason,
-		ST_SetSRID(location(ST_IsValidDetail(test.geom)),3035) ::geometry(Point,3035) AS error_location
-	FROM	(
-		SELECT	source.id AS id,					-- PK
-			ST_IsValid(source.geom) AS error,
-			source.geom AS geom
-		FROM	orig_ego.ego_deu_loads_collect_buffer100_mview AS source	-- Table
-		) AS test
-	WHERE	test.error = FALSE;
-
--- "Grant oeuser"   (OK!) -> 100ms =0
-GRANT ALL ON TABLE	orig_ego.ego_deu_loads_collect_buffer100_mview_error_geom_view TO oeuser WITH GRANT OPTION;
-ALTER TABLE		orig_ego.ego_deu_loads_collect_buffer100_mview_error_geom_view OWNER TO oeuser;
-
--- "Drop empty view"   (OK!) -> 5.000ms =1
-SELECT f_drop_view('{ego_deu_loads_collect_buffer100_mview_error_geom_view}', 'orig_ego');
+-- -- "Validate (geom)"   (OK!) -> 100ms =0
+-- DROP VIEW IF EXISTS	orig_ego.ego_deu_loads_collect_buffer100_mview_error_geom_view CASCADE;
+-- CREATE VIEW		orig_ego.ego_deu_loads_collect_buffer100_mview_error_geom_view AS 
+-- 	SELECT	test.id,
+-- 		test.error,
+-- 		reason(ST_IsValidDetail(test.geom)) AS error_reason,
+-- 		ST_SetSRID(location(ST_IsValidDetail(test.geom)),3035) ::geometry(Point,3035) AS error_location
+-- 	FROM	(
+-- 		SELECT	source.id AS id,					-- PK
+-- 			ST_IsValid(source.geom) AS error,
+-- 			source.geom AS geom
+-- 		FROM	orig_ego.ego_deu_loads_collect_buffer100_mview AS source	-- Table
+-- 		) AS test
+-- 	WHERE	test.error = FALSE;
+-- 
+-- -- "Grant oeuser"   (OK!) -> 100ms =0
+-- GRANT ALL ON TABLE	orig_ego.ego_deu_loads_collect_buffer100_mview_error_geom_view TO oeuser WITH GRANT OPTION;
+-- ALTER TABLE		orig_ego.ego_deu_loads_collect_buffer100_mview_error_geom_view OWNER TO oeuser;
+-- 
+-- -- "Drop empty view"   (OK!) -> 5.000ms =1
+-- SELECT f_drop_view('{ego_deu_loads_collect_buffer100_mview_error_geom_view}', 'orig_ego');
 
 
 
@@ -117,14 +117,14 @@ SELECT f_drop_view('{ego_deu_loads_collect_buffer100_mview_error_geom_view}', 'o
 ---------- ---------- ---------- ---------- ---------- ----------
 
 -- "Sequence"   (OK!) 100ms =0
-DROP SEQUENCE IF EXISTS 	ego_deu_loads_melted_mview_id CASCADE;
-CREATE TEMP SEQUENCE 		ego_deu_loads_melted_mview_id;
+DROP SEQUENCE IF EXISTS 	orig_ego.ego_deu_loads_melted_mview_id CASCADE;
+CREATE SEQUENCE 		orig_ego.ego_deu_loads_melted_mview_id;
 
 
 -- "Create Table"   (OK!) 340.000ms =189.104
 DROP TABLE IF EXISTS	orig_ego.ego_deu_loads_melted;
 CREATE TABLE		orig_ego.ego_deu_loads_melted AS
-	SELECT	nextval('ego_deu_loads_melted_mview_id') AS id,
+	SELECT	nextval('orig_ego.ego_deu_loads_melted_mview_id') AS id,
 		(ST_DUMP(ST_MULTI(ST_UNION(
 			ST_BUFFER(buffer.geom, -100)
 		)))).geom ::geometry(Polygon,3035) AS geom
@@ -146,29 +146,29 @@ GRANT ALL ON TABLE	orig_ego.ego_deu_loads_melted TO oeuser WITH GRANT OPTION;
 ALTER TABLE		orig_ego.ego_deu_loads_melted OWNER TO oeuser;
 
 ---------- ---------- ----------
-
--- "Validate (geom)"   (OK!) -> 100ms =0
-DROP VIEW IF EXISTS	orig_ego.ego_deu_loads_melted_error_geom_view CASCADE;
-CREATE VIEW		orig_ego.ego_deu_loads_melted_error_geom_view AS 
-	SELECT	test.id,
-		test.error,
-		reason(ST_IsValidDetail(test.geom)) AS error_reason,
-		ST_SetSRID(location(ST_IsValidDetail(test.geom)),3035) ::geometry(Point,3035) AS error_location,
-		test.geom ::geometry(Polygon,3035) AS geom
-	FROM	(
-		SELECT	source.id AS id,				-- PK
-			ST_IsValid(source.geom) AS error,
-			source.geom AS geom
-		FROM	orig_ego.ego_deu_loads_melted AS source	-- Table
-		) AS test
-	WHERE	test.error = FALSE;
-
--- "Grant oeuser"   (OK!) -> 100ms =0
-GRANT ALL ON TABLE	orig_ego.ego_deu_loads_melted_error_geom_view TO oeuser WITH GRANT OPTION;
-ALTER TABLE		orig_ego.ego_deu_loads_melted_error_geom_view OWNER TO oeuser;
-
--- "Drop empty view"   (OK!) -> 3.000ms =1
-SELECT f_drop_view('{ego_deu_loads_melted_error_geom_view}', 'orig_ego');
+-- 
+-- -- "Validate (geom)"   (OK!) -> 100ms =0
+-- DROP VIEW IF EXISTS	orig_ego.ego_deu_loads_melted_error_geom_view CASCADE;
+-- CREATE VIEW		orig_ego.ego_deu_loads_melted_error_geom_view AS 
+-- 	SELECT	test.id,
+-- 		test.error,
+-- 		reason(ST_IsValidDetail(test.geom)) AS error_reason,
+-- 		ST_SetSRID(location(ST_IsValidDetail(test.geom)),3035) ::geometry(Point,3035) AS error_location,
+-- 		test.geom ::geometry(Polygon,3035) AS geom
+-- 	FROM	(
+-- 		SELECT	source.id AS id,				-- PK
+-- 			ST_IsValid(source.geom) AS error,
+-- 			source.geom AS geom
+-- 		FROM	orig_ego.ego_deu_loads_melted AS source	-- Table
+-- 		) AS test
+-- 	WHERE	test.error = FALSE;
+-- 
+-- -- "Grant oeuser"   (OK!) -> 100ms =0
+-- GRANT ALL ON TABLE	orig_ego.ego_deu_loads_melted_error_geom_view TO oeuser WITH GRANT OPTION;
+-- ALTER TABLE		orig_ego.ego_deu_loads_melted_error_geom_view OWNER TO oeuser;
+-- 
+-- -- "Drop empty view"   (OK!) -> 3.000ms =1
+-- SELECT f_drop_view('{ego_deu_loads_melted_error_geom_view}', 'orig_ego');
 
 ---------- ---------- ----------
 

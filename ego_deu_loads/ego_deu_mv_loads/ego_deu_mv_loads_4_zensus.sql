@@ -195,4 +195,4 @@ FROM	orig_ego.ego_deu_loads_zensus AS lp
 	UNION ALL
 SELECT	'zensus_loadpoints_cluster' AS name,
 	SUM(cl.zensus_sum) AS people
-FROM	orig_ego.ego_deu_loads_zensus_cluster AS cl
+FROM	orig_ego.ego_deu_loads_zensus_cluster AS cl;

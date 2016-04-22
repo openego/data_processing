@@ -1,5 +1,9 @@
-﻿-- Create Function Table in public schema
+﻿
+---------- ---------- ----------
+-- Function "f_drop_tables" in public
+---------- ---------- ----------
 
+DROP FUNCTION IF EXISTS f_drop_tables(text[],text);
 CREATE OR REPLACE FUNCTION f_drop_tables(_tbls text[] = '{}'
                                        , _schema text = 'public'
                                        , OUT drop_ct int)  AS
@@ -35,18 +39,19 @@ BEGIN
 END
 $func$ LANGUAGE plpgsql STRICT;
 
+---------- ---------- ----------
 -- Call Function
 
-SELECT f_drop_tables('{foo1,foo2,foo3,foo4}');
+-- SELECT f_drop_tables('{foo1,foo2,foo3,foo4}');
+-- SELECT f_drop_tables('{foo1,foo2,foo3,foo4}', 'schema');
 
-SELECT f_drop_tables('{foo1,foo2,foo3,foo4}', 'schema');
 
 
 ---------- ---------- ----------
+-- Function "f_drop_view" in public
+---------- ---------- ----------
 
--- Create Function View in public schema
-
-DROP FUNCTION f_drop_view(text[],text) ;
+DROP FUNCTION IF EXISTS f_drop_view(text[],text) ;
 CREATE OR REPLACE FUNCTION f_drop_view(_views text[] = '{}'
                                        , _schema text = 'public'
                                        , OUT drop_ct int)  AS
@@ -81,8 +86,8 @@ BEGIN
 END
 $func$ LANGUAGE plpgsql STRICT;
 
+---------- ---------- ----------
 -- Call Function
 
-SELECT f_drop_view('{foo1,foo2,foo3,foo4}');
-
-SELECT f_drop_view('{foo1,foo2,foo3,foo4}', 'schema');
+-- SELECT f_drop_view('{foo1,foo2,foo3,foo4}');
+-- SELECT f_drop_view('{foo1,foo2,foo3,foo4}', 'schema');
