@@ -1,5 +1,5 @@
 ﻿---------- ---------- ----------
----------- --SKRIPT-- OK! 54s
+---------- --SKRIPT-- OK! 13s
 ---------- ---------- ----------
 
 ---------- ---------- ----------
@@ -7,30 +7,12 @@
 ---------- ---------- ----------
 
 -- DROP SCHEMA IF EXISTS	orig_ego;
--- GRANT ALL ON DATABASE 	oedb TO oeuser WITH GRANT OPTION;
 -- CREATE SCHEMA 		orig_ego;
+-- ALTER DEFAULT PRIVILEGES IN SCHEMA orig_ego GRANT ALL ON TABLES TO oeuser;
+-- ALTER DEFAULT PRIVILEGES IN SCHEMA orig_ego GRANT ALL ON SEQUENCES TO oeuser;
+-- ALTER DEFAULT PRIVILEGES IN SCHEMA orig_ego GRANT ALL ON FUNCTIONS TO oeuser;
 -- GRANT ALL ON SCHEMA 	orig_ego TO oeuser WITH GRANT OPTION;
--- GRANT ALL ON SCHEMA 	orig_geo_vg250 TO oeuser WITH GRANT OPTION;
--- GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA orig_geo_vg250 TO oeuser;
-
----------- ---------- ----------
-
--- CREATE FUNCTION exec(text) returns text language plpgsql volatile
---   AS $f$
---     BEGIN
---       EXECUTE $1;
---       RETURN $1;
---     END;
--- $f$;
--- SELECT exec('ALTER TABLE ' || quote_ident(s.nspname) || '.' ||
---             quote_ident(s.relname) || ' OWNER TO oeuser')
---   FROM (SELECT nspname, relname
---           FROM pg_class c JOIN pg_namespace n ON (c.relnamespace = n.oid) 
---          WHERE nspname NOT LIKE E'pg\\_%' AND 
---                nspname <> 'information_schema' AND 
---                relkind IN ('r','S','v') ORDER BY relkind = 'S') s;
-
-
+-- GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA orig_ego TO oeuser;
 
 ---------- ---------- ---------- ---------- ---------- ----------
 -- "1. Data Setup vg250"   2016-04-18 10:00 36s
@@ -254,7 +236,30 @@ ALTER TABLE		orig_geo_vg250.vg250_4_krs_mview OWNER TO oeuser;
 -- -- "Drop empty view"   (OK!) -> 100ms =1
 -- SELECT f_drop_view('{vg250_4_krs_mview_error_geom_view}', 'orig_geo_vg250');
 
+---------- ---------- ----------
 
+-- "Separate SPF-Testregion from VG250 Kreise"   (OK!) -> 1.000ms =432
+DROP MATERIALIZED VIEW IF EXISTS	orig_geo_vg250.vg250_4_krs_spf_mview CASCADE;
+CREATE MATERIALIZED VIEW 		orig_geo_vg250.vg250_4_krs_spf_mview AS 
+ SELECT 	vg.gid,
+		vg.gen AS name,
+		ST_AREA(ST_Transform(vg.geom, 3035)) / 10000::double precision AS area_km2,
+		vg.geom
+   FROM orig_geo_vg250.vg250_4_krs vg
+  WHERE vg.gen = 'Unterallgäu' OR vg.gen = 'Memmingen';
+
+-- "Create Index (id)"   (OK!) -> 100ms =0
+CREATE UNIQUE INDEX  	vg250_4_krs_spf_mview_gid_idx
+		ON	orig_geo_vg250.vg250_4_krs_spf_mview (gid);
+
+-- "Create Index GIST (geom)"   (OK!) -> 200ms =0
+CREATE INDEX  	vg250_4_krs_spf_mview_geom_idx
+	ON	orig_geo_vg250.vg250_4_krs_spf_mview
+	USING	GIST (geom);
+
+-- "Grant oeuser"   (OK!) -> 100ms =0
+GRANT ALL ON TABLE	orig_geo_vg250.vg250_4_krs_spf_mview TO oeuser WITH GRANT OPTION;
+ALTER TABLE		orig_geo_vg250.vg250_4_krs_spf_mview OWNER TO oeuser;
 
 ---------- ---------- ----------
 -- "orig_geo_vg250.vg250_6_gem"

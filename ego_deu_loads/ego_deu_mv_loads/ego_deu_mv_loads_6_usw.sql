@@ -1,6 +1,5 @@
-﻿
----------- ---------- ----------
----------- --SKRIPT-- OK! 54s
+﻿---------- ---------- ----------
+---------- --SKRIPT-- OK! 7min
 ---------- ---------- ----------
 
 
@@ -17,7 +16,7 @@
 -- OSM Substations
 ---------- ---------- ----------
 
--- "Substations"   (OK!) 2.000ms =3.709
+-- "Substations"   (OK!) 2.000ms =3.707
 DROP TABLE IF EXISTS	orig_osm.osm_deu_substations CASCADE;
 CREATE TABLE		orig_osm.osm_deu_substations AS
 	SELECT	sub.subst_id ::integer AS subst_id,
@@ -28,7 +27,7 @@ CREATE TABLE		orig_osm.osm_deu_substations AS
 		sub.operator ::text AS subst_operator,
 		sub.status ::text AS subst_status,
 		(ST_DUMP(ST_TRANSFORM(sub.geom,3035))).geom ::geometry(Point,3035) AS geom
-	FROM	calc_gridcells_znes.znes_deu_substations_filtered AS sub,
+	FROM	calc_gridcells_znes.substations_deu_voronoi AS sub,
 		orig_geo_vg250.vg250_1_sta_union_mview AS vg
 	WHERE	vg.geom && ST_TRANSFORM(sub.geom,3035) AND
 		ST_CONTAINS(vg.geom,ST_TRANSFORM(sub.geom,3035));
@@ -298,97 +297,109 @@ WHERE  	t1.ags_0 = t2.ags_0;
 ---------- ---------- ----------
 -- VORONOI ON Substations IN vg250
 ---------- ---------- ----------
--- 
--- -- "VORONOI"   (OK!) -> 954.000ms =3.689
--- DROP TABLE IF EXISTS orig_ego.ego_deu_substations_voronoi;  -- NAME 1/2
--- WITH 
---     -- Sample set of points to work with
---     Sample AS (SELECT   ST_SetSRID(ST_Union(pts.geom), 0) AS geom
--- 		FROM	orig_osm.osm_deu_substations AS pts),  -- INPUT
---     -- Build edges and circumscribe points to generate a centroid
---     Edges AS (
---     SELECT id,
---         UNNEST(ARRAY['e1','e2','e3']) EdgeName,
---         UNNEST(ARRAY[
---             ST_MakeLine(p1,p2) ,
---             ST_MakeLine(p2,p3) ,
---             ST_MakeLine(p3,p1)]) Edge,
---         ST_Centroid(ST_ConvexHull(ST_Union(-- Done this way due to issues I had with LineToCurve
---             ST_CurveToLine(REPLACE(ST_AsText(ST_LineMerge(ST_Union(ST_MakeLine(p1,p2),ST_MakeLine(p2,p3)))),'LINE','CIRCULAR'),15),
---             ST_CurveToLine(REPLACE(ST_AsText(ST_LineMerge(ST_Union(ST_MakeLine(p2,p3),ST_MakeLine(p3,p1)))),'LINE','CIRCULAR'),15)
---         ))) ct      
---     FROM    (
---         -- Decompose to points
---         SELECT id,
---             ST_PointN(g,1) p1,
---             ST_PointN(g,2) p2,
---             ST_PointN(g,3) p3
---         FROM    (
---             SELECT (gd).Path id, ST_ExteriorRing((gd).geom) g -- ID andmake triangle a linestring
---             FROM (SELECT (ST_Dump(ST_DelaunayTriangles(geom))) gd FROM Sample) a -- Get Delaunay Triangles
---             )b
---         ) c
---     )
--- SELECT ST_SetSRID((ST_Dump(ST_Polygonize(ST_Node(ST_LineMerge(ST_Union(v, (SELECT ST_ExteriorRing(ST_ConvexHull(ST_Union(ST_Union(ST_Buffer(edge,20),ct)))) FROM Edges))))))).geom, 2180) geom
--- INTO orig_ego.ego_deu_substations_voronoi		  -- NAME 2/2
--- FROM (
---     SELECT  -- Create voronoi edges and reduce to a multilinestring
---         ST_LineMerge(ST_Union(ST_MakeLine(
---         x.ct,
---         CASE 
---         WHEN y.id IS NULL THEN
---             CASE WHEN ST_Within(
---                 x.ct,
---                 (SELECT ST_ConvexHull(geom) FROM sample)) THEN -- Don't draw lines back towards the original set
---                 -- Project line out twice the distance from convex hull
---                 ST_MakePoint(ST_X(x.ct) + ((ST_X(ST_Centroid(x.edge)) - ST_X(x.ct)) * 200),ST_Y(x.ct) + ((ST_Y(ST_Centroid(x.edge)) - ST_Y(x.ct)) * 200))
---             END
---         ELSE 
---             y.ct
---         END
---         ))) v
---     FROM    Edges x 
---         LEFT OUTER JOIN -- Self Join based on edges
---         Edges y ON x.id <> y.id AND ST_Equals(x.edge,y.edge)
---     ) z;
--- 
--- 
--- -- "Set PK"   (OK!) -> 100ms =0
--- ALTER TABLE orig_ego.ego_deu_substations_voronoi
--- 	ADD COLUMN id serial,
--- 	ADD COLUMN subst_id integer,
--- 	ADD COLUMN subst_sum integer,
--- 	ADD PRIMARY KEY (id),
--- 	ALTER COLUMN geom TYPE geometry(POLYGON,3035) USING ST_SETSRID(geom,3035);
--- 
--- -- "Create Index GIST (geom)"   (OK!) 11.000ms =0
--- CREATE INDEX	ego_deu_substations_voronoi_geom_idx
--- 	ON	orig_ego.ego_deu_substations_voronoi
--- 	USING	GIST (geom);
--- 
--- -- "Substation ID"   (OK!) -> 1.000ms =3.688
--- UPDATE 	orig_ego.ego_deu_substations_voronoi AS t1
--- SET  	subst_id = t2.subst_id
--- FROM	(SELECT	voi.id AS id,
--- 		voi.subst_id ::integer AS subst_id
--- 	FROM	orig_ego.ego_deu_substations_voronoi AS voi,
--- 		orig_osm.osm_deu_substations AS sub
--- 	WHERE  	ST_CONTAINS(voi.geom,ST_TRANSFORM(sub.geom,3035))
--- 	GROUP BY voi.id
--- 	)AS t2
--- WHERE  	t1.id = t2.id;
--- 
--- -- "Substation Count"   (OK!) -> 1.000ms =3.688
--- UPDATE 	orig_ego.ego_deu_substations_voronoi AS t1
--- SET  	subst_sum = t2.subst_sum
--- FROM	(SELECT	voi.id AS id,
--- 		COUNT(sub.geom)::integer AS subst_sum
--- 	FROM	orig_ego.ego_deu_substations_voronoi AS voi,
--- 		orig_osm.osm_deu_substations AS sub
--- 	WHERE  	ST_CONTAINS(voi.geom,ST_TRANSFORM(sub.geom,3035))
--- 	GROUP BY voi.id
--- 	)AS t2
--- WHERE  	t1.id = t2.id;
+-- Hier kann das Voronoi berechnet werden. Alternativ kann unten ein anderes Table gewählt werden!
+
+-- "VORONOI"   (OK!) -> 954.000ms =3.689
+DROP TABLE IF EXISTS orig_ego.ego_deu_substations_voronoi;  -- NAME 1/2
+WITH 
+    -- Sample set of points to work with
+    Sample AS (SELECT   ST_SetSRID(ST_Union(pts.geom), 0) AS geom
+		FROM	orig_osm.osm_deu_substations AS pts),  -- INPUT
+    -- Build edges and circumscribe points to generate a centroid
+    Edges AS (
+    SELECT id,
+        UNNEST(ARRAY['e1','e2','e3']) EdgeName,
+        UNNEST(ARRAY[
+            ST_MakeLine(p1,p2) ,
+            ST_MakeLine(p2,p3) ,
+            ST_MakeLine(p3,p1)]) Edge,
+        ST_Centroid(ST_ConvexHull(ST_Union(-- Done this way due to issues I had with LineToCurve
+            ST_CurveToLine(REPLACE(ST_AsText(ST_LineMerge(ST_Union(ST_MakeLine(p1,p2),ST_MakeLine(p2,p3)))),'LINE','CIRCULAR'),15),
+            ST_CurveToLine(REPLACE(ST_AsText(ST_LineMerge(ST_Union(ST_MakeLine(p2,p3),ST_MakeLine(p3,p1)))),'LINE','CIRCULAR'),15)
+        ))) ct      
+    FROM    (
+        -- Decompose to points
+        SELECT id,
+            ST_PointN(g,1) p1,
+            ST_PointN(g,2) p2,
+            ST_PointN(g,3) p3
+        FROM    (
+            SELECT (gd).Path id, ST_ExteriorRing((gd).geom) g -- ID andmake triangle a linestring
+            FROM (SELECT (ST_Dump(ST_DelaunayTriangles(geom))) gd FROM Sample) a -- Get Delaunay Triangles
+            )b
+        ) c
+    )
+SELECT ST_SetSRID((ST_Dump(ST_Polygonize(ST_Node(ST_LineMerge(ST_Union(v, (SELECT ST_ExteriorRing(ST_ConvexHull(ST_Union(ST_Union(ST_Buffer(edge,20),ct)))) FROM Edges))))))).geom, 2180) geom
+INTO orig_ego.ego_deu_substations_voronoi		  -- NAME 2/2
+FROM (
+    SELECT  -- Create voronoi edges and reduce to a multilinestring
+        ST_LineMerge(ST_Union(ST_MakeLine(
+        x.ct,
+        CASE 
+        WHEN y.id IS NULL THEN
+            CASE WHEN ST_Within(
+                x.ct,
+                (SELECT ST_ConvexHull(geom) FROM sample)) THEN -- Don't draw lines back towards the original set
+                -- Project line out twice the distance from convex hull
+                ST_MakePoint(ST_X(x.ct) + ((ST_X(ST_Centroid(x.edge)) - ST_X(x.ct)) * 200),ST_Y(x.ct) + ((ST_Y(ST_Centroid(x.edge)) - ST_Y(x.ct)) * 200))
+            END
+        ELSE 
+            y.ct
+        END
+        ))) v
+    FROM    Edges x 
+        LEFT OUTER JOIN -- Self Join based on edges
+        Edges y ON x.id <> y.id AND ST_Equals(x.edge,y.edge)
+    ) z;
+
+---------- ---------- ---------- Alternativer Input:
+
+-- -- "Create Table with Voronoi-Polygons"   (OK!) -> 100ms =3.682
+-- DROP TABLE IF EXISTS orig_ego.ego_deu_substations_voronoi;
+-- CREATE TABLE orig_ego.ego_deu_substations_voronoi AS
+-- 	SELECT	voi.id,
+-- 		GeometryType(voi.geom) ::text AS geom_type,
+-- 		ST_MAKEVALID(ST_TRANSFORM(voi.geom),3035) ::geometry(Polygon,3035) AS geom
+-- 	FROM	calc_gridcells_znes.deu_voronoi AS voi;
+
+---------- ---------- ----------
+
+-- "Set PK"   (OK!) -> 100ms =0
+ALTER TABLE orig_ego.ego_deu_substations_voronoi
+	ADD COLUMN id serial,
+	ADD COLUMN subst_id integer,
+	ADD COLUMN subst_sum integer,
+	ADD PRIMARY KEY (id),
+	ALTER COLUMN geom TYPE geometry(Polygon,3035) USING ST_SETSRID(geom,3035);
+
+-- "Create Index GIST (geom)"   (OK!) 11.000ms =0
+CREATE INDEX	ego_deu_substations_voronoi_geom_idx
+	ON	orig_ego.ego_deu_substations_voronoi
+	USING	GIST (geom);
+
+-- "Substation ID"   (OK!) -> 1.000ms =3.688
+UPDATE 	orig_ego.ego_deu_substations_voronoi AS t1
+SET  	subst_id = t2.subst_id
+FROM	(SELECT	voi.id AS id,
+		voi.subst_id ::integer AS subst_id
+	FROM	orig_ego.ego_deu_substations_voronoi AS voi,
+		orig_osm.osm_deu_substations AS sub
+	WHERE  	ST_CONTAINS(voi.geom,ST_TRANSFORM(sub.geom,3035))
+	GROUP BY voi.id
+	)AS t2
+WHERE  	t1.id = t2.id;
+
+-- "Substation Count"   (OK!) -> 1.000ms =3.688
+UPDATE 	orig_ego.ego_deu_substations_voronoi AS t1
+SET  	subst_sum = t2.subst_sum
+FROM	(SELECT	voi.id AS id,
+		COUNT(sub.geom)::integer AS subst_sum
+	FROM	orig_ego.ego_deu_substations_voronoi AS voi,
+		orig_osm.osm_deu_substations AS sub
+	WHERE  	ST_CONTAINS(voi.geom,ST_TRANSFORM(sub.geom,3035))
+	GROUP BY voi.id
+	)AS t2
+WHERE  	t1.id = t2.id;
 
 ---------- ---------- ----------
 
@@ -930,7 +941,7 @@ INSERT INTO     orig_ego.ego_grid_districts_collect
 	FROM	orig_ego.ego_grid_districts_type_2
 	ORDER BY subst_id;
 
--- "Insert 2"   (OK!) 100.000ms =3.709
+-- "Insert 3"   (OK!) 100.000ms =3.709
 INSERT INTO     orig_ego.ego_grid_districts_collect 
 	(subst_id,subst_name,subst_voltage,power_typ,substation,
 	subst_operator,subst_status,ags_0,geom_sub,subst_sum,subst_typ,geom)
