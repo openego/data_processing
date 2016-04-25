@@ -49,7 +49,7 @@ ALTER TABLE	orig_ego.ego_deu_loads
 	ADD COLUMN rs varchar(12),
 	ADD COLUMN ags_0 varchar(8),	
 	ADD COLUMN geom_centroid geometry(POINT,3035),
-	ADD COLUMN geom_surfacepoint geometry(POINT,3035)
+	ADD COLUMN geom_surfacepoint geometry(POINT,3035),
 	ADD COLUMN geom_centre geometry(POINT,3035);
 
 -- "Create Index GIST (geom)"   (OK!) 2.000ms =0
