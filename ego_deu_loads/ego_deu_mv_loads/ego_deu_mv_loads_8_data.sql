@@ -1,7 +1,14 @@
 ﻿
+
+
+
 ---------- ---------- ---------- ---------- ---------- ----------
 -- "LOADS"   2016-04-06 15:17   12s
 ---------- ---------- ---------- ---------- ---------- ----------
+
+---------- ---------- ----------
+-- Cutting Loads with Grid Districts
+---------- ---------- ----------
 
 -- "Create Table"   (OK!) 200ms =0
 DROP TABLE IF EXISTS  	orig_ego.ego_deu_loads CASCADE;
@@ -12,8 +19,9 @@ CONSTRAINT 	ego_deu_loads_pkey PRIMARY KEY (id));
 
 -- "Insert Loads"   (OK!) 10.000ms =182.430
 INSERT INTO     orig_ego.ego_deu_loads (geom)
-	SELECT	loads.geom AS geom
-	FROM	orig_ego.ego_deu_loads_collect_buffer100_unbuffer AS loads;
+	SELECT	(ST_DUMP(ST_INTERSECTION(loads.geom,dis.geom))).geom ::geometry(Polygon,3035) AS geom
+	FROM	orig_ego.ego_deu_loads_melted AS loads,
+		orig_ego.ego_grid_districts AS dis;
 
 -- "Extend Table"   (OK!) 100ms =0
 ALTER TABLE	orig_ego.ego_deu_loads
@@ -36,7 +44,7 @@ ALTER TABLE	orig_ego.ego_deu_loads
 	ADD COLUMN sector_count_retail integer,
 	ADD COLUMN sector_count_industrial integer,
 	ADD COLUMN sector_count_agricultural integer,
-	ADD COLUMN mv_poly_id integer,
+	ADD COLUMN subst_id integer,
 	ADD COLUMN nuts varchar(5),
 	ADD COLUMN rs varchar(12),
 	ADD COLUMN ags_0 varchar(8),	
@@ -386,57 +394,50 @@ CREATE MATERIALIZED VIEW 		orig_ego.ego_deu_loads_error_noags_mview AS
 
 ---------- ---------- ----------
 
--- "Calculate MV-Key"   (OK!) -> 55.000ms =181.068
+-- "Calculate Substation ID"   (OK!) -> 55.000ms =181.068
 UPDATE 	orig_ego.ego_deu_loads AS t1
-SET  	mv_poly_id = t2.mv_poly_id
+SET  	subst_id = t2.subst_id
 FROM    (
 	SELECT	loads.id AS id,
-		mv.id AS mv_poly_id
+		dis.subst_id AS subst_id
 	FROM	orig_ego.ego_deu_loads AS loads,
-		orig_ego.ego_deu_mv_gridcell_full_mview AS mv
+		orig_ego.ego_grid_districts AS dis
 	WHERE  	mv.geom && loads.geom_centre AND
-		ST_CONTAINS(mv.geom,loads.geom_centre)
+		ST_CONTAINS(dis.geom,loads.geom_centre)
 	) AS t2
 WHERE  	t1.id = t2.id;
 
--- "Loads without MV"   (OK!) 500ms =105
-DROP MATERIALIZED VIEW IF EXISTS	orig_ego.ego_deu_loads_error_nomv_mview CASCADE;
-CREATE MATERIALIZED VIEW 		orig_ego.ego_deu_loads_error_nomv_mview AS 
-	SELECT	loads.id,
-		loads.geom
-	FROM	orig_ego.ego_deu_loads AS loads
-	WHERE  	loads.mv_poly_id IS NULL;
 
 
-
----------- ---------- ----------
--- "Create SPF"   2016-04-07 11:34   3s
----------- ---------- ----------
-
--- "Create Table SPF"   (OK!) 3.000ms =884
-DROP TABLE IF EXISTS  	orig_ego.ego_deu_loads_spf;
-CREATE TABLE         	orig_ego.ego_deu_loads_spf AS
-	SELECT	loads.*
-	FROM	orig_ego.ego_deu_loads AS loads,
-		orig_geo_vg250.vg250_4_krs_spf_mview AS spf
-	WHERE	ST_TRANSFORM(spf.geom,3035) && loads.geom  AND  
-		ST_CONTAINS(ST_TRANSFORM(spf.geom,3035), loads.geom_centre)
-	ORDER BY loads.id;
-
--- "Ad PK"   (OK!) 150ms =0
-ALTER TABLE	orig_ego.ego_deu_loads_spf
-	ADD PRIMARY KEY (id);
-
--- "Create Index GIST (geom)"   (OK!) -> 100ms =0
-CREATE INDEX  	ego_deu_loads_spf_geom_idx
-	ON	orig_ego.ego_deu_loads_spf
-	USING	GIST (geom);
-
--- "Create Index GIST (geom_centre)"   (OK!) -> 150ms =0
-CREATE INDEX  	ego_deu_loads_spf_geom_centre_idx
-    ON    	orig_ego.ego_deu_loads_spf
-    USING     	GIST (geom_centre);
-
--- "Grant oeuser"   (OK!) -> 100ms =0
-GRANT ALL ON TABLE 	orig_ego.ego_deu_loads_spf TO oeuser WITH GRANT OPTION;
-ALTER TABLE		orig_ego.ego_deu_loads_spf OWNER TO oeuser;
+-- 
+-- ---------- ---------- ----------
+-- -- "Create SPF"   2016-04-07 11:34   3s
+-- ---------- ---------- ----------
+-- 
+-- -- "Create Table SPF"   (OK!) 3.000ms =884
+-- DROP TABLE IF EXISTS  	orig_ego.ego_deu_loads_spf;
+-- CREATE TABLE         	orig_ego.ego_deu_loads_spf AS
+-- 	SELECT	loads.*
+-- 	FROM	orig_ego.ego_deu_loads AS loads,
+-- 		orig_geo_vg250.vg250_4_krs_spf_mview AS spf
+-- 	WHERE	ST_TRANSFORM(spf.geom,3035) && loads.geom  AND  
+-- 		ST_CONTAINS(ST_TRANSFORM(spf.geom,3035), loads.geom_centre)
+-- 	ORDER BY loads.id;
+-- 
+-- -- "Ad PK"   (OK!) 150ms =0
+-- ALTER TABLE	orig_ego.ego_deu_loads_spf
+-- 	ADD PRIMARY KEY (id);
+-- 
+-- -- "Create Index GIST (geom)"   (OK!) -> 100ms =0
+-- CREATE INDEX  	ego_deu_loads_spf_geom_idx
+-- 	ON	orig_ego.ego_deu_loads_spf
+-- 	USING	GIST (geom);
+-- 
+-- -- "Create Index GIST (geom_centre)"   (OK!) -> 150ms =0
+-- CREATE INDEX  	ego_deu_loads_spf_geom_centre_idx
+--     ON    	orig_ego.ego_deu_loads_spf
+--     USING     	GIST (geom_centre);
+-- 
+-- -- "Grant oeuser"   (OK!) -> 100ms =0
+-- GRANT ALL ON TABLE 	orig_ego.ego_deu_loads_spf TO oeuser WITH GRANT OPTION;
+-- ALTER TABLE		orig_ego.ego_deu_loads_spf OWNER TO oeuser;

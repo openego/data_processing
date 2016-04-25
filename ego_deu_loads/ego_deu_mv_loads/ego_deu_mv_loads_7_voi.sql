@@ -2,17 +2,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 ---------- ---------- ---------- ---------- ---------- ----------
 -- "VORONOI"   2016-04-18 11:00   1s
 ---------- ---------- ---------- ---------- ---------- ----------
@@ -22,15 +11,15 @@
 
 
 ---------- ---------- ----------
--- VORONOI USW DEU
+-- VORONOI ON Substations IN vg250
 ---------- ---------- ----------
 
--- "VORONOI"   (OK!) -> 100ms =3.693
-DROP TABLE IF EXISTS orig_ego.ego_deu_usw_voronoi;
+-- "VORONOI"   (OK!) -> 954.000ms =3.689
+DROP TABLE IF EXISTS orig_ego.ego_deu_usw_voronoi;  -- NAME 1/2
 WITH 
     -- Sample set of points to work with
     Sample AS (SELECT   ST_SetSRID(ST_Union(pts.geom), 0) AS geom
-		FROM	orig_ego.ego_deu_mv_substations_mview AS pts),  -- INPUT 1/2
+		FROM	orig_osm.osm_deu_substations AS pts),  -- INPUT
     -- Build edges and circumscribe points to generate a centroid
     Edges AS (
     SELECT id,
@@ -56,7 +45,7 @@ WITH
         ) c
     )
 SELECT ST_SetSRID((ST_Dump(ST_Polygonize(ST_Node(ST_LineMerge(ST_Union(v, (SELECT ST_ExteriorRing(ST_ConvexHull(ST_Union(ST_Union(ST_Buffer(edge,20),ct)))) FROM Edges))))))).geom, 2180) geom
-INTO orig_ego.ego_deu_usw_voronoi		  -- INPUT 2/2
+INTO orig_ego.ego_deu_usw_voronoi		  -- NAME 2/2
 FROM (
     SELECT  -- Create voronoi edges and reduce to a multilinestring
         ST_LineMerge(ST_Union(ST_MakeLine(

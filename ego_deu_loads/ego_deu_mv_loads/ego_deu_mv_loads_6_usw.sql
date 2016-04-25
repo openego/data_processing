@@ -1,76 +1,106 @@
 ﻿
----------- ---------- ---------- ---------- ---------- ----------
--- "Loads USW"
----------- ---------- ---------- ---------- ---------- ----------
-
-
 ---------- ---------- ----------
--- USW
+---------- --SKRIPT-- OK! 54s
 ---------- ---------- ----------
 
--- "Substations"   (OK!) 100ms =3.716
-DROP TABLE IF EXISTS	orig_ego.ego_deu_mv_substations CASCADE;
-CREATE TABLE		orig_ego.ego_deu_mv_substations AS
-	SELECT	pts.subst_id ::integer AS subst_id,
-		pts.name ::text AS subst_name,
-		pts.voltage ::text AS subst_voltage,
-		pts.power_typ ::text AS power_typ,
-		pts.substation ::text AS substation,
-		pts.operator ::text AS subst_operator,
-		pts.status ::text AS subst_status,
-		ST_TRANSFORM(pts.geom,3035) ::geometry(Point,3035) AS geom
-	FROM	calc_gridcells_znes.znes_deu_substations_filtered AS pts
-	WHERE	ST_CONTAINS(gem.geom,ST_TRANSFORM(pts.geom,3035));
 
--- "Create Index (subst_id)"   (OK!) -> 1.000ms =0
-CREATE UNIQUE INDEX  	ego_deu_mv_substations_gid_idx
-		ON	orig_ego.ego_deu_mv_substations (subst_id);
+-- -- "Create Index GIST (geom)"   (OK!) -> 100ms =0
+-- CREATE INDEX  	znes_deu_substations_filtered_geom_idx
+-- 	ON	calc_gridcells_znes.znes_deu_substations_filtered
+-- 	USING	GIST (geom);
+
+-- -- "Grant oeuser"   (OK!) -> 100ms =0
+-- GRANT ALL ON TABLE 	calc_gridcells_znes.znes_deu_substations_filtered TO oeuser WITH GRANT OPTION;
+-- ALTER TABLE		calc_gridcells_znes.znes_deu_substations_filtered OWNER TO oeuser;
+
+---------- ---------- ----------
+-- OSM Substations
+---------- ---------- ----------
+
+-- "Substations"   (OK!) 2.000ms =3.709
+DROP TABLE IF EXISTS	orig_osm.osm_deu_substations CASCADE;
+CREATE TABLE		orig_osm.osm_deu_substations AS
+	SELECT	sub.subst_id ::integer AS subst_id,
+		sub.name ::text AS subst_name,
+		sub.voltage ::text AS subst_voltage,
+		sub.power_typ ::text AS power_typ,
+		sub.substation ::text AS substation,
+		sub.operator ::text AS subst_operator,
+		sub.status ::text AS subst_status,
+		(ST_DUMP(ST_TRANSFORM(sub.geom,3035))).geom ::geometry(Point,3035) AS geom
+	FROM	calc_gridcells_znes.znes_deu_substations_filtered AS sub,
+		orig_geo_vg250.vg250_1_sta_union_mview AS vg
+	WHERE	vg.geom && ST_TRANSFORM(sub.geom,3035) AND
+		ST_CONTAINS(vg.geom,ST_TRANSFORM(sub.geom,3035));
+
+-- "Set PK"   (OK!) -> 2.000ms =0
+ALTER TABLE orig_osm.osm_deu_substations
+	ADD COLUMN	ags_0 character varying(12),
+	ADD PRIMARY KEY (subst_id);
 
 -- "Create Index GIST (geom)"   (OK!) -> 100ms =0
-CREATE INDEX  	ego_deu_mv_substations_geom_idx
-	ON	orig_ego.ego_deu_mv_substations
+CREATE INDEX  	osm_deu_substations_geom_idx
+	ON	orig_osm.osm_deu_substations
 	USING	GIST (geom);
 
 -- "Grant oeuser"   (OK!) -> 100ms =0
-GRANT ALL ON TABLE 	orig_ego.ego_deu_mv_substations TO oeuser WITH GRANT OPTION;
-ALTER TABLE		orig_ego.ego_deu_mv_substations OWNER TO oeuser;
+GRANT ALL ON TABLE 	orig_osm.osm_deu_substations TO oeuser WITH GRANT OPTION;
+ALTER TABLE		orig_osm.osm_deu_substations OWNER TO oeuser;
+
+---------- ---------- ----------
+
+-- "Calculate Gemeindeschlüssel"   (OK!) -> 3.000ms =3.709
+UPDATE 	orig_osm.osm_deu_substations AS t1
+SET  	ags_0 = t2.ags_0
+FROM    (
+	SELECT	sub.subst_id AS subst_id,
+		vg.ags_0 AS ags_0
+	FROM	orig_osm.osm_deu_substations AS sub,
+		orig_geo_vg250.vg250_6_gem_mview AS vg
+	WHERE  	vg.geom && sub.geom AND
+		ST_CONTAINS(vg.geom,sub.geom)
+	) AS t2
+WHERE  	t1.subst_id = t2.subst_id;
 
 
 
 ---------- ---------- ----------
--- GEM_dump_usw
+-- Substations per Municipalities
 ---------- ---------- ----------
 
--- "Gemeinde table"   (OK!) -> 500ms =12.528
-DROP TABLE IF EXISTS	orig_ego.vg250_6_gem_dump_usw CASCADE;
-CREATE TABLE		orig_ego.vg250_6_gem_dump_usw AS
+-- "Municipalities"   (OK!) -> 28.000ms =12.528
+DROP TABLE IF EXISTS	orig_ego.ego_deu_municipalities_sub CASCADE;
+CREATE TABLE		orig_ego.ego_deu_municipalities_sub AS
 	SELECT	vg.*
 	FROM	orig_geo_vg250.vg250_6_gem_dump_mview AS vg;
-	
+
+-- "Set PK"   (OK!) -> 1.000ms =0
+ALTER TABLE orig_ego.ego_deu_municipalities_sub
+	ADD COLUMN subst_sum integer,
+	ADD COLUMN subst_typ integer,
+	ADD PRIMARY KEY (id);
+
 -- "Create Index GIST (geom)"   (OK!) -> 100ms =0
-CREATE INDEX  	vg250_6_gem_dump_usw_geom_idx
-	ON	orig_ego.vg250_6_gem_dump_usw
+CREATE INDEX  	ego_deu_municipalities_sub_geom_idx
+	ON	orig_ego.ego_deu_municipalities_sub
 	USING	GIST (geom);
 
 -- "Grant oeuser"   (OK!) -> 100ms =0
-GRANT ALL ON TABLE	orig_ego.vg250_6_gem_dump_usw TO oeuser WITH GRANT OPTION;
-ALTER TABLE		orig_ego.vg250_6_gem_dump_usw OWNER TO oeuser;
+GRANT ALL ON TABLE	orig_ego.ego_deu_municipalities_sub TO oeuser WITH GRANT OPTION;
+ALTER TABLE		orig_ego.ego_deu_municipalities_sub OWNER TO oeuser;
 
--- "Set PK"   (OK!) -> 1.000ms =0
-ALTER TABLE orig_ego.vg250_6_gem_dump_usw
-	ADD COLUMN usw_sum integer,
-	ADD COLUMN usw_cat integer,
-	ADD PRIMARY KEY (id);
+---------- ---------- ----------
 
 -- "usw count"   (OK!) -> 1.000ms =2.267
-UPDATE 	orig_ego.vg250_6_gem_dump_usw AS t1
-SET  	usw_sum = t2.usw_sum
-FROM	(SELECT	gem.id AS id,
-		COUNT(usw.geom)::integer AS usw_sum
-	FROM	orig_ego.vg250_6_gem_dump_usw AS gem,
-		orig_ego.ego_deu_mv_substations_mview AS usw
-	WHERE  	ST_CONTAINS(gem.geom,ST_TRANSFORM(usw.geom,3035))
-	GROUP BY gem.id
+UPDATE 	orig_ego.ego_deu_municipalities_sub AS t1
+SET  	subst_sum = t2.subst_sum
+FROM	(SELECT	mun.id AS id,
+		COUNT(sub.geom)::integer AS subst_sum
+	FROM	orig_ego.ego_deu_municipalities_sub AS mun,
+		orig_osm.osm_deu_substations AS sub
+	WHERE  	mun.geom && sub.geom AND
+		ST_CONTAINS(mun.geom,sub.geom)
+	GROUP BY mun.id
 	)AS t2
 WHERE  	t1.id = t2.id;
 
@@ -81,155 +111,314 @@ WHERE  	t1.id = t2.id;
 ---------- ---------- ----------
 
 -- "MView I."   (OK!) -> 300ms =1.682
-DROP MATERIALIZED VIEW IF EXISTS	orig_ego.vg250_6_gem_dump_usw_1_mview CASCADE;
-CREATE MATERIALIZED VIEW		orig_ego.vg250_6_gem_dump_usw_1_mview AS 
-	SELECT	usw.*
-	FROM	orig_ego.vg250_6_gem_dump_usw AS usw
-	WHERE	usw_sum = '1';
+DROP MATERIALIZED VIEW IF EXISTS	orig_ego.ego_deu_municipalities_sub_1_mview CASCADE;
+CREATE MATERIALIZED VIEW		orig_ego.ego_deu_municipalities_sub_1_mview AS 
+	SELECT	mun.id,
+		mun.gen,
+		mun.bez,
+		mun.ags_0,
+		'1' ::integer AS subst_typ,
+		mun.geom :: geometry(Polygon,3035) AS geom
+	FROM	orig_ego.ego_deu_municipalities_sub AS mun
+	WHERE	mun.subst_sum = '1';
 
 -- "Create Index (id)"   (OK!) -> 1.000ms =0
-CREATE UNIQUE INDEX  	vg250_6_gem_dump_usw_1_mview_gid_idx
-		ON	orig_ego.vg250_6_gem_dump_usw_1_mview (id);
+CREATE UNIQUE INDEX  	ego_deu_municipalities_sub_1_mview_gid_idx
+		ON	orig_ego.ego_deu_municipalities_sub_1_mview (id);
 
--- "usw category"   (OK!) -> 1.000ms =1682
-UPDATE 	orig_ego.vg250_6_gem_dump_usw AS t1
-SET  	usw_cat = t2.usw_cat
-FROM	(SELECT	gem.id AS id,
-		'1'::integer AS usw_cat
-	FROM	orig_ego.vg250_6_gem_dump_usw_1_mview AS gem )AS t2
+-- "Substation Type 1"   (OK!) -> 1.000ms =1.682
+UPDATE 	orig_ego.ego_deu_municipalities_sub AS t1
+SET  	subst_typ = t2.subst_typ
+FROM	(SELECT	mun.id AS id,
+		mun.subst_typ AS subst_typ
+	FROM	orig_ego.ego_deu_municipalities_sub_1_mview AS mun )AS t2
 WHERE  	t1.id = t2.id;
+
+-- "Grant oeuser"   (OK!) -> 100ms =0
+GRANT ALL ON TABLE 	orig_ego.ego_deu_municipalities_sub_1_mview TO oeuser WITH GRANT OPTION;
+ALTER TABLE		orig_ego.ego_deu_municipalities_sub_1_mview OWNER TO oeuser;
 
 ---------- ---------- ----------
 
 -- "MView II."   (OK!) -> 100ms =585
-DROP MATERIALIZED VIEW IF EXISTS	orig_ego.vg250_6_gem_dump_usw_2_mview CASCADE;
-CREATE MATERIALIZED VIEW		orig_ego.vg250_6_gem_dump_usw_2_mview AS 
-	SELECT	usw.*
-	FROM	orig_ego.vg250_6_gem_dump_usw AS usw
-	WHERE	usw_sum > '1';
+DROP MATERIALIZED VIEW IF EXISTS	orig_ego.ego_deu_municipalities_sub_2_mview CASCADE;
+CREATE MATERIALIZED VIEW		orig_ego.ego_deu_municipalities_sub_2_mview AS 
+	SELECT	mun.id,
+		mun.gen,
+		mun.bez,
+		mun.ags_0,
+		'2' ::integer AS subst_typ,
+		mun.geom :: geometry(Polygon,3035) AS geom
+	FROM	orig_ego.ego_deu_municipalities_sub AS mun
+	WHERE	mun.subst_sum > '1';
 
 -- "Create Index (id)"   (OK!) -> 1.000ms =0
-CREATE UNIQUE INDEX  	vg250_6_gem_dump_usw_2_mview_gid_idx
-		ON	orig_ego.vg250_6_gem_dump_usw_2_mview (id);
+CREATE UNIQUE INDEX  	ego_deu_municipalities_sub_2_mview_gid_idx
+		ON	orig_ego.ego_deu_municipalities_sub_2_mview (id);
 
--- "usw category"   (OK!) -> 1.000ms =585
-UPDATE 	orig_ego.vg250_6_gem_dump_usw AS t1
-SET  	usw_cat = t2.usw_cat
-FROM	(SELECT	gem.id AS id,
-		'2'::integer AS usw_cat
-	FROM	orig_ego.vg250_6_gem_dump_usw_2_mview AS gem )AS t2
+-- "Grant oeuser"   (OK!) -> 100ms =0
+GRANT ALL ON TABLE 	orig_ego.ego_deu_municipalities_sub_2_mview TO oeuser WITH GRANT OPTION;
+ALTER TABLE		orig_ego.ego_deu_municipalities_sub_2_mview OWNER TO oeuser;
+
+-- "Substation Type 2"   (OK!) -> 1.000ms =585
+UPDATE 	orig_ego.ego_deu_municipalities_sub AS t1
+SET  	subst_typ = t2.subst_typ
+FROM	(SELECT	mun.id AS id,
+		mun.subst_typ AS subst_typ
+	FROM	orig_ego.ego_deu_municipalities_sub_2_mview AS mun )AS t2
 WHERE  	t1.id = t2.id;
 
-----------
+---------- ---------- ----------
 
--- "usw in gem II."   (OK!) -> 200ms =2027
-DROP MATERIALIZED VIEW IF EXISTS	orig_ego.ego_deu_mv_substations_2_mview CASCADE;
-CREATE MATERIALIZED VIEW		orig_ego.ego_deu_mv_substations_2_mview AS
-	SELECT	usw.subst_id ::integer AS subst_id,
-		usw.subst_name ::text AS subst_name,
-		usw.subst_voltage ::text AS subst_voltage,
-		usw.power_typ ::text AS power_typ,
-		usw.substation ::text AS substation,
-		usw.subst_operator ::text AS subst_operator,
-		usw.subst_status ::text AS subst_status,
-		usw.geom ::geometry(Point,3035) AS geom
-	FROM	orig_ego.ego_deu_mv_substations_mview AS usw,
-		orig_ego.vg250_6_gem_dump_usw_2_mview AS gem
-	WHERE  	ST_CONTAINS(gem.geom,usw.geom);
+-- "Substation Type 2"   (OK!) -> 200ms =2.027
+DROP MATERIALIZED VIEW IF EXISTS	orig_ego.osm_deu_substations_2_mview CASCADE;
+CREATE MATERIALIZED VIEW		orig_ego.osm_deu_substations_2_mview AS
+	SELECT	sub.subst_id ::integer AS subst_id,
+		sub.subst_name ::text AS subst_name,
+		sub.subst_voltage ::text AS subst_voltage,
+		sub.power_typ ::text AS power_typ,
+		sub.substation ::text AS substation,
+		sub.subst_operator ::text AS subst_operator,
+		sub.subst_status ::text AS subst_status,
+		sub.ags_0 ::character varying(12) AS ags_0,
+		'3' ::integer AS subst_typ,
+		sub.geom ::geometry(Point,3035) AS geom
+	FROM	orig_osm.osm_deu_substations AS sub,
+		orig_ego.ego_deu_municipalities_sub_2_mview AS gem
+	WHERE  	ST_CONTAINS(gem.geom,sub.geom);
+
+-- "Create Index (subst_id)"   (OK!) -> 1.000ms =0
+CREATE UNIQUE INDEX  	osm_deu_substations_2_mview_gid_idx
+		ON	orig_ego.osm_deu_substations_2_mview (subst_id);
+
+-- "Grant oeuser"   (OK!) -> 100ms =0
+GRANT ALL ON TABLE 	orig_ego.osm_deu_substations_2_mview TO oeuser WITH GRANT OPTION;
+ALTER TABLE		orig_ego.osm_deu_substations_2_mview OWNER TO oeuser;
+
 
 ---------- ---------- ----------
 
 -- "MView III."   (OK!) -> 22.000ms =10.261
-DROP MATERIALIZED VIEW IF EXISTS	orig_ego.vg250_6_gem_dump_usw_3_mview CASCADE;
-CREATE MATERIALIZED VIEW		orig_ego.vg250_6_gem_dump_usw_3_mview AS 
-	SELECT	usw.*
-	FROM	orig_ego.vg250_6_gem_dump_usw AS usw
-	WHERE	usw_sum IS NULL;
+DROP MATERIALIZED VIEW IF EXISTS	orig_ego.ego_deu_municipalities_sub_3_mview CASCADE;
+CREATE MATERIALIZED VIEW		orig_ego.ego_deu_municipalities_sub_3_mview AS 
+	SELECT	mun.id,
+		mun.gen,
+		mun.bez,
+		mun.ags_0,
+		'3' ::integer AS subst_typ,
+		mun.geom :: geometry(Polygon,3035) AS geom
+	FROM	orig_ego.ego_deu_municipalities_sub AS mun
+	WHERE	mun.subst_sum IS NULL;
 
 -- "Create Index (id)"   (OK!) -> 1.000ms =0
-CREATE UNIQUE INDEX  	vg250_6_gem_dump_usw_3_mview_gid_idx
-		ON	orig_ego.vg250_6_gem_dump_usw_3_mview (id);
+CREATE UNIQUE INDEX  	ego_deu_municipalities_sub_3_mview_gid_idx
+		ON	orig_ego.ego_deu_municipalities_sub_3_mview (id);
 
--- "usw category"   (OK!) -> 1.000ms =10.261
-UPDATE 	orig_ego.vg250_6_gem_dump_usw AS t1
-SET  	usw_cat = t2.usw_cat
-FROM	(SELECT	gem.id AS id,
-		'3'::integer AS usw_cat
-	FROM	orig_ego.vg250_6_gem_dump_usw_3_mview AS gem
-	)AS t2
+-- "Grant oeuser"   (OK!) -> 100ms =0
+GRANT ALL ON TABLE 	orig_ego.ego_deu_municipalities_sub_3_mview TO oeuser WITH GRANT OPTION;
+ALTER TABLE		orig_ego.ego_deu_municipalities_sub_3_mview OWNER TO oeuser;
+
+
+-- "Substation Type 3"   (OK!) -> 1.000ms =10.261
+UPDATE 	orig_ego.ego_deu_municipalities_sub AS t1
+SET  	subst_typ = t2.subst_typ
+FROM	(SELECT	mun.id AS id,
+		'3'::integer AS subst_typ
+	FROM	orig_ego.ego_deu_municipalities_sub_3_mview AS mun )AS t2
 WHERE  	t1.id = t2.id;
 
 
 
 ---------- ---------- ----------
--- "Grid Districs"
+-- "Grid Districts"
 ---------- ---------- ----------
 
--- "Table Netzbezirke"   (OK!) -> 100ms =3.716
-DROP TABLE IF EXISTS	orig_ego.ego_grid_districs CASCADE;
-CREATE TABLE		orig_ego.ego_grid_districs AS
-	SELECT	usw.subst_id AS sub_id,
-		ST_TRANSFORM(usw.geom,3035) ::geometry(Point,3035) AS geom_subst
-	FROM	orig_ego.ego_deu_mv_substations_mview AS usw;
+---------- ---------- ----------
+-- "I. Gemeinden mit genau einem USW" 
+---------- ---------- ----------
+
+-- "Substations Template"   (OK!) -> 100ms =3.709
+DROP TABLE IF EXISTS	orig_ego.ego_grid_districts_type_1 CASCADE;
+CREATE TABLE		orig_ego.ego_grid_districts_type_1 AS
+	SELECT	sub.subst_id ::integer AS subst_id,
+		sub.subst_name ::text,
+		sub.subst_voltage ::text,
+		sub.power_typ ::text,
+		sub.substation ::text,
+		sub.subst_operator ::text,
+		sub.subst_status ::text,
+		sub.ags_0 ::character varying(12),
+		ST_TRANSFORM(sub.geom,3035) ::geometry(Point,3035) AS geom_sub
+	FROM	orig_osm.osm_deu_substations AS sub;
 
 -- "Set PK"   (OK!) -> 100ms =0
-ALTER TABLE orig_ego.ego_grid_districs
-	ADD COLUMN usw_sum integer,
-	ADD COLUMN usw_cat integer,
-	ADD COLUMN geom_gem geometry(Polygon,3035),
-	ADD PRIMARY KEY (sub_id);
+ALTER TABLE orig_ego.ego_grid_districts_type_1
+	ADD COLUMN subst_sum integer,
+	ADD COLUMN subst_typ integer,
+	ADD COLUMN geom geometry(MultiPolygon,3035),
+	ADD PRIMARY KEY (subst_id);
 
--- "Create Index GIST (geom_subst)"   (OK!) -> 100ms =0
-CREATE INDEX  	ego_grid_districs_geom_subst_idx
-	ON	orig_ego.ego_grid_districs
-	USING	GIST (geom_subst);
-
-
-
----------- ---------- ----------
--- "I. Gemeinden mit genau einem USW"
----------- ---------- ----------
--- sub_id = gem.id
--- "update usw geom gem1"   (OK!) -> 1.000ms =292
-UPDATE 	orig_ego.ego_grid_districs AS t1
-SET  	usw_sum  = t2.usw_sum,
-	usw_cat = t2.usw_cat,
-	geom_gem = t2.geom_gem
-FROM	(SELECT	gem.id AS id,
-		gem.usw_sum ::integer AS usw_sum,
-		gem.usw_cat ::integer AS usw_cat,
-		gem.geom ::geometry(Polygon,3035) AS geom_gem
-	FROM	orig_ego.vg250_6_gem_dump_usw_1_mview AS gem )AS t2
-WHERE  	t1.sub_id = t2.id;
-
-
-
----------- ---------- ----------
--- "II. Gemeinden mit mehreren USW"
----------- ---------- ----------
-
--- "Voronoi Gridcells (voi)"   (OK!) 100ms =3.711
-DROP MATERIALIZED VIEW IF EXISTS	orig_ego.ego_deu_usw_voi_mview CASCADE;
-CREATE MATERIALIZED VIEW		orig_ego.ego_deu_usw_voi_mview AS
-	SELECT	poly.id ::integer AS id,
-		poly.subst_id ::integer AS subst_id,
-		(ST_DUMP(ST_TRANSFORM(poly.geom,3035))).geom ::geometry(Polygon,3035) AS geom
-	FROM	calc_gridcells_znes.znes_deu_gridcells_qgis AS poly;
+-- "Create Index GIST (geom_sub)"   (OK!) -> 100ms =0
+CREATE INDEX  	ego_grid_districts_type_1_geom_sub_idx
+	ON	orig_ego.ego_grid_districts_type_1
+	USING	GIST (geom_sub);
 
 -- "Create Index GIST (geom)"   (OK!) -> 100ms =0
-CREATE INDEX  	ego_deu_usw_voi_mview_geom_idx
-	ON	orig_ego.ego_deu_usw_voi_mview
+CREATE INDEX  	ego_grid_districts_type_1_geom_mun_idx
+	ON	orig_ego.ego_grid_districts_type_1
 	USING	GIST (geom);
 
 -- "Grant oeuser"   (OK!) -> 100ms =0
-GRANT ALL ON TABLE 	orig_ego.ego_deu_usw_voi_mview TO oeuser WITH GRANT OPTION;
-ALTER TABLE		orig_ego.ego_deu_usw_voi_mview OWNER TO oeuser;
+GRANT ALL ON TABLE 	orig_ego.ego_grid_districts_type_1 TO oeuser WITH GRANT OPTION;
+ALTER TABLE		orig_ego.ego_grid_districts_type_1 OWNER TO oeuser;
+
+---------- ---------- ----------
+
+-- sub_id = gem.id
+-- "update usw geom gem1"   (OK!) -> 1.000ms =1.682
+UPDATE 	orig_ego.ego_grid_districts_type_1 AS t1
+SET  	subst_sum  = t2.subst_sum,
+	subst_typ = t2.subst_typ,
+	geom = t2.geom
+FROM	(SELECT	mun.ags_0 AS ags_0,
+		mun.subst_sum ::integer AS subst_sum,
+		mun.subst_typ ::integer AS subst_typ,
+		ST_MULTI(mun.geom) ::geometry(MultiPolygon,3035) AS geom
+	FROM	orig_ego.ego_deu_municipalities_sub AS mun
+	WHERE	subst_typ = '1')AS t2
+WHERE  	t1.ags_0 = t2.ags_0;
+
+
+
+---------- ---------- ---------- ---------- ---------- ----------
+-- "II. Gemeinden mit mehreren USW"
+---------- ---------- ---------- ---------- ---------- ----------
+
+
+---------- ---------- ----------
+-- VORONOI ON Substations IN vg250
+---------- ---------- ----------
+-- 
+-- -- "VORONOI"   (OK!) -> 954.000ms =3.689
+-- DROP TABLE IF EXISTS orig_ego.ego_deu_substations_voronoi;  -- NAME 1/2
+-- WITH 
+--     -- Sample set of points to work with
+--     Sample AS (SELECT   ST_SetSRID(ST_Union(pts.geom), 0) AS geom
+-- 		FROM	orig_osm.osm_deu_substations AS pts),  -- INPUT
+--     -- Build edges and circumscribe points to generate a centroid
+--     Edges AS (
+--     SELECT id,
+--         UNNEST(ARRAY['e1','e2','e3']) EdgeName,
+--         UNNEST(ARRAY[
+--             ST_MakeLine(p1,p2) ,
+--             ST_MakeLine(p2,p3) ,
+--             ST_MakeLine(p3,p1)]) Edge,
+--         ST_Centroid(ST_ConvexHull(ST_Union(-- Done this way due to issues I had with LineToCurve
+--             ST_CurveToLine(REPLACE(ST_AsText(ST_LineMerge(ST_Union(ST_MakeLine(p1,p2),ST_MakeLine(p2,p3)))),'LINE','CIRCULAR'),15),
+--             ST_CurveToLine(REPLACE(ST_AsText(ST_LineMerge(ST_Union(ST_MakeLine(p2,p3),ST_MakeLine(p3,p1)))),'LINE','CIRCULAR'),15)
+--         ))) ct      
+--     FROM    (
+--         -- Decompose to points
+--         SELECT id,
+--             ST_PointN(g,1) p1,
+--             ST_PointN(g,2) p2,
+--             ST_PointN(g,3) p3
+--         FROM    (
+--             SELECT (gd).Path id, ST_ExteriorRing((gd).geom) g -- ID andmake triangle a linestring
+--             FROM (SELECT (ST_Dump(ST_DelaunayTriangles(geom))) gd FROM Sample) a -- Get Delaunay Triangles
+--             )b
+--         ) c
+--     )
+-- SELECT ST_SetSRID((ST_Dump(ST_Polygonize(ST_Node(ST_LineMerge(ST_Union(v, (SELECT ST_ExteriorRing(ST_ConvexHull(ST_Union(ST_Union(ST_Buffer(edge,20),ct)))) FROM Edges))))))).geom, 2180) geom
+-- INTO orig_ego.ego_deu_substations_voronoi		  -- NAME 2/2
+-- FROM (
+--     SELECT  -- Create voronoi edges and reduce to a multilinestring
+--         ST_LineMerge(ST_Union(ST_MakeLine(
+--         x.ct,
+--         CASE 
+--         WHEN y.id IS NULL THEN
+--             CASE WHEN ST_Within(
+--                 x.ct,
+--                 (SELECT ST_ConvexHull(geom) FROM sample)) THEN -- Don't draw lines back towards the original set
+--                 -- Project line out twice the distance from convex hull
+--                 ST_MakePoint(ST_X(x.ct) + ((ST_X(ST_Centroid(x.edge)) - ST_X(x.ct)) * 200),ST_Y(x.ct) + ((ST_Y(ST_Centroid(x.edge)) - ST_Y(x.ct)) * 200))
+--             END
+--         ELSE 
+--             y.ct
+--         END
+--         ))) v
+--     FROM    Edges x 
+--         LEFT OUTER JOIN -- Self Join based on edges
+--         Edges y ON x.id <> y.id AND ST_Equals(x.edge,y.edge)
+--     ) z;
+-- 
+-- 
+-- -- "Set PK"   (OK!) -> 100ms =0
+-- ALTER TABLE orig_ego.ego_deu_substations_voronoi
+-- 	ADD COLUMN id serial,
+-- 	ADD COLUMN subst_id integer,
+-- 	ADD COLUMN subst_sum integer,
+-- 	ADD PRIMARY KEY (id),
+-- 	ALTER COLUMN geom TYPE geometry(POLYGON,3035) USING ST_SETSRID(geom,3035);
+-- 
+-- -- "Create Index GIST (geom)"   (OK!) 11.000ms =0
+-- CREATE INDEX	ego_deu_substations_voronoi_geom_idx
+-- 	ON	orig_ego.ego_deu_substations_voronoi
+-- 	USING	GIST (geom);
+-- 
+-- -- "Substation ID"   (OK!) -> 1.000ms =3.688
+-- UPDATE 	orig_ego.ego_deu_substations_voronoi AS t1
+-- SET  	subst_id = t2.subst_id
+-- FROM	(SELECT	voi.id AS id,
+-- 		voi.subst_id ::integer AS subst_id
+-- 	FROM	orig_ego.ego_deu_substations_voronoi AS voi,
+-- 		orig_osm.osm_deu_substations AS sub
+-- 	WHERE  	ST_CONTAINS(voi.geom,ST_TRANSFORM(sub.geom,3035))
+-- 	GROUP BY voi.id
+-- 	)AS t2
+-- WHERE  	t1.id = t2.id;
+-- 
+-- -- "Substation Count"   (OK!) -> 1.000ms =3.688
+-- UPDATE 	orig_ego.ego_deu_substations_voronoi AS t1
+-- SET  	subst_sum = t2.subst_sum
+-- FROM	(SELECT	voi.id AS id,
+-- 		COUNT(sub.geom)::integer AS subst_sum
+-- 	FROM	orig_ego.ego_deu_substations_voronoi AS voi,
+-- 		orig_osm.osm_deu_substations AS sub
+-- 	WHERE  	ST_CONTAINS(voi.geom,ST_TRANSFORM(sub.geom,3035))
+-- 	GROUP BY voi.id
+-- 	)AS t2
+-- WHERE  	t1.id = t2.id;
+
+---------- ---------- ----------
+
+-- "Voronoi Gridcells (voi)"   (OK!) 100ms =3.689
+DROP MATERIALIZED VIEW IF EXISTS	orig_ego.ego_deu_substations_voronoi_mview CASCADE;
+CREATE MATERIALIZED VIEW		orig_ego.ego_deu_substations_voronoi_mview AS
+	SELECT	poly.id ::integer AS id,
+		poly.subst_id ::integer AS subst_id,
+		poly.subst_sum ::integer AS subst_sum,
+		(ST_DUMP(ST_TRANSFORM(poly.geom,3035))).geom ::geometry(Polygon,3035) AS geom
+	FROM	orig_ego.ego_deu_substations_voronoi AS poly;
+
+-- "Create Index (id)"   (OK!) -> 1.000ms =0
+CREATE UNIQUE INDEX  	ego_deu_substations_voronoi_mview_id_idx
+		ON	orig_ego.ego_deu_substations_voronoi_mview (id);
+
+-- "Create Index GIST (geom)"   (OK!) -> 100ms =0
+CREATE INDEX  	ego_deu_substations_voronoi_mview_geom_idx
+	ON	orig_ego.ego_deu_substations_voronoi_mview
+	USING	GIST (geom);
+
+-- "Grant oeuser"   (OK!) -> 100ms =0
+GRANT ALL ON TABLE 	orig_ego.ego_deu_substations_voronoi_mview TO oeuser WITH GRANT OPTION;
+ALTER TABLE		orig_ego.ego_deu_substations_voronoi_mview OWNER TO oeuser;
 
 ---------- ---------- ----------
 
 -- "Validate (geom)"   (OK!) -> 22.000ms =0
-DROP VIEW IF EXISTS	orig_ego.ego_deu_usw_voi_mview_error_geom_view CASCADE;
-CREATE VIEW		orig_ego.ego_deu_usw_voi_mview_error_geom_view AS 
+DROP VIEW IF EXISTS	orig_ego.ego_deu_substations_voronoi_error_geom_view CASCADE;
+CREATE VIEW		orig_ego.ego_deu_substations_voronoi_error_geom_view AS 
 	SELECT	test.id,
 		test.error,
 		reason(ST_IsValidDetail(test.geom)) AS error_reason,
@@ -238,16 +427,16 @@ CREATE VIEW		orig_ego.ego_deu_usw_voi_mview_error_geom_view AS
 		SELECT	source.id AS id,				-- PK
 			ST_IsValid(source.geom) AS error,
 			source.geom AS geom
-		FROM	orig_ego.ego_deu_usw_voi_mview AS source	-- Table
+		FROM	orig_ego.ego_deu_substations_voronoi AS source	-- Table
 		) AS test
 	WHERE	test.error = FALSE;
 
 -- "Grant oeuser"   (OK!) -> 100ms =0
-GRANT ALL ON TABLE	orig_ego.ego_deu_usw_voi_mview_error_geom_view TO oeuser WITH GRANT OPTION;
-ALTER TABLE		orig_ego.ego_deu_usw_voi_mview_error_geom_view OWNER TO oeuser;
+GRANT ALL ON TABLE	orig_ego.ego_deu_substations_voronoi_error_geom_view TO oeuser WITH GRANT OPTION;
+ALTER TABLE		orig_ego.ego_deu_substations_voronoi_error_geom_view OWNER TO oeuser;
 
--- "Drop empty view"   (OK!) -> 100ms =1
-SELECT f_drop_view('{ego_deu_usw_voi_mview_error_geom_view}', 'orig_ego');
+-- -- "Drop empty view"   (OK!) -> 100ms =1
+-- SELECT f_drop_view('{ego_deu_usw_voi_mview_error_geom_view}', 'orig_ego');
 
 -- Problem: leere voi-Teile
 
@@ -256,55 +445,57 @@ SELECT f_drop_view('{ego_deu_usw_voi_mview_error_geom_view}', 'orig_ego');
 ---------- ---------- ----------
 
 -- "Sequence"   (OK!) 100ms =0
-DROP SEQUENCE IF EXISTS 	orig_ego.ego_deu_usw_voi_cut_id CASCADE;
-CREATE SEQUENCE 		orig_ego.ego_deu_usw_voi_cut_id;
+DROP SEQUENCE IF EXISTS 	orig_ego.ego_deu_substations_voronoi_cut_id CASCADE;
+CREATE SEQUENCE 		orig_ego.ego_deu_substations_voronoi_cut_id;
 
--- "Cutting GEM II."   (OK!) 3.000ms =4.981
-DROP TABLE IF EXISTS	orig_ego.ego_deu_usw_voi_cut CASCADE;
-CREATE TABLE		orig_ego.ego_deu_usw_voi_cut AS
-	SELECT	nextval('orig_ego.ego_deu_usw_voi_cut_id') AS id,
-		gem.id AS gid,
-		voi.id AS vid,
+-- "Cutting GEM II."   (OK!) 3.000ms =4.824
+DROP TABLE IF EXISTS	orig_ego.ego_deu_substations_voronoi_cut CASCADE;
+CREATE TABLE		orig_ego.ego_deu_substations_voronoi_cut AS
+	SELECT	nextval('orig_ego.ego_deu_substations_voronoi_cut_id') AS id,
+		gem.id AS mun_id,
+		voi.id AS voi_id,
 		gem.ags_0 AS ags_0,
-		gem.usw_cat AS usw_cat,
+		gem.subst_typ AS subst_typ,
 		(ST_DUMP(ST_INTERSECTION(gem.geom,voi.geom))).geom ::geometry(Polygon,3035) AS geom
-	FROM	orig_ego.vg250_6_gem_dump_usw_2_mview AS gem,
-		orig_ego.ego_deu_usw_voi_mview AS voi
+	FROM	orig_ego.ego_deu_municipalities_sub_2_mview AS gem,
+		orig_ego.ego_deu_substations_voronoi AS voi
 	WHERE	gem.geom && voi.geom;
 
 -- "Ad PK"   (OK!) 150ms =0
-ALTER TABLE	orig_ego.ego_deu_usw_voi_cut
-	ADD COLUMN voi_usw_sum integer,
+ALTER TABLE	orig_ego.ego_deu_substations_voronoi_cut
+	ADD COLUMN subst_sum integer,
 	ADD PRIMARY KEY (id);
 
 -- "Create Index GIST (geom)"   (OK!) 2.500ms =0
-CREATE INDEX	ego_deu_usw_voi_cut_geom_idx
-	ON	orig_ego.ego_deu_usw_voi_cut
+CREATE INDEX	ego_deu_substations_voronoi_cut_geom_idx
+	ON	orig_ego.ego_deu_substations_voronoi_cut
 	USING	GIST (geom);
 
 -- "Grant oeuser"   (OK!) -> 100ms =0
-GRANT ALL ON TABLE	orig_ego.ego_deu_usw_voi_cut TO oeuser WITH GRANT OPTION;
-ALTER TABLE		orig_ego.ego_deu_usw_voi_cut OWNER TO oeuser;
+GRANT ALL ON TABLE	orig_ego.ego_deu_substations_voronoi_cut TO oeuser WITH GRANT OPTION;
+ALTER TABLE		orig_ego.ego_deu_substations_voronoi_cut OWNER TO oeuser;
 
--- "usw count"   (OK!) -> 1.000ms =2.021
-UPDATE 	orig_ego.ego_deu_usw_voi_cut AS t1
-SET  	voi_usw_sum = t2.voi_usw_sum
+---------- ---------- ----------
+
+-- "Count Substations in Voronoi Cuts"   (OK!) -> 1.000ms =2.026
+UPDATE 	orig_ego.ego_deu_substations_voronoi_cut AS t1
+SET  	subst_sum = t2.subst_sum
 FROM	(SELECT	gem.id AS id,
-		COUNT(usw.geom)::integer AS voi_usw_sum
-	FROM	orig_ego.ego_deu_usw_voi_cut AS gem,
-		orig_ego.ego_deu_mv_substations_mview AS usw
-	WHERE  	ST_CONTAINS(gem.geom,ST_TRANSFORM(usw.geom,3035))
+		COUNT(sub.geom)::integer AS subst_sum
+	FROM	orig_ego.ego_deu_substations_voronoi_cut AS gem,
+		orig_osm.osm_deu_substations AS sub
+	WHERE  	ST_CONTAINS(gem.geom,ST_TRANSFORM(sub.geom,3035))
 	GROUP BY gem.id
 	)AS t2
 WHERE  	t1.id = t2.id;
 
 -- -- "Calculate Gemeindeschlüssel"   (OK!) -> 3.000ms =4.981
--- UPDATE 	orig_ego.ego_deu_usw_voi_cut AS t1
+-- UPDATE 	orig_ego.ego_deu_substations_voronoi_cut AS t1
 -- SET  	ags_0 = t2.ags_0
 -- FROM    (
 -- 	SELECT	cut.id AS id,
 -- 		vg.ags_0 AS ags_0
--- 	FROM	orig_ego.ego_deu_usw_voi_cut AS cut,
+-- 	FROM	orig_ego.ego_deu_substations_voronoi_cut AS cut,
 -- 		orig_geo_vg250.vg250_6_gem_mview AS vg
 -- 	WHERE  	vg.geom && ST_POINTONSURFACE(cut.geom) AND
 -- 		ST_CONTAINS(vg.geom,ST_POINTONSURFACE(cut.geom))
@@ -312,178 +503,468 @@ WHERE  	t1.id = t2.id;
 -- WHERE  	t1.id = t2.id;
 
 ---------- ---------- ----------
+-- NN
 
--- sub_id = id
--- "update usw geom gem2"   (OK!) -> 1.000ms =1.741
-UPDATE 	orig_ego.ego_grid_districs AS t1
-SET  	usw_sum  = t2.usw_sum,
-	usw_cat = t2.usw_cat,
-	geom_gem = t2.geom_gem
-FROM	(SELECT	gem.id AS id,
-		gem.gid AS gid,
-		gem.vid AS vid,
-		gem.ags_0 AS ags_0,
-		gem.usw_cat AS usw_cat,
-		gem.voi_usw_sum ::integer AS usw_sum,
-		gem.geom ::geometry(Polygon,3035) AS geom_gem
-	FROM	orig_ego.ego_deu_usw_voi_cut AS gem )AS t2
-WHERE  	t1.sub_id = t2.id;
+
+-- "Next Neighbor"   (OK!) 1.000ms =4.714
+DROP MATERIALIZED VIEW IF EXISTS	orig_ego.ego_deu_substations_voronoi_cut_nn_mview CASCADE;
+CREATE MATERIALIZED VIEW 		orig_ego.ego_deu_substations_voronoi_cut_nn_mview AS 
+SELECT DISTINCT ON (voi.id)
+	voi.id AS voi_id,
+	voi.ags_0 AS voi_ags_0,
+	voi.geom AS geom_voi,
+	sub.subst_id AS subst_id, 
+	sub.ags_0 AS ags_0,
+	sub.geom AS geom_sub
+FROM 	orig_ego.ego_deu_substations_voronoi_cut AS voi, 
+	orig_ego.osm_deu_substations_2_mview AS sub  
+WHERE 	voi.id <> sub.subst_id
+	AND ST_DWithin(ST_PointOnSurface(voi.geom), sub.geom, 10000)
+	AND voi.ags_0 = sub.ags_0
+ORDER BY 	voi.id, 
+		ST_Distance(ST_CENTROID(voi.geom),sub.geom);
+
+-- "Create Index (id)"   (OK!) -> 1.000ms =0
+CREATE UNIQUE INDEX  	ego_deu_substations_voronoi_cut_nn_mview_voi_id_idx
+		ON	orig_ego.ego_deu_substations_voronoi_cut_nn_mview (voi_id);
+
+-- "Create Index GIST (geom_voi)"   (OK!) -> 100ms =0
+CREATE INDEX  	ego_deu_substations_voronoi_cut_nn_mview_geom_voi_idx
+	ON	orig_ego.ego_deu_substations_voronoi_cut_nn_mview
+	USING	GIST (geom_voi);
+
+-- "Create Index GIST (geom_sub)"   (OK!) -> 100ms =0
+CREATE INDEX  	ego_deu_substations_voronoi_cut_nn_mview_geom_sub_idx
+	ON	orig_ego.ego_deu_substations_voronoi_cut_nn_mview
+	USING	GIST (geom_sub);
+
+-- "Grant oeuser"   (OK!) -> 100ms =0
+GRANT ALL ON TABLE 	orig_ego.ego_deu_substations_voronoi_cut_nn_mview TO oeuser WITH GRANT OPTION;
+ALTER TABLE		orig_ego.ego_deu_substations_voronoi_cut_nn_mview OWNER TO oeuser;
 
 ---------- ---------- ----------
 
--- DROP MATERIALIZED VIEW IF EXISTS	orig_ego.vg250_6_gem_usw_2_pts_mview CASCADE;
--- CREATE MATERIALIZED VIEW		orig_ego.vg250_6_gem_usw_2_pts_mview AS 
+-- "Sequence"   (OK!) 100ms =0
+DROP SEQUENCE IF EXISTS 	orig_ego.ego_deu_substations_voronoi_cut_nn_line_mview_id CASCADE;
+CREATE SEQUENCE 		orig_ego.ego_deu_substations_voronoi_cut_nn_line_mview_id;
+
+-- "connect points"   (OK!) 1.000ms =4.714
+DROP MATERIALIZED VIEW IF EXISTS	orig_ego.ego_deu_substations_voronoi_cut_nn_line_mview;
+CREATE MATERIALIZED VIEW 		orig_ego.ego_deu_substations_voronoi_cut_nn_line_mview AS 
+	SELECT 	nextval('orig_ego.ego_deu_substations_voronoi_cut_nn_line_mview_id') AS id,
+		nn.voi_id, -- gref
+		nn.subst_id, -- gnn
+		(ST_Dump(ST_POINTONSURFACE(nn.geom_voi))).geom ::geometry(Point,3035) AS geom_centre,
+		ST_ShortestLine(	(ST_Dump(ST_PointOnSurface(nn.geom_voi))).geom ::geometry(Point,3035),
+					nn.geom_sub ::geometry(Point,3035)
+		) ::geometry(LineString,3035) AS geom
+	FROM	orig_ego.ego_deu_substations_voronoi_cut_nn_mview AS nn;
+
+-- "Create Index (id)"   (OK!) -> 100ms =0
+CREATE UNIQUE INDEX  	ego_deu_substations_voronoi_cut_nn_line_mview_id_idx
+		ON	orig_ego.ego_deu_substations_voronoi_cut_nn_line_mview (id);
+
+-- "Create Index GIST (geom_centre)"   (OK!) 2.500ms =0
+CREATE INDEX	ego_deu_substations_voronoi_cut_nn_line_mview_geom_centre_idx
+	ON	orig_ego.ego_deu_substations_voronoi_cut_nn_line_mview
+	USING	GIST (geom_centre);
+
+-- "Create Index GIST (geom)"   (OK!) 2.500ms =0
+CREATE INDEX	ego_deu_substations_voronoi_cut_nn_line_mview_geom_idx
+	ON	orig_ego.ego_deu_substations_voronoi_cut_nn_line_mview
+	USING	GIST (geom);
+
+---------- ---------- ----------
+
+-- "Create Table"   (OK!) 4.000ms =2.026
+DROP TABLE IF EXISTS	orig_ego.ego_deu_substations_voronoi_cut_nn CASCADE;
+CREATE TABLE		orig_ego.ego_deu_substations_voronoi_cut_nn AS 
+	SELECT	nn.subst_id As subst_id, 
+		ST_MAKEVALID(ST_MULTI(ST_UNION(nn.geom_voi))) ::geometry(MultiPolygon,3035) AS geom
+	FROM	orig_ego.ego_deu_substations_voronoi_cut_nn_mview AS nn
+	GROUP BY nn.subst_id;
+
+-- "Set PK"   (OK!) -> 100ms =0
+ALTER TABLE orig_ego.ego_deu_substations_voronoi_cut_nn
+	ADD COLUMN subst_sum integer,
+	ADD PRIMARY KEY (subst_id);
+
+-- "Create Index GIST (geom)"   (OK!) 11.000ms =0
+CREATE INDEX	ego_deu_substations_voronoi_cut_nn_geom_idx
+	ON	orig_ego.ego_deu_substations_voronoi_cut_nn
+	USING	GIST (geom);
+
+-- "Count Substations"   (OK!) -> 1.000ms =2.026
+UPDATE 	orig_ego.ego_deu_substations_voronoi_cut_nn AS t1
+SET  	subst_sum = t2.subst_sum
+FROM	(SELECT	voi.subst_id AS subst_id,
+		COUNT(sub.geom)::integer AS subst_sum
+	FROM	orig_ego.ego_deu_substations_voronoi_cut_nn AS voi,
+		orig_osm.osm_deu_substations AS sub
+	WHERE  	ST_CONTAINS(voi.geom,sub.geom)
+	GROUP BY voi.subst_id
+	)AS t2
+WHERE  	t1.subst_id = t2.subst_id;
+
+---------- ---------- ----------
+
+-- "Substations Template"   (OK!) -> 100ms =3.709
+DROP TABLE IF EXISTS	orig_ego.ego_grid_districts_type_2 CASCADE;
+CREATE TABLE		orig_ego.ego_grid_districts_type_2 AS
+	SELECT	sub.subst_id ::integer AS subst_id,
+		sub.subst_name ::text,
+		sub.subst_voltage ::text,
+		sub.power_typ ::text,
+		sub.substation ::text,
+		sub.subst_operator ::text,
+		sub.subst_status ::text,
+		sub.ags_0 ::character varying(12),
+		ST_TRANSFORM(sub.geom,3035) ::geometry(Point,3035) AS geom_sub
+	FROM	orig_osm.osm_deu_substations AS sub;
+
+-- "Set PK"   (OK!) -> 100ms =0
+ALTER TABLE orig_ego.ego_grid_districts_type_2
+	ADD COLUMN subst_sum integer,
+	ADD COLUMN subst_typ integer,
+	ADD COLUMN geom geometry(MultiPolygon,3035),
+	ADD PRIMARY KEY (subst_id);
+
+-- "Create Index GIST (geom_sub)"   (OK!) -> 100ms =0
+CREATE INDEX  	ego_grid_districts_type_2_geom_sub_idx
+	ON	orig_ego.ego_grid_districts_type_2
+	USING	GIST (geom_sub);
+
+-- "Create Index GIST (geom)"   (OK!) -> 100ms =0
+CREATE INDEX  	ego_grid_districts_type_2_geom_mun_idx
+	ON	orig_ego.ego_grid_districts_type_2
+	USING	GIST (geom);
+
+-- "Grant oeuser"   (OK!) -> 100ms =0
+GRANT ALL ON TABLE 	orig_ego.ego_grid_districts_type_2 TO oeuser WITH GRANT OPTION;
+ALTER TABLE		orig_ego.ego_grid_districts_type_2 OWNER TO oeuser;
+
+---------- ---------- ----------
+
+-- sub_id = id
+-- "update sub geom gem2"   (OK!) -> 1.000ms =2.026
+UPDATE 	orig_ego.ego_grid_districts_type_2 AS t1
+SET  	subst_sum  = t2.subst_sum,
+	subst_typ = t2.subst_typ,
+	geom = t2.geom
+FROM	(SELECT	cut.subst_id AS subst_id,
+		'2' ::integer AS subst_typ,
+		cut.subst_sum ::integer AS subst_sum,
+		cut.geom ::geometry(MultiPolygon,3035) AS geom
+	FROM	orig_ego.ego_deu_substations_voronoi_cut_nn AS cut )AS t2
+WHERE  	t1.subst_id = t2.subst_id;
+
+---------- ---------- ----------
+-- 
+-- -- "voi"   (OK!) 100ms =3.693
+-- DROP MATERIALIZED VIEW IF EXISTS	orig_ego.ego_deu_usw_voronoi_mview CASCADE;
+-- CREATE MATERIALIZED VIEW		orig_ego.ego_deu_usw_voronoi_mview AS
+-- 	SELECT	poly.id ::integer AS id,
+-- 		(ST_DUMP(ST_TRANSFORM(poly.geom,3035))).geom ::geometry(Polygon,3035) AS geom
+-- 	FROM	orig_ego.ego_deu_usw_voronoi AS poly;
+-- 
+-- -- "Create Index GIST (geom)"   (OK!) -> 100ms =0
+-- CREATE INDEX  	ego_deu_usw_voronoi_mview_geom_idx
+-- 	ON	orig_ego.ego_deu_usw_voronoi_mview
+-- 	USING	GIST (geom);
+-- 
+-- -- "Grant oeuser"   (OK!) -> 100ms =0
+-- GRANT ALL ON TABLE 	orig_ego.ego_deu_usw_voronoi_mview TO oeuser WITH GRANT OPTION;
+-- ALTER TABLE		orig_ego.ego_deu_usw_voronoi_mview OWNER TO oeuser;
+-- 
+-- ---------- ---------- ----------	
+-- 
+-- -- "Validate (geom)"   (OK!) -> 22.000ms =0
+-- DROP VIEW IF EXISTS	orig_ego.ego_deu_usw_voronoi_mview_error_geom_view CASCADE;
+-- CREATE VIEW		orig_ego.ego_deu_usw_voronoi_mview_error_geom_view AS 
+-- 	SELECT	test.id,
+-- 		test.error,
+-- 		reason(ST_IsValidDetail(test.geom)) AS error_reason,
+-- 		ST_SetSRID(location(ST_IsValidDetail(test.geom)),3035) ::geometry(Point,3035) AS error_location
+-- 	FROM	(
+-- 		SELECT	source.id AS id,				-- PK
+-- 			ST_IsValid(source.geom) AS error,
+-- 			source.geom AS geom
+-- 		FROM	orig_ego.ego_deu_usw_voronoi_mview AS source	-- Table
+-- 		) AS test
+-- 	WHERE	test.error = FALSE;
+-- 
+-- -- "Grant oeuser"   (OK!) -> 100ms =0
+-- GRANT ALL ON TABLE	orig_ego.ego_deu_usw_voronoi_mview_error_geom_view TO oeuser WITH GRANT OPTION;
+-- ALTER TABLE		orig_ego.ego_deu_usw_voronoi_mview_error_geom_view OWNER TO oeuser;
+-- 
+-- -- "Drop empty view"   (OK!) -> 100ms =1
+-- SELECT f_drop_view('{ego_deu_usw_voronoi_mview_error_geom_view}', 'orig_ego');
+
+---------- ---------- ----------
+
+
+
+---------- ---------- ----------
+
+-- DROP MATERIALIZED VIEW IF EXISTS	orig_ego.vg250_6_gem_sub_2_pts_mview CASCADE;
+-- CREATE MATERIALIZED VIEW		orig_ego.vg250_6_gem_sub_2_pts_mview AS 
 -- 	SELECT	'1' ::integer AS id,
--- 		ST_SetSRID(ST_Union(usw.geom), 0) AS geom
--- 	FROM	calc_gridcells_znes.znes_deu_substations_filtered AS usw
+-- 		ST_SetSRID(ST_Union(sub.geom), 0) AS geom
+-- 	FROM	calc_gridcells_znes.znes_deu_substations_filtered AS sub
 -- 	WHERE	subst_id = '3791' OR subst_id = '3765';
 
 -- -- (POSTGIS 2.3!!!)
--- DROP MATERIALIZED VIEW IF EXISTS	orig_ego.vg250_6_gem_usw_2_voronoi_mview CASCADE;
--- CREATE MATERIALIZED VIEW		orig_ego.vg250_6_gem_usw_2_voronoi_mview AS 
+-- DROP MATERIALIZED VIEW IF EXISTS	orig_ego.vg250_6_gem_sub_2_voronoi_mview CASCADE;
+-- CREATE MATERIALIZED VIEW		orig_ego.vg250_6_gem_sub_2_voronoi_mview AS 
 -- 	SELECT	gem2.gid AS id,
--- 		ST_Voronoi(usw.geom,gem2.geom,30,true) AS geom
--- 	FROM	orig_ego.vg250_6_gem_usw_2_pts_mview AS usw,
--- 		orig_ego.vg250_6_gem_usw_2_mview AS gem2
+-- 		ST_Voronoi(sub.geom,gem2.geom,30,true) AS geom
+-- 	FROM	orig_ego.vg250_6_gem_sub_2_pts_mview AS sub,
+-- 		orig_ego.vg250_6_gem_sub_2_mview AS gem2
 -- 	WHERE	gem2.gid = '4884'
 
 
 
 ---------- ---------- ----------
--- "III. Gemeinden ohne USW"
+-- "III. Gemeinden ohne sub"
 ---------- ---------- ----------
 
--- gem WHERE usw_sum=0		orig_geo_ego.vg250_6_gem_usw_3_mview
--- usw				orig_geo_ego.ego_deu_mv_substations_mview
+-- gem WHERE subst_sum=0		orig_geo_ego.vg250_6_gem_sub_3_mview
+-- sub				orig_geo_ego.ego_deu_mv_substations_mview
 
 -- "Sequence"   (OK!) 100ms =0
-DROP SEQUENCE IF EXISTS 	orig_ego.vg250_6_gem_dump_usw_3_nn_id CASCADE;
-CREATE SEQUENCE 		orig_ego.vg250_6_gem_dump_usw_3_nn_id;
+DROP SEQUENCE IF EXISTS 	orig_ego.ego_deu_municipalities_sub_3_nn_id CASCADE;
+CREATE SEQUENCE 		orig_ego.ego_deu_municipalities_sub_3_nn_id;
 
--- "Next Neighbor"   (OK!) 53.000ms =9.318
-DROP TABLE IF EXISTS	orig_ego.vg250_6_gem_dump_usw_3_nn CASCADE;
-CREATE TABLE 		orig_ego.vg250_6_gem_dump_usw_3_nn AS 
-SELECT DISTINCT ON (gem.gid)
-	nextval('orig_ego.vg250_6_gem_dump_usw_3_nn_id') AS id,
-	gem.gid As gem_gid,
-	gem.ags_0 As gem_ags_0,
-	gem.geom ::geometry(Polygon,3035) AS gem_geom,
-	sub.subst_id As sub_id, 
-        sub.subst_name As sub_subst_name,
+-- "Next Neighbor"   (OK!) 285.000ms =10.259
+DROP TABLE IF EXISTS	orig_ego.ego_deu_municipalities_sub_3_nn CASCADE;
+CREATE TABLE 		orig_ego.ego_deu_municipalities_sub_3_nn AS 
+SELECT DISTINCT ON (mun.id)
+	nextval('orig_ego.ego_deu_municipalities_sub_3_nn_id') AS id,
+	mun.id AS mun_id,
+	sub.subst_id AS subst_id, 
+	mun.ags_0 AS mun_ags_0,
+	sub.ags_0 AS sub_ags_0,
+        sub.subst_name AS sub_subst_name,
+	mun.subst_typ AS subst_typ,
 	sub.geom ::geometry(Point,3035) AS sub_geom,
-	gem.ags_0 AS ags_0,
-	gem.usw_cat AS usw_cat,
-	gem.usw_sum ::integer AS usw_sum
-FROM 	orig_ego.vg250_6_gem_dump_usw_3_mview As gem, 
-	orig_ego.ego_deu_mv_substations_mview As sub   
-WHERE 	gem.gid <> sub.subst_id
-	AND ST_DWithin(gem.geom, sub.geom, 100000)
-ORDER BY 	gem.gid, 
-		ST_Distance(gem.geom,sub.geom);
+	ST_MULTI(mun.geom) ::geometry(MultiPolygon,3035) AS mun_geom
+FROM 	orig_ego.ego_deu_municipalities_sub_3_mview AS mun, 
+	orig_osm.osm_deu_substations AS sub
+WHERE 	mun.id <> sub.subst_id AND
+	ST_DWithin(mun.geom, sub.geom, 50000) -- In a 50 km radius
+ORDER BY 	mun.id, ST_Distance(ST_PointOnSurface(mun.geom),sub.geom);
 
 -- "Ad PK"   (OK!) 150ms =0
-ALTER TABLE	orig_ego.vg250_6_gem_dump_usw_3_nn
+ALTER TABLE	orig_ego.ego_deu_municipalities_sub_3_nn
 	ADD PRIMARY KEY (id);
 
--- "Create Index GIST (gem_geom)"   (OK!) 2.500ms =0
-DROP INDEX IF EXISTS 	vg250_6_gem_dump_usw_3_nn_gem_geom_idx;
-CREATE INDEX		vg250_6_gem_dump_usw_3_nn_gem_geom_idx
-	ON	orig_ego.vg250_6_gem_dump_usw_3_nn
-	USING	GIST (gem_geom);
+-- "Create Index GIST (mun_geom)"   (OK!) 2.500ms =0
+DROP INDEX IF EXISTS 	ego_deu_municipalities_sub_3_nn_mun_geom_idx;
+CREATE INDEX		ego_deu_municipalities_sub_3_nn_mun_geom_idx
+	ON	orig_ego.ego_deu_municipalities_sub_3_nn
+	USING	GIST (mun_geom);
 
 -- "Create Index GIST (sub_geom)"   (OK!) 2.500ms =0
-DROP INDEX IF EXISTS 	vg250_6_gem_dump_usw_3_nn_sub_geom_idx;
-CREATE INDEX		vg250_6_gem_dump_usw_3_nn_sub_geom_idx
-	ON	orig_ego.vg250_6_gem_dump_usw_3_nn
+DROP INDEX IF EXISTS 	ego_deu_municipalities_sub_3_nn_sub_geom_idx;
+CREATE INDEX		ego_deu_municipalities_sub_3_nn_sub_geom_idx
+	ON	orig_ego.ego_deu_municipalities_sub_3_nn
 	USING	GIST (sub_geom);
+
+-- "Grant oeuser"   (OK!) -> 100ms =0
+GRANT ALL ON TABLE	orig_ego.ego_deu_municipalities_sub_3_nn TO oeuser WITH GRANT OPTION;
+ALTER TABLE		orig_ego.ego_deu_municipalities_sub_3_nn OWNER TO oeuser;
+
 
 ---------- ---------- ----------
 -- NN Line
 ---------- ---------- ----------
 
 -- "Sequence"   (OK!) 100ms =0
-DROP SEQUENCE IF EXISTS 	orig_ego.vg250_6_gem_dump_usw_3_nn_line_id CASCADE;
-CREATE SEQUENCE 		orig_ego.vg250_6_gem_dump_usw_3_nn_line_id;
+DROP SEQUENCE IF EXISTS 	orig_ego.ego_deu_municipalities_sub_3_nn_line_id CASCADE;
+CREATE SEQUENCE 		orig_ego.ego_deu_municipalities_sub_3_nn_line_id;
 
 -- "connect points"   (OK!) 1.000ms =9.318
-DROP MATERIALIZED VIEW IF EXISTS	orig_ego.vg250_6_gem_dump_usw_3_nn_line;
-CREATE MATERIALIZED VIEW 		orig_ego.vg250_6_gem_dump_usw_3_nn_line AS 
-	SELECT 	nextval('orig_ego.vg250_6_gem_dump_usw_3_nn_line_id') AS id,
-		nn.gem_gid,
-		nn.sub_id,
-		(ST_Dump(ST_Centroid(nn.gem_geom))).geom ::geometry(Point,3035) AS geom_centre,
-		ST_ShortestLine(	(ST_Dump(ST_Centroid(nn.gem_geom))).geom ::geometry(Point,3035),
+DROP MATERIALIZED VIEW IF EXISTS	orig_ego.ego_deu_municipalities_sub_3_nn_line;
+CREATE MATERIALIZED VIEW 		orig_ego.ego_deu_municipalities_sub_3_nn_line AS 
+	SELECT 	nextval('orig_ego.ego_deu_municipalities_sub_3_nn_line_id') AS id,
+		nn.id AS nn_id,
+		nn.subst_id,
+		(ST_Dump(ST_Centroid(nn.mun_geom))).geom ::geometry(Point,3035) AS geom_centre,
+		ST_ShortestLine(	(ST_Dump(ST_PointOnSurface(nn.mun_geom))).geom ::geometry(Point,3035),
 					nn.sub_geom ::geometry(Point,3035)
 		) ::geometry(LineString,3035) AS geom
-	FROM	orig_ego.vg250_6_gem_dump_usw_3_nn AS nn;
+	FROM	orig_ego.ego_deu_municipalities_sub_3_nn AS nn;
 
 -- "Create Index (id)"   (OK!) -> 100ms =0
-CREATE UNIQUE INDEX  	vg250_6_gem_dump_usw_3_nn_line_id_idx
-		ON	orig_ego.vg250_6_gem_dump_usw_3_nn_line (id);
+CREATE UNIQUE INDEX  	ego_deu_municipalities_sub_3_nn_line_id_idx
+		ON	orig_ego.ego_deu_municipalities_sub_3_nn_line (id);
 
 -- "Create Index GIST (geom_centre)"   (OK!) 2.500ms =0
-CREATE INDEX	vg250_6_gem_dump_usw_3_nn_line_geom_centre_idx
-	ON	orig_ego.vg250_6_gem_dump_usw_3_nn_line
+CREATE INDEX	ego_deu_municipalities_sub_3_nn_line_geom_centre_idx
+	ON	orig_ego.ego_deu_municipalities_sub_3_nn_line
 	USING	GIST (geom_centre);
 
 -- "Create Index GIST (geom)"   (OK!) 2.500ms =0
-CREATE INDEX	vg250_6_gem_dump_usw_3_nn_line_geom_idx
-	ON	orig_ego.vg250_6_gem_dump_usw_3_nn_line
+CREATE INDEX	ego_deu_municipalities_sub_3_nn_line_geom_idx
+	ON	orig_ego.ego_deu_municipalities_sub_3_nn_line
 	USING	GIST (geom);
+
+-- "Grant oeuser"   (OK!) -> 100ms =0
+GRANT ALL ON TABLE	orig_ego.ego_deu_municipalities_sub_3_nn_line TO oeuser WITH GRANT OPTION;
+ALTER TABLE		orig_ego.ego_deu_municipalities_sub_3_nn_line OWNER TO oeuser;
+
 
 ---------- ---------- ----------
 
 -- UNION
 
--- "union gem"   (OK!) 5.000ms =2.111
-DROP MATERIALIZED VIEW IF EXISTS	orig_ego.vg250_6_gem_dump_usw_3_nn_union CASCADE;
-CREATE MATERIALIZED VIEW 		orig_ego.vg250_6_gem_dump_usw_3_nn_union AS 
-	SELECT	un.sub_id ::integer AS sub_id,
-		un.usw_cat ::integer AS usw_cat,
-		un.usw_sum ::integer AS usw_sum,
-		un.geom ::geometry(Polygon,3035) AS geom
-	FROM	(SELECT DISTINCT ON (nn.sub_id)
-			nn.sub_id AS sub_id,
-			nn.usw_cat AS usw_cat,
-			nn.usw_sum AS usw_sum,
-			(ST_DUMP(ST_UNION(nn.gem_geom))).geom AS geom
-		FROM	orig_ego.vg250_6_gem_dump_usw_3_nn AS nn
-		GROUP BY nn.sub_id, nn.usw_cat, nn.usw_sum) AS un;
+-- "union mun"   (OK!) 33.000ms =2.107
+DROP MATERIALIZED VIEW IF EXISTS	orig_ego.ego_deu_municipalities_sub_3_nn_union CASCADE;
+CREATE MATERIALIZED VIEW 		orig_ego.ego_deu_municipalities_sub_3_nn_union AS 
+	SELECT	un.subst_id ::integer AS subst_id,
+		un.subst_typ ::integer AS subst_typ,
+		un.geom ::geometry(MultiPolygon,3035) AS geom
+	FROM	(SELECT DISTINCT ON (nn.subst_id)
+			nn.subst_id AS subst_id,
+			nn.subst_typ AS subst_typ,
+			ST_MULTI(ST_UNION(nn.mun_geom)) AS geom
+		FROM	orig_ego.ego_deu_municipalities_sub_3_nn AS nn
+		GROUP BY nn.subst_id, nn.subst_typ) AS un;
 
 -- "Create Index (sub_id)"   (OK!) -> 100ms =0
-CREATE UNIQUE INDEX  	vg250_6_gem_dump_usw_3_nn_union_sub_id_idx
-		ON	orig_ego.vg250_6_gem_dump_usw_3_nn_union (sub_id);
+CREATE UNIQUE INDEX  	ego_deu_municipalities_sub_3_nn_union_subst_id_idx
+		ON	orig_ego.ego_deu_municipalities_sub_3_nn_union (subst_id);
 
 -- "Create Index GIST (geom)"   (OK!) 2.500ms =0
-CREATE INDEX	vg250_6_gem_dump_usw_3_nn_union_geom_idx
-	ON	orig_ego.vg250_6_gem_dump_usw_3_nn_union
+CREATE INDEX	ego_deu_municipalities_sub_3_nn_union_geom_idx
+	ON	orig_ego.ego_deu_municipalities_sub_3_nn_union
 	USING	GIST (geom);
+
+-- "Grant oeuser"   (OK!) -> 100ms =0
+GRANT ALL ON TABLE	orig_ego.ego_deu_municipalities_sub_3_nn_union TO oeuser WITH GRANT OPTION;
+ALTER TABLE		orig_ego.ego_deu_municipalities_sub_3_nn_union OWNER TO oeuser;
 
 ---------- ---------- ----------
 
--- "update usw geom gem2"   (OK!) -> 1.000ms =1741
-UPDATE 	orig_ego.ego_grid_districs AS t1
-SET  	usw_sum  = t2.usw_sum,
-	usw_cat = t2.usw_cat,
-	geom_gem = t2.geom_gem
-FROM	(SELECT	gem.id AS id,
-		gem.gid AS gid,
-		gem.vid AS vid,
-		gem.ags_0 AS ags_0,
-		gem.usw_cat ::integer AS usw_cat,
-		gem.voi_usw_sum ::integer AS usw_sum,
-		gem.geom ::geometry(Polygon,3035) AS geom_gem
-	FROM	orig_ego.vg250_6_gem_dump_usw_3_nn_union AS gem )AS t2
-WHERE  	t1.id = t2.id;
+-- "Substations Template"   (OK!) -> 100ms =3.709
+DROP TABLE IF EXISTS	orig_ego.ego_grid_districts_type_3 CASCADE;
+CREATE TABLE		orig_ego.ego_grid_districts_type_3 AS
+	SELECT	sub.subst_id ::integer AS subst_id,
+		sub.subst_name ::text,
+		sub.subst_voltage ::text,
+		sub.power_typ ::text,
+		sub.substation ::text,
+		sub.subst_operator ::text,
+		sub.subst_status ::text,
+		sub.ags_0 ::character varying(12),
+		ST_TRANSFORM(sub.geom,3035) ::geometry(Point,3035) AS geom_sub
+	FROM	orig_osm.osm_deu_substations AS sub;
+
+-- "Set PK"   (OK!) -> 100ms =0
+ALTER TABLE orig_ego.ego_grid_districts_type_3
+	ADD COLUMN subst_sum integer,
+	ADD COLUMN subst_typ integer,
+	ADD COLUMN geom geometry(MultiPolygon,3035),
+	ADD PRIMARY KEY (subst_id);
+
+-- "Create Index GIST (geom_sub)"   (OK!) -> 100ms =0
+CREATE INDEX  	ego_grid_districts_type_3_geom_sub_idx
+	ON	orig_ego.ego_grid_districts_type_3
+	USING	GIST (geom_sub);
+
+-- "Create Index GIST (geom)"   (OK!) -> 100ms =0
+CREATE INDEX  	ego_grid_districts_type_3_geom_mun_idx
+	ON	orig_ego.ego_grid_districts_type_3
+	USING	GIST (geom);
+
+-- "Grant oeuser"   (OK!) -> 100ms =0
+GRANT ALL ON TABLE 	orig_ego.ego_grid_districts_type_3 TO oeuser WITH GRANT OPTION;
+ALTER TABLE		orig_ego.ego_grid_districts_type_3 OWNER TO oeuser;
+
+---------- ---------- ----------
+
+-- "update sub geom mun3"   (OK!) -> 1.000ms =2.117
+UPDATE 	orig_ego.ego_grid_districts_type_3 AS t1
+SET  	subst_typ = t2.subst_typ,
+	geom = t2.geom
+FROM	(SELECT	un.subst_id AS subst_id,
+		un.subst_typ ::integer AS subst_typ,
+		ST_MULTI(un.geom) ::geometry(MultiPolygon,3035) AS geom
+	FROM	orig_ego.ego_deu_municipalities_sub_3_nn_union AS un ) AS t2
+WHERE  	t1.subst_id = t2.subst_id;
 
 
+---------- ---------- ----------
 
+-- "Substations Template"   (OK!) -> 100ms =3.709
+DROP TABLE IF EXISTS	orig_ego.ego_grid_districts_collect CASCADE;
+CREATE TABLE		orig_ego.ego_grid_districts_collect (
+	id SERIAL NOT NULL,
+	subst_id integer,
+	subst_name text,
+	subst_voltage text,
+	power_typ text,
+	substation text,
+	subst_operator text,
+	subst_status text,
+	ags_0 character varying(12),
+	geom_sub geometry(Point,3035),
+	subst_sum integer,
+	subst_typ integer,
+	geom geometry(MultiPolygon,3035),
+	CONSTRAINT	ego_grid_districts_collect_pkey PRIMARY KEY (id));
 
+-- "Insert 1"   (OK!) 100.000ms =3.709
+INSERT INTO     orig_ego.ego_grid_districts_collect 
+	(subst_id,subst_name,subst_voltage,power_typ,substation,
+	subst_operator,subst_status,ags_0,geom_sub,subst_sum,subst_typ,geom)
+	SELECT	*
+	FROM	orig_ego.ego_grid_districts_type_1
+	ORDER BY subst_id;
 
+-- "Insert 2"   (OK!) 100.000ms =3.709
+INSERT INTO     orig_ego.ego_grid_districts_collect 
+	(subst_id,subst_name,subst_voltage,power_typ,substation,
+	subst_operator,subst_status,ags_0,geom_sub,subst_sum,subst_typ,geom)
+	SELECT	*
+	FROM	orig_ego.ego_grid_districts_type_2
+	ORDER BY subst_id;
 
+-- "Insert 2"   (OK!) 100.000ms =3.709
+INSERT INTO     orig_ego.ego_grid_districts_collect 
+	(subst_id,subst_name,subst_voltage,power_typ,substation,
+	subst_operator,subst_status,ags_0,geom_sub,subst_sum,subst_typ,geom)
+	SELECT	*
+	FROM	orig_ego.ego_grid_districts_type_3
+	ORDER BY subst_id;
 
+---------- ---------- ----------
 
+-- UNION I + II + II
 
+-- "union mun"   (OK!) 19.000ms =3.709
+DROP TABLE IF EXISTS	orig_ego.ego_grid_districts CASCADE;
+CREATE TABLE 		orig_ego.ego_grid_districts AS 
+	SELECT	un.subst_id ::integer AS subst_id,
+		ST_AREA(un.geom)/10000 AS area,
+		un.geom ::geometry(MultiPolygon,3035) AS geom
+	FROM	(SELECT DISTINCT ON (dis.subst_id)
+			dis.subst_id AS subst_id,
+			ST_MULTI(ST_UNION(dis.geom)) ::geometry(MultiPolygon,3035) AS geom
+		FROM	orig_ego.ego_grid_districts_collect AS dis
+		GROUP BY dis.subst_id) AS un;
 
+-- "Ad PK"   (OK!) 150ms =0
+ALTER TABLE	orig_ego.ego_grid_districts
+	ADD PRIMARY KEY (subst_id);
 
+-- "Create Index GIST (geom)"   (OK!) 2.500ms =0
+CREATE INDEX	ego_grid_districts_geom_idx
+	ON	orig_ego.ego_grid_districts
+	USING	GIST (geom);
 
+-- "Grant oeuser"   (OK!) -> 100ms =0
+GRANT ALL ON TABLE	orig_ego.ego_grid_districts TO oeuser WITH GRANT OPTION;
+ALTER TABLE		orig_ego.ego_grid_districts OWNER TO oeuser;
+
+---------- ---------- ----------

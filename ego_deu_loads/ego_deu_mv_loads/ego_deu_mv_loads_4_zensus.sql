@@ -1,4 +1,31 @@
-﻿
+﻿---------- ---------- ---------- ---------- ---------- ----------
+-- "Zensus MView"   2016-04-23 04:00  160s
+---------- ---------- ---------- ---------- ---------- ----------
+
+-- "MVIEW with -1"   (OK!) -> 33.00ms =3.177.723
+DROP MATERIALIZED VIEW IF EXISTS	orig_destatis.zensus_population_per_ha_mview CASCADE;
+CREATE MATERIALIZED VIEW         	orig_destatis.zensus_population_per_ha_mview AS
+	SELECT	zensus.gid ::integer AS gid,
+		zensus.population ::numeric(10,0) AS population,
+		zensus.geom ::geometry(Point,3035) AS geom
+	FROM	orig_destatis.zensus_population_per_ha AS zensus
+	WHERE	zensus.population >= 0;
+
+-- "Create Index (gid)"   (OK!) -> 1.000ms =0
+CREATE UNIQUE INDEX  	zensus_population_per_ha_mview_gid_idx
+		ON	orig_destatis.zensus_population_per_ha_mview (gid);
+
+-- "Create Index GIST (geom)"   (OK!) 2.000ms =0
+CREATE INDEX  	zensus_population_per_ha_mview_geom_idx
+    ON    	orig_destatis.zensus_population_per_ha_mview
+    USING     	GIST (geom);
+    
+-- "Grant oeuser"   (OK!) -> 100ms =0
+GRANT ALL ON TABLE 	orig_destatis.zensus_population_per_ha_mview TO oeuser WITH GRANT OPTION;
+ALTER TABLE		orig_destatis.zensus_population_per_ha_mview OWNER TO oeuser;
+
+
+
 ---------- ---------- ---------- ---------- ---------- ----------
 -- "Load Points Zensus"   2016-04-17 22:00   s
 ---------- ---------- ---------- ---------- ---------- ----------
@@ -28,12 +55,12 @@ CREATE INDEX  	ego_deu_loads_zensus_geom_idx
 UPDATE 	orig_ego.ego_deu_loads_zensus AS t1
 SET  	inside_la = t2.inside_la
 FROM    (
-	SELECT	lp.id AS id,
+	SELECT	zensus.id AS id,
 		'TRUE' ::boolean AS inside_la
-	FROM	orig_ego.ego_deu_loads_zensus AS lp,
-		orig_ego.ego_deu_loads_osm_mview AS osm
-	WHERE  	osm.geom && lp.geom AND
-		ST_CONTAINS(osm.geom,lp.geom)
+	FROM	orig_ego.ego_deu_loads_zensus AS zensus,
+		orig_ego.ego_deu_loads_osm AS osm
+	WHERE  	osm.geom && zensus.geom AND
+		ST_CONTAINS(osm.geom,zensus.geom)
 	) AS t2
 WHERE  	t1.id = t2.id;
 
@@ -184,7 +211,7 @@ ALTER TABLE		orig_ego.ego_deu_loads_zensus_cluster OWNER TO oeuser;
 
 -- Zensus Punkte, die nicht in LA liegen
 
--- "Population in Load Points"   (OK!) 1.000ms = 80.324.282 / 8.013.797
+-- "Population in Load Points"   (OK!) 1.000ms = 80.324.282 / 8.035.967
 SELECT	'zensus_deu' AS name,
 	SUM(zensus.population) AS people
 FROM	orig_destatis.zensus_population_per_ha_mview AS zensus
