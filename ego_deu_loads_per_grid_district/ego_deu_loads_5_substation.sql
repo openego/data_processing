@@ -447,9 +447,8 @@ GRANT ALL ON TABLE	orig_ego.ego_deu_substations_voronoi_error_geom_view TO oeuse
 ALTER TABLE		orig_ego.ego_deu_substations_voronoi_error_geom_view OWNER TO oeuser;
 
 -- -- "Drop empty view"   (OK!) -> 100ms =1
--- SELECT f_drop_view('{ego_deu_usw_voi_mview_error_geom_view}', 'orig_ego');
+-- SELECT f_drop_view('{ego_deu_substations_voronoi_error_geom_view}', 'orig_ego');
 
--- Problem: leere voi-Teile
 
 ---------- ---------- ----------
 -- "CUT"
@@ -500,6 +499,32 @@ FROM	(SELECT	gem.id AS id,
 	)AS t2
 WHERE  	t1.id = t2.id;
 
+---------- ---------- ----------
+
+-- "Validate (geom)"   (OK!) -> 22.000ms =0
+DROP VIEW IF EXISTS	orig_ego.ego_deu_substations_voronoi_cut_error_geom_view CASCADE;
+CREATE VIEW		orig_ego.ego_deu_substations_voronoi_cut_error_geom_view AS 
+	SELECT	test.id,
+		test.error,
+		reason(ST_IsValidDetail(test.geom)) AS error_reason,
+		ST_SetSRID(location(ST_IsValidDetail(test.geom)),3035) ::geometry(Point,3035) AS error_location
+	FROM	(
+		SELECT	source.id AS id,				-- PK
+			ST_IsValid(source.geom) AS error,
+			source.geom AS geom
+		FROM	orig_ego.ego_deu_substations_voronoi_cut AS source	-- Table
+		) AS test
+	WHERE	test.error = FALSE;
+
+-- "Grant oeuser"   (OK!) -> 100ms =0
+GRANT ALL ON TABLE	orig_ego.ego_deu_substations_voronoi_cut_error_geom_view TO oeuser WITH GRANT OPTION;
+ALTER TABLE		orig_ego.ego_deu_substations_voronoi_cut_error_geom_view OWNER TO oeuser;
+
+-- -- "Drop empty view"   (OK!) -> 100ms =1 (no error!)
+-- SELECT f_drop_view('{ego_deu_substations_voronoi_cut_error_geom_view}', 'orig_ego');
+
+---------- ---------- ----------
+
 -- -- "Calculate Gemeindeschlüssel"   (OK!) -> 3.000ms =4.981
 -- UPDATE 	orig_ego.ego_deu_substations_voronoi_cut AS t1
 -- SET  	ags_0 = t2.ags_0
@@ -513,9 +538,10 @@ WHERE  	t1.id = t2.id;
 -- 	) AS t2
 -- WHERE  	t1.id = t2.id;
 
----------- ---------- ----------
--- NN
 
+---------- ---------- ----------
+-- Connect the cutted parts to the next substation
+---------- ---------- ----------
 
 -- "Next Neighbor"   (OK!) 1.000ms =4.714
 DROP MATERIALIZED VIEW IF EXISTS	orig_ego.ego_deu_substations_voronoi_cut_nn_mview CASCADE;
@@ -527,13 +553,13 @@ SELECT DISTINCT ON (voi.id)
 	sub.subst_id AS subst_id, 
 	sub.ags_0 AS ags_0,
 	sub.geom AS geom_sub
-FROM 	orig_ego.ego_deu_substations_voronoi_cut AS voi, 
+FROM 	orig_ego.ego_deu_substations_voronoi_cut AS voi,
 	orig_ego.osm_deu_substations_2_mview AS sub  
 WHERE 	voi.id <> sub.subst_id
-	AND ST_DWithin(ST_PointOnSurface(voi.geom), sub.geom, 10000)
+	AND ST_DWithin(voi.geom, sub.geom, 50000) -- In a 50 km radius
 	AND voi.ags_0 = sub.ags_0
 ORDER BY 	voi.id, 
-		ST_Distance(ST_CENTROID(voi.geom),sub.geom);
+		ST_Distance(voi.geom,sub.geom);
 
 -- "Create Index (id)"   (OK!) -> 1.000ms =0
 CREATE UNIQUE INDEX  	ego_deu_substations_voronoi_cut_nn_mview_voi_id_idx
@@ -800,7 +826,7 @@ CREATE MATERIALIZED VIEW 		orig_ego.ego_deu_municipalities_sub_3_nn_line AS
 	SELECT 	nextval('orig_ego.ego_deu_municipalities_sub_3_nn_line_id') AS id,
 		nn.id AS nn_id,
 		nn.subst_id,
-		(ST_Dump(ST_Centroid(nn.mun_geom))).geom ::geometry(Point,3035) AS geom_centre,
+		(ST_Dump(ST_PointOnSurface(nn.mun_geom))).geom ::geometry(Point,3035) AS geom_centre,
 		ST_ShortestLine(	(ST_Dump(ST_PointOnSurface(nn.mun_geom))).geom ::geometry(Point,3035),
 					nn.sub_geom ::geometry(Point,3035)
 		) ::geometry(LineString,3035) AS geom
@@ -905,6 +931,9 @@ FROM	(SELECT	un.subst_id AS subst_id,
 WHERE  	t1.subst_id = t2.subst_id;
 
 
+
+---------- ---------- ----------
+-- Collect the 3 Mun-types
 ---------- ---------- ----------
 
 -- "Substations Template"   (OK!) -> 100ms =3.709
@@ -967,6 +996,7 @@ CREATE TABLE 		orig_ego.ego_grid_districts AS
 
 -- "Ad PK"   (OK!) 150ms =0
 ALTER TABLE	orig_ego.ego_grid_districts
+	ADD COLUMN subst_sum integer,
 	ADD PRIMARY KEY (subst_id);
 
 -- "Create Index GIST (geom)"   (OK!) 2.500ms =0
@@ -977,5 +1007,19 @@ CREATE INDEX	ego_grid_districts_geom_idx
 -- "Grant oeuser"   (OK!) -> 100ms =0
 GRANT ALL ON TABLE	orig_ego.ego_grid_districts TO oeuser WITH GRANT OPTION;
 ALTER TABLE		orig_ego.ego_grid_districts OWNER TO oeuser;
+
+
+-- "Count Substations in Grid Districts"   (OK!) -> 1.000ms =2.267
+UPDATE 	orig_ego.ego_grid_districts AS t1
+SET  	subst_sum = t2.subst_sum
+FROM	(SELECT	dis.subst_id AS subst_id,
+		COUNT(sub.geom)::integer AS subst_sum
+	FROM	orig_ego.ego_grid_districts AS dis,
+		orig_osm.osm_deu_substations AS sub
+	WHERE  	dis.geom && sub.geom AND
+		ST_CONTAINS(dis.geom,sub.geom)
+	GROUP BY dis.subst_id
+	)AS t2
+WHERE  	t1.subst_id = t2.subst_id;
 
 ---------- ---------- ----------

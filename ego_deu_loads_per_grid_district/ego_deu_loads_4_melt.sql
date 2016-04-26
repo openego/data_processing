@@ -360,32 +360,32 @@ WHERE	test.error = FALSE;
 
 
 
----------- ---------- ----------
--- Cut Loads with vg250_gem_dump 22.837s
----------- ---------- ----------
-
--- "Create Table"   (OK!) 100ms =0
-DROP TABLE IF EXISTS	orig_ego.ego_deu_loads_melted_cut_gem CASCADE;
-CREATE TABLE		orig_ego.ego_deu_loads_melted_cut_gem (
-		id SERIAL,
-		geom geometry(Polygon,3035),
-CONSTRAINT	ego_deu_loads_melted_cut_gem_pkey PRIMARY KEY (id));
-
--- "Insert Cut"   (OK!) 330.000ms =188.998
-INSERT INTO	orig_ego.ego_deu_loads_melted_cut_gem (geom)
-	SELECT	(ST_DUMP(ST_INTERSECTION(poly.geom,cut.geom))).geom ::geometry(Polygon,3035) AS geom
-	FROM	orig_ego.ego_deu_loads_melted AS poly,
-		orig_geo_vg250.vg250_6_gem_dump_mview AS cut
-	WHERE	poly.geom && cut.geom;
-
--- "Create Index GIST (geom)"   (OK!) 2.500ms =0
-CREATE INDEX	ego_deu_loads_melted_cut_gem_geom_idx
-	ON	orig_ego.ego_deu_loads_melted_cut_gem
-	USING	GIST (geom);
-
--- "Grant oeuser"   (OK!) -> 100ms =0
-GRANT ALL ON TABLE	orig_ego.ego_deu_loads_melted_cut_gem TO oeuser WITH GRANT OPTION;
-ALTER TABLE		orig_ego.ego_deu_loads_melted_cut_gem OWNER TO oeuser;
+-- ---------- ---------- ----------
+-- -- Cut Loads with vg250_gem_dump 22.837s
+-- ---------- ---------- ----------
+-- 
+-- -- "Create Table"   (OK!) 100ms =0
+-- DROP TABLE IF EXISTS	orig_ego.ego_deu_loads_melted_cut_gem CASCADE;
+-- CREATE TABLE		orig_ego.ego_deu_loads_melted_cut_gem (
+-- 		id SERIAL,
+-- 		geom geometry(Polygon,3035),
+-- CONSTRAINT	ego_deu_loads_melted_cut_gem_pkey PRIMARY KEY (id));
+-- 
+-- -- "Insert Cut"   (OK!) 330.000ms =188.998
+-- INSERT INTO	orig_ego.ego_deu_loads_melted_cut_gem (geom)
+-- 	SELECT	(ST_DUMP(ST_INTERSECTION(poly.geom,cut.geom))).geom ::geometry(Polygon,3035) AS geom
+-- 	FROM	orig_ego.ego_deu_loads_melted AS poly,
+-- 		orig_geo_vg250.vg250_6_gem_dump_mview AS cut
+-- 	WHERE	poly.geom && cut.geom;
+-- 
+-- -- "Create Index GIST (geom)"   (OK!) 2.500ms =0
+-- CREATE INDEX	ego_deu_loads_melted_cut_gem_geom_idx
+-- 	ON	orig_ego.ego_deu_loads_melted_cut_gem
+-- 	USING	GIST (geom);
+-- 
+-- -- "Grant oeuser"   (OK!) -> 100ms =0
+-- GRANT ALL ON TABLE	orig_ego.ego_deu_loads_melted_cut_gem TO oeuser WITH GRANT OPTION;
+-- ALTER TABLE		orig_ego.ego_deu_loads_melted_cut_gem OWNER TO oeuser;
 
 
 

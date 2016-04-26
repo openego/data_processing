@@ -17,13 +17,12 @@ CREATE TABLE         	orig_ego.ego_deu_loads (
 		geom geometry(Polygon,3035),
 CONSTRAINT 	ego_deu_loads_pkey PRIMARY KEY (id));
 
--- "Insert Loads"   (OK!) 10.000ms =182.430
+-- "Insert Loads"   (ERROR!) 10.000ms =182.430
 INSERT INTO     orig_ego.ego_deu_loads (geom)
-	SELECT	(ST_DUMP(ST_INTERSECTION(loads.geom,dis.geom)).geom) ::geometry(Polygon,3035) AS geom
-	FROM	orig_ego.ego_deu_loads_melted_cut_gem AS loads,
+	SELECT	(ST_DUMP(ST_INTERSECTION(loads.geom,dis.geom))).geom ::geometry(Polygon,3035) AS geom
+	FROM	orig_ego.ego_deu_loads_melted AS loads,
 		orig_ego.ego_grid_districts AS dis
 	WHERE	loads.geom && dis.geom;
-	
 	--	AND dis.subst_id = 2155;
 
 -- "Extend Table"   (OK!) 100ms =0
