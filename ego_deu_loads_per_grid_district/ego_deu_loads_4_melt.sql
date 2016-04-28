@@ -364,60 +364,60 @@ WHERE	test.error = FALSE;
 -- Cut Loads with vg250_gem_dump 22.837s
 ---------- ---------- ----------
 
--- "Create Table"   (OK!) 100ms =0
-DROP TABLE IF EXISTS	orig_ego.ego_deu_loads_melted_cut_gem CASCADE;
-CREATE TABLE		orig_ego.ego_deu_loads_melted_cut_gem (
-		id SERIAL,
-		geom geometry(Polygon,3035),
-CONSTRAINT	ego_deu_loads_melted_cut_gem_pkey PRIMARY KEY (id));
+-- -- "Create Table"   (OK!) 100ms =0
+-- DROP TABLE IF EXISTS	orig_ego.ego_deu_loads_melted_cut_gem CASCADE;
+-- CREATE TABLE		orig_ego.ego_deu_loads_melted_cut_gem (
+		-- id SERIAL,
+		-- geom geometry(Polygon,3035),
+-- CONSTRAINT	ego_deu_loads_melted_cut_gem_pkey PRIMARY KEY (id));
 
--- "Insert Cut"   (OK!) 330.000ms =188.998
-INSERT INTO	orig_ego.ego_deu_loads_melted_cut_gem (geom)
-	SELECT	(ST_DUMP(ST_INTERSECTION(poly.geom,cut.geom))).geom ::geometry(Polygon,3035) AS geom
-	FROM	orig_ego.ego_deu_loads_melted AS poly,
-		orig_geo_vg250.vg250_6_gem_dump_mview AS cut
-	WHERE	poly.geom && cut.geom;
+-- -- "Insert Cut"   (OK!) 330.000ms =188.998
+-- INSERT INTO	orig_ego.ego_deu_loads_melted_cut_gem (geom)
+	-- SELECT	(ST_DUMP(ST_INTERSECTION(poly.geom,cut.geom))).geom ::geometry(Polygon,3035) AS geom
+	-- FROM	orig_ego.ego_deu_loads_melted AS poly,
+		-- orig_geo_vg250.vg250_6_gem_dump_mview AS cut
+	-- WHERE	poly.geom && cut.geom;
 
--- "Create Index GIST (geom)"   (OK!) 2.500ms =0
-CREATE INDEX	ego_deu_loads_melted_cut_gem_geom_idx
-	ON	orig_ego.ego_deu_loads_melted_cut_gem
+-- -- "Create Index GIST (geom)"   (OK!) 2.500ms =0
+-- CREATE INDEX	ego_deu_loads_melted_cut_gem_geom_idx
+	-- ON	orig_ego.ego_deu_loads_melted_cut_gem
+	-- USING	GIST (geom);
+
+-- -- "Grant oeuser"   (OK!) -> 100ms =0
+-- GRANT ALL ON TABLE	orig_ego.ego_deu_loads_melted_cut_gem TO oeuser WITH GRANT OPTION;
+-- ALTER TABLE		orig_ego.ego_deu_loads_melted_cut_gem OWNER TO oeuser;
+
+
+
+---------- ---------- ----------
+-- "Create SPF"   2016-04-06 14:50   3s
+---------- ---------- ----------
+
+-- "Create Table SPF"   (OK!) 3.000ms =886
+DROP TABLE IF EXISTS  	orig_ego.ego_deu_loads_melted_spf;
+CREATE TABLE         	orig_ego.ego_deu_loads_melted_spf AS
+	SELECT	lc.*
+	FROM	orig_ego.ego_deu_loads_melted_spf AS lc,
+		orig_geo_vg250.vg250_4_krs_spf_mview AS spf
+	WHERE	ST_TRANSFORM(spf.geom,3035) && lc.geom  AND  
+		ST_CONTAINS(ST_TRANSFORM(spf.geom,3035), lc.geom_centroid);
+
+-- "Ad PK"   (OK!) 150ms =0
+ALTER TABLE	orig_ego.ego_deu_loads_melted_spf
+	ADD PRIMARY KEY (id);
+
+-- "Create Index GIST (geom)"   (OK!) -> 100ms =0
+CREATE INDEX  	ego_deu_loads_melted_spf_geom_idx
+	ON	orig_ego.ego_deu_loads_melted_spf
 	USING	GIST (geom);
 
+-- "Create Index GIST (geom_centroid)"   (OK!) -> 150ms =0
+CREATE INDEX  	ego_deu_loads_melted_spf_geom_centroid_idx
+    ON    	orig_ego.ego_deu_loads_melted_spf
+    USING     	GIST (geom_centroid);
+
 -- "Grant oeuser"   (OK!) -> 100ms =0
-GRANT ALL ON TABLE	orig_ego.ego_deu_loads_melted_cut_gem TO oeuser WITH GRANT OPTION;
-ALTER TABLE		orig_ego.ego_deu_loads_melted_cut_gem OWNER TO oeuser;
+GRANT ALL ON TABLE 	orig_ego.ego_deu_loads_melted_spf TO oeuser WITH GRANT OPTION;
+ALTER TABLE		orig_ego.ego_deu_loads_melted_spf OWNER TO oeuser;
 
-
-
--- ---------- ---------- ----------
--- -- "Create SPF"   2016-04-06 14:50   3s
--- ---------- ---------- ----------
--- 
--- -- "Create Table SPF"   (OK!) 3.000ms =886
--- DROP TABLE IF EXISTS  	orig_ego.ego_deu_loads_collect_buffer100_unbuffer_spf;
--- CREATE TABLE         	orig_ego.ego_deu_loads_collect_buffer100_unbuffer_spf AS
--- 	SELECT	lc.*
--- 	FROM	orig_ego.ego_deu_loads_collect_buffer100_unbuffer AS lc,
--- 		orig_geo_vg250.vg250_4_krs_spf_mview AS spf
--- 	WHERE	ST_TRANSFORM(spf.geom,3035) && lc.geom  AND  
--- 		ST_CONTAINS(ST_TRANSFORM(spf.geom,3035), lc.geom_centroid);
--- 
--- -- "Ad PK"   (OK!) 150ms =0
--- ALTER TABLE	orig_ego.ego_deu_loads_collect_buffer100_unbuffer_spf
--- 	ADD PRIMARY KEY (id);
--- 
--- -- "Create Index GIST (geom)"   (OK!) -> 100ms =0
--- CREATE INDEX  	ego_deu_loads_collect_buffer100_unbuffer_spf_geom_idx
--- 	ON	orig_ego.ego_deu_loads_collect_buffer100_unbuffer_spf
--- 	USING	GIST (geom);
--- 
--- -- "Create Index GIST (geom_centroid)"   (OK!) -> 150ms =0
--- CREATE INDEX  	ego_deu_loads_collect_buffer100_unbuffer_spf_geom_centroid_idx
---     ON    	orig_ego.ego_deu_loads_collect_buffer100_unbuffer_spf
---     USING     	GIST (geom_centroid);
--- 
--- -- "Grant oeuser"   (OK!) -> 100ms =0
--- GRANT ALL ON TABLE 	orig_ego.ego_deu_loads_collect_buffer100_unbuffer_spf TO oeuser WITH GRANT OPTION;
--- ALTER TABLE		orig_ego.ego_deu_loads_collect_buffer100_unbuffer_spf OWNER TO oeuser;
--- 
--- ---------- ---------- ----------
+---------- ---------- ----------
