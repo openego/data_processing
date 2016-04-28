@@ -1,11 +1,67 @@
 ﻿---------- ---------- ----------
----------- --SKRIPT-- OK! s
+---------- --SKRIPT-- OK! 11s
 ---------- ---------- ----------
+
+-- Separate SPF-Testregion from VG250 Kreise   (OK!) -> 1.000ms =432
+DROP MATERIALIZED VIEW IF EXISTS	orig_geo_vg250.vg250_4_krs_spf_mview CASCADE;
+CREATE MATERIALIZED VIEW 		orig_geo_vg250.vg250_4_krs_spf_mview AS 
+ SELECT 	vg.gid,
+		vg.gen AS name,
+		ST_AREA(ST_Transform(vg.geom, 3035)) / 10000::double precision AS area_km2,
+		vg.geom
+   FROM orig_geo_vg250.vg250_4_krs vg
+  WHERE vg.gen = 'Unterallgäu' OR vg.gen = 'Memmingen';
+
+-- "Create Index (id)"   (OK!) -> 100ms =0
+CREATE UNIQUE INDEX  	vg250_4_krs_spf_mview_gid_idx
+		ON	orig_geo_vg250.vg250_4_krs_spf_mview (gid);
+
+-- "Create Index GIST (geom)"   (OK!) -> 200ms =0
+CREATE INDEX  	vg250_4_krs_spf_mview_geom_idx
+	ON	orig_geo_vg250.vg250_4_krs_spf_mview
+	USING	GIST (geom);
+
+-- "Grant oeuser"   (OK!) -> 100ms =0
+GRANT ALL ON TABLE	orig_geo_vg250.vg250_4_krs_spf_mview TO oeuser WITH GRANT OPTION;
+ALTER TABLE		orig_geo_vg250.vg250_4_krs_spf_mview OWNER TO oeuser;
 
 ---------- ---------- ---------- ---------- ---------- ----------
 -- "LOADS"   2016-04-06 15:17   12s
 ---------- ---------- ---------- ---------- ---------- ----------
 
+---------- ---------- ----------
+-- "Create SPF"   2016-04-06 14:50   3s
+---------- ---------- ----------
+
+-- "Create Table SPF"   (OK!) 17.000ms =901
+DROP TABLE IF EXISTS  	orig_ego.ego_deu_loads_melted_spf;
+CREATE TABLE         	orig_ego.ego_deu_loads_melted_spf AS
+	SELECT	lc.*,
+		ST_CENTROID(lc.geom) :: geometry(Point, 3035) AS geom_centre
+	FROM	orig_ego.ego_deu_loads_melted AS lc,
+		orig_geo_vg250.vg250_4_krs_spf_mview AS spf
+	WHERE	ST_TRANSFORM(spf.geom,3035) && lc.geom  AND  
+		ST_CONTAINS(ST_TRANSFORM(spf.geom,3035), ST_CENTROID(lc.geom));
+
+-- "Ad PK"   (OK!) 150ms =0
+ALTER TABLE	orig_ego.ego_deu_loads_melted_spf
+	ADD PRIMARY KEY (id);
+
+-- "Create Index GIST (geom)"   (OK!) -> 100ms =0
+CREATE INDEX  	ego_deu_loads_melted_spf_geom_idx
+	ON	orig_ego.ego_deu_loads_melted_spf
+	USING	GIST (geom);
+
+-- "Create Index GIST (geom_centre)"   (OK!) -> 150ms =0
+CREATE INDEX  	ego_deu_loads_melted_spf_geom_centre_idx
+    ON    	orig_ego.ego_deu_loads_melted_spf
+    USING     	GIST (geom_centre);
+
+-- "Grant oeuser"   (OK!) -> 100ms =0
+GRANT ALL ON TABLE 	orig_ego.ego_deu_loads_melted_spf TO oeuser WITH GRANT OPTION;
+ALTER TABLE		orig_ego.ego_deu_loads_melted_spf OWNER TO oeuser;
+
+---------- ---------- ----------
 ---------- ---------- ----------
 -- Cutting Loads with Grid Districts
 ---------- ---------- ----------
@@ -89,16 +145,16 @@ GRANT ALL ON TABLE 	orig_ego.ego_deu_loads_spf_error_area_ha_mview TO oeuser WIT
 ALTER TABLE		orig_ego.ego_deu_loads_spf_error_area_ha_mview OWNER TO oeuser;
 
 
--- "Remove Errors (area_ha)"   (OK!) 700ms =5
+-- "Remove Errors (area_ha)"   (OK!) 700ms =310
 DELETE FROM	orig_ego.ego_deu_loads_spf AS loads
-	WHERE	loads.area_ha < 0.001;
+	WHERE	loads.area_ha < 1;
 
--- "Validate Area (area_ha) Check"   (OK!) 84.000ms =81.161
-SELECT 	loads.id AS id,
-	loads.area_ha AS area_ha,
-	loads.geom AS geom
-FROM 	orig_ego.ego_deu_loads_spf AS loads
-WHERE	loads.area_ha <= 2;
+-- -- "Validate Area (area_ha) Check"   (OK!) 84.000ms =81.161
+-- SELECT 	loads.id AS id,
+-- 	loads.area_ha AS area_ha,
+-- 	loads.geom AS geom
+-- FROM 	orig_ego.ego_deu_loads_spf AS loads
+-- WHERE	loads.area_ha < 1;
 
 
 
@@ -121,8 +177,8 @@ FROM    (
 WHERE  	t1.id = t2.id;
 
 -- "Create Index GIST (geom_centroid)"   (OK!) -> 4.000ms =0
-CREATE INDEX  	ego_deu_loads_geom_centroid_idx
-    ON    	orig_ego.ego_deu_loads
+CREATE INDEX  	ego_deu_loads_spf_geom_centroid_idx
+    ON    	orig_ego.ego_deu_loads_spf
     USING     	GIST (geom_centroid);
     
 ---------- ---------- ----------
@@ -175,10 +231,10 @@ CREATE INDEX  	ego_deu_loads_spf_geom_centre_idx
     ON    	orig_ego.ego_deu_loads_spf
     USING     	GIST (geom_centre);
 
--- "Validate Centre"   (OK!) -> 1.000ms =0
-	SELECT	loads.id AS id
-	FROM	orig_ego.ego_deu_loads_spf AS loads
-	WHERE  	NOT ST_CONTAINS(loads.geom,loads.geom_centre);
+-- -- "Validate Centre"   (OK!) -> 1.000ms =0
+-- 	SELECT	loads.id AS id
+-- 	FROM	orig_ego.ego_deu_loads_spf AS loads
+-- 	WHERE  	NOT ST_CONTAINS(loads.geom,loads.geom_centre);
 
 ---------- ---------- ----------
 
@@ -324,25 +380,6 @@ WHERE  	t1.id = t2.id;
 -- "Calculate Codes"   2016-04-06 18:01
 ---------- ---------- ----------
 
--- "Transform VG250"   (OK!) -> 2.000ms =11.438
-DROP MATERIALIZED VIEW IF EXISTS	orig_geo_vg250.vg250_6_gem_mview CASCADE;
-CREATE MATERIALIZED VIEW		orig_geo_vg250.vg250_6_gem_mview AS
-	SELECT	vg.gid,
-		vg.gen,
-		vg.nuts,
-		vg.rs,
-		ags_0,
-		ST_TRANSFORM(vg.geom,3035) AS geom
-	FROM	orig_geo_vg250.vg250_6_gem AS vg
-	ORDER BY vg.gid;
-
--- "Create Index GIST (geom)"   (OK!) -> 150ms =0
-CREATE INDEX  	vg250_6_gem_mview_geom_idx
-	ON	orig_geo_vg250.vg250_6_gem_mview
-	USING	GIST (geom);
-
----------- ---------- ----------
-
 -- "Calculate NUTS"   (OK!) -> 42.000ms =181.157
 UPDATE 	orig_ego.ego_deu_loads_spf AS t1
 SET  	nuts = t2.nuts
@@ -386,13 +423,13 @@ FROM    (
 	) AS t2
 WHERE  	t1.id = t2.id;
 
--- "Loads without AGS"   (OK!) 500ms =16
-DROP MATERIALIZED VIEW IF EXISTS	orig_ego.ego_deu_loads_error_noags_mview CASCADE;
-CREATE MATERIALIZED VIEW 		orig_ego.ego_deu_loads_error_noags_mview AS 
-	SELECT	loads.id,
-		loads.geom
-	FROM	orig_ego.ego_deu_loads_spf AS loads
-	WHERE  	loads.ags_0 IS NULL;
+-- -- "Loads without AGS"   (OK!) 500ms =16
+-- DROP MATERIALIZED VIEW IF EXISTS	orig_ego.ego_deu_loads_spf_error_noags_mview CASCADE;
+-- CREATE MATERIALIZED VIEW 		orig_ego.ego_deu_loads_spf_error_noags_mview AS 
+-- 	SELECT	loads.id,
+-- 		loads.geom
+-- 	FROM	orig_ego.ego_deu_loads_spf AS loads
+-- 	WHERE  	loads.ags_0 IS NULL;
 
 ---------- ---------- ----------
 
