@@ -17,11 +17,13 @@ CREATE TABLE         	orig_ego.ego_deu_loads (
 		geom geometry(Polygon,3035),
 CONSTRAINT 	ego_deu_loads_pkey PRIMARY KEY (id));
 
--- "Insert Loads"   (OK!) 10.000ms =182.430
+-- "Insert Loads"   (ERROR!) 10.000ms =182.430
 INSERT INTO     orig_ego.ego_deu_loads (geom)
 	SELECT	(ST_DUMP(ST_INTERSECTION(loads.geom,dis.geom))).geom ::geometry(Polygon,3035) AS geom
 	FROM	orig_ego.ego_deu_loads_melted AS loads,
-		orig_ego.ego_grid_districts AS dis;
+		orig_ego.ego_grid_districts AS dis
+	WHERE	loads.geom && dis.geom;
+	--	AND dis.subst_id = 2155;
 
 -- "Extend Table"   (OK!) 100ms =0
 ALTER TABLE	orig_ego.ego_deu_loads
@@ -249,7 +251,7 @@ FROM    (
 		SUM(ST_AREA(sector.geom)/10000) AS sector_area,
 		COUNT(sector.geom) AS sector_count,
 		loads.area_ha AS area_ha
-	FROM	orig_ego.osm_deu_polygon_urban_sector_1_residential_mview AS sector,
+	FROM	orig_osm.osm_deu_polygon_urban_sector_1_residential_mview AS sector,
 		orig_ego.ego_deu_loads AS loads	
 	WHERE  	loads.geom && sector.geom AND  
 		ST_CONTAINS(loads.geom,sector.geom)
@@ -269,7 +271,7 @@ FROM    (
 		SUM(ST_AREA(sector.geom)/10000) AS sector_area,
 		COUNT(sector.geom) AS sector_count,
 		loads.area_ha AS area_ha
-	FROM	orig_ego.osm_deu_polygon_urban_sector_2_retail_mview AS sector,
+	FROM	orig_osm.osm_deu_polygon_urban_sector_2_retail_mview AS sector,
 		orig_ego.ego_deu_loads AS loads	
 	WHERE  	loads.geom && sector.geom AND  
 		ST_CONTAINS(loads.geom,sector.geom)
@@ -289,7 +291,7 @@ FROM    (
 		SUM(ST_AREA(sector.geom)/10000) AS sector_area,
 		COUNT(sector.geom) AS sector_count,
 		loads.area_ha AS area_ha
-	FROM	orig_ego.osm_deu_polygon_urban_sector_3_industrial_mview AS sector,
+	FROM	orig_osm.osm_deu_polygon_urban_sector_3_industrial_mview AS sector,
 		orig_ego.ego_deu_loads AS loads	
 	WHERE  	loads.geom && sector.geom AND  
 		ST_CONTAINS(loads.geom,sector.geom)
@@ -309,7 +311,7 @@ FROM    (
 		SUM(ST_AREA(sector.geom)/10000) AS sector_area,
 		COUNT(sector.geom) AS sector_count,
 		loads.area_ha AS area_ha
-	FROM	orig_ego.osm_deu_polygon_urban_sector_4_agricultural_mview AS sector,
+	FROM	orig_osm.osm_deu_polygon_urban_sector_4_agricultural_mview AS sector,
 		orig_ego.ego_deu_loads AS loads	
 	WHERE  	loads.geom && sector.geom AND  
 		ST_CONTAINS(loads.geom,sector.geom)
@@ -402,7 +404,7 @@ FROM    (
 		dis.subst_id AS subst_id
 	FROM	orig_ego.ego_deu_loads AS loads,
 		orig_ego.ego_grid_districts AS dis
-	WHERE  	mv.geom && loads.geom_centre AND
+	WHERE  	dis.geom && loads.geom_centre AND
 		ST_CONTAINS(dis.geom,loads.geom_centre)
 	) AS t2
 WHERE  	t1.id = t2.id;
