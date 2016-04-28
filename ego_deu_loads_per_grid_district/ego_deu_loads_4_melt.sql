@@ -393,14 +393,15 @@ WHERE	test.error = FALSE;
 -- "Create SPF"   2016-04-06 14:50   3s
 ---------- ---------- ----------
 
--- "Create Table SPF"   (OK!) 3.000ms =886
+-- "Create Table SPF"   (OK!) 17.000ms =901
 DROP TABLE IF EXISTS  	orig_ego.ego_deu_loads_melted_spf;
 CREATE TABLE         	orig_ego.ego_deu_loads_melted_spf AS
-	SELECT	lc.*
-	FROM	orig_ego.ego_deu_loads_melted_spf AS lc,
+	SELECT	lc.*,
+		ST_CENTROID(lc.geom) :: geometry(Point, 3035) AS geom_centre
+	FROM	orig_ego.ego_deu_loads_melted AS lc,
 		orig_geo_vg250.vg250_4_krs_spf_mview AS spf
 	WHERE	ST_TRANSFORM(spf.geom,3035) && lc.geom  AND  
-		ST_CONTAINS(ST_TRANSFORM(spf.geom,3035), lc.geom_centroid);
+		ST_CONTAINS(ST_TRANSFORM(spf.geom,3035), ST_CENTROID(lc.geom));
 
 -- "Ad PK"   (OK!) 150ms =0
 ALTER TABLE	orig_ego.ego_deu_loads_melted_spf
@@ -411,10 +412,10 @@ CREATE INDEX  	ego_deu_loads_melted_spf_geom_idx
 	ON	orig_ego.ego_deu_loads_melted_spf
 	USING	GIST (geom);
 
--- "Create Index GIST (geom_centroid)"   (OK!) -> 150ms =0
-CREATE INDEX  	ego_deu_loads_melted_spf_geom_centroid_idx
+-- "Create Index GIST (geom_centre)"   (OK!) -> 150ms =0
+CREATE INDEX  	ego_deu_loads_melted_spf_geom_centre_idx
     ON    	orig_ego.ego_deu_loads_melted_spf
-    USING     	GIST (geom_centroid);
+    USING     	GIST (geom_centre);
 
 -- "Grant oeuser"   (OK!) -> 100ms =0
 GRANT ALL ON TABLE 	orig_ego.ego_deu_loads_melted_spf TO oeuser WITH GRANT OPTION;
