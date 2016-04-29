@@ -1,11 +1,11 @@
-﻿
+
 ---------- ---------- ----------
 -- "Create Consumption Loads SPF"   2016-04-07 11:43   1s
 ---------- ---------- ----------
 
 -- "Create Table Consumption"   (OK!) 100ms =0
-DROP TABLE IF EXISTS	orig_geo_ego.ego_deu_loads_consumption_spf;
-CREATE TABLE 		orig_geo_ego.ego_deu_loads_consumption_spf (
+DROP TABLE IF EXISTS	orig_ego.ego_deu_loads_consumption_spf;
+CREATE TABLE 		orig_ego.ego_deu_loads_consumption_spf (
 	id integer NOT NULL,
 	sector_consumption_residential numeric,
 	sector_consumption_retail numeric,
@@ -14,13 +14,13 @@ CREATE TABLE 		orig_geo_ego.ego_deu_loads_consumption_spf (
 	CONSTRAINT ego_deu_loads_consumption_spf_pkey PRIMARY KEY (id));
 
 -- "Insert Loads"   (OK!) 150ms =884
-INSERT INTO orig_geo_ego.ego_deu_loads_consumption_spf (id)
+INSERT INTO orig_ego.ego_deu_loads_consumption_spf (id)
 	SELECT	loads.id
-	FROM	orig_geo_ego.ego_deu_loads_spf AS loads;
+	FROM	orig_ego.ego_deu_loads_spf AS loads;
 
 -- "Grant oeuser"   (OK!) -> 100ms =0
-GRANT ALL ON TABLE 	orig_geo_ego.ego_deu_loads_consumption_spf TO oeuser WITH GRANT OPTION;
-ALTER TABLE		orig_geo_ego.ego_deu_loads_consumption_spf OWNER TO oeuser;
+GRANT ALL ON TABLE 	orig_ego.ego_deu_loads_consumption_spf TO oeuser WITH GRANT OPTION;
+ALTER TABLE		orig_ego.ego_deu_loads_consumption_spf OWNER TO oeuser;
 
 
 ---------- ---------- ----------
@@ -31,7 +31,7 @@ ALTER TABLE		orig_geo_ego.ego_deu_loads_consumption_spf OWNER TO oeuser;
 
 SELECT	sum(sector_area_industrial), substr(nuts,1,5) 
 	INTO 	orig_consumption_znes.temp_table
-	FROM 	orig_geo_ego.ego_deu_loads_spf
+	FROM 	orig_ego.ego_deu_loads_spf
 GROUP BY 	substr(nuts,1,5);
 
 UPDATE orig_consumption_znes.lak_consumption_per_district a
@@ -46,7 +46,7 @@ DROP TABLE IF EXISTS orig_consumption_znes.temp_table;
 
 SELECT sum(sector_area_retail), substr(nuts,1,5) 
 	INTO 	orig_consumption_znes.temp_table
-	FROM 	orig_geo_ego.ego_deu_loads_spf
+	FROM 	orig_ego.ego_deu_loads_spf
 GROUP BY 	substr(nuts,1,5);
 
 UPDATE orig_consumption_znes.lak_consumption_per_district a
@@ -61,7 +61,7 @@ DROP TABLE IF EXISTS orig_consumption_znes.temp_table;
 
 SELECT sum(sector_area_agricultural), substr(nuts,1,5) 
 	INTO 	orig_consumption_znes.temp_table
-	FROM 	orig_geo_ego.ego_deu_loads_spf
+	FROM 	orig_ego.ego_deu_loads_spf
 GROUP BY 	substr(nuts,1,5);
 
 UPDATE orig_consumption_znes.lak_consumption_per_district a
@@ -93,7 +93,7 @@ SET 	consumption_per_area_industry = elec_consumption_industry/nullif(area_indus
 
 -- Calculate sector consumption of industry per loadarea
 
-UPDATE 	orig_geo_ego.ego_deu_loads_consumption_spf a
+UPDATE 	orig_ego.ego_deu_loads_consumption_spf a
 SET   	sector_consumption_industrial = sub.result 
 FROM
 (
@@ -102,7 +102,7 @@ FROM
 	b.consumption_per_area_industry * c.sector_area_industrial as result
 	FROM
 	orig_consumption_znes.lak_consumption_per_district b,
-	orig_geo_ego.ego_deu_loads_spf c
+	orig_ego.ego_deu_loads_spf c
 	WHERE
 	c.nuts = b.eu_code
 ) AS sub
@@ -111,7 +111,7 @@ sub.id = a.id;
 
 -- Calculate sector consumption of tertiary sector per loadarea
 
-UPDATE orig_geo_ego.ego_deu_loads_consumption_spf a
+UPDATE orig_ego.ego_deu_loads_consumption_spf a
 SET   sector_consumption_retail = sub.result 
 FROM
 (
@@ -120,7 +120,7 @@ FROM
 	b.consumption_per_area_tertiary_sector * c.sector_area_retail as result
 	FROM
 	orig_consumption_znes.lak_consumption_per_district b,
-	orig_geo_ego.ego_deu_loads_spf c
+	orig_ego.ego_deu_loads_spf c
 	WHERE
 	c.nuts = b.eu_code
 ) AS sub
@@ -129,7 +129,7 @@ sub.id = a.id;
 
 -- Calculate sector consumption of agriculture per loadarea
 
-UPDATE orig_geo_ego.ego_deu_loads_consumption_spf a
+UPDATE orig_ego.ego_deu_loads_consumption_spf a
 SET   sector_consumption_agricultural = sub.result 
 FROM
 (
@@ -138,7 +138,7 @@ FROM
 	b.consumption_per_area_tertiary_sector * c.sector_area_agricultural as result
 	FROM
 	orig_consumption_znes.lak_consumption_per_district b,
-	orig_geo_ego.ego_deu_loads_spf c
+	orig_ego.ego_deu_loads_spf c
 	WHERE
 	c.nuts = b.eu_code
 ) AS sub
@@ -148,7 +148,7 @@ sub.id = a.id;
 
 -- Calculate sector consumption of households per loadarea
 
-UPDATE orig_geo_ego.ego_deu_loads_consumption_spf a
+UPDATE orig_ego.ego_deu_loads_consumption_spf a
 SET   sector_consumption_residential = sub.result 
 FROM
 (
@@ -157,13 +157,11 @@ FROM
 	b.elec_consumption_households_per_person * c.zensus_sum as result
 	FROM 
 	orig_consumption_znes.lak_consumption_per_federalstate b,
-	orig_geo_ego.ego_deu_loads_spf c
+	orig_ego.ego_deu_loads_spf c
 	WHERE
 	substring(c.nuts,1,3) = b.eu_code
 
 ) AS sub
 WHERE
 sub.id = a.id;
-
-
 
