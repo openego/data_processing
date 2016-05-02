@@ -23,7 +23,6 @@ INSERT INTO     orig_ego.ego_deu_loads (geom)
 	FROM	orig_ego.ego_deu_loads_melted AS loads,
 		orig_ego.ego_grid_districts AS dis
 	WHERE	loads.geom && dis.geom;
-	--	AND dis.subst_id = 2155;
 
 -- "Extend Table"   (OK!) 100ms =0
 ALTER TABLE	orig_ego.ego_deu_loads
