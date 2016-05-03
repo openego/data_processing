@@ -278,7 +278,7 @@ CREATE MATERIALIZED VIEW		orig_geo_vg250.vg250_6_gem_mview AS
 		vg.nuts ::varchar(5) AS nuts,
 		vg.rs_0 ::varchar(12) AS rs_0,
 		vg.ags_0 ::varchar(12) AS ags_0,
-		ST_AREA(vg.geom) / 10000 ::double precision AS area_km2,
+		ST_AREA(vg.geom) / 1000 ::double precision AS area_ha,
 		ST_TRANSFORM(vg.geom,3035) ::geometry(MultiPolygon,3035) AS geom
 	FROM	orig_geo_vg250.vg250_6_gem AS vg
 	ORDER BY vg.gid;
@@ -384,6 +384,66 @@ ALTER TABLE		orig_geo_vg250.vg250_6_gem_dump_mview OWNER TO oeuser;
 -- 
 -- -- "Drop empty view"   (OK!) -> 100ms =1
 -- SELECT f_drop_view('{vg250_6_gem_dump_mview_error_geom_view}', 'orig_geo_vg250');
+
+
+
+---------- ---------- ----------
+-- "orig_geo_vg250.vg250_6_gem_dump_mview"
+---------- ---------- ----------
+
+-- "Sequence"   (OK!) 100ms =0
+DROP SEQUENCE IF EXISTS 		orig_geo_vg250.vg250_6_gem_dump_clean_id CASCADE;
+CREATE SEQUENCE 			orig_geo_vg250.vg250_6_gem_dump_clean_id;
+
+-- "Transform VG250 Gemeinden"   (OK!) -> 5.000ms =12.878
+DROP TABLE IF EXISTS	orig_geo_vg250.vg250_6_gem_dump_clean CASCADE;
+CREATE TABLE		orig_geo_vg250.vg250_6_gem_dump_clean AS
+	SELECT	nextval('orig_geo_vg250.vg250_6_gem_dump_clean_id') AS id,
+		--vg.gid ::integer AS gid,
+		--vg.gen ::text AS gen,
+		--vg.bez ::text AS bez,
+		--vg.bem ::text AS bem,
+		--vg.nuts ::varchar(5) AS nuts,
+		--vg.rs_0 ::varchar(12) AS rs_0,
+		--vg.ags_0 ::varchar(12) AS ags_0,
+		--ST_AREA(vg.geom) / 10000 ::double precision AS area_km2,
+		--ST_MULTI(ST_UNION(ST_TRANSFORM(vg.geom,3035))) ::geometry(MultiPolygon,3035) AS geom_union
+		ST_AREA(dump.geom) / 1000 ::double precision AS area_ha,
+		dump.count_ring,
+		dump.geom AS geom		
+	FROM	(SELECT ST_NumInteriorRings(vg.geom) AS count_ring,
+			(ST_DumpRings(vg.geom)).geom AS geom
+		FROM	orig_geo_vg250.vg250_6_gem_dump_mview AS vg) AS dump;
+
+-- "Create Index (id)"   (OK!) -> 100ms =0
+CREATE UNIQUE INDEX  	vg250_6_gem_dump_clean_gid_idx
+		ON	orig_geo_vg250.vg250_6_gem_dump_clean (id);
+
+-- "Create Index GIST (geom)"   (OK!) -> 150ms =0
+CREATE INDEX  	vg250_6_gem_dump_clean_geom_idx
+	ON	orig_geo_vg250.vg250_6_gem_dump_clean
+	USING	GIST (geom);
+
+-- "Grant oeuser"   (OK!) -> 100ms =0
+GRANT ALL ON TABLE	orig_geo_vg250.vg250_6_gem_dump_clean TO oeuser WITH GRANT OPTION;
+ALTER TABLE		orig_geo_vg250.vg250_6_gem_dump_clean OWNER TO oeuser;
+
+---------- ---------- ----------
+
+-- "Kill dem rings"   (OK!) 30.000ms =559
+DROP MATERIALIZED VIEW IF EXISTS	orig_ego.vg250_6_gem_dump_clean_nn_mview CASCADE;
+CREATE MATERIALIZED VIEW 		orig_ego.vg250_6_gem_dump_clean_nn_mview AS 
+SELECT  mun.id,
+	mun.area_ha,
+	mun.count_ring,
+	ST_Within(mun.geom,mun.geom) AS inside,
+	mun.geom
+FROM 	orig_geo_vg250.vg250_6_gem_dump_clean AS mun
+WHERE	mun.count_ring > 0 AND
+	mun.geom && mun.geom AND
+	ST_Within(mun.geom,mun.geom) AND
+	mun.id <> mun.id;
+
 
 ---------- ---------- ----------
 

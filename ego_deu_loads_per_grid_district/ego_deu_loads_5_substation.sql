@@ -872,6 +872,7 @@ SELECT DISTINCT ON (mun.id)
 	sub.subst_id AS subst_id, 
 	mun.subst_typ AS subst_typ,
 	sub.geom ::geometry(Point,3035) AS geom_sub,
+	ST_Distance(ST_ExteriorRing(mun.geom),sub.geom) AS distance,
 	ST_MULTI(mun.geom) ::geometry(MultiPolygon,3035) AS geom
 FROM 	orig_ego.ego_deu_municipalities_sub_3_mview AS mun, 
 	orig_osm.osm_deu_substations AS sub
@@ -1069,22 +1070,33 @@ INSERT INTO     orig_ego.ego_grid_districts_collect
 
 -- UNION I + II + II
 
+-- -- "union mun"   (OK!) 19.000ms =3.707
+-- DROP TABLE IF EXISTS	orig_ego.ego_grid_districts CASCADE;
+-- CREATE TABLE 		orig_ego.ego_grid_districts AS 
+-- 	SELECT	un.subst_id ::integer AS subst_id,
+-- 		ST_AREA(un.geom)/10000 AS area_ha,
+-- 		un.geom AS geom
+-- 	FROM	(SELECT DISTINCT ON (dis.subst_id)
+-- 			dis.subst_id AS subst_id,
+-- 			ST_UNION(ST_SNAP(dis.geom,dis.geom,0.5))  AS geom
+-- 		FROM	orig_ego.ego_grid_districts_collect AS dis
+-- 		GROUP BY dis.subst_id) AS un;
+-- --::geometry(MultiPolygon,3035)
+
 -- "union mun"   (OK!) 19.000ms =3.707
 DROP TABLE IF EXISTS	orig_ego.ego_grid_districts CASCADE;
 CREATE TABLE 		orig_ego.ego_grid_districts AS 
-	SELECT	un.subst_id ::integer AS subst_id,
-		ST_AREA(un.geom)/10000 AS area,
-		un.geom ::geometry(MultiPolygon,3035) AS geom
-	FROM	(SELECT DISTINCT ON (dis.subst_id)
+SELECT DISTINCT ON 	(dis.subst_id)
 			dis.subst_id AS subst_id,
-			ST_MULTI(ST_UNION(ST_SNAP(dis.geom,vg.geom,1))) ::geometry(MultiPolygon,3035) AS geom
-		FROM	orig_ego.ego_grid_districts_collect AS dis,
-			orig_geo_vg250.vg250_6_gem_dump_mview AS vg
-		GROUP BY dis.subst_id) AS un;
-
+			ST_UNION(ST_SnapToGrid(dis.geom, 0.01))  AS geom
+		FROM	orig_ego.ego_grid_districts_collect AS dis
+	GROUP BY 	dis.subst_id;
+--::geometry(MultiPolygon,3035)
 -- "Ad PK"   (OK!) 150ms =0
 ALTER TABLE	orig_ego.ego_grid_districts
 	ADD COLUMN subst_sum integer,
+	ADD COLUMN area_ha decimal,
+	ADD COLUMN geom_type text,
 	ADD PRIMARY KEY (subst_id);
 
 -- "Create Index GIST (geom)"   (OK!) 2.500ms =0
@@ -1096,12 +1108,15 @@ CREATE INDEX	ego_grid_districts_geom_idx
 GRANT ALL ON TABLE	orig_ego.ego_grid_districts TO oeuser WITH GRANT OPTION;
 ALTER TABLE		orig_ego.ego_grid_districts OWNER TO oeuser;
 
-
 -- "Count Substations in Grid Districts"   (OK!) -> 1.000ms =2.267
 UPDATE 	orig_ego.ego_grid_districts AS t1
-SET  	subst_sum = t2.subst_sum
+SET  	subst_sum = t2.subst_sum,
+	area_ha = t2.area_ha,
+	geom_type = t2.geom_type
 FROM	(SELECT	dis.subst_id AS subst_id,
-		COUNT(sub.geom)::integer AS subst_sum
+		ST_AREA(dis.geom)/10000 AS area_ha,
+		COUNT(sub.geom)::integer AS subst_sum,
+		GeometryType(dis.geom) ::text AS geom_type
 	FROM	orig_ego.ego_grid_districts AS dis,
 		orig_osm.osm_deu_substations AS sub
 	WHERE  	dis.geom && sub.geom AND
@@ -1110,7 +1125,39 @@ FROM	(SELECT	dis.subst_id AS subst_id,
 	)AS t2
 WHERE  	t1.subst_id = t2.subst_id;
 
----------- ---------- ----------	
+
+-- "Dump Rings"   (OK!) -> 22.000ms =0
+SELECT	dis.subst_id,
+	ST_NumInteriorRings(dis.geom) ::integer AS count_ring
+FROM	orig_ego.ego_grid_districts AS dis
+WHERE	ST_NumInteriorRings(dis.geom) <> 0;
+
+-- "Dump Rings"   (OK!) -> 22.000ms =0
+DROP SEQUENCE IF EXISTS orig_ego.ego_grid_districts_rings_id CASCADE;
+CREATE SEQUENCE orig_ego.ego_grid_districts_rings_id;
+DROP MATERIALIZED VIEW IF EXISTS	orig_ego.ego_grid_districts_rings CASCADE;
+CREATE MATERIALIZED VIEW 		orig_ego.ego_grid_districts_rings AS 
+	SELECT	nextval('orig_ego.ego_grid_districts_rings_id') AS id,
+		dis.subst_id,
+		ST_NumInteriorRings(dis.geom) AS count_ring,
+		(ST_DumpRings(dis.geom)).geom AS geom
+	FROM	orig_ego.ego_grid_districts AS dis
+	WHERE	ST_NumInteriorRings(dis.geom) <> 0;
+
+-- "Dump Rings"   (OK!) -> 22.000ms =0
+DROP MATERIALIZED VIEW IF EXISTS	orig_ego.ego_grid_districts_rings_dump CASCADE;
+CREATE MATERIALIZED VIEW 		orig_ego.ego_grid_districts_rings_dump AS 
+	SELECT	dump.id AS id,
+		dump.subst_id,
+		dump.count_ring,
+		ST_AREA(dump.geom) AS area_ha,
+		dump.geom AS geom
+	FROM	orig_ego.ego_grid_districts_rings AS dump
+	WHERE	ST_AREA(dump.geom) > 1000000;
+
+
+
+---------- ---------- ----------
 
 -- "Validate (geom)"   (OK!) -> 22.000ms =0
 DROP VIEW IF EXISTS	orig_ego.ego_grid_districts_error_geom_view CASCADE;
