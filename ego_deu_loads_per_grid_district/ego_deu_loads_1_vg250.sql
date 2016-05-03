@@ -388,62 +388,134 @@ ALTER TABLE		orig_geo_vg250.vg250_6_gem_dump_mview OWNER TO oeuser;
 
 
 ---------- ---------- ----------
--- "orig_geo_vg250.vg250_6_gem_dump_mview"
+-- "orig_ego.vg250_6_gem_clean"
 ---------- ---------- ----------
 
 -- "Sequence"   (OK!) 100ms =0
-DROP SEQUENCE IF EXISTS 		orig_geo_vg250.vg250_6_gem_dump_clean_id CASCADE;
-CREATE SEQUENCE 			orig_geo_vg250.vg250_6_gem_dump_clean_id;
+DROP SEQUENCE IF EXISTS 		orig_geo_vg250.vg250_6_gem_clean_id CASCADE;
+CREATE SEQUENCE 			orig_geo_vg250.vg250_6_gem_clean_id;
 
--- "Transform VG250 Gemeinden"   (OK!) -> 5.000ms =12.878
-DROP TABLE IF EXISTS	orig_geo_vg250.vg250_6_gem_dump_clean CASCADE;
-CREATE TABLE		orig_geo_vg250.vg250_6_gem_dump_clean AS
-	SELECT	nextval('orig_geo_vg250.vg250_6_gem_dump_clean_id') AS id,
-		--vg.gid ::integer AS gid,
-		--vg.gen ::text AS gen,
-		--vg.bez ::text AS bez,
-		--vg.bem ::text AS bem,
-		--vg.nuts ::varchar(5) AS nuts,
-		--vg.rs_0 ::varchar(12) AS rs_0,
-		--vg.ags_0 ::varchar(12) AS ags_0,
-		--ST_AREA(vg.geom) / 10000 ::double precision AS area_km2,
-		--ST_MULTI(ST_UNION(ST_TRANSFORM(vg.geom,3035))) ::geometry(MultiPolygon,3035) AS geom_union
+-- "Transform VG250 Gemeinden"   (OK!) -> 1.000ms =12.878
+DROP TABLE IF EXISTS	orig_geo_vg250.vg250_6_gem_clean CASCADE;
+CREATE TABLE		orig_geo_vg250.vg250_6_gem_clean AS
+	SELECT	nextval('orig_geo_vg250.vg250_6_gem_clean_id') AS id,
+		dump.gid ::integer AS gid,
+		dump.gen ::text AS gen,
+		dump.bez ::text AS bez,
+		dump.bem ::text AS bem,
+		dump.nuts ::varchar(5) AS nuts,
+		dump.rs_0 ::varchar(12) AS rs_0,
+		dump.ags_0 ::varchar(12) AS ags_0,
 		ST_AREA(dump.geom) / 1000 ::double precision AS area_ha,
 		dump.count_ring,
-		dump.geom AS geom		
-	FROM	(SELECT ST_NumInteriorRings(vg.geom) AS count_ring,
+		dump.geom ::geometry(Polygon,3035) AS geom		
+	FROM	(SELECT vg.gid,
+			vg.gen,
+			vg.bez,
+			vg.bem,
+			vg.nuts,
+			vg.rs_0,
+			vg.ags_0,
+			ST_NumInteriorRings(vg.geom) AS count_ring,
 			(ST_DumpRings(vg.geom)).geom AS geom
 		FROM	orig_geo_vg250.vg250_6_gem_dump_mview AS vg) AS dump;
 
--- "Create Index (id)"   (OK!) -> 100ms =0
-CREATE UNIQUE INDEX  	vg250_6_gem_dump_clean_gid_idx
-		ON	orig_geo_vg250.vg250_6_gem_dump_clean (id);
+-- "Ad PK"   (OK!) 150ms =0
+ALTER TABLE	orig_geo_vg250.vg250_6_gem_clean
+	ADD COLUMN	is_ring boolean,
+	ADD PRIMARY KEY (id);
 
 -- "Create Index GIST (geom)"   (OK!) -> 150ms =0
-CREATE INDEX  	vg250_6_gem_dump_clean_geom_idx
-	ON	orig_geo_vg250.vg250_6_gem_dump_clean
+CREATE INDEX  	vg250_6_gem_clean_geom_idx
+	ON	orig_geo_vg250.vg250_6_gem_clean
 	USING	GIST (geom);
 
 -- "Grant oeuser"   (OK!) -> 100ms =0
-GRANT ALL ON TABLE	orig_geo_vg250.vg250_6_gem_dump_clean TO oeuser WITH GRANT OPTION;
-ALTER TABLE		orig_geo_vg250.vg250_6_gem_dump_clean OWNER TO oeuser;
+GRANT ALL ON TABLE	orig_geo_vg250.vg250_6_gem_clean TO oeuser WITH GRANT OPTION;
+ALTER TABLE		orig_geo_vg250.vg250_6_gem_clean OWNER TO oeuser;
 
 ---------- ---------- ----------
 
--- "Kill dem rings"   (OK!) 30.000ms =559
-DROP MATERIALIZED VIEW IF EXISTS	orig_ego.vg250_6_gem_dump_clean_nn_mview CASCADE;
-CREATE MATERIALIZED VIEW 		orig_ego.vg250_6_gem_dump_clean_nn_mview AS 
-SELECT  mun.id,
-	mun.area_ha,
-	mun.count_ring,
-	ST_Within(mun.geom,mun.geom) AS inside,
-	mun.geom
-FROM 	orig_geo_vg250.vg250_6_gem_dump_clean AS mun
-WHERE	mun.count_ring > 0 AND
-	mun.geom && mun.geom AND
-	ST_Within(mun.geom,mun.geom) AND
-	mun.id <> mun.id;
+-- "Spearate all municipalities with rings"   (OK!) 30.000ms =559
+DROP MATERIALIZED VIEW IF EXISTS	orig_geo_vg250.vg250_6_gem_clean_ring_mview CASCADE;
+CREATE MATERIALIZED VIEW 		orig_geo_vg250.vg250_6_gem_clean_ring_mview AS 
+SELECT 	mun.*
+FROM	orig_geo_vg250.vg250_6_gem_clean AS mun
+WHERE	mun.count_ring > 0;
 
+-- "Create Index (id)"   (OK!) -> 100ms =0
+CREATE UNIQUE INDEX  	vg250_6_gem_clean_ring_mview_id_idx
+		ON	orig_geo_vg250.vg250_6_gem_clean_ring_mview (id);
+
+-- "Create Index GIST (geom)"   (OK!) -> 150ms =0
+CREATE INDEX  	vg250_6_gem_clean_ring_mview_geom_idx
+	ON	orig_geo_vg250.vg250_6_gem_clean_ring_mview
+	USING	GIST (geom);
+
+-- "Grant oeuser"   (OK!) -> 100ms =0
+GRANT ALL ON TABLE	orig_geo_vg250.vg250_6_gem_clean_ring_mview TO oeuser WITH GRANT OPTION;
+ALTER TABLE		orig_geo_vg250.vg250_6_gem_clean_ring_mview OWNER TO oeuser;
+
+---------- ---------- ----------
+
+-- "Select all rings rings"   (OK!) 1.000ms =341
+DROP MATERIALIZED VIEW IF EXISTS	orig_geo_vg250.vg250_6_gem_clean_rings_mview CASCADE;
+CREATE MATERIALIZED VIEW		orig_geo_vg250.vg250_6_gem_clean_rings_mview AS 
+	SELECT 	DISTINCT mun.*,
+		joi.id AS j_id
+	FROM 	orig_geo_vg250.vg250_6_gem_clean_ring_mview AS mun		
+	INNER JOIN orig_geo_vg250.vg250_6_gem_clean_ring_mview AS joi
+		ON ST_WITHIN(ST_BUFFER(mun.geom,1),joi.geom)
+	WHERE	mun.geom && joi.geom;
+
+
+-- "Create Index (id)"   (OK!) -> 100ms =0
+CREATE UNIQUE INDEX  	vg250_6_gem_clean_rings_mview_id_idx
+		ON	orig_geo_vg250.vg250_6_gem_clean_rings_mview (id,j_id);
+
+-- "Create Index GIST (geom)"   (OK!) -> 150ms =0
+CREATE INDEX  	vg250_6_gem_clean_rings_mview_geom_idx
+	ON	orig_geo_vg250.vg250_6_gem_clean_rings_mview
+	USING	GIST (geom);
+
+-- "Grant oeuser"   (OK!) -> 100ms =0
+GRANT ALL ON TABLE	orig_geo_vg250.vg250_6_gem_clean_rings_mview TO oeuser WITH GRANT OPTION;
+ALTER TABLE		orig_geo_vg250.vg250_6_gem_clean_rings_mview OWNER TO oeuser;
+
+---------- ---------- ----------
+
+
+-- "Calculate Inside Load Area"   (OK!) -> 160.000ms =2.483.755
+UPDATE 	orig_geo_vg250.vg250_6_gem_clean AS t1
+SET  	is_ring = t2.is_ring
+FROM    (
+	SELECT	clean.id AS id,
+		'TRUE' ::boolean AS is_ring
+	FROM	orig_geo_vg250.vg250_6_gem_clean_rings_mview AS ring,
+		orig_geo_vg250.vg250_6_gem_clean AS clean
+	WHERE  	clean.id = ring.id
+	) AS t2
+WHERE  	t1.id = t2.id;
+
+-- "Spearate all municipalities with rings"   (OK!) 1.000ms =12.539
+DROP MATERIALIZED VIEW IF EXISTS	orig_geo_vg250.vg250_6_gem_clean_mview CASCADE;
+CREATE MATERIALIZED VIEW 		orig_geo_vg250.vg250_6_gem_clean_mview AS 
+	SELECT 	mun.*
+	FROM	orig_geo_vg250.vg250_6_gem_clean AS mun
+	WHERE	mun.is_ring IS NULL;
+
+-- "Create Index (id)"   (OK!) -> 100ms =0
+CREATE UNIQUE INDEX  	vg250_6_gem_clean_mview_id_idx
+		ON	orig_geo_vg250.vg250_6_gem_clean_mview (id);
+
+-- "Create Index GIST (geom)"   (OK!) -> 150ms =0
+CREATE INDEX  	vg250_6_gem_clean_mview_geom_idx
+	ON	orig_geo_vg250.vg250_6_gem_clean_mview
+	USING	GIST (geom);
+
+-- "Grant oeuser"   (OK!) -> 100ms =0
+GRANT ALL ON TABLE	orig_geo_vg250.vg250_6_gem_clean_mview TO oeuser WITH GRANT OPTION;
+ALTER TABLE		orig_geo_vg250.vg250_6_gem_clean_mview OWNER TO oeuser;
 
 ---------- ---------- ----------
 
