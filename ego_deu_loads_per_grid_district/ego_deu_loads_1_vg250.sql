@@ -408,6 +408,7 @@ CREATE TABLE		orig_geo_vg250.vg250_6_gem_clean AS
 		dump.ags_0 ::varchar(12) AS ags_0,
 		ST_AREA(dump.geom) / 1000 ::double precision AS area_ha,
 		dump.count_ring,
+		dump.path,
 		dump.geom ::geometry(Polygon,3035) AS geom		
 	FROM	(SELECT vg.gid,
 			vg.gen,
@@ -417,6 +418,7 @@ CREATE TABLE		orig_geo_vg250.vg250_6_gem_clean AS
 			vg.rs_0,
 			vg.ags_0,
 			ST_NumInteriorRings(vg.geom) AS count_ring,
+			(ST_DumpRings(vg.geom)).path AS path,
 			(ST_DumpRings(vg.geom)).geom AS geom
 		FROM	orig_geo_vg250.vg250_6_gem_dump_mview AS vg) AS dump;
 
@@ -436,25 +438,25 @@ ALTER TABLE		orig_geo_vg250.vg250_6_gem_clean OWNER TO oeuser;
 
 ---------- ---------- ----------
 
--- "Spearate all municipalities with rings"   (OK!) 30.000ms =559
-DROP MATERIALIZED VIEW IF EXISTS	orig_geo_vg250.vg250_6_gem_clean_ring_mview CASCADE;
-CREATE MATERIALIZED VIEW 		orig_geo_vg250.vg250_6_gem_clean_ring_mview AS 
+-- "Spearate all municipalities with rings"   (OK!) 30.000ms =350
+DROP MATERIALIZED VIEW IF EXISTS	orig_geo_vg250.vg250_6_gem_rings_mview CASCADE;
+CREATE MATERIALIZED VIEW 		orig_geo_vg250.vg250_6_gem_rings_mview AS 
 SELECT 	mun.*
 FROM	orig_geo_vg250.vg250_6_gem_clean AS mun
-WHERE	mun.count_ring > 0;
+WHERE	mun.path[1] <> 0;
 
 -- "Create Index (id)"   (OK!) -> 100ms =0
-CREATE UNIQUE INDEX  	vg250_6_gem_clean_ring_mview_id_idx
-		ON	orig_geo_vg250.vg250_6_gem_clean_ring_mview (id);
+CREATE UNIQUE INDEX  	vg250_6_gem_rings_mview_id_idx
+		ON	orig_geo_vg250.vg250_6_gem_rings_mview (id);
 
 -- "Create Index GIST (geom)"   (OK!) -> 150ms =0
-CREATE INDEX  	vg250_6_gem_clean_ring_mview_geom_idx
-	ON	orig_geo_vg250.vg250_6_gem_clean_ring_mview
+CREATE INDEX  	vg250_6_gem_rings_mview_geom_idx
+	ON	orig_geo_vg250.vg250_6_gem_rings_mview
 	USING	GIST (geom);
 
 -- "Grant oeuser"   (OK!) -> 100ms =0
-GRANT ALL ON TABLE	orig_geo_vg250.vg250_6_gem_clean_ring_mview TO oeuser WITH GRANT OPTION;
-ALTER TABLE		orig_geo_vg250.vg250_6_gem_clean_ring_mview OWNER TO oeuser;
+GRANT ALL ON TABLE	orig_geo_vg250.vg250_6_gem_rings_mview TO oeuser WITH GRANT OPTION;
+ALTER TABLE		orig_geo_vg250.vg250_6_gem_rings_mview OWNER TO oeuser;
 
 ---------- ---------- ----------
 
@@ -484,8 +486,7 @@ ALTER TABLE		orig_geo_vg250.vg250_6_gem_clean_rings_mview OWNER TO oeuser;
 
 ---------- ---------- ----------
 
-
--- "Calculate Inside Load Area"   (OK!) -> 160.000ms =2.483.755
+-- "Update rings"   (OK!) -> 160.000ms =2.483.755
 UPDATE 	orig_geo_vg250.vg250_6_gem_clean AS t1
 SET  	is_ring = t2.is_ring
 FROM    (
@@ -502,7 +503,7 @@ DROP MATERIALIZED VIEW IF EXISTS	orig_geo_vg250.vg250_6_gem_clean_mview CASCADE;
 CREATE MATERIALIZED VIEW 		orig_geo_vg250.vg250_6_gem_clean_mview AS 
 	SELECT 	mun.*
 	FROM	orig_geo_vg250.vg250_6_gem_clean AS mun
-	WHERE	mun.is_ring IS NULL;
+	WHERE	mun.is_ring IS NOT TRUE;
 
 -- "Create Index (id)"   (OK!) -> 100ms =0
 CREATE UNIQUE INDEX  	vg250_6_gem_clean_mview_id_idx
