@@ -1,0 +1,517 @@
+<?xml version="1.0" encoding="Cp1252"?>
+<section name="xgml">
+	<attribute key="Creator" type="String">yFiles</attribute>
+	<attribute key="Version" type="String">2.13</attribute>
+	<section name="graph">
+		<attribute key="hierarchic" type="int">1</attribute>
+		<attribute key="label" type="String"></attribute>
+		<attribute key="directed" type="int">1</attribute>
+		<section name="node">
+			<attribute key="id" type="int">0</attribute>
+			<attribute key="label" type="String"></attribute>
+			<section name="graphics">
+				<attribute key="x" type="double">152.0</attribute>
+				<attribute key="y" type="double">119.0</attribute>
+				<attribute key="w" type="double">35.0</attribute>
+				<attribute key="h" type="double">55.0</attribute>
+				<attribute key="customconfiguration" type="String">com.yworks.bpmn.Artifact.withShadow</attribute>
+				<section name="styleproperties">
+					<section name="property">
+						<attribute key="name" type="String">com.yworks.bpmn.icon.line.color</attribute>
+						<attribute key="valueClass" type="String">java.awt.Color</attribute>
+						<attribute key="value" type="String">#000000</attribute>
+					</section>
+					<section name="property">
+						<attribute key="name" type="String">com.yworks.bpmn.dataObjectType</attribute>
+						<attribute key="valueClass" type="String">com.yworks.yfiles.bpmn.view.DataObjectTypeEnum</attribute>
+						<attribute key="value" type="String">DATA_OBJECT_TYPE_PLAIN</attribute>
+					</section>
+					<section name="property">
+						<attribute key="name" type="String">com.yworks.bpmn.icon.fill2</attribute>
+						<attribute key="valueClass" type="String">java.awt.Color</attribute>
+						<attribute key="value" type="String">#d4d4d4cc</attribute>
+					</section>
+					<section name="property">
+						<attribute key="name" type="String">com.yworks.bpmn.icon.fill</attribute>
+						<attribute key="valueClass" type="String">java.awt.Color</attribute>
+						<attribute key="value" type="String">#ffffffe6</attribute>
+					</section>
+					<section name="property">
+						<attribute key="name" type="String">com.yworks.bpmn.type</attribute>
+						<attribute key="valueClass" type="String">com.yworks.yfiles.bpmn.view.BPMNTypeEnum</attribute>
+						<attribute key="value" type="String">ARTIFACT_TYPE_DATA_OBJECT</attribute>
+					</section>
+				</section>
+				<attribute key="fill" type="String">#FFFFFFE6</attribute>
+				<attribute key="outline" type="String">#000000</attribute>
+			</section>
+			<section name="LabelGraphics">
+			</section>
+			<section name="LabelGraphics">
+				<attribute key="text" type="String">osm_deu_polygon</attribute>
+				<attribute key="fontSize" type="int">12</attribute>
+				<attribute key="fontName" type="String">Dialog</attribute>
+				<attribute key="model"/>
+			</section>
+		</section>
+		<section name="node">
+			<attribute key="id" type="int">1</attribute>
+			<attribute key="label" type="String"></attribute>
+			<section name="graphics">
+				<attribute key="x" type="double">152.0</attribute>
+				<attribute key="y" type="double">327.0</attribute>
+				<attribute key="w" type="double">35.0</attribute>
+				<attribute key="h" type="double">55.0</attribute>
+				<attribute key="customconfiguration" type="String">com.yworks.bpmn.Artifact.withShadow</attribute>
+				<section name="styleproperties">
+					<section name="property">
+						<attribute key="name" type="String">com.yworks.bpmn.icon.line.color</attribute>
+						<attribute key="valueClass" type="String">java.awt.Color</attribute>
+						<attribute key="value" type="String">#000000</attribute>
+					</section>
+					<section name="property">
+						<attribute key="name" type="String">com.yworks.bpmn.dataObjectType</attribute>
+						<attribute key="valueClass" type="String">com.yworks.yfiles.bpmn.view.DataObjectTypeEnum</attribute>
+						<attribute key="value" type="String">DATA_OBJECT_TYPE_PLAIN</attribute>
+					</section>
+					<section name="property">
+						<attribute key="name" type="String">com.yworks.bpmn.icon.fill2</attribute>
+						<attribute key="valueClass" type="String">java.awt.Color</attribute>
+						<attribute key="value" type="String">#d4d4d4cc</attribute>
+					</section>
+					<section name="property">
+						<attribute key="name" type="String">com.yworks.bpmn.icon.fill</attribute>
+						<attribute key="valueClass" type="String">java.awt.Color</attribute>
+						<attribute key="value" type="String">#ffffffe6</attribute>
+					</section>
+					<section name="property">
+						<attribute key="name" type="String">com.yworks.bpmn.type</attribute>
+						<attribute key="valueClass" type="String">com.yworks.yfiles.bpmn.view.BPMNTypeEnum</attribute>
+						<attribute key="value" type="String">ARTIFACT_TYPE_DATA_OBJECT</attribute>
+					</section>
+				</section>
+				<attribute key="fill" type="String">#FFFF00</attribute>
+				<attribute key="outline" type="String">#000000</attribute>
+			</section>
+			<section name="LabelGraphics">
+			</section>
+			<section name="LabelGraphics">
+				<attribute key="text" type="String">"urban" landuse</attribute>
+				<attribute key="fontSize" type="int">12</attribute>
+				<attribute key="fontName" type="String">Dialog</attribute>
+				<attribute key="model"/>
+			</section>
+		</section>
+		<section name="node">
+			<attribute key="id" type="int">2</attribute>
+			<attribute key="label" type="String"></attribute>
+			<section name="graphics">
+				<attribute key="x" type="double">152.0</attribute>
+				<attribute key="y" type="double">590.0</attribute>
+				<attribute key="w" type="double">35.0</attribute>
+				<attribute key="h" type="double">55.0</attribute>
+				<attribute key="customconfiguration" type="String">com.yworks.bpmn.Artifact.withShadow</attribute>
+				<section name="styleproperties">
+					<section name="property">
+						<attribute key="name" type="String">com.yworks.bpmn.icon.line.color</attribute>
+						<attribute key="valueClass" type="String">java.awt.Color</attribute>
+						<attribute key="value" type="String">#000000</attribute>
+					</section>
+					<section name="property">
+						<attribute key="name" type="String">com.yworks.bpmn.dataObjectType</attribute>
+						<attribute key="valueClass" type="String">com.yworks.yfiles.bpmn.view.DataObjectTypeEnum</attribute>
+						<attribute key="value" type="String">DATA_OBJECT_TYPE_PLAIN</attribute>
+					</section>
+					<section name="property">
+						<attribute key="name" type="String">com.yworks.bpmn.icon.fill2</attribute>
+						<attribute key="valueClass" type="String">java.awt.Color</attribute>
+						<attribute key="value" type="String">#d4d4d4cc</attribute>
+					</section>
+					<section name="property">
+						<attribute key="name" type="String">com.yworks.bpmn.icon.fill</attribute>
+						<attribute key="valueClass" type="String">java.awt.Color</attribute>
+						<attribute key="value" type="String">#ffffffe6</attribute>
+					</section>
+					<section name="property">
+						<attribute key="name" type="String">com.yworks.bpmn.type</attribute>
+						<attribute key="valueClass" type="String">com.yworks.yfiles.bpmn.view.BPMNTypeEnum</attribute>
+						<attribute key="value" type="String">ARTIFACT_TYPE_DATA_OBJECT</attribute>
+					</section>
+				</section>
+				<attribute key="fill" type="String">#FFFF00</attribute>
+				<attribute key="outline" type="String">#000000</attribute>
+			</section>
+			<section name="LabelGraphics">
+			</section>
+			<section name="LabelGraphics">
+				<attribute key="text" type="String">"Urban " landuse load areas [completed]</attribute>
+				<attribute key="fontSize" type="int">12</attribute>
+				<attribute key="fontName" type="String">Dialog</attribute>
+				<attribute key="model"/>
+			</section>
+		</section>
+		<section name="node">
+			<attribute key="id" type="int">3</attribute>
+			<attribute key="label" type="String"></attribute>
+			<section name="graphics">
+				<attribute key="x" type="double">-45.0</attribute>
+				<attribute key="y" type="double">486.0</attribute>
+				<attribute key="w" type="double">35.0</attribute>
+				<attribute key="h" type="double">55.0</attribute>
+				<attribute key="customconfiguration" type="String">com.yworks.bpmn.Artifact.withShadow</attribute>
+				<section name="styleproperties">
+					<section name="property">
+						<attribute key="name" type="String">com.yworks.bpmn.icon.line.color</attribute>
+						<attribute key="valueClass" type="String">java.awt.Color</attribute>
+						<attribute key="value" type="String">#000000</attribute>
+					</section>
+					<section name="property">
+						<attribute key="name" type="String">com.yworks.bpmn.dataObjectType</attribute>
+						<attribute key="valueClass" type="String">com.yworks.yfiles.bpmn.view.DataObjectTypeEnum</attribute>
+						<attribute key="value" type="String">DATA_OBJECT_TYPE_PLAIN</attribute>
+					</section>
+					<section name="property">
+						<attribute key="name" type="String">com.yworks.bpmn.icon.fill2</attribute>
+						<attribute key="valueClass" type="String">java.awt.Color</attribute>
+						<attribute key="value" type="String">#d4d4d4cc</attribute>
+					</section>
+					<section name="property">
+						<attribute key="name" type="String">com.yworks.bpmn.icon.fill</attribute>
+						<attribute key="valueClass" type="String">java.awt.Color</attribute>
+						<attribute key="value" type="String">#ffffffe6</attribute>
+					</section>
+					<section name="property">
+						<attribute key="name" type="String">com.yworks.bpmn.type</attribute>
+						<attribute key="valueClass" type="String">com.yworks.yfiles.bpmn.view.BPMNTypeEnum</attribute>
+						<attribute key="value" type="String">ARTIFACT_TYPE_DATA_OBJECT</attribute>
+					</section>
+				</section>
+				<attribute key="fill" type="String">#FFFFFFE6</attribute>
+				<attribute key="outline" type="String">#000000</attribute>
+			</section>
+			<section name="LabelGraphics">
+			</section>
+			<section name="LabelGraphics">
+				<attribute key="text" type="String">zensus_population_per_ha</attribute>
+				<attribute key="fontSize" type="int">12</attribute>
+				<attribute key="fontName" type="String">Dialog</attribute>
+				<attribute key="model"/>
+			</section>
+		</section>
+		<section name="node">
+			<attribute key="id" type="int">4</attribute>
+			<attribute key="label" type="String"></attribute>
+			<section name="graphics">
+				<attribute key="x" type="double">362.0</attribute>
+				<attribute key="y" type="double">486.0</attribute>
+				<attribute key="w" type="double">35.0</attribute>
+				<attribute key="h" type="double">55.0</attribute>
+				<attribute key="customconfiguration" type="String">com.yworks.bpmn.Artifact.withShadow</attribute>
+				<section name="styleproperties">
+					<section name="property">
+						<attribute key="name" type="String">com.yworks.bpmn.icon.line.color</attribute>
+						<attribute key="valueClass" type="String">java.awt.Color</attribute>
+						<attribute key="value" type="String">#000000</attribute>
+					</section>
+					<section name="property">
+						<attribute key="name" type="String">com.yworks.bpmn.dataObjectType</attribute>
+						<attribute key="valueClass" type="String">com.yworks.yfiles.bpmn.view.DataObjectTypeEnum</attribute>
+						<attribute key="value" type="String">DATA_OBJECT_TYPE_PLAIN</attribute>
+					</section>
+					<section name="property">
+						<attribute key="name" type="String">com.yworks.bpmn.icon.fill2</attribute>
+						<attribute key="valueClass" type="String">java.awt.Color</attribute>
+						<attribute key="value" type="String">#d4d4d4cc</attribute>
+					</section>
+					<section name="property">
+						<attribute key="name" type="String">com.yworks.bpmn.icon.fill</attribute>
+						<attribute key="valueClass" type="String">java.awt.Color</attribute>
+						<attribute key="value" type="String">#ffffffe6</attribute>
+					</section>
+					<section name="property">
+						<attribute key="name" type="String">com.yworks.bpmn.type</attribute>
+						<attribute key="valueClass" type="String">com.yworks.yfiles.bpmn.view.BPMNTypeEnum</attribute>
+						<attribute key="value" type="String">ARTIFACT_TYPE_DATA_OBJECT</attribute>
+					</section>
+				</section>
+				<attribute key="fill" type="String">#FFFFFFE6</attribute>
+				<attribute key="outline" type="String">#000000</attribute>
+			</section>
+			<section name="LabelGraphics">
+			</section>
+			<section name="LabelGraphics">
+				<attribute key="text" type="String">Share industrial and commercial space</attribute>
+				<attribute key="fontSize" type="int">12</attribute>
+				<attribute key="fontName" type="String">Dialog</attribute>
+				<attribute key="model"/>
+			</section>
+		</section>
+		<section name="node">
+			<attribute key="id" type="int">5</attribute>
+			<attribute key="label" type="String"></attribute>
+			<section name="graphics">
+				<attribute key="x" type="double">152.0</attribute>
+				<attribute key="y" type="double">223.0</attribute>
+				<attribute key="w" type="double">85.0</attribute>
+				<attribute key="h" type="double">55.0</attribute>
+				<attribute key="customconfiguration" type="String">com.yworks.bpmn.Activity.withShadow</attribute>
+				<section name="styleproperties">
+					<section name="property">
+						<attribute key="name" type="String">com.yworks.bpmn.icon.line.color</attribute>
+						<attribute key="valueClass" type="String">java.awt.Color</attribute>
+						<attribute key="value" type="String">#000000</attribute>
+					</section>
+					<section name="property">
+						<attribute key="name" type="String">com.yworks.bpmn.taskType</attribute>
+						<attribute key="valueClass" type="String">com.yworks.yfiles.bpmn.view.TaskTypeEnum</attribute>
+						<attribute key="value" type="String">TASK_TYPE_ABSTRACT</attribute>
+					</section>
+					<section name="property">
+						<attribute key="name" type="String">com.yworks.bpmn.icon.fill2</attribute>
+						<attribute key="valueClass" type="String">java.awt.Color</attribute>
+						<attribute key="value" type="String">#d4d4d4cc</attribute>
+					</section>
+					<section name="property">
+						<attribute key="name" type="String">com.yworks.bpmn.icon.fill</attribute>
+						<attribute key="valueClass" type="String">java.awt.Color</attribute>
+						<attribute key="value" type="String">#ffffffe6</attribute>
+					</section>
+					<section name="property">
+						<attribute key="name" type="String">com.yworks.bpmn.type</attribute>
+						<attribute key="valueClass" type="String">com.yworks.yfiles.bpmn.view.BPMNTypeEnum</attribute>
+						<attribute key="value" type="String">ACTIVITY_TYPE</attribute>
+					</section>
+					<section name="property">
+						<attribute key="name" type="String">com.yworks.bpmn.activityType</attribute>
+						<attribute key="valueClass" type="String">com.yworks.yfiles.bpmn.view.ActivityTypeEnum</attribute>
+						<attribute key="value" type="String">ACTIVITY_TYPE_TASK</attribute>
+					</section>
+				</section>
+				<attribute key="fill" type="String">#FFFFFFE6</attribute>
+				<attribute key="fill2" type="String">#D4D4D4CC</attribute>
+				<attribute key="outline" type="String">#123EA2</attribute>
+			</section>
+			<section name="LabelGraphics">
+			</section>
+			<section name="LabelGraphics">
+				<attribute key="text" type="String">Filter : " landuse " = ' commercial ' OR ' farmyard ' OR ' industrial' OR ' residential ' OR ' retail ' OR 'port'</attribute>
+				<attribute key="fontSize" type="int">12</attribute>
+				<attribute key="fontName" type="String">Dialog</attribute>
+				<attribute key="model"/>
+			</section>
+		</section>
+		<section name="node">
+			<attribute key="id" type="int">6</attribute>
+			<attribute key="label" type="String"></attribute>
+			<section name="graphics">
+				<attribute key="x" type="double">152.0</attribute>
+				<attribute key="y" type="double">431.0</attribute>
+				<attribute key="w" type="double">85.0</attribute>
+				<attribute key="h" type="double">55.0</attribute>
+				<attribute key="customconfiguration" type="String">com.yworks.bpmn.Activity.withShadow</attribute>
+				<section name="styleproperties">
+					<section name="property">
+						<attribute key="name" type="String">com.yworks.bpmn.icon.line.color</attribute>
+						<attribute key="valueClass" type="String">java.awt.Color</attribute>
+						<attribute key="value" type="String">#000000</attribute>
+					</section>
+					<section name="property">
+						<attribute key="name" type="String">com.yworks.bpmn.taskType</attribute>
+						<attribute key="valueClass" type="String">com.yworks.yfiles.bpmn.view.TaskTypeEnum</attribute>
+						<attribute key="value" type="String">TASK_TYPE_ABSTRACT</attribute>
+					</section>
+					<section name="property">
+						<attribute key="name" type="String">com.yworks.bpmn.icon.fill2</attribute>
+						<attribute key="valueClass" type="String">java.awt.Color</attribute>
+						<attribute key="value" type="String">#d4d4d4cc</attribute>
+					</section>
+					<section name="property">
+						<attribute key="name" type="String">com.yworks.bpmn.icon.fill</attribute>
+						<attribute key="valueClass" type="String">java.awt.Color</attribute>
+						<attribute key="value" type="String">#ffffffe6</attribute>
+					</section>
+					<section name="property">
+						<attribute key="name" type="String">com.yworks.bpmn.type</attribute>
+						<attribute key="valueClass" type="String">com.yworks.yfiles.bpmn.view.BPMNTypeEnum</attribute>
+						<attribute key="value" type="String">ACTIVITY_TYPE</attribute>
+					</section>
+					<section name="property">
+						<attribute key="name" type="String">com.yworks.bpmn.activityType</attribute>
+						<attribute key="valueClass" type="String">com.yworks.yfiles.bpmn.view.ActivityTypeEnum</attribute>
+						<attribute key="value" type="String">ACTIVITY_TYPE_TASK</attribute>
+					</section>
+				</section>
+				<attribute key="fill" type="String">#FFFFFFE6</attribute>
+				<attribute key="fill2" type="String">#D4D4D4CC</attribute>
+				<attribute key="outline" type="String">#123EA2</attribute>
+			</section>
+			<section name="LabelGraphics">
+			</section>
+			<section name="LabelGraphics">
+				<attribute key="text" type="String">Calculation: buffer +50m AND buffer -50m AND dissolve result AND buffer +50m</attribute>
+				<attribute key="fontSize" type="int">12</attribute>
+				<attribute key="fontName" type="String">Dialog</attribute>
+				<attribute key="model"/>
+			</section>
+		</section>
+		<section name="edge">
+			<attribute key="source" type="int">3</attribute>
+			<attribute key="target" type="int">2</attribute>
+			<section name="graphics">
+				<attribute key="customconfiguration" type="String">com.yworks.bpmn.Connection</attribute>
+				<section name="styleproperties">
+					<section name="property">
+						<attribute key="name" type="String">com.yworks.bpmn.type</attribute>
+						<attribute key="valueClass" type="String">com.yworks.yfiles.bpmn.view.BPMNTypeEnum</attribute>
+						<attribute key="value" type="String">CONNECTION_TYPE_DIRECTED_ASSOCIATION</attribute>
+					</section>
+				</section>
+				<attribute key="width" type="int">2</attribute>
+				<attribute key="style" type="String">dotted</attribute>
+				<attribute key="fill" type="String">#000000</attribute>
+				<attribute key="targetArrow" type="String">concave</attribute>
+			</section>
+		</section>
+		<section name="edge">
+			<attribute key="source" type="int">4</attribute>
+			<attribute key="target" type="int">2</attribute>
+			<section name="graphics">
+				<attribute key="customconfiguration" type="String">com.yworks.bpmn.Connection</attribute>
+				<section name="styleproperties">
+					<section name="property">
+						<attribute key="name" type="String">com.yworks.bpmn.type</attribute>
+						<attribute key="valueClass" type="String">com.yworks.yfiles.bpmn.view.BPMNTypeEnum</attribute>
+						<attribute key="value" type="String">CONNECTION_TYPE_DIRECTED_ASSOCIATION</attribute>
+					</section>
+				</section>
+				<attribute key="width" type="int">2</attribute>
+				<attribute key="style" type="String">dotted</attribute>
+				<attribute key="fill" type="String">#000000</attribute>
+				<attribute key="targetArrow" type="String">concave</attribute>
+			</section>
+		</section>
+		<section name="edge">
+			<attribute key="source" type="int">2</attribute>
+			<attribute key="target" type="int">2</attribute>
+			<attribute key="label" type="String"></attribute>
+			<section name="graphics">
+				<attribute key="customconfiguration" type="String">com.yworks.bpmn.Connection</attribute>
+				<section name="styleproperties">
+					<section name="property">
+						<attribute key="name" type="String">com.yworks.bpmn.type</attribute>
+						<attribute key="valueClass" type="String">com.yworks.yfiles.bpmn.view.BPMNTypeEnum</attribute>
+						<attribute key="value" type="String">CONNECTION_TYPE_DIRECTED_ASSOCIATION</attribute>
+					</section>
+				</section>
+				<attribute key="width" type="int">2</attribute>
+				<attribute key="style" type="String">dotted</attribute>
+				<attribute key="fill" type="String">#000000</attribute>
+				<attribute key="targetArrow" type="String">concave</attribute>
+				<section name="Line">
+					<section name="point">
+						<attribute key="x" type="double">152.0</attribute>
+						<attribute key="y" type="double">590.0</attribute>
+					</section>
+					<section name="point">
+						<attribute key="x" type="double">152.0</attribute>
+						<attribute key="y" type="double">525.0</attribute>
+					</section>
+					<section name="point">
+						<attribute key="x" type="double">152.0</attribute>
+						<attribute key="y" type="double">590.0</attribute>
+					</section>
+				</section>
+			</section>
+			<section name="LabelGraphics">
+			</section>
+			<section name="LabelGraphics">
+				<attribute key="text" type="String">Calculate: area</attribute>
+				<attribute key="fontSize" type="int">12</attribute>
+				<attribute key="fontName" type="String">Dialog</attribute>
+				<attribute key="configuration" type="String">AutoFlippingLabel</attribute>
+				<attribute key="contentWidth" type="double">84.712890625</attribute>
+				<attribute key="contentHeight" type="double">18.701171875</attribute>
+				<attribute key="model"/>
+				<attribute key="position"/>
+			</section>
+		</section>
+		<section name="edge">
+			<attribute key="source" type="int">1</attribute>
+			<attribute key="target" type="int">6</attribute>
+			<attribute key="label" type="String"></attribute>
+			<section name="graphics">
+				<attribute key="customconfiguration" type="String">com.yworks.bpmn.Connection</attribute>
+				<section name="styleproperties">
+					<section name="property">
+						<attribute key="name" type="String">com.yworks.bpmn.type</attribute>
+						<attribute key="valueClass" type="String">com.yworks.yfiles.bpmn.view.BPMNTypeEnum</attribute>
+						<attribute key="value" type="String">CONNECTION_TYPE_DIRECTED_ASSOCIATION</attribute>
+					</section>
+				</section>
+				<attribute key="width" type="int">2</attribute>
+				<attribute key="style" type="String">dotted</attribute>
+				<attribute key="fill" type="String">#000000</attribute>
+				<attribute key="targetArrow" type="String">concave</attribute>
+			</section>
+			<section name="LabelGraphics">
+			</section>
+		</section>
+		<section name="edge">
+			<attribute key="source" type="int">6</attribute>
+			<attribute key="target" type="int">2</attribute>
+			<section name="graphics">
+				<attribute key="customconfiguration" type="String">com.yworks.bpmn.Connection</attribute>
+				<section name="styleproperties">
+					<section name="property">
+						<attribute key="name" type="String">com.yworks.bpmn.type</attribute>
+						<attribute key="valueClass" type="String">com.yworks.yfiles.bpmn.view.BPMNTypeEnum</attribute>
+						<attribute key="value" type="String">CONNECTION_TYPE_DIRECTED_ASSOCIATION</attribute>
+					</section>
+				</section>
+				<attribute key="width" type="int">2</attribute>
+				<attribute key="style" type="String">dotted</attribute>
+				<attribute key="fill" type="String">#000000</attribute>
+				<attribute key="targetArrow" type="String">concave</attribute>
+			</section>
+			<section name="edgeAnchor">
+				<attribute key="yTarget" type="double">-0.8363636363636363</attribute>
+			</section>
+		</section>
+		<section name="edge">
+			<attribute key="source" type="int">0</attribute>
+			<attribute key="target" type="int">5</attribute>
+			<section name="graphics">
+				<attribute key="customconfiguration" type="String">com.yworks.bpmn.Connection</attribute>
+				<section name="styleproperties">
+					<section name="property">
+						<attribute key="name" type="String">com.yworks.bpmn.type</attribute>
+						<attribute key="valueClass" type="String">com.yworks.yfiles.bpmn.view.BPMNTypeEnum</attribute>
+						<attribute key="value" type="String">CONNECTION_TYPE_DIRECTED_ASSOCIATION</attribute>
+					</section>
+				</section>
+				<attribute key="width" type="int">2</attribute>
+				<attribute key="style" type="String">dotted</attribute>
+				<attribute key="fill" type="String">#000000</attribute>
+				<attribute key="targetArrow" type="String">concave</attribute>
+			</section>
+		</section>
+		<section name="edge">
+			<attribute key="source" type="int">5</attribute>
+			<attribute key="target" type="int">1</attribute>
+			<section name="graphics">
+				<attribute key="customconfiguration" type="String">com.yworks.bpmn.Connection</attribute>
+				<section name="styleproperties">
+					<section name="property">
+						<attribute key="name" type="String">com.yworks.bpmn.type</attribute>
+						<attribute key="valueClass" type="String">com.yworks.yfiles.bpmn.view.BPMNTypeEnum</attribute>
+						<attribute key="value" type="String">CONNECTION_TYPE_DIRECTED_ASSOCIATION</attribute>
+					</section>
+				</section>
+				<attribute key="width" type="int">2</attribute>
+				<attribute key="style" type="String">dotted</attribute>
+				<attribute key="fill" type="String">#000000</attribute>
+				<attribute key="targetArrow" type="String">concave</attribute>
+			</section>
+		</section>
+	</section>
+</section>
