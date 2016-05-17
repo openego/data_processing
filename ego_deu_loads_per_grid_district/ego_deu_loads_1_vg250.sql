@@ -236,13 +236,19 @@ ALTER TABLE		orig_geo_vg250.vg250_4_krs_mview OWNER TO oeuser;
 -- -- "Drop empty view"   (OK!) -> 100ms =1
 -- SELECT f_drop_view('{vg250_4_krs_mview_error_geom_view}', 'orig_geo_vg250');
 
+
 ---------- ---------- ----------
--- orig_geo_vg250.vg250_6_gem
+-- orig_vg250.vg250_6_gem
 ---------- ---------- ----------
 
+-- -- "Create Index GIST (geom)"   (OK!) -> 100ms =0
+-- CREATE INDEX  	vg250_6_gem_geom_idx
+-- 	ON	orig_vg250.vg250_6_gem
+-- 	USING	GIST (geom);
+
 -- -- "Validate (geom)"   (OK!) -> 22.000ms =0
--- DROP VIEW IF EXISTS	orig_geo_vg250.vg250_6_gem_error_geom_view CASCADE;
--- CREATE VIEW		orig_geo_vg250.vg250_6_gem_error_geom_view AS 
+-- DROP VIEW IF EXISTS	orig_vg250.vg250_6_gem_error_geom_view CASCADE;
+-- CREATE VIEW		orig_vg250.vg250_6_gem_error_geom_view AS 
 -- 	SELECT	test.id AS id,
 -- 		test.error AS error,
 -- 		reason(ST_IsValidDetail(test.geom)) AS error_reason,
@@ -252,25 +258,25 @@ ALTER TABLE		orig_geo_vg250.vg250_4_krs_mview OWNER TO oeuser;
 -- 		SELECT	source.gid AS id,				-- PK
 -- 			ST_IsValid(source.geom) AS error,
 -- 			source.geom ::geometry(MultiPolygon,31467) AS geom
--- 		FROM	orig_geo_vg250.vg250_6_gem AS source	-- Table
+-- 		FROM	orig_vg250.vg250_6_gem AS source	-- Table
 -- 		) AS test
 -- 	WHERE	test.error = FALSE;
 -- 
 -- -- "Grant oeuser"   (OK!) -> 100ms =0
--- GRANT ALL ON TABLE	orig_geo_vg250.vg250_6_gem_mview_error_geom_view TO oeuser WITH GRANT OPTION;
--- ALTER TABLE		orig_geo_vg250.vg250_6_gem_mview_error_geom_view OWNER TO oeuser;
+-- GRANT ALL ON TABLE	orig_vg250.vg250_6_gem_error_geom_view TO oeuser WITH GRANT OPTION;
+-- ALTER TABLE		orig_vg250.vg250_6_gem_error_geom_view OWNER TO oeuser;
 -- 
 -- -- "Drop empty view"   (OK!) -> 100ms =1
--- SELECT f_drop_view('{vg250_6_gem_mview_error_geom_view}', 'orig_geo_vg250');
+-- SELECT f_drop_view('{vg250_6_gem_error_geom_view}', 'orig_vg250');
 
 
 ---------- ---------- ----------
--- "orig_geo_vg250.vg250_6_gem_mview"
+-- "orig_vg250.vg250_6_gem_mview"
 ---------- ---------- ----------
 
--- "Transform VG250 Gemeinden"   (OK!) -> 2.000ms =11.438
-DROP MATERIALIZED VIEW IF EXISTS	orig_geo_vg250.vg250_6_gem_mview CASCADE;
-CREATE MATERIALIZED VIEW		orig_geo_vg250.vg250_6_gem_mview AS
+-- "Transform VG250 Gemeinden"   (OK!) -> 2.000ms =11.431
+DROP MATERIALIZED VIEW IF EXISTS	orig_vg250.vg250_6_gem_mview CASCADE;
+CREATE MATERIALIZED VIEW		orig_vg250.vg250_6_gem_mview AS
 	SELECT	vg.gid ::integer AS gid,
 		vg.gen ::text AS gen,
 		vg.bez ::text AS bez,
@@ -280,27 +286,27 @@ CREATE MATERIALIZED VIEW		orig_geo_vg250.vg250_6_gem_mview AS
 		vg.ags_0 ::varchar(12) AS ags_0,
 		ST_AREA(vg.geom) / 1000 ::double precision AS area_ha,
 		ST_TRANSFORM(vg.geom,3035) ::geometry(MultiPolygon,3035) AS geom
-	FROM	orig_geo_vg250.vg250_6_gem AS vg
+	FROM	orig_vg250.vg250_6_gem AS vg
 	ORDER BY vg.gid;
 
 -- "Create Index (id)"   (OK!) -> 100ms =0
 CREATE UNIQUE INDEX  	vg250_6_gem_mview_gid_idx
-		ON	orig_geo_vg250.vg250_6_gem_mview (gid);
+		ON	orig_vg250.vg250_6_gem_mview (gid);
 
 -- "Create Index GIST (geom)"   (OK!) -> 150ms =0
 CREATE INDEX  	vg250_6_gem_mview_geom_idx
-	ON	orig_geo_vg250.vg250_6_gem_mview
+	ON	orig_vg250.vg250_6_gem_mview
 	USING	GIST (geom);
 
 -- "Grant oeuser"   (OK!) -> 100ms =0
-GRANT ALL ON TABLE	orig_geo_vg250.vg250_6_gem_mview TO oeuser WITH GRANT OPTION;
-ALTER TABLE		orig_geo_vg250.vg250_6_gem_mview OWNER TO oeuser;
+GRANT ALL ON TABLE	orig_vg250.vg250_6_gem_mview TO oeuser WITH GRANT OPTION;
+ALTER TABLE		orig_vg250.vg250_6_gem_mview OWNER TO oeuser;
 
 ---------- ---------- ----------
 
 -- -- "Validate (geom)"   (OK!) -> 22.000ms =0
--- DROP VIEW IF EXISTS	orig_geo_vg250.vg250_6_gem_mview_error_geom_view CASCADE;
--- CREATE VIEW		orig_geo_vg250.vg250_6_gem_mview_error_geom_view AS 
+-- DROP VIEW IF EXISTS	orig_vg250.vg250_6_gem_mview_error_geom_view CASCADE;
+-- CREATE VIEW		orig_vg250.vg250_6_gem_mview_error_geom_view AS 
 -- 	SELECT	test.id AS id,
 -- 		test.error AS error,
 -- 		reason(ST_IsValidDetail(test.geom)) AS error_reason,
@@ -310,31 +316,31 @@ ALTER TABLE		orig_geo_vg250.vg250_6_gem_mview OWNER TO oeuser;
 -- 		SELECT	source.gid AS id,				-- PK
 -- 			ST_IsValid(source.geom) AS error,
 -- 			source.geom ::geometry(MultiPolygon,3035) AS geom
--- 		FROM	orig_geo_vg250.vg250_6_gem_mview AS source	-- Table
+-- 		FROM	orig_vg250.vg250_6_gem_mview AS source	-- Table
 -- 		) AS test
 -- 	WHERE	test.error = FALSE;
 -- 
 -- -- "Grant oeuser"   (OK!) -> 100ms =0
--- GRANT ALL ON TABLE	orig_geo_vg250.vg250_6_gem_mview_error_geom_view TO oeuser WITH GRANT OPTION;
--- ALTER TABLE		orig_geo_vg250.vg250_6_gem_mview_error_geom_view OWNER TO oeuser;
+-- GRANT ALL ON TABLE	orig_vg250.vg250_6_gem_mview_error_geom_view TO oeuser WITH GRANT OPTION;
+-- ALTER TABLE		orig_vg250.vg250_6_gem_mview_error_geom_view OWNER TO oeuser;
 -- 
 -- -- "Drop empty view"   (OK!) -> 100ms =1
--- SELECT f_drop_view('{vg250_6_gem_mview_error_geom_view}', 'orig_geo_vg250');
+-- SELECT f_drop_view('{vg250_6_gem_mview_error_geom_view}', 'orig_vg250');
 
 
 
 ---------- ---------- ----------
--- "orig_geo_vg250.vg250_6_gem_dump_mview"
+-- "orig_vg250.vg250_6_gem_dump_mview"
 ---------- ---------- ----------
 
 -- "Sequence"   (OK!) 100ms =0
-DROP SEQUENCE IF EXISTS 	orig_geo_vg250.vg250_6_gem_dump_mview_id CASCADE;
-CREATE SEQUENCE 		orig_geo_vg250.vg250_6_gem_dump_mview_id;
+DROP SEQUENCE IF EXISTS 	orig_vg250.vg250_6_gem_dump_mview_id CASCADE;
+CREATE SEQUENCE 		orig_vg250.vg250_6_gem_dump_mview_id;
 
--- "Transform VG250 Gemeinden"   (OK!) -> 5.000ms =12.528
-DROP MATERIALIZED VIEW IF EXISTS	orig_geo_vg250.vg250_6_gem_dump_mview CASCADE;
-CREATE MATERIALIZED VIEW		orig_geo_vg250.vg250_6_gem_dump_mview AS
-	SELECT	nextval('orig_geo_vg250.vg250_6_gem_dump_mview_id') AS id,
+-- "Transform VG250 Gemeinden"   (OK!) -> 5.000ms =12.521
+DROP MATERIALIZED VIEW IF EXISTS	orig_vg250.vg250_6_gem_dump_mview CASCADE;
+CREATE MATERIALIZED VIEW		orig_vg250.vg250_6_gem_dump_mview AS
+	SELECT	nextval('orig_vg250.vg250_6_gem_dump_mview_id') AS id,
 		vg.gid ::integer AS gid,
 		vg.gen ::text AS gen,
 		vg.bez ::text AS bez,
@@ -344,27 +350,27 @@ CREATE MATERIALIZED VIEW		orig_geo_vg250.vg250_6_gem_dump_mview AS
 		vg.ags_0 ::varchar(12) AS ags_0,
 		ST_AREA(vg.geom) / 10000 ::double precision AS area_km2,
 		ST_MakeValid((ST_DUMP(ST_TRANSFORM(vg.geom,3035))).geom) ::geometry(Polygon,3035) AS geom
-	FROM	orig_geo_vg250.vg250_6_gem AS vg
+	FROM	orig_vg250.vg250_6_gem AS vg
 	ORDER BY vg.gid;
 
 -- "Create Index (id)"   (OK!) -> 100ms =0
 CREATE UNIQUE INDEX  	vg250_6_gem_dump_mview_gid_idx
-		ON	orig_geo_vg250.vg250_6_gem_dump_mview (id);
+		ON	orig_vg250.vg250_6_gem_dump_mview (id);
 
 -- "Create Index GIST (geom)"   (OK!) -> 150ms =0
 CREATE INDEX  	vg250_6_gem_dump_mview_geom_idx
-	ON	orig_geo_vg250.vg250_6_gem_dump_mview
+	ON	orig_vg250.vg250_6_gem_dump_mview
 	USING	GIST (geom);
 
 -- "Grant oeuser"   (OK!) -> 100ms =0
-GRANT ALL ON TABLE	orig_geo_vg250.vg250_6_gem_dump_mview TO oeuser WITH GRANT OPTION;
-ALTER TABLE		orig_geo_vg250.vg250_6_gem_dump_mview OWNER TO oeuser;
+GRANT ALL ON TABLE	orig_vg250.vg250_6_gem_dump_mview TO oeuser WITH GRANT OPTION;
+ALTER TABLE		orig_vg250.vg250_6_gem_dump_mview OWNER TO oeuser;
 
 ---------- ---------- ----------
 
 -- -- "Validate (geom)"   (OK!) -> 22.000ms =0
--- DROP VIEW IF EXISTS	orig_geo_vg250.vg250_6_gem_dump_mview_error_geom_view CASCADE;
--- CREATE VIEW		orig_geo_vg250.vg250_6_gem_dump_mview_error_geom_view AS 
+-- DROP VIEW IF EXISTS	orig_vg250.vg250_6_gem_dump_mview_error_geom_view CASCADE;
+-- CREATE VIEW		orig_vg250.vg250_6_gem_dump_mview_error_geom_view AS 
 -- 	SELECT	test.id AS id,
 -- 		test.error AS error,
 -- 		reason(ST_IsValidDetail(test.geom)) AS error_reason,
@@ -374,16 +380,16 @@ ALTER TABLE		orig_geo_vg250.vg250_6_gem_dump_mview OWNER TO oeuser;
 -- 		SELECT	source.id AS id,				-- PK
 -- 			ST_IsValid(source.geom) AS error,
 -- 			source.geom ::geometry(Polygon,3035) AS geom
--- 		FROM	orig_geo_vg250.vg250_6_gem_dump_mview AS source	-- Table
+-- 		FROM	orig_vg250.vg250_6_gem_dump_mview AS source	-- Table
 -- 		) AS test
 -- 	WHERE	test.error = FALSE;
 -- 
 -- -- "Grant oeuser"   (OK!) -> 100ms =0
--- GRANT ALL ON TABLE	orig_geo_vg250.vg250_6_gem_dump_mview_error_geom_view TO oeuser WITH GRANT OPTION;
--- ALTER TABLE		orig_geo_vg250.vg250_6_gem_dump_mview_error_geom_view OWNER TO oeuser;
+-- GRANT ALL ON TABLE	orig_vg250.vg250_6_gem_dump_mview_error_geom_view TO oeuser WITH GRANT OPTION;
+-- ALTER TABLE		orig_vg250.vg250_6_gem_dump_mview_error_geom_view OWNER TO oeuser;
 -- 
 -- -- "Drop empty view"   (OK!) -> 100ms =1
--- SELECT f_drop_view('{vg250_6_gem_dump_mview_error_geom_view}', 'orig_geo_vg250');
+-- SELECT f_drop_view('{vg250_6_gem_dump_mview_error_geom_view}', 'orig_vg250');
 
 
 
@@ -392,13 +398,13 @@ ALTER TABLE		orig_geo_vg250.vg250_6_gem_dump_mview OWNER TO oeuser;
 ---------- ---------- ----------
 
 -- "Sequence"   (OK!) 100ms =0
-DROP SEQUENCE IF EXISTS 		orig_geo_vg250.vg250_6_gem_clean_id CASCADE;
-CREATE SEQUENCE 			orig_geo_vg250.vg250_6_gem_clean_id;
+DROP SEQUENCE IF EXISTS 		orig_vg250.vg250_6_gem_clean_id CASCADE;
+CREATE SEQUENCE 			orig_vg250.vg250_6_gem_clean_id;
 
--- "Transform VG250 Gemeinden"   (OK!) -> 1.000ms =12.878
-DROP TABLE IF EXISTS	orig_geo_vg250.vg250_6_gem_clean CASCADE;
-CREATE TABLE		orig_geo_vg250.vg250_6_gem_clean AS
-	SELECT	nextval('orig_geo_vg250.vg250_6_gem_clean_id') AS id,
+-- "Transform VG250 Gemeinden"   (OK!) -> 1.000ms =12.870
+DROP TABLE IF EXISTS	orig_vg250.vg250_6_gem_clean CASCADE;
+CREATE TABLE		orig_vg250.vg250_6_gem_clean AS
+	SELECT	nextval('orig_vg250.vg250_6_gem_clean_id') AS id,
 		dump.gid ::integer AS gid,
 		dump.gen ::text AS gen,
 		dump.bez ::text AS bez,
@@ -420,103 +426,139 @@ CREATE TABLE		orig_geo_vg250.vg250_6_gem_clean AS
 			ST_NumInteriorRings(vg.geom) AS count_ring,
 			(ST_DumpRings(vg.geom)).path AS path,
 			(ST_DumpRings(vg.geom)).geom AS geom
-		FROM	orig_geo_vg250.vg250_6_gem_dump_mview AS vg) AS dump;
+		FROM	orig_vg250.vg250_6_gem_dump_mview AS vg) AS dump;
 
 -- "Ad PK"   (OK!) 150ms =0
-ALTER TABLE	orig_geo_vg250.vg250_6_gem_clean
+ALTER TABLE	orig_vg250.vg250_6_gem_clean
 	ADD COLUMN	is_ring boolean,
 	ADD PRIMARY KEY (id);
 
 -- "Create Index GIST (geom)"   (OK!) -> 150ms =0
 CREATE INDEX  	vg250_6_gem_clean_geom_idx
-	ON	orig_geo_vg250.vg250_6_gem_clean
+	ON	orig_vg250.vg250_6_gem_clean
 	USING	GIST (geom);
 
 -- "Grant oeuser"   (OK!) -> 100ms =0
-GRANT ALL ON TABLE	orig_geo_vg250.vg250_6_gem_clean TO oeuser WITH GRANT OPTION;
-ALTER TABLE		orig_geo_vg250.vg250_6_gem_clean OWNER TO oeuser;
+GRANT ALL ON TABLE	orig_vg250.vg250_6_gem_clean TO oeuser WITH GRANT OPTION;
+ALTER TABLE		orig_vg250.vg250_6_gem_clean OWNER TO oeuser;
 
 ---------- ---------- ----------
 
--- "Spearate all municipalities with rings"   (OK!) 30.000ms =350
-DROP MATERIALIZED VIEW IF EXISTS	orig_geo_vg250.vg250_6_gem_rings_mview CASCADE;
-CREATE MATERIALIZED VIEW 		orig_geo_vg250.vg250_6_gem_rings_mview AS 
+-- separate all ringholes   (OK!) 30.000ms =350
+DROP MATERIALIZED VIEW IF EXISTS	orig_vg250.vg250_6_gem_rings_mview CASCADE;
+CREATE MATERIALIZED VIEW 		orig_vg250.vg250_6_gem_rings_mview AS 
 SELECT 	mun.*
-FROM	orig_geo_vg250.vg250_6_gem_clean AS mun
+FROM	orig_vg250.vg250_6_gem_clean AS mun
 WHERE	mun.path[1] <> 0;
 
 -- "Create Index (id)"   (OK!) -> 100ms =0
 CREATE UNIQUE INDEX  	vg250_6_gem_rings_mview_id_idx
-		ON	orig_geo_vg250.vg250_6_gem_rings_mview (id);
+		ON	orig_vg250.vg250_6_gem_rings_mview (id);
 
 -- "Create Index GIST (geom)"   (OK!) -> 150ms =0
 CREATE INDEX  	vg250_6_gem_rings_mview_geom_idx
-	ON	orig_geo_vg250.vg250_6_gem_rings_mview
+	ON	orig_vg250.vg250_6_gem_rings_mview
 	USING	GIST (geom);
 
 -- "Grant oeuser"   (OK!) -> 100ms =0
-GRANT ALL ON TABLE	orig_geo_vg250.vg250_6_gem_rings_mview TO oeuser WITH GRANT OPTION;
-ALTER TABLE		orig_geo_vg250.vg250_6_gem_rings_mview OWNER TO oeuser;
+GRANT ALL ON TABLE	orig_vg250.vg250_6_gem_rings_mview TO oeuser WITH GRANT OPTION;
+ALTER TABLE		orig_vg250.vg250_6_gem_rings_mview OWNER TO oeuser;
 
----------- ---------- ----------
-
--- "Select all rings rings"   (OK!) 1.000ms =341
-DROP MATERIALIZED VIEW IF EXISTS	orig_geo_vg250.vg250_6_gem_clean_rings_mview CASCADE;
-CREATE MATERIALIZED VIEW		orig_geo_vg250.vg250_6_gem_clean_rings_mview AS 
-	SELECT 	DISTINCT mun.*,
-		joi.id AS j_id
-	FROM 	orig_geo_vg250.vg250_6_gem_clean_ring_mview AS mun		
-	INNER JOIN orig_geo_vg250.vg250_6_gem_clean_ring_mview AS joi
-		ON ST_WITHIN(ST_BUFFER(mun.geom,1),joi.geom)
-	WHERE	mun.geom && joi.geom;
-
-
--- "Create Index (id)"   (OK!) -> 100ms =0
-CREATE UNIQUE INDEX  	vg250_6_gem_clean_rings_mview_id_idx
-		ON	orig_geo_vg250.vg250_6_gem_clean_rings_mview (id,j_id);
-
--- "Create Index GIST (geom)"   (OK!) -> 150ms =0
-CREATE INDEX  	vg250_6_gem_clean_rings_mview_geom_idx
-	ON	orig_geo_vg250.vg250_6_gem_clean_rings_mview
-	USING	GIST (geom);
-
--- "Grant oeuser"   (OK!) -> 100ms =0
-GRANT ALL ON TABLE	orig_geo_vg250.vg250_6_gem_clean_rings_mview TO oeuser WITH GRANT OPTION;
-ALTER TABLE		orig_geo_vg250.vg250_6_gem_clean_rings_mview OWNER TO oeuser;
-
----------- ---------- ----------
-
--- "Update rings"   (OK!) -> 160.000ms =2.483.755
-UPDATE 	orig_geo_vg250.vg250_6_gem_clean AS t1
+-- "Update Holes"   (OK!) -> 2.000ms =696
+UPDATE 	orig_vg250.vg250_6_gem_clean AS t1
 SET  	is_ring = t2.is_ring
 FROM    (
-	SELECT	clean.id AS id,
+	SELECT	gem.id AS id,
 		'TRUE' ::boolean AS is_ring
-	FROM	orig_geo_vg250.vg250_6_gem_clean_rings_mview AS ring,
-		orig_geo_vg250.vg250_6_gem_clean AS clean
-	WHERE  	clean.id = ring.id
+	FROM	orig_vg250.vg250_6_gem_clean AS gem,
+		orig_vg250.vg250_6_gem_rings_mview AS ring
+	WHERE  	gem.geom = ring.geom
 	) AS t2
 WHERE  	t1.id = t2.id;
 
--- "Spearate all municipalities with rings"   (OK!) 1.000ms =12.539
-DROP MATERIALIZED VIEW IF EXISTS	orig_geo_vg250.vg250_6_gem_clean_mview CASCADE;
-CREATE MATERIALIZED VIEW 		orig_geo_vg250.vg250_6_gem_clean_mview AS 
-	SELECT 	mun.*
-	FROM	orig_geo_vg250.vg250_6_gem_clean AS mun
-	WHERE	mun.is_ring IS NOT TRUE;
+---------- ---------- ----------
+-- 
+-- -- "Spearate all municipalities without rings"   (OK!) 30.000ms =350
+-- DROP MATERIALIZED VIEW IF EXISTS	orig_vg250.vg250_6_gem_clean_mview CASCADE;
+-- CREATE MATERIALIZED VIEW 		orig_vg250.vg250_6_gem_clean_mview AS 
+-- SELECT 	mun.*
+-- FROM	orig_vg250.vg250_6_gem_clean AS mun
+-- WHERE	mun.path[1] = 0;
+-- 
+-- -- "Create Index (id)"   (OK!) -> 100ms =0
+-- CREATE UNIQUE INDEX  	vg250_6_gem_clean_mview_id_idx
+-- 		ON	orig_vg250.vg250_6_gem_clean_mview (id);
+-- 
+-- -- "Create Index GIST (geom)"   (OK!) -> 150ms =0
+-- CREATE INDEX  	vg250_6_gem_clean_mview_geom_idx
+-- 	ON	orig_vg250.vg250_6_gem_clean_mview
+-- 	USING	GIST (geom);
+-- 
+-- -- "Grant oeuser"   (OK!) -> 100ms =0
+-- GRANT ALL ON TABLE	orig_vg250.vg250_6_gem_clean_mview TO oeuser WITH GRANT OPTION;
+-- ALTER TABLE		orig_vg250.vg250_6_gem_clean_mview OWNER TO oeuser;
 
--- "Create Index (id)"   (OK!) -> 100ms =0
-CREATE UNIQUE INDEX  	vg250_6_gem_clean_mview_id_idx
-		ON	orig_geo_vg250.vg250_6_gem_clean_mview (id);
+---------- ---------- ----------
 
--- "Create Index GIST (geom)"   (OK!) -> 150ms =0
-CREATE INDEX  	vg250_6_gem_clean_mview_geom_idx
-	ON	orig_geo_vg250.vg250_6_gem_clean_mview
-	USING	GIST (geom);
+---------- ---------- ----------
+-- 
+-- -- "Select all rings rings"   (OK!) 1.000ms =341
+-- DROP MATERIALIZED VIEW IF EXISTS	orig_vg250.vg250_6_gem_clean_rings_mview CASCADE;
+-- CREATE MATERIALIZED VIEW		orig_vg250.vg250_6_gem_clean_rings_mview AS 
+-- 	SELECT 	DISTINCT mun.*,
+-- 		joi.id AS j_id
+-- 	FROM 	orig_vg250.vg250_6_gem_clean_ring_mview AS mun		
+-- 	INNER JOIN orig_vg250.vg250_6_gem_clean_ring_mview AS joi
+-- 		ON ST_WITHIN(ST_BUFFER(mun.geom,1),joi.geom)
+-- 	WHERE	mun.geom && joi.geom;
+-- 
+-- 
+-- -- "Create Index (id)"   (OK!) -> 100ms =0
+-- CREATE UNIQUE INDEX  	vg250_6_gem_clean_rings_mview_id_idx
+-- 		ON	orig_vg250.vg250_6_gem_clean_rings_mview (id,j_id);
+-- 
+-- -- "Create Index GIST (geom)"   (OK!) -> 150ms =0
+-- CREATE INDEX  	vg250_6_gem_clean_rings_mview_geom_idx
+-- 	ON	orig_vg250.vg250_6_gem_clean_rings_mview
+-- 	USING	GIST (geom);
+-- 
+-- -- "Grant oeuser"   (OK!) -> 100ms =0
+-- GRANT ALL ON TABLE	orig_vg250.vg250_6_gem_clean_rings_mview TO oeuser WITH GRANT OPTION;
+-- ALTER TABLE		orig_vg250.vg250_6_gem_clean_rings_mview OWNER TO oeuser;
 
--- "Grant oeuser"   (OK!) -> 100ms =0
-GRANT ALL ON TABLE	orig_geo_vg250.vg250_6_gem_clean_mview TO oeuser WITH GRANT OPTION;
-ALTER TABLE		orig_geo_vg250.vg250_6_gem_clean_mview OWNER TO oeuser;
+---------- ---------- ----------
+-- 
+-- -- "Update rings"   (OK!) -> 160.000ms =2.483.755
+-- UPDATE 	orig_vg250.vg250_6_gem_clean AS t1
+-- SET  	is_ring = t2.is_ring
+-- FROM    (
+-- 	SELECT	clean.id AS id,
+-- 		'TRUE' ::boolean AS is_ring
+-- 	FROM	orig_vg250.vg250_6_gem_clean_rings_mview AS ring,
+-- 		orig_vg250.vg250_6_gem_clean AS clean
+-- 	WHERE  	clean.id = ring.id
+-- 	) AS t2
+-- WHERE  	t1.id = t2.id;
+-- 
+-- -- "Spearate all municipalities with rings"   (OK!) 1.000ms =12.539
+-- DROP MATERIALIZED VIEW IF EXISTS	orig_vg250.vg250_6_gem_clean_mview CASCADE;
+-- CREATE MATERIALIZED VIEW 		orig_vg250.vg250_6_gem_clean_mview AS 
+-- 	SELECT 	mun.*
+-- 	FROM	orig_vg250.vg250_6_gem_clean AS mun
+-- 	WHERE	mun.is_ring IS NOT TRUE;
+-- 
+-- -- "Create Index (id)"   (OK!) -> 100ms =0
+-- CREATE UNIQUE INDEX  	vg250_6_gem_clean_mview_id_idx
+-- 		ON	orig_vg250.vg250_6_gem_clean_mview (id);
+-- 
+-- -- "Create Index GIST (geom)"   (OK!) -> 150ms =0
+-- CREATE INDEX  	vg250_6_gem_clean_mview_geom_idx
+-- 	ON	orig_vg250.vg250_6_gem_clean_mview
+-- 	USING	GIST (geom);
+-- 
+-- -- "Grant oeuser"   (OK!) -> 100ms =0
+-- GRANT ALL ON TABLE	orig_vg250.vg250_6_gem_clean_mview TO oeuser WITH GRANT OPTION;
+-- ALTER TABLE		orig_vg250.vg250_6_gem_clean_mview OWNER TO oeuser;
 
 ---------- ---------- ----------
 
@@ -524,28 +566,28 @@ ALTER TABLE		orig_geo_vg250.vg250_6_gem_clean_mview OWNER TO oeuser;
 -- -- 38162814 km²
 -- SELECT	'vg' ::text AS id,
 -- 	SUM(vg.area_km2) ::integer AS area_sum_km2
--- FROM	orig_geo_vg250.vg250_1_sta_mview AS vg
+-- FROM	orig_vg250.vg250_1_sta_mview AS vg
 -- UNION ALL
 -- -- 38141292 km²
 -- SELECT	'deu' ::text AS id,
 -- 	SUM(vg.area_km2) ::integer AS area_sum_km2
--- FROM	orig_geo_vg250.vg250_1_sta_mview AS vg
+-- FROM	orig_vg250.vg250_1_sta_mview AS vg
 -- WHERE	bez='Bundesrepublik'
 -- UNION ALL
 -- -- 38141292 km²
 -- SELECT	'NOT deu' ::text AS id,
 -- 	SUM(vg.area_km2) ::integer AS area_sum_km2
--- FROM	orig_geo_vg250.vg250_1_sta_mview AS vg
+-- FROM	orig_vg250.vg250_1_sta_mview AS vg
 -- WHERE	bez='--'
 -- UNION ALL
 -- -- 35718841 km²
 -- SELECT	'land' ::text AS id,
 -- 	SUM(vg.area_km2) ::integer AS area_sum_km2
--- FROM	orig_geo_vg250.vg250_1_sta_mview AS vg
+-- FROM	orig_vg250.vg250_1_sta_mview AS vg
 -- WHERE	water='f'
 -- UNION ALL
 -- -- 35718841 km²
 -- SELECT	'water' ::text AS id,
 -- 	SUM(vg.area_km2) ::integer AS area_sum_km2
--- FROM	orig_geo_vg250.vg250_1_sta_mview AS vg
+-- FROM	orig_vg250.vg250_1_sta_mview AS vg
 -- WHERE	water='t';
