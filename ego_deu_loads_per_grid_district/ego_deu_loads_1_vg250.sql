@@ -477,6 +477,8 @@ FROM    (
 WHERE  	t1.id = t2.id;
 
 ---------- ---------- ----------
+
+---------- ---------- ----------
 -- 
 -- -- "Spearate all municipalities without rings"   (OK!) 30.000ms =350
 -- DROP MATERIALIZED VIEW IF EXISTS	orig_vg250.vg250_6_gem_clean_mview CASCADE;
