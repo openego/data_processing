@@ -478,6 +478,14 @@ WHERE  	t1.id = t2.id;
 
 ---------- ---------- ----------
 
+-- separate all ringholes   (OK!) 30.000ms =12.174
+DROP MATERIALIZED VIEW IF EXISTS	orig_vg250.vg250_6_gem_clean_mview CASCADE;
+CREATE MATERIALIZED VIEW 		orig_vg250.vg250_6_gem_clean_mview AS
+	SELECT	vg.*
+	FROM	orig_vg250.vg250_6_gem_clean AS vg
+	WHERE	vg.is_ring IS NOT TRUE;
+
+
 ---------- ---------- ----------
 -- 
 -- -- "Spearate all municipalities without rings"   (OK!) 30.000ms =350
