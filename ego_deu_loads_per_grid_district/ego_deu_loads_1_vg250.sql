@@ -3,7 +3,7 @@
 ---------- ---------- ----------
 
 ---------- ---------- ----------
--- "Database setups"   2016-04-17 21:00 1s
+-- Database setups   2016-04-17 21:00 1s
 ---------- ---------- ----------
 
 -- DROP SCHEMA IF EXISTS	orig_ego;
@@ -444,7 +444,7 @@ ALTER TABLE		orig_vg250.vg250_6_gem_clean OWNER TO oeuser;
 
 ---------- ---------- ----------
 
--- separate all ringholes   (OK!) 30.000ms =350
+-- separate all holes   (OK!) 30.000ms =350
 DROP MATERIALIZED VIEW IF EXISTS	orig_vg250.vg250_6_gem_rings_mview CASCADE;
 CREATE MATERIALIZED VIEW 		orig_vg250.vg250_6_gem_rings_mview AS 
 SELECT 	mun.*
@@ -460,11 +460,11 @@ CREATE INDEX  	vg250_6_gem_rings_mview_geom_idx
 	ON	orig_vg250.vg250_6_gem_rings_mview
 	USING	GIST (geom);
 
--- "Grant oeuser"   (OK!) -> 100ms =0
+-- Grant oeuser   (OK!) -> 100ms =0
 GRANT ALL ON TABLE	orig_vg250.vg250_6_gem_rings_mview TO oeuser WITH GRANT OPTION;
 ALTER TABLE		orig_vg250.vg250_6_gem_rings_mview OWNER TO oeuser;
 
--- "Update Holes"   (OK!) -> 2.000ms =696
+-- Update Holes   (OK!) -> 2.000ms =696
 UPDATE 	orig_vg250.vg250_6_gem_clean AS t1
 SET  	is_ring = t2.is_ring
 FROM    (
