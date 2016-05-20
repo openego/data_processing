@@ -3,18 +3,18 @@
 ----------------------------------------------------------
 
 -- Add Dummy points (18 Points)
-INSERT INTO orig_ego.ego_deu_substations_110 (sub_id,sub_name,geom)
-SELECT	dummy.subst_id AS sub_id,
-	dummy.name AS sub_name,
+INSERT INTO calc_ego_grid_districts.substations_110 (subst_id,subst_name,geom)
+SELECT	dummy.subst_id AS subst_id,
+	dummy.name AS subst_name,
 	ST_TRANSFORM(dummy.geom,3035)
 FROM 	calc_gridcells_znes.substations_dummy AS dummy;
 
 -- Execute voronoi algorithm with 110 kV substations
-DROP TABLE IF EXISTS orig_ego.ego_deu_substations_110_voronoi;
+DROP TABLE IF EXISTS calc_ego_grid_districts.substations_110_voronoi;
 WITH 
     -- Sample set of points to work with
     Sample AS (SELECT   ST_SetSRID(ST_Union(pts.geom), 0) AS geom
-		FROM	orig_ego.ego_deu_substations_110 AS pts),  -- INPUT 1/2
+		FROM	calc_ego_grid_districts.substations_110 AS pts),  -- INPUT 1/2
     -- Build edges and circumscribe points to generate a centroid
     Edges AS (
     SELECT id,
@@ -40,7 +40,7 @@ WITH
         ) c
     )
 SELECT ST_SetSRID((ST_Dump(ST_Polygonize(ST_Node(ST_LineMerge(ST_Union(v, (SELECT ST_ExteriorRing(ST_ConvexHull(ST_Union(ST_Union(ST_Buffer(edge,20),ct)))) FROM Edges))))))).geom, 2180) geom
-INTO orig_ego.ego_deu_substations_110_voronoi		  -- INPUT 2/2
+INTO calc_ego_grid_districts.substations_110_voronoi		  -- INPUT 2/2
 FROM (
     SELECT  -- Create voronoi edges and reduce to a multilinestring
         ST_LineMerge(ST_Union(ST_MakeLine(
@@ -63,41 +63,41 @@ FROM (
     ) z;
 
 -- "Set PK"   (OK!) -> 100ms =0
-ALTER TABLE orig_ego.ego_deu_substations_110_voronoi
+ALTER TABLE calc_ego_grid_districts.substations_110_voronoi
 	ADD COLUMN id serial,
-	ADD COLUMN sub_id integer,
-	ADD COLUMN sub_sum integer,
+	ADD COLUMN subst_id integer,
+	ADD COLUMN subst_sum integer,
 	ADD PRIMARY KEY (id),
 	ALTER COLUMN geom TYPE geometry(POLYGON,3035) USING ST_SETSRID(geom,3035);
 
 -- "Create Index GIST (geom)"   (OK!) 11.000ms =0
-CREATE INDEX	ego_deu_substations_110_voronoi_geom_idx
-	ON	orig_ego.ego_deu_substations_110_voronoi
+CREATE INDEX	substations_110_voronoi_geom_idx
+	ON	calc_ego_grid_districts.substations_110_voronoi
 	USING	GIST (geom);
 
 -- Grant oeuser   (OK!) -> 100ms =0
-GRANT ALL ON TABLE 	orig_ego.ego_deu_substations_110_voronoi TO oeuser WITH GRANT OPTION;
-ALTER TABLE		orig_ego.ego_deu_substations_110_voronoi OWNER TO oeuser;
+GRANT ALL ON TABLE 	calc_ego_grid_districts.substations_110_voronoi TO oeuser WITH GRANT OPTION;
+ALTER TABLE		calc_ego_grid_districts.substations_110_voronoi OWNER TO oeuser;
 
 
 -- Delete Dummy-points from 110 kV substations (18 Points)
-DELETE FROM orig_ego.ego_deu_substations_110 WHERE sub_name='DUMMY';
+DELETE FROM calc_ego_grid_districts.substations_110 WHERE subst_name='DUMMY';
 
 
 -- Clip voronoi with vg250
 
 /* 
-DROP TABLE IF EXISTS orig_ego.ego_vg250_voronoi_110kv;
+DROP TABLE IF EXISTS calc_ego_grid_districts.ego_vg250_voronoi_110kv;
 
 SELECT g.id, ST_Intersection ( g.geom, ST_Transform(b.geom,4326)) as geom
-INTO orig_ego.ego_vg250_voronoi_110kv;
-FROM orig_ego.ego_deu_voronoi_110kv; AS g, gis.vg250_sta AS b WHERE gid=9;
+INTO calc_ego_grid_districts.ego_vg250_voronoi_110kv;
+FROM calc_ego_grid_districts.ego_deu_voronoi_110kv; AS g, gis.vg250_sta AS b WHERE gid=9;
 
-ALTER TABLE orig_ego.ego_vg250_voronoi_110kv;
+ALTER TABLE calc_ego_grid_districts.ego_vg250_voronoi_110kv;
 	ADD PRIMARY KEY (id);
 
 CREATE INDEX	vg250_voronoi_110kV_geom_idx
-	ON	orig_ego.ego_vg250_voronoi_110kv
+	ON	calc_ego_grid_districts.ego_vg250_voronoi_110kv
 	USING	GIST (geom); 
 */
 
