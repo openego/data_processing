@@ -70,7 +70,6 @@ calc_ego_grid_districts.grid_districts_type_1
 II.
 calc_ego_grid_districts.substations_110_voronoi
 calc_ego_grid_districts.substations_110_voronoi_mview
-calc_ego_grid_districts.substations_110_voronoi_error_geom_view
 calc_ego_grid_districts.substations_110_voronoi_cut
 calc_ego_grid_districts.substations_110_voronoi_cut_1subst_mview
 calc_ego_grid_districts.substations_110_voronoi_cut_0subst_mview
@@ -91,7 +90,7 @@ calc_ego_grid_districts.grid_districts_type_3
 
 GD.
 calc_ego_grid_districts.grid_districts_collect
-
+calc_ego_grid_districts.grid_districts
 
 8. Load Data
 

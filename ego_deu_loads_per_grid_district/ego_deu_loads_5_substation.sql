@@ -2,6 +2,19 @@
 ---------- --SKRIPT-- OK! 7min
 ---------- ---------- ----------
 
+-- -- Create schemas for open_eGo
+-- DROP SCHEMA IF EXISTS	calc_ego_grid_districts;
+-- CREATE SCHEMA 		calc_ego_grid_districts;
+-- 
+-- -- Set default privileges for schema
+-- ALTER DEFAULT PRIVILEGES IN SCHEMA calc_ego_grid_districts GRANT ALL ON TABLES TO oeuser;
+-- ALTER DEFAULT PRIVILEGES IN SCHEMA calc_ego_grid_districts GRANT ALL ON SEQUENCES TO oeuser;
+-- ALTER DEFAULT PRIVILEGES IN SCHEMA calc_ego_grid_districts GRANT ALL ON FUNCTIONS TO oeuser;
+-- 
+-- -- Grant all in schema
+-- GRANT ALL ON SCHEMA 	calc_ego_grid_districts TO oeuser WITH GRANT OPTION;
+-- GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA calc_ego_grid_districts TO oeuser;
+
 ---------- ---------- ----------
 -- Substations 110 (mv)
 ---------- ---------- ----------
@@ -35,7 +48,7 @@ FROM    (
 	SELECT	sub.subst_id,
 		vg.ags_0
 	FROM	calc_ego_grid_districts.substations_110 AS sub,
-		orig_vg250.vg250_6_gem_mview AS vg
+		orig_vg250.vg250_6_gem_clean_mview AS vg
 	WHERE  	vg.geom && sub.geom AND
 		ST_CONTAINS(vg.geom,sub.geom)
 	) AS t2
@@ -65,8 +78,6 @@ CREATE INDEX  	municipalities_substst_geom_idx
 -- Grant oeuser   (OK!) -> 100ms =0
 GRANT ALL ON TABLE	calc_ego_grid_districts.municipalities_subst TO oeuser WITH GRANT OPTION;
 ALTER TABLE		calc_ego_grid_districts.municipalities_subst OWNER TO oeuser;
-
----------- ---------- ----------
 
 -- usw count   (OK!) -> 1.000ms =2.270
 UPDATE 	calc_ego_grid_districts.municipalities_subst AS t1
@@ -242,23 +253,19 @@ CREATE INDEX  	grid_districts_type_1_geom_mun_idx
 GRANT ALL ON TABLE 	calc_ego_grid_districts.grid_districts_type_1 TO oeuser WITH GRANT OPTION;
 ALTER TABLE		calc_ego_grid_districts.grid_districts_type_1 OWNER TO oeuser;
 
----------- ---------- ----------
-
 -- subst_id = gem.id
 -- update usw geom gem1   (OK!) -> 1.000ms =1.724
 UPDATE 	calc_ego_grid_districts.grid_districts_type_1 AS t1
 SET  	subst_sum  = t2.subst_sum,
 	subst_type = t2.subst_type,
 	geom = t2.geom
-FROM	(SELECT	mun.ags_0 AS ags_0,
-		mun.subst_sum ::integer AS subst_sum,
-		mun.subst_type ::integer AS subst_type,
+FROM	(SELECT	mun.ags_0,
+		mun.subst_sum ::integer,
+		mun.subst_type ::integer,
 		ST_MULTI(mun.geom) ::geometry(MultiPolygon,3035) AS geom
 	FROM	calc_ego_grid_districts.municipalities_subst AS mun
 	WHERE	subst_type = '1')AS t2
 WHERE  	t1.ags_0 = t2.ags_0;
-
-
 
 ---------- ---------- ---------- ---------- ---------- ----------
 -- II. Gemeinden mit mehreren USW
@@ -319,25 +326,25 @@ GRANT ALL ON TABLE 	calc_ego_grid_districts.substations_110_voronoi_mview TO oeu
 ALTER TABLE		calc_ego_grid_districts.substations_110_voronoi_mview OWNER TO oeuser;
 
 ---------- ---------- ----------
-
--- Validate (geom)   (OK!) -> 22.000ms =0
-DROP VIEW IF EXISTS	calc_ego_grid_districts.substations_110_voronoi_error_geom_view CASCADE;
-CREATE VIEW		calc_ego_grid_districts.substations_110_voronoi_error_geom_view AS 
-	SELECT	test.id,
-		test.error,
-		reason(ST_IsValidDetail(test.geom)) AS error_reason,
-		ST_SetSRID(location(ST_IsValidDetail(test.geom)),3035) ::geometry(Point,3035) AS error_location
-	FROM	(
-		SELECT	source.id AS id,				-- PK
-			ST_IsValid(source.geom) AS error,
-			source.geom AS geom
-		FROM	calc_ego_grid_districts.ego_deu_substations_voronoi AS source	-- Table
-		) AS test
-	WHERE	test.error = FALSE;
-
--- Grant oeuser   (OK!) -> 100ms =0
-GRANT ALL ON TABLE	calc_ego_grid_districts.substations_110_voronoi_error_geom_view TO oeuser WITH GRANT OPTION;
-ALTER TABLE		calc_ego_grid_districts.substations_110_voronoi_error_geom_view OWNER TO oeuser;
+-- 
+-- -- Validate (geom)   (OK!) -> 22.000ms =0
+-- DROP VIEW IF EXISTS	calc_ego_grid_districts.substations_110_voronoi_error_geom_view CASCADE;
+-- CREATE VIEW		calc_ego_grid_districts.substations_110_voronoi_error_geom_view AS 
+-- 	SELECT	test.id,
+-- 		test.error,
+-- 		reason(ST_IsValidDetail(test.geom)) AS error_reason,
+-- 		ST_SetSRID(location(ST_IsValidDetail(test.geom)),3035) ::geometry(Point,3035) AS error_location
+-- 	FROM	(
+-- 		SELECT	source.id AS id,				-- PK
+-- 			ST_IsValid(source.geom) AS error,
+-- 			source.geom AS geom
+-- 		FROM	calc_ego_grid_districts.ego_deu_substations_voronoi AS source	-- Table
+-- 		) AS test
+-- 	WHERE	test.error = FALSE;
+-- 
+-- -- Grant oeuser   (OK!) -> 100ms =0
+-- GRANT ALL ON TABLE	calc_ego_grid_districts.substations_110_voronoi_error_geom_view TO oeuser WITH GRANT OPTION;
+-- ALTER TABLE		calc_ego_grid_districts.substations_110_voronoi_error_geom_view OWNER TO oeuser;
 
 -- -- Drop empty view   (OK!) -> 100ms =1
 -- SELECT f_drop_view('{substations_110_voronoi_error_geom_view}', 'calc_grid_districts');
@@ -907,7 +914,7 @@ WHERE  	t1.subst_id = t2.subst_id;
 -- Collect the 3 Mun-types
 ---------- ---------- ----------
 
--- Substations Template   (OK!) -> 100ms =3.709
+-- Substations Template   (OK!) -> 100ms =0
 DROP TABLE IF EXISTS	calc_ego_grid_districts.grid_districts_collect CASCADE;
 CREATE TABLE		calc_ego_grid_districts.grid_districts_collect (
 	id SERIAL NOT NULL,
@@ -979,11 +986,10 @@ DROP TABLE IF EXISTS	calc_ego_grid_districts.grid_districts CASCADE;
 CREATE TABLE 		calc_ego_grid_districts.grid_districts AS 
 SELECT DISTINCT ON 	(dis.subst_id)
 			dis.subst_id AS subst_id,
-			ST_UNION(dis.geom)  AS geom
+			ST_MULTI(ST_UNION(dis.geom)) ::geometry(MultiPolygon,3035) AS geom
 		FROM	calc_ego_grid_districts.grid_districts_collect AS dis
 	GROUP BY 	dis.subst_id;
 
---::geometry(MultiPolygon,3035)
 -- Ad PK   (OK!) 150ms =0
 ALTER TABLE	calc_ego_grid_districts.grid_districts
 	ADD COLUMN subst_sum integer,
@@ -1018,34 +1024,36 @@ FROM	(SELECT	dis.subst_id AS subst_id,
 WHERE  	t1.subst_id = t2.subst_id;
 
 
--- Dump Rings   (OK!) -> 22.000ms =0
-SELECT	dis.subst_id,
-	ST_NumInteriorRings(dis.geom) ::integer AS count_ring
-FROM	calc_ego_grid_districts.grid_districts AS dis
-WHERE	ST_NumInteriorRings(dis.geom) <> 0;
+---------- ---------- ----------
 
--- Dump Rings   (OK!) -> 22.000ms =0
-DROP SEQUENCE IF EXISTS calc_ego_grid_districts.grid_districts_rings_id CASCADE;
-CREATE SEQUENCE calc_ego_grid_districts.grid_districts_rings_id;
-DROP MATERIALIZED VIEW IF EXISTS	calc_ego_grid_districts.grid_districts_rings CASCADE;
-CREATE MATERIALIZED VIEW 		calc_ego_grid_districts.grid_districts_rings AS 
-	SELECT	nextval('calc_ego_grid_districts.grid_districts_rings_id') AS id,
-		dis.subst_id,
-		ST_NumInteriorRings(dis.geom) AS count_ring,
-		(ST_DumpRings(dis.geom)).geom AS geom
-	FROM	calc_ego_grid_districts.grid_districts AS dis
-	WHERE	ST_NumInteriorRings(dis.geom) <> 0;
-
--- Dump Rings   (OK!) -> 22.000ms =0
-DROP MATERIALIZED VIEW IF EXISTS	calc_ego_grid_districts.grid_districts_rings_dump CASCADE;
-CREATE MATERIALIZED VIEW 		calc_ego_grid_districts.grid_districts_rings_dump AS 
-	SELECT	dump.id AS id,
-		dump.subst_id,
-		dump.count_ring,
-		ST_AREA(dump.geom) AS area_ha,
-		dump.geom AS geom
-	FROM	calc_ego_grid_districts.grid_districts_rings AS dump
-	WHERE	ST_AREA(dump.geom) > 1000000;
+-- -- Dump Rings   (OK!) -> 22.000ms =0
+-- SELECT	dis.subst_id,
+-- 	ST_NumInteriorRings(dis.geom) ::integer AS count_ring
+-- FROM	calc_ego_grid_districts.grid_districts AS dis
+-- WHERE	ST_NumInteriorRings(dis.geom) <> 0;
+-- 
+-- -- Dump Rings   (OK!) -> 22.000ms =0
+-- DROP SEQUENCE IF EXISTS calc_ego_grid_districts.grid_districts_rings_id CASCADE;
+-- CREATE SEQUENCE calc_ego_grid_districts.grid_districts_rings_id;
+-- DROP MATERIALIZED VIEW IF EXISTS	calc_ego_grid_districts.grid_districts_rings CASCADE;
+-- CREATE MATERIALIZED VIEW 		calc_ego_grid_districts.grid_districts_rings AS 
+-- 	SELECT	nextval('calc_ego_grid_districts.grid_districts_rings_id') AS id,
+-- 		dis.subst_id,
+-- 		ST_NumInteriorRings(dis.geom) AS count_ring,
+-- 		(ST_DumpRings(dis.geom)).geom AS geom
+-- 	FROM	calc_ego_grid_districts.grid_districts AS dis
+-- 	WHERE	ST_NumInteriorRings(dis.geom) <> 0;
+-- 
+-- -- Dump Rings   (OK!) -> 22.000ms =0
+-- DROP MATERIALIZED VIEW IF EXISTS	calc_ego_grid_districts.grid_districts_rings_dump CASCADE;
+-- CREATE MATERIALIZED VIEW 		calc_ego_grid_districts.grid_districts_rings_dump AS 
+-- 	SELECT	dump.id AS id,
+-- 		dump.subst_id,
+-- 		dump.count_ring,
+-- 		ST_AREA(dump.geom) AS area_ha,
+-- 		dump.geom AS geom
+-- 	FROM	calc_ego_grid_districts.grid_districts_rings AS dump
+-- 	WHERE	ST_AREA(dump.geom) > 1000000;
 
 
 

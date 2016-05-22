@@ -2,10 +2,27 @@
 -- VORONOI with  110 kV substations
 ----------------------------------------------------------
 
+DROP TABLE IF EXISTS 	calc_gridcells_znes.substations_dummy;
+CREATE TABLE		calc_gridcells_znes.substations_dummy (
+	subst_id integer NOT NULL,
+	subst_name text,
+	geom geometry(Point,3035),
+	CONSTRAINT substations_110_pkey PRIMARY KEY (subst_id));
+
+
+ALTER TABLE calc_ego_grid_districts.substations_110
+  OWNER TO oeuser;
+GRANT ALL ON TABLE calc_ego_grid_districts.substations_110 TO oeuser WITH GRANT OPTION;
+
+CREATE INDEX substations_110_geom_idx
+  ON calc_ego_grid_districts.substations_110
+  USING gist
+  (geom);
+
 -- Add Dummy points (18 Points)
 INSERT INTO calc_ego_grid_districts.substations_110 (subst_id,subst_name,geom)
-SELECT	dummy.subst_id AS subst_id,
-	dummy.name AS subst_name,
+SELECT	dummy.subst_id,
+	dummy.subst_name,
 	ST_TRANSFORM(dummy.geom,3035)
 FROM 	calc_gridcells_znes.substations_dummy AS dummy;
 
