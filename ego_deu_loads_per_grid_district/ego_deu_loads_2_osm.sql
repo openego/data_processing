@@ -77,7 +77,6 @@ GRANT ALL ON TABLE	orig_osm.osm_deu_polygon_urban TO oeuser WITH GRANT OPTION;
 ALTER TABLE		orig_osm.osm_deu_polygon_urban OWNER TO oeuser;
 
 
-
 ---------- ---------- ----------
 -- "OSM Urban Landuse Inside vg250"
 ---------- ---------- ----------
@@ -273,24 +272,24 @@ INSERT INTO	orig_osm.osm_deu_polygon_urban
 -- "(Geo) Data Validation"
 ---------- ---------- ----------
 
--- -- "Validate (geom)"   (OK!) -> 22.000ms =0
--- DROP MATERIALIZED VIEW IF EXISTS	orig_osm.osm_deu_polygon_urban_error_geom_mview CASCADE;
--- CREATE MATERIALIZED VIEW		orig_osm.osm_deu_polygon_urban_error_geom_mview AS 
--- 	SELECT	test.id,
--- 		test.error,
--- 		reason(ST_IsValidDetail(test.geom)) AS error_reason,
--- 		ST_SetSRID(location(ST_IsValidDetail(test.geom)),3035) ::geometry(Point,3035) AS error_location
--- 	FROM	(
--- 		SELECT	source.gid AS id,				-- PK
--- 			ST_IsValid(source.geom) AS error,
--- 			source.geom AS geom
--- 		FROM	orig_osm.osm_deu_polygon_urban AS source	-- Table
--- 		) AS test
--- 	WHERE	test.error = FALSE;
--- 
--- -- "Grant oeuser"   (OK!) -> 100ms =0
--- GRANT ALL ON TABLE	orig_osm.osm_deu_polygon_urban_error_geom_view TO oeuser WITH GRANT OPTION;
--- ALTER TABLE		orig_osm.osm_deu_polygon_urban_error_geom_view OWNER TO oeuser;
+-- "Validate (geom)"   (OK!) -> 22.000ms =0
+DROP MATERIALIZED VIEW IF EXISTS	orig_osm.osm_deu_polygon_urban_error_geom_mview CASCADE;
+CREATE MATERIALIZED VIEW		orig_osm.osm_deu_polygon_urban_error_geom_mview AS 
+	SELECT	test.id,
+		test.error,
+		reason(ST_IsValidDetail(test.geom)) AS error_reason,
+		ST_SetSRID(location(ST_IsValidDetail(test.geom)),3035) ::geometry(Point,3035) AS error_location
+	FROM	(
+		SELECT	source.gid AS id,				-- PK
+			ST_IsValid(source.geom) AS error,
+			source.geom AS geom
+		FROM	orig_osm.osm_deu_polygon_urban AS source	-- Table
+		) AS test
+	WHERE	test.error = FALSE;
+
+-- "Grant oeuser"   (OK!) -> 100ms =0
+GRANT ALL ON TABLE	orig_osm.osm_deu_polygon_urban_error_geom_view TO oeuser WITH GRANT OPTION;
+ALTER TABLE		orig_osm.osm_deu_polygon_urban_error_geom_view OWNER TO oeuser;
 
 ---------- ---------- ----------
 
@@ -464,6 +463,29 @@ GRANT ALL ON TABLE 	orig_osm.osm_deu_polygon_urban_sector_4_agricultural_mview T
 ALTER TABLE		orig_osm.osm_deu_polygon_urban_sector_4_agricultural_mview OWNER TO oeuser;
 
 ---------- ---------- ----------
+
+-- "Validate (geom)"   (OK!) -> 22.000ms =0
+DROP VIEW IF EXISTS	orig_osm.osm_deu_polygon_urban_sector_4_agricultural_mview_error_geom_view CASCADE;
+CREATE VIEW		orig_osm.osm_deu_polygon_urban_sector_4_agricultural_mview_error_geom_view AS 
+	SELECT	test.id,
+		test.error,
+		reason(ST_IsValidDetail(test.geom)) AS error_reason,
+		ST_SetSRID(location(ST_IsValidDetail(test.geom)),3035) ::geometry(Point,3035) AS error_location
+	FROM	(
+		SELECT	source.gid AS id,				-- PK
+			ST_IsValid(source.geom) AS error,
+			source.geom AS geom
+		FROM	orig_osm.osm_deu_polygon_urban_sector_4_agricultural_mview AS source	-- Table
+		) AS test
+	WHERE	test.error = FALSE;
+
+-- "Grant oeuser"   (OK!) -> 100ms =0
+GRANT ALL ON TABLE	orig_osm.osm_deu_polygon_urban_sector_4_agricultural_mview_error_geom_view TO oeuser WITH GRANT OPTION;
+ALTER TABLE		orig_osm.osm_deu_polygon_urban_sector_4_agricultural_mview_error_geom_view OWNER TO oeuser;
+
+-- "Drop empty view"   (OK!) -> 100ms =1
+SELECT f_drop_view('{osm_deu_polygon_urban_sector_4_agricultural_mview_error_geom_view}', 'orig_ego');
+
 
 
 ---------- ---------- ---------- ---------- ---------- ----------

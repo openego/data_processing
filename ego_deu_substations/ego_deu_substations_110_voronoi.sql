@@ -2,36 +2,40 @@
 -- VORONOI with  110 kV substations
 ----------------------------------------------------------
 
-DROP TABLE IF EXISTS 	calc_gridcells_znes.substations_dummy;
-CREATE TABLE		calc_gridcells_znes.substations_dummy (
-	subst_id integer NOT NULL,
-	subst_name text,
-	geom geometry(Point,3035),
-	CONSTRAINT substations_110_pkey PRIMARY KEY (subst_id));
+DROP TABLE IF EXISTS 	calc_ego_substation.substation_dummy;
+CREATE TABLE		calc_ego_substation.substation_dummy AS 
+	SELECT	dummy.*
+	FROM	calc_gridcells_znes.substations_dummy AS dummy;
 
+ALTER TABLE calc_ego_substation.substation_dummy
+	ADD PRIMARY KEY (subst_id);
 
-ALTER TABLE calc_ego_grid_districts.substations_110
-  OWNER TO oeuser;
-GRANT ALL ON TABLE calc_ego_grid_districts.substations_110 TO oeuser WITH GRANT OPTION;
+-- "Create Index GIST (geom)"   (OK!) 11.000ms =0
+CREATE INDEX	substation_dummy_geom_idx
+	ON	calc_ego_substation.substation_dummy
+	USING	GIST (geom);
 
-CREATE INDEX substations_110_geom_idx
-  ON calc_ego_grid_districts.substations_110
-  USING gist
-  (geom);
+-- Grant oeuser   (OK!) -> 100ms =0
+GRANT ALL ON TABLE 	calc_ego_substation.substation_dummy TO oeuser WITH GRANT OPTION;
+ALTER TABLE		calc_ego_substation.substation_dummy OWNER TO oeuser;
 
--- Add Dummy points (18 Points)
-INSERT INTO calc_ego_grid_districts.substations_110 (subst_id,subst_name,geom)
+---------------------
+
+-- Add Dummy points to substation (18 Points)
+INSERT INTO calc_ego_substation.substation_110 (subst_id,subst_name,geom)
 SELECT	dummy.subst_id,
-	dummy.subst_name,
+	dummy.name AS subst_name,
 	ST_TRANSFORM(dummy.geom,3035)
-FROM 	calc_gridcells_znes.substations_dummy AS dummy;
+FROM 	calc_ego_substation.substation_dummy AS dummy;
 
--- Execute voronoi algorithm with 110 kV substations
-DROP TABLE IF EXISTS calc_ego_grid_districts.substations_110_voronoi;
+---------------------
+
+-- Execute voronoi algorithm with 110 kV substations   (OK!) -> 227.000ms =3.628
+DROP TABLE IF EXISTS calc_ego_substation.substation_110_voronoi;
 WITH 
     -- Sample set of points to work with
     Sample AS (SELECT   ST_SetSRID(ST_Union(pts.geom), 0) AS geom
-		FROM	calc_ego_grid_districts.substations_110 AS pts),  -- INPUT 1/2
+		FROM	calc_ego_substation.substation_110 AS pts),  -- INPUT 1/2
     -- Build edges and circumscribe points to generate a centroid
     Edges AS (
     SELECT id,
@@ -57,7 +61,7 @@ WITH
         ) c
     )
 SELECT ST_SetSRID((ST_Dump(ST_Polygonize(ST_Node(ST_LineMerge(ST_Union(v, (SELECT ST_ExteriorRing(ST_ConvexHull(ST_Union(ST_Union(ST_Buffer(edge,20),ct)))) FROM Edges))))))).geom, 2180) geom
-INTO calc_ego_grid_districts.substations_110_voronoi		  -- INPUT 2/2
+INTO calc_ego_substation.substation_110_voronoi		  -- INPUT 2/2
 FROM (
     SELECT  -- Create voronoi edges and reduce to a multilinestring
         ST_LineMerge(ST_Union(ST_MakeLine(
@@ -79,8 +83,10 @@ FROM (
         Edges y ON x.id <> y.id AND ST_Equals(x.edge,y.edge)
     ) z;
 
+---------------------
+
 -- "Set PK"   (OK!) -> 100ms =0
-ALTER TABLE calc_ego_grid_districts.substations_110_voronoi
+ALTER TABLE calc_ego_substation.substation_110_voronoi
 	ADD COLUMN id serial,
 	ADD COLUMN subst_id integer,
 	ADD COLUMN subst_sum integer,
@@ -88,17 +94,17 @@ ALTER TABLE calc_ego_grid_districts.substations_110_voronoi
 	ALTER COLUMN geom TYPE geometry(POLYGON,3035) USING ST_SETSRID(geom,3035);
 
 -- "Create Index GIST (geom)"   (OK!) 11.000ms =0
-CREATE INDEX	substations_110_voronoi_geom_idx
-	ON	calc_ego_grid_districts.substations_110_voronoi
+CREATE INDEX	substation_110_voronoi_geom_idx
+	ON	calc_ego_substation.substation_110_voronoi
 	USING	GIST (geom);
 
 -- Grant oeuser   (OK!) -> 100ms =0
-GRANT ALL ON TABLE 	calc_ego_grid_districts.substations_110_voronoi TO oeuser WITH GRANT OPTION;
-ALTER TABLE		calc_ego_grid_districts.substations_110_voronoi OWNER TO oeuser;
+GRANT ALL ON TABLE 	calc_ego_substation.substation_110_voronoi TO oeuser WITH GRANT OPTION;
+ALTER TABLE		calc_ego_substation.substation_110_voronoi OWNER TO oeuser;
 
 
 -- Delete Dummy-points from 110 kV substations (18 Points)
-DELETE FROM calc_ego_grid_districts.substations_110 WHERE subst_name='DUMMY';
+DELETE FROM calc_ego_substation.substation_110 WHERE subst_name='DUMMY';
 
 
 -- Clip voronoi with vg250

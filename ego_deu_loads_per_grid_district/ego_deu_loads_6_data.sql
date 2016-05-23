@@ -273,7 +273,7 @@ CREATE TABLE         	calc_ego_loads.urban_sector_per_grid_district_1_residentia
 		geom geometry(Polygon,3035),
 CONSTRAINT 	urban_sector_per_grid_district_1_residential_pkey PRIMARY KEY (id));
 
--- "Insert Loads Residential"   (OK!) 1.717.000ms =290.175
+-- "Insert Loads Residential"   (OK!) 330.000ms =290.559
 INSERT INTO     calc_ego_loads.urban_sector_per_grid_district_1_residential (geom)
 	SELECT	loads.geom ::geometry(Polygon,3035)
 	FROM	(SELECT (ST_DUMP(ST_INTERSECTION(loads.geom,dis.geom))).geom AS geom
@@ -294,7 +294,7 @@ ALTER TABLE		calc_ego_loads.urban_sector_per_grid_district_1_residential OWNER T
 
 ---------- ---------- ----------
 
--- "Calculate Sector Residential"   (OK!) -> 313.000ms =12.735
+-- "Calculate Sector Residential"   (OK!) -> 47.000ms =102.429
 UPDATE 	calc_ego_loads.ego_deu_loads AS t1
 SET  	sector_area_residential = t2.sector_area,
 	sector_count_residential = t2.sector_count,
@@ -323,11 +323,11 @@ CREATE TABLE         	calc_ego_loads.urban_sector_per_grid_district_2_retail	 (
 		geom geometry(Polygon,3035),
 CONSTRAINT 	urban_sector_per_grid_district_2_retail_pkey PRIMARY KEY (id));
 
--- "Insert Loads Retail"   (OK!) 1.717.000ms =290.175
+-- "Insert Loads Retail"   (OK!) 32.000ms =37.496
 INSERT INTO     calc_ego_loads.urban_sector_per_grid_district_2_retail (geom)
 	SELECT	loads.geom ::geometry(Polygon,3035)
 	FROM	(SELECT (ST_DUMP(ST_INTERSECTION(loads.geom,dis.geom))).geom AS geom
-		FROM	orig_osm.osm_deu_polygon_urban_sector_1_residential_mview AS loads,
+		FROM	orig_osm.osm_deu_polygon_urban_sector_2_retail_mview AS loads,
 			calc_ego_grid_districts.grid_districts AS dis
 		WHERE	loads.geom && dis.geom
 		) AS loads
@@ -344,7 +344,7 @@ ALTER TABLE		calc_ego_loads.urban_sector_per_grid_district_2_retail OWNER TO oeu
 
 ---------- ---------- ----------
 
--- "Calculate Sector Retail"   (OK!) -> 800.000ms =2.997
+-- "Calculate Sector Retail"   (OK!) -> 18.000ms =10.983
 UPDATE 	calc_ego_loads.ego_deu_loads AS t1
 SET  	sector_area_retail = t2.sector_area,
 	sector_count_retail = t2.sector_count,
@@ -373,11 +373,11 @@ CREATE TABLE         	calc_ego_loads.urban_sector_per_grid_district_3_industrial
 		geom geometry(Polygon,3035),
 CONSTRAINT 	urban_sector_per_grid_district_3_industrial_pkey PRIMARY KEY (id));
 
--- "Insert Loads Industrial"   (OK!) 1.717.000ms =290.175
+-- "Insert Loads Industrial"   (OK!) 58.000ms =62.181
 INSERT INTO     calc_ego_loads.urban_sector_per_grid_district_3_industrial (geom)
 	SELECT	loads.geom ::geometry(Polygon,3035)
 	FROM	(SELECT (ST_DUMP(ST_INTERSECTION(loads.geom,dis.geom))).geom AS geom
-		FROM	orig_osm.osm_deu_polygon_urban_sector_1_residential_mview AS loads,
+		FROM	orig_osm.osm_deu_polygon_urban_sector_3_industrial_mview AS loads,
 			calc_ego_grid_districts.grid_districts AS dis
 		WHERE	loads.geom && dis.geom
 		) AS loads
@@ -394,7 +394,7 @@ ALTER TABLE		calc_ego_loads.urban_sector_per_grid_district_3_industrial OWNER TO
 
 ---------- ---------- ----------
 
--- "Calculate Sector Industrial"   (OK!) -> 1.320.000ms =4.118
+-- "Calculate Sector Industrial"   (OK!) -> 24.000ms =22.131
 UPDATE 	calc_ego_loads.ego_deu_loads AS t1
 SET  	sector_area_industrial = t2.sector_area,
 	sector_count_industrial = t2.sector_count,
@@ -414,6 +414,28 @@ WHERE  	t1.id = t2.id;
 
 ---------- ---------- ----------
 
+-- Validate (geom)   (OK!) -> 22.000ms =0
+DROP VIEW IF EXISTS	orig_osm.osm_deu_polygon_urban_sector_4_agricultural_mview_error_geom_view CASCADE;
+CREATE VIEW		orig_osm.osm_deu_polygon_urban_sector_4_agricultural_mview_error_geom_view AS 
+	SELECT	test.id,
+		test.error,
+		reason(ST_IsValidDetail(test.geom)) AS error_reason,
+		ST_SetSRID(location(ST_IsValidDetail(test.geom)),3035) ::geometry(Point,3035) AS error_location
+	FROM	(
+		SELECT	source.gid AS id,				-- PK
+			ST_IsValid(source.geom) AS error,
+			source.geom AS geom
+		FROM	orig_osm.osm_deu_polygon_urban_sector_4_agricultural_mview AS source	-- Table
+		) AS test
+	WHERE	test.error = FALSE;
+
+-- Grant oeuser   (OK!) -> 100ms =0
+GRANT ALL ON TABLE	orig_osm.osm_deu_polygon_urban_sector_4_agricultural_mview_error_geom_view TO oeuser WITH GRANT OPTION;
+ALTER TABLE		orig_osm.osm_deu_polygon_urban_sector_4_agricultural_mview_error_geom_view OWNER TO oeuser;
+
+-- Drop empty view   (OK!) -> 100ms =1 (no error!)
+SELECT f_drop_view('{osm_deu_polygon_urban_sector_4_agricultural_mview_error_geom_view}', 'orig_osm');
+
 -- 4. Agricultural
 
 -- "Create Table"   (OK!) 200ms =0
@@ -426,8 +448,8 @@ CONSTRAINT 	urban_sector_per_grid_district_4_agricultural_pkey PRIMARY KEY (id))
 -- "Insert Loads Agricultural"   (OK!) 1.717.000ms =290.175
 INSERT INTO     calc_ego_loads.urban_sector_per_grid_district_4_agricultural (geom)
 	SELECT	loads.geom ::geometry(Polygon,3035)
-	FROM	(SELECT (ST_DUMP(ST_INTERSECTION(loads.geom,dis.geom))).geom AS geom
-		FROM	orig_osm.osm_deu_polygon_urban_sector_1_residential_mview AS loads,
+	FROM	(SELECT (ST_DUMP(ST_MAKEVALID(ST_INTERSECTION(loads.geom,dis.geom)))).geom AS geom
+		FROM	orig_osm.osm_deu_polygon_urban_sector_4_agricultural_mview AS loads,
 			calc_ego_grid_districts.grid_districts AS dis
 		WHERE	loads.geom && dis.geom
 		) AS loads
