@@ -30,7 +30,7 @@ CREATE TABLE         	calc_ego_loads.ego_deu_loads (
 		geom geometry(Polygon,3035),
 CONSTRAINT 	ego_deu_loads_pkey PRIMARY KEY (id));
 
--- "Insert Loads"   (ERROR!) 1.778.000ms =208.665
+-- "Insert Loads"   (OK!) 493.000ms =208.706
 INSERT INTO     calc_ego_loads.ego_deu_loads (geom)
 	SELECT	loads.geom ::geometry(Polygon,3035)
 	FROM	(SELECT (ST_DUMP(ST_INTERSECTION(loads.geom,dis.geom))).geom AS geom
