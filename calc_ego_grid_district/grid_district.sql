@@ -984,6 +984,53 @@ FROM	(SELECT	dis.subst_id AS subst_id,
 	)AS t2
 WHERE  	t1.subst_id = t2.subst_id;
 
+---------- ---------- ----------
+
+-- Clean Polygons and Snap to Grid   (OK!) -> 11.000ms =3.610
+UPDATE 	calc_ego_grid_district.grid_district AS t1
+SET  	geom = t2.geom
+FROM	(SELECT	dis.subst_id,
+		ST_SnapToGrid(ST_MULTI(ST_BUFFER(ST_BUFFER(dis.geom,0.1),-0.1)),1) ::geometry(MultiPolygon,3035) AS geom
+	FROM	calc_ego_grid_district.grid_district AS dis
+	)AS t2
+WHERE  	t1.subst_id = t2.subst_id;
+
+
+
+
+---------- ---------- ----------
+
+-- Create Test Area
+DROP TABLE IF EXISTS	calc_ego_grid_district.grid_district_ta CASCADE;
+CREATE TABLE 		calc_ego_grid_district.grid_district_ta AS
+	SELECT	dis.*
+	FROM	calc_ego_grid_district.grid_district AS dis
+	WHERE	subst_id = '372' OR
+		subst_id = '387' OR
+		subst_id = '373' OR
+		subst_id = '407' OR
+		subst_id = '403' OR
+		subst_id = '482' OR
+		subst_id = '416' OR
+		subst_id = '425' OR
+		subst_id = '491' OR
+		subst_id = '368' OR
+		subst_id = '360' OR
+		subst_id = '571' OR
+		subst_id = '593';
+
+-- Ad PK   (OK!) 150ms =0
+ALTER TABLE	calc_ego_grid_district.grid_district_ta
+	ADD PRIMARY KEY (subst_id);
+
+-- Create Index GIST (geom)   (OK!) 2.500ms =0
+CREATE INDEX	grid_district_ta_geom_idx
+	ON	calc_ego_grid_district.grid_district_ta
+	USING	GIST (geom);
+
+-- Grant oeuser   (OK!) -> 100ms =0
+GRANT ALL ON TABLE	calc_ego_grid_district.grid_district_ta TO oeuser WITH GRANT OPTION;
+ALTER TABLE		calc_ego_grid_district.grid_district_ta OWNER TO oeuser;
 
 ---------- ---------- ----------
 

@@ -44,7 +44,7 @@ orig_ego.ego_deu_loads_zensus_grid
 orig_ego.ego_deu_loads_zensus_cluster
 
 
-5. Loads Melt
+5. Loads Melted
 
 orig_ego.ego_deu_loads_collect
 orig_ego.ego_deu_loads_collect_buffer100_mview
@@ -53,7 +53,7 @@ orig_ego.ego_deu_loads_melted_error_geom_view
 orig_ego.ego_deu_loads_melted_error_geom_fix_mview
 orig_ego.ego_deu_loads_melted_cut_gem
 
-6. Substations
+6. Grid Districts
 
 calc_ego_grid_districts.substations_110
 

@@ -1,11 +1,16 @@
-﻿----------------------------------------------------------
--- VORONOI with  110 kV substations
+﻿
+
+
+----------------------------------------------------------
+-- Create Voronoi Polygons from 110kV Substations
 ----------------------------------------------------------
 
-DROP TABLE IF EXISTS 	calc_ego_substation.substation_dummy;
+DROP TABLE IF EXISTS 	calc_ego_substation.substation_dummy CASCADE;
 CREATE TABLE		calc_ego_substation.substation_dummy AS 
-	SELECT	dummy.*
-	FROM	calc_gridcells_znes.substations_dummy AS dummy;
+	SELECT	dummy.subst_id ::integer,
+		dummy.name ::text AS subst_name,
+		ST_TRANSFORM(dummy.geom,3035) ::geometry(Point,3035) AS geom
+	FROM	calc_gridcells_znes.substations_dummy AS dummy; -- TODO: Create from Points from Script
 
 ALTER TABLE calc_ego_substation.substation_dummy
 	ADD PRIMARY KEY (subst_id);
@@ -24,14 +29,14 @@ ALTER TABLE		calc_ego_substation.substation_dummy OWNER TO oeuser;
 -- Add Dummy points to substation (18 Points)
 INSERT INTO calc_ego_substation.substation_110 (subst_id,subst_name,geom)
 SELECT	dummy.subst_id,
-	dummy.name AS subst_name,
+	dummy.subst_name,
 	ST_TRANSFORM(dummy.geom,3035)
 FROM 	calc_ego_substation.substation_dummy AS dummy;
 
 ---------------------
 
 -- Execute voronoi algorithm with 110 kV substations   (OK!) -> 227.000ms =3.628
-DROP TABLE IF EXISTS calc_ego_substation.substation_110_voronoi;
+DROP TABLE IF EXISTS calc_ego_substation.substation_110_voronoi CASCADE;
 WITH 
     -- Sample set of points to work with
     Sample AS (SELECT   ST_SetSRID(ST_Union(pts.geom), 0) AS geom
@@ -103,24 +108,6 @@ GRANT ALL ON TABLE 	calc_ego_substation.substation_110_voronoi TO oeuser WITH GR
 ALTER TABLE		calc_ego_substation.substation_110_voronoi OWNER TO oeuser;
 
 
--- Delete Dummy-points from 110 kV substations (18 Points)
+-- Delete Dummy-points from substations (18 Points)
 DELETE FROM calc_ego_substation.substation_110 WHERE subst_name='DUMMY';
-
-
--- Clip voronoi with vg250
-
-/* 
-DROP TABLE IF EXISTS calc_ego_grid_districts.ego_vg250_voronoi_110kv;
-
-SELECT g.id, ST_Intersection ( g.geom, ST_Transform(b.geom,4326)) as geom
-INTO calc_ego_grid_districts.ego_vg250_voronoi_110kv;
-FROM calc_ego_grid_districts.ego_deu_voronoi_110kv; AS g, gis.vg250_sta AS b WHERE gid=9;
-
-ALTER TABLE calc_ego_grid_districts.ego_vg250_voronoi_110kv;
-	ADD PRIMARY KEY (id);
-
-CREATE INDEX	vg250_voronoi_110kV_geom_idx
-	ON	calc_ego_grid_districts.ego_vg250_voronoi_110kv
-	USING	GIST (geom); 
-*/
 
