@@ -723,7 +723,7 @@ WHERE	sub.id = a.id;
 
 ---------- ---------- ----------
 
--- Create Test Area
+-- Create Test Area   (OK!) -> 3.000ms =1.020
 DROP TABLE IF EXISTS	calc_ego_loads.ego_deu_load_area_ta CASCADE;
 CREATE TABLE 		calc_ego_loads.ego_deu_load_area_ta AS
 	SELECT	load.*
