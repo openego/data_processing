@@ -6,7 +6,7 @@ from sqlalchemy.dialects.postgresql import array
 def calculate_voronoi():
     meta = sqla.MetaData()
 
-    engine = sqla.create_engine('postgres://user:pass@oe.cs.ovgu.de:5432/oedb')
+    engine = sqla.create_engine('postgres://user:pass@oe.iks.cs.ovgu.de:5432/oedb')
     connection = engine.connect()
 
     ehv = sqla.Table('osm_deu_substations_ehv', meta, schema='orig_osm',
