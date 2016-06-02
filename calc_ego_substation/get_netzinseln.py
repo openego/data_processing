@@ -1,6 +1,3 @@
-# Copyright 2016 by NEXT ENERGY
-# Published under GNU GENERAL PUBLIC LICENSE Version 3 (see https://github.com/openego/data_processing/blob/master/LICENSE)
-
 # -*- coding: utf-8 -*-
 """
 # How to use this script:
@@ -21,13 +18,13 @@ from time import localtime
 
 def find_netzinseln(cur,conn):
     sql =   """
-            DROP TABLE IF EXISTS "netzinseln_110";
+            DROP TABLE IF EXISTS "netzinseln_110" CASCADE;
             CREATE TABLE "netzinseln_110" (
             id             serial PRIMARY KEY NOT NULL,
             lon            float NOT NULL,
             lat            float NOT NULL,
-            point	   text NOT NULL,
-            polygon	   text NOT NULL,	
+            point	   geometry NOT NULL,
+            polygon	   geometry NOT NULL,	
             voltage        text,
             power_type     text,
             substation     text,
