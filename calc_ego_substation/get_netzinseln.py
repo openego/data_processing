@@ -1,3 +1,6 @@
+# Copyright 2016 by NEXT ENERGY
+# Published under GNU GENERAL PUBLIC LICENSE Version 3 (see https://github.com/openego/data_processing/blob/master/LICENSE)
+
 # -*- coding: utf-8 -*-
 """
 # How to use this script:
