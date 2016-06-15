@@ -1,8 +1,11 @@
-class Edge:
+from GraphClass import Graph
+
+class Edge(Graph):
    'Common base class for all Edges'
    edgeCount = 0
 
-   def __init__(self, source, target):
+   def __init__(self,source,target):
+      #super().__init__(name, position)
       self.source = source
       self.target = target
       Edge.edgeCount += 1
