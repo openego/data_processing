@@ -23,20 +23,19 @@ def makeGraph(graphs):
         graphs = root.findall('gml:graph', ns)
 
     for gIterator in graphs:
-        Graph(gIterator.attrib["id"],1)
-
         nodes = gIterator.findall('gml:node',ns)
         size = len(nodes)
         if (size > 0):
             if size == 1:
-                nodeArray.append(makeNode(nodes))
+                nodeArray=makeNode(nodes)
             else:
                 nodeArray.extend(makeNode(nodes))
-
 
         edges = gIterator.findall('gml:edge', ns)
         if (len(edges) > 0):
             edgeArray.append(makeEdge(edges))
+
+        Graph(gIterator.attrib["id"], nodeArray, edgeArray)
 
 def makeNode(nodes):
     tmpArray = []
