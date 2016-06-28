@@ -5,11 +5,9 @@ class DataObj(Node):
    dataObjCount = 0
 
    def __init__(self, name, position):
-      #self.name = name
-      #self.position = position
       super().__init__(name, position)
       DataObj.dataObjCount += 1
-      DataObj.displayName(self)
+      #DataObj.displayName(self)
 
    def displayName(self):
       print("Data Object Label : ", self.name)
