@@ -32,8 +32,12 @@ def makeGraph(graphs):
                 nodeArray.extend(makeNode(nodes))
 
         edges = gIterator.findall('gml:edge', ns)
-        if (len(edges) > 0):
-            edgeArray.append(makeEdge(edges))
+        size = len(edges)
+        if (size > 0):
+            if size == 1:
+                edgeArray = makeEdge(edges)
+            else:
+                edgeArray.extend(makeEdge(edges))
 
         Graph(gIterator.attrib["id"], nodeArray, edgeArray)
 
