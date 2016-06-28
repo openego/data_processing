@@ -11,8 +11,13 @@ class Graph:
       Graph.displayName(self)
 
    def displayName(self):
-      print("\nGraph ",self.graphCount,". Label= ", self.name," has nodes ")
+      print("\n\nGraph ",self.graphCount,". Label= ", self.name," has nodes ")
       for x in self.nodes:
          print(x.name, end=', ')
+      if(self.edges):
+         print('\nAnd edges ')
+      for x in self.edges:
+         print(x.source, " to ",x.target,end=', ')
+
 
 
