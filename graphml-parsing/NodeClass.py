@@ -5,9 +5,9 @@ class Node(Graph):
    nodeCount = 0
 
    def __init__(self, name, position):
-      #self.name = name
-      #self.position = position
-      super().__init__(name, position)
+      self.name = name
+      self.position = position
+      #super().__init__(name, position)
       Node.nodeCount += 1
       #Node.displayName(self)
 
