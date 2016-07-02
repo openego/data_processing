@@ -1,4 +1,4 @@
-from GraphClass import Graph
+from gmlparsing.GraphClass import Graph
 
 class Edge(Graph):
    'Common base class for all Edges'
