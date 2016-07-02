@@ -1,4 +1,4 @@
-from NodeClass import Node
+from gmlparsing.NodeClass import Node
 
 class Lane(Node):
    'Common base class for all lanes'
