@@ -1,4 +1,4 @@
-from NodeClass import Node
+from gmlparsing.NodeClass import Node
 
 class Task(Node):
    'Common base class for all Tasks'
