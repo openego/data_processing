@@ -1,13 +1,15 @@
 import xml.etree.ElementTree as ET
 
-from gmlparsing.GraphClass import Graph
-from gmlparsing.NodeClass import Node
-from gmlparsing.LaneClass import Lane
-from gmlparsing.TaskClass import Task
-from gmlparsing.DataObjClass import DataObj
-from gmlparsing.EventClass import Event
-from gmlparsing.EdgeClass import Edge
-from gmlparsing.PoolClass import Pool
+from GraphClass import Graph
+from NodeClass import Node
+from LaneClass import Lane
+from TaskClass import Task
+from DataObjClass import DataObj
+from EventClass import Event
+from EdgeClass import Edge
+from PoolClass import Pool
+from ConnectionClass import Connection
+from GatewayClass import Gateway
 
 
 tree = ET.parse('ego_deu_loads_per_grid_district.graphml')
@@ -34,6 +36,7 @@ def makeGraph(graphs):
         edges = gIterator.findall('gml:edge', ns)
         size = len(edges)
         if (size > 0):
+            makeConnectionType(edges)
             if size == 1:
                 edgeArray = makeEdge(edges)
             else:
@@ -57,6 +60,7 @@ def makeNode(nodes):
                 makeTask(activities)
                 makeDataObj(activities)
                 makeEvent(activities)
+                makeGateway(activities)
 
             pools = d.findall('tn:TableNode',ns)
             if(pools):
@@ -70,6 +74,24 @@ def makeEdge(edges):
         tmpArray.append(Edge(eIterator.attrib["source"],eIterator.attrib["target"]))
     return tmpArray
 
+def makeConnectionType(edges):
+    print("I am in connetion type")
+    tmpArray = []
+    for cIterator in edges:
+        connectionData = cIterator.findall('gml:data',ns)
+        for d in connectionData:
+            connections = d.findall('tn:GenericEdge',ns)
+            for cIterator in connections:
+                if "com.yworks.bpmn.Connection" in cIterator.attrib.values():
+                    connectionNames = cIterator.findall('tn:StyleProperties', ns)
+                    for x in connectionNames:
+                        for property in x:
+                            if "CONNECTION_TYPE" in property.attrib["value"]:
+                                cobj = Connection(property.attrib["name"], property.attrib["value"])
+                                tmpArray.append(cobj)
+                                
+    return tmpArray
+   
 def makeTask(activities):
     tmpArray = []
     for aIterator in activities:
@@ -100,6 +122,19 @@ def makeEvent(activities):
                         tmpArray.append(eobj)
     return tmpArray
 
+def makeGateway(activities):
+    tmpArray = []
+    for gIterator in activities:
+        if "com.yworks.bpmn.Gateway.withShadow" in gIterator.attrib.values():
+            gatewayNames = gIterator.findall('tn:StyleProperties', ns)
+            for x in gatewayNames:
+                for property in x:
+                    if "GATEWAY_TYPE" in property.attrib["value"]:
+                        gobj = Gateway(property.attrib["name"], property.attrib["value"])
+                        tmpArray.append(gobj)
+    return tmpArray
+
+    
 def makePool(pools):
     tmpArray = []
     laneArray = []
@@ -109,6 +144,7 @@ def makePool(pools):
             name = completePool[0].text
             tmpArray.append(Pool(name, 1))
             completePool.remove(completePool[0])
+            print("--------------------------------------------",completePool,name)
             laneArray.append(makeLane(completePool,name))
     return tmpArray
 
