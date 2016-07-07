@@ -33,6 +33,9 @@ password2 = input('password: ')
 
 con2 = sqlalchemy.create_engine('postgresql+pg8000://' + 
                                 '%s:%s@%s:%s/%s' % (user2, password2, host2, port2, database2))
+
+result_id = input("\nPlease proivde result_id: ")
+
 start_time = time.time()
 
 # get relevant bus data                               
@@ -41,7 +44,7 @@ sql = '''SELECT
   base_kv,
   geom
   FROM results.bus_data
-  WHERE result_id = 2;'''
+  WHERE result_id = %s;''' % (result_id)
 bus_data = pd.read_sql_query(sql,con1)
 
 # get relevant branch data
@@ -60,7 +63,7 @@ sql = '''SELECT
   geom,
   topo
   FROM results.branch_data
-  WHERE result_id = 2 and link_type = 'line';'''
+  WHERE result_id = %s and link_type = 'line';''' % (result_id)
   
 line_data = pd.read_sql_query(sql,con1)  
   
@@ -77,7 +80,7 @@ sql = '''SELECT
   geom,
   topo
   FROM results.branch_data
-  WHERE result_id = 2 and link_type = 'transformer';'''
+  WHERE result_id = % and link_type = 'transformer';''' % (result_id)
   
 transformer_data = pd.read_sql_query(sql,con1)    
 
@@ -156,4 +159,4 @@ if yes_no == "y":
     
     print ('\nAll data transferred and converted successfully!')
 else:
-    print('\n Script stopped')
+    print('\nScript stopped')
