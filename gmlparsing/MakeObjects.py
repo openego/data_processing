@@ -1,15 +1,15 @@
 import xml.etree.ElementTree as ET
 
-from GraphClass import Graph
-from NodeClass import Node
-from LaneClass import Lane
-from TaskClass import Task
-from DataObjClass import DataObj
-from EventClass import Event
-from EdgeClass import Edge
-from PoolClass import Pool
-from ConnectionClass import Connection
-from GatewayClass import Gateway
+from gmlparsing.GraphClass import Graph
+from gmlparsing.NodeClass import Node
+from gmlparsing.LaneClass import Lane
+from gmlparsing.TaskClass import Task
+from gmlparsing.DataObjClass import DataObj
+from gmlparsing.EventClass import Event
+from gmlparsing.EdgeClass import Edge
+from gmlparsing.PoolClass import Pool
+from gmlparsing.ConnectionClass import Connection
+from gmlparsing.GatewayClass import Gateway
 
 
 tree = ET.parse('ego_deu_loads_per_grid_district.graphml')
@@ -75,7 +75,6 @@ def makeEdge(edges):
     return tmpArray
 
 def makeConnectionType(edges):
-    print("I am in connetion type")
     tmpArray = []
     for cIterator in edges:
         connectionData = cIterator.findall('gml:data',ns)
@@ -144,7 +143,6 @@ def makePool(pools):
             name = completePool[0].text
             tmpArray.append(Pool(name, 1))
             completePool.remove(completePool[0])
-            print("--------------------------------------------",completePool,name)
             laneArray.append(makeLane(completePool,name))
     return tmpArray
 
