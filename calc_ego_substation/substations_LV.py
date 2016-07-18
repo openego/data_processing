@@ -150,8 +150,9 @@ def Position_ONTs(trafo_range,trafo_maxrange, db_connection,db_input_table,db_ou
 
         id = Column(Integer, primary_key=True)
         geom = Column(Geometry(geometry_type="POLYGON", srid=3035))
-    
-    #ego_deu_ontgrids_test100.__table__.drop(engine, checkfirst=True)
+
+    # Lösche die Tabelle, falls bereits in der DB vorhanden, damit nicht mehrere Instanzen derselben Tabelle vorhanden sind    
+    ego_deu_ontgrids_test100.__table__.drop(engine, checkfirst=True)
     
     Base.metadata.create_all(engine)
     
@@ -199,7 +200,8 @@ def Position_ONTs(trafo_range,trafo_maxrange, db_connection,db_input_table,db_ou
         id = Column(Integer, primary_key=True)
         geom = Column(Geometry(geometry_type="POINT", srid=3035))
 
-    #ego_deu_onts_test100.__table__.drop(engine, checkfirst=True)    
+    # Lösche die Tabelle, falls bereits in der DB vorhanden, damit nicht mehrere Instanzen derselben Tabelle vorhanden sind
+    ego_deu_onts_test100.__table__.drop(engine, checkfirst=True)    
     
     Base.metadata.create_all(engine)
     
@@ -284,7 +286,8 @@ def Position_ONTs(trafo_range,trafo_maxrange, db_connection,db_input_table,db_ou
         id = Column(Integer, primary_key=True)
         geom = Column(Geometry(geometry_type="POLYGON", srid=3035))
     
-    #ego_deu_load_area_rest_test100.__table__.drop(engine, checkfirst=True)
+    # Lösche die Tabelle, falls bereits in der DB vorhanden, damit nicht mehrere Instanzen derselben Tabelle vorhanden sind
+    ego_deu_load_area_rest_test100.__table__.drop(engine, checkfirst=True)
     
     Base.metadata.create_all(engine)
     
@@ -342,7 +345,7 @@ def Position_ONTs(trafo_range,trafo_maxrange, db_connection,db_input_table,db_ou
                  autoload=True, autoload_with=engine)    
     
     s = sqla.select([func.pg_terminate_backend(pg_stat_activity.c.pid)]).where\
-    (pg_stat_activity.c.state == 'idle' ) 
+    (pg_stat_activity.c.state == 'idle') 
 
     result = connection.execute(s)    
     
