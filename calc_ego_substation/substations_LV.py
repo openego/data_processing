@@ -336,15 +336,19 @@ def Position_ONTs(trafo_range,trafo_maxrange, db_connection,db_input_table,db_ou
         session.commit()      
     
     ################################# Schließe Verbindungen und Prozesse
+    ################################# Achtung: Verbindung zum Server wird damit unterbrochen!
+
+    pg_stat_activity = sqla.Table('pg_stat_activity', meta,
+                 autoload=True, autoload_with=engine)    
     
-    #s = sqla.select([func.pg_terminate_backend(pg_stat_activity.pid)]).where
-    #(pg_stat_activity.pid != func.pg_backend_pid() ) 
+    s = sqla.select([func.pg_terminate_backend(pg_stat_activity.c.pid)]).where\
+    (pg_stat_activity.c.state == 'idle' ) 
+
+    result = connection.execute(s)    
     
     connection.close()
     session.close()
     
     return grids
-    
-    
-    
+
     
