@@ -337,8 +337,8 @@ def Position_ONTs(trafo_range,trafo_maxrange, db_connection,db_input_table,db_ou
     
     ################################# Schließe Verbindungen und Prozesse
     
-    s = sqla.select([func.pg_terminate_backend(pg_stat_activity.pid)]).where
-    (pg_stat_activity.pid != func.pg_backend_pid() ) 
+    #s = sqla.select([func.pg_terminate_backend(pg_stat_activity.pid)]).where
+    #(pg_stat_activity.pid != func.pg_backend_pid() ) 
     
     connection.close()
     session.close()
