@@ -34,7 +34,9 @@ password2 = input('password: ')
 con2 = sqlalchemy.create_engine('postgresql+pg8000://' + 
                                 '%s:%s@%s:%s/%s' % (user2, password2, host2, port2, database2))
 
-result_id = input("\nPlease proivde result_id: ")
+result_id = input("\nPlease provide result_id: ")
+
+print('\nImporting data...')
 
 start_time = time.time()
 
@@ -80,7 +82,7 @@ sql = '''SELECT
   geom,
   topo
   FROM results.branch_data
-  WHERE result_id = % and link_type = 'transformer';''' % (result_id)
+  WHERE result_id = %s and link_type = 'transformer';''' % (result_id)
   
 transformer_data = pd.read_sql_query(sql,con1)    
 
