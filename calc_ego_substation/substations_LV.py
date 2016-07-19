@@ -22,11 +22,14 @@ import os.path as path
 filepath = path.join(path.dirname(path.realpath(__file__)))
 cfg.load_config('config_lv_grid_districts', filepath=filepath)
 
+EgoDeuLoadArea_name = cfg.get('regions', 'load_areas')
+from egoio.db_tables import calc_ego_loads as orm_calc_ego_loads
+orm_load_areas = orm_calc_ego_loads.__getattribute__(EgoDeuLoadArea_name)
+
 
 def Position_ONTs(trafo_range,
                   trafo_maxrange,
                   engine,
-                  db_input_table,
                   db_output_table_grids,
                   db_output_table_onts,
                   db_output_table_load_areas_rest,
@@ -41,10 +44,6 @@ def Position_ONTs(trafo_range,
 
     ################################# Erstelle Gitternetze für alle Lastgebiete
 
-    # Öffne Tabelle, in der die Lastgebiete enthalten sind:
-    load_areas = sqla.Table(db_input_table, meta, schema=input_schema,
-                 autoload=True, autoload_with=engine)
-                 
     def CreateFishnet(nrow, ncol, xsize, ysize, x0, y0):
         
         # Konstruiere eine Gitterzelle:        
@@ -84,7 +83,7 @@ def Position_ONTs(trafo_range,
     ###### Bestimme Parameter nrow (Anzahl der Zeilen):
     nrow = []
     # Bestimme nrow mittels SQL-Abfrage:    
-    for instance in session.query(load_areas):
+    for instance in session.query(orm_load_areas):
          s = sqla.select([ (func.ROUND((func.ST_ymax(func.ST_Extent(instance.geom)) -  
              func.ST_ymin(func.ST_Extent(instance.geom))) /(trafo_range*2)))])
          result = conn.execute(s)
@@ -104,7 +103,7 @@ def Position_ONTs(trafo_range,
     ###### Bestimme Parameter ncol (Anzahl der Spalten):
     ncol = []
     # Bestimme nrow mittels SQL-Abfrage:
-    for instance in session.query(load_areas):
+    for instance in session.query(orm_load_areas):
          s = sqla.select([ (func.ROUND((func.ST_xmax(func.ST_Extent(instance.geom)) -  
              func.ST_xmin(func.ST_Extent(instance.geom))) /(trafo_range*2)))])
          result = conn.execute(s)
@@ -123,7 +122,7 @@ def Position_ONTs(trafo_range,
     ###### Bestimme Parameter x0 und y0:
     x0 = []
     y0 = []
-    for instance in session.query(load_areas):
+    for instance in session.query(orm_load_areas):
         x = sqla.select([func.ST_xmin(func.box2d(instance.geom))])
         y = sqla.select([func.ST_ymin(func.box2d(instance.geom))])
         resultx = conn.execute(x)
@@ -223,15 +222,15 @@ def Position_ONTs(trafo_range,
     geoms = []   
 
     s = sqla.select([func.ST_Centroid(grid_cells.c.geom), 
-                     load_areas.c.geom, 
+                     orm_load_areas.c.geom,
                      func.ST_Within(
                          func.ST_Centroid(grid_cells.c.geom),
-                         load_areas.c.geom)
+                         orm_load_areas.c.geom)
                     ])\
                     .where(
                          func.ST_Within(
                              func.ST_Centroid(grid_cells.c.geom),
-                             load_areas.c.geom
+                             orm_load_areas.c.geom
                          ) == True
                     )
     # Schreibe Geometrien der errechneten Mittelpunkte in Liste
@@ -265,15 +264,15 @@ def Position_ONTs(trafo_range,
     
     # Wähle die Lastgebiete, in denen sich noch kein ONT-STandort befindet
     
-    s1 = sqla.select([load_areas.c.geom])\
+    s1 = sqla.select([orm_load_areas.c.geom])\
         .where(
-             func.ST_Within(onts.c.geom,load_areas.c.geom) == True
+             func.ST_Within(onts.c.geom,orm_load_areas.c.geom) == True
          )
     # Wähle die Mittelpunkte dieser Lastgebiete
     
-    s = sqla.select([func.ST_Centroid(load_areas.c.geom)])\
+    s = sqla.select([func.ST_Centroid(orm_load_areas.c.geom)])\
         .where(
-            ~load_areas.c.geom.in_(s1)
+            ~orm_load_areas.c.geom.in_(s1)
         )    
     
     # Füge die Mittelpunkte der ONT-Tabelle hinzu
@@ -302,7 +301,7 @@ def Position_ONTs(trafo_range,
     
     # Wähle die Restgebiete innerhalb der Lastgebiete oberhalb eines bestimmten Abstandes zum nächsten ONT
 
-    s1 = func.ST_Union(load_areas.c.geom)
+    s1 = func.ST_Union(orm_load_areas.c.geom)
     s2 = func.ST_Union(
             func.ST_Buffer (onts.alias().c.geom,trafo_maxrange)
             )
@@ -364,7 +363,6 @@ if __name__ == '__main__':
     trafo_range = cfg.get('assumptions', 'trafo_range')
     trafo_maxrange = cfg.get('assumptions', 'trafo_range')
 
-    db_input_table = 'ego_deu_load_area_ta'
     db_output_table_grids = 'ego_deu_ontgrids'
     db_output_table_onts = 'ego_deu_onts'
     db_output_table_load_areas_rest = 'ego_deu_load_area_rest'
@@ -374,7 +372,6 @@ if __name__ == '__main__':
     Position_ONTs(trafo_range,
                   trafo_maxrange,
                   engine,
-                  db_input_table,
                   db_output_table_grids,
                   db_output_table_onts,
                   db_output_table_load_areas_rest,
