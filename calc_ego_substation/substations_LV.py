@@ -161,8 +161,9 @@ def Position_ONTs(trafo_range,
 
         id = Column(Integer, primary_key=True)
         geom = Column(Geometry(geometry_type="POLYGON", srid=3035))
-    
-    #ego_deu_ontgrids_test100.__table__.drop(engine, checkfirst=True)
+
+    # Lösche die Tabelle, falls bereits in der DB vorhanden, damit nicht mehrere Instanzen derselben Tabelle vorhanden sind    
+    ego_deu_ontgrids_test100.__table__.drop(engine, checkfirst=True)
     
     Base.metadata.create_all(engine)
     
@@ -210,7 +211,8 @@ def Position_ONTs(trafo_range,
         id = Column(Integer, primary_key=True)
         geom = Column(Geometry(geometry_type="POINT", srid=3035))
 
-    #ego_deu_onts_test100.__table__.drop(engine, checkfirst=True)    
+    # Lösche die Tabelle, falls bereits in der DB vorhanden, damit nicht mehrere Instanzen derselben Tabelle vorhanden sind
+    ego_deu_onts_test100.__table__.drop(engine, checkfirst=True)    
     
     Base.metadata.create_all(engine)
     
@@ -295,7 +297,8 @@ def Position_ONTs(trafo_range,
         id = Column(Integer, primary_key=True)
         geom = Column(Geometry(geometry_type="POLYGON", srid=3035))
     
-    #ego_deu_load_area_rest_test100.__table__.drop(engine, checkfirst=True)
+    # Lösche die Tabelle, falls bereits in der DB vorhanden, damit nicht mehrere Instanzen derselben Tabelle vorhanden sind
+    ego_deu_load_area_rest_test100.__table__.drop(engine, checkfirst=True)
     
     Base.metadata.create_all(engine)
     
@@ -347,15 +350,22 @@ def Position_ONTs(trafo_range,
         session.commit()      
 
     ################################# Schließe Verbindungen und Prozesse
+    ################################# Achtung: Verbindung zum Server wird damit unterbrochen!
+
+    pg_stat_activity = sqla.Table('pg_stat_activity', meta,
+                 autoload=True, autoload_with=engine)    
     
-    #s = sqla.select([func.pg_terminate_backend(pg_stat_activity.pid)]).where
-    #(pg_stat_activity.pid != func.pg_backend_pid() ) 
+    s = sqla.select([func.pg_terminate_backend(pg_stat_activity.c.pid)]).where\
+    (pg_stat_activity.c.state == 'idle') 
+
+    result = connection.execute(s)    
     
     conn.close()
     session.close()
     
     return grids
 
+<<<<<<< HEAD
 if __name__ == '__main__':
 
     engine = db.engine(section='oedb')
@@ -377,3 +387,6 @@ if __name__ == '__main__':
                   db_output_table_load_areas_rest,
                   input_schema,
                   output_schema)
+=======
+    
+>>>>>>> 9e0f9550d3aabfbcae9cc8784b576d22b696b337
