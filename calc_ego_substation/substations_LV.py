@@ -15,24 +15,35 @@ from sqlalchemy.sql.expression import literal
 from numpy import *
 from geoalchemy2 import Geometry
 import re
+from oemof import db
+from egoio.tools import config as cfg
+import os.path as path
+
+filepath = path.join(path.dirname(path.realpath(__file__)))
+cfg.load_config('config_lv_grid_districts', filepath=filepath)
 
 
-
-def Position_ONTs(trafo_range,trafo_maxrange, db_connection,db_input_table,db_output_table_grids,
-                  db_output_table_onts,db_output_table_load_areas_rest,input_schema,output_schema):
+def Position_ONTs(trafo_range,
+                  trafo_maxrange,
+                  engine,
+                  db_input_table,
+                  db_output_table_grids,
+                  db_output_table_onts,
+                  db_output_table_load_areas_rest,
+                  input_schema,
+                  output_schema):
 
 
     meta = sqla.MetaData()
-    engine = sqla.create_engine(db_connection, echo=False)
-    connection = engine.connect() 
-    Session = sessionmaker(bind=engine)
+    conn = engine.connect()
+    Session = sessionmaker(bind=conn)
     session = Session()
 
     ################################# Erstelle Gitternetze für alle Lastgebiete
 
     # Öffne Tabelle, in der die Lastgebiete enthalten sind:
     load_areas = sqla.Table(db_input_table, meta, schema=input_schema,
-                 autoload=True, autoload_with=engine)   
+                 autoload=True, autoload_with=engine)
                  
     def CreateFishnet(nrow, ncol, xsize, ysize, x0, y0):
         
@@ -50,7 +61,7 @@ def Position_ONTs(trafo_range,trafo_maxrange, db_connection,db_input_table,db_ou
                     query = sqla.select(
                         [func.ST_Translate(cell,i*xsize+x0,j*ysize+y0)]
                         ).alias('geom')
-                    result = connection.execute(query)
+                    result = conn.execute(query)
                     for row in result:
                         row = str(row)
                         # Filtere mittels regulärem Ausdruck nur den relevanten Teil der Zeichenkette:
@@ -76,7 +87,7 @@ def Position_ONTs(trafo_range,trafo_maxrange, db_connection,db_input_table,db_ou
     for instance in session.query(load_areas):
          s = sqla.select([ (func.ROUND((func.ST_ymax(func.ST_Extent(instance.geom)) -  
              func.ST_ymin(func.ST_Extent(instance.geom))) /(trafo_range*2)))])
-         result = connection.execute(s)
+         result = conn.execute(s)
          # Wandle Datentyp um:        
          for row in result:
              row = str(row)
@@ -96,7 +107,7 @@ def Position_ONTs(trafo_range,trafo_maxrange, db_connection,db_input_table,db_ou
     for instance in session.query(load_areas):
          s = sqla.select([ (func.ROUND((func.ST_xmax(func.ST_Extent(instance.geom)) -  
              func.ST_xmin(func.ST_Extent(instance.geom))) /(trafo_range*2)))])
-         result = connection.execute(s)
+         result = conn.execute(s)
          # Wandle Datentyp um:        
          for row in result:
              row = str(row)
@@ -115,8 +126,8 @@ def Position_ONTs(trafo_range,trafo_maxrange, db_connection,db_input_table,db_ou
     for instance in session.query(load_areas):
         x = sqla.select([func.ST_xmin(func.box2d(instance.geom))])
         y = sqla.select([func.ST_ymin(func.box2d(instance.geom))])
-        resultx = connection.execute(x)
-        resulty = connection.execute(y)
+        resultx = conn.execute(x)
+        resulty = conn.execute(y)
         for row in resultx:
             row = str(row)
             # Lösche überflüssige Zeichen mittels eines regulären Ausdrucks:
@@ -224,7 +235,7 @@ def Position_ONTs(trafo_range,trafo_maxrange, db_connection,db_input_table,db_ou
                          ) == True
                     )
     # Schreibe Geometrien der errechneten Mittelpunkte in Liste
-    result = connection.execute(s)
+    result = conn.execute(s)
     for row in result:
         geoms.append(row[0])
     result.close()
@@ -266,7 +277,7 @@ def Position_ONTs(trafo_range,trafo_maxrange, db_connection,db_input_table,db_ou
         )    
     
     # Füge die Mittelpunkte der ONT-Tabelle hinzu
-    result = connection.execute(s)
+    result = conn.execute(s)
     
     for row in result:
         row = ego_deu_onts_test100(id= len(ids),geom = row[0])
@@ -306,7 +317,7 @@ def Position_ONTs(trafo_range,trafo_maxrange, db_connection,db_input_table,db_ou
     s = sqla.select([s3])
     
     # Füge das Abfrageergebnis der Datenbanktabelle hinzu    
-    result = connection.execute(s)
+    result = conn.execute(s)
     id_ = 0
     
     for row in result:
@@ -327,7 +338,7 @@ def Position_ONTs(trafo_range,trafo_maxrange, db_connection,db_input_table,db_ou
     # Wähle die Mittelpunkte der Restgebiete und füge sie der ONT-Tabelle hinzu
     
     s = sqla.select([func.ST_Centroid(onts.c.geom)])  
-    result = connection.execute(s)
+    result = conn.execute(s)
     
     for row in result:
         row = ego_deu_onts_test100(id= len(ids),geom = row[0])
@@ -335,19 +346,37 @@ def Position_ONTs(trafo_range,trafo_maxrange, db_connection,db_input_table,db_ou
 
         session.add(row)
         session.commit()      
-    
+
     ################################# Schließe Verbindungen und Prozesse
     
     #s = sqla.select([func.pg_terminate_backend(pg_stat_activity.pid)]).where
     #(pg_stat_activity.pid != func.pg_backend_pid() ) 
     
-    connection.close()
+    conn.close()
     session.close()
     
     return grids
 
 if __name__ == '__main__':
-    
-    
-    
-        engine = db.engine(section='oedb')
+
+    engine = db.engine(section='oedb')
+
+    trafo_range = cfg.get('assumptions', 'trafo_range')
+    trafo_maxrange = cfg.get('assumptions', 'trafo_range')
+
+    db_input_table = 'ego_deu_load_area_ta'
+    db_output_table_grids = 'ego_deu_ontgrids'
+    db_output_table_onts = 'ego_deu_onts'
+    db_output_table_load_areas_rest = 'ego_deu_load_area_rest'
+    input_schema = 'calc_ego_loads'
+    output_schema = 'geo_ego_jg'
+
+    Position_ONTs(trafo_range,
+                  trafo_maxrange,
+                  engine,
+                  db_input_table,
+                  db_output_table_grids,
+                  db_output_table_onts,
+                  db_output_table_load_areas_rest,
+                  input_schema,
+                  output_schema)
