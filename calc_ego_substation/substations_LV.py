@@ -365,7 +365,7 @@ def Position_ONTs(trafo_range,
     
     return grids
 
-<<<<<<< HEAD
+
 if __name__ == '__main__':
 
     engine = db.engine(section='oedb')
@@ -387,6 +387,3 @@ if __name__ == '__main__':
                   db_output_table_load_areas_rest,
                   input_schema,
                   output_schema)
-=======
-    
->>>>>>> 9e0f9550d3aabfbcae9cc8784b576d22b696b337
