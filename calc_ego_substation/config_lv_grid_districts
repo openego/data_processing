@@ -4,3 +4,10 @@ trafo_maxrange = 750
 
 [regions]
 load_areas = EgoDeuLoadAreaTa
+
+[auxilliary_tables]
+ontgrids = ego_deu_ontgrids
+load_area_rest = ego_deu_load_area_rest
+
+[substations]
+onts = ego_deu_onts
