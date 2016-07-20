@@ -165,6 +165,7 @@ makeGraph(None)
 
 
 parsing = []
+parsing_nodes = []
 starts=[]
 mids=[]
 ends=[]
@@ -174,72 +175,90 @@ def getStart():         # fixed start and end at events
     currInd=-1
 
     for ase in allStartEv:
-        currInd+=1
-
         if type(ase) is Event and ase.type == 'EVENT_CHARACTERISTIC_START':
             starts.append(ase.position.name)
             parsing.append(ase.type)
+            parsing_nodes.append(ase.position)
+            currInd += 1
 
             for ae in alledges:
                 if ae.source == ase.position.name:   #if current item has outgoing edge
                     for t in alltasks:
                         if ae.target == t.position:
-                            checkOtherStarts(ae.target, 1,currInd)
+                            currInd = checkOtherStarts(ae.target, 1,currInd)
                             allStartEv.insert(currInd + 1, t)  # dynamic list tht has all parsing elements
                             #print(t.name)
                             parsing.append(t.name)
-                            checkNext(ae.target)
+                            parsing_nodes.append(t.position)
+                            currInd += 1
+                            checkNext(ae.target,currInd)
 
         if type(ase) is Event and (ase.type == 'EVENT_CHARACTERISTIC_INTERMEDIATE_CATCHING' or ase.type == 'EVENT_CHARACTERISTIC_END'):
             #starts.append(ase.position.name)
             parsing.append(ase.type)
+            currInd += 1
 
-
-def checkNext(next):
+def checkNext(next,currInd):
     for ae in alledges:
         if ae.source == next:
             newObj = findType(ae.target)
 
-            if type(newObj) is DataObj and newObj.name not in parsing:
-                checkOtherStarts(ae.target, 1, 1)
+            if type(newObj) is DataObj and newObj.position.name not in parsing_nodes:
+                checkOtherStarts(ae.target, 3, currInd)
                 parsing.append(newObj.name)
-                checkNext(newObj.position.name)
+                parsing_nodes.append(newObj.position.name)
+                checkNext(newObj.position.name,currInd)
 
-            if type(newObj) is Task and newObj.name not in parsing:
-                checkOtherStarts(ae.target, 1, 1)
+            if type(newObj) is Task and newObj.position not in parsing_nodes:
+                checkOtherStarts(ae.target, 3, currInd)
                 parsing.append(newObj.name)
-                checkNext(newObj.position)
+                parsing_nodes.append(newObj.position)
+                checkNext(newObj.position,currInd)
 
 def checkOtherStarts(target,ttype,ind):
     for ae in alledges:
         if(ae.target==target and ae.source not in starts):
             newElement = findType(ae.source)
             newType = type(newElement)
+            #print('another one for ',newElement.name)
+
+            if newElement != '':
 
 
-            if newElement != '' and newElement.name not in parsing:
-                parsing.append(newElement.name)
-                #if (ttype is 2):
-                 #   parsing.insert(ind-1,newElement.name)
-                #else:
-                 #   parsing.append(newElement.name)
-
-                if newType is DataObj:
-                    checkOtherStarts(newElement.position.name,2,ind) #going to the beginning in reverse
+                ''' if (ttype is 2 and ind>0):
+                    parsing.insert(ind,newElement.name)
+                    ind += 1
                 else:
-                    checkOtherStarts(newElement.position, 2, ind)
-                    #print(newElement.position)
+                    parsing.append(newElement.name)
+                    ind += 1'''
+
+                if newType is DataObj and newElement.position.name not in parsing_nodes:
+                    ind += 1
+                    #print('appended',newElement.name)
+                    parsing.append(newElement.name)
+                    parsing_nodes.append(newElement.position.name)
+                    ind = checkOtherStarts(newElement.position.name,2,ind) #going to the beginning in reverse
+
+                else:
+                    if newType is Task and newElement.position not in parsing_nodes:
+                        parsing.append(newElement.name)
+                        parsing_nodes.append(newElement.position)
+                        ind = checkOtherStarts(newElement.position, 2, ind)
+                        #print(newElement.position)
+    return ind
 
 def findType(input): # fixed start and end at events
     answer=''
     for d in alldos:
         if input==d.position.name:
             answer=d
+            break
 
     if  answer=='' :
         for t in alltasks:
             if input == t.position:
                 answer = t
+                break
     return answer
 
 getStart()
