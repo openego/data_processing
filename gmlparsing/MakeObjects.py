@@ -18,6 +18,13 @@ root = tree.getroot()
 ns = {'gml': 'http://graphml.graphdrawing.org/xmlns',
       'tn': 'http://www.yworks.com/xml/graphml'}
 
+allStartEv = []
+alltasks= []
+alledges = []
+alldos = []
+allGateways = []
+allObj = []
+
 def makeGraph(graphs):
     nodeArray = []
     edgeArray = []
@@ -41,7 +48,7 @@ def makeGraph(graphs):
                 edgeArray = makeEdge(edges)
             else:
                 edgeArray.extend(makeEdge(edges))
-
+            alledges.extend(edgeArray)
         Graph(gIterator.attrib["id"], nodeArray, edgeArray)
 
 def makeNode(nodes):
@@ -57,10 +64,10 @@ def makeNode(nodes):
         for d in data:
             activities = d.findall('tn:GenericNode',ns)
             if(activities):
-                makeTask(activities)
-                makeDataObj(activities)
-                makeEvent(activities)
-                makeGateway(activities)
+                allStartEv.extend(makeEvent(activities,tmpArray[-1]))
+                alldos.extend(makeDataObj(activities,tmpArray[-1]))
+                alltasks.extend(makeTask(activities,tmpArray[-1].name))
+                allGateways.extend(makeGateway(activities,tmpArray[-1]))
 
             pools = d.findall('tn:TableNode',ns)
             if(pools):
@@ -88,28 +95,28 @@ def makeConnectionType(edges):
                             if "CONNECTION_TYPE" in property.attrib["value"]:
                                 cobj = Connection(property.attrib["name"], property.attrib["value"])
                                 tmpArray.append(cobj)
-                                
+
     return tmpArray
-   
-def makeTask(activities):
+
+def makeTask(activities,pos):
     tmpArray = []
     for aIterator in activities:
         if "com.yworks.bpmn.Activity.withShadow" in aIterator.attrib.values():
             name = aIterator.find('tn:NodeLabel', ns).text
-            tmpArray.append(Task(name, 1))
+            tmpArray.append(Task(name, pos))
     return tmpArray
 
-def makeDataObj(activities):
+def makeDataObj(activities,pos):
     tmpArray = []
     for aIterator in activities:
         if "com.yworks.bpmn.Artifact.withShadow" in aIterator.attrib.values():
             obj = aIterator.find('tn:NodeLabel', ns);
             if(obj and len(obj.text.strip())>0):
                 name = obj.text
-                tmpArray.append(DataObj(name, 1))
+                tmpArray.append(DataObj(name, pos))
     return tmpArray
 
-def makeEvent(activities):
+def makeEvent(activities, innode):
     tmpArray = []
     for aIterator in activities:
         if "com.yworks.bpmn.Event.withShadow" in aIterator.attrib.values():
@@ -117,11 +124,11 @@ def makeEvent(activities):
             for x in eventnames:
                 for property in x:
                     if "EVENT_CHARACTERISTIC" in property.attrib["value"]:
-                        eobj = Event(property.attrib["name"], property.attrib["value"])
+                        eobj = Event(property.attrib["name"], property.attrib["value"],innode)
                         tmpArray.append(eobj)
     return tmpArray
 
-def makeGateway(activities):
+def makeGateway(activities,pos):
     tmpArray = []
     for gIterator in activities:
         if "com.yworks.bpmn.Gateway.withShadow" in gIterator.attrib.values():
@@ -129,11 +136,11 @@ def makeGateway(activities):
             for x in gatewayNames:
                 for property in x:
                     if "GATEWAY_TYPE" in property.attrib["value"]:
-                        gobj = Gateway(property.attrib["name"], property.attrib["value"])
+                        gobj = Gateway(property.attrib["name"], property.attrib["value"],pos)
                         tmpArray.append(gobj)
     return tmpArray
 
-    
+
 def makePool(pools):
     tmpArray = []
     laneArray = []
@@ -155,3 +162,89 @@ def makeLane(lanes,parent):
     return tmpArray
 
 makeGraph(None)
+
+
+parsing = []
+starts=[]
+mids=[]
+ends=[]
+
+
+def getStart():         # fixed start and end at events
+    currInd=-1
+
+    for ase in allStartEv:
+        currInd+=1
+
+        if type(ase) is Event and ase.type == 'EVENT_CHARACTERISTIC_START':
+            starts.append(ase.position.name)
+            parsing.append(ase.type)
+
+            for ae in alledges:
+                if ae.source == ase.position.name:   #if current item has outgoing edge
+                    for t in alltasks:
+                        if ae.target == t.position:
+                            checkOtherStarts(ae.target, 1,currInd)
+                            allStartEv.insert(currInd + 1, t)  # dynamic list tht has all parsing elements
+                            #print(t.name)
+                            parsing.append(t.name)
+                            checkNext(ae.target)
+
+        if type(ase) is Event and (ase.type == 'EVENT_CHARACTERISTIC_INTERMEDIATE_CATCHING' or ase.type == 'EVENT_CHARACTERISTIC_END'):
+            #starts.append(ase.position.name)
+            parsing.append(ase.type)
+
+
+def checkNext(next):
+    for ae in alledges:
+        if ae.source == next:
+            newObj = findType(ae.target)
+
+            if type(newObj) is DataObj and newObj.name not in parsing:
+                checkOtherStarts(ae.target, 1, 1)
+                parsing.append(newObj.name)
+                checkNext(newObj.position.name)
+
+            if type(newObj) is Task and newObj.name not in parsing:
+                checkOtherStarts(ae.target, 1, 1)
+                parsing.append(newObj.name)
+                checkNext(newObj.position)
+
+def checkOtherStarts(target,ttype,ind):
+    for ae in alledges:
+        if(ae.target==target and ae.source not in starts):
+            newElement = findType(ae.source)
+            newType = type(newElement)
+
+
+            if newElement != '' and newElement.name not in parsing:
+                parsing.append(newElement.name)
+                #if (ttype is 2):
+                 #   parsing.insert(ind-1,newElement.name)
+                #else:
+                 #   parsing.append(newElement.name)
+
+                if newType is DataObj:
+                    checkOtherStarts(newElement.position.name,2,ind) #going to the beginning in reverse
+                else:
+                    checkOtherStarts(newElement.position, 2, ind)
+                    #print(newElement.position)
+
+def findType(input): # fixed start and end at events
+    answer=''
+    for d in alldos:
+        if input==d.position.name:
+            answer=d
+
+    if  answer=='' :
+        for t in alltasks:
+            if input == t.position:
+                answer = t
+    return answer
+
+getStart()
+
+for x in parsing:
+    if x=='EVENT_CHARACTERISTIC_START':
+        print('')
+    print(x)
