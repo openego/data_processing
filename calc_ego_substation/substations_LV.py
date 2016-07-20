@@ -18,6 +18,10 @@ import re
 from oemof import db
 from egoio.tools import config as cfg
 import os.path as path
+import time
+
+
+################################# Beziehe alle notwenigen Tabellen aus egoio:
 
 filepath = path.join(path.dirname(path.realpath(__file__)))
 cfg.load_config('config_lv_grid_districts', filepath=filepath)
@@ -26,15 +30,23 @@ EgoDeuLoadArea_name = cfg.get('regions', 'load_areas')
 from egoio.db_tables import calc_ego_loads as orm_calc_ego_loads
 orm_load_areas = orm_calc_ego_loads.__getattribute__(EgoDeuLoadArea_name)
 
+EgoDeuOntGrid_name = cfg.get('auxilliary_tables', 'ontgrids')
+from egoio.db_tables import calc_ego_grid_district as orm_calc_ego_grid_district
+orm_ontgrids = orm_calc_ego_grid_district.__getattribute__(EgoDeuOntGrid_name)
+
+EgoDeuOnts_name = cfg.get('substations', 'onts')
+from egoio.db_tables import calc_ego_substation as orm_calc_ego_onts
+orm_onts = orm_calc_ego_onts.__getattribute__(EgoDeuOnts_name)
+
+EgoDeuLoadAreaRest_name = cfg.get('auxilliary_tables', 'load_area_rest')
+orm_load_area_rest = orm_calc_ego_grid_district.__getattribute__(EgoDeuLoadAreaRest_name)
+
+#################################
 
 def Position_ONTs(trafo_range,
                   trafo_maxrange,
-                  engine,
-                  db_output_table_grids,
-                  db_output_table_onts,
-                  db_output_table_load_areas_rest,
-                  input_schema,
-                  output_schema):
+                  engine
+                  ):
 
 
     meta = sqla.MetaData()
@@ -149,26 +161,12 @@ def Position_ONTs(trafo_range,
     
     ############# Erstelle Grids für alle Lastgebiete und schreibe sie in die Datenbank:
     
-    # Erstelle neue Tabelle für die Gitternetze:
-
-    Base = declarative_base()
+    # Vor Tabellenerzeugung lösche die Tabelle aus der DB, falls vorhanden, um Duplikate zu vermeiden
+    orm_ontgrids.__table__.drop(engine, checkfirst=True)
+    # Erzeuge Tabelle
+    orm_calc_ego_grid_district.Base.metadata.create_all(engine)
+  
     
-    
-
-    class ego_deu_ontgrids_test100(Base):
-        __tablename__ = db_output_table_grids
-        __table_args__ = {"schema": output_schema}
-
-        id = Column(Integer, primary_key=True)
-        geom = Column(Geometry(geometry_type="POLYGON", srid=3035))
-
-    # Lösche die Tabelle, falls bereits in der DB vorhanden, damit nicht mehrere Instanzen derselben Tabelle vorhanden sind    
-    ego_deu_ontgrids_test100.__table__.drop(engine, checkfirst=True)
-    
-    Base.metadata.create_all(engine)
-    
-
-       
     # Erstelle geom-Spalte
     geoms = []
     for i in range (0,len(ncol)):
@@ -193,7 +191,7 @@ def Position_ONTs(trafo_range,
         if match:
             for j in range(0,len(geoms[i])):
                 id_counter +=1
-                grids.append (ego_deu_ontgrids_test100(id= ids[id_counter],geom = geoms[i][j]))
+                grids.append (orm_ontgrids(id= ids[id_counter],geom = geoms[i][j]))
                 session.add(grids[id_counter])
                 session.commit()
 
@@ -203,36 +201,25 @@ def Position_ONTs(trafo_range,
     
     ################################# Finde Mittelpunkte der Gitternetzzellen innerhalb der Lastgebiete
     
-    # Erstelle neue Tabelle für die Zellenmittelpunkte:    
-    class ego_deu_onts_test100(Base):
-        __tablename__ = db_output_table_onts
-        __table_args__ = {"schema": output_schema}
-
-        id = Column(Integer, primary_key=True)
-        geom = Column(Geometry(geometry_type="POINT", srid=3035))
-
-    # Lösche die Tabelle, falls bereits in der DB vorhanden, damit nicht mehrere Instanzen derselben Tabelle vorhanden sind
-    ego_deu_onts_test100.__table__.drop(engine, checkfirst=True)    
+    # Vor Tabellenerzeugung lösche die Tabelle aus der DB, falls vorhanden, um Duplikate zu vermeiden
+    orm_onts.__table__.drop(engine, checkfirst=True)    
+    # Erzeuge neue Tabelle
+    orm_calc_ego_onts.Base.metadata.create_all(engine)
     
-    Base.metadata.create_all(engine)
-    
-    # Öffne Tabelle, in der die Gitterzellen enthalten sind:
-    grid_cells = sqla.Table(db_output_table_grids, meta, schema=output_schema,
-                 autoload=True, autoload_with=engine)  
-                 
+                
     # Berechne diejenigen Mittelpunkte der Gitterzellen, die innerhalb von Lastgebieten liegen:
     geoms = []   
 
-    s = sqla.select([func.ST_Centroid(grid_cells.c.geom), 
-                     orm_load_areas.c.geom,
+    s = sqla.select([func.ST_Centroid(orm_ontgrids.geom), 
+                     orm_load_areas.geom,
                      func.ST_Within(
-                         func.ST_Centroid(grid_cells.c.geom),
-                         orm_load_areas.c.geom)
+                         func.ST_Centroid(orm_ontgrids.geom),
+                         orm_load_areas.geom)
                     ])\
                     .where(
                          func.ST_Within(
-                             func.ST_Centroid(grid_cells.c.geom),
-                             orm_load_areas.c.geom
+                             func.ST_Centroid(orm_ontgrids.geom),
+                             orm_load_areas.geom
                          ) == True
                     )
     # Schreibe Geometrien der errechneten Mittelpunkte in Liste
@@ -252,7 +239,7 @@ def Position_ONTs(trafo_range,
     id_counter = -1
     
     for i in range (0,len(geoms)):
-        grid_centroids.append (ego_deu_onts_test100(id= ids[i],geom = geoms[i]))
+        grid_centroids.append (orm_onts(id= ids[i],geom = geoms[i]))
         session.add(grid_centroids[i])
         session.commit()
 
@@ -260,28 +247,25 @@ def Position_ONTs(trafo_range,
     
     ################################# Füge den Lastgebieten, die aufgrund ihrer geringen Fläche keine ONTs zugeordnet bekommen haben, ihren Mittelpunkt als ONT-STandort hinzu
     
-    # Öffne Tabelle, in der die ONT-Standorte enthalten sind:
-    onts = sqla.Table(db_output_table_onts, meta, schema=output_schema,
-                 autoload=True, autoload_with=engine)
     
     # Wähle die Lastgebiete, in denen sich noch kein ONT-STandort befindet
     
-    s1 = sqla.select([orm_load_areas.c.geom])\
+    s1 = sqla.select([orm_load_areas.geom])\
         .where(
-             func.ST_Within(onts.c.geom,orm_load_areas.c.geom) == True
+             func.ST_Within(orm_onts.geom,orm_load_areas.geom) == True
          )
     # Wähle die Mittelpunkte dieser Lastgebiete
     
-    s = sqla.select([func.ST_Centroid(orm_load_areas.c.geom)])\
+    s = sqla.select([func.ST_Centroid(orm_load_areas.geom)])\
         .where(
-            ~orm_load_areas.c.geom.in_(s1)
+            ~orm_load_areas.geom.in_(s1)
         )    
     
     # Füge die Mittelpunkte der ONT-Tabelle hinzu
     result = conn.execute(s)
     
     for row in result:
-        row = ego_deu_onts_test100(id= len(ids),geom = row[0])
+        row = orm_onts(id= len(ids),geom = row[0])
         ids.append(len(ids))
         session.add(row)
         session.commit()
@@ -289,24 +273,18 @@ def Position_ONTs(trafo_range,
     
     ################################# Identifiziere Restgebiete innerhalb der Lastgebiete mit hohem Abstand zu ONTs
     
-    # Erstelle neue Tabelle für die Restgebiete:    
-    class ego_deu_load_area_rest_test100(Base):
-        __tablename__ = db_output_table_load_areas_rest
-        __table_args__ = {"schema": output_schema}
 
-        id = Column(Integer, primary_key=True)
-        geom = Column(Geometry(geometry_type="POLYGON", srid=3035))
     
-    # Lösche die Tabelle, falls bereits in der DB vorhanden, damit nicht mehrere Instanzen derselben Tabelle vorhanden sind
-    ego_deu_load_area_rest_test100.__table__.drop(engine, checkfirst=True)
-    
-    Base.metadata.create_all(engine)
+    # Vor Tabellenerzeugung lösche die Tabelle aus der DB, falls vorhanden, um Duplikate zu vermeiden
+    orm_load_area_rest.__table__.drop(engine, checkfirst=True)
+    # Erzeuge neue Tabelle
+    orm_calc_ego_grid_district.Base.metadata.create_all(engine)
     
     # Wähle die Restgebiete innerhalb der Lastgebiete oberhalb eines bestimmten Abstandes zum nächsten ONT
 
-    s1 = func.ST_Union(orm_load_areas.c.geom)
+    s1 = func.ST_Union(orm_load_areas.geom)
     s2 = func.ST_Union(
-            func.ST_Buffer (onts.alias().c.geom,trafo_maxrange)
+            func.ST_Buffer (orm_onts.geom,trafo_maxrange)
             )
         
     s3 = func.ST_Dump(
@@ -327,23 +305,20 @@ def Position_ONTs(trafo_range,
         row = str(row)
         row = re.search('0[01234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ]+',row)
         row = row.group(0)
-        row = ego_deu_load_area_rest_test100(id= id_,geom = row)
+        row = orm_load_area_rest(id= id_,geom = row)
         
         id_ += 1
         session.add(row)
         session.commit()
     
-    # Öffne Tabelle, in der die Restgebiete enthalten sind:
-    onts = sqla.Table(db_output_table_load_areas_rest, meta, schema=output_schema,
-                 autoload=True, autoload_with=engine) 
                  
     # Wähle die Mittelpunkte der Restgebiete und füge sie der ONT-Tabelle hinzu
     
-    s = sqla.select([func.ST_Centroid(onts.c.geom)])  
+    s = sqla.select([func.ST_Centroid(orm_load_area_rest.geom)])  
     result = conn.execute(s)
     
     for row in result:
-        row = ego_deu_onts_test100(id= len(ids),geom = row[0])
+        row = orm_onts(id= len(ids),geom = row[0])
         ids.append(len(ids))
 
         session.add(row)
@@ -358,7 +333,7 @@ def Position_ONTs(trafo_range,
     s = sqla.select([func.pg_terminate_backend(pg_stat_activity.c.pid)]).where\
     (pg_stat_activity.c.state == 'idle') 
 
-    result = connection.execute(s)    
+    result = conn.execute(s)    
     
     conn.close()
     session.close()
@@ -367,23 +342,19 @@ def Position_ONTs(trafo_range,
 
 
 if __name__ == '__main__':
+    
+    start = time.time()
 
     engine = db.engine(section='oedb')
 
     trafo_range = cfg.get('assumptions', 'trafo_range')
-    trafo_maxrange = cfg.get('assumptions', 'trafo_range')
-
-    db_output_table_grids = 'ego_deu_ontgrids'
-    db_output_table_onts = 'ego_deu_onts'
-    db_output_table_load_areas_rest = 'ego_deu_load_area_rest'
-    input_schema = 'calc_ego_loads'
-    output_schema = 'geo_ego_jg'
+    trafo_maxrange = cfg.get('assumptions', 'trafo_maxrange')
 
     Position_ONTs(trafo_range,
                   trafo_maxrange,
-                  engine,
-                  db_output_table_grids,
-                  db_output_table_onts,
-                  db_output_table_load_areas_rest,
-                  input_schema,
-                  output_schema)
+                  engine
+                  )
+    
+    end = time.time()
+    print('elapsed time:')
+    print ((float(end - start))/60)
