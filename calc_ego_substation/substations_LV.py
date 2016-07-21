@@ -286,30 +286,39 @@ def Position_ONTs(trafo_range,
     s2 = func.ST_Union(
             func.ST_Buffer (orm_onts.geom,trafo_maxrange)
             )
+    
+    exec1 = conn.execute(s1)
+    exec2 = conn.execute(s2)    
+    
+    
+    for row1 in exec1:
+        for row2 in exec2:        
+            result1 = row1[0]
+            result2 = row2[0]
         
-    s3 = func.ST_Dump(
-            func.ST_Difference(
-                s1,
-                s2
-            )
-         )
+            s3 = func.ST_Dump(
+                    func.ST_Difference(
+                        result1,
+                        result2
+                        )
+                  )
          
-    s = sqla.select([s3])
+            s = sqla.select([s3])
     
-    # Füge das Abfrageergebnis der Datenbanktabelle hinzu    
-    result = conn.execute(s)
-    id_ = 0
+            # Füge das Abfrageergebnis der Datenbanktabelle hinzu    
+            result = conn.execute(s)
+            id_ = 0
     
-    for row in result:
-        # Lösche überflüssige Zeichen mittels eines regulären Ausdrucks        
-        row = str(row)
-        row = re.search('0[01234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ]+',row)
-        row = row.group(0)
-        row = orm_load_area_rest(id= id_,geom = row)
+            for row in result:
+                # Lösche überflüssige Zeichen mittels eines regulären Ausdrucks        
+                row = str(row)
+                row = re.search('0[01234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ]+',row)
+                row = row.group(0)
+                row = orm_load_area_rest(id= id_,geom = row)
         
-        id_ += 1
-        session.add(row)
-        session.commit()
+                id_ += 1
+                session.add(row)
+                session.commit()
     
                  
     # Wähle die Mittelpunkte der Restgebiete und füge sie der ONT-Tabelle hinzu
