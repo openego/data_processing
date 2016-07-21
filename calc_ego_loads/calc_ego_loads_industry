@@ -46,7 +46,7 @@ ALTER TABLE calc_ego_loads_industry.large_scale_consumer
 	ADD COLUMN id serial, 
 	ADD COLUMN consumption numeric, 
 	ADD COLUMN peak_load numeric,
-	ADD COLUMN geom geometry(MultiPolygon,3035),
+	ADD COLUMN geom_centre geometry(Point,3035),
 	ADD PRIMARY KEY (id);
 
 ALTER TABLE calc_ego_loads_industry.large_scale_consumer ALTER COLUMN polygon_id SET DEFAULT NULL;
@@ -61,10 +61,10 @@ INSERT INTO calc_ego_loads_industry.large_scale_consumer (polygon_id, area_ha)
 	FROM calc_ego_loads_industry.landuse_industry
 	WHERE peak_load >= 0.0175; 
 
--- Add consumption, peak_load and geom for industry polygons
+-- Add consumption, peak_load and geom_centre for industry polygons
 
 UPDATE calc_ego_loads_industry.large_scale_consumer
-	SET geom = b.geom
+	SET geom_centre = b.geom_centre 
 	FROM calc_ego_loads_industry.landuse_industry b
 	WHERE polygon_id = b.gid;
 
