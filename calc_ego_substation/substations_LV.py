@@ -333,6 +333,13 @@ def Position_ONTs(trafo_range,
         session.add(row)
         session.commit()      
 
+    ################################# Gebe allen Nutzern Lese- und Schreibrechte auf die Tabelle:
+
+
+    print(orm_onts.__table_args__['schema'])
+    result = conn.execute("ALTER TABLE " + orm_onts.__table_args__['schema'] +"." + orm_onts.__tablename__+ " OWNER TO oeuser;\
+                  GRANT ALL ON TABLE " + orm_onts.__table_args__['schema'] + "." + orm_onts.__tablename__ + " TO oeuser WITH GRANT OPTION;")
+                      
     ################################# Schließe Verbindungen und Prozesse
     ################################# Achtung: Verbindung zum Server wird damit unterbrochen!
 
