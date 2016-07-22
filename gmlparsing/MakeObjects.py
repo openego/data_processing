@@ -1,4 +1,5 @@
 import xml.etree.ElementTree as ET
+from gmlparsing.Stack import Stack
 
 from gmlparsing.GraphClass import Graph
 from gmlparsing.NodeClass import Node
@@ -169,7 +170,7 @@ parsing_nodes = []
 starts=[]
 mids=[]
 ends=[]
-
+s = Stack()
 
 def getStart():         # fixed start and end at events
     currInd=-1
@@ -186,10 +187,15 @@ def getStart():         # fixed start and end at events
                     for t in alltasks:
                         if ae.target == t.position:
                             currInd = checkOtherStarts(ae.target, 1,currInd)
-                            allStartEv.insert(currInd + 1, t)  # dynamic list tht has all parsing elements
-                            #print(t.name)
                             parsing.append(t.name)
                             parsing_nodes.append(t.position)
+
+                            while not s.is_empty():
+                                parsing.append(s.pop())
+
+                            allStartEv.insert(currInd + 1, t)  # dynamic list tht has all parsing elements
+                            #print(t.name)
+
                             currInd += 1
                             checkNext(ae.target,currInd)
 
@@ -205,12 +211,18 @@ def checkNext(next,currInd):
 
             if type(newObj) is DataObj and newObj.position.name not in parsing_nodes:
                 checkOtherStarts(ae.target, 3, currInd)
+                while not s.is_empty():
+                    parsing.append(s.pop())
+
                 parsing.append(newObj.name)
                 parsing_nodes.append(newObj.position.name)
                 checkNext(newObj.position.name,currInd)
 
             if type(newObj) is Task and newObj.position not in parsing_nodes:
                 checkOtherStarts(ae.target, 3, currInd)
+                while not s.is_empty():
+                    parsing.append(s.pop())
+
                 parsing.append(newObj.name)
                 parsing_nodes.append(newObj.position)
                 checkNext(newObj.position,currInd)
@@ -223,25 +235,19 @@ def checkOtherStarts(target,ttype,ind):
             #print('another one for ',newElement.name)
 
             if newElement != '':
-
-
-                ''' if (ttype is 2 and ind>0):
-                    parsing.insert(ind,newElement.name)
-                    ind += 1
-                else:
-                    parsing.append(newElement.name)
-                    ind += 1'''
-
                 if newType is DataObj and newElement.position.name not in parsing_nodes:
                     ind += 1
                     #print('appended',newElement.name)
-                    parsing.append(newElement.name)
+                    s.push(newElement.name)
+                    #parsing.append(newElement.name)
                     parsing_nodes.append(newElement.position.name)
+
                     ind = checkOtherStarts(newElement.position.name,2,ind) #going to the beginning in reverse
 
                 else:
                     if newType is Task and newElement.position not in parsing_nodes:
-                        parsing.append(newElement.name)
+                        s.push(newElement.name)
+                        #parsing.append(newElement.name)
                         parsing_nodes.append(newElement.position)
                         ind = checkOtherStarts(newElement.position, 2, ind)
                         #print(newElement.position)
@@ -267,3 +273,6 @@ for x in parsing:
     if x=='EVENT_CHARACTERISTIC_START':
         print('')
     print(x)
+
+
+
