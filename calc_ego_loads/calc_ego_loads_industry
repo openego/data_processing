@@ -21,6 +21,130 @@ SET 	consumption_per_area_industry = elec_consumption_industry/area_industry;
 */
 
 
+DROP TABLE IF EXISTS calc_ego_loads_industry.landuse_industry;
+
+SELECT * INTO calc_ego_loads_industry.landuse_industry FROM orig_osm.osm_deu_polygon_urban_sector_3_industrial_mview; 
+
+------------------
+-- "Add and fill new columns with geometry information"
+------------------
+
+
+ALTER TABLE calc_ego_loads_industry.landuse_industry
+	ADD COLUMN geom_centroid geometry(POINT,3035),
+	ADD COLUMN geom_surfacepoint geometry(POINT,3035),
+	ADD COLUMN geom_centre geometry(POINT,3035),
+	ADD COLUMN nuts varchar(5),
+	ADD COLUMN consumption numeric, 
+	ADD COLUMN peak_load numeric, 
+	ADD PRIMARY KEY (gid);
+
+
+-- "Update Centroid"   
+UPDATE 	calc_ego_loads_industry.landuse_industry AS t1
+SET  	geom_centroid = t2.geom_centroid
+FROM    (
+	SELECT	ind.gid AS gid,
+		ST_Centroid(ind.geom) AS geom_centroid
+	FROM	calc_ego_loads_industry.landuse_industry AS ind
+	) AS t2
+WHERE  	t1.gid = t2.gid;
+
+-- "Create Index GIST (geom_centroid)"
+CREATE INDEX  	landuse_industry_geom_centroid_idx
+    ON    	calc_ego_loads_industry.landuse_industry
+    USING     	GIST (geom_centroid);
+
+-- "Update PointOnSurface" 
+UPDATE 	calc_ego_loads_industry.landuse_industry AS t1
+SET  	geom_surfacepoint = t2.geom_surfacepoint
+FROM    (
+	SELECT	ind.gid AS gid,
+		ST_PointOnSurface(ind.geom) AS geom_surfacepoint
+	FROM	calc_ego_loads_industry.landuse_industry AS ind
+	) AS t2
+WHERE  	t1.gid = t2.gid;
+
+-- "Create Index GIST (geom_surfacepoint)"
+CREATE INDEX  	landuse_industry_geom_surfacepoint_idx
+    ON    	calc_ego_loads_industry.landuse_industry
+    USING     	GIST (geom_surfacepoint);
+
+
+---------- ---------- ----------
+-- "Update Centre"
+---------- ---------- ----------
+
+-- "Update Centre with centroid if inside area"   
+UPDATE 	calc_ego_loads_industry.landuse_industry AS t1
+SET  	geom_centre = t2.geom_centre
+FROM	(
+	SELECT	ind.gid AS gid,
+		ind.geom_centroid AS geom_centre
+	FROM	calc_ego_loads_industry.landuse_industry AS ind
+	WHERE  	ind.geom && ind.geom_centroid AND
+		ST_CONTAINS(ind.geom,ind.geom_centroid)
+	)AS t2
+WHERE  	t1.gid = t2.gid;
+
+-- "Update Centre with surfacepoint if outside area"   
+UPDATE 	calc_ego_loads_industry.landuse_industry AS t1
+SET  	geom_centre = t2.geom_centre
+FROM	(
+	SELECT	ind.gid AS gid,
+		ind.geom_surfacepoint AS geom_centre
+	FROM	calc_ego_loads_industry.landuse_industry AS ind
+	WHERE  	ind.geom_centre IS NULL
+	)AS t2
+WHERE  	t1.gid = t2.gid;
+
+-- "Create Index GIST (geom_centre)"   
+CREATE INDEX  	landuse_industry_geom_centre_idx
+    ON    	calc_ego_loads_industry.landuse_industry
+    USING     	GIST (geom_centre);
+
+-- "Calculate NUTS"   
+UPDATE calc_ego_loads_industry.landuse_industry a
+SET nuts = b.nuts
+FROM orig_geo_vg250.vg250_4_krs b
+WHERE st_intersects(st_transform(st_setsrid(b.geom, 31467), 3035), a.geom_centre); 
+
+
+-----------------
+-- "Calculate the electricty consumption for each industry polygon"
+-----------------
+
+UPDATE 	calc_ego_loads_industry.landuse_industry a
+SET   	consumption = sub.result 
+FROM
+(
+	SELECT
+	c.gid,
+	b.consumption_per_area_industry * c.area_ha as result
+	FROM
+	orig_consumption_znes.lak_consumption_per_district b,
+	calc_ego_loads_industry.landuse_industry c
+	WHERE
+	c.nuts = b.eu_code
+) AS sub
+WHERE
+sub.gid = a.gid;
+
+-----------------
+-- "Calculate the peak load for each industry polygon"
+-----------------
+
+
+UPDATE calc_ego_loads_industry.landuse_industry
+SET peak_load = consumption*(0.00013247226362); -- Add different factor to calculate the peak load
+
+
+
+
+-----------------
+-- "Identify large scale consumer"
+-----------------
+
 DROP TABLE IF EXISTS calc_ego_loads_industry.large_scale_consumer;
 
 CREATE TABLE calc_ego_loads_industry.large_scale_consumer AS
