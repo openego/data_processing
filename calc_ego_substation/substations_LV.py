@@ -153,11 +153,17 @@ def Position_ONTs(trafo_range,
             row = row.group(0)
             row = float(row)
             y0.append(row)
-        
+    
+
     ###### Bestimme Parameter xsize und ysize:
 
     xsize = trafo_range*2
     ysize = trafo_range*2
+    
+    ###### Bestimme ID der Lastgebiete:
+    la_id = []    
+    for instance in session.query(orm_load_areas):
+        la_id.append(instance.id)
     
     ############# Erstelle Grids für alle Lastgebiete und schreibe sie in die Datenbank:
     
@@ -172,6 +178,12 @@ def Position_ONTs(trafo_range,
     for i in range (0,len(ncol)):
         geoms.append(CreateFishnet(nrow[i],ncol[i],xsize,ysize,x0[i],y0[i]))
     
+    # Erstelle la_id-Spalte
+    load_area_ids = []
+    for i in range (0,len(ncol)):
+        for j in range (0,(ncol[i]*nrow[i])):
+            load_area_ids.append(la_id[i])
+        
     # Erstelle ID-Spalte
     ids =[]
     counter = -1
@@ -179,7 +191,7 @@ def Position_ONTs(trafo_range,
         for j in range (0,len(geoms[i])):
             counter += 1
             ids.append(counter)
-   
+    
     # Fülle die Tabelle  und lade sie in die Datenbank:
     grids = []
     id_counter = -1
@@ -191,7 +203,7 @@ def Position_ONTs(trafo_range,
         if match:
             for j in range(0,len(geoms[i])):
                 id_counter +=1
-                grids.append (orm_ontgrids(id= ids[id_counter],geom = geoms[i][j]))
+                grids.append (orm_ontgrids(id= ids[id_counter],geom = geoms[i][j],load_area_id = load_area_ids[id_counter]))
                 session.add(grids[id_counter])
                 session.commit()
 
@@ -209,12 +221,14 @@ def Position_ONTs(trafo_range,
                 
     # Berechne diejenigen Mittelpunkte der Gitterzellen, die innerhalb von Lastgebieten liegen:
     geoms = []   
-
+    load_area_ids = []
+    
     s = sqla.select([func.ST_Centroid(orm_ontgrids.geom), 
                      orm_load_areas.geom,
                      func.ST_Within(
                          func.ST_Centroid(orm_ontgrids.geom),
-                         orm_load_areas.geom)
+                         orm_load_areas.geom), 
+                    orm_ontgrids.load_area_id
                     ])\
                     .where(
                          func.ST_Within(
@@ -226,6 +240,7 @@ def Position_ONTs(trafo_range,
     result = conn.execute(s)
     for row in result:
         geoms.append(row[0])
+        load_area_ids.append(row[3])
     result.close()
     
     # Erstelle ID-Spalte
@@ -239,7 +254,7 @@ def Position_ONTs(trafo_range,
     id_counter = -1
     
     for i in range (0,len(geoms)):
-        grid_centroids.append (orm_onts(id= ids[i],geom = geoms[i]))
+        grid_centroids.append (orm_onts(id= ids[i],geom = geoms[i], load_area_id = load_area_ids[i]))
         session.add(grid_centroids[i])
         session.commit()
 
@@ -256,7 +271,7 @@ def Position_ONTs(trafo_range,
          )
     # Wähle die Mittelpunkte dieser Lastgebiete
     
-    s = sqla.select([func.ST_Centroid(orm_load_areas.geom)])\
+    s = sqla.select([func.ST_Centroid(orm_load_areas.geom), orm_load_areas.id])\
         .where(
             ~orm_load_areas.geom.in_(s1)
         )    
@@ -265,7 +280,7 @@ def Position_ONTs(trafo_range,
     result = conn.execute(s)
     
     for row in result:
-        row = orm_onts(id= len(ids),geom = row[0])
+        row = orm_onts(id= len(ids),geom = row[0],load_area_id = row[1])
         ids.append(len(ids))
         session.add(row)
         session.commit()
@@ -310,24 +325,30 @@ def Position_ONTs(trafo_range,
             id_ = 0
     
             for row in result:
+                
                 # Lösche überflüssige Zeichen mittels eines regulären Ausdrucks        
                 row = str(row)
                 row = re.search('0[01234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ]+',row)
                 row = row.group(0)
-                row = orm_load_area_rest(id= id_,geom = row)
-        
+                # Füge ID des Lastgebiets hinzu
+                s4 = sqla.select([orm_load_areas.id]).where(func.ST_Intersects(orm_load_areas.geom,row))
+                result3 = conn.execute(s4)
+                for row2 in result3:
+                    row = orm_load_area_rest(id= id_,geom = row,load_area_id = row2[0])
+                #
                 id_ += 1
+                
                 session.add(row)
                 session.commit()
     
                  
     # Wähle die Mittelpunkte der Restgebiete und füge sie der ONT-Tabelle hinzu
     
-    s = sqla.select([func.ST_Centroid(orm_load_area_rest.geom)])  
+    s = sqla.select([func.ST_Centroid(orm_load_area_rest.geom),orm_load_area_rest.load_area_id])  
     result = conn.execute(s)
     
     for row in result:
-        row = orm_onts(id= len(ids),geom = row[0])
+        row = orm_onts(id= len(ids),geom = row[0], load_area_id = row[1])
         ids.append(len(ids))
 
         session.add(row)
@@ -335,8 +356,7 @@ def Position_ONTs(trafo_range,
 
     ################################# Gebe allen Nutzern Lese- und Schreibrechte auf die Tabelle:
 
-
-    print(orm_onts.__table_args__['schema'])
+   
     result = conn.execute("ALTER TABLE " + orm_onts.__table_args__['schema'] +"." + orm_onts.__tablename__+ " OWNER TO oeuser;\
                   GRANT ALL ON TABLE " + orm_onts.__table_args__['schema'] + "." + orm_onts.__tablename__ + " TO oeuser WITH GRANT OPTION;")
                       
