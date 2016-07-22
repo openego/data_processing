@@ -1,4 +1,4 @@
-from EdgeClass import Edge
+from gmlparsing.EdgeClass import Edge
 
 class Connection(Edge):
    'Common base class for all Connection type'
