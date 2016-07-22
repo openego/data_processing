@@ -20,7 +20,6 @@ SET 	consumption_per_area_industry = elec_consumption_industry/area_industry;
 
 */
 
-
 DROP TABLE IF EXISTS calc_ego_loads_industry.landuse_industry;
 
 SELECT * INTO calc_ego_loads_industry.landuse_industry FROM orig_osm.osm_deu_polygon_urban_sector_3_industrial_mview; 
@@ -120,9 +119,9 @@ FROM
 (
 	SELECT
 	c.gid,
-	b.consumption_per_area_industry * c.area_ha as result
+	b.elec_consumption_industry * c.area_ha as result
 	FROM
-	orig_consumption_znes.lak_consumption_per_district b,
+	orig_ego_consumption.lak_consumption_per_district b,
 	calc_ego_loads_industry.landuse_industry c
 	WHERE
 	c.nuts = b.eu_code
