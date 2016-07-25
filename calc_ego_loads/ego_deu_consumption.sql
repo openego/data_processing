@@ -13,20 +13,18 @@ CREATE TABLE 		calc_ego_loads.ego_deu_consumption
 	CONSTRAINT ego_deu_consumption_pkey PRIMARY KEY (id)
 );
 
-
 -- Set ID   (OK!) -> 100ms =206.846
 INSERT INTO 	calc_ego_loads.ego_deu_consumption (id,subst_id)
 	SELECT 	id,
 		subst_id
 	FROM 	calc_ego_loads.ego_deu_load_area;
-
-ALTER TABLE orig_ego_consumption.lak_consumption_per_district
-	ADD COLUMN area_agriculture numeric,
-	ADD COLUMN area_retail numeric,
-	ADD COLUMN area_industry numeric,
-	ADD COLUMN area_tertiary_sector numeric;
+	
 
 -- Calculate the industrial area per district 
+
+ALTER TABLE orig_ego_consumption.lak_consumption_per_district
+	ADD COLUMN area_industry numeric, 
+	ADD COLUMN area_retail numeric;
 
 UPDATE orig_ego_consumption.lak_consumption_per_district a
 SET area_industry = result.sum
@@ -80,17 +78,6 @@ WHERE result.substr = substr(a.eu_code,1,5);
 UPDATE orig_ego_consumption.lak_consumption_per_district 
 	SET area_tertiary_sector = coalesce(area_retail,0) + coalesce(area_agriculture,0);
 
--- Calculate electricity demand per loadarea
-
-ALTER TABLE orig_ego_consumption.lak_consumption_per_district
-	ADD COLUMN consumption_per_area_tertiary_sector numeric,
-	ADD COLUMN consumption_per_area_industry numeric;
-
-UPDATE orig_ego_consumption.lak_consumption_per_district
-	SET consumption_per_area_tertiary_sector = elec_consumption_tertiary_sector/nullif(area_tertiary_sector,0);
-
-UPDATE orig_ego_consumption.lak_consumption_per_district
-	SET consumption_per_area_industry = elec_consumption_industry/nullif(area_industry,0);
 
 -- Calculate sector consumption of industry per loadarea
 
@@ -100,7 +87,7 @@ FROM
 (
 	SELECT
 	c.id,
-	b.consumption_per_area_industry * c.sector_area_industrial as result
+	b.elec_consumption_industry/nullif(b.area_industry,0) * c.sector_area_industrial as result
 	FROM
 	orig_ego_consumption.lak_consumption_per_district b,
 	calc_ego_loads.ego_deu_load_area c
@@ -118,7 +105,7 @@ FROM
 (
 	SELECT
 	c.id,
-	b.consumption_per_area_tertiary_sector * c.sector_area_retail as result
+	b.elec_consumption_tertiary_sector/nullif(b.area_tertiary_sector,0) * c.sector_area_retail as result
 	FROM
 	orig_ego_consumption.lak_consumption_per_district b,
 	calc_ego_loads.ego_deu_load_area c
@@ -136,7 +123,7 @@ FROM
 (
 	SELECT
 	c.id,
-	b.consumption_per_area_tertiary_sector * c.sector_area_agricultural as result
+	b.elec_consumption_tertiary_sector/nullif(b.area_tertiary_sector,0) * c.sector_area_agricultural as result
 	FROM
 	orig_ego_consumption.lak_consumption_per_district b,
 	calc_ego_loads.ego_deu_load_area c
