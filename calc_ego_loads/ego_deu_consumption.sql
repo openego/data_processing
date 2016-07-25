@@ -13,6 +13,7 @@ CREATE TABLE 		calc_ego_loads.ego_deu_consumption
 	CONSTRAINT ego_deu_consumption_pkey PRIMARY KEY (id)
 );
 
+
 -- Set ID   (OK!) -> 100ms =206.846
 INSERT INTO 	calc_ego_loads.ego_deu_consumption (id,subst_id)
 	SELECT 	id,
@@ -20,8 +21,10 @@ INSERT INTO 	calc_ego_loads.ego_deu_consumption (id,subst_id)
 	FROM 	calc_ego_loads.ego_deu_load_area;
 
 ALTER TABLE orig_ego_consumption.lak_consumption_per_district
-	ADD COLUMN area_industry numeric, 
-	ADD COLUMN area_retail numeric;
+	ADD COLUMN area_agriculture numeric,
+	ADD COLUMN area_retail numeric,
+	ADD COLUMN area_industry numeric,
+	ADD COLUMN area_tertiary_sector numeric;
 
 -- Calculate the industrial area per district 
 
@@ -78,6 +81,10 @@ UPDATE orig_ego_consumption.lak_consumption_per_district
 	SET area_tertiary_sector = coalesce(area_retail,0) + coalesce(area_agriculture,0);
 
 -- Calculate electricity demand per loadarea
+
+ALTER TABLE orig_ego_consumption.lak_consumption_per_district
+	ADD COLUMN consumption_per_area_tertiary_sector numeric,
+	ADD COLUMN consumption_per_area_industry numeric;
 
 UPDATE orig_ego_consumption.lak_consumption_per_district
 	SET consumption_per_area_tertiary_sector = elec_consumption_tertiary_sector/nullif(area_tertiary_sector,0);
@@ -158,6 +165,7 @@ FROM
 ) AS sub
 WHERE
 sub.id = a.id;
+
 
 ---------- ---------- ----------
 
