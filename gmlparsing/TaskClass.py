@@ -8,9 +8,10 @@ class Task(Node):
       #self.name = name
       #self.position = position
       super().__init__(name, position)
+      self.name = self.name.replace('\n', ' ').replace('\r', '')
       Task.taskCount += 1
       #Task.displayName(self)
 
    def displayName(self):
-      print(" Task Label : ", self.name)
+      print(" Task Label : ", self.name,"@",self.position.name)
 
