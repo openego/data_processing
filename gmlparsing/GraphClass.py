@@ -8,7 +8,7 @@ class Graph:
       self.nodes = nodes
       self.edges = edges
       Graph.graphCount += 1
-      Graph.displayName(self)
+      #Graph.displayName(self)
 
    def displayName(self):
       print("\n\nGraph ",self.graphCount,". Label= ", self.name," has nodes ")
