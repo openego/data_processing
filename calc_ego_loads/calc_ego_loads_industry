@@ -24,6 +24,8 @@ DROP TABLE IF EXISTS calc_ego_loads.landuse_industry;
 
 SELECT * INTO calc_ego_loads.landuse_industry FROM orig_osm.osm_deu_polygon_urban_sector_3_industrial_mview; 
 
+ALTER TABLE  calc_ego_loads.landuse_industry OWNER TO oeuser;
+
 ------------------
 -- "Add and fill new columns with geometry information"
 ------------------
@@ -137,7 +139,7 @@ sub.gid = a.gid;
 UPDATE calc_ego_loads.landuse_industry
 SET peak_load = consumption*(0.00013247226362); -- Add different factor to calculate the peak load
 
-ALTER TABLE  calc_ego_loads.landuse_industry OWNER TO oeuser;
+
 
 
 -----------------
@@ -156,6 +158,8 @@ CREATE TABLE calc_ego_loads.large_scale_consumer AS
 		orig_osm. osm_deu_polygon_urban_sector_3_industrial_mview
 	WHERE	(voltage_level='3' OR voltage_level='2'OR voltage_level='1')
 	AND 	ST_Intersects (proc_power_plant_germany.geom, (ST_transform (osm_deu_polygon_urban_sector_3_industrial_mview.geom,4326))));
+
+ALTER TABLE  calc_ego_loads.large_scale_consumer OWNER TO oeuser;
 
 
 DELETE FROM calc_ego_loads.large_scale_consumer
@@ -230,7 +234,7 @@ WHERE id IN (SELECT id
                      FROM calc_ego_loads.large_scale_consumer) t
               WHERE t.rnum > 1);
 
-ALTER TABLE  calc_ego_loads.large_scale_consumer OWNER TO oeuser;
+
 
 /*﻿ 
 SELECT polygon_id, 

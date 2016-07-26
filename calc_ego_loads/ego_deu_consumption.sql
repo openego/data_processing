@@ -24,7 +24,9 @@ INSERT INTO 	calc_ego_loads.ego_deu_consumption (id,subst_id)
 
 ALTER TABLE orig_ego_consumption.lak_consumption_per_district
 	ADD COLUMN area_industry numeric, 
-	ADD COLUMN area_retail numeric;
+	ADD COLUMN area_retail numeric,
+	ADD COLUMN area_agriculture numeric,
+	ADD COLUMN area_tertiary_sector numeric;
 
 UPDATE orig_ego_consumption.lak_consumption_per_district a
 SET area_industry = result.sum
