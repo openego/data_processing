@@ -130,15 +130,14 @@ def makeDataObj(activities,pos,num):
         if "com.yworks.bpmn.Artifact.withShadow" in aIterator.attrib.values():
             obj = aIterator.find('tn:NodeLabel', ns);
             if obj:
-                name = obj.text
+                name = obj.text.replace('\n', ' ').replace('\r', '')
             obj2 = aIterator.find('tn:StyleProperties', ns).findall('tn:Property', ns);
             for anns in obj2:
                 if "ARTIFACT_TYPE_ANNOTATION" in anns.attrib.values():
-                    #print(obj.text,' is annotation')
                     tmpArray2.append(Annotation(name, pos))
                 if obj and "ARTIFACT_TYPE_DATA_OBJECT" in anns.attrib.values():
-                    #print(obj.text,' is do')
-                    tmpArray1.append(DataObj(name, pos))
+                    if len(name.strip())>0:
+                        tmpArray1.append(DataObj(name, pos))
     if num==1:
         return tmpArray1
     else:
