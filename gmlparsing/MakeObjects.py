@@ -6,16 +6,14 @@ from gmlparsing.NodeClass import Node
 from gmlparsing.LaneClass import Lane
 from gmlparsing.TaskClass import Task
 from gmlparsing.DataObjClass import DataObj
-from gmlparsing.AnnotsClass import Annots
+from gmlparsing.AnnotsClass import Annotation
 from gmlparsing.EventClass import Event
 from gmlparsing.EdgeClass import Edge
 from gmlparsing.PoolClass import Pool
 from gmlparsing.ConnectionClass import Connection
 from gmlparsing.GatewayClass import Gateway
 
-
 tree = ET.parse('ego_deu_loads_per_grid_district.graphml')
-#tree = ET.parse('test.graphml')
 root = tree.getroot()
 
 ns = {'gml': 'http://graphml.graphdrawing.org/xmlns',
@@ -42,12 +40,7 @@ def makeGraph(graphs):
 
         size = len(nodes)
         if (size > 0):
-         #   if size == 1:
-         #       nodeArray=makeNode(nodes)
-         #   else:
          nodeArray.extend(makeNode(nodes))
-
-
 
         edges = gIterator.findall('gml:edge', ns)
         size = len(edges)
@@ -142,7 +135,7 @@ def makeDataObj(activities,pos,num):
             for anns in obj2:
                 if "ARTIFACT_TYPE_ANNOTATION" in anns.attrib.values():
                     #print(obj.text,' is annotation')
-                    tmpArray2.append(Annots(name, pos))
+                    tmpArray2.append(Annotation(name, pos))
                 if obj and "ARTIFACT_TYPE_DATA_OBJECT" in anns.attrib.values():
                     #print(obj.text,' is do')
                     tmpArray1.append(DataObj(name, pos))
@@ -227,12 +220,12 @@ def getStart():         # fixed start and end at events
         if type(ase) is Event and ase.type == 'EVENT_CHARACTERISTIC_START':
 
             starts.append(ase.position.name)
-            parsing.append(ase.type)
+            parsing.append(ase)
             parsing_nodes.append(ase.position.name)
 
             if sgFor and sgFor in ase.position.name:
                 sublist.insert(0,parsing[-1])
-                parsing[-1]=''
+                del parsing[-1]
                 sg=True
             else:
                 sg = False
@@ -254,10 +247,10 @@ def getStart():         # fixed start and end at events
                             currInd = checkOtherStarts(ae.target, currInd, sg,sublist,sg2,sublist2,s)
                             while not s.is_empty():
                                 parsing.append(s.pop())
-                            parsing.append(ap.name)
+                            parsing.append(ap)
                             parsing.append(getAnnot(ap))
 
-                            sgIndex = parsing.index(ap.name)+1
+                            sgIndex = parsing.index(ap) + 1
                             parsing_nodes.append(ap.position)
 
                             sub = checkNext(ae.target, currInd, sg,sublist,sg2,sublist2,s)
@@ -273,7 +266,7 @@ def getStart():         # fixed start and end at events
                                 parsing.append(s.pop())
                                 assign(sg,sg2,sublist,sublist2,newSub,ase,'start')
 
-                            parsing.append(t.name)
+                            parsing.append(t)
                             assign(sg, sg2, sublist, sublist2, newSub, ase,'start')
 
                             parsing.append(getAnnot(t))
@@ -293,7 +286,7 @@ def getStart():         # fixed start and end at events
 
 
         if type(ase) is Event and (ase.type == 'EVENT_CHARACTERISTIC_INTERMEDIATE_CATCHING' or ase.type == 'EVENT_CHARACTERISTIC_END'):
-            parsing.append(ase.type)
+            parsing.append(ase)
             currInd += 1
 
 
@@ -325,7 +318,7 @@ def getAnnot(t):
         if ae.target == checkWith or ae.source == checkWith:
             for aa in allanns:
                 if aa.name is not None and ae.source == aa.position.name:
-                    answer = aa.name
+                    answer = aa
                     break
     return answer
 
@@ -341,7 +334,7 @@ def checkNext(next,currInd,sg,sublist,sg2,sublist2,s):
                 while not s.is_empty():
                     parsing.append(s.pop())
                     assign(sg,sg2,sublist,sublist2,None,None,'chnext')
-                parsing.append(newObj.name)
+                parsing.append(newObj)
                 assign(sg, sg2, sublist, sublist2, None, None, 'chnext')
 
                 parsing_nodes.append(newObj.position.name)
@@ -353,7 +346,7 @@ def checkNext(next,currInd,sg,sublist,sg2,sublist2,s):
                     parsing.append(s.pop())
                     assign(sg, sg2, sublist, sublist2, None, None, 'chnext')
 
-                parsing.append(newObj.name)
+                parsing.append(newObj)
                 assign(sg, sg2, sublist, sublist2, None, None, 'chnext')
 
                 parsing_nodes.append(newObj.position.name)
@@ -366,11 +359,10 @@ def checkNext(next,currInd,sg,sublist,sg2,sublist2,s):
                 checkOtherStarts(ae.target, currInd, sg,sublist,sg2,sublist2,s)
                 while not s.is_empty():
                     parsing.append(s.pop())
-                parsing.append(newObj.name)
+                parsing.append(newObj)
 
-                sgIndex = parsing.index(newObj.name)+1
+                sgIndex = parsing.index(newObj) + 1
 
-                #sg = True
                 sub = newObj.position
                 parsing_nodes.append(newObj.position)
 
@@ -378,10 +370,6 @@ def checkNext(next,currInd,sg,sublist,sg2,sublist2,s):
                 checkNext(newObj.position, currInd, sg,sublist,sg2,sublist2,s)
 
                 parsing.insert(sgIndex, sublist2)
-                #allStartEv.insert(currInd , newObj)
-
-
-
     return sub
 
 def checkOtherStarts(target,ind, sg,sublist,sg2,sublist2,s):
@@ -390,9 +378,9 @@ def checkOtherStarts(target,ind, sg,sublist,sg2,sublist2,s):
             newElement = findType(ae.source)
             newType = type(newElement)
 
-            if newElement != '':
+            if newElement != '' or newElement is not None:
                 if newType is DataObj and newElement.position.name not in parsing_nodes:
-                    s.push(newElement.name)
+                    s.push(newElement)
                     parsing_nodes.append(newElement.position.name)
                     ind = checkOtherStarts(newElement.position.name, ind, sg, sublist, sg2, sublist2, s)
 
@@ -401,7 +389,7 @@ def checkOtherStarts(target,ind, sg,sublist,sg2,sublist2,s):
                     while not s.is_empty():
                         parsing.append(s.pop())
                         assign(sg, sg2, sublist, sublist2, None, None, 'chnext')
-                    parsing.append(newElement.name)
+                    parsing.append(newElement)
                     assign(sg, sg2, sublist, sublist2, None, None, 'chnext')
                     parsing_nodes.append(newElement.position.name)
 
@@ -410,13 +398,13 @@ def checkOtherStarts(target,ind, sg,sublist,sg2,sublist2,s):
                     while not s.is_empty():
                         parsing.append(s.pop())
                         assign(sg, sg2, sublist, sublist2, None, None, 'chnext')
-                    parsing.append(newElement.name)
+                    parsing.append(newElement)
                     assign(sg, sg2, sublist, sublist2, None, None, 'chnext')
                     parsing_nodes.append(newElement.position)
 
     return ind
 
-def findType(input): # fixed start and end at events
+def findType(input):
     answer=''
     for d in alldos:
         if input==d.position.name:
@@ -449,11 +437,31 @@ def findType(input): # fixed start and end at events
 
     return answer
 
+def printParsed(toPrint,dtype):
+    for x in toPrint:
+        if type(x) is Event:
+            if x.type == 'EVENT_CHARACTERISTIC_START' and dtype=='main':
+                print('')
+            if dtype == 'sub':
+                print('\t', end="")
+            print('Event: ',x.type)
+        elif type(x) is Node:
+            if dtype == 'sub':
+                print('\t', end="")
+            print('Subgraph: ', x.name)
+        elif type(x) is Task or type(x) is DataObj or type(x) is Annotation:
+            if dtype=='sub':
+                print('\t', end="")
+            print(type(x).__name__,': ',x.name)
+        elif type(x) is list:
+            if dtype == 'sub':
+                print('\t', end="")
+            printParsed(x,'sub')
+        #else:
+            #print(type(x),': ',x)
+
 getStart()
+printParsed(parsing,'main')
 
 
-for x in parsing:
-    if x=='EVENT_CHARACTERISTIC_START':
-        print('')
-    #print(parsing.index(x),': ',x)
-    print(x)
+
