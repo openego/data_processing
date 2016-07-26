@@ -1,12 +1,14 @@
 import xml.etree.ElementTree as ET
-from gmlparsing.Stack import Stack
+import psycopg2
+import sys
 
+from gmlparsing.Stack import Stack
 from gmlparsing.GraphClass import Graph
 from gmlparsing.NodeClass import Node
 from gmlparsing.LaneClass import Lane
 from gmlparsing.TaskClass import Task
 from gmlparsing.DataObjClass import DataObj
-from gmlparsing.AnnotsClass import Annotation
+from gmlparsing.AnnotsClass import Annots
 from gmlparsing.EventClass import Event
 from gmlparsing.EdgeClass import Edge
 from gmlparsing.PoolClass import Pool
@@ -205,6 +207,41 @@ sgFor = None
 sgIndex = 0
 sg = False
 
+def runSqlFile(filename,conn): # Function to execute sql scripts
+    file = open(filename,'r')
+    sql = " ".join(file.readlines())
+    cur = conn.cursor()
+    #cur.execute("DROP SCHEMA IF EXISTS	orig_geo_opsd CASCADE");
+    #cur.execute("CREATE SCHEMA orig_geo_opsd");
+    try:
+        cur.execute(sql);
+    except psycopg2.Error as e:
+        print(str(e))
+        pass
+        #sys.exit(1)
+##    Create schemas for open_eGo
+##    cur.execute("DROP SCHEMA IF EXISTS orig_ego CASCADE");
+##    cur.execute("CREATE SCHEMA orig_ego");
+##    cur.execute(sql);
+##
+##    Set default privileges for schema
+##    cur.execute("ALTER DEFAULT PRIVILEGES IN SCHEMA orig_ego GRANT ALL ON TABLES TO oeuser");
+##    cur.execute("ALTER DEFAULT PRIVILEGES IN SCHEMA orig_ego GRANT ALL ON SEQUENCES TO oeuser");
+##    cur.execute("ALTER DEFAULT PRIVILEGES IN SCHEMA orig_ego GRANT ALL ON FUNCTIONS TO oeuser");
+##
+##    Grant all in schema
+##    cur.execute("GRANT ALL ON SCHEMA orig_ego TO oeuser WITH GRANT OPTION");
+##    cur.execute("GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA orig_ego TO oeuser");
+    
+    conn.commit()
+    print ("Records created successfully")
+
+def connectToPostgres(filename): #Function to connect postgres
+    conn = psycopg2.connect(database="OpenEgo", user="oeuser", password="sql", host="localhost", port="5432")
+    print ("Opened database successfully")
+    runSqlFile(filename,conn)
+    conn.close()    
+
 def getStart():         # fixed start and end at events
     currInd=-1
     sgFor = None
@@ -247,7 +284,11 @@ def getStart():         # fixed start and end at events
                             while not s.is_empty():
                                 parsing.append(s.pop())
                             parsing.append(ap)
-                            parsing.append(getAnnot(ap))
+                            allAnnots = getAnnot(ap)
+                            parsing.append(allAnnots)
+                            #print(allAnnots.name)
+                            if allAnnots is not None:
+                                connectToPostgres(allAnnots.name)
 
                             sgIndex = parsing.index(ap) + 1
                             parsing_nodes.append(ap.position)
@@ -268,7 +309,13 @@ def getStart():         # fixed start and end at events
                             parsing.append(t)
                             assign(sg, sg2, sublist, sublist2, newSub, ase,'start')
 
-                            parsing.append(getAnnot(t))
+                            allAnnots = getAnnot(t)
+                            parsing.append(allAnnots)
+                            
+                            
+                            if allAnnots is not None:
+                                #print(allAnnots.name)
+                                connectToPostgres(allAnnots.name)   
                             assign(sg, sg2, sublist, sublist2, newSub, ase,'start')
 
                             parsing_nodes.append(t.position.name)
@@ -318,6 +365,7 @@ def getAnnot(t):
             for aa in allanns:
                 if aa.name is not None and ae.source == aa.position.name:
                     answer = aa
+                    #connectToPostgres(answer.name)
                     break
     return answer
 
@@ -350,6 +398,9 @@ def checkNext(next,currInd,sg,sublist,sg2,sublist2,s):
 
                 parsing_nodes.append(newObj.position.name)
                 parsing.append(getAnnot(newObj))
+                allAnnots = getAnnot(newObj)
+                #print(allAnnots.name)
+                connectToPostgres(allAnnots.name)
                 assign(sg, sg2, sublist, sublist2, None, None, 'chnext')
 
                 checkNext(newObj.position.name, currInd,sg,sublist,sg2,sublist2,s)
@@ -366,6 +417,9 @@ def checkNext(next,currInd,sg,sublist,sg2,sublist2,s):
                 parsing_nodes.append(newObj.position)
 
                 parsing.append(getAnnot(newObj))
+                allAnnots = getAnnot(newObj)
+                #print(allAnnots.name)
+                connectToPostgres(allAnnots.name)
                 checkNext(newObj.position, currInd, sg,sublist,sg2,sublist2,s)
 
                 parsing.insert(sgIndex, sublist2)
@@ -461,6 +515,3 @@ def printParsed(toPrint,dtype):
 
 getStart()
 printParsed(parsing,'main')
-
-
-
