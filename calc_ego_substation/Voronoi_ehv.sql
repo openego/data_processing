@@ -4,17 +4,18 @@
 
 
 -- Add Dummy points 
-INSERT INTO orig_osm.osm_deu_substations_ehv (name, geom, subst_id)
-SELECT name, geom, subst_id
-FROM calc_gridcells_znes.substations_dummy;
+INSERT INTO calc_ego_substation.ego_deu_substations_ehv (name, point, id, otg_id)
+SELECT 'DUMMY', ST_TRANSFORM(geom,4326), subst_id, subst_id
+FROM calc_ego_substation.substation_dummy;
 
 
 -- Execute voronoi algorithm with 220 and 380 kV substations
-DROP TABLE IF EXISTS orig_ego.ego_deu_voronoi_ehv;
+DROP TABLE IF EXISTS calc_ego_substation.ego_deu_voronoi_ehv;
 WITH 
     -- Sample set of points to work with
-    Sample AS (SELECT   ST_SetSRID(ST_Union(pts.geom), 0) AS geom
-		FROM	orig_osm.osm_deu_substations_ehv AS pts),  -- INPUT 1/2
+    Sample AS (SELECT   ST_SetSRID(ST_Union(pts.point), 0) AS geom
+		FROM	calc_ego_substation.ego_deu_substations_ehv AS pts
+		WHERE	pts.otg_id IS NOT NULL),  -- INPUT 1/2
     -- Build edges and circumscribe points to generate a centroid
     Edges AS (
     SELECT id,
@@ -40,7 +41,7 @@ WITH
         ) c
     )
 SELECT ST_SetSRID((ST_Dump(ST_Polygonize(ST_Node(ST_LineMerge(ST_Union(v, (SELECT ST_ExteriorRing(ST_ConvexHull(ST_Union(ST_Union(ST_Buffer(edge,20),ct)))) FROM Edges))))))).geom, 2180) geom
-INTO orig_ego.ego_deu_voronoi_ehv		  -- INPUT 2/2
+INTO calc_ego_substation.ego_deu_voronoi_ehv		  -- INPUT 2/2
 FROM (
     SELECT  -- Create voronoi edges and reduce to a multilinestring
         ST_LineMerge(ST_Union(ST_MakeLine(
@@ -62,21 +63,32 @@ FROM (
         Edges y ON x.id <> y.id AND ST_Equals(x.edge,y.edge)
     ) z;
 
--- "Set PK"   (OK!) -> 100ms =0
-ALTER TABLE orig_ego.ego_deu_voronoi_ehv
-	ADD COLUMN id serial,
-	ADD PRIMARY KEY (id),
-	ALTER COLUMN geom TYPE geometry(POLYGON,4326) USING ST_SETSRID(geom,4326);
-
 -- "Create Index GIST (geom)"   (OK!) 11.000ms =0
 CREATE INDEX	voronoi_ehv_geom_idx
-	ON	orig_ego.ego_deu_voronoi_ehv
+	ON	calc_ego_substation.ego_deu_voronoi_ehv
 	USING	GIST (geom);
 
+-- "Set id and SRID"   (OK!) -> 100ms =0
+ALTER TABLE calc_ego_substation.ego_deu_voronoi_ehv
+	ADD COLUMN subst_id integer,
+	ALTER COLUMN geom TYPE geometry(POLYGON,4326) USING ST_SETSRID(geom,4326);
 
--- Delete Dummy-points from ehv substations 
+UPDATE calc_ego_substation.ego_deu_voronoi_ehv a
+	SET subst_id = b.id
+	FROM calc_ego_substation.ego_deu_substations_ehv b
+	WHERE ST_Intersects(a.geom, b.point) =TRUE; 
 
-DELETE FROM orig_osm.osm_deu_substations_ehv WHERE name='DUMMY';
+-- Delete Dummy-points from ehv_substations and ehv_voronoi 
+
+DELETE FROM calc_ego_substation.ego_deu_voronoi_ehv 
+	WHERE subst_id IN (SELECT id FROM calc_ego_substation.ego_deu_substations_ehv WHERE name = 'DUMMY');
+
+DELETE FROM calc_ego_substation.ego_deu_substations_ehv WHERE name='DUMMY';
+
+-- Set PK and FK 
+ALTER TABLE calc_ego_substation.ego_deu_voronoi_ehv 
+	ADD CONSTRAINT subst_fk FOREIGN KEY (subst_id) REFERENCES calc_ego_substation.ego_deu_substations_ehv (id),
+	ADD PRIMARY KEY (subst_id);
 
 -- Clip voronoi with vg250
 
