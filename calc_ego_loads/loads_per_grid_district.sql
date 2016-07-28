@@ -292,7 +292,7 @@ ALTER TABLE		calc_ego_loads.urban_sector_per_grid_district_1_residential OWNER T
 
 ---------- ---------- ----------
 
--- "Calculate Sector Residential"   (OK!) -> 47.000ms =102.461
+-- "Calculate Sector Residential"   (OK!) -> 47.000ms =102.302
 UPDATE 	calc_ego_loads.ego_deu_load_area AS t1
 SET  	sector_area_residential = t2.sector_area,
 	sector_count_residential = t2.sector_count,
@@ -305,7 +305,7 @@ FROM    (
 	FROM	calc_ego_loads.urban_sector_per_grid_district_1_residential AS sector,
 		calc_ego_loads.ego_deu_load_area AS loads
 	WHERE  	loads.geom && sector.geom AND  
-		ST_INTERSECTS(loads.geom,sector.geom)
+		ST_INTERSECTS(loads.geom,ST_BUFFER(sector.geom,-1))
 	GROUP BY loads.id
 	) AS t2
 WHERE  	t1.id = t2.id;
@@ -342,7 +342,7 @@ ALTER TABLE		calc_ego_loads.urban_sector_per_grid_district_2_retail OWNER TO oeu
 
 ---------- ---------- ----------
 
--- "Calculate Sector Retail"   (OK!) -> 18.000ms =11.004
+-- "Calculate Sector Retail"   (OK!) -> 18.000ms =10.990
 UPDATE 	calc_ego_loads.ego_deu_load_area AS t1
 SET  	sector_area_retail = t2.sector_area,
 	sector_count_retail = t2.sector_count,
@@ -355,7 +355,7 @@ FROM    (
 	FROM	calc_ego_loads.urban_sector_per_grid_district_2_retail AS sector,
 		calc_ego_loads.ego_deu_load_area AS loads	
 	WHERE  	loads.geom && sector.geom AND  
-		ST_INTERSECTS(loads.geom,sector.geom)
+		ST_INTERSECTS(loads.geom,ST_BUFFER(sector.geom,-1))
 	GROUP BY loads.id
 	) AS t2
 WHERE  	t1.id = t2.id;
@@ -392,7 +392,7 @@ ALTER TABLE		calc_ego_loads.urban_sector_per_grid_district_3_industrial OWNER TO
 
 ---------- ---------- ----------
 
--- "Calculate Sector Industrial"   (OK!) -> 24.000ms =22.159
+-- "Calculate Sector Industrial"   (OK!) -> 24.000ms =22.129
 UPDATE 	calc_ego_loads.ego_deu_load_area AS t1
 SET  	sector_area_industrial = t2.sector_area,
 	sector_count_industrial = t2.sector_count,
@@ -405,7 +405,7 @@ FROM    (
 	FROM	calc_ego_loads.urban_sector_per_grid_district_3_industrial AS sector,
 		calc_ego_loads.ego_deu_load_area AS loads	
 	WHERE  	loads.geom && sector.geom AND  
-		ST_INTERSECTS(loads.geom,sector.geom)
+		ST_INTERSECTS(loads.geom,ST_BUFFER(sector.geom,-1))
 	GROUP BY loads.id
 	) AS t2
 WHERE  	t1.id = t2.id;
@@ -423,7 +423,8 @@ CONSTRAINT 	urban_sector_per_grid_district_4_agricultural_pkey PRIMARY KEY (id))
 
 -- "Insert Loads Agricultural"   (OK!) 130.000ms =124.855
 INSERT INTO     calc_ego_loads.urban_sector_per_grid_district_4_agricultural (geom)
-	SELECT	loads.geom ::geometry(Polygon,3035)
+	SELECT	ST_AREA(loads.geom) AS area_ha,
+		loads.geom ::geometry(Polygon,3035)
 	FROM	(SELECT (ST_DUMP(ST_INTERSECTION(loads.geom,dis.geom))).geom AS geom
 		FROM	orig_osm.osm_deu_polygon_urban_sector_4_agricultural_mview AS loads,
 			calc_ego_grid_district.grid_district AS dis
@@ -442,20 +443,20 @@ ALTER TABLE		calc_ego_loads.urban_sector_per_grid_district_4_agricultural OWNER 
 
 ---------- ---------- ----------
 
--- "Calculate Sector Agricultural"   (OK!) -> 46.000ms =65.997
+-- "Calculate Sector Agricultural"   (OK!) -> 278.000ms =65.931
 UPDATE 	calc_ego_loads.ego_deu_load_area AS t1
 SET  	sector_area_agricultural = t2.sector_area,
 	sector_count_agricultural = t2.sector_count,
 	sector_share_agricultural = t2.sector_area / t2.area_ha
 FROM    (
 	SELECT	loads.id AS id,
-		COALESCE(SUM(ST_AREA(sector.geom)/10000),0) AS sector_area,
-		COALESCE(COUNT(sector.geom),0) AS sector_count,
+		SUM(ST_AREA(sector.geom)/10000) AS sector_area,
+		COUNT(sector.geom) AS sector_count,
 		loads.area_ha AS area_ha
 	FROM	calc_ego_loads.urban_sector_per_grid_district_4_agricultural AS sector,
 		calc_ego_loads.ego_deu_load_area AS loads	
 	WHERE  	loads.geom && sector.geom AND  
-		ST_INTERSECTS(loads.geom,sector.geom)
+		ST_INTERSECTS(loads.geom,ST_BUFFER(sector.geom,-1))
 	GROUP BY loads.id
 	) AS t2
 WHERE  	t1.id = t2.id;
@@ -575,7 +576,7 @@ WHERE  	t1.id = t2.id;
 
 
 ---------- ---------- ----------
--- consumption calculation
+-- consumption calculation   (OK!) -> 7.000ms =446
 ---------- ---------- ----------
 
 
@@ -651,7 +652,6 @@ FROM
 	calc_ego_loads.ego_deu_load_area c
 	WHERE
 	substring(c.nuts,1,3) = b.eu_code
-
 ) AS sub
 WHERE
 sub.id = a.id;

@@ -1,0 +1,13 @@
+[assumptions]
+trafo_range = 250
+trafo_maxrange = 750
+
+[regions]
+load_areas = EgoDeuLoadAreaTa
+
+[auxilliary_tables]
+ontgrids = EgoDeuOntGridsTa
+load_area_rest = EgoDeuLoadAreaRestTa
+
+[substations]
+onts = EgoDeuOntsTa
