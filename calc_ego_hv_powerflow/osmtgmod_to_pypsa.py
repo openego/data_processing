@@ -45,7 +45,7 @@ sql = '''SELECT
   bus_i,
   base_kv,
   geom
-  FROM results.bus_data
+  FROM calc_ego_osmtgmod.bus_data
   WHERE result_id = %s;''' % (result_id)
 bus_data = pd.read_sql_query(sql,con1)
 
@@ -64,7 +64,7 @@ sql = '''SELECT
   frequency,
   geom,
   topo
-  FROM results.branch_data
+  FROM calc_ego_osmtgmod.branch_data
   WHERE result_id = %s and link_type = 'line';''' % (result_id)
   
 line_data = pd.read_sql_query(sql,con1)  
@@ -81,7 +81,7 @@ sql = '''SELECT
   shift,
   geom,
   topo
-  FROM results.branch_data
+  FROM calc_ego_osmtgmod.branch_data
   WHERE result_id = %s and link_type = 'transformer';''' % (result_id)
   
 transformer_data = pd.read_sql_query(sql,con1)    
