@@ -1,5 +1,5 @@
 # coding: utf-8
-from sqlalchemy import Boolean, Column, DateTime, Float, ForeignKey, Integer, Numeric, SmallInteger, String, Table, Text, text
+from sqlalchemy import Column, DateTime, Float, ForeignKey, Integer, Numeric, SmallInteger, String, Table, Text, text
 from geoalchemy2.types import Geometry
 from sqlalchemy.dialects.postgresql.base import ARRAY
 from sqlalchemy.orm import relationship
@@ -50,6 +50,16 @@ class ParameterRegion(Base):
     stat_level = Column(Integer)
     geom = Column(Geometry('MULTIPOLYGON', 4326))
     geom_point = Column(Geometry('POINT', 4326))
+
+
+class ParameterSolarFeedin(Base):
+    __tablename__ = 'parameter_solar_feedin'
+    __table_args__ = {'schema': 'app_renpassgis'}
+
+    gid = Column(Integer, primary_key=True, server_default=text("nextval('app_renpassgis.parameter_solar_feedin_gid_seq'::regclass)"))
+    year = Column(Integer)
+    feedin = Column(ARRAY(DOUBLE_PRECISION(precision=53)))
+    geom = Column(Geometry('POINT', 4326), index=True)
 
 
 class ParameterThermalPowerplant(Base):
@@ -134,6 +144,16 @@ class ParameterWindCurve(Base):
     type_id = Column(ForeignKey('app_renpassgis.parameter_wind_turbine.type_id', ondelete='CASCADE'), primary_key=True, nullable=False)
 
     type = relationship('ParameterWindTurbine')
+
+
+class ParameterWindFeedin(Base):
+    __tablename__ = 'parameter_wind_feedin'
+    __table_args__ = {'schema': 'app_renpassgis'}
+
+    gid = Column(Integer, primary_key=True, server_default=text("nextval('app_renpassgis.parameter_wind_feedin_gid_seq'::regclass)"))
+    year = Column(Integer)
+    feedin = Column(ARRAY(DOUBLE_PRECISION(precision=53)))
+    geom = Column(Geometry('POINT', 4326), index=True)
 
 
 class ParameterWindTurbine(Base):
@@ -401,41 +421,3 @@ class VernetzenGridVertice(Base):
     status = Column(String(25))
     geom = Column(Geometry('POINT', 4326))
     u_region_id = Column(String(14))
-
-
-class Spatial(Base):
-    __tablename__ = 'spatial'
-    __table_args__ = {'schema': 'coastdat'}
-
-    gid = Column(Integer, primary_key=True, server_default=text("nextval('coastdat.spatial_gid_seq'::regclass)"))
-    geom = Column(Geometry('POINT', 4326), index=True)
-
-
-class ParameterWindFeedin(Spatial):
-    __tablename__ = 'parameter_wind_feedin'
-    __table_args__ = {'schema': 'app_renpassgis'}
-
-    gid = Column(ForeignKey('coastdat.spatial.gid'), primary_key=True)
-    year = Column(ForeignKey('coastdat.year.year'))
-    feedin = Column(ARRAY(DOUBLE_PRECISION(precision=53)))
-
-    year1 = relationship('Year')
-
-
-class ParameterSolarFeedin(Spatial):
-    __tablename__ = 'parameter_solar_feedin'
-    __table_args__ = {'schema': 'app_renpassgis'}
-
-    gid = Column(ForeignKey('coastdat.spatial.gid'), primary_key=True)
-    year = Column(ForeignKey('coastdat.year.year'))
-    feedin = Column(ARRAY(DOUBLE_PRECISION(precision=53)))
-
-    year1 = relationship('Year')
-
-
-class Year(Base):
-    __tablename__ = 'year'
-    __table_args__ = {'schema': 'coastdat'}
-
-    year = Column(SmallInteger, primary_key=True)
-    leap = Column(Boolean)
