@@ -19,7 +19,7 @@ t_distribution_urid_to_nuts = Table(
     Column('stat_levl_', SmallInteger, nullable=False),
     Column('region_key', String(12)),
     Column('urid', String(14)),
-    schema='app_renpassgis'
+    schema='calc_renpass_gis'
 )
 
 
@@ -29,13 +29,13 @@ t_new_windonshore = Table(
     Column('region_key', String),
     Column('year', Integer),
     Column('capacity', Float(53)),
-    schema='app_renpassgis'
+    schema='calc_renpass_gis'
 )
 
 
 class ParameterEmission(Base):
     __tablename__ = 'parameter_emission'
-    __table_args__ = {'schema': 'app_renpassgis'}
+    __table_args__ = {'schema': 'calc_renpass_gis'}
 
     fuel = Column(String, primary_key=True)
     em_fuel = Column(Numeric(7, 3))
@@ -43,9 +43,9 @@ class ParameterEmission(Base):
 
 class ParameterRegion(Base):
     __tablename__ = 'parameter_region'
-    __table_args__ = {'schema': 'app_renpassgis'}
+    __table_args__ = {'schema': 'calc_renpass_gis'}
 
-    gid = Column(Integer, primary_key=True, server_default=text("nextval('app_renpassgis.register_regions_gid_seq'::regclass)"))
+    gid = Column(Integer, primary_key=True, server_default=text("nextval('calc_renpass_gis.register_regions_gid_seq'::regclass)"))
     u_region_id = Column(String(14), nullable=False)
     stat_level = Column(Integer)
     geom = Column(Geometry('MULTIPOLYGON', 4326))
@@ -54,9 +54,9 @@ class ParameterRegion(Base):
 
 class ParameterSolarFeedin(Base):
     __tablename__ = 'parameter_solar_feedin'
-    __table_args__ = {'schema': 'app_renpassgis'}
+    __table_args__ = {'schema': 'calc_renpass_gis'}
 
-    gid = Column(Integer, primary_key=True, server_default=text("nextval('app_renpassgis.parameter_solar_feedin_gid_seq'::regclass)"))
+    gid = Column(Integer, primary_key=True, server_default=text("nextval('calc_renpass_gis.parameter_solar_feedin_gid_seq'::regclass)"))
     year = Column(Integer)
     feedin = Column(ARRAY(DOUBLE_PRECISION(precision=53)))
     geom = Column(Geometry('POINT', 4326), index=True)
@@ -64,7 +64,7 @@ class ParameterSolarFeedin(Base):
 
 class ParameterThermalPowerplant(Base):
     __tablename__ = 'parameter_thermal_powerplant'
-    __table_args__ = {'schema': 'app_renpassgis'}
+    __table_args__ = {'schema': 'calc_renpass_gis'}
 
     fuel = Column(String(15), primary_key=True, nullable=False)
     type_of_generation = Column(String(10), primary_key=True, nullable=False)
@@ -74,7 +74,7 @@ class ParameterThermalPowerplant(Base):
 
 class ParameterWindCpcurve(Base):
     __tablename__ = 'parameter_wind_cpcurves'
-    __table_args__ = {'schema': 'app_renpassgis'}
+    __table_args__ = {'schema': 'calc_renpass_gis'}
 
     rli_anlagen_id = Column(String(70), primary_key=True)
     p_nenn = Column(Numeric)
@@ -137,20 +137,20 @@ class ParameterWindCpcurve(Base):
 
 class ParameterWindCurve(Base):
     __tablename__ = 'parameter_wind_curve'
-    __table_args__ = {'schema': 'app_renpassgis'}
+    __table_args__ = {'schema': 'calc_renpass_gis'}
 
     wind_speed = Column(Numeric(5, 2), primary_key=True, nullable=False)
     power_out = Column(Numeric(5, 2), nullable=False)
-    type_id = Column(ForeignKey('app_renpassgis.parameter_wind_turbine.type_id', ondelete='CASCADE'), primary_key=True, nullable=False)
+    type_id = Column(ForeignKey('calc_renpass_gis.parameter_wind_turbine.type_id', ondelete='CASCADE'), primary_key=True, nullable=False)
 
     type = relationship('ParameterWindTurbine')
 
 
 class ParameterWindFeedin(Base):
     __tablename__ = 'parameter_wind_feedin'
-    __table_args__ = {'schema': 'app_renpassgis'}
+    __table_args__ = {'schema': 'calc_renpass_gis'}
 
-    gid = Column(Integer, primary_key=True, server_default=text("nextval('app_renpassgis.parameter_wind_feedin_gid_seq'::regclass)"))
+    gid = Column(Integer, primary_key=True, server_default=text("nextval('calc_renpass_gis.parameter_wind_feedin_gid_seq'::regclass)"))
     year = Column(Integer)
     feedin = Column(ARRAY(DOUBLE_PRECISION(precision=53)))
     geom = Column(Geometry('POINT', 4326), index=True)
@@ -158,9 +158,9 @@ class ParameterWindFeedin(Base):
 
 class ParameterWindTurbine(Base):
     __tablename__ = 'parameter_wind_turbine'
-    __table_args__ = {'schema': 'app_renpassgis'}
+    __table_args__ = {'schema': 'calc_renpass_gis'}
 
-    type_id = Column(Integer, primary_key=True, server_default=text("nextval('app_renpassgis.parameter_wind_turbine_seq'::regclass)"))
+    type_id = Column(Integer, primary_key=True, server_default=text("nextval('calc_renpass_gis.parameter_wind_turbine_seq'::regclass)"))
     type_name = Column(Text)
     rotor_diameter = Column(Integer)
     hubheight = Column(Integer)
@@ -170,16 +170,16 @@ class ParameterWindTurbine(Base):
 
 class ParameterWindzone(Base):
     __tablename__ = 'parameter_windzones'
-    __table_args__ = {'schema': 'app_renpassgis'}
+    __table_args__ = {'schema': 'calc_renpass_gis'}
 
-    gid = Column(Integer, primary_key=True, server_default=text("nextval('app_renpassgis.windzone_gid_seq'::regclass)"))
+    gid = Column(Integer, primary_key=True, server_default=text("nextval('calc_renpass_gis.windzone_gid_seq'::regclass)"))
     zone = Column(SmallInteger)
     geom = Column(Geometry('MULTIPOLYGON', 4326), index=True)
 
 
 class RegionScenario(Base):
     __tablename__ = 'region_scenario'
-    __table_args__ = {'schema': 'app_renpassgis'}
+    __table_args__ = {'schema': 'calc_renpass_gis'}
 
     scenario_name = Column(String)
     region_id = Column(Integer)
@@ -191,7 +191,7 @@ class RegionScenario(Base):
 
 class ScenarioBiomas(Base):
     __tablename__ = 'scenario_biomass'
-    __table_args__ = {'schema': 'app_renpassgis'}
+    __table_args__ = {'schema': 'calc_renpass_gis'}
 
     scenario_name = Column(String, primary_key=True, nullable=False)
     u_region_id = Column(String, primary_key=True, nullable=False)
@@ -202,7 +202,7 @@ class ScenarioBiomas(Base):
 
 class ScenarioElDemandAmount(Base):
     __tablename__ = 'scenario_el_demand_amount'
-    __table_args__ = {'schema': 'app_renpassgis'}
+    __table_args__ = {'schema': 'calc_renpass_gis'}
 
     scenario_name = Column(String(50), primary_key=True, nullable=False)
     u_region_id = Column(String(14), primary_key=True, nullable=False)
@@ -213,7 +213,7 @@ class ScenarioElDemandAmount(Base):
 
 class ScenarioElDemandShape(Base):
     __tablename__ = 'scenario_el_demand_shape'
-    __table_args__ = {'schema': 'app_renpassgis'}
+    __table_args__ = {'schema': 'calc_renpass_gis'}
 
     shape_id = Column(String(50), primary_key=True, nullable=False)
     hour = Column(Integer, primary_key=True, nullable=False)
@@ -222,7 +222,7 @@ class ScenarioElDemandShape(Base):
 
 class ScenarioGeothermal(Base):
     __tablename__ = 'scenario_geothermal'
-    __table_args__ = {'schema': 'app_renpassgis'}
+    __table_args__ = {'schema': 'calc_renpass_gis'}
 
     scenario_name = Column(String, primary_key=True, nullable=False)
     u_region_id = Column(String, primary_key=True, nullable=False)
@@ -232,7 +232,7 @@ class ScenarioGeothermal(Base):
 
 class ScenarioRegion(Base):
     __tablename__ = 'scenario_region'
-    __table_args__ = {'schema': 'app_renpassgis'}
+    __table_args__ = {'schema': 'calc_renpass_gis'}
 
     dpr_urid = Column(String(14), primary_key=True, nullable=False)
     sub_urid = Column(String(14), primary_key=True, nullable=False)
@@ -241,7 +241,7 @@ class ScenarioRegion(Base):
 
 class ScenarioRenewable(Base):
     __tablename__ = 'scenario_renewable'
-    __table_args__ = {'schema': 'app_renpassgis'}
+    __table_args__ = {'schema': 'calc_renpass_gis'}
 
     scenario_name = Column(String(50), primary_key=True)
     scenario_solar = Column(String(50), nullable=False)
@@ -256,7 +256,7 @@ class ScenarioRenewable(Base):
 
 class ScenarioResource(Base):
     __tablename__ = 'scenario_resource'
-    __table_args__ = {'schema': 'app_renpassgis'}
+    __table_args__ = {'schema': 'calc_renpass_gis'}
 
     scenario_name = Column(String, primary_key=True, nullable=False)
     year = Column(Integer, primary_key=True, nullable=False)
@@ -267,7 +267,7 @@ class ScenarioResource(Base):
 
 class ScenarioRunofriver(Base):
     __tablename__ = 'scenario_runofriver'
-    __table_args__ = {'schema': 'app_renpassgis'}
+    __table_args__ = {'schema': 'calc_renpass_gis'}
 
     scenario_name = Column(String, primary_key=True, nullable=False)
     u_region_id = Column(String, primary_key=True, nullable=False)
@@ -277,7 +277,7 @@ class ScenarioRunofriver(Base):
 
 class ScenarioSetting(Base):
     __tablename__ = 'scenario_setting'
-    __table_args__ = {'schema': 'app_renpassgis'}
+    __table_args__ = {'schema': 'calc_renpass_gis'}
 
     scenario_name = Column(String(50), primary_key=True, nullable=False)
     scenario_year = Column(Integer, primary_key=True, nullable=False)
@@ -295,7 +295,7 @@ class ScenarioSetting(Base):
 
 class ScenarioSolar(Base):
     __tablename__ = 'scenario_solar'
-    __table_args__ = {'schema': 'app_renpassgis'}
+    __table_args__ = {'schema': 'calc_renpass_gis'}
 
     scenario_name = Column(String, primary_key=True, nullable=False)
     u_region_id = Column(String, primary_key=True, nullable=False)
@@ -305,7 +305,7 @@ class ScenarioSolar(Base):
 
 class ScenarioStorage(Base):
     __tablename__ = 'scenario_storage'
-    __table_args__ = {'schema': 'app_renpassgis'}
+    __table_args__ = {'schema': 'calc_renpass_gis'}
 
     scenario_name = Column(String(50), primary_key=True, nullable=False)
     u_region_id = Column(String(14), primary_key=True, nullable=False)
@@ -321,7 +321,7 @@ class ScenarioStorage(Base):
 
 class ScenarioThermalPowerplant(Base):
     __tablename__ = 'scenario_thermal_powerplant'
-    __table_args__ = {'schema': 'app_renpassgis'}
+    __table_args__ = {'schema': 'calc_renpass_gis'}
 
     scenario_name = Column(String(50), primary_key=True, nullable=False)
     fuel = Column(String(15), primary_key=True, nullable=False)
@@ -334,7 +334,7 @@ class ScenarioThermalPowerplant(Base):
 
 class ScenarioTransshipment(Base):
     __tablename__ = 'scenario_transshipment'
-    __table_args__ = {'schema': 'app_renpassgis'}
+    __table_args__ = {'schema': 'calc_renpass_gis'}
 
     scenario_name = Column(String, primary_key=True, nullable=False)
     from_urid = Column(String(14), primary_key=True, nullable=False)
@@ -346,7 +346,7 @@ class ScenarioTransshipment(Base):
 
 class ScenarioWindoffshore(Base):
     __tablename__ = 'scenario_windoffshore'
-    __table_args__ = {'schema': 'app_renpassgis'}
+    __table_args__ = {'schema': 'calc_renpass_gis'}
 
     scenario_name = Column(String, primary_key=True, nullable=False)
     u_region_id = Column(String, primary_key=True, nullable=False)
@@ -356,7 +356,7 @@ class ScenarioWindoffshore(Base):
 
 class ScenarioWindonshore(Base):
     __tablename__ = 'scenario_windonshore'
-    __table_args__ = {'schema': 'app_renpassgis'}
+    __table_args__ = {'schema': 'calc_renpass_gis'}
 
     scenario_name = Column(String, primary_key=True, nullable=False)
     u_region_id = Column(String, primary_key=True, nullable=False)
@@ -370,13 +370,13 @@ t_scenario_windonshore_append = Table(
     Column('u_region_id', String(14)),
     Column('year', Integer),
     Column('capacity', Float(53)),
-    schema='app_renpassgis'
+    schema='calc_renpass_gis'
 )
 
 
 class VernetzenGridLink(Base):
     __tablename__ = 'vernetzen_grid_links'
-    __table_args__ = {'schema': 'app_renpassgis'}
+    __table_args__ = {'schema': 'calc_renpass_gis'}
 
     l_id = Column(SmallInteger, primary_key=True)
     v_id_1 = Column(SmallInteger, nullable=False)
@@ -409,7 +409,7 @@ class VernetzenGridLink(Base):
 
 class VernetzenGridVertice(Base):
     __tablename__ = 'vernetzen_grid_vertices'
-    __table_args__ = {'schema': 'app_renpassgis'}
+    __table_args__ = {'schema': 'calc_renpass_gis'}
 
     v_id = Column(SmallInteger, primary_key=True)
     lon = Column(Numeric(10, 8))
