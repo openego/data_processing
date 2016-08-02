@@ -1,18 +1,18 @@
 ﻿
 ------------------------------------ SETUP
 
--- Create schemas for DEA
-DROP SCHEMA IF EXISTS	calc_ego_re CASCADE;
-CREATE SCHEMA 		calc_ego_re;
-
--- Set default privileges for schema
-ALTER DEFAULT PRIVILEGES IN SCHEMA calc_ego_re GRANT ALL ON TABLES TO oeuser;
-ALTER DEFAULT PRIVILEGES IN SCHEMA calc_ego_re GRANT ALL ON SEQUENCES TO oeuser;
-ALTER DEFAULT PRIVILEGES IN SCHEMA calc_ego_re GRANT ALL ON FUNCTIONS TO oeuser;
-
--- Grant all in schema
-GRANT ALL ON SCHEMA 	calc_ego_re TO oeuser WITH GRANT OPTION;
-GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA calc_ego_re TO oeuser;
+-- -- Create schemas for DEA
+-- DROP SCHEMA IF EXISTS	calc_ego_re CASCADE;
+-- CREATE SCHEMA 		calc_ego_re;
+-- 
+-- -- Set default privileges for schema
+-- ALTER DEFAULT PRIVILEGES IN SCHEMA calc_ego_re GRANT ALL ON TABLES TO oeuser;
+-- ALTER DEFAULT PRIVILEGES IN SCHEMA calc_ego_re GRANT ALL ON SEQUENCES TO oeuser;
+-- ALTER DEFAULT PRIVILEGES IN SCHEMA calc_ego_re GRANT ALL ON FUNCTIONS TO oeuser;
+-- 
+-- -- Grant all in schema
+-- GRANT ALL ON SCHEMA 	calc_ego_re TO oeuser WITH GRANT OPTION;
+-- GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA calc_ego_re TO oeuser;
 
 
 -- Table with new locations   (OK!) -> 10.951ms =1.608.661
@@ -67,7 +67,7 @@ WHERE  	t1.id = t2.id;
 
 ------------------------------------ DEA METHODS
 
--- -- -- -- M1 HS-solar-roof
+-- -- -- -- M1 HS-solar-roof for 1 GD
 -- 
 -- -- HS solar roof =21.536
 -- DROP TABLE IF EXISTS calc_ego_dea.renewable_power_plants_germany_hv_solar_roof;
@@ -141,8 +141,179 @@ WHERE  	t1.id = t2.id;
 --   USING gist
 --   (geom);
 -- 
--- ------------------------------------ JOIN
+
+-- LOOP with new tables for each GD! Gets a memory error, beacuse a miximum of 1000 locks!
 -- 
+-- DO
+-- $$
+-- DECLARE	gd integer;
+-- BEGIN
+--     FOR gd IN 1..2
+--     LOOP
+--         EXECUTE 'DROP TABLE IF EXISTS calc_ego_re.dea_' || gd || ';
+-- 		CREATE TABLE calc_ego_re.dea_' || gd || ' AS
+-- 		SELECT	row_number() over (ORDER BY electrical_capacity DESC)as sorted,
+-- 			dea.*
+-- 		FROM 	calc_ego_re.ego_deu_dea AS dea
+-- 		WHERE 	(dea.voltage_level = ''04 (HS/MS)'' OR dea.voltage_level = ''05 (MS)'') AND
+-- 			(dea.generation_subtype = ''solar_roof_mounted'') AND dea.subst_id =' || gd || ';
+-- 		ALTER TABLE calc_ego_re.dea_' || gd || ' ADD PRIMARY KEY (sorted);
+-- 
+-- 		DROP TABLE IF EXISTS calc_ego_re.osm_' || gd || ';
+-- 		CREATE TABLE calc_ego_re.osm_' || gd || ' AS
+-- 		SELECT 	row_number() over (ORDER BY osm.area_ha DESC)as sorted,
+-- 		osm.*
+-- 		FROM 	orig_geo_opsd.urban_sector_per_grid_district_4_agricultural AS osm
+-- 		WHERE 	subst_id =' || gd || ';
+-- 		ALTER TABLE calc_ego_re.osm_' || gd || ' ADD PRIMARY KEY (sorted);
+-- 
+-- 		DROP TABLE IF EXISTS calc_ego_re.jnt_' || gd || ';
+-- 		CREATE TABLE calc_ego_re.jnt_' || gd || ' AS
+-- 		SELECT	dea.sorted,
+-- 			dea.id,
+-- 			dea.electrical_capacity,
+-- 			dea.generation_type,
+-- 			dea.generation_subtype,
+-- 			dea.voltage_level,
+-- 			dea.subst_id,
+-- 			dea.geom AS old_geom,
+-- 			ST_MAKELINE(ST_CENTROID(osm.geom),dea.geom) ::geometry(LineString,3035) AS geom_line,
+-- 			ST_CENTROID(osm.geom) ::geometry(Point,3035) AS geom
+-- 		FROM	calc_ego_re.dea_' || gd || ' AS dea
+-- 		INNER JOIN calc_ego_re.osm_' || gd || ' AS osm ON (dea.sorted = osm.sorted);
+-- 		ALTER TABLE calc_ego_re.jnt_' || gd || ' ADD PRIMARY KEY (sorted);
+-- 
+-- 		UPDATE 	calc_ego_re.ego_deu_dea AS t1
+-- 		SET  	geom_new = t2.geom_new,
+-- 			flag = ''M1''
+-- 		FROM	(SELECT	m.id AS id,
+-- 				m.geom AS geom_new
+-- 			FROM	calc_ego_re.jnt_' || gd || ' AS m
+-- 			)AS t2
+-- 		WHERE  	t1.id = t2.id;
+-- 
+-- 		DROP TABLE IF EXISTS calc_ego_re.dea_' || gd || ';
+-- 		DROP TABLE IF EXISTS calc_ego_re.osm_' || gd || ';
+-- 		DROP TABLE IF EXISTS calc_ego_re.jnt_' || gd || ';
+-- 			';
+--     END LOOP;
+-- END;
+-- $$;
+
+
+
+-- LOOP FOR M1
+
+DROP TABLE IF EXISTS 	calc_ego_re.temp_dea ;
+CREATE TABLE 		calc_ego_re.temp_dea (
+	sorted bigint NOT NULL,
+	id bigint NOT NULL,
+	sort integer,
+	electrical_capacity numeric,
+	generation_type text,
+	generation_subtype character varying,
+	voltage_level character varying,
+	voltage_type character(2),
+	subst_id integer,
+	la_id integer,
+	geom_line geometry(LineString,3035),
+	geom geometry(Point,3035),
+	geom_new geometry(Point,3035),
+	flag character varying,
+	CONSTRAINT temp_dea_pkey PRIMARY KEY (sorted));
+
+DROP TABLE IF EXISTS 	calc_ego_re.temp_osm ;
+CREATE TABLE 		calc_ego_re.temp_osm (
+	sorted bigint NOT NULL,
+	id integer,
+	subst_id integer,
+	area_ha numeric,
+	geom geometry(Polygon,3035),
+	CONSTRAINT temp_osm_pkey PRIMARY KEY (sorted));
+
+DROP TABLE IF EXISTS 	calc_ego_re.temp_jnt ;
+CREATE TABLE 		calc_ego_re.temp_jnt (
+  sorted bigint NOT NULL,
+  id bigint,
+  electrical_capacity numeric,
+  generation_type text,
+  generation_subtype character varying,
+  voltage_level character varying,
+  subst_id integer,
+  old_geom geometry(Point,3035),
+  geom_line geometry(LineString,3035),
+  geom geometry(Point,3035),
+  CONSTRAINT temp_jnt_pkey PRIMARY KEY (sorted));
+
+DO
+$$
+DECLARE	gd integer;
+BEGIN
+    FOR gd IN 1..3610
+    LOOP
+        EXECUTE 'INSERT INTO calc_ego_re.temp_dea
+		SELECT	row_number() over (ORDER BY electrical_capacity DESC)as sorted,
+			dea.*
+		FROM 	calc_ego_re.ego_deu_dea AS dea
+		WHERE 	(dea.voltage_level = ''04 (HS/MS)'' OR dea.voltage_level = ''05 (MS)'') AND
+			(dea.generation_subtype = ''solar_roof_mounted'') AND dea.subst_id =' || gd || ';
+
+		INSERT INTO calc_ego_re.temp_osm
+		SELECT 	row_number() over (ORDER BY osm.area_ha DESC)as sorted,
+		osm.*
+		FROM 	orig_geo_opsd.urban_sector_per_grid_district_4_agricultural AS osm
+		WHERE 	subst_id =' || gd || ';
+
+		INSERT INTO calc_ego_re.temp_jnt
+		SELECT	dea.sorted,
+			dea.id,
+			dea.electrical_capacity,
+			dea.generation_type,
+			dea.generation_subtype,
+			dea.voltage_level,
+			dea.subst_id,
+			dea.geom AS old_geom,
+			ST_MAKELINE(ST_CENTROID(osm.geom),dea.geom) ::geometry(LineString,3035) AS geom_line,
+			ST_CENTROID(osm.geom) ::geometry(Point,3035) AS geom
+		FROM	calc_ego_re.temp_dea AS dea
+		INNER JOIN calc_ego_re.temp_osm AS osm ON (dea.sorted = osm.sorted);
+
+		UPDATE 	calc_ego_re.ego_deu_dea AS t1
+		SET  	geom_new = t2.geom_new,
+			flag = ''M1''
+		FROM	(SELECT	m.id AS id,
+				m.geom AS geom_new
+			FROM	calc_ego_re.temp_jnt AS m
+			)AS t2
+		WHERE  	t1.id = t2.id;
+
+		TRUNCATE TABLE calc_ego_re.temp_dea, calc_ego_re.temp_osm, calc_ego_re.temp_jnt;
+			';
+    END LOOP;
+END;
+$$;
+
+
+
+UPDATE 	calc_ego_re.ego_deu_dea AS t1
+SET  	geom_line = t2.geom_line
+FROM	(SELECT	dea.id AS id,
+		ST_MAKELINE(dea.geom,dea.geom_new) ::geometry(LineString,3035) AS geom_line
+	FROM	calc_ego_re.ego_deu_dea AS dea
+	WHERE	dea.geom_new IS NOT NULL
+	)AS t2
+WHERE  	t1.id = t2.id;
+
+DROP TABLE IF EXISTS 	calc_ego_re.ego_deu_dea_m1 ;
+CREATE TABLE 		calc_ego_re.ego_deu_dea_m1 AS
+SELECT 	dea.*
+FROM	calc_ego_re.ego_deu_dea AS dea
+WHERE	flag = 'M1';
+
+ALTER TABLE calc_ego_re.ego_deu_dea_m1
+	ADD PRIMARY KEY (id);
+
+
 -- -- TEST
 -- 
 -- -- DEA
