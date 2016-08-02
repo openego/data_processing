@@ -41,14 +41,16 @@ for gid, geom in spatial_ids:
 
     # create entry wind feedin
     wind = WindFeedin()
-    wind.gid, wind.myyear, wind.feedin = gid, year,\
-        E126_power_plant.feedin(weather=wea, installed_capacity=1).values
+    wind.gid, wind.myyear, wind.feedin, wind.geom = gid, year,\
+        E126_power_plant.feedin(weather=wea, installed_capacity=1).values,\
+        shape.from_shape(geom, srid=4326)
     session.add(wind)
 
     # create entry solar feedin
     solar = SolarFeedin()
-    solar.gid, solar.myyear, solar.feedin = gid, year,\
-        yingli_module.feedin(weather=wea, peak_power=1).values
+    solar.gid, solar.myyear, solar.feedin, solar.geom = gid, year,\
+        yingli_module.feedin(weather=wea, peak_power=1).values,\
+        shape.from_shape(geom, srid=4326)
     session.add(solar)
     session.flush()
 

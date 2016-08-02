@@ -59,22 +59,24 @@ class WindFeedin(Base):
     __table_args__ = ({'schema': 'app_renpassgis',
                        'extend_existing': True},)
     gid = Column(Integer,
-                 ForeignKey('coastdat.spatial.gid'),
+                 #ForeignKey('coastdat.spatial.gid'),
                  primary_key=True)
-    myyear = Column('year', Integer,
-                  ForeignKey('coastdat.year.year'))
+    myyear = Column('year', Integer)
+                  #ForeignKey('coastdat.year.year'))
     feedin = Column(postgresql.ARRAY(Float))
+    geom = Column(Geometry('POINT', 4326))
 
 class SolarFeedin(Base):
     __tablename__ = 'parameter_solar_feedin'
     __table_args__ = ({'schema': 'app_renpassgis',
                        'extend_existing': True},)
     gid = Column(Integer,
-                 ForeignKey('coastdat.spatial.gid'),
+                 #ForeignKey('coastdat.spatial.gid'),
                  primary_key=True)
-    myyear = Column('year', Integer,
-                  ForeignKey('coastdat.year.year'))
+    myyear = Column('year', Integer)
+                 #ForeignKey('coastdat.year.year'))
     feedin = Column(postgresql.ARRAY(Float))
+    geom = Column(Geometry('POINT', 4326))
 
 Base.metadata.create_all()
 
