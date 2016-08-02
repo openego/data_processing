@@ -28,7 +28,7 @@ spatial_ids = session.query(Spatial.gid, Spatial.geom).\
 spatial_ids = [(gid, shape.to_shape(geom)) for gid, geom in spatial_ids]
 
 # weather year
-year = 2012
+year = 2011
 # create powerplants, specified by configuration file
 enerconE126 = {k: asnum(v) for k,v in cfg.items('WindTurbine')}
 E126_power_plant = plants.WindPowerPlant(**enerconE126)
