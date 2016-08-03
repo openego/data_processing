@@ -1,0 +1,71 @@
+﻿
+-- "Create Table"   (OK!) 200ms =0
+DROP TABLE IF EXISTS  	calc_ego_re.geo_pot_area_dump CASCADE;
+CREATE TABLE         	calc_ego_re.geo_pot_area_dump (
+		id SERIAL NOT NULL,
+		--region_key character varying(12) NOT NULL,
+		geom geometry(Polygon,3035),
+CONSTRAINT 	geo_pot_area_dump_pkey PRIMARY KEY (id));
+
+-- "Insert pots"   (OK!) 493.000ms =208.706
+INSERT INTO     calc_ego_re.geo_pot_area_dump (geom)
+	SELECT	(ST_DUMP(ST_MULTI(ST_UNION(
+				ST_BUFFER(ST_BUFFER(ST_TRANSFORM(pot.geom,3035),-0,01),0,011)
+		)))).geom AS geom
+	FROM	calc_ego_re.geo_pot_area AS pot;
+
+CREATE INDEX geo_pot_area_dump_idx
+  ON calc_ego_re.geo_pot_area_dump
+  USING gist
+  (geom);
+
+-- Validate (geom)   (OK!) -> 22.000ms =0
+DROP VIEW IF EXISTS	calc_ego_re.geo_pot_area_dump_error_geom_view CASCADE;
+CREATE VIEW		calc_ego_re.geo_pot_area_dump_error_geom_view AS 
+	SELECT	test.id,
+		test.error,
+		reason(ST_IsValidDetail(test.geom)) AS error_reason,
+		ST_SetSRID(location(ST_IsValidDetail(test.geom)),3035) ::geometry(Point,3035) AS error_location
+	FROM	(
+		SELECT	source.id AS id,				-- PK
+			ST_IsValid(source.geom) AS error,
+			source.geom AS geom
+		FROM	calc_ego_re.geo_pot_area_dump AS source	-- Table
+		) AS test
+	WHERE	test.error = FALSE;
+
+-- Drop empty view   (OK!) -> 100ms =1
+SELECT f_drop_view('{geo_pot_area_dump_error_geom_view}', 'calc_ego_re');
+
+
+-- -- -- 
+
+-- "Create Table"   (OK!) 200ms =0
+DROP TABLE IF EXISTS  	calc_ego_re.geo_pot_area_per_grid_district CASCADE;
+CREATE TABLE         	calc_ego_re.geo_pot_area_per_grid_district (
+		id SERIAL NOT NULL,
+		region_key character varying(12) NOT NULL,
+		geom geometry(Polygon,3035),
+CONSTRAINT 	geo_pot_area_per_grid_district_pkey PRIMARY KEY (id));
+
+
+-- -- "Insert pots"   (bad!) 493.000ms =
+-- INSERT INTO     calc_ego_re.geo_pot_area_per_grid_district (region_key, geom)
+-- 	SELECT	pot.region_key,
+-- 		ST_INTERSECTION(pot.geom,dis.geom) AS geom
+-- 	FROM	calc_ego_re.geo_pot_area_dump AS pot,
+-- 		calc_ego_grid_district.grid_district AS dis
+-- 	WHERE	pot.geom && dis.geom;
+
+
+-- "Insert pots"   (OK!) 493.000ms =208.706
+INSERT INTO     calc_ego_re.geo_pot_area_per_grid_district (region_key, geom)
+	SELECT	cut.region_key,
+		cut.geom ::geometry(Polygon,3035)
+	FROM	(SELECT pot.region_key,
+			ST_MakeValid(ST_INTERSECTION(pot.geom,dis.geom)) AS geom
+		FROM	calc_ego_re.geo_pot_area_dump AS pot,
+			calc_ego_grid_district.grid_district AS dis
+		WHERE	pot.geom && dis.geom
+		) AS cut
+	WHERE	ST_GeometryType(cut.geom) = 'ST_Polygon' AND ST_IsValid(cut.geom) = 't';

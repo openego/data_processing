@@ -1034,6 +1034,45 @@ ALTER TABLE		calc_ego_grid_district.grid_district_ta OWNER TO oeuser;
 
 ---------- ---------- ----------
 
+
+-- Grid Districts with Multipolygons (Bugs!)
+
+DROP SEQUENCE IF EXISTS calc_ego_grid_district.grid_district_dump_id_seq;
+CREATE SEQUENCE 	calc_ego_grid_district.grid_district_dump_id_seq;
+
+DROP TABLE IF EXISTS	calc_ego_grid_district.grid_district_dump CASCADE;
+CREATE TABLE         	calc_ego_grid_district.grid_district_dump AS
+	SELECT	nextval('calc_ego_grid_district.grid_district_dump_id_seq') AS id,
+		subst_id,
+		(ST_DUMP(dis.geom)).geom AS geom
+	FROM	calc_ego_grid_district.grid_district AS dis;
+
+ALTER TABLE calc_ego_grid_district.grid_district_dump
+	ADD COLUMN subst_cnt integer,
+	ADD PRIMARY KEY (id);
+
+-- Create Index GIST (geom)   (OK!) -> 100ms =0
+CREATE INDEX  	grid_district_dump_geom_idx
+	ON	calc_ego_grid_district.grid_district_dump
+	USING	GIST (geom);
+
+-- usw count   (OK!) -> 1.000ms =2.270
+UPDATE 	calc_ego_grid_district.grid_district_dump AS t1
+SET  	subst_cnt = t2.subst_cnt
+FROM	(SELECT	mun.id AS id,
+		COUNT(sub.geom)::integer AS subst_cnt
+	FROM	calc_ego_grid_district.grid_district_dump AS mun,
+		calc_ego_substation.substation_110 AS sub
+	WHERE  	mun.geom && sub.geom AND
+		ST_CONTAINS(mun.geom,sub.geom)
+	GROUP BY mun.id
+	)AS t2
+WHERE  	t1.id = t2.id;
+
+
+
+
+
 -- -- Dump Rings   (OK!) -> 22.000ms =0
 -- SELECT	dis.subst_id,
 -- 	ST_NumInteriorRings(dis.geom) ::integer AS count_ring

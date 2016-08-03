@@ -80,3 +80,10 @@ SET voltage=substr(osm_deu_substations_ehv.voltage,1,3)
 FROM orig_osm.osm_deu_substations_ehv,orig_ego.ego_deu_voronoi_ehv, AA
 WHERE ST_Intersects (ego_deu_voronoi_ehv.geom,AA.geom) AND osm_deu_substations_ehv.subst_id=ego_deu_voronoi_ehv.subst_id AND AA.id=proc_renewable_power_plants_germany.id;
 
+
+/*Change generation_type = 'hydro' to 'run_of_river' for compatibility reasons*/
+
+UPDATE orig_geo_powerplants.proc_renewable_power_plants_germany
+	SET generation_type = 'run_of_river'
+	WHERE generation_type = 'hydro'; 
+

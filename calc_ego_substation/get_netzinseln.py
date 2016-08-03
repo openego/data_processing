@@ -1,7 +1,7 @@
+# -*- coding: utf-8 -*-
 # Copyright 2016 by NEXT ENERGY
 # Published under GNU GENERAL PUBLIC LICENSE Version 3 (see https://github.com/openego/data_processing/blob/master/LICENSE)
 
-# -*- coding: utf-8 -*-
 """
 # How to use this script:
 # python get_netzinseln.py input.csv output.csv
@@ -26,7 +26,7 @@ def find_netzinseln(cur,conn):
             id             serial PRIMARY KEY NOT NULL,
             lon            float NOT NULL,
             lat            float NOT NULL,
-            point	   geometry NOT NULL,
+            point	   geometry(Point,4326) NOT NULL,
             polygon	   geometry NOT NULL,	
             voltage        text,
             power_type     text,
