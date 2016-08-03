@@ -1,14 +1,40 @@
 # coding: utf-8
-from sqlalchemy import Column, DateTime, Float, ForeignKey, Integer, Numeric, SmallInteger, String, Table, Text, text
+from sqlalchemy import Column, DateTime, Float, ForeignKey, Integer, Numeric,\
+create_engine, SmallInteger, String, Table, Text, text, MetaData, Sequence
 from geoalchemy2.types import Geometry
-from sqlalchemy.dialects.postgresql.base import ARRAY
-from sqlalchemy.orm import relationship
+from sqlalchemy.dialects.postgresql.base import ARRAY, DOUBLE_PRECISION, NUMERIC
+from sqlalchemy.orm import relationship, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.schema import CreateSchema
+import os.path as path
+import configparser as cp
+
+FILENAME = 'config.ini'
+FILE = path.join(path.expanduser("~"), '.open_eGo', FILENAME)
+cfg = cp.ConfigParser()
+cfg.read(FILE)
+
+print("Connecting to database")
+
+section = 'Test'
+conn = create_engine(
+    "postgresql+psycopg2://{user}:{password}@{host}:{port}/{db}".format(
+        user=cfg.get(section, 'username'),
+        password=cfg.get(section, 'password'),
+        host=cfg.get(section, 'host'),
+        port=cfg.get(section, 'port'),
+        db=cfg.get(section, 'db')))
+
+print("Connected.")
+
+#session = sessionmaker(bind=conn)()
+#session.execute(CreateSchema('calc_renpass_gis'))
+#session.execute("SET search_path to 'calc_renpass_gis';show search_path;"):
 
 
-Base = declarative_base()
-metadata = Base.metadata
-
+metadata = MetaData(schema='calc_renpass_gis')
+metadata.bind = conn
+Base = declarative_base(metadata=metadata)
 
 t_distribution_urid_to_nuts = Table(
     'distribution_urid_to_nuts', metadata,
@@ -45,22 +71,24 @@ class ParameterRegion(Base):
     __tablename__ = 'parameter_region'
     __table_args__ = {'schema': 'calc_renpass_gis'}
 
-    gid = Column(Integer, primary_key=True, server_default=text("nextval('calc_renpass_gis.register_regions_gid_seq'::regclass)"))
+    gid = Column(Integer, Sequence('parameter_region_gid_seq', schema='calc_renpass_gis'), primary_key=True)
     u_region_id = Column(String(14), nullable=False)
     stat_level = Column(Integer)
     geom = Column(Geometry('MULTIPOLYGON', 4326))
     geom_point = Column(Geometry('POINT', 4326))
 
 
-class ParameterSolarFeedin(Base):
-    __tablename__ = 'parameter_solar_feedin'
-    __table_args__ = {'schema': 'calc_renpass_gis'}
+Base.metadata.create_all()
 
-    gid = Column(Integer, primary_key=True, server_default=text("nextval('calc_renpass_gis.parameter_solar_feedin_gid_seq'::regclass)"))
-    year = Column(Integer)
-    feedin = Column(ARRAY(DOUBLE_PRECISION(precision=53)))
-    geom = Column(Geometry('POINT', 4326), index=True)
-
+#class ParameterSolarFeedin(Base):
+#    __tablename__ = 'parameter_solar_feedin'
+#    __table_args__ = {'schema': 'calc_renpass_gis'}
+#
+#    gid = Column(Integer, primary_key=True, server_default=text("nextval('calc_renpass_gis.parameter_solar_feedin_gid_seq'::regclass)"))
+#    year = Column(Integer)
+#    feedin = Column(ARRAY(DOUBLE_PRECISION(precision=53)))
+#    geom = Column(Geometry('POINT', 4326), index=True)
+#
 
 class ParameterThermalPowerplant(Base):
     __tablename__ = 'parameter_thermal_powerplant'
@@ -146,15 +174,15 @@ class ParameterWindCurve(Base):
     type = relationship('ParameterWindTurbine')
 
 
-class ParameterWindFeedin(Base):
-    __tablename__ = 'parameter_wind_feedin'
-    __table_args__ = {'schema': 'calc_renpass_gis'}
-
-    gid = Column(Integer, primary_key=True, server_default=text("nextval('calc_renpass_gis.parameter_wind_feedin_gid_seq'::regclass)"))
-    year = Column(Integer)
-    feedin = Column(ARRAY(DOUBLE_PRECISION(precision=53)))
-    geom = Column(Geometry('POINT', 4326), index=True)
-
+#class ParameterWindFeedin(Base):
+#    __tablename__ = 'parameter_wind_feedin'
+#    __table_args__ = {'schema': 'calc_renpass_gis'}
+#
+#    gid = Column(Integer, primary_key=True, server_default=text("nextval('calc_renpass_gis.parameter_wind_feedin_gid_seq'::regclass)"))
+#    year = Column(Integer)
+#    feedin = Column(ARRAY(DOUBLE_PRECISION(precision=53)))
+#    geom = Column(Geometry('POINT', 4326), index=True)
+#
 
 class ParameterWindTurbine(Base):
     __tablename__ = 'parameter_wind_turbine'
@@ -250,7 +278,7 @@ class ScenarioRenewable(Base):
     scenario_runofriver = Column(String(50), nullable=False)
     scenario_windoffshore = Column(String(50), nullable=False)
     scenario_windonshore = Column(String(50), nullable=False)
-    changed_by = Column(String(20), server_default=text(""current_user"()"))
+    changed_by = Column(String(20), server_default=text("current_user"))
     lastmodified = Column(DateTime, server_default=text("now()"))
 
 
@@ -289,7 +317,7 @@ class ScenarioSetting(Base):
     scenario_resource = Column(String(50), nullable=False)
     scenario_storage = Column(String(50), nullable=False)
     scenario_thermal_powerplant = Column(String(50), nullable=False)
-    changed_by = Column(String(20), server_default=text(""current_user"()"))
+    changed_by = Column(String(20), server_default=text("current_user"))
     lastmodified = Column(DateTime, server_default=text("now()"))
 
 
@@ -421,3 +449,5 @@ class VernetzenGridVertice(Base):
     status = Column(String(25))
     geom = Column(Geometry('POINT', 4326))
     u_region_id = Column(String(14))
+
+Base.metadata.create_all()
