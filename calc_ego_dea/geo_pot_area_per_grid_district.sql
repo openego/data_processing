@@ -44,28 +44,32 @@ SELECT f_drop_view('{geo_pot_area_dump_error_geom_view}', 'calc_ego_re');
 DROP TABLE IF EXISTS  	calc_ego_re.geo_pot_area_per_grid_district CASCADE;
 CREATE TABLE         	calc_ego_re.geo_pot_area_per_grid_district (
 		id SERIAL NOT NULL,
-		region_key character varying(12) NOT NULL,
+		subst_id integer,
+		area_ha decimal,
 		geom geometry(Polygon,3035),
 CONSTRAINT 	geo_pot_area_per_grid_district_pkey PRIMARY KEY (id));
 
-
--- -- "Insert pots"   (bad!) 493.000ms =
--- INSERT INTO     calc_ego_re.geo_pot_area_per_grid_district (region_key, geom)
--- 	SELECT	pot.region_key,
--- 		ST_INTERSECTION(pot.geom,dis.geom) AS geom
--- 	FROM	calc_ego_re.geo_pot_area_dump AS pot,
--- 		calc_ego_grid_district.grid_district AS dis
--- 	WHERE	pot.geom && dis.geom;
-
-
 -- "Insert pots"   (OK!) 493.000ms =208.706
-INSERT INTO     calc_ego_re.geo_pot_area_per_grid_district (region_key, geom)
-	SELECT	cut.region_key,
+INSERT INTO     calc_ego_re.geo_pot_area_per_grid_district (area_ha, geom)
+	SELECT	ST_AREA(cut.geom)/10000,
 		cut.geom ::geometry(Polygon,3035)
-	FROM	(SELECT pot.region_key,
-			ST_MakeValid(ST_INTERSECTION(pot.geom,dis.geom)) AS geom
+	FROM	(SELECT ST_MakeValid((ST_DUMP(ST_MULTI(ST_INTERSECTION(pot.geom,dis.geom)))).geom) AS geom
 		FROM	calc_ego_re.geo_pot_area_dump AS pot,
 			calc_ego_grid_district.grid_district AS dis
 		WHERE	pot.geom && dis.geom
 		) AS cut
-	WHERE	ST_GeometryType(cut.geom) = 'ST_Polygon' AND ST_IsValid(cut.geom) = 't';
+	WHERE	ST_IsValid(cut.geom) = 't' AND ST_GeometryType(cut.geom) = 'ST_Polygon';
+
+-- Get substation ID
+UPDATE 	calc_ego_re.geo_pot_area_per_grid_district AS t1
+SET  	subst_id = t2.subst_id
+FROM    (
+	SELECT	pot.id AS id,
+		gd.subst_id AS subst_id
+	FROM	calc_ego_re.geo_pot_area_per_grid_district AS pot,
+		calc_ego_grid_district.grid_district AS gd
+	WHERE  	gd.geom && pot.geom AND
+		ST_CONTAINS(gd.geom,pot.geom)
+	) AS t2
+WHERE  	t1.id = t2.id;
+
