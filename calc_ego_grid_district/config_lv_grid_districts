@@ -1,0 +1,18 @@
+[voronoi auxiliaries]
+dummys = SubstationDummy
+voronoi_polygons = EgoDeuLvGridDistrictsVoronoi
+voronoi_cuttings = EgoDeuLvGridDistrictsVoronoiCut
+
+
+[substations]
+onts = EgoDeuOnts
+
+[regions]
+load_areas = EgoDeuLoadArea
+
+[statistics]
+population_stats = ZensusPopulationPerHa
+
+[grid districts]
+grid_districts_withoutpop = EgoDeuLvGridDistrictsWithoutPop
+grid_districts = LVGridDistrict
