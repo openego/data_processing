@@ -47,16 +47,16 @@ class Typified(Base):
     __tablename__ = 'coastdat.typified'
     __table_args__ = ({'autoload': True},)
 
-meta.reflect(bind=conn, schema='app_renpassgis')
+meta.reflect(bind=conn, schema='calc_renpass_gis')
 
 class Region(Base):
-    __tablename__ = 'app_renpassgis.parameter_region'
+    __tablename__ = 'calc_renpass_gis.parameter_region'
     __table_args__ = ({'autoload': True},)
 
-# create new relations in target scheme app_renpassgis
+# create new relations in target scheme calc_renpass_gis
 class WindFeedin(Base):
     __tablename__ = 'parameter_wind_feedin'
-    __table_args__ = ({'schema': 'app_renpassgis',
+    __table_args__ = ({'schema': 'calc_renpass_gis',
                        'extend_existing': True},)
     gid = Column(Integer,
                  #ForeignKey('coastdat.spatial.gid'),
@@ -68,7 +68,7 @@ class WindFeedin(Base):
 
 class SolarFeedin(Base):
     __tablename__ = 'parameter_solar_feedin'
-    __table_args__ = ({'schema': 'app_renpassgis',
+    __table_args__ = ({'schema': 'calc_renpass_gis',
                        'extend_existing': True},)
     gid = Column(Integer,
                  #ForeignKey('coastdat.spatial.gid'),
