@@ -60,7 +60,7 @@ INSERT INTO     calc_ego_re.geo_pot_area_per_grid_district (area_ha, geom)
 		) AS cut
 	WHERE	ST_IsValid(cut.geom) = 't' AND ST_GeometryType(cut.geom) = 'ST_Polygon';
 
--- Get substation ID
+-- Get substation ID   (OK!) 46.000ms =123.862
 UPDATE 	calc_ego_re.geo_pot_area_per_grid_district AS t1
 SET  	subst_id = t2.subst_id
 FROM    (
@@ -69,7 +69,7 @@ FROM    (
 	FROM	calc_ego_re.geo_pot_area_per_grid_district AS pot,
 		calc_ego_grid_district.grid_district AS gd
 	WHERE  	gd.geom && pot.geom AND
-		ST_CONTAINS(gd.geom,pot.geom)
+		ST_CONTAINS(gd.geom,ST_PointOnSurface(pot.geom))
 	) AS t2
 WHERE  	t1.id = t2.id;
 
