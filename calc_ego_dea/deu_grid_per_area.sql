@@ -1,5 +1,5 @@
 ﻿
--- Skript to gnerate regular grid points for different areas
+-- Skript to generate regular grid points for different areas
 -- Starting from a 500m grid for germany: deu_grid_500m_ 
 -- Entire bounding box with points outside Germany has 2.237.090 points!
 
