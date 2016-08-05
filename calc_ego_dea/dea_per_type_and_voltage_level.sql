@@ -51,7 +51,22 @@ FROM    (
 	) AS t2
 WHERE  	t1.id = t2.id;
 
+-- MView outside GD   (OK!) -> 1.000ms =3.585
+DROP MATERIALIZED VIEW IF EXISTS 	calc_ego_re.ego_deu_dea_out_mview ;
+CREATE MATERIALIZED VIEW 		calc_ego_re.ego_deu_dea_out_mview AS
+	SELECT	id,electrical_capacity,generation_type,generation_subtype,voltage_level,
+		subst_id,geom,flag
+	FROM 	calc_ego_re.ego_deu_dea AS dea
+	WHERE	subst_id IS NULL;
 
+CREATE INDEX ego_deu_dea_out_mview_geom_idx
+  ON calc_ego_re.ego_deu_dea_out_mview USING gist (geom);
+
+-- Flag OUT GD    (OK!) -> 1.000ms =3.585
+UPDATE 	calc_ego_re.ego_deu_dea AS dea
+SET	flag = NULL,
+	geom_new = NULL
+WHERE	subst_id IS NULL;
 
 ------------------------------------ DEA METHODS
 -- DEA (ohne HS) -> 1.598.624
@@ -64,40 +79,59 @@ WHERE  	t1.id = t2.id;
 -- 6. M5	solar (07)	-> grid_la	-> 
 
 
+-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
 -- 1. M1-1
 -- Relocate "biomass" & "gas" to OSM agricultural areas
 -- (OK!) -> 1.579.000ms =15.090
 -- Total 16.062 -> 972 Rest!
+-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
 
--- MView M1-1 DEA   (OK!) -> 1.000ms =16.062
+-- MView M1-1 DEA   (OK!) -> 1.000ms =16.039
 DROP MATERIALIZED VIEW IF EXISTS 	calc_ego_re.ego_deu_dea_m1_1_a_mview ;
 CREATE MATERIALIZED VIEW 		calc_ego_re.ego_deu_dea_m1_1_a_mview AS
-		SELECT	id,electrical_capacity,generation_type,generation_subtype,voltage_level,
-			subst_id,geom,flag
+		SELECT	id,
+			electrical_capacity,
+			generation_type,
+			generation_subtype,
+			voltage_level,
+			subst_id,
+			geom,
+			flag
 		FROM 	calc_ego_re.ego_deu_dea AS dea
 		WHERE 	(dea.generation_type = 'biomass' OR dea.generation_type = 'gas') AND
 			(dea.voltage_level = '04 (HS/MS)' OR dea.voltage_level = '05 (MS)' OR
 			dea.voltage_level = '06 (MS/NS)' OR dea.voltage_level = '07 (NS)'
-			OR dea.voltage_level IS NULL ) ;
+			OR dea.voltage_level IS NULL ) 
+			AND dea.subst_id IS NOT NULL;
+
+CREATE INDEX ego_deu_dea_m1_1_a_mview_geom_idx
+	ON calc_ego_re.ego_deu_dea_m1_1_a_mview USING gist (geom);
+
+-- Flag M1-1 DEA    (OK!) -> 1.000ms =16.039
+UPDATE 	calc_ego_re.ego_deu_dea AS dea
+SET	flag = 'M1-1_rest'
+WHERE	(dea.generation_type = 'biomass' OR dea.generation_type = 'gas') AND
+		(dea.voltage_level = '04 (HS/MS)' OR dea.voltage_level = '05 (MS)' OR
+		dea.voltage_level = '06 (MS/NS)' OR dea.voltage_level = '07 (NS)'
+		OR dea.voltage_level IS NULL ) 
+		AND dea.subst_id IS NOT NULL;
 
 -- Create Temp Tables for the loop   (OK!) -> 1.000ms =0
 DROP TABLE IF EXISTS 	calc_ego_re.m1_1_dea_temp ;
 CREATE TABLE 		calc_ego_re.m1_1_dea_temp (
 	sorted bigint NOT NULL,
 	id bigint NOT NULL,
-	sort integer,
 	electrical_capacity numeric,
 	generation_type text,
 	generation_subtype character varying,
 	voltage_level character varying,
-	voltage_type character(2),
 	subst_id integer,
-	la_id integer,
-	geom_line geometry(LineString,3035),
 	geom geometry(Point,3035),
-	geom_new geometry(Point,3035),
 	flag character varying,
 	CONSTRAINT m1_1_dea_temp_pkey PRIMARY KEY (sorted));
+
+CREATE INDEX m1_1_dea_temp_geom_idx
+	ON calc_ego_re.m1_1_dea_temp USING gist (geom);
 
 DROP TABLE IF EXISTS 	calc_ego_re.m1_1_osm_temp ;
 CREATE TABLE 		calc_ego_re.m1_1_osm_temp (
@@ -108,20 +142,19 @@ CREATE TABLE 		calc_ego_re.m1_1_osm_temp (
 	geom geometry(Polygon,3035),
 	CONSTRAINT m1_1_osm_temp_pkey PRIMARY KEY (sorted));
 
+CREATE INDEX m1_1_osm_temp_geom_idx
+	ON calc_ego_re.m1_1_osm_temp USING gist (geom);
+
 DROP TABLE IF EXISTS 	calc_ego_re.m1_1_jnt_temp ;
 CREATE TABLE 		calc_ego_re.m1_1_jnt_temp (
-  sorted bigint NOT NULL,
-  id bigint,
-  electrical_capacity numeric,
-  generation_type text,
-  generation_subtype character varying,
-  voltage_level character varying,
-  subst_id integer,
-  old_geom geometry(Point,3035),
-  geom_line geometry(LineString,3035),
-  geom geometry(Point,3035),
-  CONSTRAINT m1_1_jnt_temp_pkey PRIMARY KEY (sorted));
+	sorted bigint NOT NULL,
+	id bigint,
+	geom_line geometry(LineString,3035),
+	geom geometry(Point,3035),
+	CONSTRAINT m1_1_jnt_temp_pkey PRIMARY KEY (sorted));
 
+CREATE INDEX m1_1_jnt_temp_geom_idx
+  ON calc_ego_re.m1_1_jnt_temp USING gist (geom);
 
 -- Run a loop around all grid districs
 DO
@@ -131,13 +164,10 @@ BEGIN
     FOR gd IN 1..3610
     LOOP
         EXECUTE 'INSERT INTO calc_ego_re.m1_1_dea_temp
-		SELECT	row_number() over (ORDER BY electrical_capacity DESC)as sorted,
+		SELECT	row_number() over (ORDER BY dea.electrical_capacity DESC)as sorted,
 			dea.*
-		FROM 	calc_ego_re.ego_deu_dea AS dea
-		WHERE 	(dea.generation_type = ''biomass'' OR dea.generation_type = ''gas'') AND
-			(dea.voltage_level = ''04 (HS/MS)'' OR dea.voltage_level = ''05 (MS)'' OR
-			dea.voltage_level = ''06 (MS/NS)'' OR dea.voltage_level = ''07 (NS)''
-			OR dea.voltage_level IS NULL ) AND dea.subst_id =' || gd || ';
+		FROM 	calc_ego_re.ego_deu_dea_m1_1_a_mview AS dea
+		WHERE 	dea.subst_id =' || gd || ';
 
 		INSERT INTO calc_ego_re.m1_1_osm_temp
 		SELECT 	row_number() over (ORDER BY osm.area_ha DESC)as sorted,
@@ -148,12 +178,6 @@ BEGIN
 		INSERT INTO calc_ego_re.m1_1_jnt_temp
 		SELECT	dea.sorted,
 			dea.id,
-			dea.electrical_capacity,
-			dea.generation_type,
-			dea.generation_subtype,
-			dea.voltage_level,
-			dea.subst_id,
-			dea.geom AS old_geom,
 			ST_MAKELINE(dea.geom,ST_CENTROID(osm.geom)) ::geometry(LineString,3035) AS geom_line,
 			ST_CENTROID(osm.geom) ::geometry(Point,3035) AS geom -- NEW LOCATION!
 		FROM	calc_ego_re.m1_1_dea_temp AS dea
@@ -176,23 +200,25 @@ BEGIN
 END;
 $$;
 
--- Get M1-1 List
+-- Get M1-1 List (OK!) -> 1.000ms = 15.028
 DROP MATERIALIZED VIEW IF EXISTS 	calc_ego_re.ego_deu_dea_m1_1_mview ;
 CREATE MATERIALIZED VIEW 		calc_ego_re.ego_deu_dea_m1_1_mview AS
 SELECT 	dea.*
 FROM	calc_ego_re.ego_deu_dea AS dea
 WHERE	flag = 'M1-1';
 
--- Get M1-1 Rest (OK!) -> 1.000ms = 41
+CREATE INDEX ego_deu_dea_m1_1_mview_geom_idx
+  ON calc_ego_re.ego_deu_dea_m1_1_mview USING gist (geom);
+
+-- Get M1-1 Rest (OK!) -> 1.000ms = 1.011
 DROP MATERIALIZED VIEW IF EXISTS 	calc_ego_re.ego_deu_dea_m1_1_rest_mview ;
 CREATE MATERIALIZED VIEW 		calc_ego_re.ego_deu_dea_m1_1_rest_mview AS
 SELECT 	dea.*
 FROM	calc_ego_re.ego_deu_dea AS dea
-WHERE	((dea.generation_type = 'biomass' OR dea.generation_type = 'gas') AND
-	(dea.voltage_level = '04 (HS/MS)' OR dea.voltage_level = '05 (MS)' OR
-	dea.voltage_level = '06 (MS/NS)' OR dea.voltage_level = '07 (NS)'
-	OR dea.voltage_level IS NULL )) AND
-	dea.flag IS NULL ;
+WHERE	dea.flag = 'M1-1_rest';
+
+CREATE INDEX ego_deu_dea_m1_1_rest_mview_geom_idx
+  ON calc_ego_re.ego_deu_dea_m1_1_rest_mview USING gist (geom);
 
 -- Drop temp
 DROP TABLE IF EXISTS 	calc_ego_re.m1_1_dea_temp ;
@@ -200,38 +226,55 @@ DROP TABLE IF EXISTS 	calc_ego_re.m1_1_osm_temp ;
 DROP TABLE IF EXISTS 	calc_ego_re.m1_1_jnt_temp ;
 
 
-
+-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
 -- 2. M1-2
 -- Relocate "solar roof mounted" with "04 (HS/MS)" to OSM agricultural areas
 -- (OK!) -> 1.679.000ms =18.290
 -- Total 21.535 -> 3.246 Rest!
+-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
 
--- MView M1-2 DEA   (OK!) -> 1.000ms =21.536
+-- MView M1-2 DEA   (OK!) -> 1.000ms =21.500
 DROP MATERIALIZED VIEW IF EXISTS 	calc_ego_re.ego_deu_dea_m1_2_a_mview ;
 CREATE MATERIALIZED VIEW 		calc_ego_re.ego_deu_dea_m1_2_a_mview AS
-		SELECT	dea.*
+		SELECT	id,
+			electrical_capacity,
+			generation_type,
+			generation_subtype,
+			voltage_level,
+			subst_id,
+			geom,
+			flag
 		FROM 	calc_ego_re.ego_deu_dea AS dea
-		WHERE 	(dea.voltage_level = '04 (HS/MS)' OR dea.voltage_level = '05 (MS)') AND
-			(dea.generation_subtype = 'solar_roof_mounted') ;
+		WHERE 	(dea.voltage_level = '04 (HS/MS)' OR dea.voltage_level = '05 (MS)') 
+			AND (dea.generation_subtype = 'solar_roof_mounted') 
+			AND dea.subst_id IS NOT NULL;
+
+CREATE INDEX ego_deu_dea_m1_2_a_mview_geom_idx
+  ON calc_ego_re.ego_deu_dea_m1_2_a_mview USING gist (geom);
+
+-- Flag M1-2 DEA    (OK!) -> 1.000ms =21.500
+UPDATE 	calc_ego_re.ego_deu_dea AS dea
+SET	flag = 'M1-2_rest'
+WHERE	(dea.voltage_level = '04 (HS/MS)' OR dea.voltage_level = '05 (MS)') 
+		AND (dea.generation_subtype = 'solar_roof_mounted') 
+		AND dea.subst_id IS NOT NULL;
 
 -- Create Temp Tables for the loop   (OK!) -> 1.000ms =0
 DROP TABLE IF EXISTS 	calc_ego_re.m1_2_dea_temp ;
 CREATE TABLE 		calc_ego_re.m1_2_dea_temp (
 	sorted bigint NOT NULL,
 	id bigint NOT NULL,
-	sort integer,
 	electrical_capacity numeric,
 	generation_type text,
 	generation_subtype character varying,
 	voltage_level character varying,
-	voltage_type character(2),
 	subst_id integer,
-	la_id integer,
-	geom_line geometry(LineString,3035),
 	geom geometry(Point,3035),
-	geom_new geometry(Point,3035),
 	flag character varying,
 	CONSTRAINT m1_2_dea_temp_pkey PRIMARY KEY (sorted));
+
+CREATE INDEX m1_2_dea_temp_geom_idx
+  ON calc_ego_re.m1_2_dea_temp USING gist (geom);
 
 DROP TABLE IF EXISTS 	calc_ego_re.m1_2_osm_temp ;
 CREATE TABLE 		calc_ego_re.m1_2_osm_temp (
@@ -241,6 +284,9 @@ CREATE TABLE 		calc_ego_re.m1_2_osm_temp (
 	area_ha numeric,
 	geom geometry(Polygon,3035),
 	CONSTRAINT m1_2_osm_temp_pkey PRIMARY KEY (sorted));
+
+CREATE INDEX m1_2_osm_temp_geom_idx
+  ON calc_ego_re.m1_2_osm_temp USING gist (geom);
 
 DROP TABLE IF EXISTS 	calc_ego_re.m1_2_jnt_temp ;
 CREATE TABLE 		calc_ego_re.m1_2_jnt_temp (
@@ -256,6 +302,8 @@ CREATE TABLE 		calc_ego_re.m1_2_jnt_temp (
   geom geometry(Point,3035),
   CONSTRAINT m1_2_jnt_temp_pkey PRIMARY KEY (sorted));
 
+CREATE INDEX m1_2_jnt_temp_geom_idx
+  ON calc_ego_re.m1_2_jnt_temp USING gist (geom);
 
 -- Run a loop around all grid districs   (OK!)
 DO
@@ -265,11 +313,10 @@ BEGIN
     FOR gd IN 1..3610
     LOOP
         EXECUTE 'INSERT INTO calc_ego_re.m1_2_dea_temp
-		SELECT	row_number() over (ORDER BY electrical_capacity DESC)as sorted,
+		SELECT	row_number() over (ORDER BY dea.electrical_capacity DESC)as sorted,
 			dea.*
-		FROM 	calc_ego_re.ego_deu_dea AS dea
-		WHERE 	(dea.voltage_level = ''04 (HS/MS)'' OR dea.voltage_level = ''05 (MS)'') AND
-			(dea.generation_subtype = ''solar_roof_mounted'') AND dea.subst_id =' || gd || ';
+		FROM 	calc_ego_re.ego_deu_dea_m1_2_a_mview AS dea
+		WHERE 	dea.subst_id =' || gd || ';
 
 		INSERT INTO calc_ego_re.m1_2_osm_temp
 		SELECT 	row_number() over (ORDER BY osm.area_ha DESC)as sorted,
@@ -315,16 +362,18 @@ SELECT 	dea.*
 FROM	calc_ego_re.ego_deu_dea AS dea
 WHERE	flag = 'M1-2';
 
--- Get M1-2 Rest (OK!) -> 1.000ms = 3.268
+CREATE INDEX ego_deu_dea_m1_2_mview_geom_idx
+	ON calc_ego_re.ego_deu_dea_m1_2_mview USING gist (geom);
+
+-- Get M1-2 Rest (OK!) -> 1.000ms = 3.210
 DROP MATERIALIZED VIEW IF EXISTS 	calc_ego_re.ego_deu_dea_m1_2_rest_mview ;
 CREATE MATERIALIZED VIEW 		calc_ego_re.ego_deu_dea_m1_2_rest_mview AS
 SELECT 	dea.*
 FROM	calc_ego_re.ego_deu_dea AS dea
-WHERE	((dea.voltage_level = '04 (HS/MS)'
-		AND	dea.generation_subtype = 'solar_roof_mounted') 
-	OR (dea.voltage_level = '05 (MS)' 
-		AND dea.generation_subtype = 'solar_roof_mounted'))
-	AND dea.flag != 'M1-2';
+WHERE	dea.flag = 'M1-2_rest';
+
+CREATE INDEX ego_deu_dea_m1_2_rest_mview_geom_idx
+	ON calc_ego_re.ego_deu_dea_m1_2_rest_mview USING gist (geom);
 
 -- Drop temp
 DROP TABLE IF EXISTS 	calc_ego_re.m1_2_dea_temp ;
@@ -342,10 +391,28 @@ DROP TABLE IF EXISTS 	calc_ego_re.m1_2_jnt_temp ;
 -- MView M2 DEA   (OK!) -> 1.000ms =2.127
 DROP MATERIALIZED VIEW IF EXISTS 	calc_ego_re.ego_deu_dea_m2_a_mview ;
 CREATE MATERIALIZED VIEW 		calc_ego_re.ego_deu_dea_m2_a_mview AS
-		SELECT	dea.*
+		SELECT	id,
+			electrical_capacity,
+			generation_type,
+			generation_subtype,
+			voltage_level,
+			subst_id,
+			geom,
+			flag
 		FROM 	calc_ego_re.ego_deu_dea AS dea
-		WHERE 	(dea.voltage_level = '04 (HS/MS)' AND
-			dea.generation_type = 'wind') ;
+		WHERE 	(dea.voltage_level = '04 (HS/MS)' 
+			AND dea.generation_type = 'wind')
+			AND dea.subst_id IS NOT NULL;
+
+CREATE INDEX ego_deu_dea_m2_a_mview_geom_idx
+	ON calc_ego_re.ego_deu_dea_m2_a_mview USING gist (geom);
+
+-- Flag M2 DEA    (OK!) -> 1.000ms =2.127
+UPDATE 	calc_ego_re.ego_deu_dea AS dea
+SET	flag = 'M2_rest'
+WHERE	dea.voltage_level = '04 (HS/MS)' 
+	AND dea.generation_type = 'wind'
+	AND dea.subst_id IS NOT NULL;
 
 -- get windfarms   (OK!) -> 485.000ms =317
 DROP TABLE IF EXISTS 	calc_ego_re.ego_deu_dea_m2_windfarm ;
@@ -370,6 +437,9 @@ INSERT INTO calc_ego_re.ego_deu_dea_m2_windfarm (area_ha,geom)
 		WHERE 	(dea.voltage_level = '04 (HS/MS)') AND
 			(dea.generation_type = 'wind')
 		) AS farm;
+
+CREATE INDEX ego_deu_dea_m2_windfarm_geom_idx
+	ON calc_ego_re.ego_deu_dea_m2_windfarm USING gist (geom);
 
 -- Update subst_id   (OK!) -> 1.000ms =317
 UPDATE 	calc_ego_re.ego_deu_dea_m2_windfarm AS t1
@@ -433,6 +503,9 @@ CREATE TABLE 		calc_ego_re.m2_farm_temp (
 	flag character varying,
 	CONSTRAINT m2_farm_temp_pkey PRIMARY KEY (sorted));
 
+CREATE INDEX m2_farm_temp_geom_idx
+	ON calc_ego_re.m2_farm_temp USING gist (geom);
+
 DROP TABLE IF EXISTS 	calc_ego_re.m2_wpa_temp ;
 CREATE TABLE 		calc_ego_re.m2_wpa_temp (
 	sorted bigint NOT NULL,
@@ -442,16 +515,20 @@ CREATE TABLE 		calc_ego_re.m2_wpa_temp (
 	geom geometry(Polygon,3035),
 	CONSTRAINT m2_wpa_temp_pkey PRIMARY KEY (sorted));
 
+CREATE INDEX m2_wpa_temp_geom_idx
+	ON calc_ego_re.m2_wpa_temp USING gist (geom);
+
 DROP TABLE IF EXISTS 	calc_ego_re.m2_jnt_temp ;
 CREATE TABLE 		calc_ego_re.m2_jnt_temp (
 	sorted bigint NOT NULL,
 	farm_id bigint,
 	subst_id integer,
-	geom_old geometry(Point,3035),
 	geom_line geometry(LineString,3035),
 	geom geometry(Point,3035),
 	CONSTRAINT m2_jnt_temp_pkey PRIMARY KEY (sorted));
 
+CREATE INDEX m2_jnt_temp_geom_idx
+	ON calc_ego_re.m2_jnt_temp USING gist (geom);
 
 -- Run a loop around all grid districs   (OK!)
 DO
@@ -476,7 +553,6 @@ BEGIN
 		SELECT	farm.sorted,
 			farm.farm_id,
 			farm.subst_id,
-			ST_CENTROID(farm.geom) AS old_geom,
 			ST_MAKELINE(ST_CENTROID(farm.geom),ST_PointOnSurface(wpa.geom)) ::geometry(LineString,3035) AS geom_line,
 			ST_PointOnSurface(wpa.geom) ::geometry(Point,3035) AS geom -- NEW LOCATION!
 		FROM	calc_ego_re.m2_farm_temp AS farm
@@ -506,13 +582,18 @@ SELECT 	dea.*
 FROM	calc_ego_re.ego_deu_dea AS dea
 WHERE	flag = 'M2';
 
+CREATE INDEX ego_deu_dea_m2_mview_geom_idx
+	ON calc_ego_re.ego_deu_dea_m2_mview USING gist (geom);
+
 -- Get M2 Rest (OK!) -> 1.000ms = 30
 DROP MATERIALIZED VIEW IF EXISTS 	calc_ego_re.ego_deu_dea_m2_rest_mview ;
 CREATE MATERIALIZED VIEW 		calc_ego_re.ego_deu_dea_m2_rest_mview AS
 SELECT 	dea.*
 FROM	calc_ego_re.ego_deu_dea AS dea
-WHERE	sort IS NOT NULL AND flag != 'M2';
+WHERE	flag = 'M2_rest';
 
+CREATE INDEX ego_deu_dea_m2_rest_mview_geom_idx
+	ON calc_ego_re.ego_deu_dea_m2_rest_mview USING gist (geom);
 
 -- Drop temp
 DROP TABLE IF EXISTS 	calc_ego_re.m2_farm_temp ;
@@ -526,47 +607,47 @@ DROP TABLE IF EXISTS 	calc_ego_re.m2_jnt_temp ;
 -- (OK!) -> 2.290.000ms = 10.835
 -- Total 13.925 -> 3.090 Rest!
 
--- MView M3 DEA   (OK!) -> 1.000ms =13.925
+-- MView M3 DEA   (OK!) -> 1.000ms =13.925 / 
 DROP MATERIALIZED VIEW IF EXISTS 	calc_ego_re.ego_deu_dea_m3_a_mview ;
 CREATE MATERIALIZED VIEW 		calc_ego_re.ego_deu_dea_m3_a_mview AS
-		SELECT	id,electrical_capacity,generation_type,generation_subtype,voltage_level,
-			subst_id,geom,flag
-		FROM 	calc_ego_re.ego_deu_dea AS dea
-		WHERE 	(dea.voltage_level = '05 (MS)' 
-				OR dea.voltage_level = '06 (MS/NS)')
-			AND dea.generation_type = 'wind';
-
--- MView M3 DEA   (OK!) -> 1.000ms =13.948
-DROP MATERIALIZED VIEW IF EXISTS 	calc_ego_re.ego_deu_dea_m3_b_mview ;
-CREATE MATERIALIZED VIEW 		calc_ego_re.ego_deu_dea_m3_b_mview AS
-		SELECT	id,electrical_capacity,generation_type,generation_subtype,voltage_level,
-			subst_id,geom,flag
-		FROM 	calc_ego_re.ego_deu_dea AS dea
-		WHERE 	(((dea.voltage_level = '05 (MS)' 
-				OR dea.voltage_level = '06 (MS/NS)') 
-			AND 	dea.generation_type = 'wind')
-				OR 	(dea.sort IS NOT NULL AND dea.flag != 'M2'))
-			AND	dea.subst_id IS NOT NULL ;
+	SELECT	id,
+		electrical_capacity,
+		generation_type,
+		generation_subtype,
+		voltage_level,
+		subst_id,
+		geom,
+		flag
+	FROM 	calc_ego_re.ego_deu_dea AS dea
+	WHERE 	(dea.voltage_level = '05 (MS)' 
+			OR dea.voltage_level = '06 (MS/NS)') 
+		AND 	dea.generation_type = 'wind'
+		OR 	dea.flag = 'M2_rest'
+		AND	dea.subst_id IS NOT NULL ;
 
 CREATE INDEX ego_deu_dea_m3_a_mview_geom_idx
   ON calc_ego_re.ego_deu_dea_m3_a_mview USING gist (geom);
+
+-- Flag M3 DEA    (OK!) -> 1.000ms =13.948
+UPDATE 	calc_ego_re.ego_deu_dea AS dea
+SET	flag = 'M3_rest'
+WHERE	(dea.voltage_level = '05 (MS)' 
+			OR dea.voltage_level = '06 (MS/NS)') 
+		AND 	dea.generation_type = 'wind'
+		OR 	dea.flag = 'M2_rest'
+		AND	dea.subst_id IS NOT NULL ;
 
 -- Create Temp Tables for the loop   (OK!) -> 1.000ms =0
 DROP TABLE IF EXISTS 	calc_ego_re.m3_dea_temp ;
 CREATE TABLE 		calc_ego_re.m3_dea_temp (
 	sorted bigint NOT NULL,
 	id bigint NOT NULL,
-	sort integer,
 	electrical_capacity numeric,
 	generation_type text,
 	generation_subtype character varying,
 	voltage_level character varying,
-	voltage_type character(2),
 	subst_id integer,
-	la_id integer,
-	geom_line geometry(LineString,3035),
 	geom geometry(Point,3035),
-	geom_new geometry(Point,3035),
 	flag character varying,
 	CONSTRAINT m3_dea_temp_pkey PRIMARY KEY (sorted));
 
@@ -589,12 +670,6 @@ DROP TABLE IF EXISTS 	calc_ego_re.m3_jnt_temp ;
 CREATE TABLE 		calc_ego_re.m3_jnt_temp (
   sorted bigint NOT NULL,
   id bigint,
-  electrical_capacity numeric,
-  generation_type text,
-  generation_subtype character varying,
-  voltage_level character varying,
-  subst_id integer,
-  old_geom geometry(Point,3035),
   geom_line geometry(LineString,3035),
   geom geometry(Point,3035),
   CONSTRAINT m3_jnt_temp_pkey PRIMARY KEY (sorted));
@@ -602,10 +677,6 @@ CREATE TABLE 		calc_ego_re.m3_jnt_temp (
 CREATE INDEX m3_jnt_temp_geom_idx
   ON calc_ego_re.m3_jnt_temp USING gist (geom);
 
-
-UPDATE calc_ego_re.ego_deu_dea
-SET	flag = ''
-WHERE	flag = 'M3';
 
 -- Run a loop around all grid districs   (OK!)
 DO
@@ -617,12 +688,8 @@ BEGIN
         EXECUTE 'INSERT INTO calc_ego_re.m3_dea_temp
 		SELECT	row_number() over (ORDER BY dea.electrical_capacity DESC)as sorted,
 			dea.*
-		FROM 	calc_ego_re.ego_deu_dea AS dea
-		WHERE 	(((dea.voltage_level = ''05 (MS)'' 
-				OR dea.voltage_level = ''06 (MS/NS)'') 
-			AND 	dea.generation_type = ''wind'')
-				OR 	(dea.sort IS NOT NULL AND dea.flag != ''M2''))
-			AND	dea.subst_id =' || gd || ';;
+		FROM 	calc_ego_re.ego_deu_dea_m3_a_mview AS dea
+		WHERE 	dea.subst_id =' || gd || ';;
 
 		INSERT INTO calc_ego_re.m3_grid_wpa_temp
 		SELECT 	row_number() over (ORDER BY RANDOM())as sorted,
@@ -633,12 +700,6 @@ BEGIN
 		INSERT INTO calc_ego_re.m3_jnt_temp
 		SELECT	dea.sorted,
 			dea.id,
-			dea.electrical_capacity,
-			dea.generation_type,
-			dea.generation_subtype,
-			dea.voltage_level,
-			dea.subst_id,
-			dea.geom AS old_geom,
 			ST_MAKELINE(dea.geom,wpa.geom) ::geometry(LineString,3035) AS geom_line,
 			wpa.geom ::geometry(Point,3035) AS geom -- NEW LOCATION!
 		FROM	calc_ego_re.m3_dea_temp AS dea
@@ -671,14 +732,12 @@ WHERE	flag = 'M3';
 CREATE INDEX ego_deu_dea_m3_mview_geom_idx
   ON calc_ego_re.ego_deu_dea_m3_mview USING gist (geom);
 
--- Get M3 Rest (bad!) -> 1.000ms = 30
+-- Get M3 Rest (OK!) -> 1.000ms = 3.120
 DROP MATERIALIZED VIEW IF EXISTS 	calc_ego_re.ego_deu_dea_m3_rest_mview ;
 CREATE MATERIALIZED VIEW 		calc_ego_re.ego_deu_dea_m3_rest_mview AS
 SELECT 	dea.*
 FROM	calc_ego_re.ego_deu_dea AS dea
-WHERE	(((dea.voltage_level = '05 (MS)' OR dea.voltage_level = '06 (MS/NS)') AND
-	(dea.generation_type = 'wind')) OR  -- Res M2
-	(sort IS NOT NULL AND flag != 'M2')) AND (flag != 'M3' OR flag != 'M2') ;
+WHERE	flag = 'M3_rest';
 
 CREATE INDEX ego_deu_dea_m3_rest_mview_geom_idx
   ON calc_ego_re.ego_deu_dea_m3_rest_mview USING gist (geom);
@@ -699,37 +758,53 @@ DROP TABLE IF EXISTS 	calc_ego_re.m3_jnt_temp ;
 -- "solar ground" & "wind" ohne voltage & 
 -- Rest M1-1 & Rest M1-2 & Rest M3
 
--- MView M3 DEA   (OK!) -> 1.000ms =13.925
+-- MView M4 DEA   (OK!) -> 1.000ms =13.925 / 20.147
 DROP MATERIALIZED VIEW IF EXISTS 	calc_ego_re.ego_deu_dea_m4_a_mview ;
 CREATE MATERIALIZED VIEW 		calc_ego_re.ego_deu_dea_m4_a_mview AS
-		SELECT	dea.*
+		SELECT	id,
+			electrical_capacity,
+			generation_type,
+			generation_subtype,
+			voltage_level,
+			subst_id,
+			geom,
+			flag
 		FROM 	calc_ego_re.ego_deu_dea AS dea
-		WHERE 	((dea.voltage_level = '04 (HS/MS)' OR dea.voltage_level = '04 (HS/MS)')
-			AND 	dea.generation_subtype = 'solar_ground_mounted' 
+		WHERE 	(dea.voltage_level = '04 (HS/MS)' OR dea.voltage_level = '05 (MS)')
+			AND 	(dea.generation_subtype = 'solar_ground_mounted' 
 				OR (dea.generation_type = 'solar' AND dea.generation_subtype IS NULL))
-			
-			(dea.voltage_level = '04 (HS/MS)' AND dea.generation_type = 'wind')
+			OR (dea.voltage_level IS NULL AND dea.generation_type = 'wind')
+			OR dea.flag = 'M1-1_rest'
+			OR dea.flag = 'M1-2_rest'
+			OR dea.flag = 'M3_rest'
+			AND dea.subst_id IS NOT NULL;
 
+CREATE INDEX ego_deu_dea_m4_a_mview_geom_idx
+	ON calc_ego_re.ego_deu_dea_m4_a_mview USING gist (geom);
 
-(dea.voltage_level = '05 (MS)' OR dea.voltage_level = '06 (MS/NS)') AND
-			(dea.generation_type = 'wind');
+-- Flag M4 DEA    (OK!) -> 1.000ms =20.147
+UPDATE 	calc_ego_re.ego_deu_dea AS dea
+SET	flag = 'M4_rest'
+WHERE	(dea.voltage_level = '04 (HS/MS)' OR dea.voltage_level = '05 (MS)')
+			AND 	(dea.generation_subtype = 'solar_ground_mounted' 
+				OR (dea.generation_type = 'solar' AND dea.generation_subtype IS NULL))
+			OR (dea.voltage_level IS NULL AND dea.generation_type = 'wind')
+			OR dea.flag = 'M1-1_rest'
+			OR dea.flag = 'M1-2_rest'
+			OR dea.flag = 'M3_rest'
+			AND dea.subst_id IS NOT NULL;
 
 -- Create Temp Tables for the loop   (OK!) -> 1.000ms =0
 DROP TABLE IF EXISTS 	calc_ego_re.m4_dea_temp ;
 CREATE TABLE 		calc_ego_re.m4_dea_temp (
 	sorted bigint NOT NULL,
 	id bigint NOT NULL,
-	sort integer,
 	electrical_capacity numeric,
 	generation_type text,
 	generation_subtype character varying,
 	voltage_level character varying,
-	voltage_type character(2),
 	subst_id integer,
-	la_id integer,
-	geom_line geometry(LineString,3035),
 	geom geometry(Point,3035),
-	geom_new geometry(Point,3035),
 	flag character varying,
 	CONSTRAINT m4_dea_temp_pkey PRIMARY KEY (sorted));
 
@@ -746,12 +821,6 @@ DROP TABLE IF EXISTS 	calc_ego_re.m4_jnt_temp ;
 CREATE TABLE 		calc_ego_re.m4_jnt_temp (
   sorted bigint NOT NULL,
   id bigint,
-  electrical_capacity numeric,
-  generation_type text,
-  generation_subtype character varying,
-  voltage_level character varying,
-  subst_id integer,
-  old_geom geometry(Point,3035),
   geom_line geometry(LineString,3035),
   geom geometry(Point,3035),
   CONSTRAINT m4_jnt_temp_pkey PRIMARY KEY (sorted));
@@ -767,27 +836,18 @@ BEGIN
         EXECUTE 'INSERT INTO calc_ego_re.m4_dea_temp
 		SELECT	row_number() over (ORDER BY dea.electrical_capacity DESC)as sorted,
 			dea.*
-		FROM 	calc_ego_re.ego_deu_dea AS dea
-		WHERE 	((dea.voltage_level = ''05 (MS)'' OR dea.voltage_level = ''06 (MS/NS)'') AND
-			(dea.generation_type = ''wind'')) OR  -- Res M2
-			(sort IS NOT NULL AND flag != ''M2'') AND
-			dea.subst_id =' || gd || ';
+		FROM 	calc_ego_re.ego_deu_dea_m4_a_mview AS dea
+		WHERE 	dea.subst_id =' || gd || ';
 
 		INSERT INTO calc_ego_re.m4_grid_wpa_temp
 		SELECT 	row_number() over (ORDER BY RANDOM())as sorted,
 			wpa.*
-		FROM 	calc_ego_re.deu_grid_500m_wpa_mview AS wpa
+		FROM 	calc_ego_re.deu_grid_500m_out_mview AS wpa
 		WHERE 	wpa.subst_id =' || gd || ';
 
 		INSERT INTO calc_ego_re.m4_jnt_temp
 		SELECT	dea.sorted,
 			dea.id,
-			dea.electrical_capacity,
-			dea.generation_type,
-			dea.generation_subtype,
-			dea.voltage_level,
-			dea.subst_id,
-			dea.geom AS old_geom,
 			ST_MAKELINE(dea.geom,wpa.geom) ::geometry(LineString,3035) AS geom_line,
 			wpa.geom ::geometry(Point,3035) AS geom -- NEW LOCATION!
 		FROM	calc_ego_re.m4_dea_temp AS dea
@@ -796,7 +856,7 @@ BEGIN
 		UPDATE 	calc_ego_re.ego_deu_dea AS t1
 		SET  	geom_new = t2.geom_new,
 			geom_line = t2.geom_line,
-			flag = ''m4''
+			flag = ''M4''
 		FROM	(SELECT	m.id AS id,
 				m.geom_line,
 				m.geom AS geom_new
@@ -810,26 +870,103 @@ BEGIN
 END;
 $$;
 
--- Get m4 List (OK!) -> 1.000ms = 30
+-- Get M4 List (OK!) -> 1.000ms = 12.418 
 DROP MATERIALIZED VIEW IF EXISTS 	calc_ego_re.ego_deu_dea_m4_mview ;
 CREATE MATERIALIZED VIEW 		calc_ego_re.ego_deu_dea_m4_mview AS
 SELECT 	dea.*
 FROM	calc_ego_re.ego_deu_dea AS dea
-WHERE	flag = 'm4';
+WHERE	flag = 'M4';
 
--- Get m4 Rest (OK!) -> 1.000ms = 30
+CREATE INDEX ego_deu_dea_m4_mview_geom_idx
+  ON calc_ego_re.ego_deu_dea_m4_mview USING gist (geom);
+
+-- Get M4 Rest (OK!) -> 1.000ms = 7.729
 DROP MATERIALIZED VIEW IF EXISTS 	calc_ego_re.ego_deu_dea_m4_rest_mview ;
 CREATE MATERIALIZED VIEW 		calc_ego_re.ego_deu_dea_m4_rest_mview AS
 SELECT 	dea.*
 FROM	calc_ego_re.ego_deu_dea AS dea
-WHERE	(((dea.voltage_level = '05 (MS)' OR dea.voltage_level = '06 (MS/NS)') AND
-	(dea.generation_type = 'wind')) OR  -- Res M2
-	(sort IS NOT NULL AND flag != 'M2')) AND (flag != 'm4' OR flag != 'M2') ;
+WHERE	dea.flag = 'M4_rest';
+
+CREATE INDEX ego_deu_dea_m4_rest_mview_geom_idx
+  ON calc_ego_re.ego_deu_dea_m4_rest_mview USING gist (geom);
 
 -- Drop temp
 DROP TABLE IF EXISTS 	calc_ego_re.m4_dea_temp ;
 DROP TABLE IF EXISTS 	calc_ego_re.m4_osm_temp ;
 DROP TABLE IF EXISTS 	calc_ego_re.m4_jnt_temp ;
+
+
+
+
+
+-- 6. M5
+-- Relocate "solar" with "06 (MS/NS)" & "07 (NS)" to la_grid
+-- (OK!) -> 1.679.000ms =
+-- Total 1.524.670 ->  Rest!
+
+
+-- MView M5 DEA   (OK!) -> 1.000ms =1.524.674
+DROP MATERIALIZED VIEW IF EXISTS 	calc_ego_re.ego_deu_dea_m5_a_mview ;
+CREATE MATERIALIZED VIEW 		calc_ego_re.ego_deu_dea_m5_a_mview AS
+		SELECT	id,
+			electrical_capacity,
+			generation_type,
+			generation_subtype,
+			voltage_level,
+			subst_id,
+			geom,
+			flag
+		FROM 	calc_ego_re.ego_deu_dea AS dea
+		WHERE 	(dea.voltage_level = '06 (MS/NS)' 
+				OR dea.voltage_level = '07 (NS)'
+				OR dea.voltage_level IS NULL)
+			AND 	dea.generation_type = 'solar'
+			OR (dea.voltage_level = '07 (NS)' AND dea.generation_type = 'wind')
+			AND dea.subst_id IS NOT NULL;
+
+CREATE INDEX ego_deu_dea_m5_a_mview_geom_idx
+	ON calc_ego_re.ego_deu_dea_m5_a_mview USING gist (geom);
+
+-- Flag M5 DEA    (OK!) -> 1.000ms =20.147
+UPDATE 	calc_ego_re.ego_deu_dea AS dea
+SET	flag = 'M5_rest'
+WHERE 	(dea.voltage_level = '06 (MS/NS)' 
+		OR dea.voltage_level = '07 (NS)'
+		OR dea.voltage_level IS NULL)
+	AND 	dea.generation_type = 'solar'
+	OR (dea.voltage_level = '07 (NS)' AND dea.generation_type = 'wind')
+	AND dea.subst_id IS NOT NULL;
+
+-- Create Temp Tables for the loop   (OK!) -> 1.000ms =0
+DROP TABLE IF EXISTS 	calc_ego_re.m4_dea_temp ;
+CREATE TABLE 		calc_ego_re.m4_dea_temp (
+	sorted bigint NOT NULL,
+	id bigint NOT NULL,
+	electrical_capacity numeric,
+	generation_type text,
+	generation_subtype character varying,
+	voltage_level character varying,
+	subst_id integer,
+	geom geometry(Point,3035),
+	flag character varying,
+	CONSTRAINT m4_dea_temp_pkey PRIMARY KEY (sorted));
+
+DROP TABLE IF EXISTS 	calc_ego_re.m4_grid_wpa_temp ;
+CREATE TABLE 		calc_ego_re.m4_grid_wpa_temp (
+	sorted bigint NOT NULL,
+	id integer,
+	subst_id integer,
+	area_type text,
+	geom geometry(Point,3035),
+	CONSTRAINT m4_grid_wpa_temp_pkey PRIMARY KEY (sorted));
+
+DROP TABLE IF EXISTS 	calc_ego_re.m4_jnt_temp ;
+CREATE TABLE 		calc_ego_re.m4_jnt_temp (
+  sorted bigint NOT NULL,
+  id bigint,
+  geom_line geometry(LineString,3035),
+  geom geometry(Point,3035),
+  CONSTRAINT m4_jnt_temp_pkey PRIMARY KEY (sorted));
 
 
 

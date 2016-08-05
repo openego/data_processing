@@ -552,8 +552,8 @@
       <data key="d10">
         <y:GenericEdge configuration="com.yworks.bpmn.Connection">
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0">
-            <y:Point x="700.0" y="500.0"/>
-            <y:Point x="1000.0" y="500.0"/>
+            <y:Point x="700.0" y="463.0"/>
+            <y:Point x="947.0" y="463.0"/>
           </y:Path>
           <y:LineStyle color="#000000" type="dotted" width="4.0"/>
           <y:Arrows source="none" target="concave"/>
