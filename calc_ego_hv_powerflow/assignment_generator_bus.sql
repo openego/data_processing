@@ -39,16 +39,16 @@ INSERT INTO orig_geo_powerplants.generators_total (conv_id, geom)
 -- Identify corresponding bus with the help of grid districts
 
 UPDATE orig_geo_powerplants.proc_power_plant_germany a
-	SET subst_id = b.subst_id, 
+	SET subst_id = b.subst_id,
 	    otg_id = result.otg_id
 	FROM 
-		(SELECT c.otg_id 
+		(SELECT c.otg_id, c.id as subst_id
 		 FROM 	calc_ego_substation.ego_deu_substations c, 
 		 	calc_ego_grid_district.grid_district d
 		 WHERE c.id = d.subst_id)
 		AS result, 
 		calc_ego_grid_district.grid_district b
-	WHERE ST_Intersects (a.geom, ST_TRANSFORM(b.geom,4326)) =TRUE AND voltage_level >= 3; 
+	WHERE ST_Intersects (a.geom, ST_TRANSFORM(b.geom,4326))  AND voltage_level >= 3 AND result.subst_id = b.subst_id; 
 
 -- Identify corresponding bus with the help of ehv-Voronoi
 
@@ -56,13 +56,13 @@ UPDATE orig_geo_powerplants.proc_power_plant_germany a
 	SET subst_id = b.subst_id, 
 	    otg_id = result.otg_id
 	FROM 
-		(SELECT c.otg_id 
+		(SELECT c.otg_id, c.id as subst_id
 		 FROM 	calc_ego_substation.ego_deu_substations_ehv c, 
 		 	calc_ego_substation.ego_deu_voronoi_ehv d
 		 WHERE c.id = d.subst_id)
 		AS result, 
 		calc_ego_substation.ego_deu_voronoi_ehv b
-	WHERE ST_Intersects (a.geom, b.geom) =TRUE AND voltage_level <= 2;
+	WHERE ST_Intersects (a.geom, b.geom) =TRUE AND voltage_level <= 2 AND result.subst_id = b.subst_id;
  
 -- Update un_id from generators_total  
 
@@ -139,13 +139,13 @@ UPDATE orig_geo_powerplants.proc_renewable_power_plants_germany a
 	SET subst_id = b.subst_id, 
 	    otg_id = result.otg_id
 	FROM 
-		(SELECT c.otg_id 
+		(SELECT c.otg_id , c.id as subst_id
 		 FROM 	calc_ego_substation.ego_deu_substations c, 
 		 	calc_ego_grid_district.grid_district d
 		 WHERE c.id = d.subst_id)
 		AS result, 
 		calc_ego_grid_district.grid_district b
-	WHERE ST_Intersects (a.geom, ST_TRANSFORM(b.geom,4326)) =TRUE AND voltage_level >= 3; 
+	WHERE ST_Intersects (a.geom, ST_TRANSFORM(b.geom,4326)) =TRUE AND voltage_level >= 3 AND result.subst_id = b.subst_id; 
 
 -- Identify corresponding bus with the help of ehv-Voronoi
 
@@ -153,13 +153,13 @@ UPDATE orig_geo_powerplants.proc_renewable_power_plants_germany a
 	SET subst_id = b.subst_id, 
 	    otg_id = result.otg_id
 	FROM 
-		(SELECT c.otg_id 
+		(SELECT c.otg_id , c.id as subst_id
 		 FROM 	calc_ego_substation.ego_deu_substations_ehv c, 
 		 	calc_ego_substation.ego_deu_voronoi_ehv d
 		 WHERE c.id = d.subst_id)
 		AS result, 
 		calc_ego_substation.ego_deu_voronoi_ehv b
-	WHERE ST_Intersects (a.geom, b.geom) =TRUE AND voltage_level <= 2; 
+	WHERE ST_Intersects (a.geom, b.geom) =TRUE AND voltage_level <= 2 AND result.subst_id = b.subst_id; 
 
 -- Update un_id from generators_total 
 
@@ -180,12 +180,13 @@ UPDATE orig_geo_powerplants.pf_generator_single a
 		control = 'PQ',  -- For generators with a capacity 50 MW or more control is set to PQ
 		source = result.source
 		FROM 
-			( SELECT c.source_id as source
-					orig_geo_powerplants.proc_power_plant_germany d
+			(SELECT c.source_id as source, d.fuel as fuel
+			FROM 	calc_ego_hv_powerflow.source c, 
+				orig_geo_powerplants.proc_power_plant_germany d 
 			WHERE	d.fuel = c.name) 
 			AS 	result,		
-					orig_geo_powerplants.proc_power_plant_germany b
-WHERE a.generator_id = b.un_id and b.capacity >= 50;
+			orig_geo_powerplants.proc_power_plant_germany b
+WHERE a.generator_id = b.un_id and b.capacity >= 50 AND result.fuel = b.fuel;
 
 
 UPDATE orig_geo_powerplants.pf_generator_single a
@@ -194,29 +195,33 @@ UPDATE orig_geo_powerplants.pf_generator_single a
 		control = 'PV', 
 		source = result.source
 		FROM 
-			( SELECT c.source_id as source 
+			( SELECT c.source_id as source, d.fuel as fuel 
 			  FROM 	calc_ego_hv_powerflow.source c, 
 			       	orig_geo_powerplants.proc_power_plant_germany d
 			  WHERE	d.fuel = c.name) 
 			AS 	result,		
 				orig_geo_powerplants.proc_power_plant_germany b
-WHERE a.generator_id = b.un_id and b.capacity < 50;
+WHERE a.generator_id = b.un_id and b.capacity < 50 AND result.fuel = b.fuel;
 
 -- For renewables 
 
-UPDATE orig_geo_powerplants.pf_generator_single a
+EXPLAIN UPDATE orig_geo_powerplants.pf_generator_single a
 	SET 	bus = b.otg_id, 
 		p_nom = b.electrical_capacity/1000, -- unit for capacity in RE-register is kW
-		control = 'PV',
-		source = result.source
+		control = 'PV'
+		FROM orig_geo_powerplants.proc_renewable_power_plants_germany b
+WHERE a.generator_id = b.un_id;
+
+
+UPDATE orig_geo_powerplants.pf_generator_single a
+	SET source = result.source
 		FROM 
-			(SELECT c.source_id as source 
+			(SELECT c.source_id as source, d.un_id as un_id
 			  FROM 	calc_ego_hv_powerflow.source c, 
 			       	orig_geo_powerplants.proc_renewable_power_plants_germany d
 			  WHERE	d.generation_type = c.name) 
-			  AS 	result,
-				orig_geo_powerplants.proc_renewable_power_plants_germany b
-WHERE a.generator_id = b.un_id; 
+			  AS 	result, orig_geo_powerplants.proc_renewable_power_plants_germany b
+WHERE a.generator_id = b.un_id AND a.generator_id = result.un_id; 
 
 -- Control is changed to PQ for biomass powerplants > 50 MW
 
@@ -224,12 +229,12 @@ UPDATE orig_geo_powerplants.pf_generator_single
 	SET control = 'PQ'
 	 
 		FROM 
-			(SELECT a.csource:id as id
+			(SELECT source_id as id
 			 FROM calc_ego_hv_powerflow.source a
 			 WHERE a.name ='biomass')
-		WHERE p_nom > 50 AND source = result.id
-		AS result;  
-
+		
+		AS result  
+WHERE p_nom > 50 AND source = result.id;
 
 -----------
 -- Accumulate data from pf_generator_single for hv_powerflow schema. Powerplants with a capacity of under 50 MW 
