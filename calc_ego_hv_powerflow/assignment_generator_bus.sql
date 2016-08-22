@@ -205,7 +205,7 @@ WHERE a.generator_id = b.un_id and b.capacity < 50 AND result.fuel = b.fuel;
 
 -- For renewables 
 
-EXPLAIN UPDATE orig_geo_powerplants.pf_generator_single a
+UPDATE orig_geo_powerplants.pf_generator_single a
 	SET 	bus = b.otg_id, 
 		p_nom = b.electrical_capacity/1000, -- unit for capacity in RE-register is kW
 		control = 'PV'
