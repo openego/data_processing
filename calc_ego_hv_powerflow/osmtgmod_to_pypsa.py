@@ -104,12 +104,12 @@ if yes_no == "y":
     
     bus_data = bus_data.rename(index=str,columns={"bus_i":"bus_id","base_kv":"v_nom"})
     line_data = line_data.rename(index=str,columns={"branch_id":"line_id","f_bus":"bus0","t_bus":"bus1","br_r":"r","br_x":"x","br_b":"b","rate_a":"s_nom"})
-    transformer_data = transformer_data.rename(index=str,columns={"branch_id":"trafo_id","f_bus":"bus0","t_bus":"bus1","br_x":"x","rate_a":"s_nom","tap":"tap_ratio","shift":"pashe_shift"})
+    transformer_data = transformer_data.rename(index=str,columns={"branch_id":"trafo_id","f_bus":"bus0","t_bus":"bus1","br_x":"x","rate_a":"s_nom","tap":"tap_ratio","shift":"phase_shift"})
     
     # create pandas as in target db
-    bus_data_empty = pd.DataFrame(columns=['bus_id','v_nom','osm_name','current_type','v_mag_pu_min','v_mag_pu_max','geom'])
-    line_data_empty = pd.DataFrame(columns=['line_id','bus0','bus1','x','r','g','b','s_nom','s_nom_extendable','s_nom_min','s_nom_max','capital_cost','length','cables','frequency','terrain_factor','geom','topo'])
-    transformer_data_empty = pd.DataFrame(columns=['trafo_id','bus0','bus1','x','r','g','b','s_nom','s_nom_extendable','s_nom_min','s_nom_max','tap_ratio','pashe_shift','capital_cost','geom','topo'])
+    bus_data_empty = pd.DataFrame(columns=['scn_name','bus_id','v_nom','current_type','v_mag_pu_min','v_mag_pu_max','geom'])
+    line_data_empty = pd.DataFrame(columns=['scn_name','line_id','bus0','bus1','x','r','g','b','s_nom','s_nom_extendable','s_nom_min','s_nom_max','capital_cost','length','cables','frequency','terrain_factor','geom','topo'])
+    transformer_data_empty = pd.DataFrame(columns=['scn_name','trafo_id','bus0','bus1','x','r','g','b','s_nom','s_nom_extendable','s_nom_min','s_nom_max','tap_ratio','phase_shift','capital_cost','geom','topo'])
     
     # merging
     bus_data_new = bus_data_empty.append(bus_data)
@@ -117,10 +117,15 @@ if yes_no == "y":
     transformer_data_new = transformer_data_empty.append(transformer_data)
     
     # column ordering 
-    bus_data_new = bus_data_new[['bus_id','v_nom','osm_name','current_type','v_mag_pu_min','v_mag_pu_max','geom']]
-    line_data_new = line_data_new[['line_id','bus0','bus1','x','r','g','b','s_nom','s_nom_extendable','s_nom_min','s_nom_max','capital_cost','length','cables','frequency','terrain_factor','geom','topo']]
-    transformer_data_new = transformer_data_new[['trafo_id','bus0','bus1','x','r','g','b','s_nom','s_nom_extendable','s_nom_min','s_nom_max','tap_ratio','pashe_shift','capital_cost','geom','topo']]
+    bus_data_new = bus_data_new[['scn_name','bus_id','v_nom','current_type','v_mag_pu_min','v_mag_pu_max','geom']]
+    line_data_new = line_data_new[['scn_name','line_id','bus0','bus1','x','r','g','b','s_nom','s_nom_extendable','s_nom_min','s_nom_max','capital_cost','length','cables','frequency','terrain_factor','geom','topo']]
+    transformer_data_new = transformer_data_new[['scn_name','trafo_id','bus0','bus1','x','r','g','b','s_nom','s_nom_extendable','s_nom_min','s_nom_max','tap_ratio','phase_shift','capital_cost','geom','topo']]
     
+    # fill with "Status Quo"
+    bus_data_new['scn_name'] = 'Status Quo'
+    line_data_new['scn_name'] = 'Status Quo'
+    transformer_data_new['scn_name'] = 'Status Quo'
+  
     print('Dataframes adjusted!')
         
     # wipe target db
@@ -136,6 +141,7 @@ if yes_no == "y":
     print('Tables wiped!')
     
     #upload to new db 
+    print("\nUploading bus, line and transformer data...")
     bus_data_new.to_sql('bus',con2,schema='calc_ego_hv_powerflow',if_exists='append',index=False)
     print('\nBus data uploaded')
     line_data_new.to_sql('line',con2,schema='calc_ego_hv_powerflow',if_exists='append',index=False)

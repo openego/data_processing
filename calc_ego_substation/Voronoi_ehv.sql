@@ -15,7 +15,7 @@ WITH
     -- Sample set of points to work with
     Sample AS (SELECT   ST_SetSRID(ST_Union(pts.point), 0) AS geom
 		FROM	calc_ego_substation.ego_deu_substations_ehv AS pts
-		WHERE	pts.otg_id IS NOT NULL),  -- INPUT 1/2
+		WHERE pts.id != 468),  -- INPUT 1/2
     -- Build edges and circumscribe points to generate a centroid
     Edges AS (
     SELECT id,
@@ -89,6 +89,9 @@ DELETE FROM calc_ego_substation.ego_deu_substations_ehv WHERE name='DUMMY';
 ALTER TABLE calc_ego_substation.ego_deu_voronoi_ehv 
 	ADD CONSTRAINT subst_fk FOREIGN KEY (subst_id) REFERENCES calc_ego_substation.ego_deu_substations_ehv (id),
 	ADD PRIMARY KEY (subst_id);
+
+ALTER TABLE calc_ego_substation.ego_deu_voronoi_ehv
+  OWNER TO oeuser;
 
 -- Clip voronoi with vg250
 

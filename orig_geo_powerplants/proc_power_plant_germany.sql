@@ -182,4 +182,11 @@ FROM orig_osm.osm_deu_substations_ehv,orig_ego.ego_deu_voronoi_ehv, AA
 WHERE ST_Intersects (ego_deu_voronoi_ehv.geom,AA.geom) AND osm_deu_substations_ehv.subst_id=ego_deu_voronoi_ehv.subst_id AND AA.gid=proc_power_plant_germany.gid;
 
 
+/* Change fuel='multiple_non_renewable' to 'other_non_renewable' for compatibility reasons*/
+
+UPDATE orig_geo_powerplants.proc_power_plant_germany
+	SET fuel = 'other_non_renewable'
+	WHERE fuel = 'multiple_non_renewable';
+
+
 
