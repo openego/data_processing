@@ -1,5 +1,10 @@
 -- osmTGmod2pyPSA
 
+-- CLEAN UP OF TABLES
+TRUNCATE calc_ego_hv_powerflow.bus CASCADE;
+TRUNCATE calc_ego_hv_powerflow.line CASCADE;
+TRUNCATE calc_ego_hv_powerflow.transformer CASCADE;
+
 -- BUS DATA
 INSERT INTO calc_ego_hv_powerflow.bus (bus_id, v_nom, geom)
 SELECT 
