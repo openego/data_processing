@@ -15,6 +15,9 @@ CREATE TABLE orig_geo_powerplants.generators_total
   CONSTRAINT generators_total_pkey PRIMARY KEY (un_id)
 );
 
+ALTER TABLE orig_geo_powerplants.generators_total
+	OWNER TO oeuser; 
+
 
 INSERT INTO orig_geo_powerplants.generators_total (re_id, geom) 
 	SELECT id, geom
