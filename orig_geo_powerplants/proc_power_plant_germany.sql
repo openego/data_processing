@@ -56,6 +56,17 @@ WHERE voltage='110/6'
 ;
 
 
+/*Correct an invalide geom in the register*/
+
+ALTER TABLE orig_geo_powerplants.proc_power_plant_germany
+SET lat = 48.0261021
+WHERE gid = 493
+;
+
+UPDATE  orig_geo_powerplants.proc_power_plant_germany
+set geom = ST_SetSRID(ST_MakePoint(lon,lat),4326)
+WHERE gid = 493;
+
 /*Update Voltage Level of Power Plants in proc_power_plants_germany*/
 ALTER TABLE orig_geo_powerplants.proc_power_plant_germany
 ADD COLUMN voltage_level smallint DEFAULT NULL
