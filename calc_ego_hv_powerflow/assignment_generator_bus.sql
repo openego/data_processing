@@ -251,6 +251,141 @@ UPDATE orig_geo_powerplants.pf_generator_single a
 WHERE ST_Intersects (result.geom, b.geom) AND generator_id = result.un_id;
 
 -----------
--- Accumulate data from pf_generator_single for hv_powerflow schema. Powerplants with a capacity of under 50 MW 
--- are aggregated per bus and technology
+-- Create aggregate IDs in pf_generator_single
 -----------
+-- Create sequence for aggregate ID
+
+DROP SEQUENCE IF EXISTS orig_geo_powerplants.pf_generator_single_aggr_id;
+CREATE SEQUENCE orig_geo_powerplants.pf_generator_single_aggr_id
+  INCREMENT 1;
+ALTER TABLE orig_geo_powerplants.pf_generator_single_aggr_id
+  OWNER TO oeuser;
+
+-- source = (wind and solar) and p_nom < 50 MW
+
+UPDATE orig_geo_powerplants.pf_generator_single a
+	SET aggr_id = result.aggr_id
+		FROM 
+			(SELECT b.bus, b.w_id, b.source, nextval('orig_geo_powerplants.pf_generator_single_aggr_id') as aggr_id
+			FROM orig_geo_powerplants.pf_generator_single b 
+			WHERE p_nom < 50 AND source IN 
+				(SELECT source_id from calc_ego_hv_powerflow.source WHERE name = 'wind' OR name = 'solar') 
+			GROUP BY bus, w_id, source)
+			as result
+	WHERE a.bus = result.bus AND a.w_id = result.w_id AND a.source = result.source;
+
+-- source != (wind and solar) and p_nom < 50 MW 
+	
+UPDATE orig_geo_powerplants.pf_generator_single a
+	SET aggr_id = result.aggr_id
+		FROM 
+			(SELECT b.bus, b.source, nextval('orig_geo_powerplants.pf_generator_single_aggr_id') as aggr_id
+			FROM orig_geo_powerplants.pf_generator_single b 
+			WHERE p_nom < 50 AND source NOT IN 
+				(SELECT source_id from calc_ego_hv_powerflow.source WHERE name = 'wind' OR name = 'solar')
+			GROUP BY b.bus, b.source)
+			as result
+	WHERE a.bus = result.bus AND a.source = result.source;
+
+-- all sources and p_nom >= 50MW
+
+UPDATE orig_geo_powerplants.pf_generator_single a
+	SET aggr_id = nextval('orig_geo_powerplants.pf_generator_single_aggr_id')
+	WHERE a.p_nom >= 50;
+
+-----------
+-- Accumulate data from pf_generator_single and insert into hv_powerflow schema. 
+-----------
+	
+-- source = (wind and solar) and p_nom < 50 MW
+INSERT INTO calc_ego_hv_powerflow.generator (
+  generator_id,
+  bus,
+  dispatch,
+  control,
+  p_nom,
+  p_nom_extendable,
+  p_nom_min,
+  p_min_pu_fixed,
+  p_max_pu_fixed,
+  sign,
+  source
+)
+SELECT 
+  aggr_id,
+  bus,
+  max(dispatch),
+  max(control),
+  sum(p_nom),
+  FALSE,
+  min(p_nom_min),
+  min(p_min_pu_fixed),
+  max(p_max_pu_fixed),
+  max(sign),
+  source
+FROM orig_geo_powerplants.pf_generator_single a
+WHERE a.p_nom < 50 AND a.aggr_id IS NOT NULL AND source IN 
+	(SELECT source_id from calc_ego_hv_powerflow.source WHERE name = 'wind' OR name = 'solar')
+GROUP BY a.aggr_id, a.bus, a.w_id, a.source;
+
+-- source != (wind and solar) and p_nom < 50 MW 
+INSERT INTO calc_ego_hv_powerflow.generator (
+  generator_id,
+  bus,
+  dispatch,
+  control,
+  p_nom,
+  p_nom_extendable,
+  p_nom_min,
+  p_min_pu_fixed,
+  p_max_pu_fixed,
+  sign,
+  source
+)
+SELECT 
+  aggr_id,
+  bus,
+  max(dispatch),
+  max(control),
+  sum(p_nom),
+  FALSE,
+  min(p_nom_min),
+  min(p_min_pu_fixed),
+  max(p_max_pu_fixed),
+  max(sign),
+  source
+FROM orig_geo_powerplants.pf_generator_single a
+WHERE a.p_nom < 50 AND a.aggr_id IS NOT NULL AND source NOT IN 
+	(SELECT source_id from calc_ego_hv_powerflow.source WHERE name = 'wind' OR name = 'solar')
+	
+GROUP BY a.aggr_id, a.bus, a.source;
+
+-- all sources and p_nom >= 50MW
+
+INSERT INTO calc_ego_hv_powerflow.generator (
+  generator_id,
+  bus,
+  dispatch,
+  control,
+  p_nom,
+  p_nom_extendable,
+  p_nom_min,
+  p_min_pu_fixed,
+  p_max_pu_fixed,
+  sign,
+  source
+)
+SELECT   
+  aggr_id,
+  bus,
+  dispatch,
+  control,
+  p_nom,
+  p_nom_extendable,
+  p_nom_min,
+  p_min_pu_fixed,
+  p_max_pu_fixed,
+  sign,
+  source
+FROM orig_geo_powerplants.pf_generator_single a
+WHERE a.p_nom >= 50 AND a.aggr_id IS NOT NULL;
