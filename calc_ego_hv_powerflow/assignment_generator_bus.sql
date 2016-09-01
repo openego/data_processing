@@ -15,6 +15,9 @@ CREATE TABLE orig_geo_powerplants.generators_total
   CONSTRAINT generators_total_pkey PRIMARY KEY (un_id)
 );
 
+ALTER TABLE orig_geo_powerplants.generators_total
+	OWNER TO oeuser; 
+
 
 INSERT INTO orig_geo_powerplants.generators_total (re_id, geom) 
 	SELECT id, geom
@@ -98,6 +101,8 @@ CREATE TABLE orig_geo_powerplants.pf_generator_single
   marginal_cost double precision,
   capital_cost double precision,
   efficiency double precision,
+  w_id integer,
+  aggr_id integer,
   CONSTRAINT generator_data_pkey PRIMARY KEY (generator_id),
   CONSTRAINT generator_data_source_fk FOREIGN KEY (source)
       REFERENCES calc_ego_hv_powerflow.source (source_id) MATCH SIMPLE
@@ -117,10 +122,6 @@ INSERT INTO orig_geo_powerplants.pf_generator_single (generator_id)
 		  WHERE a.fuel= 'pumped_storage'
 		)
 	 OR re_id IS NOT NULL; -- pumped storage units are ignored here and will be listed in storage table 
-
-
-
-
 
 
 -----------------
@@ -237,8 +238,19 @@ UPDATE orig_geo_powerplants.pf_generator_single
 WHERE p_nom > 50 AND source = result.id;
 
 -----------
+-- Identify weather point IDs for each generator
+-----------
+
+UPDATE orig_geo_powerplants.pf_generator_single a
+	SET w_id = b.id
+		FROM 
+			(SELECT c.un_id, c.geom 
+			 FROM orig_geo_powerplants.generators_total c)
+			AS result,
+		calc_renpass_gis.voronoi_weatherpoint b 
+WHERE ST_Intersects (result.geom, b.geom) AND generator_id = result.un_id;
+
+-----------
 -- Accumulate data from pf_generator_single for hv_powerflow schema. Powerplants with a capacity of under 50 MW 
 -- are aggregated per bus and technology
 -----------
-
-
