@@ -85,5 +85,11 @@ WHERE ST_Intersects (ego_deu_voronoi_ehv.geom,AA.geom) AND osm_deu_substations_e
 
 UPDATE orig_geo_powerplants.proc_renewable_power_plants_germany
 	SET generation_type = 'run_of_river'
-	WHERE generation_type = 'hydro'; 
+	WHERE generation_type = 'hydro';
+
+/*Set voltage_level of offshore_wind to 1, to be able to assign offshore wind parks to the closest EHV-substation. This might be changed: See #983 */
+
+UPDATE orig_geo_powerplants.proc_renewable_power_plants_germany 
+	SET voltage_level=1 
+	WHERE generation_subtype = 'wind_offshore'; 
 
