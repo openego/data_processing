@@ -43,30 +43,24 @@ INSERT INTO orig_geo_powerplants.generators_total (conv_id, geom)
 -- Identify corresponding bus with the help of grid districts
 
 UPDATE orig_geo_powerplants.proc_power_plant_germany a
-	SET subst_id = b.subst_id,
-	    otg_id = result.otg_id
-	FROM 
-		(SELECT c.otg_id, c.id as subst_id
-		 FROM 	calc_ego_substation.ego_deu_substations c, 
-		 	calc_ego_grid_district.grid_district d
-		 WHERE c.id = d.subst_id)
-		AS result, 
-		calc_ego_grid_district.grid_district b
-	WHERE ST_Intersects (a.geom, ST_TRANSFORM(b.geom,4326))  AND voltage_level >= 3 AND result.subst_id = b.subst_id; 
+	SET subst_id = b.subst_id
+	FROM	calc_ego_grid_district.grid_district b
+	WHERE ST_Intersects (a.geom, ST_TRANSFORM(b.geom,4326))  AND voltage_level >= 3; 
 
 -- Identify corresponding bus with the help of ehv-Voronoi
 
 UPDATE orig_geo_powerplants.proc_power_plant_germany a
-	SET subst_id = b.subst_id, 
-	    otg_id = result.otg_id
-	FROM 
-		(SELECT c.otg_id, c.id as subst_id
-		 FROM 	calc_ego_substation.ego_deu_substations_ehv c, 
-		 	calc_ego_substation.ego_deu_voronoi_ehv d
-		 WHERE c.id = d.subst_id)
-		AS result, 
-		calc_ego_substation.ego_deu_voronoi_ehv b
-	WHERE ST_Intersects (a.geom, b.geom) =TRUE AND voltage_level <= 2 AND result.subst_id = b.subst_id;
+	SET subst_id = b.subst_id
+	FROM calc_ego_substation.ego_deu_voronoi_ehv b
+	WHERE ST_Intersects (a.geom, b.geom) =TRUE AND voltage_level <= 2;
+
+-- Insert otg_id of bus
+
+UPDATE orig_geo_powerplants.proc_power_plant_germany a
+	SET otg_id =b.otg_id 
+	FROM calc_ego_substation.ego_deu_substations b
+	WHERE a.subst_id = b.id;
+
  
 -- Update un_id from generators_total  
 
@@ -140,30 +134,23 @@ INSERT INTO orig_geo_powerplants.pf_generator_single (generator_id)
 -- Identify corresponding bus with the help of grid districts
 
 UPDATE orig_geo_powerplants.proc_renewable_power_plants_germany a
-	SET subst_id = b.subst_id, 
-	    otg_id = result.otg_id
-	FROM 
-		(SELECT c.otg_id , c.id as subst_id
-		 FROM 	calc_ego_substation.ego_deu_substations c, 
-		 	calc_ego_grid_district.grid_district d
-		 WHERE c.id = d.subst_id)
-		AS result, 
-		calc_ego_grid_district.grid_district b
-	WHERE ST_Intersects (a.geom, ST_TRANSFORM(b.geom,4326)) =TRUE AND voltage_level >= 3 AND result.subst_id = b.subst_id; 
+	SET subst_id = b.subst_id
+	FROM	calc_ego_grid_district.grid_district b
+	WHERE ST_Intersects (a.geom, ST_TRANSFORM(b.geom,4326))  AND voltage_level >= 3;  
 
 -- Identify corresponding bus with the help of ehv-Voronoi
 
 UPDATE orig_geo_powerplants.proc_renewable_power_plants_germany a
-	SET subst_id = b.subst_id, 
-	    otg_id = result.otg_id
-	FROM 
-		(SELECT c.otg_id , c.id as subst_id
-		 FROM 	calc_ego_substation.ego_deu_substations_ehv c, 
-		 	calc_ego_substation.ego_deu_voronoi_ehv d
-		 WHERE c.id = d.subst_id)
-		AS result, 
-		calc_ego_substation.ego_deu_voronoi_ehv b
-	WHERE ST_Intersects (a.geom, b.geom) =TRUE AND voltage_level <= 2 AND result.subst_id = b.subst_id; 
+	SET subst_id = b.subst_id
+	FROM calc_ego_substation.ego_deu_voronoi_ehv b
+	WHERE ST_Intersects (a.geom, b.geom) =TRUE AND voltage_level <= 2; 
+
+-- Insert otg_id of bus
+
+UPDATE orig_geo_powerplants.proc_renewable_power_plants_germany a
+	SET otg_id =b.otg_id 
+	FROM calc_ego_substation.ego_deu_substations b
+	WHERE a.subst_id = b.id; 
 
 -- Update un_id from generators_total 
 
