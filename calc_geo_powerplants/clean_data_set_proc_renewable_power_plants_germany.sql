@@ -35,3 +35,14 @@ OR generation_type = 'wind' AND generation_subtype ='solar_roof_mounted';
 
 DELETE  FROM orig_geo_powerplants.proc_renewable_power_plants_germany
 WHERE electrical_capacity IS NULL OR electrical_capacity <= 0; 
+
+
+﻿/*
+Clean data set of proc_power_plant_germany
+
+*/
+
+DELETE  FROM orig_geo_powerplants.proc_power_plant_germany
+WHERE capacity IS NULL AND fuel!='pumped_storage' OR capacity <= 0 AND fuel!='pumped_storage';
+
+
