@@ -178,7 +178,7 @@ UPDATE orig_geo_powerplants.proc_renewable_power_plants_germany a
 UPDATE orig_geo_powerplants.pf_generator_single a
 	SET bus = b.otg_id, 
 		p_nom = b.capacity, 
-		control = 'PQ',  -- For generators with a capacity 50 MW or more control is set to PQ
+		control = 'PV',  -- For generators with a capacity 50 MW or more control is set to PV
 		source = result.source
 		FROM 
 			(SELECT c.source_id as source, d.fuel as fuel
@@ -193,7 +193,7 @@ WHERE a.generator_id = b.un_id and b.capacity >= 50 AND result.fuel = b.fuel;
 UPDATE orig_geo_powerplants.pf_generator_single a
 	SET 	bus = b.otg_id, 
 		p_nom = b.capacity,
-		control = 'PV', 
+		control = 'PQ', -- For generators with a capacity less than 50 MW control is set to PQ
 		source = result.source
 		FROM 
 			( SELECT c.source_id as source, d.fuel as fuel 
@@ -209,7 +209,7 @@ WHERE a.generator_id = b.un_id and b.capacity < 50 AND result.fuel = b.fuel;
 UPDATE orig_geo_powerplants.pf_generator_single a
 	SET 	bus = b.otg_id, 
 		p_nom = b.electrical_capacity/1000, -- unit for capacity in RE-register is kW
-		control = 'PV'
+		control = 'PQ' -- For RE generators control is set to PQ
 		FROM orig_geo_powerplants.proc_renewable_power_plants_germany b
 WHERE a.generator_id = b.un_id;
 
@@ -224,10 +224,10 @@ UPDATE orig_geo_powerplants.pf_generator_single a
 			  AS 	result, orig_geo_powerplants.proc_renewable_power_plants_germany b
 WHERE a.generator_id = b.un_id AND a.generator_id = result.un_id; 
 
--- Control is changed to PQ for biomass powerplants > 50 MW
+-- Control is changed to PV for biomass powerplants > 50 MW
 
 UPDATE orig_geo_powerplants.pf_generator_single 
-	SET control = 'PQ'
+	SET control = 'PV'
 	 
 		FROM 
 			(SELECT source_id as id
