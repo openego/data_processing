@@ -2,7 +2,7 @@
 -- Create a table that contains all generators (RE and conventional) but no duplicates. 
 ------------
 
-DROP TABLE IF EXISTS orig_geo_powerplants.generators_total;
+/* DROP TABLE IF EXISTS orig_geo_powerplants.generators_total;
 
 CREATE TABLE orig_geo_powerplants.generators_total
 (
@@ -16,8 +16,9 @@ CREATE TABLE orig_geo_powerplants.generators_total
 );
 
 ALTER TABLE orig_geo_powerplants.generators_total
-	OWNER TO oeuser; 
-
+	OWNER TO oeuser; */
+	
+DELETE FROM orig_geo_powerplants.generators_total; 
 
 INSERT INTO orig_geo_powerplants.generators_total (re_id, geom) 
 	SELECT id, geom
@@ -82,7 +83,7 @@ UPDATE orig_geo_powerplants.proc_power_plant_germany a
 --------------
 
 
-DROP TABLE orig_geo_powerplants.pf_generator_single;
+/* DROP TABLE orig_geo_powerplants.pf_generator_single;
 
 CREATE TABLE orig_geo_powerplants.pf_generator_single
 (
@@ -110,8 +111,10 @@ CREATE TABLE orig_geo_powerplants.pf_generator_single
 );
 
 ALTER TABLE orig_geo_powerplants.pf_generator_single
-  OWNER TO oeuser;
+  OWNER TO oeuser; */
 
+
+DELETE FROM orig_geo_powerplants.pf_generator_single; 
 
 INSERT INTO orig_geo_powerplants.pf_generator_single (generator_id)
 	SELECT un_id
