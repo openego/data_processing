@@ -30,6 +30,11 @@ INSERT INTO orig_geo_powerplants.generators_total (conv_id, geom)
 	FROM orig_geo_powerplants.proc_power_plant_germany
 	WHERE eeg NOT LIKE 'yes'; -- Duplicates that already occur in the eeg-list are ignored 
 
+CREATE INDEX generators_total_idx
+  ON orig_geo_powerplants.generators_total
+  USING gist
+  (geom);
+
 
 ---------------
 -- Update table on conventional power plants and add information on unified id of generators and information of relevant bus
