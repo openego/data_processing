@@ -49,7 +49,26 @@ SELECT
   
 -- per unit to absolute values
 
-UPDATE calc_ego_hv_powerflow.line SET r = r * ((SELECT v_nom FROM calc_ego_hv_powerflow.bus WHERE bus0 = bus_id)^2 / (100 * 10^6));
-UPDATE calc_ego_hv_powerflow.line SET x = x * ((SELECT v_nom FROM calc_ego_hv_powerflow.bus WHERE bus0 = bus_id)^2 / (100 * 10^6));
-UPDATE calc_ego_hv_powerflow.line SET b = b * ((SELECT v_nom FROM calc_ego_hv_powerflow.bus WHERE bus0 = bus_id)^2 / (100 * 10^6));
-UPDATE calc_ego_hv_powerflow.transformer SET x = x * ((SELECT max(v_nom) FROM calc_ego_hv_powerflow.bus WHERE bus_id = bus0 OR bus_id = bus1)^2 / (100 * 10^6));
+UPDATE calc_ego_hv_powerflow.line a
+	SET 
+		r = r * ((result.v_nom * 1000)^2 / (100 * 10^6)),
+		x = x * ((result.v_nom * 1000)^2 / (100 * 10^6)),
+		b = b * ((result.v_nom * 1000)^2 / (100 * 10^6)) 
+		FROM 
+			(SELECT bus_id, v_nom FROM calc_ego_hv_powerflow.bus)
+			as result
+WHERE a.bus0 = result.bus_id;
+
+
+UPDATE calc_ego_hv_powerflow.transformer a
+	SET 
+		x = x * ((result.v_nom * 1000)^2 / (100 * 10^6))
+		FROM 
+			(SELECT 
+			trafo_id, 
+			GREATEST(
+				(SELECT v_nom as v_nom_bus0 FROM calc_ego_hv_powerflow.bus WHERE bus_id = bus0), 
+				(SELECT v_nom as v_nom_bus1 FROM calc_ego_hv_powerflow.bus WHERE bus_id = bus1)) 
+				as v_nom 
+			FROM calc_ego_hv_powerflow.transformer) as result
+WHERE a.trafo_id = result.trafo_id;
