@@ -204,6 +204,7 @@ WHERE a.generator_id = b.un_id and b.capacity < 50 AND result.fuel = b.fuel;
 UPDATE orig_geo_powerplants.pf_generator_single a
 	SET 	bus = b.otg_id, 
 		p_nom = b.electrical_capacity/1000, -- unit for capacity in RE-register is kW
+		dispatch = 'variable',
 		control = 'PQ' -- For RE generators control is set to PQ
 		FROM orig_geo_powerplants.proc_renewable_power_plants_germany b
 WHERE a.generator_id = b.un_id;
