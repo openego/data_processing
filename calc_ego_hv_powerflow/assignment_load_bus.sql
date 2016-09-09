@@ -1,17 +1,18 @@
-
 -----
 -- Create table to assign single load areas to a bus
 -----
+DROP TABLE IF EXISTS calc_ego_loads.pf_load_single;
 
 CREATE TABLE calc_ego_loads.pf_load_single
 (
+  scn_name character varying NOT NULL DEFAULT 'Status Quo'::character varying,
   load_id bigint NOT NULL, -- Unit: n/a...
   bus bigint, -- Unit: n/a...
   sign double precision DEFAULT (-1), -- Unit: n/a...
   e_annual double precision, -- Unit: MW...
   CONSTRAINT load_data_pkey PRIMARY KEY (load_id),
-  CONSTRAINT load_data_bus_fk FOREIGN KEY (bus)
-      REFERENCES calc_ego_hv_powerflow.bus (bus_id) MATCH SIMPLE
+  CONSTRAINT load_data_bus_fk FOREIGN KEY (bus, scn_name)
+      REFERENCES calc_ego_hv_powerflow.bus (bus_id, scn_name) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
@@ -25,7 +26,7 @@ ALTER TABLE calc_ego_hv_powerflow.load
 ALTER TABLE calc_ego_loads.ego_deu_load_area
 	ADD COLUMN otg_id bigint;
 
--- Identify corresponding bus with the help of grid districts (large scale consumer are not considered) 
+-- Identify corresponding bus with the help of grid districts (large scale consumer are not considered seperately yet) 
 
 UPDATE calc_ego_loads.ego_deu_load_area a
 	SET otg_id = b.otg_id
@@ -49,4 +50,15 @@ WHERE a.bus IS NOT NULL
 GROUP BY a.bus;
 
 
+-- Assigment of otg_id for demand time series (to be added to demand time series script, temporarily here)
 
+INSERT INTO calc_ego_hv_powerflow.load_pq_set (load_id, temp_id, p_set)
+	SELECT
+	result.otg_id,
+	1,
+	b.demand
+
+	FROM 
+		(SELECT id, otg_id FROM calc_ego_substation.ego_deu_substations) 
+		AS result, calc_ego_loads.ego_demand_per_transition_point b
+	WHERE b.id = result.id

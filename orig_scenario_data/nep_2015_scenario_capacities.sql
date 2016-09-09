@@ -19,7 +19,7 @@ ALTER DEFAULT PRIVILEGES IN SCHEMA orig_scenario_data
 
 CREATE TABLE orig_scenario_data.nep_2015_scenario_capacities (
     state character(50),            -- Name of federal state 
-    fuel character(25) NOT NULL,    -- Type of fuel or technology
+    generation_type character(25) NOT NULL,    -- Type of fuel or technology
     capacity numeric(15),         -- Electrical capacity in MW
     nuts character(12) NOT NULL,    -- EU Nuts ID for federal states 
     scenario_name character(50) NOT NULL -- NEP 2025 scenario name
@@ -34,9 +34,10 @@ GRANT SELECT, UPDATE, INSERT ON TABLE orig_scenario_data.nep_2015_scenario_capac
 
 
 -- Insert data into table
+-- ToDo check data 
 
 INSERT INTO orig_scenario_data.nep_2015_scenario_capacities(
-            state, fuel, capacity, nuts, scenario_name)
+            state, generation_type, capacity, nuts, scenario_name)
     VALUES 
 ('Baden-Württemberg','gas','2900','DE1','B12035/B22035'),
 ('Baden-Württemberg','lignite','0','DE1','B12035/B22035'),
@@ -262,6 +263,6 @@ INSERT INTO orig_scenario_data.nep_2015_scenario_capacities(
 
 --
 ALTER TABLE ONLY  orig_scenario_data.nep_2015_scenario_capacities
-    ADD CONSTRAINT nep_2015_scenario_capacities_pkey PRIMARY KEY (scenario_name, nuts, fuel);
+    ADD CONSTRAINT nep_2015_scenario_capacities_pkey PRIMARY KEY (scenario_name, nuts,  generation_type );
 --
 

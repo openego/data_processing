@@ -62,7 +62,14 @@ def find_netzinseln(cur,conn):
     conn.commit()
 
     sql =   """
-DROP VIEW IF EXISTS final_result CASCADE;
+DROP VIEW IF EXISTS final_result_hoes CASCADE;
+DROP MATERIALIZED VIEW IF EXISTS substations_to_drop_hoes CASCADE;
+DROP MATERIALIZED VIEW IF EXISTS buffer_75_hoes CASCADE;
+DROP MATERIALIZED VIEW IF EXISTS buffer_75_a_hoes CASCADE;
+DROP MATERIALIZED VIEW IF EXISTS vg250_1_sta_union_mview CASCADE;
+DROP VIEW IF EXISTS summary_de_hoes CASCADE;
+DROP MATERIALIZED VIEW IF EXISTS summary_hoes CASCADE;
+DROP VIEW IF EXISTS summary_total_hoes CASCADE;
 DROP VIEW IF EXISTS netzinseln_hoes CASCADE;
 DROP VIEW IF EXISTS relation_substations_with_hoes CASCADE;
 DROP VIEW IF EXISTS node_substations_with_hoes CASCADE;
@@ -141,8 +148,8 @@ SELECT *,
 	'4'::smallint as status
 FROM node_substations_with_hoes;
 
-
-CREATE VIEW final_result AS
+-- create view summary_total_hoes that contains substations without any filter
+CREATE VIEW summary_total_hoes AS
 SELECT  ST_X(ST_Centroid(ST_Transform(netzinsel.way,4326))) as lon,
 	ST_Y(ST_Centroid(ST_Transform(netzinsel.way,4326))) as lat,
 	ST_Centroid(ST_Transform(netzinsel.way,4326)) as point,
@@ -166,6 +173,109 @@ SELECT  ST_X(ST_Centroid(ST_Transform(netzinsel.way,4326))) as lon,
 	status
 FROM netzinseln_hoes netzinsel ORDER BY osm_www;
 
+-- create view that filters irrelevant tags
+CREATE MATERIALIZED VIEW summary_hoes AS
+SELECT *
+FROM summary_total_hoes
+WHERE dbahn = 'no' AND substation NOT IN ('traction','transition');
+
+CREATE INDEX summary_hoes_gix ON summary_hoes USING GIST (polygon);
+
+-- eliminate substation that are not within VG250
+CREATE MATERIALIZED VIEW vg250_1_sta_union_mview AS 
+ SELECT 1 AS gid,
+    'Bundesrepublik'::text AS bez,
+    st_area(un.geom) / 10000::double precision AS area_km2,
+    un.geom
+   FROM ( SELECT st_union(st_transform(vg.geom, 4326))::geometry(MultiPolygon,4326) AS geom
+          FROM gis.vg250_sta vg
+          WHERE vg.bez::text = 'Bundesrepublik'::text) un;
+CREATE INDEX vg250_1_sta_union_mview_gix ON vg250_1_sta_union_mview USING GIST (geom);
+
+CREATE VIEW summary_de_hoes AS
+SELECT *
+FROM summary_hoes, vg250_1_sta_union_mview as vg
+WHERE vg.geom && summary_hoes.polygon 
+AND ST_CONTAINS(vg.geom,summary_hoes.polygon);
+
+-- build function to buffer in meters around a geometry 
+-- source: http://www.gistutor.com/postgresqlpostgis/6-advanced-postgresqlpostgis-tutorials/58-postgis-buffer-latlong-and-other-projections-using-meters-units-custom-stbuffermeters-function.html
+
+-- Function: utmzone(geometry)
+-- DROP FUNCTION utmzone(geometry);
+-- Usage: SELECT ST_Transform(the_geom, utmzone(ST_Centroid(the_geom))) FROM sometable;
+ 
+CREATE OR REPLACE FUNCTION utmzone(geometry)
+RETURNS integer AS
+$BODY$
+DECLARE
+geomgeog geometry;
+zone int;
+pref int;
+ 
+BEGIN
+geomgeog:= ST_Transform($1,4326);
+ 
+IF (ST_Y(geomgeog))>0 THEN
+pref:=32600;
+ELSE
+pref:=32700;
+END IF;
+ 
+zone:=floor((ST_X(geomgeog)+180)/6)+1;
+ 
+RETURN zone+pref;
+END;
+$BODY$ LANGUAGE 'plpgsql' IMMUTABLE
+COST 100;
+
+-- Function: ST_Buffer_Meters(geometry, double precision)
+-- DROP FUNCTION ST_Buffer_Meters(geometry, double precision);
+-- Usage: SELECT ST_Buffer_Meters(the_geom, num_meters) FROM sometable; 
+  
+CREATE OR REPLACE FUNCTION ST_Buffer_Meters(geometry, double precision)
+RETURNS geometry AS
+$BODY$
+DECLARE
+orig_srid int;
+utm_srid int;
+ 
+BEGIN
+orig_srid:= ST_SRID($1);
+utm_srid:= utmzone(ST_Centroid($1));
+ 
+RETURN ST_transform(ST_Buffer(ST_transform($1, utm_srid), $2), orig_srid);
+END;
+$BODY$ LANGUAGE 'plpgsql' IMMUTABLE
+COST 100;
+
+-- create view with buffer of 75m around polygons
+CREATE MATERIALIZED VIEW buffer_75_hoes AS
+SELECT osm_id, ST_Area(ST_Transform(summary_de_hoes.polygon,4326)) as area, ST_Buffer_Meters(ST_Transform(summary_de_hoes.polygon,4326), 75) as buffer_75
+FROM summary_de_hoes;
+
+-- create second view with same data to compare
+CREATE MATERIALIZED VIEW buffer_75_a_hoes AS
+SELECT osm_id, ST_Area(ST_Transform(summary_de_hoes.polygon,4326)) as area_a, ST_Buffer_Meters(ST_Transform(summary_de_hoes.polygon,4326), 75) as buffer_75_a
+FROM summary_de_hoes;
+
+-- create view to eliminate smaller substations where buffers intersect
+CREATE MATERIALIZED VIEW substations_to_drop_hoes AS
+SELECT DISTINCT
+(CASE WHEN buffer_75_hoes.area < buffer_75_a_hoes.area_a THEN buffer_75_hoes.osm_id ELSE buffer_75_a_hoes.osm_id END) as osm_id,
+(CASE WHEN buffer_75_hoes.area < buffer_75_a_hoes.area_a THEN buffer_75_hoes.area ELSE buffer_75_a_hoes.area_a END) as area,
+(CASE WHEN buffer_75_hoes.area < buffer_75_a_hoes.area_a THEN buffer_75_hoes.buffer_75 ELSE buffer_75_a_hoes.buffer_75_a END) as buffer
+FROM buffer_75_hoes, buffer_75_a_hoes
+WHERE ST_Intersects(buffer_75_hoes.buffer_75, buffer_75_a_hoes.buffer_75_a)
+AND NOT buffer_75_hoes.osm_id = buffer_75_a_hoes.osm_id;
+
+-- filter those substations and create final_result_hoes
+CREATE VIEW final_result_hoes AS
+SELECT * 
+FROM summary_de_hoes
+WHERE summary_de_hoes.osm_id NOT IN ( SELECT substations_to_drop_hoes.osm_id FROM substations_to_drop_hoes);
+
+
             """
     cur.execute(sql)
     conn.commit()
@@ -173,7 +283,7 @@ FROM netzinseln_hoes netzinsel ORDER BY osm_www;
 
     sql =   """
 WITH new_values (lon, lat, point, polygon, voltage, power_type, substation, osm_id, osm_www, frequency, name, ref, operator, dbahn, status) as (
-  SELECT * FROM final_result
+  SELECT * FROM final_result_hoes
 ),
 upsert as
 ( 
