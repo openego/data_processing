@@ -46,8 +46,7 @@ COMMENT ON TABLE **myschema**.**mytable** IS
 
 "ToDo": ["Some datasets are odd -&gt; Check numbers against another data"],
 "Licence": ["Licence – Version 2.0 (dl-de/by-2-0; [http://www.govdata.de/dl-de/by-2-0])"],
-"Instructions for proper use": ["Always state licence"],
-"Label": ["Germany", "Example Data"]
+"Instructions for proper use": ["Always state licence"]
 }';
 
 -- Select description 
