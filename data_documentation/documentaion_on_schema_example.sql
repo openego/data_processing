@@ -25,8 +25,7 @@ COMMENT ON SCHEMA **myschema** IS
                     "Date": "17.07.2014",
                     "Comment": "Delete table XYZ"}],
 
-"ToDo": ["Add new tables"],
-"Label": ["Tables of Geometries"]
+"ToDo": ["Add new tables"]
 }';
 
 -- Select description 
