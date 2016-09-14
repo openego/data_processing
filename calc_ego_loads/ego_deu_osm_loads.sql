@@ -1,3 +1,10 @@
+---------- ---------- ----------
+-- "Exclude large scale consumer"
+---------- ---------- ----------
+
+DELETE FROM orig_osm.osm_deu_polygon_urban
+	WHERE gid IN (SELECT polygon_id FROM calc_ego_loads.large_scale_consumer);
+
 
 ---------- ---------- ---------- ---------- ---------- ----------
 -- "Urban Buffer (100m)"   2016-04-18 10:00 s
