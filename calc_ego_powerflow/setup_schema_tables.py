@@ -100,7 +100,7 @@ if __name__ == '__main__':
             's_nom numeric DEFAULT 0',
             'length double precision',
             'cables integer',
-            'geom geometry(MultiLineString,4326)',
+            'geom geometry(LineString,4326)',
             'CONSTRAINT line_data_pkey PRIMARY KEY (line_id, scn_name)'],
         'load': ["scn_name character varying NOT NULL DEFAULT 'Status Quo'::character varying",
             "load_id character varying(25) NOT NULL",
