@@ -245,6 +245,6 @@ HAVING ( COUNT(polygon_id) > 1 )
 */
 
 
-
+-- Remove industrial loads from orig_osm.ego_deu_loads_osm
 
 
