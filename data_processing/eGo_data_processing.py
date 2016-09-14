@@ -3,7 +3,6 @@
 import logging
 import time
 import os
-import sqlalchemy
 from data_processing.tools import io
 
 # Configure logging
