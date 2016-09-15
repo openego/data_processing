@@ -110,7 +110,7 @@ CREATE INDEX  	landuse_industry_geom_centre_idx
 -- "Calculate NUTS"   
 UPDATE calc_ego_loads.landuse_industry a
 SET nuts = b.nuts
-FROM orig_geo_vg250.vg250_4_krs b
+FROM orig_vg250.vg250_4_krs b
 WHERE st_intersects(st_transform(st_setsrid(b.geom, 31467), 3035), a.geom_centre); 
 
 
