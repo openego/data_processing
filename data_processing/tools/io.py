@@ -1,4 +1,6 @@
 from sqlalchemy import create_engine
+import getpass
+import sys
 
 def oedb_session(section='oedb'):
     """Get SQLAlchemy session object with valid connection to OEDB"""
@@ -16,8 +18,9 @@ def oedb_session(section='oedb'):
         port = input('port (default 5432): ') or '5432'
         database = input("database name (default 'oedb'): ") or 'oedb'
         user = input('user (default postgres): ')
-        password = input('password: ')
-
+        # password = input('password: ')
+        password = getpass.getpass(prompt='password: ',
+                                   stream=sys.stderr)
         conn = create_engine(
             'postgresql://' + '%s:%s@%s:%s/%s' % (user,
                                                   password,
