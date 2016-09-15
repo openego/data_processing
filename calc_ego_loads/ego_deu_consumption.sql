@@ -20,26 +20,12 @@ INSERT INTO 	calc_ego_loads.ego_deu_consumption (id,subst_id)
 	FROM 	calc_ego_loads.ego_deu_load_area;
 	
 
--- Calculate the industrial area per district 
+-- Calculate the landuse area per district 
 
-ALTER TABLE orig_ego_consumption.lak_consumption_per_district
-	ADD COLUMN area_industry numeric, 
-	ADD COLUMN area_retail numeric,
-	ADD COLUMN area_agriculture numeric,
-	ADD COLUMN area_tertiary_sector numeric;
-
-UPDATE orig_ego_consumption.lak_consumption_per_district a
-SET area_industry = result.sum
-FROM
-( 
-	SELECT 
-	sum(sector_area_industrial), 
-	substr(nuts,1,5) 
-	FROM calc_ego_loads.ego_deu_load_area
-	GROUP BY substr(nuts,1,5)
-) as result
-
-WHERE result.substr = substr(a.eu_code,1,5);
+-- ALTER TABLE orig_ego_consumption.lak_consumption_per_district
+-- 	ADD COLUMN area_retail numeric,
+-- 	ADD COLUMN area_agriculture numeric,
+-- 	ADD COLUMN area_tertiary_sector numeric;
 
 
 -- Calculate the retail area per district

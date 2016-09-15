@@ -1,8 +1,30 @@
-/*﻿
+﻿-- Calculate the industrial area per district 
+
+-- ALTER TABLE orig_ego_consumption.lak_consumption_per_district
+-- 	ADD COLUMN area_industry numeric;
+
+UPDATE orig_ego_consumption.lak_consumption_per_district a
+SET area_industry = result.sum
+FROM
+( 
+	SELECT 
+	sum(area_ha), 
+	substr(nuts,1,5) 
+	FROM calc_ego_loads.landuse_industry
+	GROUP BY substr(nuts,1,5)
+) as result
+
+WHERE result.substr = substr(a.eu_code,1,5);
+
+
+
+------------------
+-- "Calculate specific industrial consumption"
+------------------
 
 SELECT	sum(area_ha), substr(nuts,1,5) 
 	INTO 	orig_consumption_znes.temp_table
-	FROM 	calc_gridcells_znes.landuse_industrial
+	FROM 	calc_ego_loads.landuse_industrial
 GROUP BY 	substr(nuts,1,5);
 
 UPDATE orig_consumption_znes.lak_consumption_per_district a
@@ -13,12 +35,13 @@ UPDATE orig_consumption_znes.lak_consumption_per_district a
 DROP TABLE orig_consumption_znes.temp_table; 
 
 
--- Calculate industrial consumption per industry polygon
+-- "Calculate industrial consumption per industry polygon"
 
 UPDATE 	orig_consumption_znes.lak_consumption_per_district
 SET 	consumption_per_area_industry = elec_consumption_industry/area_industry;
 
-*/
+
+-- "Export information on industrial area into calc_ego_loads.landuse_industry"
 
 DROP TABLE IF EXISTS calc_ego_loads.landuse_industry;
 
@@ -107,7 +130,7 @@ CREATE INDEX  	landuse_industry_geom_centre_idx
 -- "Calculate NUTS"   
 UPDATE calc_ego_loads.landuse_industry a
 SET nuts = b.nuts
-FROM orig_geo_vg250.vg250_4_krs b
+FROM orig_vg250.vg250_4_krs b
 WHERE st_intersects(st_transform(st_setsrid(b.geom, 31467), 3035), a.geom_centre); 
 
 
@@ -245,6 +268,5 @@ HAVING ( COUNT(polygon_id) > 1 )
 */
 
 
-
-
+-- Remove industrial loads from orig_osm.ego_deu_loads_osm
 

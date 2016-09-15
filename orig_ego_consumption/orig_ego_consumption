@@ -39,7 +39,7 @@ SET eu_code = RPAD(eu_code::text, 5, '0') -- Zero-pads to the right up to the le
 
 
 -- The eu_code of some grid districts are inconsistent between orig_ego_consumption.destatis_gva_per_districts
--- and orig_geo_vg250.vg250_4_krs. Therefore some eu_code are renamed in this table to achieve consistency. 
+-- and orig_vg250.vg250_4_krs. Therefore some eu_code are renamed in this table to achieve consistency. 
 
 UPDATE orig_ego_consumption.destatis_gva_per_districts
 	SET eu_code = 'DE80J'
