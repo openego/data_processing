@@ -1,4 +1,4 @@
--- Calculate the industrial area per district 
+﻿-- Calculate the industrial area per district 
 
 -- ALTER TABLE orig_ego_consumption.lak_consumption_per_district
 -- 	ADD COLUMN area_industry numeric;
@@ -269,5 +269,4 @@ HAVING ( COUNT(polygon_id) > 1 )
 
 
 -- Remove industrial loads from orig_osm.ego_deu_loads_osm
-
 
