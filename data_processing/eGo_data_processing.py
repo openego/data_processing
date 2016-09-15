@@ -3,7 +3,7 @@
 import logging
 import time
 import os
-from data_processing.tools import io
+from tools import io
 
 # Configure logging
 logger = logging.getLogger('EEEE')
@@ -21,7 +21,7 @@ logger.info('eGo data processing started...')
 
 # list of sql_snippets that process the data in correct order
 snippet_dir = 'sql_snippets'
-sql_snippets = ['process_vg250.sql']
+sql_snippets = ['process_vg250_statistics.sql']
 
 # get database connection
 conn = io.oedb_session(section='oedb')
