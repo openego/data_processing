@@ -27,13 +27,16 @@ voltage_level character varying,
 voltage_type character(2),
 subst_id integer,
 la_id integer,
-geom_line geometry(LineString,3035),
+flag character varying,
 geom geometry(Point,3035),
+geom_line geometry(LineString,3035),
+geom_new geometry(Point,3035),
 CONSTRAINT ego_deu_dea_pkey PRIMARY KEY (id));
 
 INSERT INTO calc_ego_re.ego_deu_dea (id, electrical_capacity, generation_type, generation_subtype, voltage_level, geom)
 	SELECT	id, electrical_capacity, generation_type, generation_subtype, voltage_level, ST_TRANSFORM(geom,3035)
-	FROM	orig_geo_opsd.renewable_power_plants_germany AS opsd;
+	FROM	supply.ego_renewable_power_plants_germany
+	WHERE	geom IS NOT NULL;
 
 CREATE INDEX	ego_deu_dea_geom_idx
 	ON	calc_ego_re.ego_deu_dea
@@ -51,22 +54,83 @@ FROM    (
 	) AS t2
 WHERE  	t1.id = t2.id;
 
--- MView outside GD   (OK!) -> 1.000ms =3.585
-DROP MATERIALIZED VIEW IF EXISTS 	calc_ego_re.ego_deu_dea_out_mview ;
-CREATE MATERIALIZED VIEW 		calc_ego_re.ego_deu_dea_out_mview AS
-	SELECT	id,electrical_capacity,generation_type,generation_subtype,voltage_level,
-		subst_id,geom,flag
-	FROM 	calc_ego_re.ego_deu_dea AS dea
-	WHERE	subst_id IS NULL;
-
-CREATE INDEX ego_deu_dea_out_mview_geom_idx
-  ON calc_ego_re.ego_deu_dea_out_mview USING gist (geom);
-
--- Flag OUT GD    (OK!) -> 1.000ms =3.585
+-- Flag reset    (OK!) -> 1.000ms =3.585
 UPDATE 	calc_ego_re.ego_deu_dea AS dea
 SET	flag = NULL,
 	geom_new = NULL
 WHERE	subst_id IS NULL;
+
+
+------------------------------------ Outside
+
+-- Flag OUT GD    (OK!) -> 1.000ms =3.585
+UPDATE 	calc_ego_re.ego_deu_dea AS dea
+SET	flag = 'out',
+	geom_new = NULL,
+	geom_line = NULL
+WHERE	dea.subst_id IS NULL;
+
+-- Flag OUT GD    (OK!) -> 1.000ms =593
+UPDATE 	calc_ego_re.ego_deu_dea AS dea
+SET	flag = 'offshore',
+	geom_new = NULL,
+	geom_line = NULL
+WHERE	dea.subst_id IS NULL AND
+	dea.generation_type = 'wind';
+
+-- -- Flag NO geom    (OK!) -> 1.000ms =71
+-- UPDATE 	calc_ego_re.ego_deu_dea AS dea
+-- SET	flag = 'no_geom',
+-- 	geom_new = NULL,
+-- 	geom_line = NULL
+-- WHERE	dea.geom IS NULL;
+
+-- MView outside GD   (OK!) -> 1.000ms =2.992
+DROP MATERIALIZED VIEW IF EXISTS 	calc_ego_re.ego_deu_dea_out_mview ;
+CREATE MATERIALIZED VIEW 		calc_ego_re.ego_deu_dea_out_mview AS
+	SELECT	id,electrical_capacity,generation_type,generation_subtype,voltage_level,
+		subst_id,flag,geom
+	FROM 	calc_ego_re.ego_deu_dea AS dea
+	WHERE	flag = 'out';
+
+CREATE INDEX ego_deu_dea_out_mview_geom_idx
+  ON calc_ego_re.ego_deu_dea_out_mview USING gist (geom);
+
+
+-- Next Neighbor   (OK!) 10.000ms =2.986
+DROP TABLE IF EXISTS	calc_ego_re.ego_deu_dea_out_nn CASCADE;
+CREATE TABLE 		calc_ego_re.ego_deu_dea_out_nn AS 
+SELECT DISTINCT ON (dea.id)
+	dea.id AS dea_id,
+	dea.generation_type,
+	sub.subst_id, 
+	sub.geom ::geometry(Point,3035) AS geom_sub,
+	ST_Distance(dea.geom,sub.geom) AS distance,
+	dea.geom ::geometry(Point,3035) AS geom
+FROM 	calc_ego_re.ego_deu_dea_out_mview AS dea,
+	calc_ego_substation.substation_110 AS sub
+WHERE 	ST_DWithin(dea.geom,sub.geom, 100000) -- In a 50 km radius
+ORDER BY 	dea.id, ST_Distance(dea.geom,sub.geom);
+
+-- Ad PK   (OK!) 150ms =0
+ALTER TABLE	calc_ego_re.ego_deu_dea_out_nn
+	ADD PRIMARY KEY (dea_id);
+
+-- Update   (OK!) 78.000ms =2.986
+UPDATE 	calc_ego_re.ego_deu_dea AS t1
+SET  	subst_id = t2.subst_id,
+	geom_new = t2.geom_new,
+	geom_line = t2.geom_line
+FROM	(SELECT	nn.dea_id AS dea_id,
+		nn.subst_id AS subst_id,
+		nn.geom_sub AS geom_new,
+		ST_MAKELINE(nn.geom,nn.geom_sub) ::geometry(LineString,3035) AS geom_line
+	FROM	calc_ego_re.ego_deu_dea_out_nn AS nn,
+		calc_ego_re.ego_deu_dea AS dea
+	WHERE  	flag = 'out'
+	)AS t2
+WHERE  	t1.id = t2.dea_id;
+
 
 ------------------------------------ DEA METHODS
 -- DEA (ohne HS) -> 1.598.624
