@@ -93,3 +93,9 @@ UPDATE orig_geo_powerplants.proc_renewable_power_plants_germany
 	SET voltage_level=1 
 	WHERE generation_subtype = 'wind_offshore'; 
 
+/*Set capacity= capacity_uba for units without capacity entry */
+
+UPDATE orig_geo_powerplants.proc_power_plant_germany 
+	SET capacity = capacity_uba
+	WHERE capacity IS NULL and capacity_uba IS NOT NULL; 
+
