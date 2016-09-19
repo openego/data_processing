@@ -48,6 +48,7 @@ CREATE TABLE calc_renpass_gis.renpass_gis_source
   target character varying(250),
   nominal_value numeric[],
   actual_value numeric[],
+  variable_cost numeric[],
   fixed boolean,
   CONSTRAINT renpass_gis_source_pkey PRIMARY KEY (id)
 )
