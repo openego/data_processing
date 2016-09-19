@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
 import logging
 import time
 import os
+import codecs
 from tools import io
 
 # Configure logging

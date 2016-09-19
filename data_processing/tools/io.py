@@ -26,6 +26,6 @@ def oedb_session(section='oedb'):
                                                   password,
                                                   host,
                                                   port,
-                                                  database))
+                                                  database)).connect()
 
     return conn
