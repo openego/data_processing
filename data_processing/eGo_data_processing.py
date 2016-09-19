@@ -35,8 +35,7 @@ for snippet in sql_snippets:
     snippet_str = open(os.path.join(snippet_dir, snippet)).read()
 
     # execute desired sql snippet
-    conn.execute(snippet_str)
-    conn.commit()
+    conn.execution_options(autocommit=True).execute(snippet_str)
 
     # inform the user
     logger.info('...successfully done in {:.2f} seconds.'.format(
