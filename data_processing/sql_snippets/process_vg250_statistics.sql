@@ -1,4 +1,4 @@
-﻿DROP MATERIALIZED VIEW IF EXISTS	political_boundary.bkg_vg250_statistics_mview CASCADE;
+DROP MATERIALIZED VIEW IF EXISTS	political_boundary.bkg_vg250_statistics_mview CASCADE;
 CREATE MATERIALIZED VIEW		political_boundary.bkg_vg250_statistics_mview AS 
 -- Area Sum
 SELECT	'1' ::integer AS id,
