@@ -14,7 +14,7 @@ def oedb_session(section='oedb'):
         print('Please provide connection parameters to database:\n' +
               'Hit [Enter] to take defaults')
 
-        host = input('host (default oe.iws.cs.ovgu.de): ') or 'oe.iws.cs.ovgu.de'
+        host = input('host (default 141.44.24.88): ') or 'oe.iws.cs.ovgu.de'
         port = input('port (default 5432): ') or '5432'
         database = input("database name (default 'oedb'): ") or 'oedb'
         user = input('user (default postgres): ')

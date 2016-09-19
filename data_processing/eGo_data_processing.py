@@ -21,7 +21,7 @@ logger.info('eGo data processing started...')
 
 # list of sql_snippets that process the data in correct order
 snippet_dir = 'sql_snippets'
-sql_snippets = ['process_vg250_statistics.sql']
+sql_snippets = ['process_bkg_vg250_statistics.sql']
 
 # get database connection
 conn = io.oedb_session(section='oedb')
