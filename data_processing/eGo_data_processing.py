@@ -36,10 +36,14 @@ for snippet in sql_snippets:
 
     # execute desired sql snippet
     conn.execute(snippet_str)
+    conn.commit()
 
     # inform the user
     logger.info('...successfully done in {:.2f} seconds.'.format(
         time.time() - snippet_time))
+
+# close database connection
+conn.close()
 
 logger.info('Data processing script successfully executed in {:.2f} seconds'.format(
     time.time() - total_time))
