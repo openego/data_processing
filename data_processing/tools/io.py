@@ -7,7 +7,7 @@ def oedb_session(section='oedb'):
 
     # get session object by oemof.db tools (requires .oemof/config.ini
     try:
-        from oemofof import db
+        from oemof import db
         conn = db.connection(section=section)
 
     except:
