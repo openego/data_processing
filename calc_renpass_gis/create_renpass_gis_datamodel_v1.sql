@@ -395,22 +395,22 @@ ALTER TABLE calc_renpass_gis.renpass_gis_results
 ALTER TABLE calc_renpass_gis.renpass_gis_storage
    ADD CONSTRAINT renpass_gis_storage_fkey
    FOREIGN KEY (scenario_id) 
-   REFERENCES calc_renpass_gis.renpass_gis_storage(id);
+   REFERENCES calc_renpass_gis.renpass_gis_scenario(id);
 --
 ALTER TABLE calc_renpass_gis.renpass_gis_linear_transformer
    ADD CONSTRAINT renpass_gis_linear_transformer_fkey
    FOREIGN KEY (scenario_id) 
-   REFERENCES calc_renpass_gis.renpass_gis_linear_transformer(id);
+   REFERENCES calc_renpass_gis.renpass_gis_scenario(id);
 --
 ALTER TABLE calc_renpass_gis.renpass_gis_sink
    ADD CONSTRAINT renpass_gis_sink_fkey
    FOREIGN KEY (scenario_id) 
-   REFERENCES calc_renpass_gis.renpass_gis_sink(id);
+   REFERENCES calc_renpass_gis.renpass_gis_scenario(id);
 --
 ALTER TABLE calc_renpass_gis.renpass_gis_source
    ADD CONSTRAINT renpass_gis_source_fkey
    FOREIGN KEY (scenario_id) 
-   REFERENCES calc_renpass_gis.renpass_gis_source(id);
+   REFERENCES calc_renpass_gis.renpass_gis_scenario(id);
 
 --
 -- Add further check constraints
@@ -455,7 +455,6 @@ DROP SEQUENCE calc_renpass_gis.renpass_gis_source_id_seq CASCADE;
 DROP SEQUENCE calc_renpass_gis.renpass_gis_linear_transformer_id_seq CASCADE;
 DROP TABLE calc_renpass_gis.renpass_gis_source CASCADE; 
 DROP TABLE calc_renpass_gis.renpass_gis_storage CASCADE;
-DROP TABLE calc_renpass_gis.renpass_gis_source CASCADE;
 DROP TABLE calc_renpass_gis.renpass_gis_sink CASCADE;
 DROP TABLE calc_renpass_gis.renpass_gis_results CASCADE;
 DROP TABLE calc_renpass_gis.renpass_gis_linear_transformer CASCADE;
