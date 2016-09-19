@@ -413,10 +413,26 @@ ALTER TABLE calc_renpass_gis.renpass_gis_source
    REFERENCES calc_renpass_gis.renpass_gis_scenario(id);
 
 --
--- Add further check constraints
+-- Add Grand 
 
+ALTER TABLE calc_renpass_gis.renpass_gis_source OWNER TO oeuser;
+GRANT ALL ON SEQUENCE calc_renpass_gis.renpass_gis_source_id_seq TO oeuser;
 
+ALTER TABLE calc_renpass_gis.renpass_gis_sink OWNER TO oeuser;
+GRANT ALL ON SEQUENCE calc_renpass_gis.renpass_gis_sink_id_seq TO oeuser;
 
+ALTER TABLE calc_renpass_gis.renpass_gis_results OWNER TO oeuser;
+GRANT ALL ON SEQUENCE calc_renpass_gis.renpass_gis_results_id_seq TO oeuser;
+
+ALTER TABLE calc_renpass_gis.renpass_gis_scenario OWNER TO oeuser;
+GRANT ALL ON SEQUENCE calc_renpass_gis.renpass_gis_scenario_id_seq TO oeuser;
+
+ALTER TABLE calc_renpass_gis.renpass_gis_linear_transformer OWNER TO oeuser;
+GRANT ALL ON SEQUENCE calc_renpass_gis.renpass_gis_linear_transformer_id_seq TO oeuser;
+ 
+ALTER TABLE calc_renpass_gis.renpass_gis_storage OWNER TO oeuser;
+GRANT ALL ON SEQUENCE calc_renpass_gis.renpass_gis_storage_id_seq TO oeuser;
+ 
 
 
 
