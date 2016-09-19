@@ -1,10 +1,47 @@
-﻿-- Table: calc_renpass_gis.renpass_gis_source
+﻿/* renpass_gis Datamodel V1
 
+
+
+
+*/
+
+
+-- Sequence: calc_renpass_gis.renpass_gis_results_id_seq
+-- DROP SEQUENCE calc_renpass_gis.renpass_gis_results_id_seq;
+
+CREATE SEQUENCE calc_renpass_gis.renpass_gis_results_id_seq START 1;
+
+-- Sequence: calc_renpass_gis.renpass_gis_scenario_id_seq
+-- DROP SEQUENCE calc_renpass_gis.renpass_gis_scenario_id_seq;
+
+CREATE SEQUENCE calc_renpass_gis.renpass_gis_scenario_id_seq START 1;
+
+-- Sequence: calc_renpass_gis.renpass_gis_storage_id_seq
+-- DROP SEQUENCE calc_renpass_gis.renpass_gis_storage_id_seq;
+
+CREATE SEQUENCE calc_renpass_gis.renpass_gis_storage_id_seq START 1;
+
+-- Sequence: calc_renpass_gis.renpass_gis_linear_transformer_id_seq
+-- DROP SEQUENCE calc_renpass_gis.renpass_gis_linear_transformer_id_seq;
+
+CREATE SEQUENCE calc_renpass_gis.renpass_gis_linear_transformer_id_seq START 1;
+
+-- Sequence: calc_renpass_gis.renpass_gis_sink_id_seq
+-- DROP SEQUENCE calc_renpass_gis.renpass_gis_sink_id_seq;
+CREATE SEQUENCE calc_renpass_gis.renpass_gis_sink_id_seq START 1;
+
+-- Sequence: calc_renpass_gis.renpass_gis_source_id_seq
+-- DROP SEQUENCE calc_renpass_gis.renpass_gis_source_id_seq;
+CREATE SEQUENCE calc_renpass_gis.renpass_gis_source_id_seq START 1;
+
+
+     
+-- Table: calc_renpass_gis.renpass_gis_source
 -- DROP TABLE calc_renpass_gis.renpass_gis_source;
 
 CREATE TABLE calc_renpass_gis.renpass_gis_source
 (
-  id bigint NOT NULL,
+  id bigint NOT NULL DEFAULT nextval('calc_renpass_gis.renpass_gis_source_id_seq'),
   scenario_id integer,
   label character varying(250),
   source character varying(250),
@@ -57,7 +94,7 @@ COMMENT ON TABLE calc_renpass_gis.renpass_gis_source
 
 CREATE TABLE calc_renpass_gis.renpass_gis_sink
 (
-  id bigint NOT NULL,
+  id bigint NOT NULL DEFAULT nextval('calc_renpass_gis.renpass_gis_sink_id_seq'),
   scenario_id integer,
   label character varying(250),
   source character varying(250),
@@ -112,7 +149,7 @@ COMMENT ON TABLE calc_renpass_gis.renpass_gis_sink
 CREATE TABLE calc_renpass_gis.renpass_gis_scenario
 (
 
-  id integer,
+  id integer NOT NULL DEFAULT nextval('calc_renpass_gis.renpass_gis_scenario_id_seq'),
   name character varying(250)  UNIQUE NOT NULL,
   CONSTRAINT renpass_gis_scenario_pkey PRIMARY KEY (id)
 )
@@ -155,7 +192,7 @@ COMMENT ON TABLE calc_renpass_gis.renpass_gis_scenario
 
 CREATE TABLE calc_renpass_gis.renpass_gis_linear_transformer
 (
-  id bigint NOT NULL,
+  id bigint NOT NULL DEFAULT nextval('calc_renpass_gis.renpass_gis_linear_transformer_id_seq'),
   scenario_id integer,
   label character varying(250),
   source character varying(250), --- check constraints()
@@ -218,7 +255,7 @@ COMMENT ON TABLE calc_renpass_gis.renpass_gis_linear_transformer
 
 CREATE TABLE calc_renpass_gis.renpass_gis_storage
 (
-  id bigint NOT NULL,
+  id bigint NOT NULL DEFAULT nextval('calc_renpass_gis.renpass_gis_storage_id_seq'),
   scenario_id integer,
   label character varying(250),
   source character varying(250), --- check constraints()
@@ -301,7 +338,7 @@ COMMENT ON TABLE calc_renpass_gis.renpass_gis_storage
 
 CREATE TABLE calc_renpass_gis.renpass_gis_results
 (
-  id bigint NOT NULL,
+  id bigint  NOT NULL DEFAULT nextval('calc_renpass_gis.renpass_gis_results_id_seq'),
   scenario_id integer,
   bus_label character varying(250),
   type character varying(250),
@@ -354,9 +391,73 @@ ALTER TABLE calc_renpass_gis.renpass_gis_results
    ADD CONSTRAINT results_scenario_fkey
    FOREIGN KEY (scenario_id) 
    REFERENCES calc_renpass_gis.renpass_gis_scenario(id);
+--
+ALTER TABLE calc_renpass_gis.renpass_gis_storage
+   ADD CONSTRAINT renpass_gis_storage_fkey
+   FOREIGN KEY (scenario_id) 
+   REFERENCES calc_renpass_gis.renpass_gis_storage(id);
+--
+ALTER TABLE calc_renpass_gis.renpass_gis_linear_transformer
+   ADD CONSTRAINT renpass_gis_linear_transformer_fkey
+   FOREIGN KEY (scenario_id) 
+   REFERENCES calc_renpass_gis.renpass_gis_linear_transformer(id);
+--
+ALTER TABLE calc_renpass_gis.renpass_gis_sink
+   ADD CONSTRAINT renpass_gis_sink_fkey
+   FOREIGN KEY (scenario_id) 
+   REFERENCES calc_renpass_gis.renpass_gis_sink(id);
+--
+ALTER TABLE calc_renpass_gis.renpass_gis_source
+   ADD CONSTRAINT renpass_gis_source_fkey
+   FOREIGN KEY (scenario_id) 
+   REFERENCES calc_renpass_gis.renpass_gis_source(id);
+
+--
+-- Add further check constraints
+
+
+
 
 
 
 -- ToDOs
--- Add further constraints
+-- Add further check constraints for sources, etc.
 
+/*
+Open questions:
+
+1.  calc_renpass_gis.renpass_gis_scenario id as sequence?
+2.  check constraints -> controll order of data filling 
+
+
+*/
+
+
+
+/*
+#########################################
+How to create a scenario:
+
+
+1. add scenario name into calc_renpass_gis.renpass_gis_scenario 
+
+
+*/ 
+
+/* Drop all
+
+
+DROP SEQUENCE calc_renpass_gis.renpass_gis_sink_id_seq CASCADE;
+DROP SEQUENCE calc_renpass_gis.renpass_gis_results_id_seq CASCADE;
+DROP SEQUENCE calc_renpass_gis.renpass_gis_scenario_id_seq CASCADE;
+DROP SEQUENCE calc_renpass_gis.renpass_gis_storage_id_seq CASCADE;
+DROP SEQUENCE calc_renpass_gis.renpass_gis_source_id_seq CASCADE;
+DROP SEQUENCE calc_renpass_gis.renpass_gis_linear_transformer_id_seq CASCADE;
+DROP TABLE calc_renpass_gis.renpass_gis_source CASCADE; 
+DROP TABLE calc_renpass_gis.renpass_gis_storage CASCADE;
+DROP TABLE calc_renpass_gis.renpass_gis_source CASCADE;
+DROP TABLE calc_renpass_gis.renpass_gis_sink CASCADE;
+DROP TABLE calc_renpass_gis.renpass_gis_results CASCADE;
+DROP TABLE calc_renpass_gis.renpass_gis_linear_transformer CASCADE;
+DROP TABLE calc_renpass_gis.renpass_gis_scenario CASCADE;
+ */
