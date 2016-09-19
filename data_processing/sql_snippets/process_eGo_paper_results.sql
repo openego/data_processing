@@ -1,4 +1,4 @@
-﻿-- calculate results and statistics for substation, load area, MV grid districts and consumption
+-- calculate results and statistics for substation, load area, MV grid districts and consumption
 DROP SEQUENCE 	model_draft.ego_paper_data_allocation_results_seq CASCADE;
 CREATE SEQUENCE model_draft.eGo_paper_data_allocation_results_seq;
 
@@ -11,7 +11,7 @@ SELECT	nextval('model_draft.eGo_paper_data_allocation_results_seq'::regclass) AS
 	'Number of substations' ::text AS description,
 	COUNT(subst_id) ::integer AS result,
 	' ' ::text AS unit,
-	NOW() ::timestamp without time zone AS timestamp
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
 FROM	calc_ego_substation.substation_110
 UNION ALL
 -- Count GD
@@ -21,7 +21,7 @@ SELECT	nextval('model_draft.eGo_paper_data_allocation_results_seq'::regclass) AS
 	'Number of grid districts' ::text AS description,
 	COUNT(subst_id) ::integer AS result,
 	' ' ::text AS unit,
-	NOW() ::timestamp without time zone AS timestamp
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
 FROM	calc_ego_grid_district.grid_district
 
 UNION ALL
@@ -32,7 +32,7 @@ SELECT	nextval('model_draft.eGo_paper_data_allocation_results_seq'::regclass) AS
 	'Gemeinde area' ::text AS description,
 	SUM(ST_AREA(geom)/10000) ::integer AS result,
 	'km²' ::text AS unit,
-	NOW() ::timestamp without time zone AS timestamp
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
 FROM	orig_vg250.vg250_6_gem
 UNION ALL
 -- Area GD
@@ -42,7 +42,7 @@ SELECT	nextval('model_draft.eGo_paper_data_allocation_results_seq'::regclass) AS
 	'Grid District area' ::text AS description,
 	SUM(ST_AREA(geom)/10000) ::integer AS result,
 	'km²' ::text AS unit,
-	NOW() ::timestamp without time zone AS timestamp
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
 FROM	calc_ego_grid_district.grid_district
 
 UNION ALL
@@ -53,7 +53,7 @@ SELECT	nextval('model_draft.eGo_paper_data_allocation_results_seq'::regclass) AS
 	'Minmal GD area' ::text AS description,
 	MIN(ST_AREA(geom)/10000) ::decimal(10,1) AS result,
 	'km²' ::text AS unit,
-	NOW() ::timestamp without time zone AS timestamp
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
 FROM	orig_vg250.vg250_6_gem
 UNION ALL
 -- Max area GD
@@ -63,7 +63,7 @@ SELECT	nextval('model_draft.eGo_paper_data_allocation_results_seq'::regclass) AS
 	'Maximal GD area' ::text AS description,
 	MAX(ST_AREA(geom)/10000) ::decimal(10,1) AS result,
 	'km²' ::text AS unit,
-	NOW() ::timestamp without time zone AS timestamp
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
 FROM	calc_ego_grid_district.grid_district
 
 UNION ALL
@@ -74,7 +74,7 @@ SELECT	nextval('model_draft.eGo_paper_data_allocation_results_seq'::regclass) AS
 	'Number of Load Areas' ::text AS description,
 	COUNT(id) ::integer AS result,
 	' ' ::text AS unit,
-	NOW() ::timestamp without time zone AS timestamp
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
 FROM	calc_ego_loads.ego_deu_load_area
 UNION ALL
 -- Area LA
@@ -84,7 +84,7 @@ SELECT	nextval('model_draft.eGo_paper_data_allocation_results_seq'::regclass) AS
 	'Load Areas area' ::text AS description,
 	SUM(ST_AREA(geom)/10000) ::decimal(10,1) AS result,
 	'km²' ::text AS unit,
-	NOW() ::timestamp without time zone AS timestamp
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
 FROM	calc_ego_loads.ego_deu_load_area
 
 UNION ALL
@@ -95,7 +95,7 @@ SELECT	nextval('model_draft.eGo_paper_data_allocation_results_seq'::regclass) AS
 	'Minmal LA area' ::text AS description,
 	MIN(ST_AREA(geom)/10000) ::decimal(10,3) AS result,
 	'km²' ::text AS unit,
-	NOW() ::timestamp without time zone AS timestamp
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
 FROM	calc_ego_loads.ego_deu_load_area
 UNION ALL
 -- Max area LA
@@ -105,7 +105,7 @@ SELECT	nextval('model_draft.eGo_paper_data_allocation_results_seq'::regclass) AS
 	'Maximal LA area' ::text AS description,
 	MAX(ST_AREA(geom)/10000) ::decimal(10,3) AS result,
 	'km²' ::text AS unit,
-	NOW() ::timestamp without time zone AS timestamp
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
 FROM	calc_ego_loads.ego_deu_load_area
 
 
