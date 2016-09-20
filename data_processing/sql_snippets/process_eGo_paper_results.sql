@@ -31,7 +31,7 @@ SELECT	nextval('model_draft.eGo_paper_data_allocation_results_seq'::regclass) AS
 	'vg250_6_gem' ::text AS table,
 	'Gemeinde area' ::text AS description,
 	SUM(ST_AREA(geom)/10000) ::integer AS result,
-	'km²' ::text AS unit,
+	'ha' ::text AS unit,
 	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
 FROM	orig_vg250.vg250_6_gem
 UNION ALL
@@ -41,7 +41,7 @@ SELECT	nextval('model_draft.eGo_paper_data_allocation_results_seq'::regclass) AS
 	'grid_district' ::text AS table,
 	'Grid District area' ::text AS description,
 	SUM(ST_AREA(geom)/10000) ::integer AS result,
-	'km²' ::text AS unit,
+	'ha' ::text AS unit,
 	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
 FROM	calc_ego_grid_district.grid_district
 
@@ -52,7 +52,7 @@ SELECT	nextval('model_draft.eGo_paper_data_allocation_results_seq'::regclass) AS
 	'grid_district' ::text AS table,
 	'Minmal GD area' ::text AS description,
 	MIN(ST_AREA(geom)/10000) ::decimal(10,1) AS result,
-	'km²' ::text AS unit,
+	'ha' ::text AS unit,
 	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
 FROM	orig_vg250.vg250_6_gem
 UNION ALL
@@ -62,7 +62,7 @@ SELECT	nextval('model_draft.eGo_paper_data_allocation_results_seq'::regclass) AS
 	'grid_district' ::text AS table,
 	'Maximal GD area' ::text AS description,
 	MAX(ST_AREA(geom)/10000) ::decimal(10,1) AS result,
-	'km²' ::text AS unit,
+	'ha' ::text AS unit,
 	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
 FROM	calc_ego_grid_district.grid_district
 
@@ -83,7 +83,7 @@ SELECT	nextval('model_draft.eGo_paper_data_allocation_results_seq'::regclass) AS
 	'ego_deu_load_area' ::text AS table,
 	'Load Areas area' ::text AS description,
 	SUM(ST_AREA(geom)/10000) ::decimal(10,1) AS result,
-	'km²' ::text AS unit,
+	'ha' ::text AS unit,
 	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
 FROM	calc_ego_loads.ego_deu_load_area
 
@@ -94,7 +94,7 @@ SELECT	nextval('model_draft.eGo_paper_data_allocation_results_seq'::regclass) AS
 	'ego_deu_load_area' ::text AS table,
 	'Minmal LA area' ::text AS description,
 	MIN(ST_AREA(geom)/10000) ::decimal(10,3) AS result,
-	'km²' ::text AS unit,
+	'ha' ::text AS unit,
 	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
 FROM	calc_ego_loads.ego_deu_load_area
 UNION ALL
@@ -104,7 +104,7 @@ SELECT	nextval('model_draft.eGo_paper_data_allocation_results_seq'::regclass) AS
 	'ego_deu_load_area' ::text AS table,
 	'Maximal LA area' ::text AS description,
 	MAX(ST_AREA(geom)/10000) ::decimal(10,3) AS result,
-	'km²' ::text AS unit,
+	'ha' ::text AS unit,
 	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
 FROM	calc_ego_loads.ego_deu_load_area
 
