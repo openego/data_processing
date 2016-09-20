@@ -15,7 +15,8 @@ from gmlparsing.PoolClass import Pool
 from gmlparsing.ConnectionClass import Connection
 from gmlparsing.GatewayClass import Gateway
 
-tree = ET.parse('ego_deu_loads_per_grid_district.graphml')
+tree = ET.parse('parallel2.graphml')
+#tree = ET.parse('ego_deu_loads_per_grid_district.graphml')
 root = tree.getroot()
 
 ns = {'gml': 'http://graphml.graphdrawing.org/xmlns',
@@ -30,6 +31,7 @@ allGateways = []
 allObj = []
 allpnodes = []
 allPool = []
+endGateways = []
 
 def makeGraph(graphs):
     nodeArray = []
@@ -136,7 +138,7 @@ def makeDataObj(activities,pos,num):
             obj2 = aIterator.find('tn:StyleProperties', ns).findall('tn:Property', ns);
             for anns in obj2:
                 if "ARTIFACT_TYPE_ANNOTATION" in anns.attrib.values():
-                    tmpArray2.append(Annotation(name, pos))
+                    tmpArray2.append(Annots(name, pos))
                 if obj and "ARTIFACT_TYPE_DATA_OBJECT" in anns.attrib.values():
                     if len(name.strip())>0:
                         tmpArray1.append(DataObj(name, pos))
@@ -287,8 +289,8 @@ def getStart():         # fixed start and end at events
                             allAnnots = getAnnot(ap)
                             parsing.append(allAnnots)
                             #print(allAnnots.name)
-                            if allAnnots is not None:
-                                connectToPostgres(allAnnots.name)
+                            #if allAnnots is not None:
+                             #   connectToPostgres(allAnnots.name)
 
                             sgIndex = parsing.index(ap) + 1
                             parsing_nodes.append(ap.position)
@@ -313,9 +315,9 @@ def getStart():         # fixed start and end at events
                             parsing.append(allAnnots)
                             
                             
-                            if allAnnots is not None:
+                           # if allAnnots is not None:
                                 #print(allAnnots.name)
-                                connectToPostgres(allAnnots.name)   
+                            #    connectToPostgres(allAnnots.name)
                             assign(sg, sg2, sublist, sublist2, newSub, ase,'start')
 
                             parsing_nodes.append(t.position.name)
@@ -369,6 +371,30 @@ def getAnnot(t):
                     break
     return answer
 
+def checkNextParallel(curr_gw,currInd,sg,sublist,sg2,sublist2,s):
+    parallel_execs = []
+    for pele in parsing:
+        if pele is not None:
+            parallel_execs.append(pele.name)
+    for ae in alledges:
+        if ae.source == curr_gw.position.name:
+            newObj = findType(ae.target)
+
+            if type(newObj) is not Gateway :
+                #checkOtherStarts(newObj.position.name, currInd, sg, sublist, sg2, sublist2, s)
+                #while not s.is_empty():
+                 #   newElement = s.pop()
+                  #  if newElement.name not in parallel_execs:
+                   #     print(newElement.name)
+                    #    parsing.append(newElement)
+
+                if newObj.name not in parallel_execs:
+                    parsing.append(newObj)
+                    checkNextParallel(newObj, currInd, sg, sublist, sg2, sublist2, s)
+            else:
+                parsing.append(newObj)
+                newObj.name = 'start of Parallel Execution:'
+
 
 def checkNext(next,currInd,sg,sublist,sg2,sublist2,s):
     sub = None
@@ -376,10 +402,37 @@ def checkNext(next,currInd,sg,sublist,sg2,sublist2,s):
         if ae.source == next:
             newObj = findType(ae.target)
 
+            if type(newObj) is Gateway:
+                newObj.name = 'start of Parallel Execution:'
+                #print(newObj.position.name)
+                #while not s.is_empty():
+                    #parsing.append(s.pop())
+               # if newObj in parsing:
+
+                #    parsing.append(newObj)
+                 #   checkOtherStarts(newObj.position.name, currInd, sg, sublist, sg2, sublist2, s)
+                  #  while not s.is_empty():
+                   #     other_start = s.pop()
+                        #print('other starts',other_start)
+                    #    parsing.append(other_start)
+                #else:
+
+                #parsing.append(newObj)
+                #checkNext(newObj.position.name, currInd, sg, sublist, sg2, sublist2, s)
+                checkNextParallel(newObj,currInd,sg,sublist,sg2,sublist2,s)
+                endOfPE = parsing.pop()
+                endOfPE.name = endOfPE.name.replace("start","end")
+                endOfPE.name = endOfPE.name.replace(":","")
+
+                parsing.append(endOfPE)
+
             if type(newObj) is DataObj and newObj.position.name not in parsing_nodes:
                 checkOtherStarts(ae.target, currInd, sg,sublist,sg2,sublist2,s)
+
                 while not s.is_empty():
-                    parsing.append(s.pop())
+                    other_start = s.pop()
+                    print('starts',other_start )
+                    parsing.append(other_start)
                     assign(sg,sg2,sublist,sublist2,None,None,'chnext')
                 parsing.append(newObj)
                 assign(sg, sg2, sublist, sublist2, None, None, 'chnext')
@@ -400,7 +453,7 @@ def checkNext(next,currInd,sg,sublist,sg2,sublist2,s):
                 parsing.append(getAnnot(newObj))
                 allAnnots = getAnnot(newObj)
                 #print(allAnnots.name)
-                connectToPostgres(allAnnots.name)
+                #connectToPostgres(allAnnots.name)
                 assign(sg, sg2, sublist, sublist2, None, None, 'chnext')
 
                 checkNext(newObj.position.name, currInd,sg,sublist,sg2,sublist2,s)
@@ -419,7 +472,7 @@ def checkNext(next,currInd,sg,sublist,sg2,sublist2,s):
                 parsing.append(getAnnot(newObj))
                 allAnnots = getAnnot(newObj)
                 #print(allAnnots.name)
-                connectToPostgres(allAnnots.name)
+               # connectToPostgres(allAnnots.name)
                 checkNext(newObj.position, currInd, sg,sublist,sg2,sublist2,s)
 
                 parsing.insert(sgIndex, sublist2)
@@ -437,6 +490,9 @@ def checkOtherStarts(target,ind, sg,sublist,sg2,sublist2,s):
                     parsing_nodes.append(newElement.position.name)
                     ind = checkOtherStarts(newElement.position.name, ind, sg, sublist, sg2, sublist2, s)
 
+                if newType is Gateway:# and 'end' in newElement.position.name:
+                    #print('Gateway before',newElement.position.name);
+                    endGateways.append(newElement.position.name)
                 if newType is Task and newElement.position.name not in parsing_nodes:
                     ind = checkOtherStarts(newElement.position.name, ind, sg, sublist, sg2, sublist2,s)
                     while not s.is_empty():
@@ -498,11 +554,15 @@ def printParsed(toPrint,dtype):
             if dtype == 'sub':
                 print('\t', end="")
             print('Event: ',x.type)
+        elif type(x) is Gateway:
+            if dtype == 'sub':
+                print('\t', end="")
+            print('Gateway: ', x.name)
         elif type(x) is Node:
             if dtype == 'sub':
                 print('\t', end="")
             print('Subgraph: ', x.name)
-        elif type(x) is Task or type(x) is DataObj or type(x) is Annotation:
+        elif type(x) is Task or type(x) is DataObj or type(x) is Annots:
             if dtype=='sub':
                 print('\t', end="")
             print(type(x).__name__,': ',x.name)
