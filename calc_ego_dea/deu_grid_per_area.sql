@@ -206,7 +206,7 @@ WHERE	grid.area_type = 'out'
 ALTER TABLE	calc_ego_re.py_deu_grid_34m
 	ADD COLUMN geom_pnt geometry(Point,3035);
 
--- Get Centroids   (OK!) 2.500ms =*
+-- Get Centroids   (OK!) 19.419.000ms =474.594.512 (5 std.)
 UPDATE 	calc_ego_re.py_deu_grid_34m AS t1
 SET  	geom_pnt = t2.geom_pnt
 FROM    (
@@ -254,6 +254,8 @@ FROM    (
 		ST_CONTAINS(gd.geom,grid.geom)
 	) AS t2
 WHERE  	t1.id = t2.id;
+
+
 
 
 -- -- FULL
