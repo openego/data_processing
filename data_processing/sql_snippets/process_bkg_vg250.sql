@@ -341,6 +341,7 @@ CREATE MATERIALIZED VIEW		orig_vg250.vg250_6_gem_dump_mview AS
 		ST_AREA(vg.geom) / 10000 ::double precision AS area_km2,
 		ST_MakeValid((ST_DUMP(ST_TRANSFORM(vg.geom,3035))).geom) ::geometry(Polygon,3035) AS geom
 	FROM	orig_vg250.vg250_6_gem AS vg
+	WHERE	gf = '4' -- Without water
 	ORDER BY vg.gid;
 
 -- Create Index (id)   (OK!) -> 100ms =0
