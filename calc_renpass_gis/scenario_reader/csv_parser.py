@@ -58,11 +58,11 @@ for idx, series in nodes_flows.iterrows():
 
         to_ignore = ['id', 'flow_direction']
 
-        if col not in to_ignore and col in series:
+        if col == 'scenario_id':
+            setattr(obj, col, sc.id)
+            continue
 
-            if col == 'scenario_id':
-                setattr(obj, col, sc.id)
-                continue
+        if col not in to_ignore and col in series:
 
             prop = asfloat(series[col])
 
