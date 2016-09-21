@@ -35,7 +35,7 @@ SET area_retail = result.sum
 FROM
 ( 
 	SELECT 
-	sum(sector_area_retail), 
+	sum(coalesce(sector_area_retail,0)), 
 	substr(nuts,1,5) 
 	FROM calc_ego_loads.ego_deu_load_area
 	GROUP BY substr(nuts,1,5)
@@ -51,7 +51,7 @@ SET area_agriculture = result.sum
 FROM
 ( 
 	SELECT 
-	sum(sector_area_agricultural), 
+	sum(coalesce(sector_area_agricultural,0)), 
 	substr(nuts,1,5) 
 	FROM calc_ego_loads.ego_deu_load_area
 	GROUP BY substr(nuts,1,5)
@@ -140,6 +140,16 @@ FROM
 ) AS sub
 WHERE
 sub.id = a.id;
+
+-- Add Geometry information to consumption table
+
+ALTER TABLE calc_ego_loads.ego_deu_consumption
+ADD COLUMN geom geometry (Polygon,3035); 
+
+UPDATE calc_ego_loads.ego_deu_consumption a
+SET geom = b.geom
+FROM calc_ego_loads.ego_deu_load_area b
+WHERE a.id = b.id;
 
 
 ---------- ---------- ----------
