@@ -9,7 +9,7 @@
 ALTER TABLE	calc_ego_re.py_deu_grid_50m
 	ADD COLUMN geom_pnt geometry(Point,3035);
 
--- Get Centroids   (OK!) ms =
+-- Get Centroids   (OK!) 3.386.000ms =48349410
 UPDATE 	calc_ego_re.py_deu_grid_50m AS t1
 SET  	geom_pnt = t2.geom_pnt
 FROM    (
@@ -19,12 +19,12 @@ FROM    (
 	) AS t2
 WHERE  	t1.id = t2.id;
 
--- Create Index GIST (geom)   (OK!) 10.000ms =*
+-- Create Index GIST (geom)   (OK!) 1.346.000ms =*
 CREATE INDEX	py_deu_grid_50m_geom_pnt_idx
 	ON	calc_ego_re.py_deu_grid_34m
 	USING	GIST (geom);
 
--- X. deu_grid_34m_la   (OK!) ms =
+-- X. deu_grid_50m_la   (OK!) ms =
 DROP TABLE IF EXISTS  	calc_ego_re.deu_grid_50m_la CASCADE;
 CREATE TABLE         	calc_ego_re.deu_grid_50m_la AS
 	SELECT	grid.id ::integer AS id,

@@ -206,7 +206,7 @@ WHERE	grid.area_type = 'out'
 ALTER TABLE	calc_ego_re.py_deu_grid_34m
 	ADD COLUMN geom_pnt geometry(Point,3035);
 
--- Get Centroids   (OK!) 19.419.000ms =474.594.512 (5 std.)
+-- Get Centroids   (OK!) 5.066.000ms =102.645.406 (1,5 std.)
 UPDATE 	calc_ego_re.py_deu_grid_34m AS t1
 SET  	geom_pnt = t2.geom_pnt
 FROM    (
@@ -216,7 +216,7 @@ FROM    (
 	) AS t2
 WHERE  	t1.id = t2.id;
 
--- Create Index GIST (geom)   (OK!) 10.000ms =*
+-- Create Index GIST (geom)   (OK!) 3.459.000ms =*
 CREATE INDEX	py_deu_grid_34m_geom_pnt_idx
 	ON	calc_ego_re.py_deu_grid_34m
 	USING	GIST (geom);
