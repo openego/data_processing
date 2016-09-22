@@ -18,6 +18,13 @@ WHERE     schemaname='public'
     AND tablename LIKE 'osm_%'
     AND indexname LIKE '%_pkey';
 
+-- Select all indexes with OSM in public
+SELECT     * 
+FROM     pg_indexes
+WHERE     schemaname='openstreetmap'
+    AND tablename LIKE 'osm_%'
+    AND indexname LIKE '%_pkey';
+
 -- 0. Create new schema
 CREATE SCHEMA openstreetmap;
 
@@ -41,12 +48,12 @@ DECLARE
     row record;
 BEGIN
     FOR row IN SELECT indexname FROM pg_indexes 
-    WHERE schemaname='openstreetmap' 
-    AND indexname LIKE '%_pkey'
-    AND tablename LIKE '%_line'
+    WHERE (schemaname='openstreetmap' 
+    AND indexname LIKE '%_pkey')
+    AND (tablename LIKE '%_line'
     OR tablename LIKE '%_point'
     OR tablename LIKE '%_polygon'
-    OR tablename LIKE '%_roads'
+    OR tablename LIKE '%_roads')
     LOOP
         EXECUTE 'DROP INDEX openstreetmap.' || quote_ident(row.indexname) || ';';
     END LOOP;
@@ -63,10 +70,10 @@ DECLARE
 BEGIN
     FOR row IN SELECT tablename FROM pg_tables 
     WHERE schemaname='openstreetmap' 
-    AND tablename LIKE '%_line'
+    AND (tablename LIKE '%_line'
     OR tablename LIKE '%_point'
     OR tablename LIKE '%_polygon'
-    OR tablename LIKE '%_roads'
+    OR tablename LIKE '%_roads')
     LOOP
         EXECUTE 'ALTER TABLE openstreetmap.' || quote_ident(row.tablename) || ' ADD gid SERIAL;';
         EXECUTE 'ALTER TABLE openstreetmap.' || quote_ident(row.tablename) || ' ADD PRIMARY KEY (gid);';
@@ -101,13 +108,14 @@ DECLARE
 BEGIN
     FOR row IN SELECT tablename FROM pg_tables 
     WHERE schemaname='openstreetmap' 
-    AND tablename LIKE '%_line'
+    AND (tablename LIKE '%_line'
     OR tablename LIKE '%_point'
     OR tablename LIKE '%_polygon'
-    OR tablename LIKE '%_roads'
+    OR tablename LIKE '%_roads')
     LOOP
         EXECUTE 'CREATE INDEX ' || quote_ident(row.tablename) || '_geom_idx ON openstreetmap.' || quote_ident(row.tablename) || ' USING gist (geom);';
-        EXECUTE 'CREATE INDEX ' || quote_ident(row.tablename) || '_tags_idx ON openstreetmap.' || quote_ident(row.tablename) || ' USING GIN (tags);';
     END LOOP;
 END;
 $$;
+
+-- EXECUTE 'CREATE INDEX ' || quote_ident(row.tablename) || '_tags_idx ON openstreetmap.' || quote_ident(row.tablename) || ' USING GIN (tags);';
