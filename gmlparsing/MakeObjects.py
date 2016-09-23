@@ -15,8 +15,8 @@ from gmlparsing.PoolClass import Pool
 from gmlparsing.ConnectionClass import Connection
 from gmlparsing.GatewayClass import Gateway
 
-tree = ET.parse('parallel2.graphml')
-#tree = ET.parse('ego_deu_loads_per_grid_district.graphml')
+#tree = ET.parse('parallel2.graphml')
+tree = ET.parse('ego_deu_loads_per_grid_district.graphml')
 root = tree.getroot()
 
 ns = {'gml': 'http://graphml.graphdrawing.org/xmlns',
@@ -372,28 +372,31 @@ def getAnnot(t):
     return answer
 
 def checkNextParallel(curr_gw,currInd,sg,sublist,sg2,sublist2,s):
-    parallel_execs = []
-    for pele in parsing:
-        if pele is not None:
-            parallel_execs.append(pele.name)
+
     for ae in alledges:
         if ae.source == curr_gw.position.name:
             newObj = findType(ae.target)
 
-            if type(newObj) is not Gateway :
-                #checkOtherStarts(newObj.position.name, currInd, sg, sublist, sg2, sublist2, s)
-                #while not s.is_empty():
-                 #   newElement = s.pop()
-                  #  if newElement.name not in parallel_execs:
-                   #     print(newElement.name)
-                    #    parsing.append(newElement)
+            if type(newObj) is Task or  type(newObj) is DataObj:
+                checkOtherStarts(newObj.position.name, currInd, sg, sublist, sg2, sublist2, s)
+                while not s.is_empty():
+                    newElement = s.pop()
+                    parsing.append(newElement)
+                    parsing_nodes.append(newElement.position.name)
 
-                if newObj.name not in parallel_execs:
+                if newObj.name not in parsing_nodes:
+                    #print(newObj.name)
+                    parsing_nodes.append(newObj.position.name)
                     parsing.append(newObj)
-                    checkNextParallel(newObj, currInd, sg, sublist, sg2, sublist2, s)
+
+                checkNextParallel(newObj, currInd, sg, sublist, sg2, sublist2, s)
+
+
             else:
-                parsing.append(newObj)
-                newObj.name = 'start of Parallel Execution:'
+                if type(newObj) is Gateway:
+                    newObj.name = 'start of Parallel Execution:'
+                    parsing.append(newObj)
+                    parsing_nodes.append(newObj.position.name)
 
 
 def checkNext(next,currInd,sg,sublist,sg2,sublist2,s):
@@ -404,27 +407,16 @@ def checkNext(next,currInd,sg,sublist,sg2,sublist2,s):
 
             if type(newObj) is Gateway:
                 newObj.name = 'start of Parallel Execution:'
-                #print(newObj.position.name)
-                #while not s.is_empty():
-                    #parsing.append(s.pop())
-               # if newObj in parsing:
+                parsing.append(newObj)
 
-                #    parsing.append(newObj)
-                 #   checkOtherStarts(newObj.position.name, currInd, sg, sublist, sg2, sublist2, s)
-                  #  while not s.is_empty():
-                   #     other_start = s.pop()
-                        #print('other starts',other_start)
-                    #    parsing.append(other_start)
-                #else:
-
-                #parsing.append(newObj)
-                #checkNext(newObj.position.name, currInd, sg, sublist, sg2, sublist2, s)
                 checkNextParallel(newObj,currInd,sg,sublist,sg2,sublist2,s)
                 endOfPE = parsing.pop()
                 endOfPE.name = endOfPE.name.replace("start","end")
                 endOfPE.name = endOfPE.name.replace(":","")
 
                 parsing.append(endOfPE)
+                checkNext(parsing[-1].position.name, currInd,sg,sublist,sg2,sublist2,s)
+
 
             if type(newObj) is DataObj and newObj.position.name not in parsing_nodes:
                 checkOtherStarts(ae.target, currInd, sg,sublist,sg2,sublist2,s)
@@ -443,20 +435,24 @@ def checkNext(next,currInd,sg,sublist,sg2,sublist2,s):
             if type(newObj) is Task and newObj.position.name not in parsing_nodes:
                 checkOtherStarts(ae.target, currInd, sg,sublist,sg2,sublist,s)
                 while not s.is_empty():
-                    parsing.append(s.pop())
+                    if newObj.name not in parsing_nodes:
+                        poppedEle = s.pop()
+                        parsing.append(poppedEle)
+                        parsing_nodes.append(poppedEle.position.name)
+                        assign(sg, sg2, sublist, sublist2, None, None, 'chnext')
+
+                if newObj.name not in parsing_nodes:
+                    parsing.append(newObj)
+                    parsing_nodes.append(newObj.position.name)
+
+                    assign(sg, sg2, sublist, sublist2, None, None, 'chnext')
+                    parsing.append(getAnnot(newObj))
+                    allAnnots = getAnnot(newObj)
+                    #print(allAnnots.name)
+                    #connectToPostgres(allAnnots.name)
                     assign(sg, sg2, sublist, sublist2, None, None, 'chnext')
 
-                parsing.append(newObj)
-                assign(sg, sg2, sublist, sublist2, None, None, 'chnext')
-
-                parsing_nodes.append(newObj.position.name)
-                parsing.append(getAnnot(newObj))
-                allAnnots = getAnnot(newObj)
-                #print(allAnnots.name)
-                #connectToPostgres(allAnnots.name)
-                assign(sg, sg2, sublist, sublist2, None, None, 'chnext')
-
-                checkNext(newObj.position.name, currInd,sg,sublist,sg2,sublist2,s)
+                    checkNext(newObj.position.name, currInd,sg,sublist,sg2,sublist2,s)
 
             if type(newObj) is Node and newObj.position not in parsing_nodes:
                 checkOtherStarts(ae.target, currInd, sg,sublist,sg2,sublist2,s)
@@ -493,6 +489,7 @@ def checkOtherStarts(target,ind, sg,sublist,sg2,sublist2,s):
                 if newType is Gateway:# and 'end' in newElement.position.name:
                     #print('Gateway before',newElement.position.name);
                     endGateways.append(newElement.position.name)
+
                 if newType is Task and newElement.position.name not in parsing_nodes:
                     ind = checkOtherStarts(newElement.position.name, ind, sg, sublist, sg2, sublist2,s)
                     while not s.is_empty():
