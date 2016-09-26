@@ -277,7 +277,6 @@ CREATE TABLE calc_renpass_gis.renpass_gis_storage
   initial_capacity numeric[],	
   capacity_min	numeric[],
   capacity_max numeric[],
-  flow_direction boolean, --(in,out)
   CONSTRAINT renpass_gis_storage_pkey PRIMARY KEY (id)
 )
 WITH (
@@ -317,8 +316,7 @@ COMMENT ON TABLE calc_renpass_gis.renpass_gis_storage
                    {"Name":"outflow_conversion_factor", "Description":"", "Unit":""},                   
                    {"Name":"initial_capacity", "Description":"", "Unit":""}, 
                    {"Name":"capacity_min", "Description":"", "Unit":""}, 
-                   {"Name":"capacity_max", "Description":"", "Unit":""}, 
-                   {"Name":"flow_direction", "Description":"", "Unit":""}
+                   {"Name":"capacity_max", "Description":"", "Unit":""}
 ],
 "Changes":[
                    {"Name": "Martin Söthe",
