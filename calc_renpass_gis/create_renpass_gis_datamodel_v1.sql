@@ -205,7 +205,6 @@ CREATE TABLE calc_renpass_gis.renpass_gis_linear_transformer
   fixed boolean,
   variable_costs numeric[],
   fixed_costs numeric[],
-  flow_direction boolean, --(in,out)
   CONSTRAINT renpass_gis_linear_transformer_pkey PRIMARY KEY (id)
 )
 WITH (
@@ -236,8 +235,7 @@ COMMENT ON TABLE calc_renpass_gis.renpass_gis_linear_transformer
                    {"Name":"actual_value", "Description":"", "Unit":""},                   
                    {"Name":"fixed", "Description":"", "Unit":""}, 
                    {"Name":"variable_costs", "Description":"", "Unit":""}, 
-                   {"Name":"fixed_costs", "Description":"", "Unit":""}, 
-                   {"Name":"flow_direction", "Description":"", "Unit":""}
+                   {"Name":"fixed_costs", "Description":"", "Unit":""}
 ],
 "Changes":[
                    {"Name": "Martin Söthe",
