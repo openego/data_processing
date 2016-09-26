@@ -29,7 +29,7 @@ nodes_flows_seq.columns = range(0, len(nodes_flows_seq.columns))
 nodes_flows_seq = nodes_flows_seq.astype(float)
 
 # create new scenario
-scenario_name = 'nep_2014_test'
+scenario_name = 'nep_2014'
 
 sc = Scenario(name=scenario_name)
 session.add(sc)
