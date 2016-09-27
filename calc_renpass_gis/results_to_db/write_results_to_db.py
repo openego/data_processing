@@ -40,9 +40,10 @@ df[cols] = df[cols].applymap(lambda x: "'" + x + "'")
 
 # best solution performance wise, a single insert statement is created
 records = [tuple(x) for x in df.values]
+
 records = ",".join("(" + ",".join(str(i) for i in r) + ")" for r in records)
 head = ("INSERT INTO " + tablename + " (scenario_id, bus_label, type, "
-             "obj_label, datetime, val)")
+             "obj_label, datetime, val) VALUES ")
 
 # export to db
 conn.execute(head + records)
