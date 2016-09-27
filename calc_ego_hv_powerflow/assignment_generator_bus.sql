@@ -385,3 +385,35 @@ SELECT
   source
 FROM orig_geo_powerplants.pf_generator_single a
 WHERE a.p_nom >= 50 AND a.aggr_id IS NOT NULL;
+
+
+-----------
+-- Add slack generators at buses that are located outside of Germany
+-----------
+-- create sequence for slack generators
+
+DROP SEQUENCE IF EXISTS calc_ego_hv_powerflow.slack_gen_seq; 
+CREATE SEQUENCE calc_ego_hv_powerflow.slack_gen_seq 
+  INCREMENT 1 
+  MINVALUE 100000 
+  MAXVALUE 9223372036854775807 
+  START 100000 
+  CACHE 1; 
+ALTER TABLE calc_ego_hv_powerflow.slack_gen_seq
+  OWNER TO oeuser;
+
+INSERT INTO calc_ego_hv_powerflow.generator 
+ (generator_id, 
+ bus, 
+ dispatch, 
+ control) 
+SELECT 
+ nextval('calc_ego_hv_powerflow.slack_gen_seq'), 
+ bus_i, 
+ 'flexible', 
+ 'Slack' 
+FROM 
+ calc_ego_osmtgmod.bus_data 
+	WHERE cntr_id != 'DE' AND 
+	result_id = GREATEST(result_id) AND
+	bus_i IN (SELECT bus_id FROM calc_ego_hv_powerflow.bus) 
