@@ -72,3 +72,14 @@ UPDATE calc_ego_hv_powerflow.transformer a
 				as v_nom 
 			FROM calc_ego_hv_powerflow.transformer) as result
 WHERE a.trafo_id = result.trafo_id;
+
+-- calculate line length (in km) from geoms
+
+UPDATE calc_ego_hv_powerflow.line a
+	SET 
+		length = result.length
+		FROM 
+		(SELECT b.line_id, st_length(b.geom,false)/1000 as length 
+		from calc_ego_hv_powerflow.line b)
+		as result
+WHERE a.line_id = result.line_id;
