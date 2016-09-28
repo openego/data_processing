@@ -402,6 +402,8 @@ CREATE SEQUENCE calc_ego_hv_powerflow.slack_gen_seq
 ALTER TABLE calc_ego_hv_powerflow.slack_gen_seq
   OWNER TO oeuser;
 
+ -- insert slack generators into poswerflow schema
+ 
 INSERT INTO calc_ego_hv_powerflow.generator 
  (generator_id, 
  bus, 
@@ -416,4 +418,5 @@ FROM
  calc_ego_osmtgmod.bus_data 
 	WHERE cntr_id != 'DE' AND 
 	result_id = GREATEST(result_id) AND
-	bus_i IN (SELECT bus_id FROM calc_ego_hv_powerflow.bus) 
+	bus_i IN (SELECT bus_id FROM calc_ego_hv_powerflow.bus) AND
+	base_kv > 110 
