@@ -4,7 +4,7 @@ class Gateway(Node):
    'Common base class for all Gateways'
    gatewayCount = 0
 
-   def __init__(self, name, type,pos):
+   def __init__(self, name, type,pos,ns):
       self.name = name
       self.type = type
       self.position = pos

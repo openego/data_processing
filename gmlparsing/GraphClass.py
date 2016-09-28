@@ -3,7 +3,7 @@ class Graph:
    'Common base class for all nodes'
    graphCount = 0
 
-   def __init__(self, name, nodes, edges):
+   def __init__(self, name, nodes, edges,ns):
       self.name = name
       self.nodes = nodes
       self.edges = edges

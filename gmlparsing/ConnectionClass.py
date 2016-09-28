@@ -4,7 +4,7 @@ class Connection(Edge):
    'Common base class for all Connection type'
    connectionTypeCount = 0
 
-   def __init__(self, name, type):
+   def __init__(self, name, type,ns):
       self.name = name
       self.type = type
       #super().__init__(name, position)

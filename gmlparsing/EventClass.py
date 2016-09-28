@@ -4,7 +4,7 @@ class Event(Node):
    'Common base class for all Events'
    eventCount = 0
 
-   def __init__(self, name, type, innode):
+   def __init__(self, name, type, innode,ns):
       self.name = name
       self.type = type
       self.position = innode
