@@ -4,10 +4,10 @@ class Task(Node):
    'Common base class for all Tasks'
    taskCount = 0
 
-   def __init__(self, name, position):
+   def __init__(self, name, position,ns):
       #self.name = name
       #self.position = position
-      super().__init__(name, position)
+      super().__init__(name, position,ns)
       self.name = self.name.replace('\n', ' ').replace('\r', '')
       Task.taskCount += 1
       #Task.displayName(self)

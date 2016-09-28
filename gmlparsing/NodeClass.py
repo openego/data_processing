@@ -4,7 +4,7 @@ class Node(Graph):
    'Common base class for all nodes'
    nodeCount = 0
 
-   def __init__(self, name, position):
+   def __init__(self, name, position,ns):
       self.name = name.replace('\n', ' ').replace('\r', '')
       self.position = position
       #super().__init__(name, position)
