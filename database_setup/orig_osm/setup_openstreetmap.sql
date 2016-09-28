@@ -100,7 +100,7 @@ ALTER TABLE openstreetmap.osm_deu_roads
     ALTER COLUMN geom TYPE geometry(LineString,3857) 
         USING ST_SetSRID(geom,3857);
 
--- 7. Add indexes GIST (geom) and GIN (tags)
+-- 7. Add indexes GIST (geom) and GIN (tags) 8.477.342 ms
 DO
 $$
 DECLARE

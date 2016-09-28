@@ -242,7 +242,7 @@ CREATE INDEX	deu_grid_34m_la_geom_idx
 GRANT ALL ON TABLE	calc_ego_re.deu_grid_34m_la TO oeuser WITH GRANT OPTION;
 ALTER TABLE		calc_ego_re.deu_grid_34m_la OWNER TO oeuser;
 
--- Get substation ID from Grid Districts   (OK!) 100.000ms =1.430.895
+-- Get substation ID from Grid Districts   (OK!) 18.284.000ms =102.289.441
 UPDATE 	calc_ego_re.deu_grid_34m_la AS t1
 SET  	subst_id = t2.subst_id
 FROM    (

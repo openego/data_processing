@@ -24,6 +24,7 @@ CREATE INDEX	py_deu_grid_50m_geom_pnt_idx
 	ON	calc_ego_re.py_deu_grid_34m
 	USING	GIST (geom);
 
+
 -- X. deu_grid_50m_la   (OK!) ms =
 DROP TABLE IF EXISTS  	calc_ego_re.deu_grid_50m_la CASCADE;
 CREATE TABLE         	calc_ego_re.deu_grid_50m_la AS
@@ -45,7 +46,7 @@ CREATE INDEX	deu_grid_50m_la_geom_idx
 GRANT ALL ON TABLE	calc_ego_re.deu_grid_50m_la TO oeuser WITH GRANT OPTION;
 ALTER TABLE		calc_ego_re.deu_grid_50m_la OWNER TO oeuser;
 
--- Get substation ID from Grid Districts   (OK!) 100.000ms =1.430.895
+-- Get substation ID from Grid Districts   (OK!) 21.858.000ms =48.119.369
 UPDATE 	calc_ego_re.deu_grid_50m_la AS t1
 SET  	subst_id = t2.subst_id
 FROM    (
