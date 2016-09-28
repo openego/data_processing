@@ -1,13 +1,13 @@
 from gmlparsing.NodeClass import Node
 
-class Annots(Node):
+class Annotation(Node):
    'Common base class for all Annotations'
    dataObjCount = 0
 
-   def __init__(self, name, position):
-      super().__init__(name, position)
+   def __init__(self, name, position,ns):
+      super().__init__(name, position,ns)
       self.name = self.name.replace('\n', ' ').replace('\r', '')
-      Annots.dataObjCount += 1
+      Annotation.dataObjCount += 1
       #Annots.displayName(self)
 
    def displayName(self):
