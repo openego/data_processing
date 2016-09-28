@@ -8,19 +8,20 @@ from gmlparsing.NodeClass import Node
 from gmlparsing.LaneClass import Lane
 from gmlparsing.TaskClass import Task
 from gmlparsing.DataObjClass import DataObj
-from gmlparsing.AnnotsClass import Annots
+from gmlparsing.AnnotsClass import Annotation
 from gmlparsing.EventClass import Event
 from gmlparsing.EdgeClass import Edge
 from gmlparsing.PoolClass import Pool
 from gmlparsing.ConnectionClass import Connection
 from gmlparsing.GatewayClass import Gateway
 
-#tree = ET.parse('parallel2.graphml')
-tree = ET.parse('ego_deu_loads_per_grid_district.graphml')
-root = tree.getroot()
 
-ns = {'gml': 'http://graphml.graphdrawing.org/xmlns',
-      'tn': 'http://www.yworks.com/xml/graphml'}
+#tree = ET.parse('parallel2.graphml')
+##tree = ET.parse('ego_deu_loads_per_grid_district.graphml')
+##root = tree.getroot()
+##
+##ns = {'gml': 'http://graphml.graphdrawing.org/xmlns',
+##      'tn': 'http://www.yworks.com/xml/graphml'}
 
 allStartEv = []
 alltasks= []
@@ -33,7 +34,19 @@ allpnodes = []
 allPool = []
 endGateways = []
 
-def makeGraph(graphs):
+def execGraphmlFile(myFileName):
+    print("My file Name------------>",myFileName)
+    tree = ET.parse(myFileName)
+    root = tree.getroot()
+
+    ns = {'gml': 'http://graphml.graphdrawing.org/xmlns',
+          'tn': 'http://www.yworks.com/xml/graphml'}
+    makeGraph(None,root,ns)
+    getStart()
+    printParsed(parsing,'main')
+
+def makeGraph(graphs,root,ns):
+    
     nodeArray = []
     edgeArray = []
     if graphs is None:
@@ -44,20 +57,20 @@ def makeGraph(graphs):
 
         size = len(nodes)
         if (size > 0):
-         nodeArray.extend(makeNode(nodes))
+         nodeArray.extend(makeNode(nodes,root,ns))
 
         edges = gIterator.findall('gml:edge', ns)
         size = len(edges)
         if (size > 0):
-            makeConnectionType(edges)
+            makeConnectionType(edges,ns)
             if size == 1:
-                edgeArray = makeEdge(edges)
+                edgeArray = makeEdge(edges,ns)
             else:
-                edgeArray.extend(makeEdge(edges))
+                edgeArray.extend(makeEdge(edges,ns))
             alledges.extend(edgeArray)
-        Graph(gIterator.attrib["id"], nodeArray, edgeArray)
+        Graph(gIterator.attrib["id"], nodeArray, edgeArray,ns)
 
-def makeNode(nodes):
+def makeNode(nodes,root,ns):
     tmpArray = []
     lvl5=None
     for nIterator in nodes:
@@ -65,7 +78,7 @@ def makeNode(nodes):
 
         if nIterator.find('tn:NodeLabel', ns):
             nodename = nIterator.find('tn:NodeLabel', ns).text
-        tmpArray.append(Node(nodename, nIterator.attrib["id"]))
+        tmpArray.append(Node(nodename, nIterator.attrib["id"],ns))
 
 
         if 'yfiles.foldertype' in nIterator.attrib:
@@ -79,30 +92,30 @@ def makeNode(nodes):
 
         graphs = nIterator.findall('gml:graph', ns)
         if (len(graphs) > 0):
-            makeGraph(graphs) #mutual recursion
+            makeGraph(graphs,root,ns) #mutual recursion
 
         data = nIterator.findall('gml:data',ns)
         for d in data:
             activities = d.findall('tn:GenericNode',ns)
             if(activities):
-                allStartEv.extend(makeEvent(activities,tmpArray[-1]))
-                alldos.extend(makeDataObj(activities,tmpArray[-1],1))
-                allanns.extend(makeDataObj(activities, tmpArray[-1], 2))
-                alltasks.extend(makeTask(activities,tmpArray[-1]))
-                allGateways.extend(makeGateway(activities,tmpArray[-1]))
+                allStartEv.extend(makeEvent(activities,tmpArray[-1],ns))
+                alldos.extend(makeDataObj(activities,tmpArray[-1],1,ns))
+                allanns.extend(makeDataObj(activities, tmpArray[-1], 2,ns))
+                alltasks.extend(makeTask(activities,tmpArray[-1],ns))
+                allGateways.extend(makeGateway(activities,tmpArray[-1],ns))
 
         pools = d.findall('tn:TableNode',ns)
         if(pools):
-            allPool.extend(makePool(pools,tmpArray[-1].name))
+            allPool.extend(makePool(pools,tmpArray[-1].name,ns))
     return tmpArray
 
-def makeEdge(edges):
+def makeEdge(edges,ns):
     tmpArray = []
     for eIterator in edges:
-        tmpArray.append(Edge(eIterator.attrib["source"],eIterator.attrib["target"]))
+        tmpArray.append(Edge(eIterator.attrib["source"],eIterator.attrib["target"],ns))
     return tmpArray
 
-def makeConnectionType(edges):
+def makeConnectionType(edges,ns):
     tmpArray = []
     for cIterator in edges:
         connectionData = cIterator.findall('gml:data',ns)
@@ -114,20 +127,20 @@ def makeConnectionType(edges):
                     for x in connectionNames:
                         for property in x:
                             if "CONNECTION_TYPE" in property.attrib["value"]:
-                                cobj = Connection(property.attrib["name"], property.attrib["value"])
+                                cobj = Connection(property.attrib["name"], property.attrib["value"],ns)
                                 tmpArray.append(cobj)
 
     return tmpArray
 
-def makeTask(activities,pos):
+def makeTask(activities,pos,ns):
     tmpArray = []
     for aIterator in activities:
         if "com.yworks.bpmn.Activity.withShadow" in aIterator.attrib.values():
             name = aIterator.find('tn:NodeLabel', ns).text
-            tmpArray.append(Task(name, pos))
+            tmpArray.append(Task(name, pos,ns))
     return tmpArray
 
-def makeDataObj(activities,pos,num):
+def makeDataObj(activities,pos,num,ns):
     tmpArray1 = []
     tmpArray2 = []
     for aIterator in activities:
@@ -138,16 +151,16 @@ def makeDataObj(activities,pos,num):
             obj2 = aIterator.find('tn:StyleProperties', ns).findall('tn:Property', ns);
             for anns in obj2:
                 if "ARTIFACT_TYPE_ANNOTATION" in anns.attrib.values():
-                    tmpArray2.append(Annots(name, pos))
+                    tmpArray2.append(Annotation(name, pos,ns))
                 if obj and "ARTIFACT_TYPE_DATA_OBJECT" in anns.attrib.values():
                     if len(name.strip())>0:
-                        tmpArray1.append(DataObj(name, pos))
+                        tmpArray1.append(DataObj(name, pos,ns))
     if num==1:
         return tmpArray1
     else:
         return tmpArray2
 
-def makeEvent(activities, innode):
+def makeEvent(activities, innode,ns):
     tmpArray = []
     for aIterator in activities:
         if "com.yworks.bpmn.Event.withShadow" in aIterator.attrib.values():
@@ -155,11 +168,11 @@ def makeEvent(activities, innode):
             for x in eventnames:
                 for property in x:
                     if "EVENT_CHARACTERISTIC" in property.attrib["value"]:
-                        eobj = Event(property.attrib["name"], property.attrib["value"],innode)
+                        eobj = Event(property.attrib["name"], property.attrib["value"],innode,ns)
                         tmpArray.append(eobj)
     return tmpArray
 
-def makeGateway(activities,pos):
+def makeGateway(activities,pos,ns):
     tmpArray = []
     for gIterator in activities:
         if "com.yworks.bpmn.Gateway.withShadow" in gIterator.attrib.values():
@@ -167,33 +180,33 @@ def makeGateway(activities,pos):
             for x in gatewayNames:
                 for property in x:
                     if "GATEWAY_TYPE" in property.attrib["value"]:
-                        gobj = Gateway(property.attrib["name"], property.attrib["value"],pos)
+                        gobj = Gateway(property.attrib["name"], property.attrib["value"],pos,ns)
                         tmpArray.append(gobj)
     return tmpArray
 
 
-def makePool(pools,pos):
+def makePool(pools,pos,ns):
     tmpArray = []
     laneArray = []
     for pIterator in pools:
         if "com.yworks.bpmn.Pool" in pIterator.attrib.values():
             completePool = pIterator.findall('tn:NodeLabel', ns)
             name = completePool[0].text
-            tmpArray.append(Pool(name, pos))
+            tmpArray.append(Pool(name, pos,ns))
             completePool.remove(completePool[0])
-            laneArray.append(makeLane(completePool,name))
+            laneArray.append(makeLane(completePool,name,ns))
 
     return tmpArray
 
-def makeLane(lanes,parent):
+def makeLane(lanes,parent,ns):
     tmpArray = []
     for pIterator in lanes:
         name =pIterator.text
         if(len(name.strip())>0):
-            tmpArray.append(Lane(name,parent, 1))
+            tmpArray.append(Lane(name,parent, 1,ns))
     return tmpArray
 
-makeGraph(None)
+#makeGraph(None)
 
 
 parsing = []
@@ -289,8 +302,8 @@ def getStart():         # fixed start and end at events
                             allAnnots = getAnnot(ap)
                             parsing.append(allAnnots)
                             #print(allAnnots.name)
-                            #if allAnnots is not None:
-                             #   connectToPostgres(allAnnots.name)
+                            if allAnnots is not None:
+                                connectToPostgres(allAnnots.name)
 
                             sgIndex = parsing.index(ap) + 1
                             parsing_nodes.append(ap.position)
@@ -315,9 +328,9 @@ def getStart():         # fixed start and end at events
                             parsing.append(allAnnots)
                             
                             
-                           # if allAnnots is not None:
+                            if allAnnots is not None:
                                 #print(allAnnots.name)
-                            #    connectToPostgres(allAnnots.name)
+                                connectToPostgres(allAnnots.name)   
                             assign(sg, sg2, sublist, sublist2, newSub, ase,'start')
 
                             parsing_nodes.append(t.position.name)
@@ -467,6 +480,8 @@ def checkNext(next,currInd,sg,sublist,sg2,sublist2,s):
 
                 parsing.append(getAnnot(newObj))
                 allAnnots = getAnnot(newObj)
+                if allAnnots is not None:
+                    connectToPostgres(allAnnots.name)
                 #print(allAnnots.name)
                # connectToPostgres(allAnnots.name)
                 checkNext(newObj.position, currInd, sg,sublist,sg2,sublist2,s)
@@ -559,7 +574,7 @@ def printParsed(toPrint,dtype):
             if dtype == 'sub':
                 print('\t', end="")
             print('Subgraph: ', x.name)
-        elif type(x) is Task or type(x) is DataObj or type(x) is Annots:
+        elif type(x) is Task or type(x) is DataObj or type(x) is Annotation:
             if dtype=='sub':
                 print('\t', end="")
             print(type(x).__name__,': ',x.name)
