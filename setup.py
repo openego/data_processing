@@ -8,5 +8,12 @@ setup(
     license='GNU GENERAL PUBLIC LICENSE Version 3',
     author='open_eGo development group',
     author_email='',
-    description='Data processing related to the research project open_eGo'
+    description='Data processing related to the research project open_eGo',
+    requires=[
+        'pandas',
+        'workalendar',
+        'oemof.db',
+        'demandlib',
+        'ego.io'
+    ]
 )
