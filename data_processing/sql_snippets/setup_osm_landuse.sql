@@ -1,4 +1,4 @@
-﻿---------- ---------- ----------
+---------- ---------- ----------
 ---------- --SKRIPT-- OK! 50min
 ---------- ---------- ----------
 
@@ -49,19 +49,19 @@ CREATE TABLE		openstreetmap.osm_deu_polygon_urban AS
 		ST_MULTI(ST_TRANSFORM(osm.geom,3035)) ::geometry(MultiPolygon,3035) AS geom		
 	FROM	openstreetmap.osm_deu_polygon AS osm
 	WHERE	tags @> '"landuse"=>"residential"'::hstore OR 
-			tags @> '"landuse"=>"commercial"'::hstore OR 
-			tags @> '"landuse"=>"retail"'::hstore OR 
-			tags @> '"landuse"=>"industrial;retail"'::hstore OR 
+		tags @> '"landuse"=>"commercial"'::hstore OR 
+		tags @> '"landuse"=>"retail"'::hstore OR 
+		tags @> '"landuse"=>"industrial;retail"'::hstore OR 
 			
-			tags @> '"landuse"=>"industrial"'::hstore OR 
-			tags @> '"landuse"=>"port"'::hstore OR 
-			tags @> '"man_made"=>"wastewater_plant"'::hstore 
-			tags @> '"aeroway"=>"terminal"'::hstore OR 
-			tags @> '"aeroway"=>"gate"'::hstore OR 
-			tags @> '"man_made"=>"works"'::hstore OR 
+		tags @> '"landuse"=>"industrial"'::hstore OR 
+		tags @> '"landuse"=>"port"'::hstore OR 
+		tags @> '"man_made"=>"wastewater_plant"'::hstore 
+		tags @> '"aeroway"=>"terminal"'::hstore OR 
+		tags @> '"aeroway"=>"gate"'::hstore OR 
+		tags @> '"man_made"=>"works"'::hstore OR 
 		
-			tags @> '"landuse"=>"farmyard"'::hstore OR 
-			tags @> '"landuse"=>"greenhouse_horticulture"'::hstore 
+		tags @> '"landuse"=>"farmyard"'::hstore OR 
+		tags @> '"landuse"=>"greenhouse_horticulture"'::hstore 
 	
 		--osm.landuse='residential' OR
 		--osm.landuse='commercial' OR 

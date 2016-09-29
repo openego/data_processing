@@ -4,35 +4,33 @@
 -- 	ADD COLUMN area_industry numeric;
 
 UPDATE orig_ego_consumption.lak_consumption_per_district a
-SET area_industry = result.sum
-FROM
-( 
-	SELECT 
-	sum(area_ha), 
-	substr(nuts,1,5) 
-	FROM calc_ego_loads.landuse_industry
-	GROUP BY substr(nuts,1,5)
-) as result
-
-WHERE result.substr = substr(a.eu_code,1,5);
-
+	SET area_industry = result.sum
+	FROM
+	( 
+		SELECT 
+		sum(area_ha), 
+		substr(nuts,1,5) 
+		FROM calc_ego_loads.landuse_industry
+		GROUP BY substr(nuts,1,5)
+	) as result
+	WHERE result.substr = substr(a.eu_code,1,5);
 
 
 ------------------
 -- "Calculate specific industrial consumption"
 ------------------
 
-SELECT	sum(area_ha), substr(nuts,1,5) 
-	INTO 	orig_consumption_znes.temp_table
-	FROM 	calc_ego_loads.landuse_industrial
-GROUP BY 	substr(nuts,1,5);
+-- SELECT	sum(area_ha), substr(nuts,1,5) 
+-- 	INTO 	orig_consumption_znes.temp_table
+-- 	FROM 	calc_ego_loads.landuse_industrial
+-- GROUP BY 	substr(nuts,1,5);
 
 UPDATE orig_consumption_znes.lak_consumption_per_district a
 	SET 	area_industry = sum
 	FROM 	orig_consumption_znes.temp_table b
 	WHERE 	b.substr = substr(a.eu_code,1,5);
 
-DROP TABLE orig_consumption_znes.temp_table; 
+-- DROP TABLE orig_consumption_znes.temp_table; 
 
 
 -- "Calculate industrial consumption per industry polygon"
