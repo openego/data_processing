@@ -23,8 +23,8 @@ db =
 import pandas as pd
 from db import conn
 
-filepath = "~/oemof/examples/solph/nodes_from_csv/results/"
-csv_file = "scenario_nep_2014_2016-09-06 14:24:29.364210_results_complete.csv"
+filepath = "~/renpassgis/results/"
+csv_file = "scenario_ego_nep_2014_2016-09-29 16:00:11.717332_results_complete.csv"
 
 scenario_id = 2
 tablename = "calc_renpass_gis.renpass_gis_results"
