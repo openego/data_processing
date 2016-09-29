@@ -1,10 +1,7 @@
----------- ---------- ----------
----------- --SKRIPT-- OK! 50min
----------- ---------- ----------
 
----------- ---------- ---------- ---------- ---------- ----------
--- "2. Data Setup OSM"   2016-04-18 10:00 11s
----------- ---------- ---------- ---------- ---------- ----------
+---------- ---------- ---------- ---------- ---------- ---------- 
+-- "2. Data Setup OSM"   2016-04-18 10:00 11s 
+---------- ---------- ---------- ---------- ---------- ---------- 
 
 -- -- "Validate (geom)"   (OK!) -> 100ms =0
 -- DROP VIEW IF EXISTS	openstreetmap.osm_deu_polygon_error_geom_view CASCADE;
@@ -55,7 +52,7 @@ CREATE TABLE		openstreetmap.osm_deu_polygon_urban AS
 			
 		tags @> '"landuse"=>"industrial"'::hstore OR 
 		tags @> '"landuse"=>"port"'::hstore OR 
-		tags @> '"man_made"=>"wastewater_plant"'::hstore 
+		tags @> '"man_made"=>"wastewater_plant"'::hstore OR
 		tags @> '"aeroway"=>"terminal"'::hstore OR 
 		tags @> '"aeroway"=>"gate"'::hstore OR 
 		tags @> '"man_made"=>"works"'::hstore OR 
@@ -166,6 +163,7 @@ CREATE MATERIALIZED VIEW		openstreetmap.osm_deu_polygon_urban_vg250_cut_mview AS
 		--cut.aeroway ::text AS aeroway,
 		cut.name ::text AS name,
 		--cut.way_area ::double precision AS way_area,
+		cut.sector ::integer AS sector,
 		cut.area_ha ::double precision AS area_ha,
 		cut.tags ::hstore AS tags,
 		cut.vg250 ::text AS vg250,
@@ -209,6 +207,7 @@ CREATE MATERIALIZED VIEW		openstreetmap.osm_deu_polygon_urban_vg250_clean_cut_mu
 		--cut.man_made ::text AS man_made,
 		--cut.aeroway ::text AS aeroway,
 		cut.name ::text AS name,
+		cut.sector ::integer AS sector,
 		--cut.way_area ::double precision AS way_area,
 		cut.area_ha ::double precision AS area_ha,
 		cut.tags ::hstore AS tags,
@@ -247,6 +246,7 @@ CREATE MATERIALIZED VIEW		openstreetmap.osm_deu_polygon_urban_vg250_clean_cut_mv
 		--cut.man_made ::text AS man_made,
 		--cut.aeroway ::text AS aeroway,
 		cut.name ::text AS name,
+		cut.sector ::integer AS sector,
 		--cut.way_area ::double precision AS way_area,
 		cut.area_ha ::double precision AS area_ha,
 		cut.tags ::hstore AS tags,
@@ -403,7 +403,7 @@ UPDATE 	openstreetmap.osm_deu_polygon_urban
 SET  	sector = '3'
 WHERE	tags @> '"landuse"=>"industrial"'::hstore OR 
 		tags @> '"landuse"=>"port"'::hstore OR 
-		tags @> '"man_made"=>"wastewater_plant"'::hstore 
+		tags @> '"man_made"=>"wastewater_plant"'::hstore OR
 		tags @> '"aeroway"=>"terminal"'::hstore OR 
 		tags @> '"aeroway"=>"gate"'::hstore OR 
 		tags @> '"man_made"=>"works"'::hstore;

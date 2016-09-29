@@ -23,17 +23,23 @@ logger.info('eGo data processing started...')
 
 # list of sql_snippets that process the data in correct order
 snippet_dir = 'sql_snippets'
-sql_snippets = ['setup_bkg_vg250.sql',
-                'setup_osm_landuse.sql',
-                'process_eGo_osm_loads_industry.sql',
-                'process_eGo_osm_loads.sql',
-                'setup_zensus_population_per_ha.sql',
-                'process_eGo_loads_melted.sql',
-                'process_eGo_substation.sql',
-                'process_eGo_grid_district.sql',
-                'process_eGo_loads_per_grid_district.sql',
-                'process_eGo_consumption.sql',
-                'analyse_eGo_paper_result.sql']
+sql_snippets = ['setup_osm_landuse.sql']
+
+# Ready:
+# 'setup_bkg_vg250.sql',
+
+# To be tested!
+                # 'setup_osm_landuse.sql',
+                # 'process_eGo_osm_loads_industry.sql',
+                # 'process_eGo_osm_loads.sql',
+                # 'setup_zensus_population_per_ha.sql',
+                # 'process_eGo_loads_melted.sql',
+                # 'process_eGo_substation.sql',
+                # 'process_eGo_grid_district.sql',
+                # 'process_eGo_loads_per_grid_district.sql',
+                # 'process_eGo_consumption.sql',
+                # 'analyse_eGo_paper_result.sql'
+
 
 # get database connection
 conn = io.oedb_session(section='oedb')
