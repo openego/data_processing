@@ -28,6 +28,7 @@
 ---------- ---------- ----------
 -- "Filter OSM Urban Landuse"
 ---------- ---------- ----------
+-- ToDo: change "urban" to electrified
 
 -- "Filter Urban"   (OK!) -> 35.000ms =494.696
 DROP TABLE IF EXISTS	openstreetmap.osm_deu_polygon_urban CASCADE;
