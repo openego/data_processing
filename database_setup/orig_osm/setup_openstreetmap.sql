@@ -121,7 +121,7 @@ $$;
 --         USING ST_SetSRID(geom,3857);
 
 
--- 7. Add indexes GIST (geom) and GIN (tags) -> Xs
+-- 7.1 Add indexes GIST (geom) -> 1.138s
 DO
 $$
 DECLARE
@@ -139,5 +139,21 @@ BEGIN
 END;
 $$;
 
+-- 7.2 Add indexes GIN (tags) -> 2.292s
+DO
+$$
+DECLARE
+    row record;
+BEGIN
+    FOR row IN SELECT tablename FROM pg_tables 
+    WHERE schemaname='openstreetmap' 
+    AND (tablename LIKE '%_line'
+    OR tablename LIKE '%_point'
+    OR tablename LIKE '%_polygon'
+    OR tablename LIKE '%_roads')
+    LOOP
+        EXECUTE 'CREATE INDEX ' || quote_ident(row.tablename) || '_tags_idx ON openstreetmap.' || quote_ident(row.tablename) || ' USING GIN (tags);';
+    END LOOP;
+END;
+$$;
 
--- EXECUTE 'CREATE INDEX ' || quote_ident(row.tablename) || '_tags_idx ON openstreetmap.' || quote_ident(row.tablename) || ' USING GIN (tags);'; -> Xs

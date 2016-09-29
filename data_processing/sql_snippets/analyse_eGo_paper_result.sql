@@ -1,4 +1,4 @@
-﻿-- calculate results and statistics for substation, load area, MV grid districts and consumption
+-- calculate results and statistics for substation, load area, MV grid districts and consumption
 DROP SEQUENCE IF EXISTS	model_draft.ego_paper_data_allocation_results_seq CASCADE;
 CREATE SEQUENCE model_draft.eGo_paper_data_allocation_results_seq;
 

@@ -1,4 +1,4 @@
-﻿
+
 
 
 DROP TABLE IF EXISTS 	calc_ego_loads.ego_deu_consumption;
