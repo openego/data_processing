@@ -1,57 +1,16 @@
-﻿-- Calculate the industrial area per district 
-
--- ALTER TABLE orig_ego_consumption.lak_consumption_per_district
--- 	ADD COLUMN area_industry numeric;
-
-UPDATE orig_ego_consumption.lak_consumption_per_district a
-SET area_industry = result.sum
-FROM
-( 
-	SELECT 
-	sum(area_ha), 
-	substr(nuts,1,5) 
-	FROM calc_ego_loads.landuse_industry
-	GROUP BY substr(nuts,1,5)
-) as result
-
-WHERE result.substr = substr(a.eu_code,1,5);
-
-
-
+﻿
 ------------------
--- "Calculate specific industrial consumption"
+-- "Export information on the industrial area into calc_ego_loads.landuse_industry"
 ------------------
 
-SELECT	sum(area_ha), substr(nuts,1,5) 
-	INTO 	orig_ego_consumption.temp_table
-	FROM 	calc_ego_loads.landuse_industry
-GROUP BY 	substr(nuts,1,5);
+DROP TABLE IF EXISTS calc_ego_loads.landuse_industry CASCADE;
 
-UPDATE orig_ego_consumption.lak_consumption_per_district a
-	SET 	area_industry = sum
-	FROM 	orig_ego_consumption.temp_table b
-	WHERE 	b.substr = substr(a.eu_code,1,5);
-
-DROP TABLE orig_ego_consumption.temp_table; 
-
-
--- "Calculate industrial consumption per industry polygon"
-
-UPDATE 	orig_ego_consumption.lak_consumption_per_district
-SET 	consumption_per_area_industry = elec_consumption_industry/area_industry;
-
-
--- "Export information on industrial area into calc_ego_loads.landuse_industry"
-
-DROP TABLE IF EXISTS calc_ego_loads.landuse_industry;
-
-SELECT * INTO calc_ego_loads.landuse_industry FROM orig_osm.osm_deu_polygon_urban_sector_3_industrial_mview; 
+SELECT * INTO calc_ego_loads.landuse_industry FROM openstreetmap.osm_deu_polygon_urban_sector_3_industrial_mview; 
 
 ALTER TABLE  calc_ego_loads.landuse_industry OWNER TO oeuser;
 
-------------------
+
 -- "Add and fill new columns with geometry information"
-------------------
 
 
 ALTER TABLE calc_ego_loads.landuse_industry
@@ -131,7 +90,58 @@ CREATE INDEX  	landuse_industry_geom_centre_idx
 UPDATE calc_ego_loads.landuse_industry a
 SET nuts = b.nuts
 FROM orig_vg250.vg250_4_krs b
-WHERE st_intersects(st_transform(st_setsrid(b.geom, 31467), 3035), a.geom_centre); 
+WHERE st_intersects(st_transform(b.geom, 3035), a.geom_centre); 
+
+
+-------------------
+-- "Calculate the industrial area per district "
+-------------------
+
+-- ALTER TABLE orig_ego_consumption.lak_consumption_per_district
+-- 	ADD COLUMN area_industry numeric;
+
+UPDATE orig_ego_consumption.lak_consumption_per_district a
+SET area_industry = result.sum
+FROM
+( 
+	SELECT 
+	sum(area_ha), 
+	substr(nuts,1,5) 
+	FROM calc_ego_loads.landuse_industry
+	GROUP BY substr(nuts,1,5)
+) as result
+
+WHERE result.substr = substr(a.eu_code,1,5);
+
+
+
+------------------
+-- "Calculate specific industrial consumption"
+------------------
+
+SELECT	sum(area_ha), substr(nuts,1,5) 
+	INTO 	orig_ego_consumption.temp_table
+	FROM 	calc_ego_loads.landuse_industry
+GROUP BY 	substr(nuts,1,5);
+
+UPDATE orig_ego_consumption.lak_consumption_per_district a
+	SET 	area_industry = sum
+	FROM 	orig_ego_consumption.temp_table b
+	WHERE 	b.substr = substr(a.eu_code,1,5);
+
+DROP TABLE orig_ego_consumption.temp_table; 
+
+
+-- "Calculate industrial consumption per industry polygon"
+
+ALTER TABLE orig_ego_consumption.lak_consumption_per_district
+	ADD COLUMN consumption_per_area_industry double precision; 
+
+UPDATE 	orig_ego_consumption.lak_consumption_per_district
+SET 	consumption_per_area_industry = elec_consumption_industry/area_industry;
+
+
+
 
 
 -----------------
@@ -169,7 +179,7 @@ SET peak_load = consumption*(0.00013247226362); -- Add different factor to calcu
 -- "Identify large scale consumer"
 -----------------
 
-DROP TABLE IF EXISTS calc_ego_loads.large_scale_consumer;
+DROP TABLE IF EXISTS calc_ego_loads.large_scale_consumer CASCADE;
 
 CREATE TABLE calc_ego_loads.large_scale_consumer AS
 	(
