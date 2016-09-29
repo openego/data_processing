@@ -1,4 +1,4 @@
--- Calculate the industrial area per district 
+﻿-- Calculate the industrial area per district 
 
 -- ALTER TABLE orig_ego_consumption.lak_consumption_per_district
 -- 	ADD COLUMN area_industry numeric;
@@ -24,7 +24,7 @@ WHERE result.substr = substr(a.eu_code,1,5);
 
 SELECT	sum(area_ha), substr(nuts,1,5) 
 	INTO 	orig_ego_consumption.temp_table
-	FROM 	calc_ego_loads.landuse_industrial
+	FROM 	calc_ego_loads.landuse_industry
 GROUP BY 	substr(nuts,1,5);
 
 UPDATE orig_ego_consumption.lak_consumption_per_district a
