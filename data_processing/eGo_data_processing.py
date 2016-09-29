@@ -23,6 +23,7 @@ logger.info('eGo data processing started...')
 
 # list of sql_snippets that process the data in correct order
 snippet_dir = 'sql_snippets'
+script_dir = 'python_scripts'
 sql_snippets = ['process_eGo_osm_loads_industry.sql']
 
 # Ready:
@@ -40,6 +41,10 @@ sql_snippets = ['process_eGo_osm_loads_industry.sql']
                 # 'process_eGo_consumption.sql',
                 # 'analyse_eGo_paper_result.sql'
 
+python_scripts = [
+    'demand_per_mv_grid_district.py',
+    'peak_load_per_load_area.py'
+]
 
 # get database connection
 conn = io.oedb_session(section='oedb')
@@ -60,6 +65,21 @@ for snippet in sql_snippets:
 
 # close database connection
 conn.close()
+
+# iterate over list of python scripts and execute
+for script in python_scripts:
+    # timing and logging
+    script_time = time.time()
+    logger.info("Execute '{}' ...".format(script))
+    filename = os.path.join(script_dir, script)
+    script_str = open(filename, "rb").read()
+
+    # execute desired sql snippet
+    exec(compile(script_str, filename, 'exec'), globals, locals)
+
+    # inform the user
+    logger.info('...successfully done in {:.2f} seconds.'.format(
+        time.time() - script_time))
 
 logger.info('Data processing script successfully executed in {:.2f} seconds'.format(
     time.time() - total_time))
