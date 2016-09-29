@@ -1,11 +1,12 @@
-﻿
+
 ------------------
 -- "Export information on the industrial area into calc_ego_loads.landuse_industry"
 ------------------
 
 DROP TABLE IF EXISTS calc_ego_loads.landuse_industry CASCADE;
-
-SELECT * INTO calc_ego_loads.landuse_industry FROM openstreetmap.osm_deu_polygon_urban_sector_3_industrial_mview; 
+SELECT 	* 
+INTO calc_ego_loads.landuse_industry 
+FROM openstreetmap.osm_deu_polygon_urban_sector_3_industrial_mview; 
 
 ALTER TABLE  calc_ego_loads.landuse_industry OWNER TO oeuser;
 
@@ -19,8 +20,9 @@ SET 	consumption_per_area_industry = elec_consumption_industry/area_industry;
 -- "Export information on industrial area into calc_ego_loads.landuse_industry"
 
 DROP TABLE IF EXISTS calc_ego_loads.landuse_industry;
-
-SELECT * INTO calc_ego_loads.landuse_industry FROM orig_osm.osm_deu_polygon_urban_sector_3_industrial_mview; 
+SELECT 	* 
+INTO calc_ego_loads.landuse_industry 
+FROM orig_osm.osm_deu_polygon_urban_sector_3_industrial_mview; 
 
 ALTER TABLE  calc_ego_loads.landuse_industry OWNER TO oeuser;
 
