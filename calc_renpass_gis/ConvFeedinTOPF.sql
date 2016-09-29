@@ -2,6 +2,8 @@
 Quick workaround to transfer renpassG!S results into the corresponding powerflow table.
 
 Author: Martin
+
+TODO: storage in storage_pqset #1069
 */
 
 -- DROP materialized view calc_renpass_gis.pf_pp_by_source_aggr_id
@@ -31,7 +33,7 @@ from
 	when obj_label like '%biomass%' Then 6
 	when obj_label like '%hard_coal%' Then 8
 	when obj_label like '%run_of_river%' Then 9
-	when obj_label like '%storage_phs%' Then 11
+--	when obj_label like '%storage_phs%' Then 11
 	when obj_label like '%solar%' Then 12
 	when obj_label like '%wind%' Then 13
 	end as source,
