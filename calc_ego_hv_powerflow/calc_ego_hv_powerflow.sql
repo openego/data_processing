@@ -1,3 +1,4 @@
+DROP SCHEMA IF EXISTS calc_ego_hv_powerflow;
 CREATE SCHEMA calc_ego_hv_powerflow
   AUTHORIZATION oeuser;
 
@@ -444,8 +445,7 @@ Default: -1
 Status: Input (optional)';
 COMMENT ON COLUMN calc_ego_hv_powerflow.load.e_annual IS 'Unit: MW
 Description: 
-Status: Input (not needd for PyPSA)
-';
+Status: Input (not needd for PyPSA)';
 COMMENT ON COLUMN calc_ego_hv_powerflow.load_pq_set.p_set IS 'Unit: MW
 Description: Active power consumption (positive if the load is consuming power).
 Status: Input (optional)';
@@ -506,8 +506,7 @@ Description: Ratio between primary energy and electrical energy, e.g. takes valu
 Status: Input (optional)';
 COMMENT ON COLUMN calc_ego_hv_powerflow.storage.soc_initial IS 'Unit: MWh
 Description: State of charge before the snapshots in the OPF.
-Status: Input (optional)
-';
+Status: Input (optional)';
 COMMENT ON COLUMN calc_ego_hv_powerflow.storage.soc_cyclic IS 'Unit: n/a
 Description: Switch: if True, then state_of_charge_initial is ignored and the initial state of charge is set to the final state of charge for the group of snapshots in the OPF.
 Status: Input (optional)';
@@ -586,7 +585,6 @@ Status: Input (optional)';
 COMMENT ON COLUMN calc_ego_hv_powerflow.transformer.capital_cost IS 'Unit: currency/MVA
 Description: Capital cost of extending s_nom by 1 MVA.
 Status: Input (optional)';
-
 
 -------------------------------------------------------------------
 ----------------------------- INDEXING ----------------------------
