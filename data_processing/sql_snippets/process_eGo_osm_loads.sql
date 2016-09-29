@@ -169,7 +169,7 @@ ALTER TABLE		orig_osm.ego_deu_loads_osm OWNER TO oeuser;
 -- 	) AS t2
 -- WHERE  	t1.id = t2.id;
 
--- -- "Validate Area (area_ha) kleiner 100m²"   (OK!) 500ms =1.418
+-- -- "Validate Area (area_ha) kleiner 100mÂ²"   (OK!) 500ms =1.418
 -- DROP MATERIALIZED VIEW IF EXISTS	orig_osm.osm_deu_polygon_urban_buffer100_unbuffer_error_area_ha_mview CASCADE;
 -- CREATE MATERIALIZED VIEW 		orig_osm.osm_deu_polygon_urban_buffer100_unbuffer_error_area_ha_mview AS 
 -- 	SELECT 	la.id AS id,

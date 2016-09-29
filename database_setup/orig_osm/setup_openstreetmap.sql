@@ -25,10 +25,12 @@ WHERE     schemaname='openstreetmap'
     AND tablename LIKE 'osm_%'
     AND indexname LIKE '%_pkey';
 
--- 0. Create new schema
-CREATE SCHEMA openstreetmap;
 
--- 1. Move all tables to new schema
+-- 0. Create new schema
+--CREATE SCHEMA openstreetmap;
+
+
+-- 1. Move all tables to new schema -> 1s
 DO
 $$
 DECLARE
@@ -41,7 +43,8 @@ BEGIN
 END;
 $$;
 
--- 2. Remove all wrong 'pkey' indexes (_line, _point, _polygon, _roads)
+
+-- 2. Remove all wrong 'pkey' and 'gist' indexes (_line, _point, _polygon, _roads) -> 1s
 DO
 $$
 DECLARE
@@ -60,9 +63,25 @@ BEGIN
 END;
 $$;
 
+DO
+$$
+DECLARE
+    row record;
+BEGIN
+    FOR row IN SELECT indexname FROM pg_indexes 
+    WHERE (schemaname='openstreetmap' 
+    AND indexname LIKE '%_index')
+    LOOP
+        EXECUTE 'DROP INDEX openstreetmap.' || quote_ident(row.indexname) || ';';
+    END LOOP;
+END;
+$$;
+
+
 -- 3. Add column 'gid' serial
 -- 4. Add primary keys
--- 5. Rename geo-column 'way' to 'geom'
+-- 5. Rename geo-column 'way' to 'geom' -> 170s
+
 DO
 $$
 DECLARE
@@ -82,25 +101,27 @@ BEGIN
 END;
 $$;
 
--- 6. Set geometry and SRID
 
-ALTER TABLE openstreetmap.osm_deu_line
-    ALTER COLUMN geom TYPE geometry(LineString,3857) 
-        USING ST_SetSRID(geom,3857);
+-- 6. Set geometry and SRID -> Xs
 
-ALTER TABLE openstreetmap.osm_deu_point
-    ALTER COLUMN geom TYPE geometry(Point,3857) 
-        USING ST_SetSRID(geom,3857);
+-- ALTER TABLE openstreetmap.osm_deu_line
+--     ALTER COLUMN geom TYPE geometry(LineString,3857) 
+--         USING ST_SetSRID(geom,3857);
+-- 
+-- ALTER TABLE openstreetmap.osm_deu_point
+--     ALTER COLUMN geom TYPE geometry(Point,3857) 
+--         USING ST_SetSRID(geom,3857);
+-- 
+-- ALTER TABLE openstreetmap.osm_deu_polygon
+--     ALTER COLUMN geom TYPE geometry(MultiPolygon, 3857) 
+--         USING ST_SetSRID(ST_MULTI(geom),3857);
+-- 
+-- ALTER TABLE openstreetmap.osm_deu_roads
+--     ALTER COLUMN geom TYPE geometry(LineString,3857) 
+--         USING ST_SetSRID(geom,3857);
 
-ALTER TABLE openstreetmap.osm_deu_polygon
-    ALTER COLUMN geom TYPE geometry(MultiPolygon, 3857) 
-        USING ST_SetSRID(ST_MULTI(geom),3857);
 
-ALTER TABLE openstreetmap.osm_deu_roads
-    ALTER COLUMN geom TYPE geometry(LineString,3857) 
-        USING ST_SetSRID(geom,3857);
-
--- 7. Add indexes GIST (geom) and GIN (tags)
+-- 7.1 Add indexes GIST (geom) -> 1.138s
 DO
 $$
 DECLARE
@@ -118,4 +139,21 @@ BEGIN
 END;
 $$;
 
--- EXECUTE 'CREATE INDEX ' || quote_ident(row.tablename) || '_tags_idx ON openstreetmap.' || quote_ident(row.tablename) || ' USING GIN (tags);';
+-- 7.2 Add indexes GIN (tags) -> 2.292s
+DO
+$$
+DECLARE
+    row record;
+BEGIN
+    FOR row IN SELECT tablename FROM pg_tables 
+    WHERE schemaname='openstreetmap' 
+    AND (tablename LIKE '%_line'
+    OR tablename LIKE '%_point'
+    OR tablename LIKE '%_polygon'
+    OR tablename LIKE '%_roads')
+    LOOP
+        EXECUTE 'CREATE INDEX ' || quote_ident(row.tablename) || '_tags_idx ON openstreetmap.' || quote_ident(row.tablename) || ' USING GIN (tags);';
+    END LOOP;
+END;
+$$;
+
