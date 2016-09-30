@@ -1,4 +1,4 @@
-
+﻿
 ------------------
 -- "Export information on the industrial area into calc_ego_loads.landuse_industry"
 ------------------
@@ -104,11 +104,19 @@ CREATE INDEX  	landuse_industry_geom_centre_idx
     ON    	calc_ego_loads.landuse_industry
     USING     	GIST (geom_centre);
 
--- "Calculate NUTS"   
-UPDATE calc_ego_loads.landuse_industry a
-SET nuts = b.nuts
-FROM orig_vg250.vg250_4_krs b
-WHERE st_intersects(st_transform(st_setsrid(b.geom, 31467), 3035), a.geom_centre); 
+-- -- "Calculate NUTS" = 58.869 -> 154sec
+-- UPDATE 	calc_ego_loads.landuse_industry a
+-- SET 	nuts = b.nuts
+-- FROM 	orig_vg250.vg250_4_krs b
+-- WHERE 	st_intersects(st_transform(st_setsrid(b.geom, 31467), 3035), a.geom_centre); 
+
+-- Using Index and MView
+-- "Calculate NUTS" = 58.869 -> 5sec
+UPDATE 	calc_ego_loads.landuse_industry a
+SET 	nuts = b.nuts
+FROM 	orig_vg250.vg250_4_krs_mview b
+WHERE 	b.geom && a.geom_centre AND
+	st_intersects(b.geom, a.geom_centre); 
 
 
 -----------------
