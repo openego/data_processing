@@ -609,3 +609,23 @@ CREATE INDEX fki_storage_data_source_fk
   ON calc_ego_hv_powerflow.transformer
   USING btree
   (bus1);
+
+-------------------------------------------------------------------
+--------------------- FILL SOURCES TABLE --------------------------
+-------------------------------------------------------------------
+  
+INSERT INTO calc_ego_hv_powerflow.source VALUES (1, 'gas', NULL, NULL);
+INSERT INTO calc_ego_hv_powerflow.source VALUES (2, 'lignite', NULL, NULL);
+INSERT INTO calc_ego_hv_powerflow.source VALUES (3, 'waste', NULL, NULL);
+INSERT INTO calc_ego_hv_powerflow.source VALUES (4, 'oil', NULL, NULL);
+INSERT INTO calc_ego_hv_powerflow.source VALUES (5, 'uranium', NULL, NULL);
+INSERT INTO calc_ego_hv_powerflow.source VALUES (6, 'biomass', NULL, NULL);
+INSERT INTO calc_ego_hv_powerflow.source VALUES (7, 'eeg_gas', NULL, NULL);
+INSERT INTO calc_ego_hv_powerflow.source VALUES (8, 'coal', NULL, NULL);
+INSERT INTO calc_ego_hv_powerflow.source VALUES (9, 'run_of_river', NULL, NULL);
+INSERT INTO calc_ego_hv_powerflow.source VALUES (10, 'reservoir', NULL, NULL);
+INSERT INTO calc_ego_hv_powerflow.source VALUES (11, 'pumped_storage', NULL, NULL);
+INSERT INTO calc_ego_hv_powerflow.source VALUES (12, 'solar', NULL, NULL);
+INSERT INTO calc_ego_hv_powerflow.source VALUES (13, 'wind', NULL, NULL);
+INSERT INTO calc_ego_hv_powerflow.source VALUES (14, 'geothermal', NULL, NULL);
+INSERT INTO calc_ego_hv_powerflow.source VALUES (15, 'other_non_renewable', NULL, NULL);
