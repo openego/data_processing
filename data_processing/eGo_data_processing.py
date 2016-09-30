@@ -24,22 +24,20 @@ logger.info('eGo data processing started...')
 # list of sql_snippets that process the data in correct order
 snippet_dir = 'sql_snippets'
 script_dir = 'python_scripts'
-sql_snippets = ['process_eGo_osm_loads.sql']
-
-# Ready:
-# 'setup_bkg_vg250.sql',
-# 'setup_osm_landuse.sql',
-# 'process_eGo_osm_loads_industry.sql',
-
-# To be tested!
-                # 'process_eGo_osm_loads.sql',
-                # 'setup_zensus_population_per_ha.sql',
-                # 'process_eGo_loads_melted.sql',
-                # 'process_eGo_substation.sql',
-                # 'process_eGo_grid_district.sql',
-                # 'process_eGo_loads_per_grid_district.sql',
-                # 'process_eGo_consumption.sql',
-                # 'analyse_eGo_paper_result.sql'
+sql_snippets = [
+    # 'scenario_eGo_data_processing.sql',
+    # 'setup_bkg_vg250.sql',
+    # 'process_eGo_substation.sql',
+    # 'process_eGo_grid_district.sql',
+    # 'setup_osm_landuse.sql',
+    # 'process_eGo_osm_loads_industry.sql',
+    # 'process_eGo_osm_loads.sql',
+    # 'setup_zensus_population_per_ha.sql',
+    # 'process_eGo_loads_melted.sql',
+    # 'process_eGo_loads_per_grid_district.sql',
+    # 'process_eGo_consumption.sql',
+    'analyse_eGo_paper_result.sql'
+    ]
 
 python_scripts = [
    # 'demand_per_mv_grid_district.py',

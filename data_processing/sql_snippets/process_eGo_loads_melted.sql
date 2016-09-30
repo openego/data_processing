@@ -16,12 +16,12 @@ CONSTRAINT	ego_deu_loads_collect_pkey PRIMARY KEY (id));
 -- "Insert Loads OSM"   (OK!) 7.000ms =169.639
 INSERT INTO	calc_ego_loads.ego_deu_loads_collect (geom)
 	SELECT	osm.geom
-	FROM	calc_ego_loads.ego_deu_loads_osm AS osm;
+	FROM	openstreetmap.ego_deu_loads_osm AS osm;
 
 -- "Insert Loads Zensus Cluster"   (OK!) 3.000ms =454.112
 INSERT INTO	calc_ego_loads.ego_deu_loads_collect (geom)
 	SELECT	zensus.geom
-	FROM	calc_ego_loads.ego_deu_loads_zensus_cluster AS zensus;
+	FROM	orig_destatis.ego_deu_loads_zensus_cluster AS zensus;
 
 -- "Create Index GIST (geom)"   (OK!) 7.000ms =0
 CREATE INDEX	ego_deu_loads_collect_geom_idx
@@ -31,7 +31,6 @@ CREATE INDEX	ego_deu_loads_collect_geom_idx
 -- "Grant oeuser"   (OK!) -> 100ms =600.828
 GRANT ALL ON TABLE	calc_ego_loads.ego_deu_loads_collect TO oeuser WITH GRANT OPTION;
 ALTER TABLE		calc_ego_loads.ego_deu_loads_collect OWNER TO oeuser;
-
 
 
 ---------- ---------- ----------
@@ -306,6 +305,25 @@ FROM	(
 	FROM	calc_ego_loads.ego_deu_loads_melted AS source
 	) AS test
 WHERE	test.error = FALSE;
+
+-- Scenario eGo data processing
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script,entries,status,timestamp)
+	SELECT	'0.1' AS version,
+		'calc_ego_loads' AS schema_name,
+		'ego_deu_loads_melted' AS table_name,
+		'process_eGo_loads_melted.sql' AS script,
+		COUNT(geom)AS entries,
+		'OK' AS status,
+		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
+	FROM	calc_ego_loads.ego_deu_loads_melted;
+
+
+
+
+
+
+
+
 
 ---------- ---------- ----------
 -- Alternative Calculation with MView

@@ -22,7 +22,7 @@ SET 	consumption_per_area_industry = elec_consumption_industry/area_industry;
 DROP TABLE IF EXISTS calc_ego_loads.landuse_industry;
 SELECT 	* 
 INTO calc_ego_loads.landuse_industry 
-FROM orig_osm.osm_deu_polygon_urban_sector_3_industrial_mview; 
+FROM openstreetmap.osm_deu_polygon_urban_sector_3_industrial_mview; 
 
 ALTER TABLE  calc_ego_loads.landuse_industry OWNER TO oeuser;
 
@@ -143,13 +143,25 @@ sub.gid = a.gid;
 -- "Calculate the peak load for each industry polygon"
 -----------------
 
-
 UPDATE calc_ego_loads.landuse_industry
 SET peak_load = consumption*(0.00013247226362); -- Add different factor to calculate the peak load
 
+-- "Create Index GIST (geom)"   (OK!) 2.000ms =0
+CREATE INDEX  	landuse_industry_geom_idx
+    ON    	calc_ego_loads.landuse_industry
+    USING     	GIST (geom);
 
-
-
+-- Scenario eGo data processing
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script,entries,status,timestamp)
+	SELECT	'0.1' AS version,
+		'calc_ego_loads' AS schema_name,
+		'landuse_industry' AS table_name,
+		'process_eGo_osm_loads_industry.sql' AS script,
+		COUNT(geom)AS entries,
+		'OK' AS status,
+		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
+	FROM	calc_ego_loads.landuse_industry;
+	
 -----------------
 -- "Identify large scale consumer"
 -----------------
@@ -163,7 +175,7 @@ CREATE TABLE calc_ego_loads.large_scale_consumer AS
 		proc_power_plant_germany.gid AS powerplant_id,
 		proc_power_plant_germany.voltage_level AS voltage_level
 	FROM 	orig_geo_powerplants.proc_power_plant_germany, 
-		orig_osm. osm_deu_polygon_urban_sector_3_industrial_mview
+		openstreetmap. osm_deu_polygon_urban_sector_3_industrial_mview
 	WHERE	(voltage_level='3' OR voltage_level='2'OR voltage_level='1')
 	AND 	ST_Intersects (proc_power_plant_germany.geom, (ST_transform (osm_deu_polygon_urban_sector_3_industrial_mview.geom,4326))));
 
@@ -181,6 +193,7 @@ ALTER TABLE calc_ego_loads.large_scale_consumer
 	ADD COLUMN id serial, 
 	ADD COLUMN consumption numeric, 
 	ADD COLUMN peak_load numeric,
+	ADD COLUMN geom geometry(MultiPolygon,3035),
 	ADD COLUMN geom_centre geometry(Point,3035),
 	ADD PRIMARY KEY (id);
 
@@ -197,6 +210,11 @@ INSERT INTO calc_ego_loads.large_scale_consumer (polygon_id, area_ha)
 	WHERE peak_load >= 0.0175; 
 
 -- Add consumption, peak_load and geom_centre for industry polygons
+
+UPDATE calc_ego_loads.large_scale_consumer
+	SET geom = b.geom
+	FROM calc_ego_loads.landuse_industry b
+	WHERE polygon_id = b.gid;
 
 UPDATE calc_ego_loads.large_scale_consumer
 	SET geom_centre = b.geom_centre 
@@ -242,7 +260,26 @@ WHERE id IN (SELECT id
                      FROM calc_ego_loads.large_scale_consumer) t
               WHERE t.rnum > 1);
 
-
+-- "Create Index GIST (geom)"   (OK!) 2.000ms =0
+CREATE INDEX  	large_scale_consumer_geom_idx
+    ON    	calc_ego_loads.large_scale_consumer
+    USING     	GIST (geom);
+			  
+-- "Create Index GIST (geom_centre)"   (OK!) 2.000ms =0
+CREATE INDEX  	large_scale_consumer_geom_idx
+    ON    	calc_ego_loads.large_scale_consumer
+    USING     	GIST (geom_centre);
+			  
+-- Scenario eGo data processing
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script,entries,status,timestamp)
+	SELECT	'0.1' AS version,
+		'calc_ego_loads' AS schema_name,
+		'large_scale_consumer' AS table_name,
+		'process_eGo_osm_loads_industry.sql' AS script,
+		COUNT(geom_centre)AS entries,
+		'OK' AS status,
+		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
+	FROM	calc_ego_loads.large_scale_consumer;
 
 /*﻿ 
 SELECT polygon_id, 
@@ -253,5 +290,5 @@ HAVING ( COUNT(polygon_id) > 1 )
 */
 
 
--- Remove industrial loads from orig_osm.ego_deu_loads_osm
+-- Remove industrial loads from openstreetmap.ego_deu_loads_osm
 

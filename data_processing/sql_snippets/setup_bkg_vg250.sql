@@ -24,36 +24,36 @@
 -- 
 -- -- Drop empty view   (OK!) -> 100ms =1
 -- SELECT f_drop_view('{vg250_1_sta_error_geom_view}', 'orig_vg250');
-
--- Error   (OK!) 47.000ms =143.293
-DROP MATERIALIZED VIEW IF EXISTS	orig_vg250.vg250_1_sta_error_geom_mview CASCADE;
-CREATE MATERIALIZED VIEW		orig_vg250.vg250_1_sta_error_geom_mview AS 
-	SELECT	test.id AS id,
-		test.error AS error,
-		test.error_reason AS error_reason,
-		ST_SETSRID(location(ST_IsValidDetail(test.geom)),3035) ::geometry(Point,3035) AS geom
-	FROM	(
-		SELECT	source.gid AS id,				-- PK
-			ST_IsValid(source.geom) AS error,
-			reason(ST_IsValidDetail(source.geom)) AS error_reason,
-			source.geom AS geom
-		FROM	orig_vg250.vg250_1_sta AS source	-- Table
-		) AS test
-	WHERE	test.error = FALSE;
-
--- Create Index (gid)   (OK!) -> 100ms =0
-CREATE UNIQUE INDEX  	vg250_1_sta_error_geom_mview_id_idx
-		ON	orig_vg250.vg250_1_sta_error_geom_mview (id);
-
--- Create Index GIST (geom)   (OK!) -> 100ms =0
-CREATE INDEX  	vg250_1_sta_error_geom_mview_geom_idx
-	ON	orig_vg250.vg250_1_sta_error_geom_mview
-	USING	GIST (geom);
-
--- Grant oeuser   (OK!) -> 100ms =0
-GRANT ALL ON TABLE	orig_vg250.vg250_1_sta_error_geom_mview TO oeuser WITH GRANT OPTION;
-ALTER TABLE		orig_vg250.vg250_1_sta_error_geom_mview OWNER TO oeuser;
-DROP VIEW IF EXISTS	orig_vg250.vg250_1_sta_error_geom_view CASCADE;
+-- 
+-- -- Error   (OK!) 47.000ms =143.293
+-- DROP MATERIALIZED VIEW IF EXISTS	orig_vg250.vg250_1_sta_error_geom_mview CASCADE;
+-- CREATE MATERIALIZED VIEW		orig_vg250.vg250_1_sta_error_geom_mview AS 
+-- 	SELECT	test.id AS id,
+-- 		test.error AS error,
+-- 		test.error_reason AS error_reason,
+-- 		ST_SETSRID(location(ST_IsValidDetail(test.geom)),3035) ::geometry(Point,3035) AS geom
+-- 	FROM	(
+-- 		SELECT	source.gid AS id,				-- PK
+-- 			ST_IsValid(source.geom) AS error,
+-- 			reason(ST_IsValidDetail(source.geom)) AS error_reason,
+-- 			source.geom AS geom
+-- 		FROM	orig_vg250.vg250_1_sta AS source	-- Table
+-- 		) AS test
+-- 	WHERE	test.error = FALSE;
+-- 
+-- -- Create Index (gid)   (OK!) -> 100ms =0
+-- CREATE UNIQUE INDEX  	vg250_1_sta_error_geom_mview_id_idx
+-- 		ON	orig_vg250.vg250_1_sta_error_geom_mview (id);
+-- 
+-- -- Create Index GIST (geom)   (OK!) -> 100ms =0
+-- CREATE INDEX  	vg250_1_sta_error_geom_mview_geom_idx
+-- 	ON	orig_vg250.vg250_1_sta_error_geom_mview
+-- 	USING	GIST (geom);
+-- 
+-- -- Grant oeuser   (OK!) -> 100ms =0
+-- GRANT ALL ON TABLE	orig_vg250.vg250_1_sta_error_geom_mview TO oeuser WITH GRANT OPTION;
+-- ALTER TABLE		orig_vg250.vg250_1_sta_error_geom_mview OWNER TO oeuser;
+-- DROP VIEW IF EXISTS	orig_vg250.vg250_1_sta_error_geom_view CASCADE;
 
 
 ---------- ---------- ----------
@@ -136,6 +136,16 @@ CREATE INDEX  	vg250_1_sta_union_mview_geom_idx
 GRANT ALL ON TABLE	orig_vg250.vg250_1_sta_union_mview TO oeuser WITH GRANT OPTION;
 ALTER TABLE		orig_vg250.vg250_1_sta_union_mview OWNER TO oeuser;
 
+-- Scenario eGo data processing
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script,entries,status,timestamp)
+	SELECT	'0.1' AS version,
+		'orig_vg250' AS schema_name,
+		'vg250_1_sta_union_mview' AS table_name,
+		'setup_bkg_vg250.sql' AS script,
+		COUNT(geom)AS entries,
+		'OK' AS status,
+		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
+	FROM	orig_vg250.vg250_1_sta_union_mview;
 
 ---------- ---------- ----------
 -- orig_vg250.vg250_1_sta_mview - With tiny buffer because of intersection (in official data)
@@ -198,6 +208,17 @@ CREATE INDEX  	vg250_4_krs_mview_geom_idx
 GRANT ALL ON TABLE	orig_vg250.vg250_4_krs_mview TO oeuser WITH GRANT OPTION;
 ALTER TABLE		orig_vg250.vg250_4_krs_mview OWNER TO oeuser;
 
+-- Scenario eGo data processing
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script,entries,status,timestamp)
+	SELECT	'0.1' AS version,
+		'orig_vg250' AS schema_name,
+		'vg250_4_krs_mview' AS table_name,
+		'setup_bkg_vg250.sql' AS script,
+		COUNT(geom)AS entries,
+		'OK' AS status,
+		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
+	FROM	orig_vg250.vg250_4_krs_mview;
+
 ---------- ---------- ----------
 
 -- -- Validate (geom)   (OK!) -> 22.000ms =0
@@ -222,9 +243,6 @@ ALTER TABLE		orig_vg250.vg250_4_krs_mview OWNER TO oeuser;
 -- -- Drop empty view   (OK!) -> 100ms =1
 -- SELECT f_drop_view('{vg250_4_krs_mview_error_geom_view}', 'orig_vg250');
 
-
----------- ---------- ----------
--- orig_vg250.vg250_6_gem
 ---------- ---------- ----------
 
 -- -- Create Index GIST (geom)   (OK!) -> 100ms =0
@@ -287,6 +305,18 @@ CREATE INDEX  	vg250_6_gem_mview_geom_idx
 -- Grant oeuser   (OK!) -> 100ms =0
 GRANT ALL ON TABLE	orig_vg250.vg250_6_gem_mview TO oeuser WITH GRANT OPTION;
 ALTER TABLE		orig_vg250.vg250_6_gem_mview OWNER TO oeuser;
+
+-- Scenario eGo data processing
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script,entries,status,timestamp)
+	SELECT	'0.1' AS version,
+		'orig_vg250' AS schema_name,
+		'vg250_6_gem_mview' AS table_name,
+		'setup_bkg_vg250.sql' AS script,
+		COUNT(geom)AS entries,
+		'OK' AS status,
+		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
+	FROM	orig_vg250.vg250_6_gem_mview;
+
 
 ---------- ---------- ----------
 
@@ -465,110 +495,41 @@ WHERE  	t1.id = t2.id;
 
 ---------- ---------- ----------
 
--- Separate all ringholes   (OK!) 1.000ms =12.174
-DROP MATERIALIZED VIEW IF EXISTS	orig_vg250.vg250_6_gem_clean_mview CASCADE;
-CREATE MATERIALIZED VIEW 		orig_vg250.vg250_6_gem_clean_mview AS
+-- Separate all ringholes   (OK!) 1.000ms =682
+DROP MATERIALIZED VIEW IF EXISTS	orig_vg250.vg250_6_gem_clean_rings_mview CASCADE;
+CREATE MATERIALIZED VIEW 		orig_vg250.vg250_6_gem_clean_rings_mview AS
 	SELECT	vg.*
 	FROM	orig_vg250.vg250_6_gem_clean AS vg
-	WHERE	vg.is_ring IS NOT TRUE;
+	WHERE	vg.is_ring IS TRUE;
 
 -- Create Index (id)   (OK!) -> 100ms =0
-CREATE UNIQUE INDEX  	vg250_6_gem_clean_mview_id_idx
-		ON	orig_vg250.vg250_6_gem_clean_mview (id);
+CREATE UNIQUE INDEX  	vg250_6_gem_clean_rings_mview_id_idx
+		ON	orig_vg250.vg250_6_gem_clean_rings_mview (id);
 
 -- Create Index GIST (geom)   (OK!) -> 150ms =0
-CREATE INDEX  	vg250_6_gem_clean_mview_geom_idx
-	ON	orig_vg250.vg250_6_gem_clean_mview
+CREATE INDEX  	vg250_6_gem_clean_rings_mview_geom_idx
+	ON	orig_vg250.vg250_6_gem_clean_rings_mview
 	USING	GIST (geom);
 
 -- Grant oeuser   (OK!) -> 100ms =0
-GRANT ALL ON TABLE	orig_vg250.vg250_6_gem_clean_mview TO oeuser WITH GRANT OPTION;
-ALTER TABLE		orig_vg250.vg250_6_gem_clean_mview OWNER TO oeuser;
+GRANT ALL ON TABLE	orig_vg250.vg250_6_gem_clean_rings_mview TO oeuser WITH GRANT OPTION;
+ALTER TABLE		orig_vg250.vg250_6_gem_clean_rings_mview OWNER TO oeuser;
 
+-- Remove ringholes   (OK!) 1.000ms =682
+DELETE FROM 	orig_vg250.vg250_6_gem_clean
+WHERE			is_ring IS TRUE;
 
----------- ---------- ----------
--- 
--- -- Spearate all municipalities without rings   (OK!) 30.000ms =350
--- DROP MATERIALIZED VIEW IF EXISTS	orig_vg250.vg250_6_gem_clean_mview CASCADE;
--- CREATE MATERIALIZED VIEW 		orig_vg250.vg250_6_gem_clean_mview AS 
--- SELECT 	mun.*
--- FROM	orig_vg250.vg250_6_gem_clean AS mun
--- WHERE	mun.path[1] = 0;
--- 
--- -- Create Index (id)   (OK!) -> 100ms =0
--- CREATE UNIQUE INDEX  	vg250_6_gem_clean_mview_id_idx
--- 		ON	orig_vg250.vg250_6_gem_clean_mview (id);
--- 
--- -- Create Index GIST (geom)   (OK!) -> 150ms =0
--- CREATE INDEX  	vg250_6_gem_clean_mview_geom_idx
--- 	ON	orig_vg250.vg250_6_gem_clean_mview
--- 	USING	GIST (geom);
--- 
--- -- Grant oeuser   (OK!) -> 100ms =0
--- GRANT ALL ON TABLE	orig_vg250.vg250_6_gem_clean_mview TO oeuser WITH GRANT OPTION;
--- ALTER TABLE		orig_vg250.vg250_6_gem_clean_mview OWNER TO oeuser;
+-- Scenario eGo data processing
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script,entries,status,timestamp)
+	SELECT	'0.1' AS version,
+		'orig_vg250' AS schema_name,
+		'vg250_6_gem_clean' AS table_name,
+		'setup_bkg_vg250.sql' AS script,
+		COUNT(geom)AS entries,
+		'OK' AS status,
+		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
+	FROM	orig_vg250.vg250_6_gem_clean;
 
----------- ---------- ----------
-
----------- ---------- ----------
--- 
--- -- Select all rings rings   (OK!) 1.000ms =341
--- DROP MATERIALIZED VIEW IF EXISTS	orig_vg250.vg250_6_gem_clean_rings_mview CASCADE;
--- CREATE MATERIALIZED VIEW		orig_vg250.vg250_6_gem_clean_rings_mview AS 
--- 	SELECT 	DISTINCT mun.*,
--- 		joi.id AS j_id
--- 	FROM 	orig_vg250.vg250_6_gem_clean_ring_mview AS mun		
--- 	INNER JOIN orig_vg250.vg250_6_gem_clean_ring_mview AS joi
--- 		ON ST_WITHIN(ST_BUFFER(mun.geom,1),joi.geom)
--- 	WHERE	mun.geom && joi.geom;
--- 
--- 
--- -- Create Index (id)   (OK!) -> 100ms =0
--- CREATE UNIQUE INDEX  	vg250_6_gem_clean_rings_mview_id_idx
--- 		ON	orig_vg250.vg250_6_gem_clean_rings_mview (id,j_id);
--- 
--- -- Create Index GIST (geom)   (OK!) -> 150ms =0
--- CREATE INDEX  	vg250_6_gem_clean_rings_mview_geom_idx
--- 	ON	orig_vg250.vg250_6_gem_clean_rings_mview
--- 	USING	GIST (geom);
--- 
--- -- Grant oeuser   (OK!) -> 100ms =0
--- GRANT ALL ON TABLE	orig_vg250.vg250_6_gem_clean_rings_mview TO oeuser WITH GRANT OPTION;
--- ALTER TABLE		orig_vg250.vg250_6_gem_clean_rings_mview OWNER TO oeuser;
-
----------- ---------- ----------
--- 
--- -- Update rings   (OK!) -> 160.000ms =2.483.755
--- UPDATE 	orig_vg250.vg250_6_gem_clean AS t1
--- SET  	is_ring = t2.is_ring
--- FROM    (
--- 	SELECT	clean.id AS id,
--- 		'TRUE' ::boolean AS is_ring
--- 	FROM	orig_vg250.vg250_6_gem_clean_rings_mview AS ring,
--- 		orig_vg250.vg250_6_gem_clean AS clean
--- 	WHERE  	clean.id = ring.id
--- 	) AS t2
--- WHERE  	t1.id = t2.id;
--- 
--- -- Spearate all municipalities with rings   (OK!) 1.000ms =12.539
--- DROP MATERIALIZED VIEW IF EXISTS	orig_vg250.vg250_6_gem_clean_mview CASCADE;
--- CREATE MATERIALIZED VIEW 		orig_vg250.vg250_6_gem_clean_mview AS 
--- 	SELECT 	mun.*
--- 	FROM	orig_vg250.vg250_6_gem_clean AS mun
--- 	WHERE	mun.is_ring IS NOT TRUE;
--- 
--- -- Create Index (id)   (OK!) -> 100ms =0
--- CREATE UNIQUE INDEX  	vg250_6_gem_clean_mview_id_idx
--- 		ON	orig_vg250.vg250_6_gem_clean_mview (id);
--- 
--- -- Create Index GIST (geom)   (OK!) -> 150ms =0
--- CREATE INDEX  	vg250_6_gem_clean_mview_geom_idx
--- 	ON	orig_vg250.vg250_6_gem_clean_mview
--- 	USING	GIST (geom);
--- 
--- -- Grant oeuser   (OK!) -> 100ms =0
--- GRANT ALL ON TABLE	orig_vg250.vg250_6_gem_clean_mview TO oeuser WITH GRANT OPTION;
--- ALTER TABLE		orig_vg250.vg250_6_gem_clean_mview OWNER TO oeuser;
 
 ---------- ---------- ----------
 
