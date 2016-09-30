@@ -18,20 +18,20 @@ ch.setFormatter(formatter)
 logger.addHandler(ch)
 
 # get current time and inform about start
-total_time = time.localtime()
+total_time = time.time()
 logger.info('eGo data processing started...')
 
 # list of sql_snippets that process the data in correct order
 snippet_dir = 'sql_snippets'
 script_dir = 'python_scripts'
-sql_snippets = ['process_eGo_osm_loads_industry.sql']
+sql_snippets = ['process_eGo_osm_loads.sql']
 
 # Ready:
 # 'setup_bkg_vg250.sql',
 # 'setup_osm_landuse.sql',
+# 'process_eGo_osm_loads_industry.sql',
 
 # To be tested!
-                # 'process_eGo_osm_loads_industry.sql',
                 # 'process_eGo_osm_loads.sql',
                 # 'setup_zensus_population_per_ha.sql',
                 # 'process_eGo_loads_melted.sql',
@@ -42,8 +42,8 @@ sql_snippets = ['process_eGo_osm_loads_industry.sql']
                 # 'analyse_eGo_paper_result.sql'
 
 python_scripts = [
-    'demand_per_mv_grid_district.py',
-    'peak_load_per_load_area.py'
+   # 'demand_per_mv_grid_district.py',
+   # 'peak_load_per_load_area.py'
 ]
 
 # get database connection
@@ -52,7 +52,7 @@ conn = io.oedb_session(section='oedb')
 # iterate over list of sql snippets and execute them
 for snippet in sql_snippets:
     # timing and logging
-    snippet_time = time.localtime()
+    snippet_time = time.time()
     logger.info("Execute '{}' ...".format(snippet))
     snippet_str = open(os.path.join(snippet_dir, snippet)).read()
 
@@ -61,7 +61,7 @@ for snippet in sql_snippets:
 
     # inform the user
     logger.info('...successfully done in {:.2f} seconds.'.format(
-        time.localtime() - snippet_time))
+        time.time() - snippet_time))
 
 # close database connection
 conn.close()
@@ -79,7 +79,7 @@ for script in python_scripts:
 
     # inform the user
     logger.info('...successfully done in {:.2f} seconds.'.format(
-        time.localtime() - script_time))
+        time.time() - script_time))
 
 logger.info('Data processing script successfully executed in {:.2f} seconds'.format(
-    time.localtime() - total_time))
+    time.time() - total_time))

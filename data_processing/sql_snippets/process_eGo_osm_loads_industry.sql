@@ -1,4 +1,4 @@
-﻿
+
 ------------------
 -- "Export information on the industrial area into calc_ego_loads.landuse_industry"
 ------------------
