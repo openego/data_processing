@@ -307,11 +307,11 @@ FROM	(
 WHERE	test.error = FALSE;
 
 -- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script,entries,status,timestamp)
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
 	SELECT	'0.1' AS version,
 		'calc_ego_loads' AS schema_name,
 		'ego_deu_loads_melted' AS table_name,
-		'process_eGo_loads_melted.sql' AS script,
+		'process_eGo_loads_melted.sql' AS script_name,
 		COUNT(geom)AS entries,
 		'OK' AS status,
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp

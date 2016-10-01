@@ -105,11 +105,11 @@ CREATE INDEX  	ego_deu_loadcluster_geom_grid_idx
 	USING	GIST (geom_grid);
 
 -- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script,entries,status,timestamp)
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
 	SELECT	'0.1' AS version,
 		'orig_destatis' AS schema_name,
 		'ego_deu_loads_zensus' AS table_name,
-		'setup_zensus_population_per_ha.sql' AS script,
+		'setup_zensus_population_per_ha.sql' AS script_name,
 		COUNT(geom)AS entries,
 		'OK' AS status,
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
@@ -179,11 +179,11 @@ GRANT ALL ON TABLE 	orig_destatis.ego_deu_loads_zensus_cluster TO oeuser WITH GR
 ALTER TABLE		orig_destatis.ego_deu_loads_zensus_cluster OWNER TO oeuser;
 
 -- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script,entries,status,timestamp)
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
 	SELECT	'0.1' AS version,
 		'orig_destatis' AS schema_name,
 		'ego_deu_loads_zensus_cluster' AS table_name,
-		'setup_zensus_population_per_ha.sql' AS script,
+		'setup_zensus_population_per_ha.sql' AS script_name,
 		COUNT(geom)AS entries,
 		'OK' AS status,
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp

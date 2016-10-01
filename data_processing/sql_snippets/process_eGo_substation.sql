@@ -36,11 +36,11 @@ FROM    (
 WHERE  	t1.id = t2.id;
 
 -- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script,entries,status,timestamp)
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
 	SELECT	'0.1' AS version,
 		'calc_ego_substation' AS schema_name,
 		'ego_deu_substations' AS table_name,
-		'process_eGo_substation.sql' AS script,
+		'process_eGo_substation.sql' AS script_name,
 		COUNT(geom)AS entries,
 		'OK' AS status,
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
@@ -159,11 +159,11 @@ DELETE FROM calc_ego_substation.ego_deu_substations WHERE subst_name='DUMMY';
 
 
 -- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script,entries,status,timestamp)
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
 	SELECT	'0.1' AS version,
 		'calc_ego_substation' AS schema_name,
 		'ego_deu_substations_voronoi' AS table_name,
-		'process_eGo_substation.sql' AS script,
+		'process_eGo_substation.sql' AS script_name,
 		COUNT(geom)AS entries,
 		'OK' AS status,
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp

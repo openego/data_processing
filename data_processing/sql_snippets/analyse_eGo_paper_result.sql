@@ -9,7 +9,7 @@ CREATE TABLE 		model_draft.eGo_paper_data_allocation_results AS
 SELECT	nextval('model_draft.eGo_paper_data_allocation_results_seq'::regclass) AS id,
 	'calc_ego_substation' ::text AS schema,
 	'ego_deu_substations' ::text AS table,
-	'Number of substations' ::text AS description,
+	'Number of substations' ::text AS descript_nameion,
 	COUNT(subst_id) ::integer AS result,
 	' ' ::text AS unit,
 	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
@@ -19,7 +19,7 @@ UNION ALL
 SELECT	nextval('model_draft.eGo_paper_data_allocation_results_seq'::regclass) AS id,
 	'calc_ego_grid_district' ::text AS schema,
 	'grid_district' ::text AS table,
-	'Number of grid districts' ::text AS description,
+	'Number of grid districts' ::text AS descript_nameion,
 	COUNT(subst_id) ::integer AS result,
 	' ' ::text AS unit,
 	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
@@ -30,7 +30,7 @@ UNION ALL
 SELECT	nextval('model_draft.eGo_paper_data_allocation_results_seq'::regclass) AS id,
 	'orig_vg250' ::text AS schema,
 	'vg250_6_gem' ::text AS table,
-	'Gemeinde area' ::text AS description,
+	'Gemeinde area' ::text AS descript_nameion,
 	SUM(ST_AREA(ST_TRANSFORM(geom,3025))/10000) ::integer AS result,
 	'ha' ::text AS unit,
 	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
@@ -40,7 +40,7 @@ UNION ALL
 SELECT	nextval('model_draft.eGo_paper_data_allocation_results_seq'::regclass) AS id,
 	'calc_ego_grid_district' ::text AS schema,
 	'grid_district' ::text AS table,
-	'Grid District area' ::text AS description,
+	'Grid District area' ::text AS descript_nameion,
 	SUM(ST_AREA(geom)/10000) ::integer AS result,
 	'ha' ::text AS unit,
 	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
@@ -50,7 +50,7 @@ UNION ALL
 SELECT	nextval('model_draft.eGo_paper_data_allocation_results_seq'::regclass) AS id,
 	'calc_ego_grid_district' ::text AS schema,
 	'grid_district' ::text AS table,
-	'Minmal GD area' ::text AS description,
+	'Minmal GD area' ::text AS descript_nameion,
 	MIN(ST_AREA(geom)/10000) ::decimal(10,1) AS result,
 	'ha' ::text AS unit,
 	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
@@ -60,7 +60,7 @@ UNION ALL
 SELECT	nextval('model_draft.eGo_paper_data_allocation_results_seq'::regclass) AS id,
 	'calc_ego_grid_district' ::text AS schema,
 	'grid_district' ::text AS table,
-	'Minmal GD area' ::text AS description,
+	'Minmal GD area' ::text AS descript_nameion,
 	MIN(area_ha) ::decimal(10,1) AS result,
 	'ha' ::text AS unit,
 	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
@@ -70,7 +70,7 @@ UNION ALL
 SELECT	nextval('model_draft.eGo_paper_data_allocation_results_seq'::regclass) AS id,
 	'calc_ego_grid_district' ::text AS schema,
 	'grid_district' ::text AS table,
-	'Maximal GD area' ::text AS description,
+	'Maximal GD area' ::text AS descript_nameion,
 	MAX(ST_AREA(geom)/10000) ::decimal(10,1) AS result,
 	'ha' ::text AS unit,
 	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
@@ -80,7 +80,7 @@ UNION ALL
 SELECT	nextval('model_draft.eGo_paper_data_allocation_results_seq'::regclass) AS id,
 	'calc_ego_loads' ::text AS schema,
 	'ego_deu_load_area' ::text AS table,
-	'Number of Load Areas' ::text AS description,
+	'Number of Load Areas' ::text AS descript_nameion,
 	COUNT(id) ::integer AS result,
 	' ' ::text AS unit,
 	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
@@ -90,7 +90,7 @@ UNION ALL
 SELECT	nextval('model_draft.eGo_paper_data_allocation_results_seq'::regclass) AS id,
 	'calc_ego_loads' ::text AS schema,
 	'ego_deu_load_area' ::text AS table,
-	'Load Areas area' ::text AS description,
+	'Load Areas area' ::text AS descript_nameion,
 	SUM(ST_AREA(geom)/10000) ::decimal(10,1) AS result,
 	'ha' ::text AS unit,
 	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
@@ -101,7 +101,7 @@ UNION ALL
 SELECT	nextval('model_draft.eGo_paper_data_allocation_results_seq'::regclass) AS id,
 	'calc_ego_loads' ::text AS schema,
 	'ego_deu_load_area' ::text AS table,
-	'Minmal LA area' ::text AS description,
+	'Minmal LA area' ::text AS descript_nameion,
 	MIN(ST_AREA(geom)/10000) ::decimal(10,3) AS result,
 	'ha' ::text AS unit,
 	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
@@ -111,7 +111,7 @@ UNION ALL
 SELECT	nextval('model_draft.eGo_paper_data_allocation_results_seq'::regclass) AS id,
 	'calc_ego_loads' ::text AS schema,
 	'ego_deu_load_area' ::text AS table,
-	'Maximal LA area' ::text AS description,
+	'Maximal LA area' ::text AS descript_nameion,
 	MAX(ST_AREA(geom)/10000) ::decimal(10,3) AS result,
 	'ha' ::text AS unit,
 	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
@@ -126,11 +126,11 @@ ALTER TABLE model_draft.ego_paper_data_allocation_results
 	ADD PRIMARY KEY (id) ;
 
 -- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script,entries,status,timestamp)
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
 	SELECT	'0.1' AS version,
 		'model_draft' AS schema_name,
 		'ego_paper_data_allocation_results' AS table_name,
-		'analyse_eGo_paper_result.sql' AS script,
+		'analyse_eGo_paper_result.sql' AS script_name,
 		COUNT(id)AS entries,
 		'OK' AS status,
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
@@ -308,11 +308,11 @@ CREATE INDEX  	eGo_paper_data_allocation_mvgd_geom_idx
 	USING	GIST (geom);
 
 -- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script,entries,status,timestamp)
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
 	SELECT	'0.1' AS version,
 		'model_draft' AS schema_name,
 		'eGo_paper_data_allocation_mvgd' AS table_name,
-		'analyse_eGo_paper_result.sql' AS script,
+		'analyse_eGo_paper_result.sql' AS script_name,
 		COUNT(subst_id)AS entries,
 		'OK' AS status,
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
@@ -327,34 +327,34 @@ CREATE MATERIALIZED VIEW		political_boundary.bkg_vg250_statistics_mview AS
 -- Calculate areas
 SELECT	'1' ::integer AS id,
 	'1_sta' ::text AS table,
-	'vg' ::text AS description,
+	'vg' ::text AS descript_nameion,
 	SUM(vg.area_km2) ::integer AS area_sum_km2
 FROM	orig_vg250.vg250_1_sta_mview AS vg
 UNION ALL
 SELECT	'3' ::integer AS id,
 	'1_sta' ::text AS table,
-	'deu' ::text AS description,
+	'deu' ::text AS descript_nameion,
 	SUM(vg.area_km2) ::integer AS area_sum_km2
 FROM	orig_vg250.vg250_1_sta_mview AS vg
 WHERE	bez='Bundesrepublik'
 UNION ALL
 SELECT	'4' ::integer AS id,
 	'1_sta' ::text AS table,
-	'NOT deu' ::text AS description,
+	'NOT deu' ::text AS descript_nameion,
 	SUM(vg.area_km2) ::integer AS area_sum_km2
 FROM	orig_vg250.vg250_1_sta_mview AS vg
 WHERE	bez='--'
 UNION ALL
 SELECT	'5' ::integer AS id,
 	'1_sta' ::text AS table,
-	'land' ::text AS description,
+	'land' ::text AS descript_nameion,
 	SUM(vg.area_km2) ::integer AS area_sum_km2
 FROM	orig_vg250.vg250_1_sta_mview AS vg
 WHERE	gf='3' OR gf='4'
 UNION ALL
 SELECT	'6' ::integer AS id,
 	'1_sta' ::text AS table,
-	'water' ::text AS description,
+	'water' ::text AS descript_nameion,
 	SUM(vg.area_km2) ::integer AS area_sum_km2
 FROM	orig_vg250.vg250_1_sta_mview AS vg
 WHERE	gf='1' OR gf='2';
@@ -388,11 +388,11 @@ ALTER TABLE		calc_ego_substation.ego_deu_substations_ewe_mview OWNER TO oeuser;
 
 
 -- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script,entries,status,timestamp)
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
 	SELECT	'0.1' AS version,
 		'calc_ego_substation' AS schema_name,
 		'ego_deu_substations_ewe_mview' AS table_name,
-		'analyse_eGo_paper_result.sql' AS script,
+		'analyse_eGo_paper_result.sql' AS script_name,
 		COUNT(*)AS entries,
 		'OK' AS status,
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp

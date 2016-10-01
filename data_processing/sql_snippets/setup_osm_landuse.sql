@@ -283,11 +283,11 @@ INSERT INTO	openstreetmap.osm_deu_polygon_urban
 	ORDER BY 	clean.gid;
 
 -- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script,entries,status,timestamp)
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
 	SELECT	'0.1' AS version,
 		'openstreetmap' AS schema_name,
 		'osm_deu_polygon_urban' AS table_name,
-		'setup_osm_landuse.sql' AS script,
+		'setup_osm_landuse.sql' AS script_name,
 		COUNT(geom)AS entries,
 		'OK' AS status,
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
@@ -375,11 +375,11 @@ GRANT ALL ON TABLE 	openstreetmap.osm_deu_polygon_urban_sector_1_residential_mvi
 ALTER TABLE		openstreetmap.osm_deu_polygon_urban_sector_1_residential_mview OWNER TO oeuser;
 
 -- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script,entries,status,timestamp)
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
 	SELECT	'0.1' AS version,
 		'openstreetmap' AS schema_name,
 		'osm_deu_polygon_urban_sector_1_residential_mview' AS table_name,
-		'setup_osm_landuse.sql' AS script,
+		'setup_osm_landuse.sql' AS script_name,
 		COUNT(geom)AS entries,
 		'OK' AS status,
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
@@ -418,11 +418,11 @@ GRANT ALL ON TABLE 	openstreetmap.osm_deu_polygon_urban_sector_2_retail_mview TO
 ALTER TABLE		openstreetmap.osm_deu_polygon_urban_sector_2_retail_mview OWNER TO oeuser;
 
 -- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script,entries,status,timestamp)
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
 	SELECT	'0.1' AS version,
 		'openstreetmap' AS schema_name,
 		'osm_deu_polygon_urban_sector_2_retail_mview' AS table_name,
-		'setup_osm_landuse.sql' AS script,
+		'setup_osm_landuse.sql' AS script_name,
 		COUNT(geom)AS entries,
 		'OK' AS status,
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
@@ -464,11 +464,11 @@ GRANT ALL ON TABLE 	openstreetmap.osm_deu_polygon_urban_sector_3_industrial_mvie
 ALTER TABLE		openstreetmap.osm_deu_polygon_urban_sector_3_industrial_mview OWNER TO oeuser;
 
 -- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script,entries,status,timestamp)
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
 	SELECT	'0.1' AS version,
 		'openstreetmap' AS schema_name,
 		'osm_deu_polygon_urban_sector_3_industrial_mview' AS table_name,
-		'setup_osm_landuse.sql' AS script,
+		'setup_osm_landuse.sql' AS script_name,
 		COUNT(geom)AS entries,
 		'OK' AS status,
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
@@ -506,11 +506,11 @@ GRANT ALL ON TABLE 	openstreetmap.osm_deu_polygon_urban_sector_4_agricultural_mv
 ALTER TABLE		openstreetmap.osm_deu_polygon_urban_sector_4_agricultural_mview OWNER TO oeuser;
 
 -- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script,entries,status,timestamp)
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
 	SELECT	'0.1' AS version,
 		'openstreetmap' AS schema_name,
 		'osm_deu_polygon_urban_sector_4_agricultural_mview' AS table_name,
-		'setup_osm_landuse.sql' AS script,
+		'setup_osm_landuse.sql' AS script_name,
 		COUNT(geom)AS entries,
 		'OK' AS status,
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp

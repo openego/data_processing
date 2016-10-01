@@ -152,11 +152,11 @@ CREATE INDEX  	landuse_industry_geom_idx
     USING     	GIST (geom);
 
 -- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script,entries,status,timestamp)
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
 	SELECT	'0.1' AS version,
 		'calc_ego_loads' AS schema_name,
 		'landuse_industry' AS table_name,
-		'process_eGo_osm_loads_industry.sql' AS script,
+		'process_eGo_osm_loads_industry.sql' AS script_name,
 		COUNT(geom)AS entries,
 		'OK' AS status,
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
@@ -266,16 +266,16 @@ CREATE INDEX  	large_scale_consumer_geom_idx
     USING     	GIST (geom);
 			  
 -- "Create Index GIST (geom_centre)"   (OK!) 2.000ms =0
-CREATE INDEX  	large_scale_consumer_geom_idx
+CREATE INDEX  	large_scale_consumer_geom_centre_idx
     ON    	calc_ego_loads.large_scale_consumer
     USING     	GIST (geom_centre);
 			  
 -- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script,entries,status,timestamp)
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
 	SELECT	'0.1' AS version,
 		'calc_ego_loads' AS schema_name,
 		'large_scale_consumer' AS table_name,
-		'process_eGo_osm_loads_industry.sql' AS script,
+		'process_eGo_osm_loads_industry.sql' AS script_name,
 		COUNT(geom_centre)AS entries,
 		'OK' AS status,
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp

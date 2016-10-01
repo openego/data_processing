@@ -137,11 +137,11 @@ GRANT ALL ON TABLE	orig_vg250.vg250_1_sta_union_mview TO oeuser WITH GRANT OPTIO
 ALTER TABLE		orig_vg250.vg250_1_sta_union_mview OWNER TO oeuser;
 
 -- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script,entries,status,timestamp)
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
 	SELECT	'0.1' AS version,
 		'orig_vg250' AS schema_name,
 		'vg250_1_sta_union_mview' AS table_name,
-		'setup_bkg_vg250.sql' AS script,
+		'setup_bkg_vg250.sql' AS script_name,
 		COUNT(geom)AS entries,
 		'OK' AS status,
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
@@ -209,11 +209,11 @@ GRANT ALL ON TABLE	orig_vg250.vg250_4_krs_mview TO oeuser WITH GRANT OPTION;
 ALTER TABLE		orig_vg250.vg250_4_krs_mview OWNER TO oeuser;
 
 -- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script,entries,status,timestamp)
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
 	SELECT	'0.1' AS version,
 		'orig_vg250' AS schema_name,
 		'vg250_4_krs_mview' AS table_name,
-		'setup_bkg_vg250.sql' AS script,
+		'setup_bkg_vg250.sql' AS script_name,
 		COUNT(geom)AS entries,
 		'OK' AS status,
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
@@ -307,11 +307,11 @@ GRANT ALL ON TABLE	orig_vg250.vg250_6_gem_mview TO oeuser WITH GRANT OPTION;
 ALTER TABLE		orig_vg250.vg250_6_gem_mview OWNER TO oeuser;
 
 -- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script,entries,status,timestamp)
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
 	SELECT	'0.1' AS version,
 		'orig_vg250' AS schema_name,
 		'vg250_6_gem_mview' AS table_name,
-		'setup_bkg_vg250.sql' AS script,
+		'setup_bkg_vg250.sql' AS script_name,
 		COUNT(geom)AS entries,
 		'OK' AS status,
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
@@ -520,11 +520,11 @@ DELETE FROM 	orig_vg250.vg250_6_gem_clean
 WHERE			is_ring IS TRUE;
 
 -- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script,entries,status,timestamp)
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
 	SELECT	'0.1' AS version,
 		'orig_vg250' AS schema_name,
 		'vg250_6_gem_clean' AS table_name,
-		'setup_bkg_vg250.sql' AS script,
+		'setup_bkg_vg250.sql' AS script_name,
 		COUNT(geom)AS entries,
 		'OK' AS status,
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp

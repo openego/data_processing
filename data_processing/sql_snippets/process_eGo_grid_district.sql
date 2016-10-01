@@ -23,7 +23,7 @@ GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA calc_ego_grid_district TO oeuser;
 DROP TABLE IF EXISTS	calc_ego_grid_district.municipalities_subst CASCADE;
 CREATE TABLE		calc_ego_grid_district.municipalities_subst AS
 	SELECT	vg.*
-	FROM	orig_vg250.vg250_6_gem_clean_mview AS vg;
+	FROM	orig_vg250.vg250_6_gem_clean AS vg;
 
 -- Set PK   (OK!) -> 1.000ms =0
 ALTER TABLE calc_ego_grid_district.municipalities_subst
@@ -90,11 +90,11 @@ GRANT ALL ON TABLE 	calc_ego_grid_district.municipalities_subst_1_mview TO oeuse
 ALTER TABLE		calc_ego_grid_district.municipalities_subst_1_mview OWNER TO oeuser;
 
 -- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script,entries,status,timestamp)
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
 	SELECT	'0.1' AS version,
 		'calc_ego_grid_district' AS schema_name,
 		'municipalities_subst_1_mview' AS table_name,
-		'process_eGo_grid_district.sql' AS script,
+		'process_eGo_grid_district.sql' AS script_name,
 		COUNT(geom)AS entries,
 		'OK' AS status,
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
@@ -131,11 +131,11 @@ FROM	(SELECT	mun.id AS id,
 WHERE  	t1.id = t2.id;
 
 -- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script,entries,status,timestamp)
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
 	SELECT	'0.1' AS version,
 		'calc_ego_grid_district' AS schema_name,
 		'municipalities_subst_2_mview' AS table_name,
-		'process_eGo_grid_district.sql' AS script,
+		'process_eGo_grid_district.sql' AS script_name,
 		COUNT(geom)AS entries,
 		'OK' AS status,
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
@@ -196,11 +196,11 @@ FROM	(SELECT	mun.id AS id,
 WHERE  	t1.id = t2.id;
 
 -- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script,entries,status,timestamp)
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
 	SELECT	'0.1' AS version,
 		'calc_ego_grid_district' AS schema_name,
 		'municipalities_subst_3_mview' AS table_name,
-		'process_eGo_grid_district.sql' AS script,
+		'process_eGo_grid_district.sql' AS script_name,
 		COUNT(geom)AS entries,
 		'OK' AS status,
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
@@ -985,11 +985,11 @@ FROM	(SELECT	dis.subst_id,
 WHERE  	t1.subst_id = t2.subst_id;
 
 -- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script,entries,status,timestamp)
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
 	SELECT	'0.1' AS version,
 		'calc_ego_grid_district' AS schema_name,
 		'grid_district' AS table_name,
-		'process_eGo_grid_district.sql' AS script,
+		'process_eGo_grid_district.sql' AS script_name,
 		COUNT(geom)AS entries,
 		'OK' AS status,
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
@@ -1075,11 +1075,11 @@ FROM	(SELECT	mun.id AS id,
 WHERE  	t1.id = t2.id;
 
 -- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script,entries,status,timestamp)
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
 	SELECT	'0.1' AS version,
 		'calc_ego_grid_district' AS schema_name,
 		'grid_district_dump' AS table_name,
-		'process_eGo_grid_district.sql' AS script,
+		'process_eGo_grid_district.sql' AS script_name,
 		COUNT(geom)AS entries,
 		'BUGS' AS status,
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp

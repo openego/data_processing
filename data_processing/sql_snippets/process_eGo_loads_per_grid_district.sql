@@ -311,11 +311,11 @@ FROM    (
 WHERE  	t1.id = t2.id;
 
 -- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script,entries,status,timestamp)
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
 	SELECT	'0.1' AS version,
 		'calc_ego_loads' AS schema_name,
 		'urban_sector_per_grid_district_1_residential' AS table_name,
-		'process_eGo_loads_per_grid_district.sql' AS script,
+		'process_eGo_loads_per_grid_district.sql' AS script_name,
 		COUNT(geom)AS entries,
 		'OK' AS status,
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
@@ -372,11 +372,11 @@ FROM    (
 WHERE  	t1.id = t2.id;
 
 -- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script,entries,status,timestamp)
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
 	SELECT	'0.1' AS version,
 		'calc_ego_loads' AS schema_name,
 		'urban_sector_per_grid_district_2_retail' AS table_name,
-		'process_eGo_loads_per_grid_district.sql' AS script,
+		'process_eGo_loads_per_grid_district.sql' AS script_name,
 		COUNT(geom)AS entries,
 		'OK' AS status,
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
@@ -433,11 +433,11 @@ FROM    (
 WHERE  	t1.id = t2.id;
 
 -- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script,entries,status,timestamp)
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
 	SELECT	'0.1' AS version,
 		'calc_ego_loads' AS schema_name,
 		'urban_sector_per_grid_district_3_industrial' AS table_name,
-		'process_eGo_loads_per_grid_district.sql' AS script,
+		'process_eGo_loads_per_grid_district.sql' AS script_name,
 		COUNT(geom)AS entries,
 		'OK' AS status,
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
@@ -494,11 +494,11 @@ FROM    (
 WHERE  	t1.id = t2.id;
 
 -- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script,entries,status,timestamp)
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
 	SELECT	'0.1' AS version,
 		'calc_ego_loads' AS schema_name,
 		'urban_sector_per_grid_district_4_agricultural' AS table_name,
-		'process_eGo_loads_per_grid_district.sql' AS script,
+		'process_eGo_loads_per_grid_district.sql' AS script_name,
 		COUNT(geom)AS entries,
 		'OK' AS status,
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
@@ -616,11 +616,11 @@ FROM    (
 WHERE  	t1.id = t2.id;
 
 -- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script,entries,status,timestamp)
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
 	SELECT	'0.1' AS version,
 		'calc_ego_loads' AS schema_name,
 		'ego_deu_load_area' AS table_name,
-		'process_eGo_loads_per_grid_district.sql' AS script,
+		'process_eGo_loads_per_grid_district.sql' AS script_name,
 		COUNT(geom)AS entries,
 		'OK' AS status,
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
