@@ -1,64 +1,16 @@
+/* 
+eGo data processing - data setup of BKG vg250
 
----------- ---------- ---------- ---------- ---------- ----------
--- Data Setup vg250   2016-05-20 17:00 36s
----------- ---------- ---------- ---------- ---------- ----------
--- 
--- -- Validate 1_sta (geom)   (OK!) -> 500ms =1
--- DROP VIEW IF EXISTS	orig_vg250.vg250_1_sta_error_geom_view CASCADE;
--- CREATE VIEW		orig_vg250.vg250_1_sta_error_geom_view AS 
--- 	SELECT	test.id AS id,
--- 		test.error AS error,
--- 		reason(ST_IsValidDetail(test.geom)) AS error_reason,
--- 		ST_SetSRID(location(ST_IsValidDetail(test.geom)),31467) ::geometry(Point,31467) AS geom
--- 	FROM	(
--- 		SELECT	source.gid AS id,				-- PK
--- 			ST_IsValid(source.geom) AS error,
--- 			source.geom AS geom
--- 		FROM	orig_vg250.vg250_1_sta AS source	-- Table
--- 		) AS test
--- 	WHERE	test.error = FALSE;
--- 
--- -- Grant oeuser   (OK!) -> 100ms =0
--- GRANT ALL ON TABLE	orig_vg250.vg250_1_sta_error_geom_view TO oeuser WITH GRANT OPTION;
--- ALTER TABLE		orig_vg250.vg250_1_sta_error_geom_view OWNER TO oeuser;
--- 
--- -- Drop empty view   (OK!) -> 100ms =1
--- SELECT f_drop_view('{vg250_1_sta_error_geom_view}', 'orig_vg250');
--- 
--- -- Error   (OK!) 47.000ms =143.293
--- DROP MATERIALIZED VIEW IF EXISTS	orig_vg250.vg250_1_sta_error_geom_mview CASCADE;
--- CREATE MATERIALIZED VIEW		orig_vg250.vg250_1_sta_error_geom_mview AS 
--- 	SELECT	test.id AS id,
--- 		test.error AS error,
--- 		test.error_reason AS error_reason,
--- 		ST_SETSRID(location(ST_IsValidDetail(test.geom)),3035) ::geometry(Point,3035) AS geom
--- 	FROM	(
--- 		SELECT	source.gid AS id,				-- PK
--- 			ST_IsValid(source.geom) AS error,
--- 			reason(ST_IsValidDetail(source.geom)) AS error_reason,
--- 			source.geom AS geom
--- 		FROM	orig_vg250.vg250_1_sta AS source	-- Table
--- 		) AS test
--- 	WHERE	test.error = FALSE;
--- 
--- -- Create Index (gid)   (OK!) -> 100ms =0
--- CREATE UNIQUE INDEX  	vg250_1_sta_error_geom_mview_id_idx
--- 		ON	orig_vg250.vg250_1_sta_error_geom_mview (id);
--- 
--- -- Create Index GIST (geom)   (OK!) -> 100ms =0
--- CREATE INDEX  	vg250_1_sta_error_geom_mview_geom_idx
--- 	ON	orig_vg250.vg250_1_sta_error_geom_mview
--- 	USING	GIST (geom);
--- 
--- -- Grant oeuser   (OK!) -> 100ms =0
--- GRANT ALL ON TABLE	orig_vg250.vg250_1_sta_error_geom_mview TO oeuser WITH GRANT OPTION;
--- ALTER TABLE		orig_vg250.vg250_1_sta_error_geom_mview OWNER TO oeuser;
--- DROP VIEW IF EXISTS	orig_vg250.vg250_1_sta_error_geom_view CASCADE;
+Process given administrative borders (vg250).
+Create mviews with transformed (EPSG:3035) and corrected geometries.
+Municipalities / Gemeinden are fragmented and cleaned from ringholes (vg250_6_gem_clean).
+ */
 
 
----------- ---------- ----------
--- orig_vg250.vg250_1_sta_mview - With tiny buffer because of intersection (in official data)
----------- ---------- ----------
+-- State borders - orig_vg250.vg250_1_sta_mview
+/*
+With tiny buffer because of intersection (in official data).
+ */
 
 -- Transform vg250 State   (OK!) -> 500ms =11
 DROP MATERIALIZED VIEW IF EXISTS	orig_vg250.vg250_1_sta_mview CASCADE;
@@ -84,29 +36,64 @@ CREATE INDEX  	vg250_1_sta_mview_geom_idx
 GRANT ALL ON TABLE	orig_vg250.vg250_1_sta_mview TO oeuser WITH GRANT OPTION;
 ALTER TABLE		orig_vg250.vg250_1_sta_mview OWNER TO oeuser;
 
----------- ---------- ----------
--- 
--- -- Validate (geom)   (OK!) -> 500ms =1
--- DROP VIEW IF EXISTS	orig_vg250.vg250_1_sta_mview_error_geom_view CASCADE;
--- CREATE VIEW		orig_vg250.vg250_1_sta_mview_error_geom_view AS 
--- 	SELECT	test.id AS id,
--- 		test.error AS error,
--- 		reason(ST_IsValidDetail(test.geom)) AS error_reason,
--- 		ST_SetSRID(location(ST_IsValidDetail(test.geom)),3035) ::geometry(Point,3035) AS error_location
--- 	FROM	(
--- 		SELECT	source.gid AS id,				-- PK
--- 			ST_IsValid(source.geom) AS error,
--- 			source.geom ::geometry(MultiPolygon,3035) AS geom
--- 		FROM	orig_vg250.vg250_1_sta_mview AS source	-- Table
--- 		) AS test
--- 	WHERE	test.error = FALSE;
--- 
--- -- Grant oeuser   (OK!) -> 100ms =0
--- GRANT ALL ON TABLE	orig_vg250.vg250_1_sta_mview_error_geom_view TO oeuser WITH GRANT OPTION;
--- ALTER TABLE		orig_vg250.vg250_1_sta_mview_error_geom_view OWNER TO oeuser;
--- 
--- -- Drop empty view   (OK!) -> 100ms =1
--- SELECT f_drop_view('{vg250_1_sta_mview_error_geom_view}', 'orig_vg250');
+
+/* 
+-- Validate mview (geom)   (OK!) -> 500ms =1
+DROP VIEW IF EXISTS	orig_vg250.vg250_1_sta_mview_error_geom_view CASCADE;
+CREATE VIEW		orig_vg250.vg250_1_sta_mview_error_geom_view AS 
+	SELECT	test.id AS id,
+		test.error AS error,
+		reason(ST_IsValidDetail(test.geom)) AS error_reason,
+		ST_SetSRID(location(ST_IsValidDetail(test.geom)),3035) ::geometry(Point,3035) AS error_location
+	FROM	(
+		SELECT	source.gid AS id,				-- PK
+			ST_IsValid(source.geom) AS error,
+			source.geom ::geometry(MultiPolygon,3035) AS geom
+		FROM	orig_vg250.vg250_1_sta_mview AS source	-- Table
+		) AS test
+	WHERE	test.error = FALSE;
+
+-- Grant oeuser   (OK!) -> 100ms =0
+GRANT ALL ON TABLE	orig_vg250.vg250_1_sta_mview_error_geom_view TO oeuser WITH GRANT OPTION;
+ALTER TABLE		orig_vg250.vg250_1_sta_mview_error_geom_view OWNER TO oeuser;
+
+-- Drop empty view   (OK!) -> 100ms =1
+SELECT f_drop_view('{vg250_1_sta_mview_error_geom_view}', 'orig_vg250');
+ */
+
+
+/* 
+-- Find errors	(OK!) 47.000ms =143.293
+DROP MATERIALIZED VIEW IF EXISTS	orig_vg250.vg250_1_sta_error_geom_mview CASCADE;
+CREATE MATERIALIZED VIEW		orig_vg250.vg250_1_sta_error_geom_mview AS 
+	SELECT	test.id AS id,
+		test.error AS error,
+		test.error_reason AS error_reason,
+		ST_SETSRID(location(ST_IsValidDetail(test.geom)),3035) ::geometry(Point,3035) AS geom
+	FROM	(
+		SELECT	source.gid AS id,				-- PK
+			ST_IsValid(source.geom) AS error,
+			reason(ST_IsValidDetail(source.geom)) AS error_reason,
+			source.geom AS geom
+		FROM	orig_vg250.vg250_1_sta AS source	-- Table
+		) AS test
+	WHERE	test.error = FALSE;
+
+-- Create Index (gid)   (OK!) -> 100ms =0
+CREATE UNIQUE INDEX  	vg250_1_sta_error_geom_mview_id_idx
+		ON	orig_vg250.vg250_1_sta_error_geom_mview (id);
+
+-- Create Index GIST (geom)   (OK!) -> 100ms =0
+CREATE INDEX  	vg250_1_sta_error_geom_mview_geom_idx
+	ON	orig_vg250.vg250_1_sta_error_geom_mview
+	USING	GIST (geom);
+
+-- Grant oeuser   (OK!) -> 100ms =0
+GRANT ALL ON TABLE	orig_vg250.vg250_1_sta_error_geom_mview TO oeuser WITH GRANT OPTION;
+ALTER TABLE		orig_vg250.vg250_1_sta_error_geom_mview OWNER TO oeuser;
+DROP VIEW IF EXISTS	orig_vg250.vg250_1_sta_error_geom_view CASCADE;
+ */
+
 
 ---------- ---------- ----------
 -- orig_vg250.vg250_1_sta_union_mview
@@ -563,3 +550,68 @@ SELECT	'water' ::text AS id,
 	SUM(vg.area_km2) ::integer AS area_sum_km2
 FROM	orig_vg250.vg250_1_sta_mview AS vg
 WHERE	gf='1' OR gf='2';
+
+
+
+-- COMMENTS
+
+-- Set comment on table
+COMMENT ON MATERIALIZED VIEW orig_vg250.vg250_1_sta_union_mview IS
+'{
+"Name": "BKG - Verwaltungsgebiete 1:250.000 / Administrative borders - State border (union)",
+"Source": [{
+                  "Name": "Dienstleistungszentrum des Bundes für Geoinformation und Geodäsie - Open Data",
+                  "URL":  "http://www.geodatenzentrum.de/geodaten/gdz_rahmen.gdz_div?gdz_spr=deu&gdz_akt_zeile=5&gdz_anz_zeile=1&gdz_unt_zeile=14&gdz_user_id=0" }],
+"Reference date": "2000-2016",
+"Date of collection": "2016-10-01",
+"Original file": "vg250_0101.utm32s.shape.ebenen.zip",
+"Spatial resolution": ["Germany"],
+"Description": ["Der Datenbestand umfasst die Verwaltungseinheiten der hierarchischen Verwaltungsebenen vom Staat bis zu den Gemeinden"],
+
+"Column": [
+                {"Name": "id",
+                "Description": "Unique identifier",
+                "Unit": "" },
+					
+                {"Name": "version",
+                "Description": "Scenario version",
+                "Unit": "" },
+
+                {"Name": "schema_name",
+                "Description": "Schema name",
+                "Unit": "" },
+					
+		{"Name": "table_name",
+                "Description": "Table name",
+                "Unit": "" },
+					
+		{"Name": "script_name",
+                "Description": "Script name",
+                "Unit": "" },
+					
+		{"Name": "entries",
+                "Description": "Number of rows",
+                "Unit": "" },
+			
+		{"Name": "status",
+                "Description": "Current status and comments",
+                "Unit": "" },
+			
+		{"Name": "timestamp",
+                "Description": "Timestamp (Berlin)",
+                "Unit": "" }],
+
+"Changes":[
+                {"Name": "Ludwig Hülk",
+                "Mail": "ludwig.huelk@rl-institut.de",
+                "Date":  "01.10.2016",
+                "Comment": "Created table" }],
+
+"ToDo": ["Table fields in English"],
+"Licence": ["Geodatenzugangsgesetz (GeoZG)"],
+"Instructions for proper use": ["Dieser Datenbestand steht über Geodatendienste gemäß Geodatenzugangsgesetz (GeoZG) (http://www.geodatenzentrum.de/auftrag/pdf/geodatenzugangsgesetz.pdf) für die kommerzielle und nicht kommerzielle Nutzung geldleistungsfrei zum Download und zur Online-Nutzung zur Verfügung. Die Nutzung der Geodaten und Geodatendienste wird durch die Verordnung zur Festlegung der Nutzungsbestimmungen für die Bereitstellung von Geodaten des Bundes (GeoNutzV) (http://www.geodatenzentrum.de/auftrag/pdf/geonutz.pdf) geregelt. Insbesondere hat jeder Nutzer den Quellenvermerk zu allen Geodaten, Metadaten und Geodatendiensten erkennbar und in optischem Zusammenhang zu platzieren. Veränderungen, Bearbeitungen, neue Gestaltungen oder sonstige Abwandlungen sind mit einem Veränderungshinweis im Quellenvermerk zu versehen. Quellenvermerk und Veränderungshinweis sind wie folgt zu gestalten. Bei der Darstellung auf einer Webseite ist der Quellenvermerk mit der URL http://www.bkg.bund.de zu verlinken. © GeoBasis-DE / BKG <Jahr des letzten Datenbezugs> © GeoBasis-DE / BKG <Jahr des letzten Datenbezugs> (Daten verändert) Beispiel: © GeoBasis-DE / BKG 2013"]
+}';
+
+-- Select description
+SELECT obj_description('orig_vg250.vg250_1_sta_union_mview'::regclass)::json
+

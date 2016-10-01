@@ -19,7 +19,7 @@ CREATE INDEX geo_pot_area_dump_idx
   USING gist
   (geom);
 
--- Validate (geom)   (OK!) -> 22.000ms =0
+/* -- Validate (geom)   (OK!) -> 22.000ms =0
 DROP VIEW IF EXISTS	calc_ego_re.geo_pot_area_dump_error_geom_view CASCADE;
 CREATE VIEW		calc_ego_re.geo_pot_area_dump_error_geom_view AS 
 	SELECT	test.id,
@@ -35,7 +35,7 @@ CREATE VIEW		calc_ego_re.geo_pot_area_dump_error_geom_view AS
 	WHERE	test.error = FALSE;
 
 -- Drop empty view   (OK!) -> 100ms =1
-SELECT f_drop_view('{geo_pot_area_dump_error_geom_view}', 'calc_ego_re');
+SELECT f_drop_view('{geo_pot_area_dump_error_geom_view}', 'calc_ego_re'); */
 
 
 -- -- -- 
