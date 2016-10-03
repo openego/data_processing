@@ -95,7 +95,7 @@ for it, row in annual_demand_df.iterrows():
     active_power = elec_demand * 1e3
 
     # derive reactive power from active power
-    reactive_power = sqrt((active_power / 0.95)**2 - active_power**2)
+    reactive_power = ((active_power / 0.95)**2 - active_power**2).apply(sqrt)
 
     # Write to database
     demand2db = orm_demand(id=it,
