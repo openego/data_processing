@@ -9,7 +9,7 @@ setup(
     author='open_eGo development group',
     author_email='',
     description='Data processing related to the research project open_eGo',
-    requires=[
+    install_requires=[
         'pandas',
         'workalendar',
         'oemof.db',
