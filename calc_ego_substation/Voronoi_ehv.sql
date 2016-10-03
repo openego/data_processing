@@ -1,4 +1,4 @@
-----------------------------------------------------------
+﻿----------------------------------------------------------
 -- VORONOI with  220 and 380 kV substations
 ----------------------------------------------------------
 
@@ -6,7 +6,7 @@
 -- Add Dummy points 
 INSERT INTO calc_ego_substation.ego_deu_substations_ehv (name, point, id, otg_id)
 SELECT 'DUMMY', ST_TRANSFORM(geom,4326), subst_id, subst_id
-FROM calc_ego_substation.substation_dummy;
+FROM calc_ego_substation.substations_dummy;
 
 
 -- Execute voronoi algorithm with 220 and 380 kV substations
