@@ -105,7 +105,7 @@ for it, row in annual_demand_df.iterrows():
 
     session.commit()
 
-# grant access to db_group
+    # grant access to db_group
     db.tools.grant_db_access(conn, schema, target_table, db_group)
 
     # change owner of table to db_group
