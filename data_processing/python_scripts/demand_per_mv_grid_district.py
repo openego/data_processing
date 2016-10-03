@@ -99,8 +99,8 @@ for it, row in annual_demand_df.iterrows():
 
     # Write to database
     demand2db = orm_demand(id=it,
-                           active_power=active_power.tolist(),
-                           reactive_power=reactive_power.tolist())
+                           p_set=active_power.tolist(),
+                           q_set=reactive_power.tolist())
     session.add(demand2db)
 
     session.commit()
