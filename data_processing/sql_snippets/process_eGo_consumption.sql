@@ -151,6 +151,10 @@ FROM
 WHERE
 sub.id = a.id;
 
+-- Grant oeuser   (OK!) -> 100ms =0
+GRANT ALL ON TABLE 	calc_ego_loads.ego_deu_consumption TO oeuser WITH GRANT OPTION;
+ALTER TABLE		calc_ego_loads.ego_deu_consumption OWNER TO oeuser;
+
 -- Scenario eGo data processing
 INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
 	SELECT	'0.1' AS version,
