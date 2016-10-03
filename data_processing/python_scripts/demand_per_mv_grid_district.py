@@ -3,7 +3,7 @@
 from demandlib import bdew as bdew, particular_profiles as profiles
 from egoio.db_tables.calc_ego_loads import EgoDeuConsumptionArea as orm_loads,\
     EgoDemandPerTransitionPoint as orm_demand
-from oemof import db
+from egoio.tools import db
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import func
 from workalendar.europe import Germany
@@ -44,7 +44,9 @@ holidays = dict(cal.holidays(2010))
 #     datetime.date(2010, 12, 26): 'Second Christmas Day'}
 
 # retrieve sectoral demand from oedb
-conn = db.connection(section='oedb')
+
+# get database connection
+conn = io.oedb_session(section='oedb')
 Session = sessionmaker(bind=conn)
 session = Session()
 
@@ -106,13 +108,13 @@ for it, row in annual_demand_df.iterrows():
     session.commit()
 
     # grant access to db_group
-    db.tools.grant_db_access(conn, schema, target_table, db_group)
+    db.grant_db_access(conn, schema, target_table, db_group)
 
     # change owner of table to db_group
-    db.tools.change_owner_to(conn, schema, target_table, db_group)
+    db.change_owner_to(conn, schema, target_table, db_group)
 
-    # add primary key constraint on id column
-    db.tools.add_primary_key(conn, schema, target_table, 'id')
+    # # add primary key constraint on id column
+    # db.add_primary_key(conn, schema, target_table, 'id')
 
     # create metadata json str
     json_str = metadata.create_metadata_json(
