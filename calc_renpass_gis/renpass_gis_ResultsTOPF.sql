@@ -6,16 +6,18 @@ Author: Martin
 
 -- DROP materialized view calc_renpass_gis.pf_pp_by_source_aggr_id
 -- aggregate nominal capacity on aggr_id from powerflow generators, keeping the source
+drop materialized view if exists calc_renpass_gis.pf_pp_by_source_aggr_id;
 create materialized view calc_renpass_gis.pf_pp_by_source_aggr_id
 as 
 select 
 SQ.aggr_id, SQ.source, SQ.p_nom / sum(SQ.p_nom) over (partition by SQ.source) as fraction_of_installed
 from
-(select aggr_id, source, sum(p_nom) as p_nom from orig_geo_powerplants.pf_generator_single group by aggr_id, source) SQ 
+(select aggr_id, source, sum(p_nom) as p_nom from orig_geo_powerplants.pf_generator_single group by aggr_id, source) SQ;
 
  
 -- DROP materialized view calc_renpass_gis.pp_feedin_by_pf_source
 -- map renpassG!S power sources to pf generators, aggr on fuel types, neglect efficiency classes
+drop materialized view if exists calc_renpass_gis.pp_feedin_by_pf_source;
 create materialized view calc_renpass_gis.pp_feedin_by_pf_source
 as
 select 
@@ -49,7 +51,7 @@ from
 	and ((obj_label like '%storage%' and type = 'output') or (obj_label not like '%storage%' and type = 'input'))
 ) as SQ
 where SQ.source is not null
-group by SQ.source, SQ.datetime 
+group by SQ.source, SQ.datetime;
 
 -- construct array per aggr_id according to source timeseries
 Insert into calc_ego_hv_powerflow.generator_pq_set (scn_name, generator_id, temp_id, p_set)
