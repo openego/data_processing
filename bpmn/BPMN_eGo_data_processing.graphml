@@ -1287,7 +1287,7 @@ dea_allocation_methods.sql</y:NodeLabel>
               <y:Geometry height="55.0" width="35.0" x="3400.878800188235" y="1422.5000000000002"/>
               <y:Fill color="#FFFFFF" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
-              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="custom" textColor="#000000" visible="true" width="69.37890625" x="-17.189453125" y="59.0">calc_ego_re<y:LabelModel>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="custom" textColor="#000000" visible="true" width="177.455078125" x="-71.2275390625" y="59.0">model_draft.eGo_dea_allocation<y:LabelModel>
                   <y:SmartNodeLabelModel distance="4.0"/>
                 </y:LabelModel>
                 <y:ModelParameter>
@@ -1310,7 +1310,7 @@ dea_allocation_methods.sql</y:NodeLabel>
               <y:Geometry height="55.0" width="35.0" x="3400.878800188235" y="1122.5"/>
               <y:Fill color="#FFFFFFE6" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
-              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="custom" textColor="#000000" visible="true" width="61.3515625" x="-13.17578125" y="-22.701171875">Kraftwerke<y:LabelModel>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="custom" textColor="#000000" visible="true" width="255.501953125" x="-110.2509765625" y="-22.701171875">supply.ego_renewable_power_plants_germany<y:LabelModel>
                   <y:SmartNodeLabelModel distance="4.0"/>
                 </y:LabelModel>
                 <y:ModelParameter>
@@ -1419,7 +1419,8 @@ data_processing.sql</y:NodeLabel>
               <y:Geometry height="55.0" width="35.0" x="2673.149894975779" y="530.0000000000002"/>
               <y:Fill color="#FFFFFFE6" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
-              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="custom" textColor="#000000" visible="true" width="219.490234375" x="-92.2451171875" y="-22.701171875">orig_destatis.zensus_population_per_ha<y:LabelModel>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="33.40234375" modelName="custom" textColor="#000000" visible="true" width="244.1640625" x="-104.58203125" y="-37.40234375">orig_destatis.ego_deu_loads_zensus_cluster
+openstreetmap.ego_deu_loads_osm<y:LabelModel>
                   <y:SmartNodeLabelModel distance="4.0"/>
                 </y:LabelModel>
                 <y:ModelParameter>
@@ -1643,7 +1644,7 @@ orig_ego_consumption.lak_consumption_per_district<y:LabelModel>
           <data key="d5"/>
           <data key="d6">
             <y:GenericNode configuration="com.yworks.flowchart.cloud">
-              <y:Geometry height="106.4902178546713" width="170.3843485674741" x="1864.8078257162629" y="946.7548910726643"/>
+              <y:Geometry height="106.4902178546713" width="170.3843485674741" x="1864.8078257162629" y="896.7548910726643"/>
               <y:Fill color="#E8EEF7" color2="#FF6600" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="custom" textColor="#000000" visible="true" width="96.05078125" x="37.16678365873713" y="43.894522989835764">zusammenfügen!<y:LabelModel>

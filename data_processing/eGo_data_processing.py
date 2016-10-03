@@ -40,7 +40,7 @@ sql_snippets = [
     
     # 'setup_eGo_wpa_per_grid_district.sql',
     # 'setup_eGo_lattice_per_area.sql',
-    # 'process_eGo_dea_allocation_methods.sql'
+     'process_eGo_dea_allocation_methods.sql'
     ]
 
 python_scripts = [
