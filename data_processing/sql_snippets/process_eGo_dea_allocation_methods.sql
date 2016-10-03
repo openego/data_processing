@@ -90,7 +90,7 @@ SELECT DISTINCT ON (dea.id)
 	ST_Distance(dea.geom,sub.geom) AS distance,
 	dea.geom ::geometry(Point,3035) AS geom
 FROM 	model_draft.eGo_dea_allocation_out_mview AS dea,
-	calc_ego_substation.substation_110 AS sub
+	calc_ego_substation.substations AS sub
 WHERE 	ST_DWithin(dea.geom,sub.geom, 100000) -- In a 50 km radius
 ORDER BY 	dea.id, ST_Distance(dea.geom,sub.geom);
 
