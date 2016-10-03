@@ -1,4 +1,4 @@
-------------
+﻿------------
 -- Create a table that contains all generators (RE and conventional) but no duplicates. 
 ------------
 
@@ -20,6 +20,8 @@ ALTER TABLE orig_geo_powerplants.generators_total
 	
 DELETE FROM orig_geo_powerplants.generators_total; 
 
+DROP INDEX IF EXISTS orig_geo_powerplants.generators_total_idx;
+
 INSERT INTO orig_geo_powerplants.generators_total (re_id, geom) 
 	SELECT id, geom
 	FROM orig_geo_powerplants.proc_renewable_power_plants_germany
@@ -29,7 +31,7 @@ INSERT INTO orig_geo_powerplants.generators_total (conv_id, geom)
 	SELECT gid, geom
 	FROM orig_geo_powerplants.proc_power_plant_germany
 	WHERE eeg NOT LIKE 'yes'; -- Duplicates that already occur in the eeg-list are ignored 
-
+ 
 CREATE INDEX generators_total_idx
   ON orig_geo_powerplants.generators_total
   USING gist
