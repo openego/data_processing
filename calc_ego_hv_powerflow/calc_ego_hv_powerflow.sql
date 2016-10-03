@@ -1,4 +1,4 @@
-DROP SCHEMA IF EXISTS calc_ego_hv_powerflow;
+﻿DROP SCHEMA IF EXISTS calc_ego_hv_powerflow CASCADE;
 CREATE SCHEMA calc_ego_hv_powerflow
   AUTHORIZATION oeuser;
 
