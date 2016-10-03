@@ -39,12 +39,12 @@ sql_snippets = [
     # 'analyse_eGo_paper_result.sql',
     
     # 'setup_eGo_wpa_per_grid_district.sql',
-    'setup_eGo_lattice_per_area.sql',
+    # 'setup_eGo_lattice_per_area.sql',
     # 'process_eGo_dea_allocation_methods.sql'
     ]
 
 python_scripts = [
-   # 'demand_per_mv_grid_district.py',
+   'demand_per_mv_grid_district.py',
    # 'peak_load_per_load_area.py'
 ]
 
@@ -71,13 +71,13 @@ conn.close()
 # iterate over list of python scripts and execute
 for script in python_scripts:
     # timing and logging
-    script_time = time.localtime()
+    script_time = time.time()
     logger.info("Execute '{}' ...".format(script))
     filename = os.path.join(script_dir, script)
     script_str = open(filename, "rb").read()
 
     # execute desired sql snippet
-    exec(compile(script_str, filename, 'exec'), globals, locals)
+    exec(compile(script_str, filename, 'exec'))
 
     # inform the user
     logger.info('...successfully done in {:.2f} seconds.'.format(
