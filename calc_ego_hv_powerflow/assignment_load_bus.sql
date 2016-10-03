@@ -1,6 +1,6 @@
-/* DROP TABLE IF EXISTS orig_geo_powerplants.loads_total;
+/* DROP TABLE IF EXISTS calc_ego_loads.loads_total;
 
-CREATE TABLE orig_geo_powerplants.loads_total
+CREATE TABLE calc_ego_loads.loads_total
 (
   un_id serial NOT NULL, 
   ssc_id integer, 
@@ -9,21 +9,21 @@ CREATE TABLE orig_geo_powerplants.loads_total
   CONSTRAINT generators_total_pkey PRIMARY KEY (un_id)
 );
 
-ALTER TABLE orig_geo_powerplants.loads_total
+ALTER TABLE calc_ego_loads.loads_total
 	OWNER TO oeuser; */
 	
-DELETE FROM orig_geo_powerplants.loads_total; 
+DELETE FROM calc_ego_loads.loads_total; 
 
-INSERT INTO orig_geo_powerplants.loads_total (ssc_id, geom) 
+INSERT INTO calc_ego_loads.loads_total (ssc_id, geom) 
 	SELECT id, geom
 	FROM calc_ego_loads.ego_deu_consumption; 
 
-INSERT INTO orig_geo_powerplants.loads_total (lsc_id, geom) 
+INSERT INTO calc_ego_loads.loads_total (lsc_id, geom) 
 	SELECT id, geom
 	FROM calc_ego_loads.large_scale_consumer; 
 
 CREATE INDEX loads_total_idx
-  ON orig_geo_powerplants.loads_total
+  ON calc_ego_loads.loads_total
   USING gist
   (geom);
 
@@ -67,15 +67,15 @@ UPDATE calc_ego_loads.ego_deu_consumption a
 
 UPDATE calc_ego_loads.ego_deu_consumption a
 	SET un_id = b.un_id 
-	FROM orig_geo_powerplants.loads_total b
+	FROM calc_ego_loads.loads_total b
 	WHERE a.id = b.ssc_id; 
 
 -- Identify corresponding bus for large scale consumer (lsc) with the help of ehv-voronoi and add un_id
 
 ALTER TABLE calc_ego_loads.large_scale_consumer
 	ADD COLUMN subst_id bigint,
-	ADD COLUMN otg_id bigint
-	ADD COLUMN un_id;
+	ADD COLUMN otg_id bigint,
+	ADD COLUMN un_id bigint;
 
 UPDATE calc_ego_loads.large_scale_consumer a
 	SET subst_id = b.subst_id
@@ -89,7 +89,7 @@ UPDATE calc_ego_loads.large_scale_consumer a
 
 UPDATE calc_ego_loads.large_scale_consumer a
 	SET un_id = b.un_id 
-	FROM orig_geo_powerplants.loads_total b
+	FROM calc_ego_loads.loads_total b
 	WHERE a.id = b.lsc_id; 
 
 -------------
