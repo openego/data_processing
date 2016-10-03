@@ -1,11 +1,15 @@
 
 
 
-DROP TABLE IF EXISTS 	calc_ego_loads.ego_deu_consumption;
+DROP TABLE IF EXISTS 	calc_ego_loads.ego_deu_consumption CASCADE;
 CREATE TABLE 		calc_ego_loads.ego_deu_consumption
 (
 	id integer NOT NULL,
 	subst_id integer,
+ 	sector_area_residential numeric,
+	sector_area_retail numeric,
+	sector_area_industrial numeric,
+	sector_area_agricultural numeric,
 	sector_consumption_residential numeric,
 	sector_consumption_retail numeric,
 	sector_consumption_industrial numeric,
@@ -14,9 +18,15 @@ CREATE TABLE 		calc_ego_loads.ego_deu_consumption
 );
 
 -- Set ID   (OK!) -> 100ms =206.846
-INSERT INTO 	calc_ego_loads.ego_deu_consumption (id,subst_id)
+INSERT INTO 	calc_ego_loads.ego_deu_consumption (id,subst_id,
+													sector_area_residential,sector_area_retail,
+													sector_area_industrial,sector_area_agricultural)
 	SELECT 	id,
-		subst_id
+			subst_id,
+			sector_area_residential,
+			sector_area_retail,
+			sector_area_industrial,
+			sector_area_agricultural
 	FROM 	calc_ego_loads.ego_deu_load_area;
 	
 
@@ -141,6 +151,16 @@ FROM
 WHERE
 sub.id = a.id;
 
+-- Scenario eGo data processing
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
+	SELECT	'0.1' AS version,
+		'calc_ego_loads' AS schema_name,
+		'ego_deu_consumption' AS table_name,
+		'process_eGo_consumption.sql' AS script_name,
+		COUNT(id)AS entries,
+		'OK' AS status,
+		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
+	FROM	calc_ego_loads.ego_deu_consumption;
 
 ---------- ---------- ----------
 

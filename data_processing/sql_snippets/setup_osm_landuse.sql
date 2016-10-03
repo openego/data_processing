@@ -28,6 +28,7 @@
 ---------- ---------- ----------
 -- "Filter OSM Urban Landuse"
 ---------- ---------- ----------
+-- ToDo: change "urban" to electrified
 
 -- "Filter Urban"   (OK!) -> 35.000ms =494.696
 DROP TABLE IF EXISTS	openstreetmap.osm_deu_polygon_urban CASCADE;
@@ -281,7 +282,18 @@ INSERT INTO	openstreetmap.osm_deu_polygon_urban
 	FROM	openstreetmap.osm_deu_polygon_urban_vg250_clean_cut_multi_mview AS clean
 	ORDER BY 	clean.gid;
 
-
+-- Scenario eGo data processing
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
+	SELECT	'0.1' AS version,
+		'openstreetmap' AS schema_name,
+		'osm_deu_polygon_urban' AS table_name,
+		'setup_osm_landuse.sql' AS script_name,
+		COUNT(geom)AS entries,
+		'OK' AS status,
+		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
+	FROM	openstreetmap.osm_deu_polygon_urban;
+	
+	
 ---------- ---------- ----------
 -- "(Geo) Data Validation"
 ---------- ---------- ----------
@@ -362,6 +374,17 @@ CREATE INDEX  	osm_deu_polygon_urban_sector_1_residential_mview_geom_idx
 GRANT ALL ON TABLE 	openstreetmap.osm_deu_polygon_urban_sector_1_residential_mview TO oeuser WITH GRANT OPTION;
 ALTER TABLE		openstreetmap.osm_deu_polygon_urban_sector_1_residential_mview OWNER TO oeuser;
 
+-- Scenario eGo data processing
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
+	SELECT	'0.1' AS version,
+		'openstreetmap' AS schema_name,
+		'osm_deu_polygon_urban_sector_1_residential_mview' AS table_name,
+		'setup_osm_landuse.sql' AS script_name,
+		COUNT(geom)AS entries,
+		'OK' AS status,
+		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
+	FROM	openstreetmap.osm_deu_polygon_urban_sector_1_residential_mview;
+
 ---------- ---------- ----------
 
 -- "Sector 2. Retail"
@@ -394,6 +417,17 @@ CREATE INDEX  	osm_deu_polygon_urban_sector_2_retail_mview_geom_idx
 GRANT ALL ON TABLE 	openstreetmap.osm_deu_polygon_urban_sector_2_retail_mview TO oeuser WITH GRANT OPTION;
 ALTER TABLE		openstreetmap.osm_deu_polygon_urban_sector_2_retail_mview OWNER TO oeuser;
 
+-- Scenario eGo data processing
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
+	SELECT	'0.1' AS version,
+		'openstreetmap' AS schema_name,
+		'osm_deu_polygon_urban_sector_2_retail_mview' AS table_name,
+		'setup_osm_landuse.sql' AS script_name,
+		COUNT(geom)AS entries,
+		'OK' AS status,
+		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
+	FROM	openstreetmap.osm_deu_polygon_urban_sector_2_retail_mview;
+	
 ---------- ---------- ----------
 
 -- "Sector 3. Industrial"
@@ -429,6 +463,17 @@ CREATE INDEX  	osm_deu_polygon_urban_sector_3_industrial_mview_geom_idx
 GRANT ALL ON TABLE 	openstreetmap.osm_deu_polygon_urban_sector_3_industrial_mview TO oeuser WITH GRANT OPTION;
 ALTER TABLE		openstreetmap.osm_deu_polygon_urban_sector_3_industrial_mview OWNER TO oeuser;
 
+-- Scenario eGo data processing
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
+	SELECT	'0.1' AS version,
+		'openstreetmap' AS schema_name,
+		'osm_deu_polygon_urban_sector_3_industrial_mview' AS table_name,
+		'setup_osm_landuse.sql' AS script_name,
+		COUNT(geom)AS entries,
+		'OK' AS status,
+		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
+	FROM	openstreetmap.osm_deu_polygon_urban_sector_3_industrial_mview;
+	
 ---------- ---------- ----------
 
 -- "Sector 4. Agricultural"
@@ -460,6 +505,17 @@ CREATE INDEX  	osm_deu_polygon_urban_sector_4_agricultural_mview_geom_idx
 GRANT ALL ON TABLE 	openstreetmap.osm_deu_polygon_urban_sector_4_agricultural_mview TO oeuser WITH GRANT OPTION;
 ALTER TABLE		openstreetmap.osm_deu_polygon_urban_sector_4_agricultural_mview OWNER TO oeuser;
 
+-- Scenario eGo data processing
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
+	SELECT	'0.1' AS version,
+		'openstreetmap' AS schema_name,
+		'osm_deu_polygon_urban_sector_4_agricultural_mview' AS table_name,
+		'setup_osm_landuse.sql' AS script_name,
+		COUNT(geom)AS entries,
+		'OK' AS status,
+		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
+	FROM	openstreetmap.osm_deu_polygon_urban_sector_4_agricultural_mview;
+	
 ---------- ---------- ----------
 
 -- -- "Validate (geom)"   (OK!) -> 22.000ms =0

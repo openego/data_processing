@@ -2,7 +2,7 @@
 ---------- --SKRIPT-- OK! 7min
 ---------- ---------- ----------
 
--- Create schemas for open_eGo
+/* -- Create schemas for open_eGo
 DROP SCHEMA IF EXISTS	calc_ego_grid_district CASCADE;
 CREATE SCHEMA 		calc_ego_grid_district;
 
@@ -14,7 +14,7 @@ ALTER DEFAULT PRIVILEGES IN SCHEMA calc_ego_grid_district GRANT ALL ON FUNCTIONS
 -- Grant all in schema
 GRANT ALL ON SCHEMA 	calc_ego_grid_district TO oeuser WITH GRANT OPTION;
 GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA calc_ego_grid_district TO oeuser;
-
+ */
 ---------- ---------- ----------
 -- Substations per Municipalities
 ---------- ---------- ----------
@@ -23,7 +23,7 @@ GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA calc_ego_grid_district TO oeuser;
 DROP TABLE IF EXISTS	calc_ego_grid_district.municipalities_subst CASCADE;
 CREATE TABLE		calc_ego_grid_district.municipalities_subst AS
 	SELECT	vg.*
-	FROM	orig_vg250.vg250_6_gem_clean_mview AS vg;
+	FROM	orig_vg250.vg250_6_gem_clean AS vg;
 
 -- Set PK   (OK!) -> 1.000ms =0
 ALTER TABLE calc_ego_grid_district.municipalities_subst
@@ -46,7 +46,7 @@ SET  	subst_sum = t2.subst_sum
 FROM	(SELECT	mun.id AS id,
 		COUNT(sub.geom)::integer AS subst_sum
 	FROM	calc_ego_grid_district.municipalities_subst AS mun,
-		calc_ego_substation.substation_110 AS sub
+		calc_ego_substation.ego_deu_substations AS sub
 	WHERE  	mun.geom && sub.geom AND
 		ST_CONTAINS(mun.geom,sub.geom)
 	GROUP BY mun.id
@@ -55,7 +55,6 @@ WHERE  	t1.id = t2.id;
 
 -- SELECT	sum(mun.subst_sum) AS sum
 -- FROM	calc_ego_grid_district.municipalities_subst AS mun;
-
 
 
 ---------- ---------- ----------
@@ -90,6 +89,17 @@ WHERE  	t1.id = t2.id;
 GRANT ALL ON TABLE 	calc_ego_grid_district.municipalities_subst_1_mview TO oeuser WITH GRANT OPTION;
 ALTER TABLE		calc_ego_grid_district.municipalities_subst_1_mview OWNER TO oeuser;
 
+-- Scenario eGo data processing
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
+	SELECT	'0.1' AS version,
+		'calc_ego_grid_district' AS schema_name,
+		'municipalities_subst_1_mview' AS table_name,
+		'process_eGo_grid_district.sql' AS script_name,
+		COUNT(geom)AS entries,
+		'OK' AS status,
+		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
+	FROM	calc_ego_grid_district.municipalities_subst_1_mview;
+
 ---------- ---------- ----------
 
 -- MView II.   (OK!) -> 100ms =546
@@ -120,27 +130,38 @@ FROM	(SELECT	mun.id AS id,
 	FROM	calc_ego_grid_district.municipalities_subst_2_mview AS mun )AS t2
 WHERE  	t1.id = t2.id;
 
+-- Scenario eGo data processing
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
+	SELECT	'0.1' AS version,
+		'calc_ego_grid_district' AS schema_name,
+		'municipalities_subst_2_mview' AS table_name,
+		'process_eGo_grid_district.sql' AS script_name,
+		COUNT(geom)AS entries,
+		'OK' AS status,
+		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
+	FROM	calc_ego_grid_district.municipalities_subst_2_mview;
+
 ---------- ---------- ----------
 
 -- Substation Type 2   (OK!) -> 200ms =1.886
-DROP MATERIALIZED VIEW IF EXISTS	calc_ego_substation.substation_110_mun_2_mview CASCADE;
-CREATE MATERIALIZED VIEW		calc_ego_substation.substation_110_mun_2_mview AS
+DROP MATERIALIZED VIEW IF EXISTS	calc_ego_substation.ego_deu_substations_mun_2_mview CASCADE;
+CREATE MATERIALIZED VIEW		calc_ego_substation.ego_deu_substations_mun_2_mview AS
 	SELECT	sub.subst_id ::integer,
 		sub.subst_name ::text,
 		'3' ::integer AS subst_type,
 		sub.geom ::geometry(Point,3035) AS geom
-	FROM	calc_ego_substation.substation_110 AS sub,
+	FROM	calc_ego_substation.ego_deu_substations AS sub,
 		calc_ego_grid_district.municipalities_subst_2_mview AS mun
 	WHERE  	mun.geom && sub.geom AND
 		ST_CONTAINS(mun.geom,sub.geom);
 
 -- Create Index (subst_id)   (OK!) -> 1.000ms =0
-CREATE UNIQUE INDEX  	substations_110_mun_2_mview_subst_id_idx
-		ON	calc_ego_substation.substation_110_mun_2_mview (subst_id);
+CREATE UNIQUE INDEX  	ego_deu_substations_mun_2_mview_subst_id_idx
+		ON	calc_ego_substation.ego_deu_substations_mun_2_mview (subst_id);
 
 -- Grant oeuser   (OK!) -> 100ms =0
-GRANT ALL ON TABLE 	calc_ego_substation.substation_110_mun_2_mview TO oeuser WITH GRANT OPTION;
-ALTER TABLE		calc_ego_substation.substation_110_mun_2_mview OWNER TO oeuser;
+GRANT ALL ON TABLE 	calc_ego_substation.ego_deu_substations_mun_2_mview TO oeuser WITH GRANT OPTION;
+ALTER TABLE		calc_ego_substation.ego_deu_substations_mun_2_mview OWNER TO oeuser;
 
 
 ---------- ---------- ----------
@@ -174,7 +195,16 @@ FROM	(SELECT	mun.id AS id,
 	FROM	calc_ego_grid_district.municipalities_subst_3_mview AS mun )AS t2
 WHERE  	t1.id = t2.id;
 
-
+-- Scenario eGo data processing
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
+	SELECT	'0.1' AS version,
+		'calc_ego_grid_district' AS schema_name,
+		'municipalities_subst_3_mview' AS table_name,
+		'process_eGo_grid_district.sql' AS script_name,
+		COUNT(geom)AS entries,
+		'OK' AS status,
+		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
+	FROM	calc_ego_grid_district.municipalities_subst_3_mview;
 
 ---------- ---------- ----------
 -- Grid Districts
@@ -191,7 +221,7 @@ CREATE TABLE		calc_ego_grid_district.grid_district_type_1 AS
 		sub.subst_name ::text,
 		sub.ags_0 ::character varying(12),
 		sub.geom ::geometry(Point,3035) AS geom_sub
-	FROM	calc_ego_substation.substation_110 AS sub;
+	FROM	calc_ego_substation.ego_deu_substations AS sub;
 
 -- Set PK   (OK!) -> 100ms =0
 ALTER TABLE calc_ego_grid_district.grid_district_type_1
@@ -232,16 +262,15 @@ WHERE  	t1.ags_0 = t2.ags_0;
 -- II. Gemeinden mit mehreren USW
 ---------- ---------- ---------- ---------- ---------- ----------
 
--- Create Table "substations_110_voronoi" 
--- with Script "data_processing\ego_deu_substations\substations_110_voronoi.sql"
+-- Create Table "ego_deu_substations_voronoi" 
 
 -- Substation ID   (OK!) -> 1.000ms =3.610
-UPDATE 	calc_ego_substation.substation_110_voronoi AS t1
+UPDATE 	calc_ego_substation.ego_deu_substations_voronoi AS t1
 SET  	subst_id = t2.subst_id
 FROM	(SELECT	voi.id AS id,
 		sub.subst_id ::integer AS subst_id
-	FROM	calc_ego_substation.substation_110_voronoi AS voi,
-		calc_ego_substation.substation_110 AS sub
+	FROM	calc_ego_substation.ego_deu_substations_voronoi AS voi,
+		calc_ego_substation.ego_deu_substations AS sub
 	WHERE  	voi.geom && sub.geom AND
 		ST_CONTAINS(voi.geom,sub.geom)
 	GROUP BY voi.id,sub.subst_id
@@ -249,12 +278,12 @@ FROM	(SELECT	voi.id AS id,
 WHERE  	t1.id = t2.id;
 
 -- Substation Count   (OK!) -> 1.000ms =3.610
-UPDATE 	calc_ego_substation.substation_110_voronoi AS t1
+UPDATE 	calc_ego_substation.ego_deu_substations_voronoi AS t1
 SET  	subst_sum = t2.subst_sum
 FROM	(SELECT	voi.id AS id,
 		COUNT(sub.geom)::integer AS subst_sum
-	FROM	calc_ego_substation.substation_110_voronoi AS voi,
-		calc_ego_substation.substation_110 AS sub
+	FROM	calc_ego_substation.ego_deu_substations_voronoi AS voi,
+		calc_ego_substation.ego_deu_substations AS sub
 	WHERE  	voi.geom && sub.geom AND
 		ST_CONTAINS(voi.geom,sub.geom)
 	GROUP BY voi.id
@@ -264,33 +293,33 @@ WHERE  	t1.id = t2.id;
 ---------- ---------- ----------
 
 -- Voronoi Gridcells (voi)   (OK!) 100ms =3.610
-DROP MATERIALIZED VIEW IF EXISTS	calc_ego_substation.substation_110_voronoi_mview CASCADE;
-CREATE MATERIALIZED VIEW		calc_ego_substation.substation_110_voronoi_mview AS
+DROP MATERIALIZED VIEW IF EXISTS	calc_ego_substation.ego_deu_substations_voronoi_mview CASCADE;
+CREATE MATERIALIZED VIEW		calc_ego_substation.ego_deu_substations_voronoi_mview AS
 	SELECT	voi.id ::integer,
 		voi.subst_id ::integer,
 		voi.subst_sum ::integer,
 		(ST_DUMP(voi.geom)).geom ::geometry(Polygon,3035) AS geom
-	FROM	calc_ego_substation.substation_110_voronoi AS voi
+	FROM	calc_ego_substation.ego_deu_substations_voronoi AS voi
 	WHERE	subst_sum = '1';
 
 -- Create Index (id)   (OK!) -> 1.000ms =0
-CREATE UNIQUE INDEX  	substations_110_voronoi_mview_id_idx
-		ON	calc_ego_substation.substation_110_voronoi_mview (id);
+CREATE UNIQUE INDEX  	ego_deu_substations_voronoi_mview_id_idx
+		ON	calc_ego_substation.ego_deu_substations_voronoi_mview (id);
 
 -- Create Index GIST (geom)   (OK!) -> 100ms =0
-CREATE INDEX  	substations_110_voronoi_mview_geom_idx
-	ON	calc_ego_substation.substation_110_voronoi_mview
+CREATE INDEX  	ego_deu_substations_voronoi_mview_geom_idx
+	ON	calc_ego_substation.ego_deu_substations_voronoi_mview
 	USING	GIST (geom);
 
 -- Grant oeuser   (OK!) -> 100ms =0
-GRANT ALL ON TABLE 	calc_ego_substation.substation_110_voronoi_mview TO oeuser WITH GRANT OPTION;
-ALTER TABLE		calc_ego_substation.substation_110_voronoi_mview OWNER TO oeuser;
+GRANT ALL ON TABLE 	calc_ego_substation.ego_deu_substations_voronoi_mview TO oeuser WITH GRANT OPTION;
+ALTER TABLE		calc_ego_substation.ego_deu_substations_voronoi_mview OWNER TO oeuser;
 
 ---------- ---------- ----------
 -- 
 -- -- Validate (geom)   (OK!) -> 22.000ms =0
--- DROP VIEW IF EXISTS	calc_ego_substation.substation_110_voronoi_error_geom_view CASCADE;
--- CREATE VIEW		calc_ego_substation.substation_110_voronoi_error_geom_view AS 
+-- DROP VIEW IF EXISTS	calc_ego_substation.ego_deu_substations_voronoi_error_geom_view CASCADE;
+-- CREATE VIEW		calc_ego_substation.ego_deu_substations_voronoi_error_geom_view AS 
 -- 	SELECT	test.id,
 -- 		test.error,
 -- 		reason(ST_IsValidDetail(test.geom)) AS error_reason,
@@ -304,11 +333,11 @@ ALTER TABLE		calc_ego_substation.substation_110_voronoi_mview OWNER TO oeuser;
 -- 	WHERE	test.error = FALSE;
 -- 
 -- -- Grant oeuser   (OK!) -> 100ms =0
--- GRANT ALL ON TABLE	calc_ego_substation.substation_110_voronoi_error_geom_view TO oeuser WITH GRANT OPTION;
--- ALTER TABLE		calc_ego_substation.substation_110_voronoi_error_geom_view OWNER TO oeuser;
+-- GRANT ALL ON TABLE	calc_ego_substation.ego_deu_substations_voronoi_error_geom_view TO oeuser WITH GRANT OPTION;
+-- ALTER TABLE		calc_ego_substation.ego_deu_substations_voronoi_error_geom_view OWNER TO oeuser;
 
 -- -- Drop empty view   (OK!) -> 100ms =1
--- SELECT f_drop_view('{substations_110_voronoi_error_geom_view}', 'calc_grid_district');
+-- SELECT f_drop_view('{ego_deu_substations_voronoi_error_geom_view}', 'calc_grid_district');
 
 
 ---------- ---------- ----------
@@ -316,13 +345,13 @@ ALTER TABLE		calc_ego_substation.substation_110_voronoi_mview OWNER TO oeuser;
 ---------- ---------- ----------
 
 -- Sequence   (OK!) 100ms =0
-DROP SEQUENCE IF EXISTS 	calc_ego_substation.substation_110_voronoi_cut_id CASCADE;
-CREATE SEQUENCE 		calc_ego_substation.substation_110_voronoi_cut_id;
+DROP SEQUENCE IF EXISTS 	calc_ego_substation.ego_deu_substations_voronoi_cut_id CASCADE;
+CREATE SEQUENCE 		calc_ego_substation.ego_deu_substations_voronoi_cut_id;
 
 -- Cutting GEM II.   (OK!) 3.000ms =4.531
-DROP TABLE IF EXISTS	calc_ego_substation.substation_110_voronoi_cut CASCADE;
-CREATE TABLE		calc_ego_substation.substation_110_voronoi_cut AS
-	SELECT	nextval('calc_ego_substation.substation_110_voronoi_cut_id') AS id,
+DROP TABLE IF EXISTS	calc_ego_substation.ego_deu_substations_voronoi_cut CASCADE;
+CREATE TABLE		calc_ego_substation.ego_deu_substations_voronoi_cut AS
+	SELECT	nextval('calc_ego_substation.ego_deu_substations_voronoi_cut_id') AS id,
 		voi.subst_id,
 		mun.id AS mun_id,
 		voi.id AS voi_id,
@@ -330,17 +359,17 @@ CREATE TABLE		calc_ego_substation.substation_110_voronoi_cut AS
 		mun.subst_type,
 		(ST_DUMP(ST_INTERSECTION(mun.geom,voi.geom))).geom ::geometry(Polygon,3035) AS geom
 	FROM	calc_ego_grid_district.municipalities_subst_2_mview AS mun,
-		calc_ego_substation.substation_110_voronoi_mview AS voi
+		calc_ego_substation.ego_deu_substations_voronoi_mview AS voi
 	WHERE	mun.geom && voi.geom;
 
 -- Ad PK   (OK!) 150ms =0
-ALTER TABLE	calc_ego_substation.substation_110_voronoi_cut
+ALTER TABLE	calc_ego_substation.ego_deu_substations_voronoi_cut
 	ADD COLUMN subst_sum integer,
 	ADD COLUMN geom_sub geometry(Point,3035),
 	ADD PRIMARY KEY (id);
 
 -- Count Substations in Voronoi Cuts   (OK!) -> 1.000ms =1.886
-UPDATE 	calc_ego_substation.substation_110_voronoi_cut AS t1
+UPDATE 	calc_ego_substation.ego_deu_substations_voronoi_cut AS t1
 SET  	subst_sum = t2.subst_sum,
 	subst_id = t2.subst_id,
 	geom_sub = t2.geom_sub
@@ -348,33 +377,33 @@ FROM	(SELECT	mun.id AS id,
 		sub.subst_id,
 		sub.geom AS geom_sub,
 		COUNT(sub.geom)::integer AS subst_sum
-	FROM	calc_ego_substation.substation_110_voronoi_cut AS mun,
-		calc_ego_substation.substation_110 AS sub
+	FROM	calc_ego_substation.ego_deu_substations_voronoi_cut AS mun,
+		calc_ego_substation.ego_deu_substations AS sub
 	WHERE  	mun.geom && sub.geom AND
 		ST_CONTAINS(mun.geom,sub.geom)
-	GROUP BY mun.id,sub.subst_id
+	GROUP BY mun.id,sub.subst_id,sub.geom
 	)AS t2
 WHERE  	t1.id = t2.id;
 
 -- Create Index GIST (geom)   (OK!) 2.500ms =0
-CREATE INDEX	substations_110_voronoi_cut_geom_idx
-	ON	calc_ego_substation.substation_110_voronoi_cut
+CREATE INDEX	ego_deu_substations_voronoi_cut_geom_idx
+	ON	calc_ego_substation.ego_deu_substations_voronoi_cut
 	USING	GIST (geom);
 
 -- Create Index GIST (geom_sub)   (OK!) 2.500ms =0
-CREATE INDEX	substations_110_voronoi_cut_geom_subst_idx
-	ON	calc_ego_substation.substation_110_voronoi_cut
+CREATE INDEX	ego_deu_substations_voronoi_cut_geom_subst_idx
+	ON	calc_ego_substation.ego_deu_substations_voronoi_cut
 	USING	GIST (geom_sub);
 	
 -- Grant oeuser   (OK!) -> 100ms =0
-GRANT ALL ON TABLE	calc_ego_substation.substation_110_voronoi_cut TO oeuser WITH GRANT OPTION;
-ALTER TABLE		calc_ego_substation.substation_110_voronoi_cut OWNER TO oeuser;
+GRANT ALL ON TABLE	calc_ego_substation.ego_deu_substations_voronoi_cut TO oeuser WITH GRANT OPTION;
+ALTER TABLE		calc_ego_substation.ego_deu_substations_voronoi_cut OWNER TO oeuser;
 
 ---------- ---------- ----------
 
 -- -- Validate (geom)   (OK!) -> 22.000ms =0
--- DROP VIEW IF EXISTS	calc_ego_substation.substation_110_voronoi_cut_error_geom_view CASCADE;
--- CREATE VIEW		calc_ego_substation.substation_110_voronoi_cut_error_geom_view AS 
+-- DROP VIEW IF EXISTS	calc_ego_substation.ego_deu_substations_voronoi_cut_error_geom_view CASCADE;
+-- CREATE VIEW		calc_ego_substation.ego_deu_substations_voronoi_cut_error_geom_view AS 
 -- 	SELECT	test.id,
 -- 		test.error,
 -- 		reason(ST_IsValidDetail(test.geom)) AS error_reason,
@@ -383,44 +412,44 @@ ALTER TABLE		calc_ego_substation.substation_110_voronoi_cut OWNER TO oeuser;
 -- 		SELECT	source.id AS id,				-- PK
 -- 			ST_IsValid(source.geom) AS error,
 -- 			source.geom AS geom
--- 		FROM	calc_ego_substation.substation_110_voronoi_cut AS source	-- Table
+-- 		FROM	calc_ego_substation.ego_deu_substations_voronoi_cut AS source	-- Table
 -- 		) AS test
 -- 	WHERE	test.error = FALSE;
 -- 
 -- -- Grant oeuser   (OK!) -> 100ms =0
--- GRANT ALL ON TABLE	calc_ego_substation.substation_110_voronoi_cut_error_geom_view TO oeuser WITH GRANT OPTION;
--- ALTER TABLE		calc_ego_substation.substation_110_voronoi_cut_error_geom_view OWNER TO oeuser;
+-- GRANT ALL ON TABLE	calc_ego_substation.ego_deu_substations_voronoi_cut_error_geom_view TO oeuser WITH GRANT OPTION;
+-- ALTER TABLE		calc_ego_substation.ego_deu_substations_voronoi_cut_error_geom_view OWNER TO oeuser;
 
 -- -- Drop empty view   (OK!) -> 100ms =1 (no error!)
--- SELECT f_drop_view('{substations_110_voronoi_cut_error_geom_view}', 'calc_grid_district');
+-- SELECT f_drop_view('{ego_deu_substations_voronoi_cut_error_geom_view}', 'calc_grid_district');
 
 ---------- ---------- ----------
 
 -- Parts with substation   (OK!) 100ms =1.886
-DROP MATERIALIZED VIEW IF EXISTS	calc_ego_substation.substation_110_voronoi_cut_1subst_mview CASCADE;
-CREATE MATERIALIZED VIEW		calc_ego_substation.substation_110_voronoi_cut_1subst_mview AS
+DROP MATERIALIZED VIEW IF EXISTS	calc_ego_substation.ego_deu_substations_voronoi_cut_1subst_mview CASCADE;
+CREATE MATERIALIZED VIEW		calc_ego_substation.ego_deu_substations_voronoi_cut_1subst_mview AS
 SELECT	voi.*
-FROM	calc_ego_substation.substation_110_voronoi_cut AS voi
+FROM	calc_ego_substation.ego_deu_substations_voronoi_cut AS voi
 WHERE	subst_sum = 1;
 
 -- Create Index (id)   (OK!) -> 1.000ms =0
-CREATE UNIQUE INDEX  	substations_110_voronoi_cut_1subst_mview_id_idx
-		ON	calc_ego_substation.substation_110_voronoi_cut_1subst_mview (id);
+CREATE UNIQUE INDEX  	ego_deu_substations_voronoi_cut_1subst_mview_id_idx
+		ON	calc_ego_substation.ego_deu_substations_voronoi_cut_1subst_mview (id);
 
 -- Create Index GIST (geom)   (OK!) -> 100ms =0
-CREATE INDEX  	substations_110_voronoi_cut_1subst_mview_geom_idx
-	ON	calc_ego_substation.substation_110_voronoi_cut_1subst_mview
+CREATE INDEX  	ego_deu_substations_voronoi_cut_1subst_mview_geom_idx
+	ON	calc_ego_substation.ego_deu_substations_voronoi_cut_1subst_mview
 	USING	GIST (geom);
 
 -- Grant oeuser   (OK!) -> 100ms =0
-GRANT ALL ON TABLE 	calc_ego_substation.substation_110_voronoi_cut_1subst_mview TO oeuser WITH GRANT OPTION;
-ALTER TABLE		calc_ego_substation.substation_110_voronoi_cut_1subst_mview OWNER TO oeuser;
+GRANT ALL ON TABLE 	calc_ego_substation.ego_deu_substations_voronoi_cut_1subst_mview TO oeuser WITH GRANT OPTION;
+ALTER TABLE		calc_ego_substation.ego_deu_substations_voronoi_cut_1subst_mview OWNER TO oeuser;
 
 ---------- ---------- ----------
 
 -- Parts without substation   (OK!) 100ms =2.645
-DROP MATERIALIZED VIEW IF EXISTS	calc_ego_substation.substation_110_voronoi_cut_0subst_mview CASCADE;
-CREATE MATERIALIZED VIEW		calc_ego_substation.substation_110_voronoi_cut_0subst_mview AS
+DROP MATERIALIZED VIEW IF EXISTS	calc_ego_substation.ego_deu_substations_voronoi_cut_0subst_mview CASCADE;
+CREATE MATERIALIZED VIEW		calc_ego_substation.ego_deu_substations_voronoi_cut_0subst_mview AS
 SELECT	voi.id,
 	voi.subst_id,
 	voi.mun_id,
@@ -428,31 +457,31 @@ SELECT	voi.id,
 	voi.ags_0,
 	voi.subst_type,
 	voi.geom
-FROM	calc_ego_substation.substation_110_voronoi_cut AS voi
+FROM	calc_ego_substation.ego_deu_substations_voronoi_cut AS voi
 WHERE	subst_sum IS NULL;
 
 -- Create Index (id)   (OK!) -> 1.000ms =0
-CREATE UNIQUE INDEX  	substations_110_voronoi_cut_0subst_mview_id_idx
-		ON	calc_ego_substation.substation_110_voronoi_cut_0subst_mview (id);
+CREATE UNIQUE INDEX  	ego_deu_substations_voronoi_cut_0subst_mview_id_idx
+		ON	calc_ego_substation.ego_deu_substations_voronoi_cut_0subst_mview (id);
 
 -- Create Index GIST (geom)   (OK!) -> 100ms =0
-CREATE INDEX  	substations_110_voronoi_cut_0subst_mview_geom_idx
-	ON	calc_ego_substation.substation_110_voronoi_cut_0subst_mview
+CREATE INDEX  	ego_deu_substations_voronoi_cut_0subst_mview_geom_idx
+	ON	calc_ego_substation.ego_deu_substations_voronoi_cut_0subst_mview
 	USING	GIST (geom);
 
 -- Grant oeuser   (OK!) -> 100ms =0
-GRANT ALL ON TABLE 	calc_ego_substation.substation_110_voronoi_cut_0subst_mview TO oeuser WITH GRANT OPTION;
-ALTER TABLE		calc_ego_substation.substation_110_voronoi_cut_0subst_mview OWNER TO oeuser;
+GRANT ALL ON TABLE 	calc_ego_substation.ego_deu_substations_voronoi_cut_0subst_mview TO oeuser WITH GRANT OPTION;
+ALTER TABLE		calc_ego_substation.ego_deu_substations_voronoi_cut_0subst_mview OWNER TO oeuser;
 
 ---------- ---------- ----------
 
 -- -- Calculate Gemeindeschlüssel   (OK!) -> 3.000ms =4.981
--- UPDATE 	calc_ego_substation.substation_110_voronoi_cut AS t1
+-- UPDATE 	calc_ego_substation.ego_deu_substations_voronoi_cut AS t1
 -- SET  	ags_0 = t2.ags_0
 -- FROM    (
 -- 	SELECT	cut.id AS id,
 -- 		vg.ags_0 AS ags_0
--- 	FROM	calc_ego_substation.substation_110_voronoi_cut AS cut,
+-- 	FROM	calc_ego_substation.ego_deu_substations_voronoi_cut AS cut,
 -- 		orig_geo_vg250.vg250_6_gem_mview AS vg
 -- 	WHERE  	vg.geom && ST_POINTONSURFACE(cut.geom) AND
 -- 		ST_CONTAINS(vg.geom,ST_POINTONSURFACE(cut.geom))
@@ -465,8 +494,8 @@ ALTER TABLE		calc_ego_substation.substation_110_voronoi_cut_0subst_mview OWNER T
 ---------- ---------- ----------
 
 -- Next Neighbor   (OK!) 1.000ms =2.645
-DROP MATERIALIZED VIEW IF EXISTS	calc_ego_substation.substation_110_voronoi_cut_0subst_nn_mview CASCADE;
-CREATE MATERIALIZED VIEW 		calc_ego_substation.substation_110_voronoi_cut_0subst_nn_mview AS 
+DROP MATERIALIZED VIEW IF EXISTS	calc_ego_substation.ego_deu_substations_voronoi_cut_0subst_nn_mview CASCADE;
+CREATE MATERIALIZED VIEW 		calc_ego_substation.ego_deu_substations_voronoi_cut_0subst_nn_mview AS 
 SELECT DISTINCT ON (voi.id)
 	voi.id AS voi_id,
 	voi.ags_0 AS voi_ags_0,
@@ -474,8 +503,8 @@ SELECT DISTINCT ON (voi.id)
 	sub.subst_id AS subst_id,
 	sub.ags_0 AS ags_0,
 	sub.geom AS geom_sub
-FROM 	calc_ego_substation.substation_110_voronoi_cut_0subst_mview AS voi,
-	calc_ego_substation.substation_110_voronoi_cut_1subst_mview AS sub
+FROM 	calc_ego_substation.ego_deu_substations_voronoi_cut_0subst_mview AS voi,
+	calc_ego_substation.ego_deu_substations_voronoi_cut_1subst_mview AS sub
 WHERE 	ST_DWithin(ST_ExteriorRing(voi.geom),ST_ExteriorRing(sub.geom), 50000) -- In a 50 km radius
 	AND voi.ags_0 = sub.ags_0  -- only inside same mun
 ORDER BY 	voi.id, 
@@ -484,120 +513,120 @@ ORDER BY 	voi.id,
 -- ST_Length(ST_CollectionExtract(ST_Intersection(a_geom, b_geom), 2)) -- Lenght of the shared border?
 
 -- Create Index (id)   (OK!) -> 1.000ms =0
-CREATE UNIQUE INDEX  	substations_110_voronoi_cut_0subst_nn_mview_voi_id_idx
-		ON	calc_ego_substation.substation_110_voronoi_cut_0subst_nn_mview (voi_id);
+CREATE UNIQUE INDEX  	ego_deu_substations_voronoi_cut_0subst_nn_mview_voi_id_idx
+		ON	calc_ego_substation.ego_deu_substations_voronoi_cut_0subst_nn_mview (voi_id);
 
 -- Create Index GIST (geom_voi)   (OK!) -> 100ms =0
-CREATE INDEX  	substations_110_voronoi_cut_0subst_nn_mview_geom_voi_idx
-	ON	calc_ego_substation.substation_110_voronoi_cut_0subst_nn_mview
+CREATE INDEX  	ego_deu_substations_voronoi_cut_0subst_nn_mview_geom_voi_idx
+	ON	calc_ego_substation.ego_deu_substations_voronoi_cut_0subst_nn_mview
 	USING	GIST (geom_voi);
 
 -- Create Index GIST (geom_sub)   (OK!) -> 100ms =0
-CREATE INDEX  	substations_110_voronoi_cut_0subst_nn_mview_geom_subst_idx
-	ON	calc_ego_substation.substation_110_voronoi_cut_0subst_nn_mview
+CREATE INDEX  	ego_deu_substations_voronoi_cut_0subst_nn_mview_geom_subst_idx
+	ON	calc_ego_substation.ego_deu_substations_voronoi_cut_0subst_nn_mview
 	USING	GIST (geom_sub);
 
 -- Grant oeuser   (OK!) -> 100ms =0
-GRANT ALL ON TABLE 	calc_ego_substation.substation_110_voronoi_cut_0subst_nn_mview TO oeuser WITH GRANT OPTION;
-ALTER TABLE		calc_ego_substation.substation_110_voronoi_cut_0subst_nn_mview OWNER TO oeuser;
+GRANT ALL ON TABLE 	calc_ego_substation.ego_deu_substations_voronoi_cut_0subst_nn_mview TO oeuser WITH GRANT OPTION;
+ALTER TABLE		calc_ego_substation.ego_deu_substations_voronoi_cut_0subst_nn_mview OWNER TO oeuser;
 
 ---------- ---------- ----------
 
 -- Sequence   (OK!) 100ms =0
-DROP SEQUENCE IF EXISTS 	calc_ego_substation.substation_110_voronoi_cut_0subst_nn_line_mview_id CASCADE;
-CREATE SEQUENCE 		calc_ego_substation.substation_110_voronoi_cut_0subst_nn_line_mview_id;
+DROP SEQUENCE IF EXISTS 	calc_ego_substation.ego_deu_substations_voronoi_cut_0subst_nn_line_mview_id CASCADE;
+CREATE SEQUENCE 		calc_ego_substation.ego_deu_substations_voronoi_cut_0subst_nn_line_mview_id;
 
 -- connect points   (OK!) 1.000ms =2.645
-DROP MATERIALIZED VIEW IF EXISTS	calc_ego_substation.substation_110_voronoi_cut_0subst_nn_line_mview;
-CREATE MATERIALIZED VIEW 		calc_ego_substation.substation_110_voronoi_cut_0subst_nn_line_mview AS 
-	SELECT 	nextval('calc_ego_substation.substation_110_voronoi_cut_0subst_nn_line_mview_id') AS id,
+DROP MATERIALIZED VIEW IF EXISTS	calc_ego_substation.ego_deu_substations_voronoi_cut_0subst_nn_line_mview;
+CREATE MATERIALIZED VIEW 		calc_ego_substation.ego_deu_substations_voronoi_cut_0subst_nn_line_mview AS 
+	SELECT 	nextval('calc_ego_substation.ego_deu_substations_voronoi_cut_0subst_nn_line_mview_id') AS id,
 		nn.voi_id,
 		nn.subst_id,
 		(ST_Dump(ST_CENTROID(nn.geom_voi))).geom ::geometry(Point,3035) AS geom_centre,
 		ST_ShortestLine(	(ST_Dump(ST_CENTROID(nn.geom_voi))).geom ::geometry(Point,3035),
 					sub.geom ::geometry(Point,3035)
 		) ::geometry(LineString,3035) AS geom
-	FROM	calc_ego_substation.substation_110_voronoi_cut_0subst_nn_mview AS nn,
-		calc_ego_substation.substation_110 AS sub
+	FROM	calc_ego_substation.ego_deu_substations_voronoi_cut_0subst_nn_mview AS nn,
+		calc_ego_substation.ego_deu_substations AS sub
 	WHERE	sub.subst_id = nn.subst_id;
 
 -- Create Index (id)   (OK!) -> 100ms =0
-CREATE UNIQUE INDEX  	substations_110_voronoi_cut_0subst_nn_line_mview_id_idx
-		ON	calc_ego_substation.substation_110_voronoi_cut_0subst_nn_line_mview (id);
+CREATE UNIQUE INDEX  	ego_deu_substations_voronoi_cut_0subst_nn_line_mview_id_idx
+		ON	calc_ego_substation.ego_deu_substations_voronoi_cut_0subst_nn_line_mview (id);
 
 -- Create Index GIST (geom_centre)   (OK!) 2.500ms =0
-CREATE INDEX	substations_110_voronoi_cut_0subst_nn_line_mview_geom_centre_idx
-	ON	calc_ego_substation.substation_110_voronoi_cut_0subst_nn_line_mview
+CREATE INDEX	ego_deu_substations_voronoi_cut_0subst_nn_line_mview_geom_centre_idx
+	ON	calc_ego_substation.ego_deu_substations_voronoi_cut_0subst_nn_line_mview
 	USING	GIST (geom_centre);
 
 -- Create Index GIST (geom)   (OK!) 2.500ms =0
-CREATE INDEX	substations_110_voronoi_cut_0subst_nn_line_mview_geom_idx
-	ON	calc_ego_substation.substation_110_voronoi_cut_0subst_nn_line_mview
+CREATE INDEX	ego_deu_substations_voronoi_cut_0subst_nn_line_mview_geom_idx
+	ON	calc_ego_substation.ego_deu_substations_voronoi_cut_0subst_nn_line_mview
 	USING	GIST (geom);
 
 ---------- ---------- ----------
 
 -- Create Table   (OK!) 4.000ms =1.057
-DROP MATERIALIZED VIEW IF EXISTS	calc_ego_substation.substation_110_voronoi_cut_0subst_nn_union_mview CASCADE;
-CREATE MATERIALIZED VIEW		calc_ego_substation.substation_110_voronoi_cut_0subst_nn_union_mview AS 
+DROP MATERIALIZED VIEW IF EXISTS	calc_ego_substation.ego_deu_substations_voronoi_cut_0subst_nn_union_mview CASCADE;
+CREATE MATERIALIZED VIEW		calc_ego_substation.ego_deu_substations_voronoi_cut_0subst_nn_union_mview AS 
 	SELECT	nn.subst_id As subst_id, 
 		ST_MULTI(ST_UNION(nn.geom_voi)) ::geometry(MultiPolygon,3035) AS geom
-	FROM	calc_ego_substation.substation_110_voronoi_cut_0subst_nn_mview AS nn
+	FROM	calc_ego_substation.ego_deu_substations_voronoi_cut_0subst_nn_mview AS nn
 	GROUP BY nn.subst_id;
 
 -- Create Index (id)   (OK!) -> 100ms =0
-CREATE UNIQUE INDEX  	substations_110_voronoi_cut_0subst_nn_union_mview_id_idx
-		ON	calc_ego_substation.substation_110_voronoi_cut_0subst_nn_union_mview (subst_id);
+CREATE UNIQUE INDEX  	ego_deu_substations_voronoi_cut_0subst_nn_union_mview_id_idx
+		ON	calc_ego_substation.ego_deu_substations_voronoi_cut_0subst_nn_union_mview (subst_id);
 
 -- Create Index GIST (geom)   (OK!) 2.500ms =0
-CREATE INDEX	substations_110_voronoi_cut_0subst_nn_union_mview_geom_idx
-	ON	calc_ego_substation.substation_110_voronoi_cut_0subst_nn_union_mview
+CREATE INDEX	ego_deu_substations_voronoi_cut_0subst_nn_union_mview_geom_idx
+	ON	calc_ego_substation.ego_deu_substations_voronoi_cut_0subst_nn_union_mview
 	USING	GIST (geom);
 
 ---------- ---------- ----------
 
 -- Create Table   (OK!) 4.000ms =0
-DROP TABLE IF EXISTS	calc_ego_substation.substation_110_voronoi_cut_nn_collect CASCADE;
-CREATE TABLE		calc_ego_substation.substation_110_voronoi_cut_nn_collect (
+DROP TABLE IF EXISTS	calc_ego_substation.ego_deu_substations_voronoi_cut_nn_collect CASCADE;
+CREATE TABLE		calc_ego_substation.ego_deu_substations_voronoi_cut_nn_collect (
 	id serial,
 	subst_id integer,
 	geom geometry(MultiPolygon,3035),
-CONSTRAINT substations_110_voronoi_cut_nn_collect_pkey PRIMARY KEY (id));
+CONSTRAINT ego_deu_substations_voronoi_cut_nn_collect_pkey PRIMARY KEY (id));
 
 -- Insert parts with substations   (OK!) 4.000ms =1.886
-INSERT INTO     calc_ego_substation.substation_110_voronoi_cut_nn_collect (subst_id,geom)
+INSERT INTO     calc_ego_substation.ego_deu_substations_voronoi_cut_nn_collect (subst_id,geom)
 	SELECT	sub.subst_id AS subst_id,
 		ST_MULTI(sub.geom) ::geometry(MultiPolygon,3035) AS geom
-	FROM	calc_ego_substation.substation_110_voronoi_cut_1subst_mview AS sub;
+	FROM	calc_ego_substation.ego_deu_substations_voronoi_cut_1subst_mview AS sub;
 
 -- Insert parts without substations union   (OK!) 4.000ms =1.103
-INSERT INTO     calc_ego_substation.substation_110_voronoi_cut_nn_collect (subst_id,geom)
+INSERT INTO     calc_ego_substation.ego_deu_substations_voronoi_cut_nn_collect (subst_id,geom)
 	SELECT	voi.subst_id AS subst_id,
 		voi.geom ::geometry(MultiPolygon,3035) AS geom
-	FROM	calc_ego_substation.substation_110_voronoi_cut_0subst_nn_union_mview AS voi;
+	FROM	calc_ego_substation.ego_deu_substations_voronoi_cut_0subst_nn_union_mview AS voi;
 
 -- Create Index GIST (geom)   (OK!) 11.000ms =0
-CREATE INDEX	substations_110_voronoi_cut_nn_collect_geom_idx
-	ON	calc_ego_substation.substation_110_voronoi_cut_nn_collect
+CREATE INDEX	ego_deu_substations_voronoi_cut_nn_collect_geom_idx
+	ON	calc_ego_substation.ego_deu_substations_voronoi_cut_nn_collect
 	USING	GIST (geom);
 
 ---------- ---------- ----------
 
 -- Create Table   (OK!) 4.000ms =1.886
-DROP MATERIALIZED VIEW IF EXISTS	calc_ego_substation.substation_110_voronoi_cut_nn_mview CASCADE;
-CREATE MATERIALIZED VIEW		calc_ego_substation.substation_110_voronoi_cut_nn_mview AS 
+DROP MATERIALIZED VIEW IF EXISTS	calc_ego_substation.ego_deu_substations_voronoi_cut_nn_mview CASCADE;
+CREATE MATERIALIZED VIEW		calc_ego_substation.ego_deu_substations_voronoi_cut_nn_mview AS 
 	SELECT	nn.subst_id As subst_id, 
 		ST_MULTI(ST_UNION(nn.geom)) ::geometry(MultiPolygon,3035) AS geom
-	FROM	calc_ego_substation.substation_110_voronoi_cut_nn_collect AS nn
+	FROM	calc_ego_substation.ego_deu_substations_voronoi_cut_nn_collect AS nn
 	GROUP BY nn.subst_id;
 
 -- Create Index (id)   (OK!) -> 100ms =0
-CREATE UNIQUE INDEX  	substations_110_voronoi_cut_nn_mview_id_idx
-		ON	calc_ego_substation.substation_110_voronoi_cut_nn_mview (subst_id);
+CREATE UNIQUE INDEX  	ego_deu_substations_voronoi_cut_nn_mview_id_idx
+		ON	calc_ego_substation.ego_deu_substations_voronoi_cut_nn_mview (subst_id);
 
 -- Create Index GIST (geom)   (OK!) 2.500ms =0
-CREATE INDEX	substations_110_voronoi_cut_nn_mview_geom_idx
-	ON	calc_ego_substation.substation_110_voronoi_cut_nn_mview
+CREATE INDEX	ego_deu_substations_voronoi_cut_nn_mview_geom_idx
+	ON	calc_ego_substation.ego_deu_substations_voronoi_cut_nn_mview
 	USING	GIST (geom);
 
 ---------- ---------- ----------
@@ -609,7 +638,7 @@ CREATE TABLE		calc_ego_grid_district.grid_district_type_2 AS
 		sub.subst_name ::text,
 		sub.ags_0 ::character varying(12),
 		sub.geom ::geometry(Point,3035) AS geom_sub
-	FROM	calc_ego_substation.substation_110 AS sub;
+	FROM	calc_ego_substation.ego_deu_substations AS sub;
 
 -- Set PK   (OK!) -> 100ms =0
 ALTER TABLE calc_ego_grid_district.grid_district_type_2
@@ -642,27 +671,10 @@ SET  	subst_type = t2.subst_type,
 FROM	(SELECT	nn.subst_id AS subst_id,
 		'2' ::integer AS subst_type,
 		nn.geom ::geometry(MultiPolygon,3035) AS geom
-	FROM	calc_ego_substation.substation_110_voronoi_cut_nn_mview AS nn )AS t2
+	FROM	calc_ego_substation.ego_deu_substations_voronoi_cut_nn_mview AS nn )AS t2
 WHERE  	t1.subst_id = t2.subst_id;
 
----------- ---------- ----------
--- 
--- -- voi   (OK!) 100ms =3.693
--- DROP MATERIALIZED VIEW IF EXISTS	calc_ego_grid_district.ego_deu_usw_voronoi_mview CASCADE;
--- CREATE MATERIALIZED VIEW		calc_ego_grid_district.ego_deu_usw_voronoi_mview AS
--- 	SELECT	poly.id ::integer AS id,
--- 		(ST_DUMP(ST_TRANSFORM(poly.geom,3035))).geom ::geometry(Polygon,3035) AS geom
--- 	FROM	calc_ego_grid_district.ego_deu_usw_voronoi AS poly;
--- 
--- -- Create Index GIST (geom)   (OK!) -> 100ms =0
--- CREATE INDEX  	ego_deu_usw_voronoi_mview_geom_idx
--- 	ON	calc_ego_grid_district.ego_deu_usw_voronoi_mview
--- 	USING	GIST (geom);
--- 
--- -- Grant oeuser   (OK!) -> 100ms =0
--- GRANT ALL ON TABLE 	calc_ego_grid_district.ego_deu_usw_voronoi_mview TO oeuser WITH GRANT OPTION;
--- ALTER TABLE		calc_ego_grid_district.ego_deu_usw_voronoi_mview OWNER TO oeuser;
--- 
+
 -- ---------- ---------- ----------	
 -- 
 -- -- Validate (geom)   (OK!) -> 22.000ms =0
@@ -687,29 +699,6 @@ WHERE  	t1.subst_id = t2.subst_id;
 -- -- Drop empty view   (OK!) -> 100ms =1
 -- SELECT f_drop_view('{ego_deu_usw_voronoi_mview_error_geom_view}', 'calc_grid_district');
 
----------- ---------- ----------
-
-
-
----------- ---------- ----------
-
--- DROP MATERIALIZED VIEW IF EXISTS	calc_ego_grid_district.vg250_6_gem_subst_2_pts_mview CASCADE;
--- CREATE MATERIALIZED VIEW		calc_ego_grid_district.vg250_6_gem_subst_2_pts_mview AS 
--- 	SELECT	'1' ::integer AS id,
--- 		ST_SetSRID(ST_Union(sub.geom), 0) AS geom
--- 	FROM	calc_gridcells_znes.znes_deu_substations_filtered AS sub
--- 	WHERE	subst_id = '3791' OR subst_id = '3765';
-
--- -- (POSTGIS 2.3!!!)
--- DROP MATERIALIZED VIEW IF EXISTS	calc_ego_grid_district.vg250_6_gem_subst_2_voronoi_mview CASCADE;
--- CREATE MATERIALIZED VIEW		calc_ego_grid_district.vg250_6_gem_subst_2_voronoi_mview AS 
--- 	SELECT	gem2.gid AS id,
--- 		ST_Voronoi(sub.geom,gem2.geom,30,true) AS geom
--- 	FROM	calc_ego_grid_district.vg250_6_gem_subst_2_pts_mview AS sub,
--- 		calc_ego_grid_district.vg250_6_gem_subst_2_mview AS gem2
--- 	WHERE	gem2.gid = '4884'
-
-
 
 ---------- ---------- ----------
 -- III. Gemeinden ohne sub
@@ -731,7 +720,7 @@ SELECT DISTINCT ON (mun.id)
 	ST_Distance(ST_ExteriorRing(mun.geom),sub.geom) AS distance,
 	ST_MULTI(mun.geom) ::geometry(MultiPolygon,3035) AS geom
 FROM 	calc_ego_grid_district.municipalities_subst_3_mview AS mun, 
-	calc_ego_substation.substation_110 AS sub
+	calc_ego_substation.ego_deu_substations AS sub
 WHERE 	ST_DWithin(ST_ExteriorRing(mun.geom),sub.geom, 50000) -- In a 50 km radius
 ORDER BY 	mun.id, ST_Distance(ST_ExteriorRing(mun.geom),sub.geom);
 
@@ -834,7 +823,7 @@ CREATE TABLE		calc_ego_grid_district.grid_district_type_3 AS
 		sub.subst_name ::text,
 		sub.ags_0 ::character varying(12),
 		sub.geom ::geometry(Point,3035) AS geom_sub
-	FROM	calc_ego_substation.substation_110 AS sub;
+	FROM	calc_ego_substation.ego_deu_substations AS sub;
 
 -- Set PK   (OK!) -> 100ms =0
 ALTER TABLE calc_ego_grid_district.grid_district_type_3
@@ -977,7 +966,7 @@ FROM	(SELECT	dis.subst_id AS subst_id,
 		COUNT(sub.geom)::integer AS subst_sum,
 		GeometryType(dis.geom) ::text AS geom_type
 	FROM	calc_ego_grid_district.grid_district AS dis,
-		calc_ego_substation.substation_110 AS sub
+		calc_ego_substation.ego_deu_substations AS sub
 	WHERE  	dis.geom && sub.geom AND
 		ST_CONTAINS(dis.geom,sub.geom)
 	GROUP BY dis.subst_id
@@ -995,12 +984,28 @@ FROM	(SELECT	dis.subst_id,
 	)AS t2
 WHERE  	t1.subst_id = t2.subst_id;
 
+-- Scenario eGo data processing
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
+	SELECT	'0.1' AS version,
+		'calc_ego_grid_district' AS schema_name,
+		'grid_district' AS table_name,
+		'process_eGo_grid_district.sql' AS script_name,
+		COUNT(geom)AS entries,
+		'OK' AS status,
+		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
+	FROM	calc_ego_grid_district.grid_district;
 
+	
 
+---------- ---------- ---------- 
+	
+	
+	
+	
 
 ---------- ---------- ----------
 
--- Create Test Area
+/* -- Create Test Area
 DROP TABLE IF EXISTS	calc_ego_grid_district.grid_district_ta CASCADE;
 CREATE TABLE 		calc_ego_grid_district.grid_district_ta AS
 	SELECT	dis.*
@@ -1030,7 +1035,7 @@ CREATE INDEX	grid_district_ta_geom_idx
 
 -- Grant oeuser   (OK!) -> 100ms =0
 GRANT ALL ON TABLE	calc_ego_grid_district.grid_district_ta TO oeuser WITH GRANT OPTION;
-ALTER TABLE		calc_ego_grid_district.grid_district_ta OWNER TO oeuser;
+ALTER TABLE		calc_ego_grid_district.grid_district_ta OWNER TO oeuser; */
 
 ---------- ---------- ----------
 
@@ -1062,15 +1067,23 @@ SET  	subst_cnt = t2.subst_cnt
 FROM	(SELECT	mun.id AS id,
 		COUNT(sub.geom)::integer AS subst_cnt
 	FROM	calc_ego_grid_district.grid_district_dump AS mun,
-		calc_ego_substation.substation_110 AS sub
+		calc_ego_substation.ego_deu_substations AS sub
 	WHERE  	mun.geom && sub.geom AND
 		ST_CONTAINS(mun.geom,sub.geom)
 	GROUP BY mun.id
 	)AS t2
 WHERE  	t1.id = t2.id;
 
-
-
+-- Scenario eGo data processing
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
+	SELECT	'0.1' AS version,
+		'calc_ego_grid_district' AS schema_name,
+		'grid_district_dump' AS table_name,
+		'process_eGo_grid_district.sql' AS script_name,
+		COUNT(geom)AS entries,
+		'BUGS' AS status,
+		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
+	FROM	calc_ego_grid_district.grid_district_dump;
 
 
 -- -- Dump Rings   (OK!) -> 22.000ms =0
@@ -1158,7 +1171,7 @@ WHERE  	t1.id = t2.id;
 -- FROM	(SELECT	dis.id AS id,
 -- 		COUNT(sub.geom)::integer AS subst_sum
 -- 	FROM	calc_ego_grid_district.grid_district_dump AS dis,
--- 		calc_ego_substation.substation_110 AS sub
+-- 		calc_ego_substation.ego_deu_substations AS sub
 -- 	WHERE  	dis.geom && sub.geom AND
 -- 		ST_CONTAINS(dis.geom,sub.geom)
 -- 	GROUP BY dis.id
@@ -1171,40 +1184,5 @@ WHERE  	t1.id = t2.id;
 -- 	USING	GIST (geom);
 
 -- 
--- ---------- ---------- ----------
--- -- HULL
--- ---------- ---------- ----------
--- 
--- -- hull   (OK!) 19.000ms =4.091
--- DROP TABLE IF EXISTS	calc_ego_grid_district.grid_district_hull CASCADE;
--- CREATE TABLE 		calc_ego_grid_district.grid_district_hull AS 
--- 	SELECT	dis.subst_id ::integer AS subst_id,
--- 		ST_AREA(dis.geom)/1000 AS area_ha,
--- 		ST_MULTI(dis.geom) ::geometry(MultiPolygon,3035) AS geom
--- 	FROM	(SELECT dis.subst_id AS subst_id,
--- 			ST_BUFFER(dis.geom,1) AS geom
--- 		FROM	calc_ego_grid_district.grid_district AS dis) AS dis;
--- 
--- -- Ad PK   (OK!) 150ms =0
--- ALTER TABLE	calc_ego_grid_district.grid_district_hull
--- 	ADD COLUMN subst_sum integer,
--- 	ADD PRIMARY KEY (subst_id);
--- 
--- -- Count Substations in Grid Districts   (OK!) -> 1.000ms =2.267
--- UPDATE 	calc_ego_grid_district.grid_district_hull AS t1
--- SET  	subst_sum = t2.subst_sum
--- FROM	(SELECT	dis.subst_id AS subst_id,
--- 		COUNT(sub.geom)::integer AS subst_sum
--- 	FROM	calc_ego_grid_district.grid_district_hull AS dis,
--- 		calc_ego_substation.substation_110 AS sub
--- 	WHERE  	dis.geom && sub.geom AND
--- 		ST_CONTAINS(dis.geom,sub.geom)
--- 	GROUP BY dis.subst_id
--- 	)AS t2
--- WHERE  	t1.subst_id = t2.subst_id;
--- 
--- -- Create Index GIST (geom)   (OK!) 2.500ms =0
--- CREATE INDEX	grid_district_hull_geom_idx
--- 	ON	calc_ego_grid_district.grid_district_hull
--- 	USING	GIST (geom);
+
 

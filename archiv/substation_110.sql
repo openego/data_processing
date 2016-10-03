@@ -2,7 +2,7 @@
 ---------- --SKRIPT-- OK! 7min
 ---------- ---------- ----------
 
--- Create schemas for open_eGo
+/* -- Create schemas for open_eGo
 DROP SCHEMA IF EXISTS	calc_ego_substation CASCADE;
 CREATE SCHEMA 		calc_ego_substation;
 
@@ -13,7 +13,7 @@ ALTER DEFAULT PRIVILEGES IN SCHEMA calc_ego_substation GRANT ALL ON FUNCTIONS TO
 
 -- Grant all in schema
 GRANT ALL ON SCHEMA 	calc_ego_substation TO oeuser WITH GRANT OPTION;
-GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA calc_ego_substation TO oeuser;
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA calc_ego_substation TO oeuser; */
 
 ---------- ---------- ----------
 -- Substations 110 (mv)

@@ -33,8 +33,8 @@ CONSTRAINT 	ego_deu_load_area_pkey PRIMARY KEY (id));
 -- "Insert Loads"   (OK!) 493.000ms =208.706
 INSERT INTO     calc_ego_loads.ego_deu_load_area (geom)
 	SELECT	loads.geom ::geometry(Polygon,3035)
-	FROM	(SELECT (ST_DUMP(ST_INTERSECTION(loads.geom,dis.geom))).geom AS geom
-		FROM	orig_ego.ego_deu_load_area_melted AS loads,
+	FROM	(SELECT (ST_DUMP(ST_SAFE_INTERSECTION(loads.geom,dis.geom))).geom AS geom
+		FROM	orig_ego.ego_deu_loads_melted AS loads,
 			calc_ego_grid_district.grid_district AS dis
 		WHERE	loads.geom && dis.geom
 		) AS loads
@@ -274,8 +274,8 @@ CONSTRAINT 	urban_sector_per_grid_district_1_residential_pkey PRIMARY KEY (id));
 -- "Insert Loads Residential"   (OK!) 330.000ms =290.559
 INSERT INTO     calc_ego_loads.urban_sector_per_grid_district_1_residential (geom)
 	SELECT	loads.geom ::geometry(Polygon,3035)
-	FROM	(SELECT (ST_DUMP(ST_INTERSECTION(loads.geom,dis.geom))).geom AS geom
-		FROM	orig_osm.osm_deu_polygon_urban_sector_1_residential_mview AS loads,
+	FROM	(SELECT (ST_DUMP(ST_SAFE_INTERSECTION(loads.geom,dis.geom))).geom AS geom
+		FROM	openstreetmap.osm_deu_polygon_urban_sector_1_residential_mview AS loads,
 			calc_ego_grid_district.grid_district AS dis
 		WHERE	loads.geom && dis.geom
 		) AS loads
@@ -310,6 +310,17 @@ FROM    (
 	) AS t2
 WHERE  	t1.id = t2.id;
 
+-- Scenario eGo data processing
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
+	SELECT	'0.1' AS version,
+		'calc_ego_loads' AS schema_name,
+		'urban_sector_per_grid_district_1_residential' AS table_name,
+		'process_eGo_loads_per_grid_district.sql' AS script_name,
+		COUNT(geom)AS entries,
+		'OK' AS status,
+		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
+	FROM	calc_ego_loads.urban_sector_per_grid_district_1_residential;
+	
 ---------- ---------- ----------
 
 -- 2. Retail
@@ -324,8 +335,8 @@ CONSTRAINT 	urban_sector_per_grid_district_2_retail_pkey PRIMARY KEY (id));
 -- "Insert Loads Retail"   (OK!) 32.000ms =37.496
 INSERT INTO     calc_ego_loads.urban_sector_per_grid_district_2_retail (geom)
 	SELECT	loads.geom ::geometry(Polygon,3035)
-	FROM	(SELECT (ST_DUMP(ST_INTERSECTION(loads.geom,dis.geom))).geom AS geom
-		FROM	orig_osm.osm_deu_polygon_urban_sector_2_retail_mview AS loads,
+	FROM	(SELECT (ST_DUMP(ST_SAFE_INTERSECTION(loads.geom,dis.geom))).geom AS geom
+		FROM	openstreetmap.osm_deu_polygon_urban_sector_2_retail_mview AS loads,
 			calc_ego_grid_district.grid_district AS dis
 		WHERE	loads.geom && dis.geom
 		) AS loads
@@ -360,6 +371,17 @@ FROM    (
 	) AS t2
 WHERE  	t1.id = t2.id;
 
+-- Scenario eGo data processing
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
+	SELECT	'0.1' AS version,
+		'calc_ego_loads' AS schema_name,
+		'urban_sector_per_grid_district_2_retail' AS table_name,
+		'process_eGo_loads_per_grid_district.sql' AS script_name,
+		COUNT(geom)AS entries,
+		'OK' AS status,
+		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
+	FROM	calc_ego_loads.urban_sector_per_grid_district_2_retail;
+	
 ---------- ---------- ----------
 
 -- 3. Industrial
@@ -374,8 +396,8 @@ CONSTRAINT 	urban_sector_per_grid_district_3_industrial_pkey PRIMARY KEY (id));
 -- "Insert Loads Industrial"   (OK!) 58.000ms =62.181
 INSERT INTO     calc_ego_loads.urban_sector_per_grid_district_3_industrial (geom)
 	SELECT	loads.geom ::geometry(Polygon,3035)
-	FROM	(SELECT (ST_DUMP(ST_INTERSECTION(loads.geom,dis.geom))).geom AS geom
-		FROM	orig_osm.osm_deu_polygon_urban_sector_3_industrial_mview AS loads,
+	FROM	(SELECT (ST_DUMP(ST_SAFE_INTERSECTION(loads.geom,dis.geom))).geom AS geom
+		FROM	openstreetmap.osm_deu_polygon_urban_sector_3_industrial_mview AS loads,
 			calc_ego_grid_district.grid_district AS dis
 		WHERE	loads.geom && dis.geom
 		) AS loads
@@ -410,6 +432,17 @@ FROM    (
 	) AS t2
 WHERE  	t1.id = t2.id;
 
+-- Scenario eGo data processing
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
+	SELECT	'0.1' AS version,
+		'calc_ego_loads' AS schema_name,
+		'urban_sector_per_grid_district_3_industrial' AS table_name,
+		'process_eGo_loads_per_grid_district.sql' AS script_name,
+		COUNT(geom)AS entries,
+		'OK' AS status,
+		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
+	FROM	calc_ego_loads.urban_sector_per_grid_district_3_industrial;
+	
 ---------- ---------- ----------
 
 -- 4. Agricultural
@@ -423,10 +456,9 @@ CONSTRAINT 	urban_sector_per_grid_district_4_agricultural_pkey PRIMARY KEY (id))
 
 -- "Insert Loads Agricultural"   (OK!) 130.000ms =124.855
 INSERT INTO     calc_ego_loads.urban_sector_per_grid_district_4_agricultural (geom)
-	SELECT	ST_AREA(loads.geom) AS area_ha,
-		loads.geom ::geometry(Polygon,3035)
-	FROM	(SELECT (ST_DUMP(ST_INTERSECTION(loads.geom,dis.geom))).geom AS geom
-		FROM	orig_osm.osm_deu_polygon_urban_sector_4_agricultural_mview AS loads,
+	SELECT	loads.geom ::geometry(Polygon,3035)
+	FROM	(SELECT (ST_DUMP(ST_SAFE_INTERSECTION(loads.geom,dis.geom))).geom AS geom
+		FROM	openstreetmap.osm_deu_polygon_urban_sector_4_agricultural_mview AS loads,
 			calc_ego_grid_district.grid_district AS dis
 		WHERE	loads.geom && dis.geom
 		) AS loads
@@ -461,6 +493,17 @@ FROM    (
 	) AS t2
 WHERE  	t1.id = t2.id;
 
+-- Scenario eGo data processing
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
+	SELECT	'0.1' AS version,
+		'calc_ego_loads' AS schema_name,
+		'urban_sector_per_grid_district_4_agricultural' AS table_name,
+		'process_eGo_loads_per_grid_district.sql' AS script_name,
+		COUNT(geom)AS entries,
+		'OK' AS status,
+		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
+	FROM	calc_ego_loads.urban_sector_per_grid_district_4_agricultural;
+	
 ---------- ---------- ----------
 
 -- "Calculate Sector Stats"   (OK!) -> 42.000ms =206.846
@@ -488,20 +531,20 @@ WHERE  	t1.id = t2.id;
 ---------- ---------- ----------
 -- 
 -- -- "Transform VG250"   (OK!) -> 2.000ms =11.438
--- DROP MATERIALIZED VIEW IF EXISTS	orig_geo_vg250.vg250_6_gem_mview CASCADE;
--- CREATE MATERIALIZED VIEW		orig_geo_vg250.vg250_6_gem_mview AS
+-- DROP MATERIALIZED VIEW IF EXISTS	orig_vg250.vg250_6_gem_mview CASCADE;
+-- CREATE MATERIALIZED VIEW		orig_vg250.vg250_6_gem_mview AS
 -- 	SELECT	vg.gid,
 -- 		vg.gen,
 -- 		vg.nuts,
 -- 		vg.rs,
 -- 		ags_0,
 -- 		ST_TRANSFORM(vg.geom,3035) AS geom
--- 	FROM	orig_geo_vg250.vg250_6_gem AS vg
+-- 	FROM	orig_vg250.vg250_6_gem AS vg
 -- 	ORDER BY vg.gid;
 -- 
 -- -- "Create Index GIST (geom)"   (OK!) -> 150ms =0
 -- CREATE INDEX  	vg250_6_gem_mview_geom_idx
--- 	ON	orig_geo_vg250.vg250_6_gem_mview
+-- 	ON	orig_vg250.vg250_6_gem_mview
 -- 	USING	GIST (geom);
 
 ---------- ---------- ----------
@@ -572,9 +615,18 @@ FROM    (
 	) AS t2
 WHERE  	t1.id = t2.id;
 
+-- Scenario eGo data processing
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
+	SELECT	'0.1' AS version,
+		'calc_ego_loads' AS schema_name,
+		'ego_deu_load_area' AS table_name,
+		'process_eGo_loads_per_grid_district.sql' AS script_name,
+		COUNT(geom)AS entries,
+		'OK' AS status,
+		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
+	FROM	calc_ego_loads.ego_deu_load_area;
 
-
-
+/* 
 ---------- ---------- ----------
 -- consumption calculation   (OK!) -> 7.000ms =446
 ---------- ---------- ----------
@@ -718,7 +770,11 @@ FROM	(SELECT	la.id,
 			coalesce(la.sector_consumption_industrial,0) + 
 			coalesce(la.sector_consumption_agricultural,0) AS consumption_sum
 	FROM	calc_ego_loads.ego_deu_load_area AS la) AS sub
-WHERE	sub.id = a.id;
+WHERE	sub.id = a.id; */
+
+
+
+
 
 
 ---------- ---------- ----------
@@ -765,7 +821,7 @@ ALTER TABLE		calc_ego_loads.ego_deu_load_area_ta OWNER TO oeuser;
 -- CREATE TABLE         	calc_ego_loads.ego_deu_load_area_spf AS
 -- 	SELECT	loads.*
 -- 	FROM	calc_ego_loads.ego_deu_load_area AS loads,
--- 		orig_geo_vg250.vg250_4_krs_spf_mview AS spf
+-- 		orig_vg250.vg250_4_krs_spf_mview AS spf
 -- 	WHERE	ST_TRANSFORM(spf.geom,3035) && loads.geom  AND  
 -- 		ST_CONTAINS(ST_TRANSFORM(spf.geom,3035), loads.geom_centre)
 -- 	ORDER BY loads.id;

@@ -1,4 +1,8 @@
-﻿-- TESTS:
+﻿
+-- Script to process OpenStreetMap tables after import with osm2pgsql
+-- basic operations: move to schema; update pkey and index
+
+-- TESTS:
 -- Select all tables with OSM in public
 SELECT     *
 FROM     information_schema.tables
