@@ -1,4 +1,4 @@
-/* DROP TABLE IF EXISTS calc_ego_loads.loads_total;
+﻿ DROP TABLE IF EXISTS calc_ego_loads.loads_total CASCADE;
 
 CREATE TABLE calc_ego_loads.loads_total
 (
@@ -10,7 +10,7 @@ CREATE TABLE calc_ego_loads.loads_total
 );
 
 ALTER TABLE calc_ego_loads.loads_total
-	OWNER TO oeuser; */
+	OWNER TO oeuser;
 	
 DELETE FROM calc_ego_loads.loads_total; 
 
