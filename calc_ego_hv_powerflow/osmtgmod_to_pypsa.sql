@@ -1,4 +1,4 @@
--- osmTGmod2pyPSA
+﻿-- osmTGmod2pyPSA
 
 -- CLEAN UP OF TABLES
 TRUNCATE calc_ego_hv_powerflow.bus CASCADE;
@@ -12,7 +12,7 @@ SELECT
   base_kv AS v_nom,
   geom
   FROM calc_ego_osmtgmod.bus_data
-  WHERE result_id = GREATEST(result_id)
+  WHERE result_id = 2;
 
 -- BRANCH DATA
 INSERT INTO calc_ego_hv_powerflow.line (line_id, bus0, bus1, x, r, b, s_nom, cables, frequency, geom, topo)
@@ -29,7 +29,7 @@ SELECT
   geom,
   topo
   FROM calc_ego_osmtgmod.branch_data
-  WHERE result_id = GREATEST(result_id) and (link_type = 'line' or link_type = 'cable');
+  WHERE result_id = 2 and (link_type = 'line' or link_type = 'cable');
   
 -- TRANSFORMER DATA
 INSERT INTO calc_ego_hv_powerflow.transformer (trafo_id, bus0, bus1, x, s_nom, tap_ratio, phase_shift, geom, topo)
@@ -44,7 +44,7 @@ SELECT
   geom,
   topo
   FROM calc_ego_osmtgmod.branch_data
-  WHERE result_id = GREATEST(result_id) and link_type = 'transformer';
+  WHERE result_id = 2 and link_type = 'transformer';
   
   
 -- per unit to absolute values
