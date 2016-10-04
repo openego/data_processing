@@ -102,14 +102,14 @@ INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_na
 
 	
 -- MViews 
-/* 	
+
 -- 1. eGo_lattice_deu_500m_wpa
 -- Grid inside wpa   (OK!) 500ms =108.289
 DROP MATERIALIZED VIEW IF EXISTS  	model_draft.eGo_lattice_deu_500m_wpa_mview CASCADE;
 CREATE MATERIALIZED VIEW         	model_draft.eGo_lattice_deu_500m_wpa_mview AS
 	SELECT	grid.*
 	FROM	model_draft.eGo_lattice_deu_500m AS grid
-	WHERE	area_type = 'wpa'
+	WHERE	area_type = 'wpa';
 
 -- Create Index GIST (geom)   (OK!) 1.000ms =*
 CREATE INDEX	eGo_lattice_deu_500m_wpa_mview_geom_idx
@@ -127,7 +127,7 @@ DROP MATERIALIZED VIEW IF EXISTS  	model_draft.eGo_lattice_deu_500m_la_mview CAS
 CREATE MATERIALIZED VIEW         	model_draft.eGo_lattice_deu_500m_la_mview AS
 	SELECT	grid.*
 	FROM	model_draft.eGo_lattice_deu_500m AS grid
-	WHERE	area_type = 'la'
+	WHERE	area_type = 'la';
 
 -- Create Index GIST (geom)   (OK!) 1.000ms =*
 CREATE INDEX	eGo_lattice_deu_500m_la_mview_geom_idx
@@ -138,7 +138,7 @@ CREATE INDEX	eGo_lattice_deu_500m_la_mview_geom_idx
 GRANT ALL ON TABLE	model_draft.eGo_lattice_deu_500m_wpa_mview TO oeuser WITH GRANT OPTION;
 ALTER TABLE		model_draft.eGo_lattice_deu_500m_wpa_mview OWNER TO oeuser;
 
-
+/*
 -- X. eGo_lattice_deu_500m_la_x
 -- Grid inside wpa   (OK!) 1.500ms =775
 DROP MATERIALIZED VIEW IF EXISTS  	model_draft.eGo_lattice_deu_500m_x_mview CASCADE;

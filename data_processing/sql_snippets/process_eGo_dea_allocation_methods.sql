@@ -549,8 +549,7 @@ CREATE MATERIALIZED VIEW 		model_draft.eGo_dea_allocation_m2_a_mview AS
 			flag
 		FROM 	model_draft.eGo_dea_allocation AS dea
 		WHERE 	(dea.voltage_level = '04 (HS/MS)' 
-			AND dea.generation_type = 'wind')
-			AND dea.subst_id IS NOT NULL;
+			AND dea.generation_type = 'wind');
 
 CREATE INDEX eGo_dea_allocation_m2_a_mview_geom_idx
 	ON model_draft.eGo_dea_allocation_m2_a_mview USING gist (geom);
@@ -559,8 +558,7 @@ CREATE INDEX eGo_dea_allocation_m2_a_mview_geom_idx
 UPDATE 	model_draft.eGo_dea_allocation AS dea
 SET	flag = 'M2_rest'
 WHERE	dea.voltage_level = '04 (HS/MS)' 
-	AND dea.generation_type = 'wind'
-	AND dea.subst_id IS NOT NULL;
+	AND dea.generation_type = 'wind';
 
 -- get windfarms   (OK!) -> 485.000ms =317
 DROP TABLE IF EXISTS 	model_draft.eGo_dea_allocation_m2_windfarm ;
@@ -694,7 +692,7 @@ BEGIN
 		INSERT INTO model_draft.m2_wpa_temp
 		SELECT 	row_number() over (ORDER BY pot.area_ha DESC)as sorted,
 			pot.*
-		FROM 	model_draft.geo_pot_area_per_grid_district AS pot
+		FROM 	model_draft.eGo_wpa_per_grid_district AS pot
 		WHERE 	subst_id =' || gd || ';
 
 		INSERT INTO model_draft.m2_jnt_temp
@@ -865,7 +863,7 @@ BEGIN
 		INSERT INTO model_draft.m3_grid_wpa_temp
 		SELECT 	row_number() over (ORDER BY RANDOM())as sorted,
 			wpa.*
-		FROM 	model_draft.deu_grid_500m_wpa_mview AS wpa
+		FROM 	model_draft.eGo_lattice_deu_500m_wpa_mview AS wpa
 		WHERE 	wpa.subst_id =' || gd || ';
 
 		INSERT INTO model_draft.m3_jnt_temp
