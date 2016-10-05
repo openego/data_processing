@@ -14,7 +14,7 @@ from data_processing.tools import io, metadata
 import time
 
 
-def demand_per_mv_gri_district():
+def demand_per_mv_grid_district():
     year = 2013
     schema = 'calc_ego_loads'
     target_table = 'ego_demand_per_transition_point'
@@ -163,7 +163,7 @@ def demand_per_mv_gri_district():
     metadata.submit_comment(conn, json_str, schema, target_table)
 
 if __name__ == '__main__':
-    demand_per_mv_gri_district()
+    demand_per_mv_grid_district()
 
     # orm_demand.__table__.create(conn)
 
