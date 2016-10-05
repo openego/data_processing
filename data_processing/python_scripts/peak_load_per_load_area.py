@@ -99,6 +99,11 @@ if __name__ == '__main__':
                 'sector_consumption_agricultural': 'l0',
                 'sector_consumption_industrial': 'i0',}
 
+    names_dc2 = {'h0': 'residential',
+                 'g0': 'retail',
+                 'l0': 'agricultural',
+                 'i0': 'industrial'}
+
     # rename columns to demandlib compatible names
     load_areas.rename(columns=names_dc, inplace=True)
 
@@ -112,6 +117,7 @@ if __name__ == '__main__':
         orm_peak_load.__table__.create(conn)
     except:
         session.query(orm_peak_load).delete()
+
     # iterate over substation retrieving sectoral demand at each of it
     for it, row in load_areas.iterrows():
         row = row.fillna(0)
@@ -141,6 +147,9 @@ if __name__ == '__main__':
         elec_demand['id'] = it
         elec_demand.set_index('id', inplace=True)
 
+        # rename columns
+        elec_demand.rename(columns=names_dc2, inplace=True)
+
         # Add data to orm object
         peak_load = orm_peak_load(
             id=it,
@@ -157,6 +166,7 @@ if __name__ == '__main__':
         #                      schema=schema,
         #                      index=True,
         #                      if_exists='fail')
+
     # push data to database
     session.commit()
 
@@ -166,8 +176,8 @@ if __name__ == '__main__':
     # change owner of table to db_group
     tools.change_owner_to(conn, schema, target_table, db_group)
 
-    # add primary key constraint on id column
-    tools.add_primary_key(conn, schema, target_table, la_index_col)
+    # # add primary key constraint on id column
+    # tools.add_primary_key(conn, schema, target_table, la_index_col)
 
     # create metadata json str
     json_str = metadata.create_metadata_json(
