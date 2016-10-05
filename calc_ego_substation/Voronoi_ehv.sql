@@ -1,4 +1,4 @@
-----------------------------------------------------------
+﻿----------------------------------------------------------
 -- VORONOI with  220 and 380 kV substations
 ----------------------------------------------------------
 
@@ -6,16 +6,16 @@
 -- Add Dummy points 
 INSERT INTO calc_ego_substation.ego_deu_substations_ehv (name, point, id, otg_id)
 SELECT 'DUMMY', ST_TRANSFORM(geom,4326), subst_id, subst_id
-FROM calc_ego_substation.substation_dummy;
+FROM calc_ego_substation.substations_dummy;
 
 
 -- Execute voronoi algorithm with 220 and 380 kV substations
-DROP TABLE IF EXISTS calc_ego_substation.ego_deu_voronoi_ehv;
+DROP TABLE IF EXISTS calc_ego_substation.ego_deu_voronoi_ehv CASCADE;
 WITH 
     -- Sample set of points to work with
     Sample AS (SELECT   ST_SetSRID(ST_Union(pts.point), 0) AS geom
 		FROM	calc_ego_substation.ego_deu_substations_ehv AS pts
-		WHERE pts.otg_id IS NOT NULL),  -- INPUT 1/2, this only includes substations with an otg_id
+		/*WHERE pts.otg_id IS NOT NULL*/),  -- INPUT 1/2, this only includes substations with an otg_id
     -- Build edges and circumscribe points to generate a centroid
     Edges AS (
     SELECT id,

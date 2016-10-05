@@ -1,3 +1,4 @@
+﻿DROP SCHEMA IF EXISTS calc_ego_hv_powerflow CASCADE;
 CREATE SCHEMA calc_ego_hv_powerflow
   AUTHORIZATION oeuser;
 
@@ -139,8 +140,8 @@ CREATE TABLE calc_ego_hv_powerflow.storage
   marginal_cost double precision, -- Unit: currency/MWh...
   capital_cost double precision, -- Unit: currency/MW...
   efficiency double precision, -- Unit: per unit...
-  soa_initial double precision, -- Unit: MWh...
-  soa_cyclic boolean DEFAULT false, -- Unit: n/a...
+  soc_initial double precision, -- Unit: MWh...
+  soc_cyclic boolean DEFAULT false, -- Unit: n/a...
   max_hours double precision, -- Unit: hours...
   efficiency_store double precision, -- Unit: per unit...
   efficiency_dispatch double precision, -- Unit: per unit...
@@ -244,7 +245,7 @@ CREATE TABLE calc_ego_hv_powerflow.storage_pq_set
   q_set double precision[], -- Unit: MVar...
   p_min_pu double precision[], -- Unit: per unit...
   p_max_pu double precision[], -- Unit: per unit...
-  soa_set double precision[], -- Unit: MWh...
+  soc_set double precision[], -- Unit: MWh...
   inflow double precision[], -- Unit: MW...
     CONSTRAINT storage_pq_set_pkey PRIMARY KEY (storage_id, temp_id, scn_name),
   CONSTRAINT storage_pq_set_temp_fkey FOREIGN KEY (temp_id) REFERENCES calc_ego_hv_powerflow.temp_resolution (temp_id)
@@ -444,8 +445,7 @@ Default: -1
 Status: Input (optional)';
 COMMENT ON COLUMN calc_ego_hv_powerflow.load.e_annual IS 'Unit: MW
 Description: 
-Status: Input (not needd for PyPSA)
-';
+Status: Input (not needd for PyPSA)';
 COMMENT ON COLUMN calc_ego_hv_powerflow.load_pq_set.p_set IS 'Unit: MW
 Description: Active power consumption (positive if the load is consuming power).
 Status: Input (optional)';
@@ -504,11 +504,10 @@ Status: Input (optional)';
 COMMENT ON COLUMN calc_ego_hv_powerflow.storage.efficiency IS 'Unit: per unit
 Description: Ratio between primary energy and electrical energy, e.g. takes value 0.4 for gas. This is important for determining CO2 emissions per MWh.
 Status: Input (optional)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.storage.soa_initial IS 'Unit: MWh
+COMMENT ON COLUMN calc_ego_hv_powerflow.storage.soc_initial IS 'Unit: MWh
 Description: State of charge before the snapshots in the OPF.
-Status: Input (optional)
-';
-COMMENT ON COLUMN calc_ego_hv_powerflow.storage.soa_cyclic IS 'Unit: n/a
+Status: Input (optional)';
+COMMENT ON COLUMN calc_ego_hv_powerflow.storage.soc_cyclic IS 'Unit: n/a
 Description: Switch: if True, then state_of_charge_initial is ignored and the initial state of charge is set to the final state of charge for the group of snapshots in the OPF.
 Status: Input (optional)';
 COMMENT ON COLUMN calc_ego_hv_powerflow.storage.max_hours IS 'Unit: hours
@@ -535,7 +534,7 @@ Status: Input (optional)';
 COMMENT ON COLUMN calc_ego_hv_powerflow.storage_pq_set.p_max_pu IS 'Unit: per unit
 Description: If control=”variable” this gives the maximum output for each snapshot per unit of p_nom for the OPF, relevant e.g. if for renewables the power output is limited by the weather.
 Status: Input (optional)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.storage_pq_set.soa_set IS 'Unit: MWh
+COMMENT ON COLUMN calc_ego_hv_powerflow.storage_pq_set.soc_set IS 'Unit: MWh
 Description: State of charge set points for snapshots in the OPF.
 Status: Input (optional)';
 COMMENT ON COLUMN calc_ego_hv_powerflow.storage_pq_set.inflow IS 'Unit: MW
@@ -587,7 +586,6 @@ COMMENT ON COLUMN calc_ego_hv_powerflow.transformer.capital_cost IS 'Unit: curre
 Description: Capital cost of extending s_nom by 1 MVA.
 Status: Input (optional)';
 
-
 -------------------------------------------------------------------
 ----------------------------- INDEXING ----------------------------
 -------------------------------------------------------------------
@@ -611,3 +609,23 @@ CREATE INDEX fki_storage_data_source_fk
   ON calc_ego_hv_powerflow.transformer
   USING btree
   (bus1);
+
+-------------------------------------------------------------------
+--------------------- FILL SOURCES TABLE --------------------------
+-------------------------------------------------------------------
+  
+INSERT INTO calc_ego_hv_powerflow.source VALUES (1, 'gas', NULL, NULL);
+INSERT INTO calc_ego_hv_powerflow.source VALUES (2, 'lignite', NULL, NULL);
+INSERT INTO calc_ego_hv_powerflow.source VALUES (3, 'waste', NULL, NULL);
+INSERT INTO calc_ego_hv_powerflow.source VALUES (4, 'oil', NULL, NULL);
+INSERT INTO calc_ego_hv_powerflow.source VALUES (5, 'uranium', NULL, NULL);
+INSERT INTO calc_ego_hv_powerflow.source VALUES (6, 'biomass', NULL, NULL);
+INSERT INTO calc_ego_hv_powerflow.source VALUES (7, 'eeg_gas', NULL, NULL);
+INSERT INTO calc_ego_hv_powerflow.source VALUES (8, 'coal', NULL, NULL);
+INSERT INTO calc_ego_hv_powerflow.source VALUES (9, 'run_of_river', NULL, NULL);
+INSERT INTO calc_ego_hv_powerflow.source VALUES (10, 'reservoir', NULL, NULL);
+INSERT INTO calc_ego_hv_powerflow.source VALUES (11, 'pumped_storage', NULL, NULL);
+INSERT INTO calc_ego_hv_powerflow.source VALUES (12, 'solar', NULL, NULL);
+INSERT INTO calc_ego_hv_powerflow.source VALUES (13, 'wind', NULL, NULL);
+INSERT INTO calc_ego_hv_powerflow.source VALUES (14, 'geothermal', NULL, NULL);
+INSERT INTO calc_ego_hv_powerflow.source VALUES (15, 'other_non_renewable', NULL, NULL);

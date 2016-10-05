@@ -1,4 +1,4 @@
-------------
+﻿------------
 -- Create a table that contains all generators (RE and conventional) but no duplicates. 
 ------------
 
@@ -20,6 +20,8 @@ ALTER TABLE orig_geo_powerplants.generators_total
 	
 DELETE FROM orig_geo_powerplants.generators_total; 
 
+DROP INDEX IF EXISTS orig_geo_powerplants.generators_total_idx;
+
 INSERT INTO orig_geo_powerplants.generators_total (re_id, geom) 
 	SELECT id, geom
 	FROM orig_geo_powerplants.proc_renewable_power_plants_germany
@@ -29,7 +31,7 @@ INSERT INTO orig_geo_powerplants.generators_total (conv_id, geom)
 	SELECT gid, geom
 	FROM orig_geo_powerplants.proc_power_plant_germany
 	WHERE eeg NOT LIKE 'yes'; -- Duplicates that already occur in the eeg-list are ignored 
-
+ 
 CREATE INDEX generators_total_idx
   ON orig_geo_powerplants.generators_total
   USING gist
@@ -385,3 +387,38 @@ SELECT
   source
 FROM orig_geo_powerplants.pf_generator_single a
 WHERE a.p_nom >= 50 AND a.aggr_id IS NOT NULL;
+
+
+-----------
+-- Add slack generators at buses that are located outside of Germany
+-----------
+-- create sequence for slack generators
+
+DROP SEQUENCE IF EXISTS calc_ego_hv_powerflow.slack_gen_seq; 
+CREATE SEQUENCE calc_ego_hv_powerflow.slack_gen_seq 
+  INCREMENT 1 
+  MINVALUE 100000 
+  MAXVALUE 9223372036854775807 
+  START 100000 
+  CACHE 1; 
+ALTER TABLE calc_ego_hv_powerflow.slack_gen_seq
+  OWNER TO oeuser;
+
+ -- insert slack generators into poswerflow schema
+ 
+INSERT INTO calc_ego_hv_powerflow.generator 
+ (generator_id, 
+ bus, 
+ dispatch, 
+ control) 
+SELECT 
+ nextval('calc_ego_hv_powerflow.slack_gen_seq'), 
+ bus_i, 
+ 'flexible', 
+ 'Slack' 
+FROM 
+ calc_ego_osmtgmod.bus_data 
+	WHERE cntr_id != 'DE' AND 
+	result_id = GREATEST(result_id) AND
+	bus_i IN (SELECT bus_id FROM calc_ego_hv_powerflow.bus) AND
+	base_kv > 110 
