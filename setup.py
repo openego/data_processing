@@ -3,7 +3,7 @@ from distutils.core import setup
 setup(
     name='data_processing',
     version='0.1-pre',
-    packages=[''],
+    packages=['data_processing'],
     url='https://github.com/openego/data_processing',
     license='GNU GENERAL PUBLIC LICENSE Version 3',
     author='open_eGo development group',
