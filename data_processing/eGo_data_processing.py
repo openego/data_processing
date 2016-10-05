@@ -24,42 +24,50 @@ logger.info('eGo data processing started...')
 # list of sql_snippets that process the data in correct order
 snippet_dir = 'sql_snippets'
 script_dir = 'python_scripts'
-sql_snippets = [
-    # 'scenario_eGo_data_processing.sql',
-    # 'setup_bkg_vg250.sql',
-    # 'process_eGo_substation.sql',
-    # 'process_eGo_grid_district.sql',
-    # 'setup_osm_landuse.sql',
-    # 'process_eGo_osm_loads_industry.sql',
-    # 'process_eGo_osm_loads.sql',
-    # 'setup_zensus_population_per_ha.sql',
-    # 'process_eGo_loads_melted.sql',
-    # 'process_eGo_loads_per_grid_district.sql',
-    # 'process_eGo_consumption.sql',
-    # 'analyse_eGo_paper_result.sql',
-    
-    # 'setup_eGo_wpa_per_grid_district.sql',
-    # 'setup_eGo_lattice_per_area.sql',
-    # 'process_eGo_dea_allocation_methods.sql'
-    ]
 
-python_scripts = [
-   # 'demand_per_mv_grid_district.py',
-   # 'peak_load_per_load_area.py'
-]
+snippets = [
+    'scenario_eGo_data_processing.sql',
+    'setup_bkg_vg250.sql',
+    'process_eGo_substation.sql',
+    'process_eGo_grid_district.sql',
+    'setup_osm_landuse.sql',
+    'process_eGo_osm_loads_industry.sql',
+    'process_eGo_osm_loads.sql',
+    'setup_zensus_population_per_ha.sql',
+    'process_eGo_loads_melted.sql',
+    'process_eGo_loads_per_grid_district.sql',
+    'process_eGo_consumption.sql',
+    'analyse_eGo_paper_result.sql',
+    'setup_eGo_wpa_per_grid_district.sql',
+    'setup_eGo_lattice_per_area.sql',
+    'process_eGo_dea_allocation_methods.sql',
+    'demand_per_mv_grid_district.py',
+    'peak_load_per_load_area.py'
+    ]
 
 # get database connection
 conn = io.oedb_session(section='oedb')
 
 # iterate over list of sql snippets and execute them
-for snippet in sql_snippets:
+for snippet in snippets:
     # timing and logging
     snippet_time = time.time()
     logger.info("Execute '{}' ...".format(snippet))
-    snippet_str = open(os.path.join(snippet_dir, snippet)).read()
+    if os.path.splitext(snippet)[1] == '.sql':
+        snippet_str = open(os.path.join(snippet_dir, snippet)).read()
 
-    # execute desired sql snippet
-    conn.execution_options(autocommit=True).execute(snippet_str)
+        # execute desired sql snippet
+        conn.execution_options(autocommit=True).execute(snippet_str)
+    elif os.path.splitext(snippet)[1] == '.py':
+        filename = os.path.join(script_dir, snippet)
+        script_str = open(filename, "rb").read()
+
+        # execute desired sql snippet
+        exec(compile(script_str, filename, 'exec'))
+    else:
+        raise NameError('{} is neither a python nor a sql script (at least it '
+                        'has not the right extension). Please add an extension '
+                        'to the script name (.py or .sql)'.format(snippet))
 
     # inform the user
     logger.info('...successfully done in {:.2f} seconds.'.format(
@@ -67,21 +75,6 @@ for snippet in sql_snippets:
 
 # close database connection
 conn.close()
-
-# iterate over list of python scripts and execute
-for script in python_scripts:
-    # timing and logging
-    script_time = time.time()
-    logger.info("Execute '{}' ...".format(script))
-    filename = os.path.join(script_dir, script)
-    script_str = open(filename, "rb").read()
-
-    # execute desired sql snippet
-    exec(compile(script_str, filename, 'exec'))
-
-    # inform the user
-    logger.info('...successfully done in {:.2f} seconds.'.format(
-        time.time() - script_time))
 
 logger.info('Data processing script successfully executed in {:.2f} seconds'.format(
     time.time() - total_time))
