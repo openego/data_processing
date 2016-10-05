@@ -2,9 +2,11 @@ import pandas as pd
 from workalendar.europe import Germany
 from datetime import time as settime
 import time
+from sqlalchemy.orm import sessionmaker
 
 from demandlib import bdew as bdew, particular_profiles as profiles
 from data_processing.tools import io, metadata
+from egoio.db_tables.calc_ego_loads import CalcEgoPeakLoad as orm_peak_load
 from oemof.db import tools
 
 
@@ -79,6 +81,8 @@ if __name__ == '__main__':
 
     # get database connection object
     conn = io.oedb_session(section='oedb')
+    Session = sessionmaker(bind=conn)
+    session = Session()
 
     # retrieve load areas table
     columns = [la_index_col,
@@ -98,6 +102,16 @@ if __name__ == '__main__':
     # rename columns to demandlib compatible names
     load_areas.rename(columns=names_dc, inplace=True)
 
+    # # delete old content from table
+    # del_str = "DROP TABLE IF EXISTS {0}.{1} CASCADE;".format(
+    #     schema, target_table)
+    # conn.execute(del_str)
+
+    # empty table or create
+    try:
+        orm_peak_load.__table__.create(conn)
+    except:
+        session.query(orm_peak_load).delete()
     # iterate over substation retrieving sectoral demand at each of it
     for it, row in load_areas.iterrows():
         row = row.fillna(0)
@@ -127,12 +141,24 @@ if __name__ == '__main__':
         elec_demand['id'] = it
         elec_demand.set_index('id', inplace=True)
 
-        # write results to new database table
-        elec_demand.to_sql(target_table,
-                             conn,
-                             schema=schema,
-                             index=True,
-                             if_exists='append')
+        # Add data to orm object
+        peak_load = orm_peak_load(
+            id=it,
+            retail=float(elec_demand['retail']),
+            residential=float(elec_demand['residential']),
+            industrial=float(elec_demand['industrial']),
+            agricultural=float(elec_demand['agricultural']))
+
+        session.add(peak_load)
+
+        # # write results to new database table
+        # elec_demand.to_sql(target_table,
+        #                      conn,
+        #                      schema=schema,
+        #                      index=True,
+        #                      if_exists='fail')
+    # push data to database
+    session.commit()
 
     # grant access to db_group
     tools.grant_db_access(conn, schema, target_table, db_group)
@@ -180,3 +206,5 @@ if __name__ == '__main__':
     )
 
     metadata.submit_comment(conn, json_str, schema, target_table)
+
+    conn.close()
