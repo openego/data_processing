@@ -88,3 +88,4 @@ meta2.reflect(bind=conn2, schema='coastdat',
 # map to classes of coastdat weather data
 Coastdat = automap_base(metadata=meta2)
 Coastdat.prepare()
+ 
