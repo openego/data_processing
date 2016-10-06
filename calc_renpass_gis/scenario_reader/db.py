@@ -29,6 +29,22 @@ conn = create_engine(
 
 print("Connected to database.")
 
+
+# establish  second db connection to
+# change of init file in .open_ego and Server connetion via ssh required
+section2 = 'Coastdat'
+conn2 = create_engine(
+    "postgresql+psycopg2://{user}:{password}@{host}:{port}/{db}".format(
+        user=cfg.get(section2, 'username'),
+        password=cfg.get(section2, 'password'),
+        host=cfg.get(section2, 'host'),
+        port=cfg.get(section2, 'port'),
+        db=cfg.get(section2, 'db')))
+
+print("Connected to database 2.")
+
+
+
 # map schema
 session = sessionmaker(bind=conn)()
 
@@ -51,3 +67,25 @@ Scenario, LinearTransformer, Source, Sink, Storage = \
     Base.classes.renpass_gis_source,\
     Base.classes.renpass_gis_sink,\
     Base.classes.renpass_gis_storage
+
+# map schema of coastdat-2
+session2 = sessionmaker(bind=conn)()
+
+meta2 = MetaData()
+meta2.bind = conn2
+meta2.reflect(bind=conn2, schema='coastdat',
+             only=['cosmoclmgrid',
+                   'datatype',
+                   'located',
+                   'projection',
+                   'scheduled',
+                   'spatial',
+                   'timeseries',                   
+                   'typified',
+                   'year'])
+
+
+# map to classes of coastdat weather data
+Coastdat = automap_base(metadata=meta2)
+Coastdat.prepare()
+ 
