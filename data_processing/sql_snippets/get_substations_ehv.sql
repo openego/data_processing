@@ -252,7 +252,7 @@ INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_na
 		'calc_ego_substation' AS schema_name,
 		'ego_deu_substations_ehv' AS table_name,
 		'get_substations_ehv.sql' AS script_name,
-		COUNT(id)AS entries,
+		COUNT(subst_id)AS entries,
 		'OK' AS status,
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
 FROM	calc_ego_substation.ego_deu_substations_ehv;
