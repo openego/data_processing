@@ -18,7 +18,8 @@ scenario = session.query(Scenario).filter(Scenario.id == scenario_id).all()[0]
 
 li = scenario.renpass_gis_storage_collection +\
     scenario.renpass_gis_source_collection +\
-    scenario.renpass_gis_sink_collection
+    scenario.renpass_gis_sink_collection +\
+    scenario.renpass_gis_linear_transformer_collection
 
 
 nodes_flows = []
