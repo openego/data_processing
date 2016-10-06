@@ -28,6 +28,8 @@ script_dir = 'python_scripts'
 snippets = [
     'scenario_eGo_data_processing.sql',
     'setup_bkg_vg250.sql',
+    'get_substations.sql',
+    'get_substations_ehv.sql',
     'process_eGo_substation.sql',
     'process_eGo_grid_district.sql',
     'setup_osm_landuse.sql',
