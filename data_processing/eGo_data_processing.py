@@ -44,7 +44,8 @@ snippets = [
     'setup_eGo_lattice_per_area.sql',
     'process_eGo_dea_allocation_methods.sql',
     'demand_per_mv_grid_district.py',
-    'peak_load_per_load_area.py'
+    'peak_load_per_load_area.py',
+    'Voronoi_ehv.sql'
     ]
 
 # get database connection
