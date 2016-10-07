@@ -50,9 +50,9 @@ CREATE TABLE calc_ego_loads.pf_load_single
 ALTER TABLE calc_ego_hv_powerflow.load
   OWNER TO oeuser;
 
------
--- Add information on corresponding bus (subst_id and otg_id) and un_id to load tables
------
+-----------
+-- Add un_id to load tables
+-----------
 
 
 -- Add un_id for small scale consumer (ssc) 
