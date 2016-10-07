@@ -16,3 +16,6 @@ BEGIN
 END
 $$
 LANGUAGE 'plpgsql' STABLE STRICT;
+
+-- Grant oeuser   (OK!) -> 100ms =0
+ALTER FUNCTION		public.st_safe_intersection(geometry, geometry) OWNER TO ludwig_schneider;
