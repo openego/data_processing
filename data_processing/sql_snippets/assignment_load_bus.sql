@@ -55,37 +55,14 @@ ALTER TABLE calc_ego_hv_powerflow.load
 -----
 
 
--- Identify corresponding bus for small scale consumer (ssc) with the help of grid districts and add un_id
-ALTER TABLE calc_ego_loads.ego_deu_consumption
-	ADD COLUMN otg_id bigint;
-
-
-UPDATE calc_ego_loads.ego_deu_consumption a
-	SET otg_id = b.otg_id
-	FROM calc_ego_substation.ego_deu_substations b
-	WHERE a.subst_id = b.id; 
+-- Add un_id for small scale consumer (ssc) 
 
 UPDATE calc_ego_loads.ego_deu_consumption a
 	SET un_id = b.un_id 
 	FROM calc_ego_loads.loads_total b
 	WHERE a.id = b.ssc_id; 
 
--- Identify corresponding bus for large scale consumer (lsc) with the help of ehv-voronoi and add un_id
-
-ALTER TABLE calc_ego_loads.large_scale_consumer
-	ADD COLUMN subst_id bigint,
-	ADD COLUMN otg_id bigint,
-	ADD COLUMN un_id bigint;
-
-UPDATE calc_ego_loads.large_scale_consumer a
-	SET subst_id = b.subst_id
-	FROM calc_ego_substation.ego_deu_voronoi_ehv b
-	WHERE ST_Intersects (ST_Transform(a.geom,4326), b.geom) =TRUE;
-
-UPDATE calc_ego_loads.large_scale_consumer a
-	SET otg_id = b.otg_id
-	FROM calc_ego_substation.ego_deu_substations b
-	WHERE a.subst_id = b.id; 
+-- Add un_id for large scale consumer (lsc)
 
 UPDATE calc_ego_loads.large_scale_consumer a
 	SET un_id = b.un_id 
