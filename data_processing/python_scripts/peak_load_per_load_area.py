@@ -31,37 +31,61 @@ def add_sectoral_peak_load(load_areas, **kwargs):
 
     # call demandlib
     # TODO: change to use new demandlib
-    tmp_peak_load = dm.electrical_demand(method='calculate_profile',
-                                     year=year,
-                                     ann_el_demand_per_sector= {
-                                         'h0':
-                                             load_areas['sector_consumption_residential'],
-                                         'g0':
-                                             load_areas['sector_consumption_retail'],
-                                         'i0':
-                                             load_areas['sector_consumption_industrial'],
-                                        'l0':
-                                            load_areas['sector_consumption_agricultural']}
-                                     ).elec_demand
+    # read standard load profiles
+    e_slp = bdew.ElecSlp(year, holidays=holidays)
+
+    # multiply given annual demand with timeseries
+    # elec_demand = e_slp.get_profile(load_areas['h0', 'g0', 'l0', 'i0'].to_dict())
+    elec_demand = e_slp.get_profile(load_areas.to_dict())
+
+    # tmp_peak_load = dm.electrical_demand(method='calculate_profile',
+    #                                  year=year,
+    #                                  ann_el_demand_per_sector= {
+    #                                      'h0':
+    #                                          load_areas['sector_consumption_residential'],
+    #                                      'g0':
+    #                                          load_areas['sector_consumption_retail'],
+    #                                      'i0':
+    #                                          load_areas['sector_consumption_industrial'],
+    #                                     'l0':
+    #                                         load_areas['sector_consumption_agricultural']}
+    #                                  ).elec_demand
     # hack correct industrial profile into dataframe
     # print(load_areas['sector_consumption_industrial'])
 
-    if load_areas['sector_consumption_industrial'] == 0:
-        load_areas['sector_consumption_industrial'] = 0.1
+    # if load_areas['sector_consumption_industrial'] == 0:
+    #     load_areas['sector_consumption_industrial'] = 0.1
 
-    demand_industry = eb.IndustrialLoadProfile('simple_industrial_profile',
-        **{'annual_demand': load_areas['sector_consumption_industrial'],
-        'year': year,
-        'am': settime(6, 0, 0),
-        'pm': settime(22, 0, 0),
-        'profile_factors':
-            {'week': {'day': 0.8, 'night': 0.6},
-            'weekend': {'day': 0.6, 'night': 0.6}}
-        })
-    ind_demand = demand_industry.profile
-    tmp_peak_load['i0'] = ind_demand
+    # Add the slp for the industrial group
+    ilp = profiles.IndustrialLoadProfile(e_slp.date_time_index,
+                                         holidays=holidays)
 
-    peak_load = tmp_peak_load.max(axis=0)
+    # Beginning and end of workday, weekdays and weekend days, and scaling factors
+    # by default
+    elec_demand['i0'] = ilp.simple_profile(
+        load_areas['i0'],
+        am=settime(6, 0, 0),
+        pm=settime(22, 0, 0),
+        profile_factors=
+        {'week': {'day': 0.8, 'night': 0.6},
+         'weekend': {'day': 0.6, 'night': 0.6}})
+
+    # Resample 15-minute values to hourly values and sum across sectors
+    elec_demand = elec_demand.resample('H').mean().fillna(0).max().to_frame().T
+
+    # demand_industry = eb.IndustrialLoadProfile('simple_industrial_profile',
+    #     **{'annual_demand': load_areas['sector_consumption_industrial'],
+    #     'year': year,
+    #     'am': settime(6, 0, 0),
+    #     'pm': settime(22, 0, 0),
+    #     'profile_factors':
+    #         {'week': {'day': 0.8, 'night': 0.6},
+    #         'weekend': {'day': 0.6, 'night': 0.6}}
+    #     })
+    # ind_demand = demand_industry.profile
+    # elec_demand['i0'] = ind_demand
+
+    peak_load = elec_demand.max(axis=0)
 
     return peak_load
 
@@ -118,18 +142,24 @@ if __name__ == '__main__':
     except:
         session.query(orm_peak_load).delete()
 
+    # Use above function `add_sectoral_peak_load` via apply
+    # elec_demand = load_areas.fillna(0).apply(
+    #     add_sectoral_peak_load, axis=1, args=())
+
+    # read standard load profiles
+    e_slp = bdew.ElecSlp(year, holidays=holidays)
+
+    # Add the slp for the industrial group
+    ilp = profiles.IndustrialLoadProfile(e_slp.date_time_index,
+                                         holidays=holidays)
+
     # iterate over substation retrieving sectoral demand at each of it
     for it, row in load_areas.iterrows():
         row = row.fillna(0)
-        # read standard load profiles
-        e_slp = bdew.ElecSlp(year, holidays=holidays)
 
         # multiply given annual demand with timeseries
         elec_demand = e_slp.get_profile(row.to_dict())
 
-        # Add the slp for the industrial group
-        ilp = profiles.IndustrialLoadProfile(e_slp.date_time_index,
-                                             holidays=holidays)
 
         # Beginning and end of workday, weekdays and weekend days, and scaling factors
         # by default
@@ -143,7 +173,7 @@ if __name__ == '__main__':
 
         # Resample 15-minute values to hourly values and sum across sectors
         elec_demand = elec_demand.resample('H').mean().fillna(0).max().to_frame().T#.max(axis=0)#.to_frame().unstack()#.\
-            # to_frame(name='peak_load')
+        # to_frame(name='peak_load')
         elec_demand['id'] = it
         elec_demand.set_index('id', inplace=True)
 

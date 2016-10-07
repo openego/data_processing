@@ -1,11 +1,11 @@
-﻿ DROP TABLE IF EXISTS calc_ego_loads.loads_total CASCADE;
+DROP TABLE IF EXISTS calc_ego_loads.loads_total CASCADE;
 
 CREATE TABLE calc_ego_loads.loads_total
 (
   un_id serial NOT NULL, 
   ssc_id integer, 
   lsc_id integer,
-  geom geometry(Point,4326),
+  geom geometry(MultiPolygon,3035),
   CONSTRAINT generators_total_pkey PRIMARY KEY (un_id)
 );
 
@@ -15,7 +15,7 @@ ALTER TABLE calc_ego_loads.loads_total
 DELETE FROM calc_ego_loads.loads_total; 
 
 INSERT INTO calc_ego_loads.loads_total (ssc_id, geom) 
-	SELECT id, geom
+	SELECT id, ST_Multi(geom)
 	FROM calc_ego_loads.ego_deu_consumption; 
 
 INSERT INTO calc_ego_loads.loads_total (lsc_id, geom) 
@@ -32,7 +32,7 @@ CREATE INDEX loads_total_idx
 -----
 -- Create table to assign single load areas to a bus
 -----
-DROP TABLE IF EXISTS calc_ego_loads.pf_load_single;
+DROP TABLE IF EXISTS calc_ego_loads.pf_load_single CASCADE;
 
 CREATE TABLE calc_ego_loads.pf_load_single
 (
@@ -74,6 +74,7 @@ UPDATE calc_ego_loads.large_scale_consumer a
 -------------
 
 -- Add data for small scale consumer to pf_load_single 
+
 
 INSERT INTO calc_ego_loads.pf_load_single (load_id, bus, e_annual)
 	SELECT un_id, otg_id, (sector_consumption_residential+sector_consumption_retail+sector_consumption_industrial+sector_consumption_agricultural)
