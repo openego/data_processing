@@ -30,6 +30,7 @@ snippets = [
     'setup_bkg_vg250.sql',
     'get_substations.sql',
     'get_substations_ehv.sql',
+    'otg_id_to_substations.sql',
     'process_eGo_substation.sql',
     'process_eGo_grid_district.sql',
     'setup_osm_landuse.sql',
