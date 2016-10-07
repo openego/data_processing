@@ -52,7 +52,7 @@ snippets = [
     'renpass_gis_ResultsTOPF.sql',
     'assignment_load_bus.sql',
     'demand_per_mv_grid_district.py',
-
+    'demandseries_TOPF.sql'
     ]
 
 # get database connection
