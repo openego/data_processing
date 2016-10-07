@@ -118,18 +118,20 @@ if __name__ == '__main__':
     except:
         session.query(orm_peak_load).delete()
 
+    # read standard load profiles
+    e_slp = bdew.ElecSlp(year, holidays=holidays)
+
+    # Add the slp for the industrial group
+    ilp = profiles.IndustrialLoadProfile(e_slp.date_time_index,
+                                         holidays=holidays)
+
     # iterate over substation retrieving sectoral demand at each of it
-    for it, row in load_areas.iterrows():
+    for it, row in load_areas.iloc[0:100].iterrows():
         row = row.fillna(0)
-        # read standard load profiles
-        e_slp = bdew.ElecSlp(year, holidays=holidays)
 
         # multiply given annual demand with timeseries
         elec_demand = e_slp.get_profile(row.to_dict())
 
-        # Add the slp for the industrial group
-        ilp = profiles.IndustrialLoadProfile(e_slp.date_time_index,
-                                             holidays=holidays)
 
         # Beginning and end of workday, weekdays and weekend days, and scaling factors
         # by default
@@ -143,7 +145,7 @@ if __name__ == '__main__':
 
         # Resample 15-minute values to hourly values and sum across sectors
         elec_demand = elec_demand.resample('H').mean().fillna(0).max().to_frame().T#.max(axis=0)#.to_frame().unstack()#.\
-            # to_frame(name='peak_load')
+        # to_frame(name='peak_load')
         elec_demand['id'] = it
         elec_demand.set_index('id', inplace=True)
 
