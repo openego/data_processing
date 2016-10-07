@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 from demandlib import bdew as bdew, particular_profiles as profiles
-from egoio.db_tables.calc_ego_loads import EgoDeuConsumptionArea as orm_loads,\
+from egoio.db_tables.calc_ego_loads import EgoDeuConsumption as orm_loads,\
     EgoDemandPerTransitionPoint as orm_demand
 from egoio.tools import db
 from sqlalchemy.orm import sessionmaker
@@ -52,7 +52,7 @@ def demand_per_mv_grid_district():
     Session = sessionmaker(bind=conn)
     session = Session()
 
-    query_demand = session.query(orm_loads.subst_id,
+    query_demand = session.query(orm_loads.otg_id,
                                  func.sum(orm_loads.sector_consumption_residential).\
                                  label('residential'),
                                  func.sum(orm_loads.sector_consumption_retail).label('retail'),
@@ -60,10 +60,10 @@ def demand_per_mv_grid_district():
                                  label('industrial'),
                                  func.sum(orm_loads.sector_consumption_agricultural).\
                                  label('agricultural')).\
-                                 group_by(orm_loads.subst_id)
+                                 group_by(orm_loads.otg_id)
 
     annual_demand_df = pd.read_sql_query(
-        query_demand.statement, session.bind, index_col='subst_id').fillna(0)
+        query_demand.statement, session.bind, index_col='otg_id').fillna(0)
 
     large_scale_industrial = pd.read_sql_table('large_scale_consumer', conn, schema,
                                                index_col='id')
@@ -72,7 +72,7 @@ def demand_per_mv_grid_district():
     annual_demand_df = pd.concat(
         [annual_demand_df,
          large_scale_industrial.groupby(
-             by='subst_id').sum()['consumption']],
+             by='otg_id').sum()['consumption']],
         axis=1)
     annual_demand_df['industrial'] = annual_demand_df[
         ['industrial', 'consumption']].sum(axis=1)

@@ -190,7 +190,10 @@ WHERE polygon_id IN (SELECT polygon_id
               WHERE t.rnum > 1);
 
 ALTER TABLE calc_ego_loads.large_scale_consumer
-	ADD COLUMN id serial, 
+	ADD COLUMN id serial,
+	ADD COLUMN subst_id integer, 
+	ADD COLUMN otg_id integer,  
+	ADD COLUMN un_id integer,
 	ADD COLUMN consumption numeric, 
 	ADD COLUMN peak_load numeric,
 	ADD COLUMN geom geometry(MultiPolygon,3035),
@@ -269,6 +272,20 @@ CREATE INDEX  	large_scale_consumer_geom_idx
 CREATE INDEX  	large_scale_consumer_geom_centre_idx
     ON    	calc_ego_loads.large_scale_consumer
     USING     	GIST (geom_centre);
+
+
+-- Identify corresponding bus for large scale consumer (lsc) with the help of ehv-voronoi
+
+UPDATE calc_ego_loads.large_scale_consumer a
+	SET subst_id = b.subst_id
+	FROM calc_ego_substation.ego_deu_voronoi_ehv b
+	WHERE ST_Intersects (ST_Transform(a.geom,4326), b.geom) =TRUE;
+
+UPDATE calc_ego_loads.large_scale_consumer a
+	SET otg_id = b.otg_id
+	FROM calc_ego_substation.ego_deu_substations b
+	WHERE a.subst_id = b.id; 
+
 			  
 -- Scenario eGo data processing
 INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)

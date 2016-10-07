@@ -6,6 +6,8 @@ CREATE TABLE 		calc_ego_loads.ego_deu_consumption
 (
 	id integer NOT NULL,
 	subst_id integer,
+	otg_id integer,
+	un_id integer,
  	sector_area_residential numeric,
 	sector_area_retail numeric,
 	sector_area_industrial numeric,
@@ -14,14 +16,15 @@ CREATE TABLE 		calc_ego_loads.ego_deu_consumption
 	sector_consumption_retail numeric,
 	sector_consumption_industrial numeric,
 	sector_consumption_agricultural numeric,
+	geom geometry (Polygon,3035), 
 	CONSTRAINT ego_deu_consumption_pkey PRIMARY KEY (id)
 );
 
 -- Set ID   (OK!) -> 100ms =206.846
 INSERT INTO 	calc_ego_loads.ego_deu_consumption (id,subst_id,
-													sector_area_residential,sector_area_retail,
-													sector_area_industrial,sector_area_agricultural)
-	SELECT 	id,
+		sector_area_residential,sector_area_retail,
+		sector_area_industrial,sector_area_agricultural)
+	SELECT 		id,
 			subst_id,
 			sector_area_residential,
 			sector_area_retail,
@@ -153,15 +156,21 @@ FROM
 WHERE
 sub.id = a.id;
 
--- Add Geometry information to consumption table
-
-ALTER TABLE calc_ego_loads.ego_deu_consumption
-ADD COLUMN geom geometry (Polygon,3035); 
+-- Add Geometry information in consumption table
 
 UPDATE calc_ego_loads.ego_deu_consumption a
 SET geom = b.geom
 FROM calc_ego_loads.ego_deu_load_area b
 WHERE a.id = b.id;
+
+
+-- Identify corresponding otg_id
+
+UPDATE calc_ego_loads.ego_deu_consumption a
+	SET otg_id = b.otg_id
+	FROM calc_ego_substation.ego_deu_substations b
+WHERE a.subst_id = b.id; 
+
 
 -- Grant oeuser   (OK!) -> 100ms =0
 GRANT ALL ON TABLE 	calc_ego_loads.ego_deu_consumption TO oeuser WITH GRANT OPTION;
