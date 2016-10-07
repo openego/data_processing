@@ -143,10 +143,8 @@ if __name__ == '__main__':
         session.query(orm_peak_load).delete()
 
     # Use above function `add_sectoral_peak_load` via apply
-    # elec_demand = load_areas.iloc[0:100].fillna(0).apply(
+    # elec_demand = load_areas.fillna(0).apply(
     #     add_sectoral_peak_load, axis=1, args=())
-    # print(elec_demand)
-    # exit(0)
 
     # read standard load profiles
     e_slp = bdew.ElecSlp(year, holidays=holidays)
@@ -156,7 +154,7 @@ if __name__ == '__main__':
                                          holidays=holidays)
 
     # iterate over substation retrieving sectoral demand at each of it
-    for it, row in load_areas.iloc[0:100].iterrows():
+    for it, row in load_areas.iterrows():
         row = row.fillna(0)
 
         # multiply given annual demand with timeseries
