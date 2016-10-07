@@ -44,7 +44,6 @@ snippets = [
     'setup_eGo_wpa_per_grid_district.sql',
     'setup_eGo_lattice_per_area.sql',
     'process_eGo_dea_allocation_methods.sql',
-    'peak_load_per_load_area.py',
     'Voronoi_ehv.sql',
     'voronoi_weatherpoint.sql',
     'calc_ego_hv_powerflow.sql',
@@ -53,7 +52,8 @@ snippets = [
     'renpass_gis_ResultsTOPF.sql',
     'assignment_load_bus.sql',
     'demand_per_mv_grid_district.py',
-    'demandseries_TOPF.sql'
+    'demandseries_TOPF.sql',
+    'peak_load_per_load_area.py'
     ]
 
 # get database connection
