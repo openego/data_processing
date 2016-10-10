@@ -89,7 +89,7 @@ node,way   admin_level  text         linear,nocolumn
 node,way   aerialway    text         linear,nocolumn
 node,way   aeroway      text         polygon,nocolumn
 node,way   amenity      text         polygon,nocolumn
-node,way   area         text         polygon,nocolumn
+node,way   area         text         polygon,nocolumn # hard coded support for area=1/yes => polygon is in osm2pgsql
 node,way   barrier      text         linear,nocolumn
 node,way   bicycle      text         linear,nocolumn
 node,way   brand        text         linear,nocolumn
