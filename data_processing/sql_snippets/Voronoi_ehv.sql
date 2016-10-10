@@ -93,6 +93,17 @@ ALTER TABLE calc_ego_substation.ego_deu_voronoi_ehv
 ALTER TABLE calc_ego_substation.ego_deu_voronoi_ehv
   OWNER TO oeuser;
 
+-- Scenario eGo data processing
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
+	SELECT	'0.1' AS version,
+		'calc_ego_substation' AS schema_name,
+		'ego_deu_voronoi_ehv' AS table_name,
+		'Voronoi_ehv.sql' AS script_name,
+		COUNT(subst_id)AS entries,
+		'OK' AS status,
+		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
+FROM	calc_ego_substation.ego_deu_voronoi_ehv;
+
 -- Clip voronoi with vg250
 
 /* 

@@ -422,3 +422,15 @@ FROM
 	result_id = GREATEST(result_id) AND
 	bus_i IN (SELECT bus_id FROM calc_ego_hv_powerflow.bus) AND
 	base_kv > 110 
+
+-- Scenario eGo data processing
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
+	SELECT	'0.1' AS version,
+		'calc_ego_hv_powerflow' AS schema_name,
+		'generator' AS table_name,
+		'assignment_generator_bus.sql' AS script_name,
+		COUNT(generator_id)AS entries,
+		'OK' AS status,
+		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
+FROM	calc_ego_hv_powerflow.generator;
+

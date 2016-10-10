@@ -14,6 +14,17 @@ SELECT
   FROM calc_ego_osmtgmod.bus_data
   WHERE result_id = 2;
 
+-- Scenario eGo data processing
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
+	SELECT	'0.1' AS version,
+		'calc_ego_hv_powerflow' AS schema_name,
+		'bus' AS table_name,
+		'osmtgmod_to_pypsa.sql' AS script_name,
+		COUNT(bus_id)AS entries,
+		'OK' AS status,
+		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
+FROM	calc_ego_hv_powerflow.bus;
+
 -- BRANCH DATA
 INSERT INTO calc_ego_hv_powerflow.line (line_id, bus0, bus1, x, r, b, s_nom, cables, frequency, geom, topo)
 SELECT 
@@ -31,6 +42,17 @@ SELECT
   FROM calc_ego_osmtgmod.branch_data
   WHERE result_id = 2 and (link_type = 'line' or link_type = 'cable');
   
+-- Scenario eGo data processing
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
+	SELECT	'0.1' AS version,
+		'calc_ego_hv_powerflow' AS schema_name,
+		'line' AS table_name,
+		'osmtgmod_to_pypsa.sql' AS script_name,
+		COUNT(line_id)AS entries,
+		'OK' AS status,
+		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
+FROM	calc_ego_hv_powerflow.line;
+
 -- TRANSFORMER DATA
 INSERT INTO calc_ego_hv_powerflow.transformer (trafo_id, bus0, bus1, x, s_nom, tap_ratio, phase_shift, geom, topo)
 SELECT 
@@ -47,6 +69,17 @@ SELECT
   WHERE result_id = 2 and link_type = 'transformer';
   
   
+-- Scenario eGo data processing
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
+	SELECT	'0.1' AS version,
+		'calc_ego_hv_powerflow' AS schema_name,
+		'transformer' AS table_name,
+		'osmtgmod_to_pypsa.sql' AS script_name,
+		COUNT(trafo_id)AS entries,
+		'OK' AS status,
+		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
+FROM	calc_ego_hv_powerflow.transformer;
+
 -- per unit to absolute values
 
 UPDATE calc_ego_hv_powerflow.line a
