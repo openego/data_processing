@@ -88,3 +88,15 @@ ALTER TABLE calc_renpass_gis.voronoi_weatherpoint
 
 ALTER TABLE calc_renpass_gis.voronoi_weatherpoint
   OWNER TO oeuser;
+
+-- Scenario eGo data processing
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
+	SELECT	'0.1' AS version,
+		'calc_renpass_gis' AS schema_name,
+		'voronoi_weatherpoint' AS table_name,
+		'voronoi_weatherpoint.sql' AS script_name,
+		COUNT(id)AS entries,
+		'OK' AS status,
+		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
+FROM	calc_renpass_gis.voronoi_weatherpoint;
+

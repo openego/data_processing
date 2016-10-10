@@ -62,5 +62,14 @@ calc_renpass_gis.pp_feedin_by_pf_source B where A.source = B.source
 group by A.aggr_id
 
 
-
+-- Scenario eGo data processing
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
+	SELECT	'0.1' AS version,
+		'calc_ego_hv_powerflow' AS schema_name,
+		'generator_pq_set' AS table_name,
+		'renpass_gis_ResultsTOPF.sql' AS script_name,
+		COUNT(generator_id)AS entries,
+		'OK' AS status,
+		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
+FROM	calc_ego_hv_powerflow.generator_pq_set;
 
