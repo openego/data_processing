@@ -1,1 +1,1 @@
-osm2pgsql --create --slim --hstore-all --number-processes 2 --cache 5120 -H localhost -P 5432 -d oedb -U ulf_mueller -W -p osm_deu -S oedb.style
+osm2pgsql --create --slim --hstore-all --number-processes 2 --cache 5120 -H localhost -P 5432 -d oedb -U  -W  -p osm_deu -S oedb.style  germany-161001.osm.pbf
