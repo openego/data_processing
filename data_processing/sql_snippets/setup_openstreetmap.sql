@@ -1,8 +1,10 @@
-﻿
--- Script to process OpenStreetMap tables after import with osm2pgsql
--- basic operations: move to schema; update pkey and index
+﻿/*
+Script to process OpenStreetMap tables after import with osm2pgsql
+Basic operations: move to schema; update pkey and index
+*/ 
 
--- TESTS:
+/*
+-- Tests for the loops
 -- Select all tables with OSM in public
 SELECT     *
 FROM     information_schema.tables
@@ -28,10 +30,21 @@ FROM     pg_indexes
 WHERE     schemaname='openstreetmap'
     AND tablename LIKE 'osm_%'
     AND indexname LIKE '%_pkey';
-
+*/ 
 
 -- 0. Create new schema
 --CREATE SCHEMA openstreetmap;
+-- ALTER DEFAULT PRIVILEGES IN SCHEMA openstreetmap
+--     GRANT INSERT, SELECT, UPDATE, DELETE, TRUNCATE, REFERENCES, TRIGGER ON TABLES
+--     TO oeuser;
+-- 
+-- ALTER DEFAULT PRIVILEGES IN SCHEMA openstreetmap
+--     GRANT SELECT, UPDATE, USAGE ON SEQUENCES
+--     TO oeuser;
+-- 
+-- ALTER DEFAULT PRIVILEGES IN SCHEMA openstreetmap
+--     GRANT EXECUTE ON FUNCTIONS
+--     TO oeuser;
 
 
 -- 1. Move all tables to new schema -> 1s
