@@ -41,9 +41,9 @@ snippets = [
     'process_eGo_loads_per_grid_district.sql',
     'process_eGo_consumption.sql',
     'analyse_eGo_paper_result.sql',
-    'setup_eGo_wpa_per_grid_district.sql',
-    'setup_eGo_lattice_per_area.sql',
-    'process_eGo_dea_allocation_methods.sql',
+    # 'setup_eGo_wpa_per_grid_district.sql', # takes very long, will be executed separately
+    # 'setup_eGo_lattice_per_area.sql',
+    # 'process_eGo_dea_allocation_methods.sql',
     'Voronoi_ehv.sql',
     'voronoi_weatherpoint.sql',
     'calc_ego_hv_powerflow.sql',
