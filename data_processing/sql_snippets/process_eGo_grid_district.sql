@@ -349,7 +349,7 @@ DROP SEQUENCE IF EXISTS 	calc_ego_substation.ego_deu_substations_voronoi_cut_id 
 CREATE SEQUENCE 		calc_ego_substation.ego_deu_substations_voronoi_cut_id;
 
 -- Grant oeuser   (OK!) -> 100ms =0
-ALTER SEQUENCE		calc_ego_grid_district.ego_deu_substations_voronoi_cut_id OWNER TO oeuser;
+ALTER SEQUENCE		calc_ego_substation.ego_deu_substations_voronoi_cut_id OWNER TO oeuser;
 
 -- Cutting GEM II.   (OK!) 3.000ms =4.531
 DROP TABLE IF EXISTS	calc_ego_substation.ego_deu_substations_voronoi_cut CASCADE;
@@ -540,7 +540,7 @@ DROP SEQUENCE IF EXISTS 	calc_ego_substation.ego_deu_substations_voronoi_cut_0su
 CREATE SEQUENCE 		calc_ego_substation.ego_deu_substations_voronoi_cut_0subst_nn_line_mview_id;
 
 -- Grant oeuser   (OK!) -> 100ms =0
-ALTER SEQUENCE		calc_ego_grid_district.ego_deu_substations_voronoi_cut_0subst_nn_line_mview_id OWNER TO oeuser;
+ALTER SEQUENCE		calc_ego_substation.ego_deu_substations_voronoi_cut_0subst_nn_line_mview_id OWNER TO oeuser;
 
 -- connect points   (OK!) 1.000ms =2.645
 DROP MATERIALIZED VIEW IF EXISTS	calc_ego_substation.ego_deu_substations_voronoi_cut_0subst_nn_line_mview;
