@@ -1086,6 +1086,10 @@ FROM	(SELECT	mun.id AS id,
 	)AS t2
 WHERE  	t1.id = t2.id;
 
+-- Grant oeuser   (OK!) -> 100ms =0
+GRANT ALL ON TABLE	calc_ego_grid_district.grid_district_dump TO oeuser WITH GRANT OPTION;
+ALTER TABLE		calc_ego_grid_district.grid_district_dump OWNER TO oeuser;
+
 -- Scenario eGo data processing
 INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
 	SELECT	'0.1' AS version,
