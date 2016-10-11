@@ -178,6 +178,7 @@ RETURN zone+pref;
 END;
 $BODY$ LANGUAGE 'plpgsql' IMMUTABLE
 COST 100;
+ALTER FUNCTION utmzone(geometry) OWNER TO oeuser;
 
 -- Function: ST_Buffer_Meters(geometry, double precision)
 -- DROP FUNCTION ST_Buffer_Meters(geometry, double precision);
@@ -198,6 +199,7 @@ RETURN ST_transform(ST_Buffer(ST_transform($1, utm_srid), $2), orig_srid);
 END;
 $BODY$ LANGUAGE 'plpgsql' IMMUTABLE
 COST 100;
+ALTER FUNCTION ST_Buffer_Meters(geometry, double precision) OWNER TO oeuser;
 
 -- create view with buffer of 75m around polygons
 CREATE MATERIALIZED VIEW calc_ego_substation.buffer_75_hoes AS

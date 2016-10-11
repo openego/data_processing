@@ -26,7 +26,7 @@ snippet_dir = 'sql_snippets'
 script_dir = 'python_scripts'
 
 snippets = [
-    'scenario_eGo_data_processing.sql',
+    # 'scenario_eGo_data_processing.sql',
     'setup_bkg_vg250.sql',
     'get_substations.sql',
     'get_substations_ehv.sql',

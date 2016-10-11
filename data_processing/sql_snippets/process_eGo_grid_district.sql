@@ -753,6 +753,9 @@ ALTER TABLE		calc_ego_grid_district.municipalities_subst_3_nn OWNER TO oeuser;
 DROP SEQUENCE IF EXISTS 	calc_ego_grid_district.municipalities_subst_3_nn_line_id CASCADE;
 CREATE SEQUENCE 		calc_ego_grid_district.municipalities_subst_3_nn_line_id;
 
+-- Grant oeuser   (OK!) -> 100ms =0
+ALTER SEQUENCE		calc_ego_grid_district.municipalities_subst_3_nn_line_id OWNER TO oeuser;
+
 -- connect points   (OK!) 1.000ms =9.902
 DROP MATERIALIZED VIEW IF EXISTS	calc_ego_grid_district.municipalities_subst_3_nn_line;
 CREATE MATERIALIZED VIEW 		calc_ego_grid_district.municipalities_subst_3_nn_line AS 
