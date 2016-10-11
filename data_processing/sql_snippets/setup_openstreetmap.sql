@@ -174,3 +174,68 @@ BEGIN
 END;
 $$;
 
+
+-- 8 Add metadata
+DO
+$$
+DECLARE
+    row record;
+    comment_string text;
+BEGIN
+    comment_string := '{
+        "Name": "OpenStreetMap - Germany",
+
+	"Source": [{
+                  "Name": "Geofabrik - Download - OpenStreetMap Data Extracts",
+                  "URL":  "http://download.geofabrik.de/europe/germany.html#" }],
+
+	"Reference date": ["01.10.2016"],
+
+	"Date of collection": ["10.10.2016"],
+
+	"Original file": ["germany-161001.osm.pbf"],
+
+	"Spatial resolution": ["Germany"],
+
+	"Description": ["OSM Datensatz Deutschland"],
+
+	"Column":[ 
+	
+	{"name":"osm_id",
+	"description":"OSM ID",
+	"description_german":"OSM ID",
+	"unit":" " },
+
+	{"name":"oedb.style",
+	"description":"Keys defined in this file",
+	"description_german":"Alle keys in diesem Dokument dokumentiert",
+	"unit":" "}
+	],
+
+	"Changes":[
+	  { "name":"Martin Glauer", 
+	    "mail":" ", 
+	    "date":"10.10.2016", 
+	    "comment":"Created table with osm2pgsql"},
+
+	   { "name":"Ludwig Hülk", 
+	    "mail":"ludwig.huelk@rl-institut.de", 
+	    "date":"11.10.2016", 
+	    "comment":"Executed setup"}  ],
+
+	"ToDo": ["Keys beschreiben und/oder aus osm.wiki verlinken"],
+
+	"Licence": ["Open Data Commons Open Database Lizenz (ODbL)"],
+
+	"Instructions for proper use": ["Wir verlangen die Verwendung des Hinweises OpenStreetMap-Mitwirkende. Du musst auch klarstellen, dass die Daten unter der Open-Database-Lizenz verfügbar sind, und, sofern du unsere Kartenkacheln verwendest, dass die Kartografie gemäß CC BY-SA lizenziert ist. Du kannst dies tun, indem du auf www.openstreetmap.org/copyright verlinkst. Ersatzweise, und als Erfordernis, falls du OSM in Datenform weitergibst, kannst du die Lizenz(en) direkt verlinken und benennen. In Medien, in denen keine Links möglich sind (z.B. gedruckten Werken), empfehlen wir dir, deine Leser direkt auf openstreetmap.org zu verweisen (möglicherweise mit dem Erweitern von OpenStreetMap zur vollen Adresse), auf opendatacommons.org, und, sofern zutreffend, auf creativecommons.org. Der Hinweis sollte für eine durchsuchbare elektronische Karte in der Ecke der Karte stehen."]
+	}';
+
+    FOR row IN SELECT tablename FROM pg_tables 
+    WHERE schemaname='openstreetmap' 
+    AND tablename LIKE 'osm_%'
+    LOOP
+        EXECUTE 'COMMENT ON TABLE openstreetmap.' || quote_ident(row.tablename) || ' IS ' || quote_literal(comment_string);
+
+    END LOOP;
+END;
+$$;
