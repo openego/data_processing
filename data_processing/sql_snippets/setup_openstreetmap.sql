@@ -23,17 +23,11 @@ FROM     pg_indexes
 WHERE     schemaname='public'
     AND tablename LIKE 'osm_%'
     AND indexname LIKE '%_pkey';
-
--- Select all indexes with OSM in public
-SELECT     * 
-FROM     pg_indexes
-WHERE     schemaname='openstreetmap'
-    AND tablename LIKE 'osm_%'
-    AND indexname LIKE '%_pkey';
 */ 
 
 -- 0. Create new schema
 --CREATE SCHEMA openstreetmap;
+
 -- ALTER DEFAULT PRIVILEGES IN SCHEMA openstreetmap
 --     GRANT INSERT, SELECT, UPDATE, DELETE, TRUNCATE, REFERENCES, TRIGGER ON TABLES
 --     TO oeuser;
@@ -47,135 +41,122 @@ WHERE     schemaname='openstreetmap'
 --     TO oeuser;
 
 
--- 1. Move all tables to new schema -> 1s
-DO
-$$
-DECLARE
-    row record;
-BEGIN
-    FOR row IN SELECT tablename FROM pg_tables WHERE schemaname = 'public' AND tablename LIKE 'osm_%'
-    LOOP
-        EXECUTE 'ALTER TABLE public.' || quote_ident(row.tablename) || ' SET SCHEMA openstreetmap;';
-    END LOOP;
-END;
-$$;
-
-
--- 2. Remove all wrong 'pkey' and 'gist' indexes (_line, _point, _polygon, _roads) -> 1s
+-- 1. Remove wrong index
+-- 1.1 Remove all wrong 'pkey' (_line, _point, _polygon, _roads)
 DO
 $$
 DECLARE
     row record;
 BEGIN
     FOR row IN SELECT indexname FROM pg_indexes 
-    WHERE (schemaname='openstreetmap' 
+    WHERE (schemaname='public' 
     AND indexname LIKE '%_pkey')
     AND (tablename LIKE '%_line'
     OR tablename LIKE '%_point'
     OR tablename LIKE '%_polygon'
     OR tablename LIKE '%_roads')
     LOOP
-        EXECUTE 'DROP INDEX openstreetmap.' || quote_ident(row.indexname) || ';';
+        EXECUTE 'DROP INDEX public.' || quote_ident(row.indexname) || ';';
     END LOOP;
 END;
 $$;
 
+-- 1.2 Remove all wrong other indexes (_line, _point, _polygon, _roads)
 DO
 $$
 DECLARE
     row record;
 BEGIN
     FOR row IN SELECT indexname FROM pg_indexes 
-    WHERE (schemaname='openstreetmap' 
+    WHERE (schemaname='public' 
     AND indexname LIKE '%_index')
     LOOP
-        EXECUTE 'DROP INDEX openstreetmap.' || quote_ident(row.indexname) || ';';
+        EXECUTE 'DROP INDEX public.' || quote_ident(row.indexname) || ';';
     END LOOP;
 END;
 $$;
 
 
--- 3. Add column 'gid' serial
--- 4. Add primary keys
--- 5. Rename geo-column 'way' to 'geom' -> 170s
-
+-- 2. Add column 'gid' serial
+-- 3. Add primary keys
+-- 4. Rename geo-column 'way' to 'geom'
 DO
 $$
 DECLARE
     row record;
 BEGIN
     FOR row IN SELECT tablename FROM pg_tables 
-    WHERE schemaname='openstreetmap' 
+    WHERE schemaname='public' 
     AND (tablename LIKE '%_line'
     OR tablename LIKE '%_point'
     OR tablename LIKE '%_polygon'
     OR tablename LIKE '%_roads')
     LOOP
-        EXECUTE 'ALTER TABLE openstreetmap.' || quote_ident(row.tablename) || ' ADD gid SERIAL;';
-        EXECUTE 'ALTER TABLE openstreetmap.' || quote_ident(row.tablename) || ' ADD PRIMARY KEY (gid);';
-        EXECUTE 'ALTER TABLE openstreetmap.' || quote_ident(row.tablename) || ' RENAME COLUMN way TO geom;';
+        EXECUTE 'ALTER TABLE public.' || quote_ident(row.tablename) || ' ADD gid SERIAL;';
+        EXECUTE 'ALTER TABLE public.' || quote_ident(row.tablename) || ' ADD PRIMARY KEY (gid);';
+        EXECUTE 'ALTER TABLE public.' || quote_ident(row.tablename) || ' RENAME COLUMN way TO geom;';
     END LOOP;
 END;
 $$;
 
 
--- 6. Set geometry and SRID -> Xs
+-- 5. Set geometry and SRID (original!)
 
--- ALTER TABLE openstreetmap.osm_deu_line
+-- ALTER TABLE public.osm_deu_line
 --     ALTER COLUMN geom TYPE geometry(LineString,3857) 
 --         USING ST_SetSRID(geom,3857);
 -- 
--- ALTER TABLE openstreetmap.osm_deu_point
+-- ALTER TABLE public.osm_deu_point
 --     ALTER COLUMN geom TYPE geometry(Point,3857) 
 --         USING ST_SetSRID(geom,3857);
 -- 
--- ALTER TABLE openstreetmap.osm_deu_polygon
+-- ALTER TABLE public.osm_deu_polygon
 --     ALTER COLUMN geom TYPE geometry(MultiPolygon, 3857) 
 --         USING ST_SetSRID(ST_MULTI(geom),3857);
 -- 
--- ALTER TABLE openstreetmap.osm_deu_roads
+-- ALTER TABLE public.osm_deu_roads
 --     ALTER COLUMN geom TYPE geometry(LineString,3857) 
 --         USING ST_SetSRID(geom,3857);
 
 
--- 7.1 Add indexes GIST (geom) -> 1.138s
+-- 6. Add imdex
+-- 6.1 Add indexes GIST (geom)
 DO
 $$
 DECLARE
     row record;
 BEGIN
     FOR row IN SELECT tablename FROM pg_tables 
-    WHERE schemaname='openstreetmap' 
+    WHERE schemaname='public' 
     AND (tablename LIKE '%_line'
     OR tablename LIKE '%_point'
     OR tablename LIKE '%_polygon'
     OR tablename LIKE '%_roads')
     LOOP
-        EXECUTE 'CREATE INDEX ' || quote_ident(row.tablename) || '_geom_idx ON openstreetmap.' || quote_ident(row.tablename) || ' USING gist (geom);';
+        EXECUTE 'CREATE INDEX ' || quote_ident(row.tablename) || '_geom_idx ON public.' || quote_ident(row.tablename) || ' USING gist (geom);';
     END LOOP;
 END;
 $$;
 
--- 7.2 Add indexes GIN (tags) -> 2.292s
+-- 6.2 Add indexes GIN (tags)
 DO
 $$
 DECLARE
     row record;
 BEGIN
     FOR row IN SELECT tablename FROM pg_tables 
-    WHERE schemaname='openstreetmap' 
+    WHERE schemaname='public' 
     AND (tablename LIKE '%_line'
     OR tablename LIKE '%_point'
     OR tablename LIKE '%_polygon'
     OR tablename LIKE '%_roads')
     LOOP
-        EXECUTE 'CREATE INDEX ' || quote_ident(row.tablename) || '_tags_idx ON openstreetmap.' || quote_ident(row.tablename) || ' USING GIN (tags);';
+        EXECUTE 'CREATE INDEX ' || quote_ident(row.tablename) || '_tags_idx ON public.' || quote_ident(row.tablename) || ' USING GIN (tags);';
     END LOOP;
 END;
 $$;
 
-
--- 8 Add metadata
+-- 7. Add metadata
 DO
 $$
 DECLARE
@@ -231,11 +212,24 @@ BEGIN
 	}';
 
     FOR row IN SELECT tablename FROM pg_tables 
-    WHERE schemaname='openstreetmap' 
+    WHERE schemaname='public' 
     AND tablename LIKE 'osm_%'
     LOOP
-        EXECUTE 'COMMENT ON TABLE openstreetmap.' || quote_ident(row.tablename) || ' IS ' || quote_literal(comment_string);
+        EXECUTE 'COMMENT ON TABLE public.' || quote_ident(row.tablename) || ' IS ' || quote_literal(comment_string);
 
+    END LOOP;
+END;
+$$;
+
+-- 8. Move all tables to new schema
+DO
+$$
+DECLARE
+    row record;
+BEGIN
+    FOR row IN SELECT tablename FROM pg_tables WHERE schemaname = 'public' AND tablename LIKE 'osm_%'
+    LOOP
+        EXECUTE 'ALTER TABLE public.' || quote_ident(row.tablename) || ' SET SCHEMA openstreetmap;';
     END LOOP;
 END;
 $$;

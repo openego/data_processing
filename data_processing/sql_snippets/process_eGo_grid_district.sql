@@ -348,6 +348,9 @@ ALTER TABLE		calc_ego_substation.ego_deu_substations_voronoi_mview OWNER TO oeus
 DROP SEQUENCE IF EXISTS 	calc_ego_substation.ego_deu_substations_voronoi_cut_id CASCADE;
 CREATE SEQUENCE 		calc_ego_substation.ego_deu_substations_voronoi_cut_id;
 
+-- Grant oeuser   (OK!) -> 100ms =0
+ALTER SEQUENCE		calc_ego_substation.ego_deu_substations_voronoi_cut_id OWNER TO oeuser;
+
 -- Cutting GEM II.   (OK!) 3.000ms =4.531
 DROP TABLE IF EXISTS	calc_ego_substation.ego_deu_substations_voronoi_cut CASCADE;
 CREATE TABLE		calc_ego_substation.ego_deu_substations_voronoi_cut AS
@@ -535,6 +538,9 @@ ALTER TABLE		calc_ego_substation.ego_deu_substations_voronoi_cut_0subst_nn_mview
 -- Sequence   (OK!) 100ms =0
 DROP SEQUENCE IF EXISTS 	calc_ego_substation.ego_deu_substations_voronoi_cut_0subst_nn_line_mview_id CASCADE;
 CREATE SEQUENCE 		calc_ego_substation.ego_deu_substations_voronoi_cut_0subst_nn_line_mview_id;
+
+-- Grant oeuser   (OK!) -> 100ms =0
+ALTER SEQUENCE		calc_ego_substation.ego_deu_substations_voronoi_cut_0subst_nn_line_mview_id OWNER TO oeuser;
 
 -- connect points   (OK!) 1.000ms =2.645
 DROP MATERIALIZED VIEW IF EXISTS	calc_ego_substation.ego_deu_substations_voronoi_cut_0subst_nn_line_mview;
@@ -1048,6 +1054,9 @@ ALTER TABLE		calc_ego_grid_district.grid_district_ta OWNER TO oeuser; */
 DROP SEQUENCE IF EXISTS calc_ego_grid_district.grid_district_dump_id_seq;
 CREATE SEQUENCE 	calc_ego_grid_district.grid_district_dump_id_seq;
 
+-- Grant oeuser   (OK!) -> 100ms =0
+ALTER SEQUENCE		calc_ego_grid_district.grid_district_dump_id_seq OWNER TO oeuser;
+
 DROP TABLE IF EXISTS	calc_ego_grid_district.grid_district_dump CASCADE;
 CREATE TABLE         	calc_ego_grid_district.grid_district_dump AS
 	SELECT	nextval('calc_ego_grid_district.grid_district_dump_id_seq') AS id,
@@ -1076,6 +1085,10 @@ FROM	(SELECT	mun.id AS id,
 	GROUP BY mun.id
 	)AS t2
 WHERE  	t1.id = t2.id;
+
+-- Grant oeuser   (OK!) -> 100ms =0
+GRANT ALL ON TABLE	calc_ego_grid_district.grid_district_dump TO oeuser WITH GRANT OPTION;
+ALTER TABLE		calc_ego_grid_district.grid_district_dump OWNER TO oeuser;
 
 -- Scenario eGo data processing
 INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
