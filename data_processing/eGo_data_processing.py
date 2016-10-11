@@ -22,8 +22,12 @@ total_time = time.time()
 logger.info('eGo data processing started...')
 
 # list of sql_snippets that process the data in correct order
-snippet_dir = 'sql_snippets'
-script_dir = 'python_scripts'
+snippet_dir = os.path.abspath(
+    os.path.join(os.path.dirname(__file__),
+                         'sql_snippets'))
+script_dir = os.path.abspath(
+    os.path.join(os.path.dirname(__file__),
+                 'python_scripts'))
 
 snippets = [
     'scenario_eGo_data_processing.sql',
