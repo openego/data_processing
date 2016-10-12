@@ -27,4 +27,4 @@ CREATE INDEX deu_lattice_500m_geom_idx
 
 -- Grant oeuser   
 GRANT ALL ON TABLE 	model_draft.deu_lattice_500m TO oeuser WITH GRANT OPTION;
-ALTER TABLE		model_draft.deu_lattice_500m OWNER TO oeuser;
+ALTER TABLE			model_draft.deu_lattice_500m OWNER TO oeuser;

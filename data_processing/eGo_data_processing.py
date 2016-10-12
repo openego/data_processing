@@ -43,8 +43,8 @@ snippets = [
     # 'setup_zensus_population_per_ha.sql',
     # 'process_eGo_loads_melted.sql',
     # 'process_eGo_loads_per_grid_district.sql',
-    'process_eGo_consumption.sql',
-    'analyse_eGo_paper_result.sql',
+    # 'process_eGo_consumption.sql',
+    # 'analyse_eGo_paper_result.sql',
     # 'setup_eGo_wpa_per_grid_district.sql',
     # 'setup_eGo_lattice_per_area.sql', # takes very long (24h), will be executed separately
     # 'process_eGo_dea_allocation_methods.sql',
