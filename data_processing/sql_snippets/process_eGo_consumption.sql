@@ -169,7 +169,7 @@ WHERE a.id = b.id;
 UPDATE calc_ego_loads.ego_deu_consumption a
 	SET otg_id = b.otg_id
 	FROM calc_ego_substation.ego_deu_substations b
-WHERE a.subst_id = b.id; 
+WHERE a.subst_id = b.subst_id; 
 
 
 -- Grant oeuser   (OK!) -> 100ms =0
@@ -182,7 +182,7 @@ INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_na
 		'calc_ego_loads' AS schema_name,
 		'ego_deu_consumption' AS table_name,
 		'process_eGo_consumption.sql' AS script_name,
-		COUNT(id)AS entries,
+		COUNT(*)AS entries,
 		'OK' AS status,
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
 	FROM	calc_ego_loads.ego_deu_consumption;
