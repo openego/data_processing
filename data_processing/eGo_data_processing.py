@@ -57,7 +57,9 @@ snippets = [
     # 'assignment_load_bus.sql',
     # 'demand_per_mv_grid_district.py',
     # 'demandseries_TOPF.sql',
-    # 'peak_load_per_load_area.py'
+    # 'peak_load_per_load_area.py',
+	# 'process_eGo_onts',
+	# 'process_eGo_lv_grid_districts'
     ]
 
 # get database connection
