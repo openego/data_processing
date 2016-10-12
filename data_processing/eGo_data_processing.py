@@ -49,7 +49,7 @@ snippets = [
     # 'setup_eGo_create_lattice.sql',
     # 'setup_eGo_lattice_per_area.sql', # takes 24h
     'process_eGo_dea_allocation_methods.sql',
-    'Voronoi_ehv.sql',
+    # 'Voronoi_ehv.sql',
     'voronoi_weatherpoint.sql',
     'calc_ego_hv_powerflow.sql',
     'osmtgmod_to_pypsa.sql',
