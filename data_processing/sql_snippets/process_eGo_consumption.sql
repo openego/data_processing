@@ -48,7 +48,7 @@ SET area_retail = result.sum
 FROM
 ( 
 	SELECT 
-	sum(sector_area_retail),
+	--sum(sector_area_retail), --Merge-error???
  	sum(coalesce(sector_area_retail,0)), 
 	substr(nuts,1,5) 
 	FROM calc_ego_loads.ego_deu_load_area
@@ -65,7 +65,7 @@ SET area_agriculture = result.sum
 FROM
 ( 
 	SELECT 
-	sum(sector_area_agricultural), 
+	--sum(sector_area_agricultural), --Merge-error???
 	sum(coalesce(sector_area_agricultural,0)), 
 	substr(nuts,1,5) 
 	FROM calc_ego_loads.ego_deu_load_area

@@ -1,4 +1,4 @@
-﻿
+﻿-- Function with normal intersection and buffer when problems
 DROP FUNCTION IF EXISTS ST_SAFE_INTERSECTION(geom_a geometry, geom_b geometry);
 CREATE OR REPLACE FUNCTION ST_SAFE_INTERSECTION(geom_a geometry, geom_b geometry)
 RETURNS geometry AS
