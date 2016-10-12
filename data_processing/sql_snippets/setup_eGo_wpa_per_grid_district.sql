@@ -21,15 +21,16 @@ INSERT INTO     model_draft.eGo_wpa (geom)
 CREATE INDEX eGo_wpa_idx
   ON model_draft.eGo_wpa
   USING gist (geom);
-  
+
 -- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,user_name,timestamp)
 	SELECT	'0.1' AS version,
 		'model_draft' AS schema_name,
 		'eGo_wpa' AS table_name,
 		'setup_eGo_wpa_per_grid_district.sql' AS script_name,
 		COUNT(*)AS entries,
 		'OK' AS status,
+		session_user AS user_name,
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
 	FROM	model_draft.eGo_wpa;
 
@@ -86,13 +87,14 @@ FROM    (
 WHERE  	t1.id = t2.id;
 
 -- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,user_name,timestamp)
 	SELECT	'0.1' AS version,
 		'model_draft' AS schema_name,
 		'eGo_wpa_per_grid_district' AS table_name,
 		'setup_eGo_wpa_per_grid_district.sql' AS script_name,
 		COUNT(*)AS entries,
 		'OK' AS status,
+		session_user AS user_name,
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
 	FROM	model_draft.eGo_wpa_per_grid_district;
 
