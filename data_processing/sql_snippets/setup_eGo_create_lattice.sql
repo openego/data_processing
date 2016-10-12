@@ -3,7 +3,7 @@ Create different lattices for Germany with 500m / 50m / (34m)
 */
 
 -- Create a lattice on the bbox of Germany with 500m
-DROP TABLE IF EXISTS 	model_draft.eGo_lattice_deu_500m;
+DROP TABLE IF EXISTS 	model_draft.eGo_lattice_deu_500m CASCADE;
 CREATE TABLE 			model_draft.eGo_lattice_deu_500m AS
 	SELECT ST_SETSRID(ST_CreateFishnet(
 		ROUND((ST_ymax(box2d(geom)) -  ST_ymin(box2d(geom))) /500)::integer,
@@ -41,7 +41,7 @@ FROM	model_draft.eGo_lattice_deu_500m;
 
 
 -- Create a lattice on the bbox of load area with 50m
-DROP TABLE IF EXISTS model_draft.eGo_lattice_la_50m;
+DROP TABLE IF EXISTS model_draft.eGo_lattice_la_50m CASCADE;
 CREATE TABLE model_draft.eGo_lattice_la_50m AS
 	SELECT ST_SETSRID(ST_CREATEFISHNET(
 		ROUND((ST_ymax(box2d(geom)) -  ST_ymin(box2d(geom))) /50)::integer,
@@ -79,7 +79,7 @@ FROM	model_draft.eGo_lattice_la_50m;
 
 
 -- Create a lattice on the bbox of load area with 50m
-DROP TABLE IF EXISTS model_draft.eGo_lattice_la_34m;
+DROP TABLE IF EXISTS model_draft.eGo_lattice_la_34m CASCADE;
 CREATE TABLE model_draft.eGo_lattice_la_34m AS
 	SELECT ST_SETSRID(ST_CREATEFISHNET(
 		ROUND((ST_ymax(box2d(geom)) -  ST_ymin(box2d(geom))) /34)::integer,
