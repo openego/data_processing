@@ -30,6 +30,9 @@ EgoDeuLoadArea_name = cfg.get('regions', 'load_areas')
 from egoio.db_tables import calc_ego_loads as orm_calc_ego_loads
 orm_load_areas = orm_calc_ego_loads.__getattribute__(EgoDeuLoadArea_name)
 
+#PeakLoads_name = cfg.get('auxilliary_tables', 'peak_loads')
+#orm_peak_loads = orm_calc_ego_loads.__getattribute__(PeakLoads_name)
+
 EgoDeuOntGrid_name = cfg.get('auxilliary_tables', 'ontgrids')
 from egoio.db_tables import calc_ego_grid_district as orm_calc_ego_grid_district
 orm_ontgrids = orm_calc_ego_grid_district.__getattribute__(EgoDeuOntGrid_name)
@@ -40,6 +43,7 @@ orm_onts = orm_calc_ego_onts.__getattribute__(EgoDeuOnts_name)
 
 EgoDeuLoadAreaRest_name = cfg.get('auxilliary_tables', 'load_area_rest')
 orm_load_area_rest = orm_calc_ego_grid_district.__getattribute__(EgoDeuLoadAreaRest_name)
+
 
 #################################
 
@@ -90,8 +94,31 @@ def Position_ONTs(trafo_range,
 
 
     ############# Bestimme Parameter für CreateFishnet-Funktion:    
-           
+    # Bestimme Fläche der bbox für Sonderfallbehandlung:    
+    area = []
+    bbox_xsize = []
+    bbox_ysize = []
     
+    ###### Bestimme Fläche und Ausdehnung der bbox für Ausnahmenbehandlung
+    for instance in session.query(orm_load_areas):       
+        s = sqla.select([func.ST_xmax(func.box2d(instance.geom)) - func.ST_xmin(func.box2d(instance.geom)) ])
+        result = conn.execute(s)
+        for row in result:
+            bbox_xsize.append (row [0])
+   
+    for instance in session.query(orm_load_areas):       
+        s = sqla.select([func.ST_ymax(func.box2d(instance.geom)) - func.ST_ymin(func.box2d(instance.geom)) ])
+        result = conn.execute(s)
+        for row in result:
+            bbox_ysize.append (row [0])
+
+    for instance in session.query(orm_load_areas):       
+        s = sqla.select([(func.ST_xmax(func.box2d(instance.geom)) - func.ST_xmin(func.box2d(instance.geom)))*
+            (func.ST_ymax(func.box2d(instance.geom)) - func.ST_ymin(func.box2d(instance.geom))) ])
+        result = conn.execute(s)
+        for row in result:
+            area.append (row [0])   
+            
     ###### Bestimme Parameter nrow (Anzahl der Zeilen):
     nrow = []
     # Bestimme nrow mittels SQL-Abfrage:    
@@ -99,35 +126,35 @@ def Position_ONTs(trafo_range,
          s = sqla.select([ (func.ROUND((func.ST_ymax(func.ST_Extent(instance.geom)) -  
              func.ST_ymin(func.ST_Extent(instance.geom))) /(trafo_range*2)))])
          result = conn.execute(s)
-         # Wandle Datentyp um:        
+         # Wandle Datentyp um:
+
          for row in result:
-             row = str(row)
-             # Lösche überflüssige Zeichen mittels eines regulären Ausdrucks:
-             row = re.search('[0123456789]+',row)
-             row = row.group(0)
-             row = int(row)
-             nrow.append(row)
-    
-         
+            row = str(row)
+            # Lösche überflüssige Zeichen mittels eines regulären Ausdrucks:
+            row = re.search('[0123456789]+',row)
+            row = row.group(0)
+            row = int(row)
+            nrow.append(row)
+
     result.close()
 
     
     ###### Bestimme Parameter ncol (Anzahl der Spalten):
     ncol = []
-    # Bestimme nrow mittels SQL-Abfrage:
+    # Bestimme ncol mittels SQL-Abfrage:
     for instance in session.query(orm_load_areas):
          s = sqla.select([ (func.ROUND((func.ST_xmax(func.ST_Extent(instance.geom)) -  
              func.ST_xmin(func.ST_Extent(instance.geom))) /(trafo_range*2)))])
          result = conn.execute(s)
          # Wandle Datentyp um:        
          for row in result:
-             row = str(row)
-             # Lösche überflüssige Zeichen mittels eines regulären Ausdrucks:
-             row = re.search('[0123456789]+',row)
-             row = row.group(0)
-             row = int(row)
-             ncol.append(row)
-    
+           row = str(row)
+           # Lösche überflüssige Zeichen mittels eines regulären Ausdrucks:
+           row = re.search('[0123456789]+',row)
+           row = row.group(0)
+           row = int(row)
+           ncol.append(row)
+
          
     result.close()
 
@@ -164,25 +191,39 @@ def Position_ONTs(trafo_range,
     la_id = []    
     for instance in session.query(orm_load_areas):
         la_id.append(instance.id)
+
+    #############
+
+    # Leere die Tabellen aus der DB, um Duplikate zu vermeiden
+    conn.execute(orm_load_area_rest.__table__.delete().where(True))
+    conn.execute(orm_ontgrids.__table__.delete().where(True))
+
+    session.commit()
     
     ############# Erstelle Grids für alle Lastgebiete und schreibe sie in die Datenbank:
-    
-    # Vor Tabellenerzeugung lösche die Tabelle aus der DB, falls vorhanden, um Duplikate zu vermeiden
-    orm_ontgrids.__table__.drop(engine, checkfirst=True)
-    # Erzeuge Tabelle
-    orm_calc_ego_grid_district.Base.metadata.create_all(engine)
-  
     
     # Erstelle geom-Spalte
     geoms = []
     for i in range (0,len(ncol)):
-        geoms.append(CreateFishnet(nrow[i],ncol[i],xsize,ysize,x0[i],y0[i]))
-    
+        # Betrachte nur Lastgebiete, die nicht sehr klein sind:
+        #if area[i] > 0.25*((trafo_range*2)**2):
+            # für große Lastegbiete erstelle das Gitternetz:
+         if area[i] > (3.1415926535 * trafo_maxrange**2):
+            geoms.append(CreateFishnet(nrow[i],ncol[i],xsize,ysize,x0[i],y0[i]))
+                # für kleine Lastgebiete erstelle nur die bounding box :   
+         elif area[i] <= (3.1415926535 * trafo_maxrange**2):
+                nrow[i] = 1
+                ncol[i] = 1
+                geoms.append (CreateFishnet(nrow[i], ncol[i],bbox_ysize[i],bbox_xsize[i],x0[i],y0[i]))
+         else: 
+                print ('error at line 219')
     # Erstelle la_id-Spalte
     load_area_ids = []
     for i in range (0,len(ncol)):
+        # Betrachte nur Lastgebiete, die nicht sehr klein sind:
+        # if area[i] > 0.25*((trafo_range*2)**2):
         for j in range (0,(ncol[i]*nrow[i])):
-            load_area_ids.append(la_id[i])
+             load_area_ids.append(la_id[i])
         
     # Erstelle ID-Spalte
     ids =[]
@@ -213,10 +254,9 @@ def Position_ONTs(trafo_range,
     
     ################################# Finde Mittelpunkte der Gitternetzzellen innerhalb der Lastgebiete
     
-    # Vor Tabellenerzeugung lösche die Tabelle aus der DB, falls vorhanden, um Duplikate zu vermeiden
-    orm_onts.__table__.drop(engine, checkfirst=True)    
-    # Erzeuge neue Tabelle
-    orm_calc_ego_onts.Base.metadata.create_all(engine)
+    # Leere die Tabelle aus der DB, um Duplikate zu vermeiden
+    conn.execute(orm_onts.__table__.delete())    
+
     
                 
     # Berechne diejenigen Mittelpunkte der Gitterzellen, die innerhalb von Lastgebieten liegen:
@@ -231,10 +271,13 @@ def Position_ONTs(trafo_range,
                     orm_ontgrids.load_area_id
                     ])\
                     .where(
-                         func.ST_Within(
-                             func.ST_Centroid(orm_ontgrids.geom),
-                             orm_load_areas.geom
-                         ) == True
+                         sqla.and_(
+                             func.ST_Within(
+                                 func.ST_Centroid(orm_ontgrids.geom),
+                                 orm_load_areas.geom
+                                 ) == True,
+                             orm_ontgrids.load_area_id == orm_load_areas.id
+                         )
                     )
     # Schreibe Geometrien der errechneten Mittelpunkte in Liste
     result = conn.execute(s)
@@ -262,22 +305,46 @@ def Position_ONTs(trafo_range,
     
     ################################# Füge den Lastgebieten, die aufgrund ihrer geringen Fläche keine ONTs zugeordnet bekommen haben, ihren Mittelpunkt als ONT-STandort hinzu
     
-    
-    # Wähle die Lastgebiete, in denen sich noch kein ONT-STandort befindet
+    # Wähle die Mittelpunkte der Lastgebiete, in denen sich noch kein ONT befindet        
     
     s1 = sqla.select([orm_load_areas.geom])\
         .where(
              func.ST_Within(orm_onts.geom,orm_load_areas.geom) == True
          )
-    # Wähle die Mittelpunkte dieser Lastgebiete
-    
+
+        # Fall 1: Mittelpunkt des Lastgebiets liegt innerhalb des Lastgebiets
     s = sqla.select([func.ST_Centroid(orm_load_areas.geom), orm_load_areas.id])\
         .where(
-            ~orm_load_areas.geom.in_(s1)
-        )    
+            sqla.and_(
+                ~orm_load_areas.geom.in_(s1),
+                func.ST_Within(func.ST_Centroid(orm_load_areas.geom),orm_load_areas.geom)
+            )
+        )
     
-    # Füge die Mittelpunkte der ONT-Tabelle hinzu
+       # Fall 2: Mittelpunkt des Lastgebiets liegt außerhalb des Lastgebiets. Wähle
+       #         dann nicht den Mittelpunkt, sondern den PointOnSurface
+    
+    s2 = sqla.select([func.ST_PointOnSurface(orm_load_areas.geom), orm_load_areas.id])\
+        .where(
+            sqla.and_(
+                ~orm_load_areas.geom.in_(s1),
+                ~func.ST_Within(func.ST_Centroid(orm_load_areas.geom),orm_load_areas.geom)
+            )
+        )
+    
+    # Füge die Punkte der ONT-Tabelle hinzu
+    
+    # Fall 1
     result = conn.execute(s)
+    
+    for row in result:
+        row = orm_onts(id= len(ids),geom = row[0],load_area_id = row[1])
+        ids.append(len(ids))
+        session.add(row)
+        session.commit()
+    
+    # Fall 2
+    result = conn.execute(s2)
     
     for row in result:
         row = orm_onts(id= len(ids),geom = row[0],load_area_id = row[1])
@@ -290,10 +357,7 @@ def Position_ONTs(trafo_range,
     
 
     
-    # Vor Tabellenerzeugung lösche die Tabelle aus der DB, falls vorhanden, um Duplikate zu vermeiden
-    orm_load_area_rest.__table__.drop(engine, checkfirst=True)
-    # Erzeuge neue Tabelle
-    orm_calc_ego_grid_district.Base.metadata.create_all(engine)
+
     
     # Wähle die Restgebiete innerhalb der Lastgebiete oberhalb eines bestimmten Abstandes zum nächsten ONT
 
@@ -328,17 +392,22 @@ def Position_ONTs(trafo_range,
                 
                 # Lösche überflüssige Zeichen mittels eines regulären Ausdrucks        
                 row = str(row)
+
+                row = re.search(',0[01234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ]+',row)
+                row = row.group(0)
                 row = re.search('0[01234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ]+',row)
                 row = row.group(0)
+                
                 # Füge ID des Lastgebiets hinzu
                 s4 = sqla.select([orm_load_areas.id]).where(func.ST_Intersects(orm_load_areas.geom,row))
                 result3 = conn.execute(s4)
                 for row2 in result3:
-                    row = orm_load_area_rest(id= id_,geom = row,load_area_id = row2[0])
+                    
+                    row3 = orm_load_area_rest(id= id_,geom = row,load_area_id = row2[0])
                 #
                 id_ += 1
                 
-                session.add(row)
+                session.add(row3)
                 session.commit()
     
                  
@@ -359,19 +428,23 @@ def Position_ONTs(trafo_range,
    
     result = conn.execute("ALTER TABLE " + orm_onts.__table_args__['schema'] +"." + orm_onts.__tablename__+ " OWNER TO oeuser;\
                   GRANT ALL ON TABLE " + orm_onts.__table_args__['schema'] + "." + orm_onts.__tablename__ + " TO oeuser WITH GRANT OPTION;")
-                      
+    ################################# Lösche alle Hilfstabellen, um Übersichtlichkeit in der Datenbank zu erhalten                  
+                  
+    #orm_ontgrids.__table__.drop(engine, checkfirst=True)
+    #orm_load_area_rest.__table__.drop(engine, checkfirst=True)
+        
     ################################# Schließe Verbindungen und Prozesse
     ################################# Achtung: Verbindung zum Server wird damit unterbrochen!
 
-    pg_stat_activity = sqla.Table('pg_stat_activity', meta,
-                 autoload=True, autoload_with=engine)    
+#    pg_stat_activity = sqla.Table('pg_stat_activity', meta,
+#                 autoload=True, autoload_with=engine)    
+#    
+#    s = sqla.select([func.pg_terminate_backend(pg_stat_activity.c.pid)]).where\
+#    (pg_stat_activity.c.state == 'idle') 
+#
+#    result = conn.execute(s)    
     
-    s = sqla.select([func.pg_terminate_backend(pg_stat_activity.c.pid)]).where\
-    (pg_stat_activity.c.state == 'idle') 
-
-    result = conn.execute(s)    
-    
-    conn.close()
+    #conn.close()
     session.close()
     
     return grids

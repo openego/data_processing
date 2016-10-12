@@ -65,8 +65,8 @@ def CreateGridDistricts():
     
     ################################ Füge Dummy-Punkte in ONT-Tabelle ein
     
-    s = sqla.select([orm_dummy_onts.subst_id,func.ST_Transform(orm_dummy_onts.geom,3035)])
-    ins = orm_onts.__table__.insert().from_select(['id','geom'],s)
+    s = sqla.select([orm_dummy_onts.subst_id,func.ST_Transform(orm_dummy_onts.geom,3035),orm_dummy_onts.is_dummy])
+    ins = orm_onts.__table__.insert().from_select(['id','geom','is_dummy'],s)
     result = conn.execute(ins)
     
     ################################
@@ -226,7 +226,7 @@ def CreateGridDistricts():
    
 #   ################################ Lösche Dummy-Punkte aus ONT-Tabelle 
     
-    s = orm_onts.__table__.delete().where(orm_onts.id >= 9000)
+    s = orm_onts.__table__.delete().where(orm_onts.is_dummy = True)
     result = conn.execute(s)
     
     
@@ -236,7 +236,10 @@ def CreateGridDistricts():
         func.ST_Dump(
             func.ST_Intersection(orm_load_areas.geom,orm_voronois.geom)
         )
-    ]).where(orm_load_areas.geom.intersects(orm_voronois.geom))
+    ]).where(sqla.and_(
+        orm_load_areas.geom.intersects(orm_voronois.geom),
+        ~func.ST_Geometrytype(func.ST_Intersection(orm_load_areas.geom,orm_voronois.geom)) = 'ST_LineString')
+        )
     
     res = conn.execute(cuts)
     ID = 0
@@ -291,30 +294,32 @@ def CreateGridDistricts():
     t3 = aliased (orm_onts)    
     
     # Finde ID des nächstgelegenen ONTs
-    subex = aliased(sqla.select([
-       t1.id.label('district_id'),
-       t3.id.label('merge_id'),
-       func.Min(
-            func.ST_Distance(
-                func.ST_Centroid(t1.geom),
-                t3.geom)
-            )        
-    ]).where(
-        sqla.and_(
-            sqla.and_(
-                func.ST_Contains(t2.geom,t3.geom),
-                t1.ont_count == 0
-            ),
-            sqla.and_(
-                func.ST_Touches(t1.geom,t2.geom),
-                func.ST_Geometrytype (func.ST_Intersection(t1.geom,t2.geom)) == 'ST_LineString'
+    mins = aliased( sqla.select([ 
+        orm_voronoi_cuts.id,
+        func.Min(func.ST_Distance(
+            func.ST_Centroid(orm_voronoi_cuts.geom),
+            orm_onts.geom)
             )
+        ]).select_from(sqla.join(orm_voronoi_cuts,orm_onts,
+            orm_voronoi_cuts.load_area_id == orm_onts.load_area_id)
+        ).group_by(orm_voronoi_cuts.id)
+    )
+    
+    regions = aliased(orm_voronoi_cuts)
+    onts = aliased(orm_onts)
+    
+    ex = sqla.select([regions.id, onts.id        
+        ])\
+        .select_from(sqla.join(onts,regions, onts.load_area_id == regions.load_area_id),
+            sqla.join(mins,regions, mins.regions_id == regions.id))\
+        .where( func.ST_Distance(
+            func.ST_Centroid(regions.geom),
+            onts.geom) = mins.distance
         )
-    ).group_by(t1.id,t3.id))
-      
+    
     update = sqla.update(orm_voronoi_cuts.__table__)\
-    .where(orm_voronoi_cuts.id == subex.c.district_id)\
-    .values(merge_id = subex.c.merge_id)
+    .where(orm_voronoi_cuts.id == ex.c.district_id)\
+    .values(merge_id = ex.c.merge_id)
       
     
     conn.execute(update)
