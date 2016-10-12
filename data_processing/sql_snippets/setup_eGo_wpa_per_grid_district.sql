@@ -123,7 +123,12 @@ COMMENT ON TABLE model_draft.eGo_wpa IS
                 {"Name": "Ludwig Hülk",
                 "Mail": "ludwig.huelk@rl-institut.de",
                 "Date":  "01.10.2016",
-                "Comment": "Created table" }],
+                "Comment": "Created table" },
+				
+				{"Name": "Ludwig Hülk",
+                "Mail": "ludwig.huelk@rl-institut.de",
+                "Date":  "12.10.2016",
+                "Comment": "eGo v0.1" }],
 
 "ToDo": [""],
 "Licence": ["tba"],

@@ -18,8 +18,8 @@ $$ LANGUAGE sql IMMUTABLE STRICT;
 DROP TABLE IF EXISTS calc_ego_re.deu_grid_500m;
 CREATE TABLE calc_ego_re.deu_grid_500m AS
 
--- Erstelle ein Gitternetz auf der bbox der Lastgebiete:
-SELECT ST_SETSRID(ST_CREATEFISHNET(
+-- Create a lattice on the bbox of Germany
+SELECT ST_SETSRID(ST_CreateFishnet(
 	ROUND((ST_ymax(box2d(geom)) -  ST_ymin(box2d(geom))) /500)::integer,
 	ROUND((ST_xmax(box2d(geom)) -  ST_xmin(box2d(geom))) /500)::integer,
 	500,
@@ -40,7 +40,7 @@ CREATE INDEX idx_deu_grid_500m_geom
   USING gist
   (geom);
 
-
 -- Grant oeuser   
 GRANT ALL ON TABLE 	calc_ego_re.deu_grid_500m TO oeuser WITH GRANT OPTION;
 ALTER TABLE		calc_ego_re.deu_grid_500m OWNER TO oeuser;
+

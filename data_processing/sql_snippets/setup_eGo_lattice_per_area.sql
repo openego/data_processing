@@ -18,7 +18,7 @@ CREATE TABLE         	model_draft.eGo_lattice_deu_500m AS
 		'0' ::integer AS subst_id,
 		'out' ::text AS area_type,
 		grid.geom ::geometry(Point,3035) AS geom
-	FROM	calc_ego_re.py_deu_grid_500m AS grid,
+	FROM	model_draft.py_deu_grid_500m AS grid,
 		orig_vg250.vg250_1_sta_union_mview AS deu
 	WHERE	deu.geom && grid.geom AND
 		ST_CONTAINS(deu.geom,grid.geom);
@@ -547,6 +547,7 @@ INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_na
 		'setup_eGo_lattice_per_area.sql' AS script_name,
 		COUNT(*)AS entries,
 		'OK' AS status,
+		session_user AS user_name,
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
 	FROM	model_draft.eGo_lattice_deu_50m;
 
@@ -586,7 +587,12 @@ COMMENT ON TABLE model_draft.eGo_lattice_deu_500m IS
                 {"Name": "Ludwig Hülk",
                 "Mail": "ludwig.huelk@rl-institut.de",
                 "Date":  "01.10.2016",
-                "Comment": "Created table" }],
+                "Comment": "Created table" },
+				
+				{"Name": "Ludwig Hülk",
+                "Mail": "ludwig.huelk@rl-institut.de",
+                "Date":  "12.10.2016",
+                "Comment": "eG0 v.01" }],
 
 "ToDo": [""],
 "Licence": ["tba"],

@@ -16,6 +16,7 @@ CREATE TABLE 		scenario.eGo_data_processing_clean_run (
 	script_name text,
 	entries integer,
 	status text,
+	user_name text,
 	timestamp timestamp,
 	CONSTRAINT eGo_data_processing_clean_run_pkey PRIMARY KEY (id));
 	
@@ -66,6 +67,10 @@ COMMENT ON TABLE scenario.eGo_data_processing_clean_run IS
 		{"Name": "status",
                 "Description": "Current status and comments",
                 "Unit": "" },
+		
+		{"Name": "user_name",
+                "Description": "Author or session user",
+                "Unit": "" },
 			
 		{"Name": "timestamp",
                 "Description": "Timestamp (Berlin)",
@@ -75,7 +80,12 @@ COMMENT ON TABLE scenario.eGo_data_processing_clean_run IS
                 {"Name": "Ludwig Hülk",
                 "Mail": "ludwig.huelk@rl-institut.de",
                 "Date":  "01.10.2016",
-                "Comment": "Created table" }],
+                "Comment": "Created table" },
+				
+				{"Name": "Ludwig Hülk",
+                "Mail": "ludwig.huelk@rl-institut.de",
+                "Date":  "12.10.2016",
+                "Comment": "Added user_name" }],
 
 "ToDo": ["More attributes needed?"],
 "Licence": ["tba"],
