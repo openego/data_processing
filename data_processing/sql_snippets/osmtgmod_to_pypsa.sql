@@ -12,7 +12,7 @@ SELECT
   base_kv AS v_nom,
   geom
   FROM calc_ego_osmtgmod.bus_data
-  WHERE result_id = 2;
+  WHERE result_id = 1;
 
 -- Scenario eGo data processing
 INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
@@ -40,7 +40,7 @@ SELECT
   geom,
   topo
   FROM calc_ego_osmtgmod.branch_data
-  WHERE result_id = 2 and (link_type = 'line' or link_type = 'cable');
+  WHERE result_id = 1 and (link_type = 'line' or link_type = 'cable');
   
 -- Scenario eGo data processing
 INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
@@ -66,7 +66,7 @@ SELECT
   geom,
   topo
   FROM calc_ego_osmtgmod.branch_data
-  WHERE result_id = 2 and link_type = 'transformer';
+  WHERE result_id = 1 and link_type = 'transformer';
   
   
 -- Scenario eGo data processing

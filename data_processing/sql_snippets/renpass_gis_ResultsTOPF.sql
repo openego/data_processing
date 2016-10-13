@@ -59,7 +59,7 @@ group by SQ.source, SQ.datetime;
 Insert into calc_ego_hv_powerflow.generator_pq_set (scn_name, generator_id, temp_id, p_set)
 select 'Status Quo' as scn_name, A.aggr_id, 1 as temp_id, array_agg(A.fraction_of_installed * B.val order by B.datetime) as p_set from calc_renpass_gis.pf_pp_by_source_aggr_id A,
 calc_renpass_gis.pp_feedin_by_pf_source B where A.source = B.source
-group by A.aggr_id
+group by A.aggr_id;
 
 
 -- Scenario eGo data processing

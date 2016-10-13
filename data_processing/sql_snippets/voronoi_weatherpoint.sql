@@ -1,11 +1,11 @@
 -- Add Dummy points 
 INSERT INTO calc_renpass_gis.parameter_solar_feedin (year, geom)
 SELECT '9999', ST_TRANSFORM(geom,4326)
-FROM calc_ego_substation.substation_dummy;
+FROM calc_ego_substation.substations_dummy;
 
 
 -- Execute voronoi algorithm with weather points
-DROP TABLE IF EXISTS calc_renpass_gis.voronoi_weatherpoint;
+DROP TABLE IF EXISTS calc_renpass_gis.voronoi_weatherpoint CASCADE;
 WITH 
     -- Sample set of points to work with
     Sample AS (SELECT   ST_SetSRID(ST_Union(pts.geom), 0) AS geom
