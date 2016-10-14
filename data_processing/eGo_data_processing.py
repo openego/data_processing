@@ -55,7 +55,7 @@ snippets = [
     # 'osmtgmod_to_pypsa.sql',
     # 'assignment_generator_bus.sql',
     'renpass_gis_ResultsTOPF.sql',
-    'assignment_load_bus.sql',
+    # 'assignment_load_bus.sql',
     'demand_per_mv_grid_district.py',
     'demandseries_TOPF.sql',
     'peak_load_per_load_area.py',
