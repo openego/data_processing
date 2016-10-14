@@ -14,6 +14,8 @@ setup(
         'workalendar',
         'oemof.db',
         'demandlib',
-        'ego.io'
+        'ego.io >=0.0.1rc3, <= 0.0.1rc3',
+        'geoalchemy2'
     ]
 )
+
