@@ -213,6 +213,22 @@ INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_na
 	FROM	model_draft.eGo_lattice_deu_500m_x_mview;
 
 -- 4. eGo_lattice_deu_500m_out
+-- Grid inside wpa
+DROP MATERIALIZED VIEW IF EXISTS  	model_draft.eGo_lattice_deu_500m_out_mview CASCADE;
+CREATE MATERIALIZED VIEW         	model_draft.eGo_lattice_deu_500m_out_mview AS
+	SELECT	gid, subst_id, geom
+	FROM	model_draft.eGo_lattice_deu_500m
+	WHERE	area_type = 'out';
+
+-- Create Index GIST (geom)
+CREATE INDEX	eGo_lattice_deu_500m_out_mview_geom_idx
+	ON	model_draft.eGo_lattice_deu_500m_out_mview
+	USING	GIST (geom);
+
+-- Grant oeuser
+GRANT ALL ON TABLE	model_draft.eGo_lattice_deu_500m_out_mview TO oeuser WITH GRANT OPTION;
+ALTER TABLE			model_draft.eGo_lattice_deu_500m_out_mview OWNER TO oeuser;
+
 -- Scenario eGo data processing
 INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,user_name,timestamp)
 	SELECT	'0.1' AS version,
@@ -223,8 +239,7 @@ INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_na
 		'OK' AS status,
 		session_user AS user_name,
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
-	FROM	model_draft.eGo_lattice_deu_500m
-	WHERE area_type = 'out';
+	FROM	model_draft.eGo_lattice_deu_500m_out_mview;
 
 -- metadata
 COMMENT ON TABLE model_draft.eGo_lattice_deu_500m IS
