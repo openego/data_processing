@@ -135,5 +135,5 @@ COMMENT ON TABLE model_draft.template_table IS
 	}' ; 
 	
 -- select description
-SELECT obj_description('model_draft.template_table'::regclass)::json;
+SELECT obj_description('model_draft.template_table' ::regclass) ::json ;
 	
