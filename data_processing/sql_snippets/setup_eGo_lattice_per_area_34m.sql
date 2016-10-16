@@ -124,7 +124,7 @@ INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_na
 	FROM	model_draft.eGo_lattice_la_34m_mview;
 
 -- metadata
-COMMENT ON TABLE model_draft.eGo_lattice_la_34m_mview IS
+COMMENT ON TABLE model_draft.eGo_lattice_la_34m IS
 '{
 "Name": "eGo data processing - lattice on load area with 34m",
 "Source": [{
@@ -177,4 +177,4 @@ COMMENT ON TABLE model_draft.eGo_lattice_la_34m_mview IS
 }' ; 
 
 -- select description
-SELECT obj_description('model_draft.eGo_lattice_la_34m_mview'::regclass)::json ;
+SELECT obj_description('model_draft.eGo_lattice_la_34m'::regclass)::json ;
