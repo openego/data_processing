@@ -1032,7 +1032,7 @@ BEGIN
 		INSERT INTO model_draft.m4_grid_wpa_temp
 		SELECT 	row_number() over (ORDER BY RANDOM())as sorted,
 			wpa.*
-		FROM 	model_draft.deu_grid_500m_out_mview AS wpa
+		FROM 	model_draft.eGo_lattice_deu_500m_out_mview AS wpa
 		WHERE 	wpa.subst_id =' || gd || ';
 
 		INSERT INTO model_draft.m4_jnt_temp
@@ -1193,7 +1193,7 @@ BEGIN
 		INSERT INTO model_draft.m5_grid_la_temp
 		SELECT 	row_number() over (ORDER BY RANDOM())as sorted,
 			la.*
-		FROM 	model_draft.deu_grid_34m_la AS la
+		FROM 	model_draft.eGo_lattice_la_34m_mview AS la
 		WHERE 	wpa.subst_id =' || gd || ';
 
 		INSERT INTO model_draft.m5_jnt_temp

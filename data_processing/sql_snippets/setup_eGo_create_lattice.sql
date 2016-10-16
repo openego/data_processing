@@ -6,14 +6,14 @@ Create different lattices for Germany with 500m / 50m / (34m)
 DROP TABLE IF EXISTS 	model_draft.eGo_lattice_deu_500m CASCADE;
 CREATE TABLE 			model_draft.eGo_lattice_deu_500m AS
 	SELECT ST_SETSRID(ST_CreateFishnet(
-		ROUND((ST_ymax(box2d(geom)) -  ST_ymin(box2d(geom))) /500)::integer,
-		ROUND((ST_xmax(box2d(geom)) -  ST_xmin(box2d(geom))) /500)::integer,
+		ROUND((ST_ymax(box2d(box.geom)) -  ST_ymin(box2d(box.geom))) /500)::integer,
+		ROUND((ST_xmax(box2d(box.geom)) -  ST_xmin(box2d(box.geom))) /500)::integer,
 		500,
 		500,
-		ST_xmin (box2d(geom)),
-		ST_ymin (box2d(geom))
+		ST_xmin (box2d(box.geom)),
+		ST_ymin (box2d(box.geom))
 										),3035)::geometry(POLYGON,3035) AS geom
-	FROM orig_vg250.vg250_1_sta_union_mview ;
+	FROM orig_vg250.vg250_1_sta_union_mview AS box ;
 
 -- Add ID
 ALTER TABLE model_draft.eGo_lattice_deu_500m ADD "gid" SERIAL;
