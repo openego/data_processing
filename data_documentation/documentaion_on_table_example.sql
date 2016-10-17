@@ -1,7 +1,7 @@
-﻿/*
+/*
 This script provides an SQL example of the metadata documentation
+A definition of metadata can be found in the openmod glossary http://wiki.openmod-initiative.org/wiki/Metadata
 A further description can be found on http://wiki.openmod-initiative.org/wiki/DatabaseRules
-
 */
 
 -- metadata
