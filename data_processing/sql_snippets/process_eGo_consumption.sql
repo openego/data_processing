@@ -150,7 +150,7 @@ FROM
 	orig_ego_consumption.lak_consumption_per_federalstate b,
 	calc_ego_loads.ego_deu_load_area c
 	WHERE
-	substring(c.nuts,1,3) = b.eu_code
+	substring(c.nuts,1,3) = substring(b.eu_code, 1,3)
 
 ) AS sub
 WHERE
