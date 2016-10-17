@@ -16,7 +16,7 @@ COMMENT ON TABLE schema.table IS '{
 "Spatial resolution": ["Germany"],
 "Description": ["Example Data (annual totals)", "Regional level: national"],
 "Column":[
-	{"Name": "id", "Description": "Unique identifier", "Unit": " " },
+    {"Name": "id", "Description": "Unique identifier", "Unit": " " },
 	{"Name": "year", "Description": "Reference Year", "Unit": " " },
 	{"Name": "example_value", "Description": "Some important value", "Unit": "EUR" }],
 "Changes":	[
