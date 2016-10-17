@@ -47,6 +47,7 @@ snippets = [
     # 'analyse_eGo_paper_result.sql',
     # 'setup_eGo_wpa_per_grid_district.sql', # setup wpa
     # 'setup_eGo_lattice_per_area_500m.sql',
+    'setup_eGo_lattice_per_area_50m.sql', 
     # 'setup_eGo_lattice_per_area_34m.sql', # 24h
     # 'process_eGo_dea_allocation_methods.sql',
     # 'Voronoi_ehv.sql',
