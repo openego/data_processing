@@ -23,7 +23,7 @@ geom_line geometry(LineString,3035),
 geom_new geometry(Point,3035),
 CONSTRAINT eGo_dea_allocation_pkey PRIMARY KEY (id));
 
--- Insert DEA, no geom excluded
+-- Insert DEA, with no geom excluded
 INSERT INTO model_draft.eGo_dea_allocation (id, electrical_capacity, generation_type, generation_subtype, voltage_level, postcode, source, geom)
 	SELECT	id, electrical_capacity, generation_type, generation_subtype, voltage_level, postcode, source, ST_TRANSFORM(geom,3035)
 	FROM	supply.ego_renewable_power_plants_germany
