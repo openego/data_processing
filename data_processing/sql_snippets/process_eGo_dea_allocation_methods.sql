@@ -1,4 +1,4 @@
-﻿/* 
+/* 
 Skript to allocate decentralised renewable power plants (dea)
 Methods base on technology and voltage level
 Uses different lattice from setup_eGo_wpa_per_grid_district.sql
@@ -79,7 +79,6 @@ CREATE INDEX eGo_dea_allocation_out_mview_geom_idx
   ON model_draft.eGo_dea_allocation_out_mview USING gist (geom);
 
 
-
 -- New geom, DEA to next substation
 DROP TABLE IF EXISTS	model_draft.eGo_dea_allocation_out_nn CASCADE;
 CREATE TABLE 		model_draft.eGo_dea_allocation_out_nn AS 
@@ -114,8 +113,8 @@ FROM	(SELECT	nn.dea_id AS dea_id,
 WHERE  	t1.id = t2.dea_id;
 
 -- Drop
-DROP TABLE IF EXISTS			model_draft.eGo_dea_allocation_out_nn CASCADE;
-DROP MATERIALIZED VIEW IF EXISTS 	model_draft.eGo_dea_allocation_out_mview CASCADE;
+-- DROP TABLE IF EXISTS			model_draft.eGo_dea_allocation_out_nn CASCADE;
+-- DROP MATERIALIZED VIEW IF EXISTS 	model_draft.eGo_dea_allocation_out_mview CASCADE;
 
 
 -- OSM agricultural
@@ -332,24 +331,26 @@ DROP TABLE IF EXISTS 	model_draft.m1_1_osm_temp ;
 DROP TABLE IF EXISTS 	model_draft.m1_1_jnt_temp ;
 
 -- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,user_name,timestamp)
 	SELECT	'0.1' AS version,
 		'model_draft' AS schema_name,
 		'eGo_dea_allocation_m1_1_mview' AS table_name,
 		'process_eGo_dea_allocation_methods.sql' AS script_name,
 		COUNT(*)AS entries,
 		'OK' AS status,
+        session_user AS user_name,
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
 	FROM	model_draft.eGo_dea_allocation_m1_1_mview;
 
 -- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,user_name,timestamp)
 	SELECT	'0.1' AS version,
 		'model_draft' AS schema_name,
 		'eGo_dea_allocation_m1_1_rest_mview' AS table_name,
 		'process_eGo_dea_allocation_methods.sql' AS script_name,
 		COUNT(*)AS entries,
 		'OK' AS status,
+        session_user AS user_name,
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
 	FROM	model_draft.eGo_dea_allocation_m1_1_rest_mview;
 
@@ -507,24 +508,26 @@ DROP TABLE IF EXISTS 	model_draft.m1_2_osm_temp ;
 DROP TABLE IF EXISTS 	model_draft.m1_2_jnt_temp ;
 
 -- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,user_name,timestamp)
 	SELECT	'0.1' AS version,
 		'model_draft' AS schema_name,
 		'eGo_dea_allocation_m1_2_mview' AS table_name,
 		'process_eGo_dea_allocation_methods.sql' AS script_name,
 		COUNT(*)AS entries,
 		'OK' AS status,
+        session_user AS user_name,
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
 	FROM	model_draft.eGo_dea_allocation_m1_2_mview;
 
 -- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,user_name,timestamp)
 	SELECT	'0.1' AS version,
 		'model_draft' AS schema_name,
 		'eGo_dea_allocation_m1_2_rest_mview' AS table_name,
 		'process_eGo_dea_allocation_methods.sql' AS script_name,
 		COUNT(*)AS entries,
 		'OK' AS status,
+        session_user AS user_name,
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
 	FROM	model_draft.eGo_dea_allocation_m1_2_rest_mview;
 
@@ -747,24 +750,26 @@ DROP TABLE IF EXISTS 	model_draft.m2_wpa_temp ;
 DROP TABLE IF EXISTS 	model_draft.m2_jnt_temp ;
 
 -- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,user_name,timestamp)
 	SELECT	'0.1' AS version,
 		'model_draft' AS schema_name,
 		'eGo_dea_allocation_m2_mview' AS table_name,
 		'process_eGo_dea_allocation_methods.sql' AS script_name,
 		COUNT(*)AS entries,
 		'OK' AS status,
+        session_user AS user_name,
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
 	FROM	model_draft.eGo_dea_allocation_m2_mview;
 
 -- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,user_name,timestamp)
 	SELECT	'0.1' AS version,
 		'model_draft' AS schema_name,
 		'eGo_dea_allocation_m2_rest_mview' AS table_name,
 		'process_eGo_dea_allocation_methods.sql' AS script_name,
 		COUNT(*)AS entries,
 		'OK' AS status,
+        session_user AS user_name,
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
 	FROM	model_draft.eGo_dea_allocation_m2_rest_mview;
 
@@ -917,24 +922,26 @@ DROP TABLE IF EXISTS 	model_draft.m3_grid_wpa_temp ;
 DROP TABLE IF EXISTS 	model_draft.m3_jnt_temp ;
 
 -- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,user_name,timestamp)
 	SELECT	'0.1' AS version,
 		'model_draft' AS schema_name,
 		'eGo_dea_allocation_m3_mview' AS table_name,
 		'process_eGo_dea_allocation_methods.sql' AS script_name,
 		COUNT(*)AS entries,
 		'OK' AS status,
+        session_user AS user_name,
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
 	FROM	model_draft.eGo_dea_allocation_m3_mview;
 
 -- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,user_name,timestamp)
 	SELECT	'0.1' AS version,
 		'model_draft' AS schema_name,
 		'eGo_dea_allocation_m3_rest_mview' AS table_name,
 		'process_eGo_dea_allocation_methods.sql' AS script_name,
 		COUNT(*)AS entries,
 		'OK' AS status,
+        session_user AS user_name,
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
 	FROM	model_draft.eGo_dea_allocation_m3_rest_mview;
 
@@ -1086,24 +1093,26 @@ DROP TABLE IF EXISTS 	model_draft.m4_grid_wpa_temp ;
 DROP TABLE IF EXISTS 	model_draft.m4_jnt_temp ;
 
 -- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,user_name,timestamp)
 	SELECT	'0.1' AS version,
 		'model_draft' AS schema_name,
 		'eGo_dea_allocation_m4_mview' AS table_name,
 		'process_eGo_dea_allocation_methods.sql' AS script_name,
 		COUNT(*)AS entries,
 		'OK' AS status,
+        session_user AS user_name,
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
 	FROM	model_draft.eGo_dea_allocation_m4_mview;
 
 -- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,user_name,timestamp)
 	SELECT	'0.1' AS version,
 		'model_draft' AS schema_name,
 		'eGo_dea_allocation_m4_rest_mview' AS table_name,
 		'process_eGo_dea_allocation_methods.sql' AS script_name,
 		COUNT(*)AS entries,
 		'OK' AS status,
+        session_user AS user_name,
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
 	FROM	model_draft.eGo_dea_allocation_m4_rest_mview;
 
@@ -1247,24 +1256,26 @@ DROP TABLE IF EXISTS 	model_draft.m5_la_temp ;
 DROP TABLE IF EXISTS 	model_draft.m5_jnt_temp ;
 
 -- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,user_name,timestamp)
 	SELECT	'0.1' AS version,
 		'model_draft' AS schema_name,
 		'eGo_dea_allocation_m5_mview' AS table_name,
 		'process_eGo_dea_allocation_methods.sql' AS script_name,
 		COUNT(*)AS entries,
 		'OK' AS status,
+        session_user AS user_name,
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
 	FROM	model_draft.eGo_dea_allocation_m5_mview;
 
 -- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,user_name,timestamp)
 	SELECT	'0.1' AS version,
 		'model_draft' AS schema_name,
 		'eGo_dea_allocation_m5_rest_mview' AS table_name,
 		'process_eGo_dea_allocation_methods.sql' AS script_name,
 		COUNT(*)AS entries,
 		'OK' AS status,
+        session_user AS user_name,
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
 	FROM	model_draft.eGo_dea_allocation_m5_rest_mview;
 
@@ -1398,13 +1409,14 @@ FROM	model_draft.dea_germany_per_load_area AS la,
 	model_draft.eGo_dea_per_grid_district AS gd;
 
 -- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,user_name,timestamp)
 	SELECT	'0.1' AS version,
 		'model_draft' AS schema_name,
 		'dea_germany_per_load_area' AS table_name,
 		'process_eGo_dea_allocation_methods.sql' AS script_name,
 		COUNT(*)AS entries,
 		'OK' AS status,
+        session_user AS user_name,
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
 	FROM	model_draft.dea_germany_per_load_area;
 
