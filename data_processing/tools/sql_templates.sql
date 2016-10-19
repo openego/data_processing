@@ -44,8 +44,7 @@ UPDATE 	model_draft.template_table
 
 -- create index GIST (geom)
 CREATE INDEX	template_table_geom_idx
-	ON	model_draft.template_table
-	USING	GIST (geom);
+	ON	model_draft.template_table USING GIST (geom);
 
 -- grant (oeuser)
 GRANT ALL ON TABLE	model_draft.template_table TO oeuser WITH GRANT OPTION;
