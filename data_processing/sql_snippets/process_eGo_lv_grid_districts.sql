@@ -291,7 +291,7 @@ WHERE population IS NULL;
 -- Create sector table
 ------------------------------------------
 -- Wähle Sektorflächen für jeden Grid District aus:
-CREATE TABLE IF EXISTS calc_ego_grid_district.ego_deu_grid_district_sectors
+CREATE TABLE IF NOT EXISTS calc_ego_grid_district.ego_deu_grid_district_sectors
 (
   id serial NOT NULL,
   geom geometry,
