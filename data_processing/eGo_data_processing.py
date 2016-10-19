@@ -30,7 +30,7 @@ script_dir = os.path.abspath(
                  'python_scripts'))
 
 snippets = [
-    # # 'scenario_eGo_data_processing.sql', # setup scenario
+    # # 'scenario_eGo_data_processing.sql', # setup scenario log
     # # 'setup_bkg_vg250.sql', # setup borders
     # 'get_substations.sql',
     # 'get_substations_ehv.sql',
@@ -45,12 +45,11 @@ snippets = [
     # 'process_eGo_loads_per_grid_district.sql',
     # 'process_eGo_consumption.sql',
     # 'analyse_eGo_paper_result.sql',
-    # # 'setup_eGo_wpa_per_grid_district.sql', # setup wpa
-    # 'setup_eGo_lattice_per_area.sql', # setup lattice (24h)
+    # 'setup_eGo_wpa_per_grid_district.sql', # setup wpa
     # 'setup_eGo_lattice_per_area_500m.sql',
-    # 'setup_eGo_lattice_per_area_50m.sql',
-    'setup_eGo_lattice_per_area_34m.sql',
-    # 'process_eGo_dea_allocation_methods.sql',
+    # 'setup_eGo_lattice_per_area_50m.sql', 
+    # 'setup_eGo_lattice_per_area_34m.sql', # 24h
+    'process_eGo_dea_allocation_methods.sql',
     # 'Voronoi_ehv.sql',
     # 'voronoi_weatherpoint.sql',
     # 'calc_ego_hv_powerflow.sql',
