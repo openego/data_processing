@@ -64,9 +64,12 @@ def demand_per_mv_grid_district():
 
     annual_demand_df = pd.read_sql_query(
         query_demand.statement, session.bind, index_col='otg_id').fillna(0)
+    annual_demand_df = annual_demand_df.loc[~pd.isnull(annual_demand_df.index)]
+
 
     large_scale_industrial = pd.read_sql_table('large_scale_consumer', conn, schema,
                                                index_col='id')
+
 
     # add extra industrial demand ontop of MV industrial demand
     annual_demand_df = pd.concat(

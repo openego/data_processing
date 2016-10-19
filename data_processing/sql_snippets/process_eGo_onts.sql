@@ -1,4 +1,4 @@
-﻿-- (08:30 min)
+-- (08:30 min)
 
 CREATE OR REPLACE FUNCTION ST_CreateFishnet(
         nrow integer, ncol integer,
@@ -15,6 +15,15 @@ FROM generate_series(0, $1 - 1) AS i,
 SELECT ('POLYGON((0 0, 0 '||$4||', '||$3||' '||$4||', '||$3||' 0,0 0))')::geometry AS cell
 ) AS foo;
 $$ LANGUAGE sql IMMUTABLE STRICT;
+
+
+CREATE TABLE IF NOT EXISTS calc_ego_grid_district."ego_deu_ontgrids"
+(
+  id serial NOT NULL,
+  geom geometry(Polygon,3035),
+  load_area_id integer,
+  CONSTRAINT test_ego_deu_ontgrids_pkey PRIMARY KEY (id)
+);
 
 TRUNCATE TABLE  calc_ego_grid_district."ego_deu_ontgrids";
 INSERT INTO calc_ego_grid_district."ego_deu_ontgrids" (geom, load_area_id)
@@ -54,6 +63,15 @@ FROM calc_ego_loads."ego_deu_load_area" AS area INNER JOIN calc_ego_loads."calc_
 
 
 
+CREATE TABLE IF NOT EXISTS calc_ego_substation."ego_deu_onts"
+(
+  geom geometry(Point,3035),
+  id serial NOT NULL,
+  is_dummy boolean,
+  subst_id integer,
+  load_area_id integer,
+  CONSTRAINT ego_deu_onts_pkey PRIMARY KEY (id)
+);
   
 TRUNCATE TABLE calc_ego_substation."ego_deu_onts";
 INSERT INTO calc_ego_substation."ego_deu_onts" (geom, load_area_id)
@@ -92,6 +110,14 @@ FROM
 
 	
 -- Lege Buffer um ONT-STandorte und ermittle die Teile der Lastgebiete, die sich nicht innerhalb dieser Buffer befinden
+CREATE TABLE IF NOT EXISTS calc_ego_grid_district."ego_deu_load_area_rest"
+(
+  id serial NOT NULL,
+  geom geometry(Polygon,3035),
+  load_area_id integer NOT NULL,
+  CONSTRAINT test_ego_deu_load_area_rest_pkey PRIMARY KEY (id)
+);
+
 TRUNCATE TABLE calc_ego_grid_district."ego_deu_load_area_rest";
 INSERT INTO calc_ego_grid_district."ego_deu_load_area_rest" (geom, load_area_id)
 
@@ -137,3 +163,7 @@ FROM    (
 	) AS t2
 WHERE  	t1.id = t2.id;
 
+-- Lösche Hilfstabellen 
+
+DROP TABLE IF EXISTS calc_ego_grid_district."ego_deu_ontgrids";
+DROP TABLE IF EXISTS calc_ego_grid_district."ego_deu_load_area_rest";
