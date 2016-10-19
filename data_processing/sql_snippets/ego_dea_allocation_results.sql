@@ -202,13 +202,13 @@ UNION ALL
 		SUM(dea.electrical_capacity) AS capacity,
 		COUNT(dea.id) AS count
 	FROM	model_draft.ego_dea_allocation AS dea
-	WHERE	dea.flag = 'M5';
+	WHERE	dea.flag = 'M5'
 UNION ALL
 	SELECT	'rest' AS name,
 		SUM(dea.electrical_capacity) AS capacity,
 		COUNT(dea.id) AS count
 	FROM	model_draft.ego_dea_allocation AS dea
-	WHERE	dea.flag LIKE '%_rest';	
+	WHERE	dea.flag LIKE '\%%_rest';	
 	
 
 ALTER TABLE	model_draft.ego_dea_per_method

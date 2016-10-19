@@ -19,7 +19,7 @@ logger.addHandler(ch)
 
 # get current time and inform about start
 total_time = time.time()
-logger.info('eGo data processing started...')
+logger.info('eGo dea allocation started...')
 
 # list of sql_snippets that process the data in correct order
 snippet_dir = os.path.abspath(
@@ -36,10 +36,10 @@ snippets = [
     # 'ego_dea_allocation_setup.sql',
     # 'ego_dea_allocation_m1.sql',
     # 'ego_dea_allocation_m2.sql',
-    'ego_dea_allocation_m3.sql',
-    'ego_dea_allocation_m4.sql',
-    'ego_dea_allocation_m5.sql',
-    'ego_dea_allocation_results.sql',
+    # 'ego_dea_allocation_m3.sql',
+    # 'ego_dea_allocation_m4.sql',
+    # 'ego_dea_allocation_m5.sql',
+    'ego_dea_allocation_results.sql'
     ]
 
 # get database connection
