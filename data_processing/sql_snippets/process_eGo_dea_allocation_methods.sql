@@ -95,7 +95,7 @@ CREATE INDEX ego_dea_allocation_out_mview_geom_idx
 
 -- grant (oeuser)
 GRANT ALL ON TABLE	model_draft.ego_dea_allocation_out_mview TO oeuser WITH GRANT OPTION;
-ALTER TABLE			model_draft.ego_dea_allocation_out_mview OWNER TO oeuser;
+ALTER TABLE		model_draft.ego_dea_allocation_out_mview OWNER TO oeuser;
 
 -- New geom, DEA to next substation
 DROP TABLE IF EXISTS	model_draft.ego_dea_allocation_out_nn CASCADE;
@@ -118,21 +118,21 @@ ALTER TABLE	model_draft.ego_dea_allocation_out_nn
 
 -- new subst_id and geom_new with line
 UPDATE 	model_draft.ego_dea_allocation AS t1
-SET  	subst_id = t2.subst_id,
-	geom_new = t2.geom_new,
-	geom_line = t2.geom_line
-FROM	(SELECT	nn.dea_id AS dea_id,
-		nn.subst_id AS subst_id,
-		nn.geom_sub AS geom_new,
-		ST_MAKELINE(nn.geom,nn.geom_sub) ::geometry(LineString,3035) AS geom_line
-	FROM	model_draft.ego_dea_allocation_out_nn AS nn,
-		model_draft.ego_dea_allocation AS dea
-	WHERE  	flag = 'out'
-	)AS t2
-WHERE  	t1.id = t2.dea_id;
+	SET  	subst_id = t2.subst_id,
+		geom_new = t2.geom_new,
+		geom_line = t2.geom_line
+	FROM	(SELECT	nn.dea_id AS dea_id,
+			nn.subst_id AS subst_id,
+			nn.geom_sub AS geom_new,
+			ST_MAKELINE(nn.geom,nn.geom_sub) ::geometry(LineString,3035) AS geom_line
+		FROM	model_draft.ego_dea_allocation_out_nn AS nn,
+			model_draft.ego_dea_allocation AS dea
+		WHERE  	flag = 'out'
+		)AS t2
+	WHERE  	t1.id = t2.dea_id;
 
 -- drop
-DROP TABLE IF EXISTS			model_draft.ego_dea_allocation_out_nn CASCADE;
+DROP TABLE IF EXISTS	model_draft.ego_dea_allocation_out_nn CASCADE;
 
 -- scenario log
 INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,user_name,timestamp)
@@ -208,14 +208,14 @@ INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_na
 	FROM 	supply.ego_renewable_power_plants_germany AS dea
 	GROUP BY dea.source
 
--- Flag BNetzA    (OK!) -> 1.000ms =3.585
+-- Flag BNetzA
 UPDATE 	model_draft.ego_dea_allocation AS dea
 	SET	flag = 'bnetza',
 		geom_new = NULL,
 		geom_line = NULL
 	WHERE	dea.source = 'BNetzA' OR dea.source = 'BNetzA PV';
 
--- MView BNetzA   (OK!) -> 1.000ms =2.992
+-- MView BNetzA
 DROP MATERIALIZED VIEW IF EXISTS 	model_draft.ego_dea_allocation_bnetza_mview CASCADE;
 CREATE MATERIALIZED VIEW 		model_draft.ego_dea_allocation_bnetza_mview AS
 	SELECT	dea.*
@@ -245,9 +245,10 @@ DROP MATERIALIZED VIEW IF EXISTS 	model_draft.ego_dea_allocation_bnetza_mview CA
 
 /* 1. M1-1
 Move "biomass" & (renewable) "gas" to OSM agricultural areas.
+The "rest" could not be allocated, consider in next method.
 */ 
 
--- MView M1-1 DEA   (OK!) -> 1.000ms =16.062
+-- MView M1-1
 DROP MATERIALIZED VIEW IF EXISTS 	model_draft.ego_dea_allocation_m1_1_a_mview CASCADE;
 CREATE MATERIALIZED VIEW 		model_draft.ego_dea_allocation_m1_1_a_mview AS
 	SELECT	id,
@@ -284,7 +285,7 @@ INSERT INTO	scenario.ego_data_processing_clean_run (version,schema_name,table_na
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
 	FROM	model_draft.ego_dea_allocation_m1_1_a_mview;
 
--- flag M1-1 DEA    (OK!) -> 1.000ms =16.062
+-- flag M1-1
 UPDATE 	model_draft.ego_dea_allocation AS dea
 	SET	flag = 'M1-1_rest'
 	WHERE	(dea.generation_type = 'biomass' OR dea.generation_type = 'gas') AND
@@ -438,10 +439,11 @@ INSERT INTO	scenario.ego_data_processing_clean_run (version,schema_name,table_na
 
 
 /* 2. M1-2
-Move "solar roof mounted" with "04 (HS/MS)" to OSM agricultural areas
+Move "solar roof mounted" with "04 (HS/MS)" to OSM agricultural areas.
+The "rest" could not be allocated, consider in next method.
 */
 
--- MView M1-2 DEA
+-- MView M1-2
 DROP MATERIALIZED VIEW IF EXISTS 	model_draft.ego_dea_allocation_m1_2_a_mview CASCADE;
 CREATE MATERIALIZED VIEW 		model_draft.ego_dea_allocation_m1_2_a_mview AS
 	SELECT	id,
@@ -476,7 +478,7 @@ INSERT INTO	scenario.ego_data_processing_clean_run (version,schema_name,table_na
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
 	FROM	model_draft.ego_dea_allocation_m1_2_a_mview;
 
--- flag M1-2 DEA    (OK!) -> 1.000ms =21.536
+-- flag M1-2
 UPDATE 	model_draft.ego_dea_allocation AS dea
 	SET	flag = 'M1-2_rest'
 	WHERE	(dea.voltage_level = '04 (HS/MS)' OR dea.voltage_level = '05 (MS)') AND
@@ -558,7 +560,7 @@ BEGIN
 				dea.subst_id,
 				dea.geom AS old_geom,
 				ST_MAKELINE(dea.geom,ST_CENTROID(osm.geom)) ::geometry(LineString,3035) AS geom_line,
-				ST_CENTROID(osm.geom) ::geometry(Point,3035) AS geom -- NEW LOCATION!
+				ST_CENTROID(osm.geom) ::geometry(Point,3035) AS geom 	-- NEW LOCATION!
 			FROM	model_draft.ego_m1_2_dea_temp AS dea
 			INNER JOIN model_draft.ego_m1_2_osm_temp AS osm ON (dea.sorted = osm.sorted);
 
@@ -640,32 +642,50 @@ INSERT INTO	scenario.ego_data_processing_clean_run (version,schema_name,table_na
 
 
 /* 3. M2
-Move "wind" with "04 (HS/MS)" to WPA as wind farms
+Move "wind" with "04 (HS/MS)" to WPA as wind farms.
+The "rest" could not be allocated, consider in next method.
 */
 
--- MView M2 DEA   (OK!) -> 1.000ms =2.127
+-- MView M2
 DROP MATERIALIZED VIEW IF EXISTS 	model_draft.ego_dea_allocation_m2_a_mview CASCADE;
 CREATE MATERIALIZED VIEW 		model_draft.ego_dea_allocation_m2_a_mview AS
-		SELECT	id,
-			electrical_capacity,
-			generation_type,
-			generation_subtype,
-			voltage_level,
-			subst_id,
-			geom,
-			flag
-		FROM 	model_draft.ego_dea_allocation AS dea
-		WHERE 	(dea.voltage_level = '04 (HS/MS)' 
-			AND dea.generation_type = 'wind');
+	SELECT	id,
+		electrical_capacity,
+		generation_type,
+		generation_subtype,
+		voltage_level,
+		subst_id,
+		geom,
+		flag
+	FROM 	model_draft.ego_dea_allocation AS dea
+	WHERE 	(dea.voltage_level = '04 (HS/MS)' AND 
+		dea.generation_type = 'wind');
 
+-- create index GIST (geom)
 CREATE INDEX ego_dea_allocation_m2_a_mview_geom_idx
 	ON model_draft.ego_dea_allocation_m2_a_mview USING gist (geom);
 
--- Flag M2 DEA    (OK!) -> 1.000ms =2.127
+-- grant (oeuser)
+GRANT ALL ON TABLE	model_draft.ego_dea_allocation_m2_a_mview TO oeuser WITH GRANT OPTION;
+ALTER TABLE		model_draft.ego_dea_allocation_m2_a_mview OWNER TO oeuser;
+
+-- scenario log
+INSERT INTO	scenario.ego_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,user_name,timestamp)
+	SELECT	'0.1' AS version,
+		'model_draft' AS schema_name,
+		'ego_dea_allocation_m2_a_mview' AS table_name,
+		'process_ego_dea_allocation_methods.sql' AS script_name,
+		COUNT(*)AS entries,
+		'OK' AS status,
+		session_user AS user_name,
+		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
+	FROM	model_draft.ego_dea_allocation_m2_a_mview;
+
+-- flag M2
 UPDATE 	model_draft.ego_dea_allocation AS dea
-SET	flag = 'M2_rest'
-WHERE	dea.voltage_level = '04 (HS/MS)' 
-	AND dea.generation_type = 'wind';
+	SET	flag = 'M2_rest'
+	WHERE	dea.voltage_level = '04 (HS/MS)' AND 
+		dea.generation_type = 'wind';
 
 -- get windfarms   (OK!) -> 485.000ms =317
 DROP TABLE IF EXISTS 	model_draft.ego_dea_allocation_m2_windfarm CASCADE;
@@ -680,6 +700,7 @@ CREATE TABLE 		model_draft.ego_dea_allocation_m2_windfarm (
 	geom geometry(Polygon,3035),
 	CONSTRAINT ego_dea_allocation_m2_windfarm_pkey PRIMARY KEY (farm_id));
 
+-- insert data (windfarm)
 INSERT INTO model_draft.ego_dea_allocation_m2_windfarm (area_ha,geom)
 	SELECT	ST_AREA(farm.geom_farm),
 		farm.geom_farm
@@ -691,59 +712,71 @@ INSERT INTO model_draft.ego_dea_allocation_m2_windfarm (area_ha,geom)
 			(dea.generation_type = 'wind')
 		) AS farm;
 
+-- create index GIST (geom)
 CREATE INDEX ego_dea_allocation_m2_windfarm_geom_idx
 	ON model_draft.ego_dea_allocation_m2_windfarm USING gist (geom);
 
--- Update subst_id   (OK!) -> 1.000ms =317
+-- update subst_id from grid_district
 UPDATE 	model_draft.ego_dea_allocation_m2_windfarm AS t1
-SET  	subst_id = t2.subst_id
-FROM    (
-	SELECT	farm.farm_id AS farm_id,
-		gd.subst_id AS subst_id
-	FROM	model_draft.ego_dea_allocation_m2_windfarm AS farm,
-		calc_ego_grid_district.grid_district AS gd
-	WHERE  	gd.geom && ST_CENTROID(farm.geom) AND
-		ST_CONTAINS(gd.geom,ST_CENTROID(farm.geom))
-	) AS t2
-WHERE  	t1.farm_id = t2.farm_id;
+	SET  	subst_id = t2.subst_id
+	FROM    (
+		SELECT	farm.farm_id AS farm_id,
+			gd.subst_id AS subst_id
+		FROM	model_draft.ego_dea_allocation_m2_windfarm AS farm,
+			calc_ego_grid_district.grid_district AS gd
+		WHERE  	gd.geom && ST_CENTROID(farm.geom) AND
+			ST_CONTAINS(gd.geom,ST_CENTROID(farm.geom))
+		) AS t2
+	WHERE  	t1.farm_id = t2.farm_id;
 
--- Update wind farm data   (OK!) -> 1.000ms =317
+-- update wind farm data
 UPDATE 	model_draft.ego_dea_allocation_m2_windfarm AS t1
-SET  	dea_cnt = t2.dea_cnt,
-	electrical_capacity_sum = t2.electrical_capacity_sum
-FROM    (
-	SELECT	farm.farm_id AS farm_id,
-		COUNT(dea.geom) AS dea_cnt,
-		SUM(dea.electrical_capacity) AS electrical_capacity_sum
-	FROM	model_draft.ego_dea_allocation AS dea,
-		model_draft.ego_dea_allocation_m2_windfarm AS farm
-	WHERE  	(dea.voltage_level = '04 (HS/MS)' AND
-		dea.generation_type = 'wind') AND
-		(farm.geom && dea.geom AND
-		ST_CONTAINS(farm.geom,dea.geom))
-	GROUP BY farm.farm_id
-	) AS t2
-WHERE  	t1.farm_id = t2.farm_id;
+	SET  	dea_cnt = t2.dea_cnt,
+		electrical_capacity_sum = t2.electrical_capacity_sum
+	FROM    (
+		SELECT	farm.farm_id AS farm_id,
+			COUNT(dea.geom) AS dea_cnt,
+			SUM(dea.electrical_capacity) AS electrical_capacity_sum
+		FROM	model_draft.ego_dea_allocation AS dea,
+			model_draft.ego_dea_allocation_m2_windfarm AS farm
+		WHERE  	(dea.voltage_level = '04 (HS/MS)' AND
+			dea.generation_type = 'wind') AND
+			(farm.geom && dea.geom AND
+			ST_CONTAINS(farm.geom,dea.geom))
+		GROUP BY farm.farm_id
+		) AS t2
+	WHERE  	t1.farm_id = t2.farm_id;
 
--- Update DEA in wind farms   (OK!) -> 1.000ms =2.127
+-- update DEA in wind farms
 UPDATE 	model_draft.ego_dea_allocation AS t1
-SET  	sort = t2.farm_id   -- temporary storage of farm id in sort!
-FROM    (
-	SELECT	dea.id AS id,
-		farm.farm_id AS farm_id
-	FROM	model_draft.ego_dea_allocation AS dea,
-		model_draft.ego_dea_allocation_m2_windfarm AS farm
-	WHERE  	(dea.voltage_level = '04 (HS/MS)' AND
-		dea.generation_type = 'wind') AND
-		(farm.geom && dea.geom AND
-		ST_CONTAINS(farm.geom,dea.geom))
-	) AS t2
-WHERE  	t1.id = t2.id;
+	SET  	sort = t2.farm_id   -- temporary store farm_id in sort!
+	FROM    (
+		SELECT	dea.id AS id,
+			farm.farm_id AS farm_id
+		FROM	model_draft.ego_dea_allocation AS dea,
+			model_draft.ego_dea_allocation_m2_windfarm AS farm
+		WHERE  	(dea.voltage_level = '04 (HS/MS)' AND
+			dea.generation_type = 'wind') AND
+			(farm.geom && dea.geom AND
+			ST_CONTAINS(farm.geom,dea.geom))
+		) AS t2
+	WHERE  	t1.id = t2.id;
 
+-- scenario log
+INSERT INTO	scenario.ego_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,user_name,timestamp)
+	SELECT	'0.1' AS version,
+		'model_draft' AS schema_name,
+		'ego_dea_allocation_m2_windfarm' AS table_name,
+		'process_ego_dea_allocation_methods.sql' AS script_name,
+		COUNT(*)AS entries,
+		'OK' AS status,
+		session_user AS user_name,
+		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
+	FROM	model_draft.ego_dea_allocation_m2_windfarm;
 
--- Create Temp Tables for the loop   (OK!) -> 1.000ms =0
-DROP TABLE IF EXISTS 	model_draft.m2_farm_temp CASCADE;
-CREATE TABLE 		model_draft.m2_farm_temp (
+-- create temporary tables for the loop
+DROP TABLE IF EXISTS 	model_draft.ego_m2_farm_temp CASCADE;
+CREATE TABLE 		model_draft.ego_m2_farm_temp (
 	sorted bigint NOT NULL,
 	farm_id bigint NOT NULL,
 	subst_id integer,
@@ -754,106 +787,117 @@ CREATE TABLE 		model_draft.m2_farm_temp (
 	geom_line geometry(LineString,3035),
 	geom geometry(Polygon,3035),
 	flag character varying,
-	CONSTRAINT m2_farm_temp_pkey PRIMARY KEY (sorted));
+	CONSTRAINT ego_m2_farm_temp_pkey PRIMARY KEY (sorted));
 
-CREATE INDEX m2_farm_temp_geom_idx
-	ON model_draft.m2_farm_temp USING gist (geom);
+CREATE INDEX ego_m2_farm_temp_geom_idx
+	ON model_draft.ego_m2_farm_temp USING gist (geom);
 
-DROP TABLE IF EXISTS 	model_draft.m2_wpa_temp CASCADE;
-CREATE TABLE 		model_draft.m2_wpa_temp (
+DROP TABLE IF EXISTS 	model_draft.ego_m2_wpa_temp CASCADE;
+CREATE TABLE 		model_draft.ego_m2_wpa_temp (
 	sorted bigint NOT NULL,
 	id integer,
 	subst_id integer,
 	area_ha numeric,
 	geom geometry(Polygon,3035),
-	CONSTRAINT m2_wpa_temp_pkey PRIMARY KEY (sorted));
+	CONSTRAINT ego_m2_wpa_temp_pkey PRIMARY KEY (sorted));
 
-CREATE INDEX m2_wpa_temp_geom_idx
-	ON model_draft.m2_wpa_temp USING gist (geom);
+CREATE INDEX ego_m2_wpa_temp_geom_idx
+	ON model_draft.ego_m2_wpa_temp USING gist (geom);
 
-DROP TABLE IF EXISTS 	model_draft.m2_jnt_temp CASCADE;
-CREATE TABLE 		model_draft.m2_jnt_temp (
+DROP TABLE IF EXISTS 	model_draft.ego_m2_jnt_temp CASCADE;
+CREATE TABLE 		model_draft.ego_m2_jnt_temp (
 	sorted bigint NOT NULL,
 	farm_id bigint,
 	subst_id integer,
 	geom_line geometry(LineString,3035),
 	geom geometry(Point,3035),
-	CONSTRAINT m2_jnt_temp_pkey PRIMARY KEY (sorted));
+	CONSTRAINT ego_m2_jnt_temp_pkey PRIMARY KEY (sorted));
 
-CREATE INDEX m2_jnt_temp_geom_idx
-	ON model_draft.m2_jnt_temp USING gist (geom);
+CREATE INDEX ego_m2_jnt_temp_geom_idx
+	ON model_draft.ego_m2_jnt_temp USING gist (geom);
 
--- Run a loop around all grid districs   (OK!)
+-- loop for grid_district
 DO
 $$
 DECLARE	gd integer;
 BEGIN
-    FOR gd IN 1..3609
-    LOOP
-        EXECUTE 'INSERT INTO model_draft.m2_farm_temp
-		SELECT	row_number() over (ORDER BY farm.dea_cnt DESC)as sorted,
-			farm.*
-		FROM 	model_draft.ego_dea_allocation_m2_windfarm AS farm
-		WHERE 	farm.subst_id =' || gd || ';
+	FOR gd IN 1..3609	-- subst_id
+	LOOP
+        EXECUTE '
+		INSERT INTO model_draft.ego_m2_farm_temp
+			SELECT	row_number() over (ORDER BY farm.dea_cnt DESC)as sorted,
+				farm.*
+			FROM 	model_draft.ego_dea_allocation_m2_windfarm AS farm
+			WHERE 	farm.subst_id =' || gd || ';
 
-		INSERT INTO model_draft.m2_wpa_temp
-		SELECT 	row_number() over (ORDER BY pot.area_ha DESC)as sorted,
-			pot.*
-		FROM 	model_draft.ego_wpa_per_grid_district AS pot
-		WHERE 	subst_id =' || gd || ';
+		INSERT INTO model_draft.ego_m2_wpa_temp
+			SELECT 	row_number() over (ORDER BY wpa.area_ha DESC)as sorted,
+				wpa.*
+			FROM 	model_draft.ego_wpa_per_grid_district AS wpa
+			WHERE 	wpa.subst_id =' || gd || ';
 
-		INSERT INTO model_draft.m2_jnt_temp
-		SELECT	farm.sorted,
-			farm.farm_id,
-			farm.subst_id,
-			ST_MAKELINE(ST_CENTROID(farm.geom),ST_PointOnSurface(wpa.geom)) ::geometry(LineString,3035) AS geom_line,
-			ST_PointOnSurface(wpa.geom) ::geometry(Point,3035) AS geom -- NEW LOCATION!
-		FROM	model_draft.m2_farm_temp AS farm
-		INNER JOIN model_draft.m2_wpa_temp AS wpa ON (farm.sorted = wpa.sorted);
+		INSERT INTO model_draft.ego_m2_jnt_temp
+			SELECT	farm.sorted,
+				farm.farm_id,
+				farm.subst_id,
+				ST_MAKELINE(ST_CENTROID(farm.geom),ST_PointOnSurface(wpa.geom)) ::geometry(LineString,3035) AS geom_line,
+				ST_PointOnSurface(wpa.geom) ::geometry(Point,3035) AS geom	-- NEW LOCATION!
+			FROM	model_draft.ego_m2_farm_temp AS farm
+			INNER JOIN model_draft.ego_m2_wpa_temp AS wpa ON (farm.sorted = wpa.sorted);
 
 		UPDATE 	model_draft.ego_dea_allocation AS t1
-		SET  	geom_new = t2.geom_new,
-			geom_line = t2.geom_line,
-			flag = ''M2''
-		FROM	(SELECT	m.farm_id AS farm_id,
-				m.geom_line,
-				m.geom AS geom_new
-			FROM	model_draft.m2_jnt_temp AS m
-			)AS t2
-		WHERE  	t1.sort = t2.farm_id;
+			SET  	geom_new = t2.geom_new,
+				geom_line = t2.geom_line,
+				flag = ''M2''
+			FROM	(SELECT	m.farm_id AS farm_id,
+					m.geom_line,
+					m.geom AS geom_new
+				FROM	model_draft.ego_m2_jnt_temp AS m
+				)AS t2
+			WHERE  	t1.sort = t2.farm_id;
 
-		TRUNCATE TABLE model_draft.m2_farm_temp, model_draft.m2_wpa_temp, model_draft.m2_jnt_temp;
-			';
-    END LOOP;
+		TRUNCATE TABLE model_draft.ego_m2_farm_temp, model_draft.ego_m2_wpa_temp, model_draft.ego_m2_jnt_temp;
+		';
+	END LOOP;
 END;
 $$;
 
--- Get M2 List (OK!) -> 1.000ms = 2.097
+-- M2 result
 DROP MATERIALIZED VIEW IF EXISTS 	model_draft.ego_dea_allocation_m2_mview CASCADE;
 CREATE MATERIALIZED VIEW 		model_draft.ego_dea_allocation_m2_mview AS
-SELECT 	dea.*
-FROM	model_draft.ego_dea_allocation AS dea
-WHERE	flag = 'M2';
+	SELECT 	dea.*
+	FROM	model_draft.ego_dea_allocation AS dea
+	WHERE	flag = 'M2';
 
+-- create index GIST (geom)
 CREATE INDEX ego_dea_allocation_m2_mview_geom_idx
 	ON model_draft.ego_dea_allocation_m2_mview USING gist (geom);
 
--- Get M2 Rest (OK!) -> 1.000ms = 30
+-- grant (oeuser)
+GRANT ALL ON TABLE	model_draft.ego_dea_allocation_m2_mview TO oeuser WITH GRANT OPTION;
+ALTER TABLE		model_draft.ego_dea_allocation_m2_mview OWNER TO oeuser;
+
+-- M2 rest
 DROP MATERIALIZED VIEW IF EXISTS 	model_draft.ego_dea_allocation_m2_rest_mview CASCADE;
 CREATE MATERIALIZED VIEW 		model_draft.ego_dea_allocation_m2_rest_mview AS
-SELECT 	dea.*
-FROM	model_draft.ego_dea_allocation AS dea
-WHERE	flag = 'M2_rest';
+	SELECT 	dea.*
+	FROM	model_draft.ego_dea_allocation AS dea
+	WHERE	flag = 'M2_rest';
 
+-- create index GIST (geom)
 CREATE INDEX ego_dea_allocation_m2_rest_mview_geom_idx
 	ON model_draft.ego_dea_allocation_m2_rest_mview USING gist (geom);
 
--- Drop temp
-DROP TABLE IF EXISTS 	model_draft.m2_farm_temp CASCADE;
-DROP TABLE IF EXISTS 	model_draft.m2_wpa_temp CASCADE;
-DROP TABLE IF EXISTS 	model_draft.m2_jnt_temp CASCADE;
+-- grant (oeuser)
+GRANT ALL ON TABLE	model_draft.ego_dea_allocation_m2_rest_mview TO oeuser WITH GRANT OPTION;
+ALTER TABLE		model_draft.ego_dea_allocation_m2_rest_mview OWNER TO oeuser;	
 
--- Scenario ego data processing
+-- Drop temp
+DROP TABLE IF EXISTS 	model_draft.ego_m2_farm_temp CASCADE;
+DROP TABLE IF EXISTS 	model_draft.ego_m2_wpa_temp CASCADE;
+DROP TABLE IF EXISTS 	model_draft.ego_m2_jnt_temp CASCADE;
+
+-- scenario log
 INSERT INTO	scenario.ego_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,user_name,timestamp)
 	SELECT	'0.1' AS version,
 		'model_draft' AS schema_name,
@@ -861,11 +905,11 @@ INSERT INTO	scenario.ego_data_processing_clean_run (version,schema_name,table_na
 		'process_ego_dea_allocation_methods.sql' AS script_name,
 		COUNT(*)AS entries,
 		'OK' AS status,
-        session_user AS user_name,
+		session_user AS user_name,
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
 	FROM	model_draft.ego_dea_allocation_m2_mview;
 
--- Scenario ego data processing
+-- scenario log
 INSERT INTO	scenario.ego_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,user_name,timestamp)
 	SELECT	'0.1' AS version,
 		'model_draft' AS schema_name,
@@ -873,19 +917,17 @@ INSERT INTO	scenario.ego_data_processing_clean_run (version,schema_name,table_na
 		'process_ego_dea_allocation_methods.sql' AS script_name,
 		COUNT(*)AS entries,
 		'OK' AS status,
-        session_user AS user_name,
+		session_user AS user_name,
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
 	FROM	model_draft.ego_dea_allocation_m2_rest_mview;
 
 
 /* 4. M3 
-Relocate "wind" with "05 (MS)" & "06 (MS/NS)" to wpa_grid
-(OK!) -> 2.290.000ms = 10.835
-Total 13.925 -> 3.090 Rest!
-The "rest" could not be allocated, consider in next method
+Move "wind" with "05 (MS)" & "06 (MS/NS)" to wpa_grid.
+The "rest" could not be allocated, consider in next method.
 */ 
 
--- MView M3 DEA   (OK!) -> 1.000ms =13.925 / 
+-- MView M3
 DROP MATERIALIZED VIEW IF EXISTS 	model_draft.ego_dea_allocation_m3_a_mview CASCADE;
 CREATE MATERIALIZED VIEW 		model_draft.ego_dea_allocation_m3_a_mview AS
 	SELECT	id,
@@ -897,27 +939,45 @@ CREATE MATERIALIZED VIEW 		model_draft.ego_dea_allocation_m3_a_mview AS
 		geom,
 		flag
 	FROM 	model_draft.ego_dea_allocation AS dea
-	WHERE 	(dea.voltage_level = '05 (MS)' 
-			OR dea.voltage_level = '06 (MS/NS)') 
-		AND 	dea.generation_type = 'wind'
-		OR 	dea.flag = 'M2_rest'
-		AND	dea.subst_id IS NOT NULL ;
+	WHERE 	(dea.voltage_level = '05 (MS)' OR 
+		dea.voltage_level = '06 (MS/NS)') AND 
+		dea.generation_type = 'wind' OR 
+		dea.flag = 'M2_rest' AND
+		dea.subst_id IS NOT NULL ;
 
+-- create index GIST (geom)
 CREATE INDEX ego_dea_allocation_m3_a_mview_geom_idx
   ON model_draft.ego_dea_allocation_m3_a_mview USING gist (geom);
 
--- Flag M3 DEA    (OK!) -> 1.000ms =13.948
-UPDATE 	model_draft.ego_dea_allocation AS dea
-SET	flag = 'M3_rest'
-WHERE	(dea.voltage_level = '05 (MS)' 
-			OR dea.voltage_level = '06 (MS/NS)') 
-		AND 	dea.generation_type = 'wind'
-		OR 	dea.flag = 'M2_rest'
-		AND	dea.subst_id IS NOT NULL ;
+-- grant (oeuser)
+GRANT ALL ON TABLE	model_draft.ego_dea_allocation_m3_a_mview TO oeuser WITH GRANT OPTION;
+ALTER TABLE		model_draft.ego_dea_allocation_m3_a_mview OWNER TO oeuser;  
 
--- Create Temp Tables for the loop   (OK!) -> 1.000ms =0
-DROP TABLE IF EXISTS 	model_draft.m3_dea_temp CASCADE;
-CREATE TABLE 		model_draft.m3_dea_temp (
+-- flag M3
+UPDATE 	model_draft.ego_dea_allocation AS dea
+	SET	flag = 'M3_rest'
+	WHERE	(dea.voltage_level = '05 (MS)' OR 
+		dea.voltage_level = '06 (MS/NS)') AND 
+		dea.generation_type = 'wind' OR 
+		dea.flag = 'M2_rest' AND
+		dea.subst_id IS NOT NULL ;
+
+-- scenario log
+INSERT INTO	scenario.ego_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,user_name,timestamp)
+	SELECT	'0.1' AS version,
+		'model_draft' AS schema_name,
+		'ego_dea_allocation_m3_a_mview' AS table_name,
+		'process_ego_dea_allocation_methods.sql' AS script_name,
+		COUNT(*)AS entries,
+		'OK' AS status,
+		session_user AS user_name,
+		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
+	FROM	model_draft.ego_dea_allocation_m3_a_mview;
+	
+
+-- create temporary tables for the loop
+DROP TABLE IF EXISTS 	model_draft.ego_m3_dea_temp CASCADE;
+CREATE TABLE 		model_draft.ego_m3_dea_temp (
 	sorted bigint NOT NULL,
 	id bigint NOT NULL,
 	electrical_capacity numeric,
@@ -927,105 +987,115 @@ CREATE TABLE 		model_draft.m3_dea_temp (
 	subst_id integer,
 	geom geometry(Point,3035),
 	flag character varying,
-	CONSTRAINT m3_dea_temp_pkey PRIMARY KEY (sorted));
+	CONSTRAINT ego_m3_dea_temp_pkey PRIMARY KEY (sorted));
 
-CREATE INDEX m3_dea_temp_geom_idx
-  ON model_draft.m3_dea_temp USING gist (geom);
+CREATE INDEX ego_m3_dea_temp_geom_idx
+  ON model_draft.ego_m3_dea_temp USING gist (geom);
 
-DROP TABLE IF EXISTS 	model_draft.m3_grid_wpa_temp CASCADE;
-CREATE TABLE 		model_draft.m3_grid_wpa_temp (
+DROP TABLE IF EXISTS 	model_draft.ego_m3_grid_wpa_temp CASCADE;
+CREATE TABLE 		model_draft.ego_m3_grid_wpa_temp (
 	sorted bigint NOT NULL,
 	id integer,
 	subst_id integer,
 	area_type text,
 	geom geometry(Point,3035),
-	CONSTRAINT m3_grid_wpa_temp_pkey PRIMARY KEY (sorted));
+	CONSTRAINT ego_m3_grid_wpa_temp_pkey PRIMARY KEY (sorted));
 
-CREATE INDEX m3_grid_wpa_temp_geom_idx
-  ON model_draft.m3_grid_wpa_temp USING gist (geom);
+CREATE INDEX ego_m3_grid_wpa_temp_geom_idx
+  ON model_draft.ego_m3_grid_wpa_temp USING gist (geom);
 
-DROP TABLE IF EXISTS 	model_draft.m3_jnt_temp CASCADE;
-CREATE TABLE 		model_draft.m3_jnt_temp (
-  sorted bigint NOT NULL,
-  id bigint,
-  geom_line geometry(LineString,3035),
-  geom geometry(Point,3035),
-  CONSTRAINT m3_jnt_temp_pkey PRIMARY KEY (sorted));
+DROP TABLE IF EXISTS 	model_draft.ego_m3_jnt_temp CASCADE;
+CREATE TABLE 		model_draft.ego_m3_jnt_temp (
+	sorted bigint NOT NULL,
+	id bigint,
+	geom_line geometry(LineString,3035),
+	geom geometry(Point,3035),
+	CONSTRAINT ego_m3_jnt_temp_pkey PRIMARY KEY (sorted));
 
-CREATE INDEX m3_jnt_temp_geom_idx
-  ON model_draft.m3_jnt_temp USING gist (geom);
+CREATE INDEX ego_m3_jnt_temp_geom_idx
+  ON model_draft.ego_m3_jnt_temp USING gist (geom);
 
-
--- Run a loop around all grid districs   (OK!)
+-- loop for grid_district
 DO
 $$
 DECLARE	gd integer;
 BEGIN
-    FOR gd IN 1..3609
-    LOOP
-        EXECUTE 'INSERT INTO model_draft.m3_dea_temp
-		SELECT	row_number() over (ORDER BY dea.electrical_capacity DESC)as sorted,
-			dea.*
-		FROM 	model_draft.ego_dea_allocation_m3_a_mview AS dea
-		WHERE 	dea.subst_id =' || gd || ';;
+	FOR gd IN 1..3609	-- subst_id
+	LOOP
+        EXECUTE '
+		INSERT INTO model_draft.ego_m3_dea_temp
+			SELECT	row_number() over (ORDER BY dea.electrical_capacity DESC)as sorted,
+				dea.*
+			FROM 	model_draft.ego_dea_allocation_m3_a_mview AS dea
+			WHERE 	dea.subst_id =' || gd || ';;
 
-		INSERT INTO model_draft.m3_grid_wpa_temp
-		SELECT 	row_number() over (ORDER BY RANDOM())as sorted,
-			wpa.*
-		FROM 	model_draft.ego_lattice_deu_500m_wpa_mview AS wpa
-		WHERE 	wpa.subst_id =' || gd || ';
+		INSERT INTO model_draft.ego_m3_grid_wpa_temp
+			SELECT 	row_number() over (ORDER BY RANDOM())as sorted,
+				wpa.*
+			FROM 	model_draft.ego_lattice_deu_500m_wpa_mview AS wpa
+			WHERE 	wpa.subst_id =' || gd || ';
 
-		INSERT INTO model_draft.m3_jnt_temp
-		SELECT	dea.sorted,
-			dea.id,
-			ST_MAKELINE(dea.geom,wpa.geom) ::geometry(LineString,3035) AS geom_line,
-			wpa.geom ::geometry(Point,3035) AS geom -- NEW LOCATION!
-		FROM	model_draft.m3_dea_temp AS dea
-		INNER JOIN model_draft.m3_grid_wpa_temp AS wpa ON (dea.sorted = wpa.sorted);
+		INSERT INTO model_draft.ego_m3_jnt_temp
+			SELECT	dea.sorted,
+				dea.id,
+				ST_MAKELINE(dea.geom,wpa.geom) ::geometry(LineString,3035) AS geom_line,
+				wpa.geom ::geometry(Point,3035) AS geom 	-- NEW LOCATION!
+			FROM	model_draft.ego_m3_dea_temp AS dea
+			INNER JOIN model_draft.ego_m3_grid_wpa_temp AS wpa ON (dea.sorted = wpa.sorted);
 
 		UPDATE 	model_draft.ego_dea_allocation AS t1
-		SET  	geom_new = t2.geom_new,
-			geom_line = t2.geom_line,
-			flag = ''M3''
-		FROM	(SELECT	m.id AS id,
-				m.geom_line,
-				m.geom AS geom_new
-			FROM	model_draft.m3_jnt_temp AS m
-			)AS t2
-		WHERE  	t1.id = t2.id;
+			SET  	geom_new = t2.geom_new,
+				geom_line = t2.geom_line,
+				flag = ''M3''
+			FROM	(SELECT	m.id AS id,
+					m.geom_line,
+					m.geom AS geom_new
+				FROM	model_draft.ego_m3_jnt_temp AS m
+				)AS t2
+			WHERE  	t1.id = t2.id;
 
-		TRUNCATE TABLE model_draft.m3_dea_temp, model_draft.m3_grid_wpa_temp, model_draft.m3_jnt_temp;
-			';
-    END LOOP;
+		TRUNCATE TABLE model_draft.ego_m3_dea_temp, model_draft.ego_m3_grid_wpa_temp, model_draft.ego_m3_jnt_temp;
+		';
+	END LOOP;
 END;
 $$;
 
--- Get M3 List (OK!) -> 1.000ms = 10.835
+-- M3 result
 DROP MATERIALIZED VIEW IF EXISTS 	model_draft.ego_dea_allocation_m3_mview CASCADE;
 CREATE MATERIALIZED VIEW 		model_draft.ego_dea_allocation_m3_mview AS
-SELECT 	dea.*
-FROM	model_draft.ego_dea_allocation AS dea
-WHERE	flag = 'M3';
+	SELECT 	dea.*
+	FROM	model_draft.ego_dea_allocation AS dea
+	WHERE	flag = 'M3';
 
+-- create index GIST (geom)
 CREATE INDEX ego_dea_allocation_m3_mview_geom_idx
-  ON model_draft.ego_dea_allocation_m3_mview USING gist (geom);
+	ON model_draft.ego_dea_allocation_m3_mview USING gist (geom);
 
--- Get M3 Rest (OK!) -> 1.000ms = 3.120
+-- grant (oeuser)
+GRANT ALL ON TABLE	model_draft.ego_dea_allocation_m3_mview TO oeuser WITH GRANT OPTION;
+ALTER TABLE		model_draft.ego_dea_allocation_m3_mview OWNER TO oeuser;
+
+-- M3 rest
 DROP MATERIALIZED VIEW IF EXISTS 	model_draft.ego_dea_allocation_m3_rest_mview CASCADE;
 CREATE MATERIALIZED VIEW 		model_draft.ego_dea_allocation_m3_rest_mview AS
-SELECT 	dea.*
-FROM	model_draft.ego_dea_allocation AS dea
-WHERE	flag = 'M3_rest';
+	SELECT 	dea.*
+	FROM	model_draft.ego_dea_allocation AS dea
+	WHERE	flag = 'M3_rest';
 
+-- create index GIST (geom)
 CREATE INDEX ego_dea_allocation_m3_rest_mview_geom_idx
-  ON model_draft.ego_dea_allocation_m3_rest_mview USING gist (geom);
+	ON model_draft.ego_dea_allocation_m3_rest_mview USING gist (geom);
+
+-- grant (oeuser)
+GRANT ALL ON TABLE	model_draft.ego_dea_allocation_m3_rest_mview TO oeuser WITH GRANT OPTION;
+ALTER TABLE		model_draft.ego_dea_allocation_m3_rest_mview OWNER TO oeuser;  
 
 -- Drop temp
-DROP TABLE IF EXISTS 	model_draft.m3_dea_temp CASCADE;
-DROP TABLE IF EXISTS 	model_draft.m3_grid_wpa_temp CASCADE;
-DROP TABLE IF EXISTS 	model_draft.m3_jnt_temp CASCADE;
+DROP TABLE IF EXISTS 	model_draft.ego_m3_dea_temp CASCADE;
+DROP TABLE IF EXISTS 	model_draft.ego_m3_grid_wpa_temp CASCADE;
+DROP TABLE IF EXISTS 	model_draft.ego_m3_jnt_temp CASCADE;
 
--- Scenario ego data processing
+-- scenario log
 INSERT INTO	scenario.ego_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,user_name,timestamp)
 	SELECT	'0.1' AS version,
 		'model_draft' AS schema_name,
@@ -1033,11 +1103,11 @@ INSERT INTO	scenario.ego_data_processing_clean_run (version,schema_name,table_na
 		'process_ego_dea_allocation_methods.sql' AS script_name,
 		COUNT(*)AS entries,
 		'OK' AS status,
-        session_user AS user_name,
+		session_user AS user_name,
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
 	FROM	model_draft.ego_dea_allocation_m3_mview;
 
--- Scenario ego data processing
+-- scenario log
 INSERT INTO	scenario.ego_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,user_name,timestamp)
 	SELECT	'0.1' AS version,
 		'model_draft' AS schema_name,
@@ -1045,18 +1115,16 @@ INSERT INTO	scenario.ego_data_processing_clean_run (version,schema_name,table_na
 		'process_ego_dea_allocation_methods.sql' AS script_name,
 		COUNT(*)AS entries,
 		'OK' AS status,
-        session_user AS user_name,
+		session_user AS user_name,
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
 	FROM	model_draft.ego_dea_allocation_m3_rest_mview;
 
 
 /* 5. M4
-Relocate "wind" with "05 (MS)" & "06 (MS/NS)" to wpa_grid
-(OK!) -> 1.679.000ms =
-Total 13.925 -> 3.245 Rest!
+Move "wind" with "05 (MS)" & "06 (MS/NS)" to wpa_grid.
 "solar ground" & "wind" ohne voltage & 
-Rest M1-1 & Rest M1-2 & Rest M3
-The "rest" could not be allocated, consider in next method
+Rest M1-1 & Rest M1-2 & Rest M3.
+The "rest" could not be allocated, consider in next method.
 */ 
 
 -- MView M4 DEA   (OK!) -> 1.000ms =13.925 / 20.147
