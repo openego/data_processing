@@ -1,13 +1,13 @@
 
 
 -- Add Dummy points to substations (18 Points)
-ALTER TABLE calc_ego_substation.substation_dummy 
+ALTER TABLE calc_ego_substation.substations_dummy 
 DROP COLUMN IF EXISTS is_dummy;
 
-ALTER TABLE calc_ego_substation.substation_dummy 
+ALTER TABLE calc_ego_substation.substations_dummy 
 ADD COLUMN is_dummy boolean;
 
-UPDATE calc_ego_substation.substation_dummy 
+UPDATE calc_ego_substation.substations_dummy 
 SET is_dummy = TRUE;
 
 ALTER TABLE calc_ego_substation.ego_deu_onts 
@@ -21,7 +21,7 @@ SELECT
 	dummy.subst_id+800000,
 	ST_TRANSFORM(dummy.geom,3035),
 	dummy.is_dummy
-FROM 	calc_ego_substation.substation_dummy AS dummy;
+FROM 	calc_ego_substation.substations_dummy AS dummy;
 
 ---------------------
 
