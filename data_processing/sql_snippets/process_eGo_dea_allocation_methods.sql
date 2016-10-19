@@ -118,7 +118,7 @@ WHERE  	t1.id = t2.dea_id;
 
 
 -- OSM agricultural
-DROP TABLE IF EXISTS 	model_draft.eGo_dea_agricultural_sector_per_grid_district;
+DROP TABLE IF EXISTS 	model_draft.eGo_dea_agricultural_sector_per_grid_district CASCADE;
 CREATE TABLE 		model_draft.eGo_dea_agricultural_sector_per_grid_district (
   id serial NOT NULL,
   subst_id integer,
@@ -306,7 +306,7 @@ END;
 $$;
 
 -- Get M1-1 List (OK!) -> 1.000ms = 1998
-DROP MATERIALIZED VIEW IF EXISTS 	model_draft.eGo_dea_allocation_m1_1_mview ;
+DROP MATERIALIZED VIEW IF EXISTS 	model_draft.eGo_dea_allocation_m1_1_mview CASCADE;
 CREATE MATERIALIZED VIEW 		model_draft.eGo_dea_allocation_m1_1_mview AS
 SELECT 	dea.*
 FROM	model_draft.eGo_dea_allocation AS dea
@@ -316,7 +316,7 @@ CREATE INDEX eGo_dea_allocation_m1_1_mview_geom_idx
   ON model_draft.eGo_dea_allocation_m1_1_mview USING gist (geom);
 
 -- Get M1-1 Rest (OK!) -> 1.000ms = 1.011
-DROP MATERIALIZED VIEW IF EXISTS 	model_draft.eGo_dea_allocation_m1_1_rest_mview ;
+DROP MATERIALIZED VIEW IF EXISTS 	model_draft.eGo_dea_allocation_m1_1_rest_mview CASCADE;
 CREATE MATERIALIZED VIEW 		model_draft.eGo_dea_allocation_m1_1_rest_mview AS
 SELECT 	dea.*
 FROM	model_draft.eGo_dea_allocation AS dea
@@ -326,9 +326,9 @@ CREATE INDEX eGo_dea_allocation_m1_1_rest_mview_geom_idx
   ON model_draft.eGo_dea_allocation_m1_1_rest_mview USING gist (geom);
 
 -- Drop temp
-DROP TABLE IF EXISTS 	model_draft.m1_1_dea_temp ;
-DROP TABLE IF EXISTS 	model_draft.m1_1_osm_temp ;
-DROP TABLE IF EXISTS 	model_draft.m1_1_jnt_temp ;
+DROP TABLE IF EXISTS 	model_draft.m1_1_dea_temp CASCADE;
+DROP TABLE IF EXISTS 	model_draft.m1_1_osm_temp CASCADE;
+DROP TABLE IF EXISTS 	model_draft.m1_1_jnt_temp CASCADE;
 
 -- Scenario eGo data processing
 INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,user_name,timestamp)
@@ -363,7 +363,7 @@ The "rest" could not be allocated, consider in next method
 */ 
 
 -- MView M1-2 DEA   (OK!) -> 1.000ms =21.536
-DROP MATERIALIZED VIEW IF EXISTS 	model_draft.eGo_dea_allocation_m1_2_a_mview ;
+DROP MATERIALIZED VIEW IF EXISTS 	model_draft.eGo_dea_allocation_m1_2_a_mview CASCADE;
 CREATE MATERIALIZED VIEW 		model_draft.eGo_dea_allocation_m1_2_a_mview AS
 		SELECT	id,
 			electrical_capacity,
@@ -387,7 +387,7 @@ WHERE	(dea.voltage_level = '04 (HS/MS)' OR dea.voltage_level = '05 (MS)')
 		AND (dea.generation_subtype = 'solar_roof_mounted');
 
 -- Create temp tables for the loop
-DROP TABLE IF EXISTS 	model_draft.m1_2_dea_temp ;
+DROP TABLE IF EXISTS 	model_draft.m1_2_dea_temp CASCADE;
 CREATE TABLE 		model_draft.m1_2_dea_temp (
 	sorted bigint NOT NULL,
 	id bigint NOT NULL,
@@ -415,7 +415,7 @@ CREATE TABLE 		model_draft.m1_2_osm_temp (
 CREATE INDEX m1_2_osm_temp_geom_idx
   ON model_draft.m1_2_osm_temp USING gist (geom);
 
-DROP TABLE IF EXISTS 	model_draft.m1_2_jnt_temp ;
+DROP TABLE IF EXISTS 	model_draft.m1_2_jnt_temp CASCADE;
 CREATE TABLE 		model_draft.m1_2_jnt_temp (
   sorted bigint NOT NULL,
   id bigint,
@@ -483,7 +483,7 @@ END;
 $$;
 
 -- Get M1-2 List (OK!) -> 1.000ms = 18.290 
-DROP MATERIALIZED VIEW IF EXISTS 	model_draft.eGo_dea_allocation_m1_2_mview ;
+DROP MATERIALIZED VIEW IF EXISTS 	model_draft.eGo_dea_allocation_m1_2_mview CASCADE;
 CREATE MATERIALIZED VIEW 		model_draft.eGo_dea_allocation_m1_2_mview AS
 SELECT 	dea.*
 FROM	model_draft.eGo_dea_allocation AS dea
@@ -493,7 +493,7 @@ CREATE INDEX eGo_dea_allocation_m1_2_mview_geom_idx
 	ON model_draft.eGo_dea_allocation_m1_2_mview USING gist (geom);
 
 -- Get M1-2 Rest (OK!) -> 1.000ms = 3.210
-DROP MATERIALIZED VIEW IF EXISTS 	model_draft.eGo_dea_allocation_m1_2_rest_mview ;
+DROP MATERIALIZED VIEW IF EXISTS 	model_draft.eGo_dea_allocation_m1_2_rest_mview CASCADE;
 CREATE MATERIALIZED VIEW 		model_draft.eGo_dea_allocation_m1_2_rest_mview AS
 SELECT 	dea.*
 FROM	model_draft.eGo_dea_allocation AS dea
@@ -503,9 +503,9 @@ CREATE INDEX eGo_dea_allocation_m1_2_rest_mview_geom_idx
 	ON model_draft.eGo_dea_allocation_m1_2_rest_mview USING gist (geom);
 
 -- Drop temp
-DROP TABLE IF EXISTS 	model_draft.m1_2_dea_temp ;
-DROP TABLE IF EXISTS 	model_draft.m1_2_osm_temp ;
-DROP TABLE IF EXISTS 	model_draft.m1_2_jnt_temp ;
+DROP TABLE IF EXISTS 	model_draft.m1_2_dea_temp CASCADE;
+DROP TABLE IF EXISTS 	model_draft.m1_2_osm_temp CASCADE;
+DROP TABLE IF EXISTS 	model_draft.m1_2_jnt_temp CASCADE;
 
 -- Scenario eGo data processing
 INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,user_name,timestamp)
@@ -540,7 +540,7 @@ The "rest" could not be allocated, consider in next method
 */
 
 -- MView M2 DEA   (OK!) -> 1.000ms =2.127
-DROP MATERIALIZED VIEW IF EXISTS 	model_draft.eGo_dea_allocation_m2_a_mview ;
+DROP MATERIALIZED VIEW IF EXISTS 	model_draft.eGo_dea_allocation_m2_a_mview CASCADE;
 CREATE MATERIALIZED VIEW 		model_draft.eGo_dea_allocation_m2_a_mview AS
 		SELECT	id,
 			electrical_capacity,
@@ -564,7 +564,7 @@ WHERE	dea.voltage_level = '04 (HS/MS)'
 	AND dea.generation_type = 'wind';
 
 -- get windfarms   (OK!) -> 485.000ms =317
-DROP TABLE IF EXISTS 	model_draft.eGo_dea_allocation_m2_windfarm ;
+DROP TABLE IF EXISTS 	model_draft.eGo_dea_allocation_m2_windfarm CASCADE;
 CREATE TABLE 		model_draft.eGo_dea_allocation_m2_windfarm (
 	farm_id serial,
 	subst_id integer,
@@ -638,7 +638,7 @@ WHERE  	t1.id = t2.id;
 
 
 -- Create Temp Tables for the loop   (OK!) -> 1.000ms =0
-DROP TABLE IF EXISTS 	model_draft.m2_farm_temp ;
+DROP TABLE IF EXISTS 	model_draft.m2_farm_temp CASCADE;
 CREATE TABLE 		model_draft.m2_farm_temp (
 	sorted bigint NOT NULL,
 	farm_id bigint NOT NULL,
@@ -655,7 +655,7 @@ CREATE TABLE 		model_draft.m2_farm_temp (
 CREATE INDEX m2_farm_temp_geom_idx
 	ON model_draft.m2_farm_temp USING gist (geom);
 
-DROP TABLE IF EXISTS 	model_draft.m2_wpa_temp ;
+DROP TABLE IF EXISTS 	model_draft.m2_wpa_temp CASCADE;
 CREATE TABLE 		model_draft.m2_wpa_temp (
 	sorted bigint NOT NULL,
 	id integer,
@@ -667,7 +667,7 @@ CREATE TABLE 		model_draft.m2_wpa_temp (
 CREATE INDEX m2_wpa_temp_geom_idx
 	ON model_draft.m2_wpa_temp USING gist (geom);
 
-DROP TABLE IF EXISTS 	model_draft.m2_jnt_temp ;
+DROP TABLE IF EXISTS 	model_draft.m2_jnt_temp CASCADE;
 CREATE TABLE 		model_draft.m2_jnt_temp (
 	sorted bigint NOT NULL,
 	farm_id bigint,
@@ -725,7 +725,7 @@ END;
 $$;
 
 -- Get M2 List (OK!) -> 1.000ms = 2.097
-DROP MATERIALIZED VIEW IF EXISTS 	model_draft.eGo_dea_allocation_m2_mview ;
+DROP MATERIALIZED VIEW IF EXISTS 	model_draft.eGo_dea_allocation_m2_mview CASCADE;
 CREATE MATERIALIZED VIEW 		model_draft.eGo_dea_allocation_m2_mview AS
 SELECT 	dea.*
 FROM	model_draft.eGo_dea_allocation AS dea
@@ -735,7 +735,7 @@ CREATE INDEX eGo_dea_allocation_m2_mview_geom_idx
 	ON model_draft.eGo_dea_allocation_m2_mview USING gist (geom);
 
 -- Get M2 Rest (OK!) -> 1.000ms = 30
-DROP MATERIALIZED VIEW IF EXISTS 	model_draft.eGo_dea_allocation_m2_rest_mview ;
+DROP MATERIALIZED VIEW IF EXISTS 	model_draft.eGo_dea_allocation_m2_rest_mview CASCADE;
 CREATE MATERIALIZED VIEW 		model_draft.eGo_dea_allocation_m2_rest_mview AS
 SELECT 	dea.*
 FROM	model_draft.eGo_dea_allocation AS dea
@@ -745,9 +745,9 @@ CREATE INDEX eGo_dea_allocation_m2_rest_mview_geom_idx
 	ON model_draft.eGo_dea_allocation_m2_rest_mview USING gist (geom);
 
 -- Drop temp
-DROP TABLE IF EXISTS 	model_draft.m2_farm_temp ;
-DROP TABLE IF EXISTS 	model_draft.m2_wpa_temp ;
-DROP TABLE IF EXISTS 	model_draft.m2_jnt_temp ;
+DROP TABLE IF EXISTS 	model_draft.m2_farm_temp CASCADE;
+DROP TABLE IF EXISTS 	model_draft.m2_wpa_temp CASCADE;
+DROP TABLE IF EXISTS 	model_draft.m2_jnt_temp CASCADE;
 
 -- Scenario eGo data processing
 INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,user_name,timestamp)
@@ -782,7 +782,7 @@ The "rest" could not be allocated, consider in next method
 */ 
 
 -- MView M3 DEA   (OK!) -> 1.000ms =13.925 / 
-DROP MATERIALIZED VIEW IF EXISTS 	model_draft.eGo_dea_allocation_m3_a_mview ;
+DROP MATERIALIZED VIEW IF EXISTS 	model_draft.eGo_dea_allocation_m3_a_mview CASCADE;
 CREATE MATERIALIZED VIEW 		model_draft.eGo_dea_allocation_m3_a_mview AS
 	SELECT	id,
 		electrical_capacity,
@@ -812,7 +812,7 @@ WHERE	(dea.voltage_level = '05 (MS)'
 		AND	dea.subst_id IS NOT NULL ;
 
 -- Create Temp Tables for the loop   (OK!) -> 1.000ms =0
-DROP TABLE IF EXISTS 	model_draft.m3_dea_temp ;
+DROP TABLE IF EXISTS 	model_draft.m3_dea_temp CASCADE;
 CREATE TABLE 		model_draft.m3_dea_temp (
 	sorted bigint NOT NULL,
 	id bigint NOT NULL,
@@ -828,7 +828,7 @@ CREATE TABLE 		model_draft.m3_dea_temp (
 CREATE INDEX m3_dea_temp_geom_idx
   ON model_draft.m3_dea_temp USING gist (geom);
 
-DROP TABLE IF EXISTS 	model_draft.m3_grid_wpa_temp ;
+DROP TABLE IF EXISTS 	model_draft.m3_grid_wpa_temp CASCADE;
 CREATE TABLE 		model_draft.m3_grid_wpa_temp (
 	sorted bigint NOT NULL,
 	id integer,
@@ -840,7 +840,7 @@ CREATE TABLE 		model_draft.m3_grid_wpa_temp (
 CREATE INDEX m3_grid_wpa_temp_geom_idx
   ON model_draft.m3_grid_wpa_temp USING gist (geom);
 
-DROP TABLE IF EXISTS 	model_draft.m3_jnt_temp ;
+DROP TABLE IF EXISTS 	model_draft.m3_jnt_temp CASCADE;
 CREATE TABLE 		model_draft.m3_jnt_temp (
   sorted bigint NOT NULL,
   id bigint,
@@ -897,7 +897,7 @@ END;
 $$;
 
 -- Get M3 List (OK!) -> 1.000ms = 10.835
-DROP MATERIALIZED VIEW IF EXISTS 	model_draft.eGo_dea_allocation_m3_mview ;
+DROP MATERIALIZED VIEW IF EXISTS 	model_draft.eGo_dea_allocation_m3_mview CASCADE;
 CREATE MATERIALIZED VIEW 		model_draft.eGo_dea_allocation_m3_mview AS
 SELECT 	dea.*
 FROM	model_draft.eGo_dea_allocation AS dea
@@ -907,7 +907,7 @@ CREATE INDEX eGo_dea_allocation_m3_mview_geom_idx
   ON model_draft.eGo_dea_allocation_m3_mview USING gist (geom);
 
 -- Get M3 Rest (OK!) -> 1.000ms = 3.120
-DROP MATERIALIZED VIEW IF EXISTS 	model_draft.eGo_dea_allocation_m3_rest_mview ;
+DROP MATERIALIZED VIEW IF EXISTS 	model_draft.eGo_dea_allocation_m3_rest_mview CASCADE;
 CREATE MATERIALIZED VIEW 		model_draft.eGo_dea_allocation_m3_rest_mview AS
 SELECT 	dea.*
 FROM	model_draft.eGo_dea_allocation AS dea
@@ -917,9 +917,9 @@ CREATE INDEX eGo_dea_allocation_m3_rest_mview_geom_idx
   ON model_draft.eGo_dea_allocation_m3_rest_mview USING gist (geom);
 
 -- Drop temp
-DROP TABLE IF EXISTS 	model_draft.m3_dea_temp ;
-DROP TABLE IF EXISTS 	model_draft.m3_grid_wpa_temp ;
-DROP TABLE IF EXISTS 	model_draft.m3_jnt_temp ;
+DROP TABLE IF EXISTS 	model_draft.m3_dea_temp CASCADE;
+DROP TABLE IF EXISTS 	model_draft.m3_grid_wpa_temp CASCADE;
+DROP TABLE IF EXISTS 	model_draft.m3_jnt_temp CASCADE;
 
 -- Scenario eGo data processing
 INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,user_name,timestamp)
@@ -956,7 +956,7 @@ The "rest" could not be allocated, consider in next method
 */ 
 
 -- MView M4 DEA   (OK!) -> 1.000ms =13.925 / 20.147
-DROP MATERIALIZED VIEW IF EXISTS 	model_draft.eGo_dea_allocation_m4_a_mview ;
+DROP MATERIALIZED VIEW IF EXISTS 	model_draft.eGo_dea_allocation_m4_a_mview CASCADE;
 CREATE MATERIALIZED VIEW 		model_draft.eGo_dea_allocation_m4_a_mview AS
 		SELECT	id,
 			electrical_capacity,
@@ -992,7 +992,7 @@ WHERE	(dea.voltage_level = '04 (HS/MS)' OR dea.voltage_level = '05 (MS)')
 			AND dea.subst_id IS NOT NULL;
 
 -- Create Temp Tables for the loop   (OK!) -> 1.000ms =0
-DROP TABLE IF EXISTS 	model_draft.m4_dea_temp ;
+DROP TABLE IF EXISTS 	model_draft.m4_dea_temp CASCADE;
 CREATE TABLE 		model_draft.m4_dea_temp (
 	sorted bigint NOT NULL,
 	id bigint NOT NULL,
@@ -1005,7 +1005,7 @@ CREATE TABLE 		model_draft.m4_dea_temp (
 	flag character varying,
 	CONSTRAINT m4_dea_temp_pkey PRIMARY KEY (sorted));
 
-DROP TABLE IF EXISTS 	model_draft.m4_grid_wpa_temp ;
+DROP TABLE IF EXISTS 	model_draft.m4_grid_wpa_temp CASCADE;
 CREATE TABLE 		model_draft.m4_grid_wpa_temp (
 	sorted bigint NOT NULL,
 	id integer,
@@ -1014,7 +1014,7 @@ CREATE TABLE 		model_draft.m4_grid_wpa_temp (
 	geom geometry(Point,3035),
 	CONSTRAINT m4_grid_wpa_temp_pkey PRIMARY KEY (sorted));
 
-DROP TABLE IF EXISTS 	model_draft.m4_jnt_temp ;
+DROP TABLE IF EXISTS 	model_draft.m4_jnt_temp CASCADE;
 CREATE TABLE 		model_draft.m4_jnt_temp (
   sorted bigint NOT NULL,
   id bigint,
@@ -1068,7 +1068,7 @@ END;
 $$;
 
 -- Get M4 List (OK!) -> 1.000ms = 12.418 
-DROP MATERIALIZED VIEW IF EXISTS 	model_draft.eGo_dea_allocation_m4_mview ;
+DROP MATERIALIZED VIEW IF EXISTS 	model_draft.eGo_dea_allocation_m4_mview CASCADE;
 CREATE MATERIALIZED VIEW 		model_draft.eGo_dea_allocation_m4_mview AS
 SELECT 	dea.*
 FROM	model_draft.eGo_dea_allocation AS dea
@@ -1078,7 +1078,7 @@ CREATE INDEX eGo_dea_allocation_m4_mview_geom_idx
   ON model_draft.eGo_dea_allocation_m4_mview USING gist (geom);
 
 -- Get M4 Rest (OK!) -> 1.000ms = 7.729
-DROP MATERIALIZED VIEW IF EXISTS 	model_draft.eGo_dea_allocation_m4_rest_mview ;
+DROP MATERIALIZED VIEW IF EXISTS 	model_draft.eGo_dea_allocation_m4_rest_mview CASCADE;
 CREATE MATERIALIZED VIEW 		model_draft.eGo_dea_allocation_m4_rest_mview AS
 SELECT 	dea.*
 FROM	model_draft.eGo_dea_allocation AS dea
@@ -1088,9 +1088,9 @@ CREATE INDEX eGo_dea_allocation_m4_rest_mview_geom_idx
   ON model_draft.eGo_dea_allocation_m4_rest_mview USING gist (geom);
 
 -- Drop temp
-DROP TABLE IF EXISTS 	model_draft.m4_dea_temp ;
-DROP TABLE IF EXISTS 	model_draft.m4_grid_wpa_temp ;
-DROP TABLE IF EXISTS 	model_draft.m4_jnt_temp ;
+DROP TABLE IF EXISTS 	model_draft.m4_dea_temp CASCADE;
+DROP TABLE IF EXISTS 	model_draft.m4_grid_wpa_temp CASCADE;
+DROP TABLE IF EXISTS 	model_draft.m4_jnt_temp CASCADE;
 
 -- Scenario eGo data processing
 INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,user_name,timestamp)
@@ -1124,7 +1124,7 @@ Total 1.524.670 ->  Rest?
 */
 
 -- MView M5 DEA   (OK!) -> 1.000ms =1.524.674
-DROP MATERIALIZED VIEW IF EXISTS 	model_draft.eGo_dea_allocation_m5_a_mview ;
+DROP MATERIALIZED VIEW IF EXISTS 	model_draft.eGo_dea_allocation_m5_a_mview CASCADE;
 CREATE MATERIALIZED VIEW 		model_draft.eGo_dea_allocation_m5_a_mview AS
 		SELECT	id,
 			electrical_capacity,
@@ -1155,7 +1155,7 @@ WHERE 	(dea.voltage_level = '06 (MS/NS)'
 	AND dea.subst_id IS NOT NULL;
 
 -- Create Temp Tables for the loop   (OK!) -> 1.000ms =0
-DROP TABLE IF EXISTS 	model_draft.m5_dea_temp ;
+DROP TABLE IF EXISTS 	model_draft.m5_dea_temp CASCADE;
 CREATE TABLE 		model_draft.m5_dea_temp (
 	sorted bigint NOT NULL,
 	id bigint NOT NULL,
@@ -1168,7 +1168,7 @@ CREATE TABLE 		model_draft.m5_dea_temp (
 	flag character varying,
 	CONSTRAINT m5_dea_temp_pkey PRIMARY KEY (sorted));
 
-DROP TABLE IF EXISTS 	model_draft.m5_grid_la_temp ;
+DROP TABLE IF EXISTS 	model_draft.m5_grid_la_temp CASCADE;
 CREATE TABLE 		model_draft.m5_grid_la_temp (
 	sorted bigint NOT NULL,
 	id integer,
@@ -1177,7 +1177,7 @@ CREATE TABLE 		model_draft.m5_grid_la_temp (
 	geom geometry(Point,3035),
 	CONSTRAINT m5_grid_wpa_temp_pkey PRIMARY KEY (sorted));
 
-DROP TABLE IF EXISTS 	model_draft.m5_jnt_temp ;
+DROP TABLE IF EXISTS 	model_draft.m5_jnt_temp CASCADE;
 CREATE TABLE 		model_draft.m5_jnt_temp (
   sorted bigint NOT NULL,
   id bigint,
@@ -1231,7 +1231,7 @@ END;
 $$;
 
 -- Get M5 List (OK!) -> 1.000ms = 12.418 
-DROP MATERIALIZED VIEW IF EXISTS 	model_draft.eGo_dea_allocation_m5_mview ;
+DROP MATERIALIZED VIEW IF EXISTS 	model_draft.eGo_dea_allocation_m5_mview CASCADE;
 CREATE MATERIALIZED VIEW 		model_draft.eGo_dea_allocation_m5_mview AS
 SELECT 	dea.*
 FROM	model_draft.eGo_dea_allocation AS dea
@@ -1241,7 +1241,7 @@ CREATE INDEX eGo_dea_allocation_m5_mview_geom_idx
   ON model_draft.eGo_dea_allocation_m5_mview USING gist (geom);
 
 -- Get M5 Rest (OK!) -> 1.000ms = 7.729
-DROP MATERIALIZED VIEW IF EXISTS 	model_draft.eGo_dea_allocation_m5_rest_mview ;
+DROP MATERIALIZED VIEW IF EXISTS 	model_draft.eGo_dea_allocation_m5_rest_mview CASCADE;
 CREATE MATERIALIZED VIEW 		model_draft.eGo_dea_allocation_m5_rest_mview AS
 SELECT 	dea.*
 FROM	model_draft.eGo_dea_allocation AS dea
@@ -1251,9 +1251,9 @@ CREATE INDEX eGo_dea_allocation_m5_rest_mview_geom_idx
   ON model_draft.eGo_dea_allocation_m5_rest_mview USING gist (geom);
 
 -- Drop temp
-DROP TABLE IF EXISTS 	model_draft.m5_dea_temp ;
-DROP TABLE IF EXISTS 	model_draft.m5_la_temp ;
-DROP TABLE IF EXISTS 	model_draft.m5_jnt_temp ;
+DROP TABLE IF EXISTS 	model_draft.m5_dea_temp CASCADE;
+DROP TABLE IF EXISTS 	model_draft.m5_la_temp CASCADE;
+DROP TABLE IF EXISTS 	model_draft.m5_jnt_temp CASCADE;
 
 -- Scenario eGo data processing
 INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,user_name,timestamp)
@@ -1283,7 +1283,7 @@ INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_na
 -- STATISTICS
 
 -- dea capacity and count per generation types and voltage level  (OK!) 1.000ms =103
-DROP TABLE IF EXISTS 	model_draft.eGo_dea_per_generation_type_and_voltage_level;
+DROP TABLE IF EXISTS 	model_draft.eGo_dea_per_generation_type_and_voltage_level CASCADE;
 CREATE TABLE 		model_draft.eGo_dea_per_generation_type_and_voltage_level AS
 SELECT 	row_number() over (ORDER BY ee.voltage_level, ee.generation_type, ee.generation_subtype DESC) AS id,
 	ee.generation_type,
@@ -1312,7 +1312,7 @@ INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_na
 
 
 -- dea capacity and count per grid district (GD)  (OK!) 1.000ms =3.610
-DROP TABLE IF EXISTS 	model_draft.eGo_dea_per_grid_district;
+DROP TABLE IF EXISTS 	model_draft.eGo_dea_per_grid_district CASCADE;
 CREATE TABLE 		model_draft.eGo_dea_per_grid_district AS
 SELECT	gd.subst_id,
 	'0'::integer lv_dea_cnt,
@@ -1376,7 +1376,7 @@ INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_na
 
 
 -- dea capacity and count per load area  (OK!) 1.000ms = 208.646
-DROP TABLE IF EXISTS 	model_draft.dea_germany_per_load_area;
+DROP TABLE IF EXISTS 	model_draft.dea_germany_per_load_area CASCADE;
 CREATE TABLE 		model_draft.dea_germany_per_load_area AS
 SELECT	la.id,
 	la.subst_id,
