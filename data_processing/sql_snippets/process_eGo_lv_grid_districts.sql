@@ -1,14 +1,20 @@
--- (02:08 min)--
+
 
 -- Add Dummy points to substations (18 Points)
---ALTER TABLE calc_ego_substation.substation_dummy 
---ADD COLUMN is_dummy boolean;
+ALTER TABLE calc_ego_substation.substation_dummy 
+DROP COLUMN IF EXISTS is_dummy;
 
---UPDATE calc_ego_substation.substation_dummy 
---SET is_dummy = TRUE;
+ALTER TABLE calc_ego_substation.substation_dummy 
+ADD COLUMN is_dummy boolean;
 
---ALTER TABLE calc_ego_substation.ego_deu_onts_ta
---ADD COLUMN is_dummy boolean;
+UPDATE calc_ego_substation.substation_dummy 
+SET is_dummy = TRUE;
+
+ALTER TABLE calc_ego_substation.ego_deu_onts 
+DROP COLUMN IF EXISTS is_dummy;
+
+ALTER TABLE calc_ego_substation.ego_deu_onts
+ADD COLUMN is_dummy boolean;
 
 INSERT INTO calc_ego_substation.ego_deu_onts (id,geom, is_dummy)
 SELECT	
@@ -20,7 +26,15 @@ FROM 	calc_ego_substation.substation_dummy AS dummy;
 ---------------------
 
 
--- Execute voronoi algorithm 
+-- Execute voronoi algorithm
+CREATE TABLE IF NOT EXISTS calc_ego_grid_district.ego_deu_LV_grid_districts_voronoi
+(
+  id serial NOT NULL,
+  geom geometry(Polygon,3035),
+  subst_id integer,
+  CONSTRAINT ego_deu_lv_grid_districts_voronoi_pkey PRIMARY KEY (id)
+);
+
 TRUNCATE TABLE calc_ego_grid_district.ego_deu_LV_grid_districts_voronoi;
 
 -- Begin loop over MS grid districts
@@ -100,7 +114,19 @@ DELETE FROM calc_ego_substation.ego_deu_onts WHERE is_dummy = TRUE;
 ---------- ---------- ----------
 
 
--- Cutting 
+-- Cutting
+
+CREATE TABLE IF NOT EXISTS calc_ego_grid_district.ego_deu_LV_cut
+(
+  id serial NOT NULL,
+  geom geometry(Polygon,3035),
+  load_area_id integer,
+  ont_count integer,
+  ont_id integer,
+  merge_id integer,
+  CONSTRAINT ego_deu_lv_cut_pkey PRIMARY KEY (id)
+);
+ 
 TRUNCATE TABLE 	calc_ego_grid_district.ego_deu_LV_cut ;
 INSERT INTO		calc_ego_grid_district.ego_deu_LV_cut 
 	SELECT	(ST_DUMP(ST_INTERSECTION(mun.geom,voi.geom))).geom ::geometry(Polygon,3035) AS geom, mun.id AS load_area_id
@@ -176,6 +202,13 @@ WHERE ont_count = 0;
 
 
 -- Merge areas with same ONT_ID
+CREATE TABLE IF NOT EXISTS calc_ego_grid_district.ego_deu_LV_grid_district_withoutpop
+(
+  id serial NOT NULL,
+  geom geometry(Polygon,3035),
+  load_area_id integer,
+  CONSTRAINT ego_deu_lv_grid_district_withoutpop_pkey PRIMARY KEY (id)
+);
 
 TRUNCATE TABLE 	calc_ego_grid_district.ego_deu_LV_grid_district_withoutpop;
 INSERT INTO		calc_ego_grid_district.ego_deu_LV_grid_district_withoutpop (geom,load_area_id)
@@ -221,6 +254,18 @@ WHERE districts.id = adjacent.district_id;
 
 
 -- Add population
+CREATE TABLE IF NOT EXISTS calc_ego_grid_district.ego_deu_LV_grid_district
+(
+  id serial NOT NULL,
+  geom geometry(Polygon,3035),
+  load_area_id integer,
+  population integer,
+  peak_load integer,
+  area_ha integer,
+  pop_density integer,
+  structure_type text,
+  CONSTRAINT ego_deu_lv_grid_district_pkey PRIMARY KEY (id)
+);
 
 TRUNCATE TABLE 	calc_ego_grid_district.ego_deu_LV_grid_district;
 
@@ -246,6 +291,20 @@ WHERE population IS NULL;
 -- Create sector table
 ------------------------------------------
 -- Wähle Sektorflächen für jeden Grid District aus:
+CREATE TABLE IF EXISTS calc_ego_grid_district.ego_deu_grid_district_sectors
+(
+  id serial NOT NULL,
+  geom geometry,
+  grid_district_id integer,
+  load_area_id integer,
+  sector text,
+  population integer,
+  area_ha integer,
+  pop_density integer,
+  peak_load_1 integer,
+  peak_load_2 integer,
+  CONSTRAINT ego_deu_grid_district_sectors_pkey PRIMARY KEY (id)
+);
 
 TRUNCATE TABLE calc_ego_grid_district.ego_deu_grid_district_sectors;
 INSERT INTO calc_ego_grid_district.ego_deu_grid_district_sectors 
@@ -451,7 +510,7 @@ WHERE pop_density > 33;
 
 ----- Delete auxilliary tables
 
---DROP TABLE IF EXISTS calc_ego_grid_district.ego_deu_LV_grid_districts_voronoi_ta;
---DROP TABLE IF EXISTS	calc_ego_grid_district.ego_deu_LV_cut_ta;
---DROP TABLE IF EXISTS	calc_ego_grid_district.ego_deu_LV_grid_district_withoutpop_ta;
---DROP TABLE IF EXISTS calc_ego_grid_district.ego_deu_grid_district_sectors;
+DROP TABLE IF EXISTS calc_ego_grid_district.ego_deu_LV_grid_districts_voronoi;
+DROP TABLE IF EXISTS calc_ego_grid_district.ego_deu_LV_cut;
+DROP TABLE IF EXISTS calc_ego_grid_district.ego_deu_LV_grid_district_withoutpop;
+DROP TABLE IF EXISTS calc_ego_grid_district.ego_deu_grid_district_sectors;
