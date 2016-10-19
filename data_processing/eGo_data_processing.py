@@ -45,11 +45,6 @@ snippets = [
     # 'process_eGo_loads_per_grid_district.sql',
     # 'process_eGo_consumption.sql',
     # 'analyse_eGo_paper_result.sql',
-    # 'setup_eGo_wpa_per_grid_district.sql', # setup wpa
-    # 'setup_eGo_lattice_per_area_500m.sql',
-    # 'setup_eGo_lattice_per_area_50m.sql',
-    # 'setup_eGo_lattice_per_area_34m.sql', # 24h
-    # 'process_eGo_dea_allocation_methods.sql',
     # 'Voronoi_ehv.sql',
     # 'voronoi_weatherpoint.sql',
     # 'calc_ego_hv_powerflow.sql',
@@ -60,8 +55,8 @@ snippets = [
     # 'demand_per_mv_grid_district.py',
     # 'demandseries_TOPF.sql',
     # 'peak_load_per_load_area.py',
-    'process_eGo_onts.sql',
-    'process_eGo_lv_grid_districts.sql'
+    # 'process_eGo_onts.sql',
+    # 'process_eGo_lv_grid_districts.sql'
     ]
 
 # get database connection
