@@ -52,17 +52,17 @@ ALTER TABLE			model_draft.template_table OWNER TO oeuser;
 
 -- update ID from polygon layer
 UPDATE 	model_draft.template_table AS t1
-SET  	base_id = t2.base_id,
-		area_type = 'in'
-FROM    (
-	SELECT	point.id,
-			poly.gid AS base_id		
-	FROM	political_boundary.vg250_6_gem_berlin_mview AS poly,
-			model_draft.template_table AS point
-	WHERE  	poly.geom && point.geom AND
-			ST_CONTAINS(poly.geom,point.geom)
-		) AS t2
-WHERE  	t1.id = t2.id;
+	SET  	base_id = t2.base_id,
+			area_type = 'in'
+	FROM    (
+		SELECT	point.id,
+				poly.gid AS base_id		
+		FROM	political_boundary.vg250_6_gem_berlin_mview AS poly,
+				model_draft.template_table AS point
+		WHERE  	poly.geom && point.geom AND
+				ST_CONTAINS(poly.geom,point.geom)
+			) AS t2
+	WHERE  	t1.id = t2.id;
 
 -- scenario log
 INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,user_name,timestamp)
