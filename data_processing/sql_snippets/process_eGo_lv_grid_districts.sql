@@ -1,4 +1,4 @@
-﻿--(02:08 min)--
+-- (02:08 min)--
 
 -- Add Dummy points to substations (18 Points)
 --ALTER TABLE calc_ego_substation.substation_dummy 

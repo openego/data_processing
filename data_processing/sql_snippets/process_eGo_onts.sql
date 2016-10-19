@@ -1,4 +1,4 @@
-﻿-- (08:30 min)
+-- (08:30 min)
 
 CREATE OR REPLACE FUNCTION ST_CreateFishnet(
         nrow integer, ncol integer,
