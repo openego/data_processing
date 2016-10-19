@@ -33,9 +33,9 @@ snippets = [
     # 'setup_eGo_wpa_per_grid_district.sql', # setup wpa
     # 'setup_eGo_lattice_per_area_500m.sql',
     # 'setup_eGo_lattice_per_area_50m.sql',
-    'ego_dea_allocation_setup.sql',
-    'ego_dea_allocation_m1.sql',
-    'ego_dea_allocation_m2.sql',
+    # 'ego_dea_allocation_setup.sql',
+    # 'ego_dea_allocation_m1.sql',
+    # 'ego_dea_allocation_m2.sql',
     'ego_dea_allocation_m3.sql',
     'ego_dea_allocation_m4.sql',
     'ego_dea_allocation_m5.sql',

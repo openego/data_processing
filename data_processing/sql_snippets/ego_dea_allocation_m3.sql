@@ -154,7 +154,14 @@ CREATE MATERIALIZED VIEW 		model_draft.ego_dea_allocation_m3_mview AS
 -- create index GIST (geom)
 CREATE INDEX ego_dea_allocation_m3_mview_geom_idx
 	ON model_draft.ego_dea_allocation_m3_mview USING gist (geom);
+	
+-- create index GIST (geom_line)
+CREATE INDEX ego_dea_allocation_m3_mview_geom_line_idx
+	ON model_draft.ego_dea_allocation_m3_mview USING gist (geom_line);
 
+-- create index GIST (geom_new)
+CREATE INDEX ego_dea_allocation_m3_mview_geom_new_idx
+	ON model_draft.ego_dea_allocation_m3_mview USING gist (geom_new);	
 -- grant (oeuser)
 GRANT ALL ON TABLE	model_draft.ego_dea_allocation_m3_mview TO oeuser WITH GRANT OPTION;
 ALTER TABLE		model_draft.ego_dea_allocation_m3_mview OWNER TO oeuser;
@@ -176,14 +183,6 @@ CREATE MATERIALIZED VIEW 		model_draft.ego_dea_allocation_m3_rest_mview AS
 -- create index GIST (geom)
 CREATE INDEX ego_dea_allocation_m3_rest_mview_geom_idx
 	ON model_draft.ego_dea_allocation_m3_rest_mview USING gist (geom);
-
--- create index GIST (geom_line)
-CREATE INDEX ego_dea_allocation_m3_mview_geom_line_idx
-	ON model_draft.ego_dea_allocation_m3_rest_mview USING gist (geom_line);
-
--- create index GIST (geom_new)
-CREATE INDEX ego_dea_allocation_m3_mview_geom_new_idx
-	ON model_draft.ego_dea_allocation_m3_rest_mview USING gist (geom_new);	
 
 -- grant (oeuser)
 GRANT ALL ON TABLE	model_draft.ego_dea_allocation_m3_rest_mview TO oeuser WITH GRANT OPTION;
