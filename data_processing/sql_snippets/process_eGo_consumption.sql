@@ -285,3 +285,39 @@ ALTER TABLE		calc_ego_loads.ego_deu_consumption_ta OWNER TO oeuser;
 -- -- Grant oeuser   (OK!) -> 100ms =0
 -- GRANT ALL ON TABLE	calc_ego_loads.ego_deu_consumption_area_ta TO oeuser WITH GRANT OPTION;
 -- ALTER TABLE		calc_ego_loads.ego_deu_consumption_area_ta OWNER TO oeuser;
+
+-- metadata
+COMMENT ON TABLE calc_ego_loads.ego_deu_consumption IS '{
+    "Name": "eGo data processing - ego_deu_consumption",,
+    "Source":   [{
+        "Name": "open_eGo",
+        "URL":  "https://github.com/openego/data_processing" }],
+    "Reference date": "2016",
+    "Date of collection": "19.10.2016",
+    "Original file": "process_eGo_consumption.sql",
+    "Spatial resolution": ["Germany"],
+    "Description": ["electrical consumption per sector", "Regional level: load_area"],
+    "Column":[
+        {"Name": "id", "Description": "Unique identifier", "Unit": " " },
+        {"Name": "subst_id", "Description": "ID of corresponding HV/LV substation", "Unit": " " },
+        {"Name": "otg_id", "Description": "osmTGmod-id of corresponding substation", "Unit": "" },
+		{"Name": "un_id", "Description": "", "Unit": " " },
+		{"Name": "sector_area_residential", "Description": "area of sector residential", "Unit": "hectare " },
+		{"Name": "sector_area_retail", "Description": "area of sector retail", "Unit": "hectare " },
+		{"Name": "sector_area_industrial", "Description": "area of sector industrial", "Unit": "ha" },
+		{"Name": "sector_area_agricultural", "Description": "area of sector agricultural", "Unit": "ha" },
+		{"Name": "sector_consumption_residential", "Description": "consumption of sector residential", "Unit": "GWh" },
+		{"Name": "sector_consumption_retail", "Description": "consumption of sector retail", "Unit": "GWh" },
+		{"Name": "sector_consumption_industrial", "Description": "consumption of sector industrial", "Unit": "GWh" },
+		{"Name": "sector_consumption_agricultural", "Description": "consumption of sector agricultural", "Unit": "GWh" },
+		{"Name": "geom", "Description": "geometry", "Unit": "" },
+		],
+    "Changes":	[
+        ],
+    "ToDo": [],
+    "Licence": ["tba"],
+    "Instructions for proper use": [""]
+    }' ;
+
+-- select description
+SELECT obj_description('calc_ego_loads.ego_deu_consumption' ::regclass) ::json;
