@@ -197,8 +197,8 @@ if __name__ == '__main__':
         #                      index=True,
         #                      if_exists='fail')
 
-    # push data to database
-    session.commit()
+        # push data to database
+        session.commit()
 
     # grant access to db_group
     tools.grant_db_access(conn, schema, target_table, db_group)

@@ -1,21 +1,15 @@
 
 -- Set id as subst_id
 ALTER TABLE	calc_ego_substation.ego_deu_substations
-	DROP COLUMN IF EXISTS 	subst_id CASCADE,
-	ADD COLUMN 		subst_id integer,
-	DROP COLUMN IF EXISTS 	subst_name CASCADE,
-	ADD COLUMN 		subst_name text,
 	DROP COLUMN IF EXISTS 	ags_0 CASCADE,
 	ADD COLUMN 		ags_0 text,
 	DROP COLUMN IF EXISTS 	geom CASCADE,
 	ADD COLUMN 		geom geometry(Point,3035);
 
 UPDATE 	calc_ego_substation.ego_deu_substations t1
-SET  	subst_id = t1.id,
-	subst_name = t1.name,
-	geom = ST_TRANSFORM(t1.point,3035)
+SET  	geom = ST_TRANSFORM(t1.point,3035)
 FROM	calc_ego_substation.ego_deu_substations t2
-WHERE  	t1.id = t2.id;
+WHERE  	t1.subst_id = t2.subst_id;
 
 -- "Create Index GIST (geom)"   (OK!) 11.000ms =0
 CREATE INDEX	ego_deu_substations_geom_idx
@@ -26,14 +20,14 @@ CREATE INDEX	ego_deu_substations_geom_idx
 UPDATE 	calc_ego_substation.ego_deu_substations AS t1
 SET  	ags_0 = t2.ags_0
 FROM    (
-	SELECT	sub.id AS id,
+	SELECT	sub.subst_id AS subst_id,
 		vg.ags_0 AS ags_0
 	FROM	calc_ego_substation.ego_deu_substations AS sub,
 		orig_vg250.vg250_6_gem_clean AS vg
 	WHERE  	vg.geom && sub.geom AND
 		ST_CONTAINS(vg.geom,sub.geom)
 	) AS t2
-WHERE  	t1.id = t2.id;
+WHERE  	t1.subst_id = t2.subst_id;
 
 -- Scenario eGo data processing
 INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)

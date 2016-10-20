@@ -284,7 +284,7 @@ UPDATE calc_ego_loads.large_scale_consumer a
 UPDATE calc_ego_loads.large_scale_consumer a
 	SET otg_id = b.otg_id
 	FROM calc_ego_substation.ego_deu_substations b
-	WHERE a.subst_id = b.id; 
+	WHERE a.subst_id = b.subst_id; 
 
 			  
 -- Scenario eGo data processing

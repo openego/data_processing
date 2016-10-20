@@ -1,11 +1,10 @@
-﻿----------------------------------------------------------
+----------------------------------------------------------
 -- VORONOI with  220 and 380 kV substations
 ----------------------------------------------------------
 
-
 -- Add Dummy points 
-INSERT INTO calc_ego_substation.ego_deu_substations_ehv (name, point, id, otg_id)
-SELECT 'DUMMY', ST_TRANSFORM(geom,4326), subst_id, subst_id
+INSERT INTO calc_ego_substation.ego_deu_substations_ehv (subst_name, point, subst_id, otg_id, lon, lat, polygon, osm_id, osm_www, status)
+SELECT 'DUMMY', ST_TRANSFORM(geom,4326), subst_id, subst_id, ST_X (ST_Transform (geom, 4326)), ST_Y (ST_Transform (geom, 4326)), 'POLYGON((0 0, 1 0, 1 1, 0 1, 0 0))', 'dummy'||row_number() OVER(), 'dummy', 0
 FROM calc_ego_substation.substations_dummy;
 
 
@@ -74,24 +73,41 @@ ALTER TABLE calc_ego_substation.ego_deu_voronoi_ehv
 	ALTER COLUMN geom TYPE geometry(POLYGON,4326) USING ST_SETSRID(geom,4326);
 
 UPDATE calc_ego_substation.ego_deu_voronoi_ehv a
-	SET subst_id = b.id
+	SET subst_id = b.subst_id
 	FROM calc_ego_substation.ego_deu_substations_ehv b
 	WHERE ST_Intersects(a.geom, b.point) =TRUE; 
 
 -- Delete Dummy-points from ehv_substations and ehv_voronoi 
 
 DELETE FROM calc_ego_substation.ego_deu_voronoi_ehv 
-	WHERE subst_id IN (SELECT id FROM calc_ego_substation.ego_deu_substations_ehv WHERE name = 'DUMMY');
+	WHERE subst_id IN (SELECT subst_id FROM calc_ego_substation.ego_deu_substations_ehv WHERE subst_name = 'DUMMY');
 
-DELETE FROM calc_ego_substation.ego_deu_substations_ehv WHERE name='DUMMY';
+DELETE FROM calc_ego_substation.ego_deu_substations_ehv WHERE subst_name='DUMMY';
+
+--set unique constraint on subst_id
+
+ALTER TABLE calc_ego_substation.ego_deu_substations_ehv DROP CONSTRAINT IF EXISTS unique_substation;
+ALTER TABLE calc_ego_substation.ego_deu_substations_ehv
+ADD CONSTRAINT unique_substation UNIQUE (subst_id);
 
 -- Set PK and FK 
 ALTER TABLE calc_ego_substation.ego_deu_voronoi_ehv 
-	ADD CONSTRAINT subst_fk FOREIGN KEY (subst_id) REFERENCES calc_ego_substation.ego_deu_substations_ehv (id),
+	ADD CONSTRAINT subst_fk FOREIGN KEY (subst_id) REFERENCES calc_ego_substation.ego_deu_substations_ehv (subst_id),
 	ADD PRIMARY KEY (subst_id);
 
 ALTER TABLE calc_ego_substation.ego_deu_voronoi_ehv
   OWNER TO oeuser;
+
+-- Scenario eGo data processing
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
+	SELECT	'0.1' AS version,
+		'calc_ego_substation' AS schema_name,
+		'ego_deu_voronoi_ehv' AS table_name,
+		'Voronoi_ehv.sql' AS script_name,
+		COUNT(subst_id)AS entries,
+		'OK' AS status,
+		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
+FROM	calc_ego_substation.ego_deu_voronoi_ehv;
 
 -- Clip voronoi with vg250
 

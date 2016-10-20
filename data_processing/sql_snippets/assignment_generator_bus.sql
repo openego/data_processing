@@ -66,7 +66,7 @@ UPDATE orig_geo_powerplants.proc_power_plant_germany a
 UPDATE orig_geo_powerplants.proc_power_plant_germany a
 	SET otg_id =b.otg_id 
 	FROM calc_ego_substation.ego_deu_substations b
-	WHERE a.subst_id = b.id;
+	WHERE a.subst_id = b.subst_id;
 
  
 -- Update un_id from generators_total  
@@ -157,7 +157,7 @@ UPDATE orig_geo_powerplants.proc_renewable_power_plants_germany a
 UPDATE orig_geo_powerplants.proc_renewable_power_plants_germany a
 	SET otg_id =b.otg_id 
 	FROM calc_ego_substation.ego_deu_substations b
-	WHERE a.subst_id = b.id; 
+	WHERE a.subst_id = b.subst_id; 
 
 -- Update un_id from generators_total 
 
@@ -294,7 +294,7 @@ UPDATE orig_geo_powerplants.pf_generator_single a
 -----------
 -- Accumulate data from pf_generator_single and insert into hv_powerflow schema. 
 -----------
-	
+
 -- source = (wind and solar) and p_nom < 50 MW
 INSERT INTO calc_ego_hv_powerflow.generator (
   generator_id,
@@ -421,4 +421,16 @@ FROM
 	WHERE cntr_id != 'DE' AND 
 	result_id = GREATEST(result_id) AND
 	bus_i IN (SELECT bus_id FROM calc_ego_hv_powerflow.bus) AND
-	base_kv > 110 
+	base_kv > 110;
+
+-- Scenario eGo data processing
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
+	SELECT	'0.1' AS version,
+		'calc_ego_hv_powerflow' AS schema_name,
+		'generator' AS table_name,
+		'assignment_generator_bus.sql' AS script_name,
+		COUNT(generator_id)AS entries,
+		'OK' AS status,
+		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
+FROM	calc_ego_hv_powerflow.generator;
+
