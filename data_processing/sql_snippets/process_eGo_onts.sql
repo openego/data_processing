@@ -167,3 +167,63 @@ WHERE  	t1.id = t2.id;
 
 DROP TABLE IF EXISTS calc_ego_grid_district."ego_deu_ontgrids";
 DROP TABLE IF EXISTS calc_ego_grid_district."ego_deu_load_area_rest";
+
+-- Set comment on table
+COMMENT ON TABLE calc_ego_substation.ego_deu_onts IS
+'{
+"Name": "eGo data processing - ego_deu_onts",
+"Source": [{
+                  "Name": "open_eGo",
+                  "URL":  "https://github.com/openego/data_processing" }],
+"Reference date": "2016",
+"Date of collection": "2016-10-12",
+"Original file": "process_eGo_onts.sql",
+"Spatial resolution": ["germany"],
+"Description": ["eGo data processing modeling of ONTs"],
+
+"Column": [
+                {"Name": "id",
+                "Description": "Unique identifier",
+                "Unit": "" },
+				
+				{"Name": "geom",
+                "Description": "Geometry",
+                "Unit": "" },
+				
+				{"Name": "load_area_id",
+                "Description": "ID of the corresponding load area",
+                "Unit": "" },
+				
+				{"Name": "subst_id",
+                "Description": "ID of the corresponding MV substation",
+                "Unit": "" },
+
+                				{"Name": "is_dummy",
+                "Description": "True if the entry is a dummy entry",
+                "Unit": "" }],
+
+"Changes":[
+                {"Name": "Jonas Gütter",
+                "Mail": "jonas.guetter@rl-institut.de",
+                "Date":  "20.10.2016",
+                "Comment": "Created table" }],
+
+"ToDo": [""],
+"Licence": ["tba"],
+"Instructions for proper use": [""]
+}'; 
+
+-- Select description
+SELECT obj_description('calc_ego_substation.ego_deu_onts'::regclass)::json;
+
+-- Add entry to scenario logtable
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,user_name,timestamp)
+SELECT	'0.1' AS version,
+	'model_draft' AS schema_name,
+	'ego_deu_onts' AS table_name,
+	'process_eGo_onts.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
+FROM	model_draft.table;
