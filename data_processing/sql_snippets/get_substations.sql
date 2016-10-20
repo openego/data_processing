@@ -28,7 +28,7 @@ DROP MATERIALIZED VIEW IF EXISTS calc_ego_substation.vg250_1_sta_union_mview CAS
 DROP VIEW IF EXISTS calc_ego_substation.summary_de CASCADE;
 DROP MATERIALIZED VIEW IF EXISTS calc_ego_substation.summary CASCADE;
 DROP VIEW IF EXISTS calc_ego_substation.summary_total CASCADE;
-DROP VIEW IF EXISTS calc_ego_substation.netzinseln_110kV CASCADE;
+DROP VIEW IF EXISTS calc_ego_substation.substation_110kV CASCADE;
 DROP VIEW IF EXISTS calc_ego_substation.way_substations_without_110kV_intersected_by_110kV_line CASCADE;
 DROP VIEW IF EXISTS calc_ego_substation.way_lines_110kV CASCADE;
 DROP VIEW IF EXISTS calc_ego_substation.node_substations_with_110kV CASCADE;
@@ -38,9 +38,9 @@ DROP VIEW IF EXISTS calc_ego_substation.way_substations CASCADE;
 
 --> WAY: create view of way substations:
 CREATE VIEW calc_ego_substation.way_substations AS
-SELECT openstreetmap.ego_deu_power_osm_ways.id, openstreetmap.ego_deu_power_osm_ways.tags, openstreetmap.ego_deu_power_osm_polygon.way
-FROM openstreetmap.ego_deu_power_osm_ways JOIN openstreetmap.ego_deu_power_osm_polygon ON openstreetmap.ego_deu_power_osm_ways.id = openstreetmap.ego_deu_power_osm_polygon.osm_id
-WHERE hstore(openstreetmap.ego_deu_power_osm_ways.tags)->'power' in ('substation','sub_station','station');
+SELECT openstreetmap.osm_deu_ways.id, openstreetmap.osm_deu_ways.tags, openstreetmap.osm_deu_polygon.geom
+FROM openstreetmap.osm_deu_ways JOIN openstreetmap.osm_deu_polygon ON openstreetmap.osm_deu_ways.id = openstreetmap.osm_deu_polygon.osm_id
+WHERE hstore(openstreetmap.osm_deu_ways.tags)->'power' in ('substation','sub_station','station');
 
 --> WAY: create view of way substations with 110kV:
 CREATE VIEW calc_ego_substation.way_substations_with_110kV AS
@@ -56,25 +56,28 @@ WHERE not '110000' = ANY( string_to_array(hstore(calc_ego_substation.way_substat
 
 --> NODE: create view of 110kV node substations:
 CREATE VIEW calc_ego_substation.node_substations_with_110kV AS
-SELECT openstreetmap.ego_deu_power_osm_nodes.id, openstreetmap.ego_deu_power_osm_nodes.tags, openstreetmap.ego_deu_power_osm_point.way
-FROM openstreetmap.ego_deu_power_osm_nodes JOIN openstreetmap.ego_deu_power_osm_point ON openstreetmap.ego_deu_power_osm_nodes.id = openstreetmap.ego_deu_power_osm_point.osm_id
-WHERE '110000' = ANY( string_to_array(hstore(openstreetmap.ego_deu_power_osm_nodes.tags)->'voltage',';')) and hstore(openstreetmap.ego_deu_power_osm_nodes.tags)->'power' in ('substation','sub_station','station') OR '60000' = ANY( string_to_array(hstore(openstreetmap.ego_deu_power_osm_nodes.tags)->'voltage',';')) and hstore(openstreetmap.ego_deu_power_osm_nodes.tags)->'power' in ('substation','sub_station','station');
+SELECT openstreetmap.osm_deu_nodes.id, openstreetmap.osm_deu_nodes.tags, openstreetmap.osm_deu_point.geom
+FROM openstreetmap.osm_deu_nodes JOIN openstreetmap.osm_deu_point ON openstreetmap.osm_deu_nodes.id = openstreetmap.osm_deu_point.osm_id
+WHERE '110000' = ANY( string_to_array(hstore(openstreetmap.osm_deu_nodes.tags)->'voltage',';')) and hstore(openstreetmap.osm_deu_nodes.tags)->'power' in ('substation','sub_station','station') OR '60000' = ANY( string_to_array(hstore(openstreetmap.osm_deu_nodes.tags)->'voltage',';')) and hstore(openstreetmap.osm_deu_nodes.tags)->'power' in ('substation','sub_station','station');
+
 
 --> LINES 110kV: create view of 110kV lines
 CREATE VIEW calc_ego_substation.way_lines_110kV AS
-SELECT openstreetmap.ego_deu_power_osm_ways.id, openstreetmap.ego_deu_power_osm_ways.tags, openstreetmap.ego_deu_power_osm_line.way 
-FROM openstreetmap.ego_deu_power_osm_ways JOIN openstreetmap.ego_deu_power_osm_line ON openstreetmap.ego_deu_power_osm_ways.id = openstreetmap.ego_deu_power_osm_line.osm_id
-WHERE '110000' = ANY( string_to_array(hstore(openstreetmap.ego_deu_power_osm_ways.tags)->'voltage',';')) 
-		 AND NOT hstore(openstreetmap.ego_deu_power_osm_ways.tags)->'power' in ('minor_line','razed','dismantled:line','historic:line','construction','planned','proposed','abandoned:line','sub_station','abandoned','substation') OR '60000' = ANY( string_to_array(hstore(openstreetmap.ego_deu_power_osm_ways.tags)->'voltage',';')) 
-		 AND NOT hstore(openstreetmap.ego_deu_power_osm_ways.tags)->'power' in ('minor_line','razed','dismantled:line','historic:line','construction','planned','proposed','abandoned:line','sub_station','abandoned','substation');
+SELECT openstreetmap.osm_deu_ways.id, openstreetmap.osm_deu_ways.tags, openstreetmap.osm_deu_line.geom 
+FROM openstreetmap.osm_deu_ways JOIN openstreetmap.osm_deu_line ON openstreetmap.osm_deu_ways.id = openstreetmap.osm_deu_line.osm_id
+WHERE '110000' = ANY( string_to_array(hstore(openstreetmap.osm_deu_ways.tags)->'voltage',';')) 
+		 AND NOT hstore(openstreetmap.osm_deu_ways.tags)->'power' in ('minor_line','razed','dismantled:line','historic:line','construction','planned','proposed','abandoned:line','sub_station','abandoned','substation') OR '60000' = ANY( string_to_array(hstore(openstreetmap.osm_deu_ways.tags)->'voltage',';')) 
+		 AND NOT hstore(openstreetmap.osm_deu_ways.tags)->'power' in ('minor_line','razed','dismantled:line','historic:line','construction','planned','proposed','abandoned:line','sub_station','abandoned','substation');
+
 
 -- INTERSECTION: create view from substations without 110kV tag that contain 110kV line
 CREATE VIEW calc_ego_substation.way_substations_without_110kV_intersected_by_110kV_line AS
 SELECT DISTINCT calc_ego_substation.way_substations_without_110kV.* 
 FROM calc_ego_substation.way_substations_without_110kV, calc_ego_substation.way_lines_110kV
-WHERE ST_Contains(calc_ego_substation.way_substations_without_110kV.way,ST_StartPoint(calc_ego_substation.way_lines_110kV.way)) or ST_Contains(calc_ego_substation.way_substations_without_110kV.way,ST_EndPoint(calc_ego_substation.way_lines_110kV.way));
+WHERE ST_Contains(calc_ego_substation.way_substations_without_110kV.geom,ST_StartPoint(calc_ego_substation.way_lines_110kV.geom)) or ST_Contains(calc_ego_substation.way_substations_without_110kV.geom,ST_EndPoint(calc_ego_substation.way_lines_110kV.geom));
 
-CREATE VIEW calc_ego_substation.netzinseln_110kV AS
+
+CREATE VIEW calc_ego_substation.substation_110kV AS
 SELECT 	*,
 	'http://www.osm.org/way/'|| calc_ego_substation.way_substations_with_110kV.id as osm_www,
 	'w'|| calc_ego_substation.way_substations_with_110kV.id as osm_id,
@@ -95,28 +98,28 @@ FROM calc_ego_substation.node_substations_with_110kV;
 --
 -- create view summary_total that contains substations without any filter
 CREATE VIEW calc_ego_substation.summary_total AS
-SELECT  ST_X(ST_Centroid(ST_Transform(netzinsel.way,4326))) as lon,
-	ST_Y(ST_Centroid(ST_Transform(netzinsel.way,4326))) as lat,
-	ST_Centroid(ST_Transform(netzinsel.way,4326)) as point,
-	ST_Transform(netzinsel.way,4326) as polygon,
-	(CASE WHEN hstore(netzinsel.tags)->'voltage' <> '' THEN hstore(netzinsel.tags)->'voltage' ELSE '110000' END) as voltage, 
-        hstore(netzinsel.tags)->'power' as power_type, 
-        (CASE WHEN hstore(netzinsel.tags)->'substation' <> '' THEN hstore(netzinsel.tags)->'substation' ELSE 'NA' END) as substation, 
-	netzinsel.osm_id as osm_id,
+SELECT  ST_X(ST_Centroid(ST_Transform(substation.geom,4326))) as lon,
+	ST_Y(ST_Centroid(ST_Transform(substation.geom,4326))) as lat,
+	ST_Centroid(ST_Transform(substation.geom,4326)) as point,
+	ST_Transform(substation.geom,4326) as polygon,
+	(CASE WHEN hstore(substation.tags)->'voltage' <> '' THEN hstore(substation.tags)->'voltage' ELSE '110000' END) as voltage, 
+        hstore(substation.tags)->'power' as power_type, 
+        (CASE WHEN hstore(substation.tags)->'substation' <> '' THEN hstore(substation.tags)->'substation' ELSE 'NA' END) as substation, 
+	substation.osm_id as osm_id,
 	osm_www,
-	(CASE WHEN hstore(netzinsel.tags)->'frequency' <> '' THEN hstore(netzinsel.tags)->'frequency' ELSE 'NA' END) as frequency,
-	(CASE WHEN hstore(netzinsel.tags)->'name' <> '' THEN hstore(netzinsel.tags)->'name' ELSE 'NA' END) as subst_name, 
-	(CASE WHEN hstore(netzinsel.tags)->'ref' <> '' THEN hstore(netzinsel.tags)->'ref' ELSE 'NA' END) as ref, 
-	(CASE WHEN hstore(netzinsel.tags)->'operator' <> '' THEN hstore(netzinsel.tags)->'operator' ELSE 'NA' END) as operator, 
-	(CASE WHEN hstore(netzinsel.tags)->'operator' in ('DB_Energie','DB Netz AG','DB Energie GmbH','DB Netz')
+	(CASE WHEN hstore(substation.tags)->'frequency' <> '' THEN hstore(substation.tags)->'frequency' ELSE 'NA' END) as frequency,
+	(CASE WHEN hstore(substation.tags)->'name' <> '' THEN hstore(substation.tags)->'name' ELSE 'NA' END) as subst_name, 
+	(CASE WHEN hstore(substation.tags)->'ref' <> '' THEN hstore(substation.tags)->'ref' ELSE 'NA' END) as ref, 
+	(CASE WHEN hstore(substation.tags)->'operator' <> '' THEN hstore(substation.tags)->'operator' ELSE 'NA' END) as operator, 
+	(CASE WHEN hstore(substation.tags)->'operator' in ('DB_Energie','DB Netz AG','DB Energie GmbH','DB Netz')
 	      THEN 'see operator' 
-	      ELSE (CASE WHEN '16.7' = ANY( string_to_array(hstore(netzinsel.tags)->'frequency',';')) or '16.67' = ANY( string_to_array(hstore(netzinsel.tags)->'frequency',';')) 
+	      ELSE (CASE WHEN '16.7' = ANY( string_to_array(hstore(substation.tags)->'frequency',';')) or '16.67' = ANY( string_to_array(hstore(substation.tags)->'frequency',';')) 
 	                 THEN 'see frequency' 
 	                 ELSE 'no' 
 	                 END)
 	      END) as dbahn,
 	status
-FROM calc_ego_substation.netzinseln_110kV netzinsel ORDER BY osm_www;
+FROM calc_ego_substation.substation_110kV substation ORDER BY osm_www;
 
 -- create view that filters irrelevant tags
 CREATE MATERIALIZED VIEW calc_ego_substation.summary AS
@@ -234,7 +237,7 @@ DROP MATERIALIZED VIEW IF EXISTS calc_ego_substation.vg250_1_sta_union_mview CAS
 DROP VIEW IF EXISTS calc_ego_substation.summary_de CASCADE;
 DROP MATERIALIZED VIEW IF EXISTS calc_ego_substation.summary CASCADE;
 DROP VIEW IF EXISTS calc_ego_substation.summary_total CASCADE;
-DROP VIEW IF EXISTS calc_ego_substation.netzinseln_110kV CASCADE;
+DROP VIEW IF EXISTS calc_ego_substation.substation_110kV CASCADE;
 DROP VIEW IF EXISTS calc_ego_substation.way_substations_without_110kV_intersected_by_110kV_line CASCADE;
 DROP VIEW IF EXISTS calc_ego_substation.way_lines_110kV CASCADE;
 DROP VIEW IF EXISTS calc_ego_substation.node_substations_with_110kV CASCADE;
