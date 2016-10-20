@@ -180,6 +180,7 @@ SET voltage_level=7
 WHERE capacity BETWEEN 0 AND 0.099 AND voltage_level is NULL /*voltage_level =1 when capacity lower than 0.1*/;
 
 
+
 /*Assign voltage-entries to power plants in gridlevel 1 or 2*/
 
 DROP TABLE IF EXISTS AA;
