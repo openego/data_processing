@@ -514,3 +514,76 @@ DROP TABLE IF EXISTS calc_ego_grid_district.ego_deu_LV_grid_districts_voronoi;
 DROP TABLE IF EXISTS calc_ego_grid_district.ego_deu_LV_cut;
 DROP TABLE IF EXISTS calc_ego_grid_district.ego_deu_LV_grid_district_withoutpop;
 DROP TABLE IF EXISTS calc_ego_grid_district.ego_deu_grid_district_sectors;
+
+-- Set comment on table
+COMMENT ON TABLE calc_ego_grid_district.ego_deu_lv_grid_district IS
+'{
+"Name": "eGo data processing - ego_deu_lv_grid_district",
+"Source": [{
+                  "Name": "open_eGo",
+                  "URL":  "https://github.com/openego/data_processing" }],
+"Reference date": "2016",
+"Date of collection": "2016-10-12",
+"Original file": "process_eGo_lv_grid_districts.sql",
+"Spatial resolution": ["germany"],
+"Description": ["eGo data processing modeling of LV grid districts"],
+
+"Column": [
+                {"Name": "id",
+                "Description": "Unique identifier",
+                "Unit": "" },
+				
+				{"Name": "geom",
+                "Description": "Geometry",
+                "Unit": "" },
+				
+				{"Name": "load_area_id",
+                "Description": "ID of the corresponding load area",
+                "Unit": "" },
+				
+				{"Name": "population",
+                "Description": "number of residents in the district",
+                "Unit": "residents" },
+
+                		{"Name": "peak_load",
+                "Description": "estimated peak_load in the district",
+                "Unit": "kW" },
+
+                              	{"Name": "area_ha",
+                "Description": "area of the the district",
+                "Unit": "ha" },
+
+                                {"Name": "pop_density",
+                "Description": "population density in the district",
+                "Unit": "residents/ha" },
+
+                                {"Name": "structure_type",
+                "Description": "structure type of the the district (urban, rural)",
+                "Unit": "" }],
+
+
+"Changes":[
+                {"Name": "Jonas Gütter",
+                "Mail": "jonas.guetter@rl-institut.de",
+                "Date":  "20.10.2016",
+                "Comment": "Created table" }],
+
+"ToDo": [""],
+"Licence": ["tba"],
+"Instructions for proper use": [""]
+}'; 
+
+-- Select description
+SELECT obj_description('calc_ego_grid_district.ego_deu_lv_grid_district'::regclass)::json;
+
+-- Add entry to scenario logtable
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,user_name,timestamp)
+SELECT	'0.1' AS version,
+	'model_draft' AS schema_name,
+	'ego_deu_lv_grid_district' AS table_name,
+	'process_eGo_lv_grid_districts.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
+FROM	model_draft.table;
