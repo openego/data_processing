@@ -1,10 +1,14 @@
-from distutils.core import setup
+from setuptools import find_packages, setup
+import os
 
 setup(
-    name='data_processing',
+    name='dataprocessing',
     version='0.1-pre',
-    packages=['data_processing'],
-    url='https://github.com/openego/data_processing',
+    packages=find_packages(),
+    package_data={
+        'dataprocessing': [os.path.join('sql_snippets','*.sql')]
+    },
+    url='https://github.com/openego/dataprocessing',
     license='GNU GENERAL PUBLIC LICENSE Version 3',
     author='open_eGo development group',
     author_email='',
