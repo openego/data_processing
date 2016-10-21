@@ -20,6 +20,8 @@ setup(
         'demandlib',
         'ego.io >=0.0.1rc4, <= 0.0.1rc4',
         'geoalchemy2'
-    ]
+    ],
+    entry_points={
+        'console_scripts': [
+            'ego_data_processing = dataprocessing.eGo_data_processing:data_processing', ]}
 )
-
