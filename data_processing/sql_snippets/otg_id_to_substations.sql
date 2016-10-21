@@ -3,46 +3,48 @@
 
 -- script to assign osmTGmod-id to substation
 
--- update calc_ego_substation.ego_deu_substations table with new column of respective osmtgmod bus_i
-ALTER TABLE calc_ego_substation.ego_deu_substations 
+-- update model_draft.ego_grid_hvmv_substation table with new column of respective osmtgmod bus_i
+ALTER TABLE model_draft.ego_grid_hvmv_substation 
 ADD COLUMN otg_id bigint;
 
 -- fill table with bus_i from osmtgmod
-UPDATE calc_ego_substation.ego_deu_substations
-SET otg_id = calc_ego_osmtgmod.bus_data.bus_i
-FROM calc_ego_osmtgmod.bus_data
-WHERE (SELECT TRIM(leading 'n' FROM TRIM(leading 'w' FROM calc_ego_substation.ego_deu_substations.osm_id))::BIGINT)=calc_ego_osmtgmod.bus_data.osm_substation_id; 
+UPDATE model_draft.ego_grid_hvmv_substation
+SET otg_id = grid.otg_ehvhv_bus_data.bus_i
+FROM grid.otg_ehvhv_bus_data
+WHERE (SELECT TRIM(leading 'n' FROM TRIM(leading 'w' FROM model_draft.ego_grid_hvmv_substation.osm_id))::BIGINT)=grid.otg_ehvhv_bus_data.osm_substation_id; 
 
--- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
-	SELECT	'0.1' AS version,
-		'calc_ego_substation' AS schema_name,
-		'ego_deu_substations' AS table_name,
-		'otg_id_to_substations.sql' AS script_name,
-		COUNT(subst_id)AS entries,
-		'OK' AS status,
-		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
-FROM	calc_ego_loads.ego_deu_consumption;
+-- Add entry to scenario logtable
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,user_name,timestamp)
+SELECT	'0.2' AS version,
+	'model_draft' AS schema_name,
+	'ego_grid_hvmv_substation' AS table_name,
+	'otg_id_to_substations.sql' AS script_name,
+	COUNT(subst_id)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
+FROM	model_draft.ego_grid_hvmv_substation;
 
--- do the same with calc_ego_substation.ego_deu_substations_ehv
+-- do the same with model_draft.ego_grid_ehv_substation
 
--- update calc_ego_substation.ego_deu_substations_ehv table with new column of respective osmtgmod bus_i
-ALTER TABLE calc_ego_substation.ego_deu_substations_ehv
+-- update model_draft.ego_grid_ehv_substation table with new column of respective osmtgmod bus_i
+ALTER TABLE model_draft.ego_grid_ehv_substation
 ADD COLUMN otg_id bigint;
 
 -- fill table with bus_i from osmtgmod
-UPDATE calc_ego_substation.ego_deu_substations_ehv
-SET otg_id = calc_ego_osmtgmod.bus_data.bus_i
-FROM calc_ego_osmtgmod.bus_data
-WHERE (SELECT TRIM(leading 'n' FROM TRIM(leading 'w' FROM TRIM(leading 'r' FROM calc_ego_substation.ego_deu_substations_ehv.osm_id)))::BIGINT)=calc_ego_osmtgmod.bus_data.osm_substation_id; 
+UPDATE model_draft.ego_grid_ehv_substation
+SET otg_id = grid.otg_ehvhv_bus_data.bus_i
+FROM grid.otg_ehvhv_bus_data
+WHERE (SELECT TRIM(leading 'n' FROM TRIM(leading 'w' FROM TRIM(leading 'r' FROM model_draft.ego_grid_ehv_substation.osm_id)))::BIGINT)=grid.otg_ehvhv_bus_data.osm_substation_id; 
 
--- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
-	SELECT	'0.1' AS version,
-		'calc_ego_substation' AS schema_name,
-		'ego_deu_substations_ehv' AS table_name,
-		'otg_id_to_substations.sql' AS script_name,
-		COUNT(subst_id)AS entries,
-		'OK' AS status,
-		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
-FROM	calc_ego_loads.ego_deu_consumption;
+-- Add entry to scenario logtable
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,user_name,timestamp)
+SELECT	'0.2' AS version,
+	'model_draft' AS schema_name,
+	'ego_grid_ehv_substation' AS table_name,
+	'otg_id_to_substations.sql' AS script_name,
+	COUNT(subst_id)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
+FROM	model_draft.ego_grid_ehv_substation;
