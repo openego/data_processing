@@ -5,7 +5,7 @@ import logging
 import time
 import os
 import codecs
-from .tools import io
+from tools import io
 
 
 def data_processing():
