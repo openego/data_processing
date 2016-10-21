@@ -22,7 +22,7 @@ INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_na
 		COUNT(subst_id)AS entries,
 		'OK' AS status,
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
-FROM	calc_ego_loads.ego_deu_consumption;
+FROM	calc_ego_substation.ego_deu_substations;
 
 -- do the same with calc_ego_substation.ego_deu_substations_ehv
 
@@ -45,4 +45,4 @@ INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_na
 		COUNT(subst_id)AS entries,
 		'OK' AS status,
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
-FROM	calc_ego_loads.ego_deu_consumption;
+FROM	calc_ego_substation.ego_deu_substations_ehv;
