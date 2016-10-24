@@ -1,4 +1,4 @@
-/*
+﻿/*
 Quick workaround to transfer renpassG!S results into the corresponding powerflow table.
 
 Author: Martin
@@ -54,6 +54,13 @@ from
 ) as SQ
 where SQ.source is not null
 group by SQ.source, SQ.datetime;
+
+--
+DELETE FROM calc_ego_hv_powerflow.generator_pq_set;
+DELETE FROM calc_ego_hv_powerflow.temp_resolution;
+
+INSERT INTO calc_ego_hv_powerflow.temp_resolution (temp_id, timesteps, resolution, start_time)
+SELECT 1, 8760, 'h', TIMESTAMP '2011-01-01 00:00:00';
 
 -- construct array per aggr_id according to source timeseries
 Insert into calc_ego_hv_powerflow.generator_pq_set (scn_name, generator_id, temp_id, p_set)

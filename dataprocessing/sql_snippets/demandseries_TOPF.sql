@@ -1,10 +1,6 @@
 -- Assigment of otg_id for demand time series
 
 DELETE FROM calc_ego_hv_powerflow.load_pq_set;
-DELETE FROM calc_ego_hv_powerflow.temp_resolution;
-
-INSERT INTO calc_ego_hv_powerflow.temp_resolution (temp_id, timesteps, resolution, start_time)
-SELECT 1, 8760, 'h', TIMESTAMP '2011-01-01 00:00:00';
 
 INSERT INTO calc_ego_hv_powerflow.load_pq_set (load_id, temp_id, p_set, q_set)
 	SELECT

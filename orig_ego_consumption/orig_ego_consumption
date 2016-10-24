@@ -18,6 +18,52 @@ UPDATE orig_ego_consumption.lak_consumption_per_federalstate
 SET eu_code = RPAD(eu_code::text, 5, '0') -- Zero-pads to the right up to the length of 5;
 
 
+COMMENT ON TABLE  orig_ego_consumption.lak_consumption_per_federalstate IS
+'{
+"Name": "Electricity consumption per federal state in Germany",
+"Source": [{
+                  "Name": "Länderarbeitskreis Energiebilanzen",
+                  "URL":  "http://www.lak-energiebilanzen.de/seiten/energiebilanzenLaender.cfm" }],
+"Reference date": "2011",
+"Date of collection": "November 2015",
+"Original file": "...",
+"Spatial resolution": ["Germany"],
+"Description": ["..."],
+"Column": [
+                   {"Name": "eu_code",
+                    "Description": "Nuts code for federal state",
+                    "Unit": "" },
+                   {"Name": "federal_states",
+                    "Description": "Name of federal state in Germany",
+                    "Unit": "" },
+                   {"Name": "elec_consumption_housholds",
+                    "Description": "Annual electricity consumption in the household sector",
+                    "Unit": "GWh" },
+                   {"Name": "elec_consumption_industry",
+                    "Description": "Annual electricity consumption in the industrial sector",
+                    "Unit": "GWh" },
+                   {"Name": "elec_consumption_tertiary_sector",
+                    "Description": "Annual electricity consumption in the tertiary sector including public sector",
+                    "Unit": "GWh" },
+                   {"Name": "population",
+                    "Description": "Inhabitants per federal state",
+                    "Unit": "" },
+                   {"Name": "elec_consumption_households_per_person",
+                    "Description": "Electricity consumption of household sector per inhabitant",
+                    "Unit": "GWh" }],
+"Changes":[
+                   {"Name": "Ilka Cussmann",
+                    "Mail": "ilka.cussmann@hs-flensburg.de",
+                    "Date":  "24.10.2016",
+                    "Comment": "..." }
+                  ],
+"ToDo": [""],
+"Licence": ["..."],
+"Instructions for proper use": ["..."]
+}';
+
+
+
 -------------
 -- Table set up for gross value added per German districts (Landkreise) in 2011 based on 
 -- https://www.destatis.de/DE/Publikationen/Thematisch/VolkswirtschaftlicheGesamtrechnungen/VGRderLaender/VGR_KreisergebnisseBand1.html 
