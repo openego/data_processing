@@ -1,4 +1,4 @@
-﻿-- osmTGmod2pyPSA
+-- osmTGmod2pyPSA
 
 -- CLEAN UP OF TABLES
 TRUNCATE calc_ego_hv_powerflow.bus CASCADE;

@@ -1,4 +1,4 @@
-﻿-- Assigment of otg_id for demand time series
+-- Assigment of otg_id for demand time series
 
 DELETE FROM calc_ego_hv_powerflow.load_pq_set;
 DELETE FROM calc_ego_hv_powerflow.temp_resolution;

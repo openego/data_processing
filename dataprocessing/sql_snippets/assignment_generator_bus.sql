@@ -1,4 +1,4 @@
-﻿------------
+------------
 -- Create a table that contains all generators (RE and conventional) but no duplicates. 
 ------------
 
