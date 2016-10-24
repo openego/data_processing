@@ -1,3 +1,48 @@
+--------------
+-- Calculate specific electricity consumption per million Euro GVA for each federal state
+--------------
+
+DROP TABLE IF EXISTS orig_ego_consumption.lak_consumption_per_federalstate_per_gva;
+
+CREATE TABLE orig_ego_consumption.lak_consumption_per_federalstate_per_gva AS 
+( 
+SELECT  a.eu_code, 
+ 	a.federal_states, 
+ 	a.elec_consumption_industry/b.gva_industry AS elec_consumption_industry, 
+ 	a.elec_consumption_tertiary_sector/b.gva_tertiary_sector AS elec_consumption_tertiary_sector 
+FROM  	orig_ego_consumption.lak_consumption_per_federalstate a, 
+ 	orig_ego_consumption.destatis_gva_per_districts b 
+WHERE a.eu_code = b.eu_code 
+ORDER BY eu_code 
+) 
+; 
+ALTER TABLE orig_ego_consumption.lak_consumption_per_federalstate_per_gva
+ADD PRIMARY KEY (eu_code),
+OWNER TO oeuser;
+
+
+--------------
+-- Calculate electricity consumption per district based on gross value added
+--------------
+DROP TABLE IF EXISTS orig_ego_consumption.lak_consumption_per_district;
+
+CREATE TABLE orig_ego_consumption.lak_consumption_per_district as 
+( 
+SELECT b.eu_code, 
+ 
+b.district, 
+a.elec_consumption_industry * b.gva_industry as elec_consumption_industry, 
+a.elec_consumption_tertiary_sector * b.gva_tertiary_sector AS elec_consumption_tertiary_sector 
+FROM  	orig_ego_consumption.lak_consumption_per_federalstate_per_gva a, 
+ 	orig_ego_consumption.destatis_gva_per_districts b
+WHERE SUBSTR (a.eu_code,1,3) = SUBSTR(b.eu_code,1,3)  
+) 
+; 
+ALTER TABLE orig_ego_consumption.lak_consumption_per_district
+ADD PRIMARY KEY (eu_code),
+OWNER TO oeuser;
+
+
 
 ------------------
 -- "Export information on the industrial area into calc_ego_loads.landuse_industry"
