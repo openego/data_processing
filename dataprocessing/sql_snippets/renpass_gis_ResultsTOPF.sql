@@ -55,6 +55,13 @@ from
 where SQ.source is not null
 group by SQ.source, SQ.datetime;
 
+--
+DELETE FROM calc_ego_hv_powerflow.generator_pq_set;
+DELETE FROM calc_ego_hv_powerflow.temp_resolution;
+
+INSERT INTO calc_ego_hv_powerflow.temp_resolution (temp_id, timesteps, resolution, start_time)
+SELECT 1, 8760, 'h', TIMESTAMP '2011-01-01 00:00:00';
+
 -- construct array per aggr_id according to source timeseries
 Insert into calc_ego_hv_powerflow.generator_pq_set (scn_name, generator_id, temp_id, p_set)
 select 'Status Quo' as scn_name, A.aggr_id, 1 as temp_id, array_agg(A.fraction_of_installed * B.val order by B.datetime) as p_set from calc_renpass_gis.pf_pp_by_source_aggr_id A,

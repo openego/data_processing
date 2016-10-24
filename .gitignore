@@ -9,3 +9,7 @@
 /data_processing/tools/__pycache__/io.cpython-34.pyc
 /data_processing/tools/__pycache__/metadata.cpython-34.pyc
 /ego_deu_loads_per_grid_district/2016-04-26_ego_deu_mv_loads.pdf
+
+/data_processing.egg-info/*
+
+*.pyc

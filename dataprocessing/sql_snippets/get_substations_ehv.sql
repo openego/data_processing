@@ -55,24 +55,7 @@ WHERE '220000' = ANY( string_to_array(hstore(openstreetmap.osm_deu_nodes.tags)->
 -- Da die relations keine geometry besitzen wird mit folgender funktion der geometrische mittelpunkt der relation ermittelt, 
 -- wobei hier der Mittelpunkt aus dem Rechteck ermittelt wird welches entsteht, wenn man die äußersten Korrdinaten für
 -- longitude und latitude wählt
--- Funktion erzeugt aus den relation parts vom type way einen gemittelten geometry point
-DROP FUNCTION IF EXISTS relation_geometry (members text[]) ;
-CREATE OR REPLACE FUNCTION relation_geometry (members text[]) 
-RETURNS geometry 
-AS $$
-DECLARE 
-way  geometry;
-BEGIN
-   way = (SELECT ST_SetSRID(ST_MakePoint((max(lon) + min(lon))/200.0,(max(lat) + min(lat))/200.0),900913) 
-	  FROM openstreetmap.osm_deu_nodes 
-	  WHERE id in (SELECT unnest(nodes) 
-             FROM openstreetmap.osm_deu_ways 
-             WHERE id in (SELECT trim(leading 'w' from member)::bigint 
-			  FROM (SELECT unnest(members) as member) t
-	                  WHERE member~E'[w,1,2,3,4,5,6,7,8,9,0]')));        
-RETURN way;
-END;
-$$ LANGUAGE plpgsql;
+-- needs st_relation_geometry
 
 CREATE VIEW model_draft.relation_substations_with_hoes AS
 SELECT openstreetmap.osm_deu_rels.id, openstreetmap.osm_deu_rels.tags, relation_geometry(openstreetmap.osm_deu_rels.members) as way
@@ -100,10 +83,10 @@ FROM model_draft.node_substations_with_hoes;
 
 -- create view summary_total_hoes that contains substations without any filter
 CREATE VIEW model_draft.summary_total_hoes AS
-SELECT  ST_X(ST_Centroid(ST_Transform(substation.geom,4326))) as lon,
-	ST_Y(ST_Centroid(ST_Transform(substation.geom,4326))) as lat,
-	ST_Centroid(ST_Transform(substation.geom,4326)) as point,
-	ST_Transform(substation.geom,4326) as polygon,
+SELECT  ST_X(ST_Centroid(ST_Transform(substation.way,4326))) as lon,
+	ST_Y(ST_Centroid(ST_Transform(substation.way,4326))) as lat,
+	ST_Centroid(ST_Transform(substation.way,4326)) as point,
+	ST_Transform(substation.way,4326) as polygon,
 	(CASE WHEN hstore(substation.tags)->'voltage' <> '' THEN hstore(substation.tags)->'voltage' ELSE 'hoes' END) as voltage, 
         hstore(substation.tags)->'power' as power_type,
         (CASE WHEN hstore(substation.tags)->'substation' <> '' THEN hstore(substation.tags)->'substation' ELSE 'NA' END) as substation,  
