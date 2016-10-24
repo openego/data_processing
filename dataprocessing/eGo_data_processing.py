@@ -5,7 +5,7 @@ import logging
 import time
 import os
 import codecs
-from .tools import io
+from tools import io
 
 
 def data_processing():
@@ -33,32 +33,32 @@ def data_processing():
 
     snippets = [
         # # 'scenario_eGo_data_processing.sql', # setup scenario log
-        # # 'setup_bkg_vg250.sql', # setup borders
-        # 'get_substations.sql',
-        # 'get_substations_ehv.sql',
-        # 'otg_id_to_substations.sql',
-        # 'process_eGo_substation.sql',
-        # 'process_eGo_grid_district.sql',
-        # 'setup_osm_landuse.sql', # setup OSM
-        # 'process_eGo_osm_loads_industry.sql',
-        # 'process_eGo_osm_loads.sql',
-        # # 'setup_zensus_population_per_ha.sql', # setup zensus
-        # 'process_eGo_loads_melted.sql',
-        # 'process_eGo_loads_per_grid_district.sql',
-        # 'process_eGo_consumption.sql',
-        # 'analyse_eGo_paper_result.sql',
-        # 'Voronoi_ehv.sql',
-        # 'voronoi_weatherpoint.sql',
-        # 'calc_ego_hv_powerflow.sql',
-        # 'osmtgmod_to_pypsa.sql',
-        # 'assignment_generator_bus.sql',
-        # 'renpass_gis_ResultsTOPF.sql',
-        # 'assignment_load_bus.sql',
-        # 'demand_per_mv_grid_district.py',
-        # 'demandseries_TOPF.sql',
-        # 'peak_load_per_load_area.py',
-        # 'process_eGo_onts.sql',
-        # 'process_eGo_lv_grid_districts.sql'
+        # 'setup_bkg_vg250.sql', # setup borders
+        'get_substations.sql',
+        'get_substations_ehv.sql',
+        'otg_id_to_substations.sql',
+        'process_eGo_substation.sql',
+        'process_eGo_grid_district.sql',
+        'setup_osm_landuse.sql', # setup OSM
+        'process_eGo_osm_loads_industry.sql',
+        'process_eGo_osm_loads.sql',
+        # 'setup_zensus_population_per_ha.sql', # setup zensus
+        'process_eGo_loads_melted.sql',
+        'process_eGo_loads_per_grid_district.sql',
+        'process_eGo_consumption.sql',
+        'analyse_eGo_paper_result.sql',
+        'Voronoi_ehv.sql',
+        'voronoi_weatherpoint.sql',
+        'calc_ego_hv_powerflow.sql',
+        'osmtgmod_to_pypsa.sql',
+        'assignment_generator_bus.sql',
+        'renpass_gis_ResultsTOPF.sql',
+        'assignment_load_bus.sql',
+        'demand_per_mv_grid_district.py',
+        'demandseries_TOPF.sql',
+        'peak_load_per_load_area.py',
+        'process_eGo_onts.sql',
+        'process_eGo_lv_grid_districts.sql'
         ]
 
     # get database connection
