@@ -957,49 +957,34 @@ SELECT obj_description('orig_destatis.zensus_population_by_gender_per_mun'::regc
 
 -- 
 
-COMMENT ON TABLE  orig_destatis.zensus_population_per_ha IS
-'{
-"Name": "...",
-"Source": [{
-                  "Name": "...",
-                  "URL":  "..." }],
-"Reference date": "...",
-"Date of collection": "...",
-"Original file": "...",
-"Spatial resolution": ["Germany"],
-"Description": ["..."],
-"Column": [
-                   {"Name": "gid",
-                    "Description": "...",
-                    "Unit": "" },
-                   {"Name": "gid_id",
-                    "Description": "...",
-                    "Unit": "" },
-                   {"Name": "x_mp",
-                    "Description": "...",
-                    "Unit": "" },
-                   {"Name": "y_mp",
-                    "Description": "...",
-                    "Unit": "" },
-                   {"Name": "population",
-                    "Description": "...",
-                    "Unit": "" },
-                   {"Name": "geom",
-                    "Description": "...",
-                    "Unit": "" }],
-"Changes":[
-                   {"Name": "Mario Kropshofer",
-                    "Mail": "mario.kropshofer2@stud.fh-flensburg.de",
-                    "Date":  "05.10.2016",
-                    "Comment": "..." }
-                  ],
-"ToDo": ["Please complete"],
-"Licence": ["..."],
-"Instructions for proper use": ["..."]
-}';
+COMMENT ON TABLE  orig_destatis.zensus_population_per_ha IS '{
+	"Name": "...",
+	"Source": [{
+		"Name": "...",
+		"URL":  "..." }],
+	"Reference date": "2011",
+	"Date of collection": "03.02.2016",
+	"Original file": "https://www.zensus2011.de/SharedDocs/Downloads/DE/Pressemitteilung/DemografischeGrunddaten/csv_Bevoelkerung_100m_Gitter.zip",
+	"Spatial resolution": ["Germany"],
+	"Description": ["Last national census in Germany in 2011"],
+	"Column": [
+		{"Name": "gid",	"Description": "Unique identifier", "Unit": "" },
+		{"Name": "grid_id", "Description": "Grid number of source", "Unit": "" },
+		{"Name": "x_mp", "Description": "Latitude of centroid in (ETRS89 - LAEA; EPSG:3035)", "Unit": "" },
+		{"Name": "y_mp", "Description": "Longitude of centroid in (ETRS89 - LAEA; EPSG:3035)", "Unit": "" },
+		{"Name": "population", "Description": "Number of registred residents", "Unit": "human" },
+		{"Name": "geom", "Description": "Geometry", "Unit": "" } ],
+	"Changes":[
+		{"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
+		"Date":  "03.02.2016","Comment": "Added Table"},
+		{"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
+		"Date":  "25.10.2016","Comment": "Moved table and add metadata"} ],
+	"ToDo": [" "],
+	"Licence": ["..."],
+	"Instructions for proper use": ["..."]
+	}';
 
-
-SELECT obj_description('orig_destatis.zensus_population_per_ha'::regclass)::json;
+SELECT obj_description('orig_destatis.zensus_population_per_ha' ::regclass) ::json;
 
 --
 
