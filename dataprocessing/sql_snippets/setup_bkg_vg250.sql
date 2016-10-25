@@ -136,8 +136,50 @@ INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_na
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
 	FROM	political_boundary.bkg_vg250_1_sta_union_mview;
 
+
 ---------- ---------- ----------
--- political_boundary.bkg_vg250_1_sta_mview - With tiny buffer because of intersection (in official data)
+-- political_boundary.bkg_vg250_1_sta_bbox_mview
+---------- ---------- ----------
+
+-- Transform bkg_vg250 State UNION   (OK!) -> 2.000ms =1
+DROP MATERIALIZED VIEW IF EXISTS	political_boundary.bkg_vg250_1_sta_bbox_mview CASCADE;
+CREATE MATERIALIZED VIEW		political_boundary.bkg_vg250_1_sta_bbox_mview AS
+	SELECT	'1' ::integer AS id,
+		'Bundesrepublik' ::text AS bez,
+		ST_AREA(un.geom) / 10000 ::double precision AS area_km2,
+		un.geom ::geometry(Polygon,3035) AS geom
+	FROM	(SELECT	ST_SetSRID(Box2D(vg.geom),3035) ::geometry(Polygon,3035) AS geom
+		FROM	political_boundary.bkg_vg250_1_sta_union_mview AS vg
+		) AS un;
+
+-- Create Index (id)   (OK!) -> 100ms =0
+CREATE UNIQUE INDEX  	bkg_vg250_1_sta_bbox_mview_id_idx
+		ON	political_boundary.bkg_vg250_1_sta_bbox_mview (id);
+
+-- Create Index GIST (geom)   (OK!) -> 100ms =0
+CREATE INDEX  	bkg_vg250_1_sta_bbox_mview_geom_idx
+	ON	political_boundary.bkg_vg250_1_sta_bbox_mview
+	USING	GIST (geom);
+	
+-- Grant oeuser   (OK!) -> 100ms =0
+GRANT ALL ON TABLE	political_boundary.bkg_vg250_1_sta_bbox_mview TO oeuser WITH GRANT OPTION;
+ALTER TABLE		political_boundary.bkg_vg250_1_sta_bbox_mview OWNER TO oeuser;
+
+-- Scenario eGo data processing
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
+	SELECT	'0.1' AS version,
+		'orig_bkg_vg250' AS schema_name,
+		'bkg_vg250_1_sta_bbox_mview' AS table_name,
+		'setup_bkg_vg250.sql' AS script_name,
+		COUNT(geom)AS entries,
+		'OK' AS status,
+		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
+	FROM	political_boundary.bkg_vg250_1_sta_bbox_mview;
+	
+	
+	
+---------- ---------- ----------
+-- political_boundary.bkg_vg250_2_lan_mview - With tiny buffer because of intersection (in official data)
 ---------- ---------- ----------
 
 -- Transform bkg_vg250 State   (OK!) -> 11.000ms =11
