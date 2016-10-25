@@ -21,6 +21,48 @@ ADD PRIMARY KEY (eu_code),
 OWNER TO oeuser;
 
 
+-- "Add Meta-documentation"
+
+COMMENT ON TABLE  orig_ego_consumption.lak_consumption_per_federalstates_per_gva IS
+'{
+"Name": "Specific electricity consumption per gross value added",
+"Source": [{
+                  "Name": "open_eGo data-processing",
+                  "URL":  "https://github.com/openego/data_processing" }],
+"Reference date": "2011",
+"Date of collection": "...",
+"Original file": "...",
+"Spatial resolution": ["Germany"],
+"Description": ["Electricity consumption of the industrial and tertiary sector divided by the respective gross value added"],
+"Column": [
+                   {"Name": "eu_code",
+                    "Description": "eu_code for nuts region",
+                    "Unit": "" },
+                   {"Name": "federal_states",
+                    "Description": "name of federal state",
+                    "Unit": "" },
+                   {"Name": "elec_consumption_industry",
+                    "Description": "specific electricity consumption per Million Euro of gva of the industrial sector",
+                    "Unit": "GWh/Million Euro" },
+                   {"Name": "elec_consumption_tertiary_sector",
+                    "Description": "specific electricity consumption per Million Euro of gva of the tertiary sector",
+                    "Unit": "GWh/Million Euro" }],
+"Changes":[
+                   {"Name": "Mario Kropshofer",
+                    "Mail": "mario.kropshofer2@stud.fh-flensburg.de",
+                    "Date":  "05.10.2016",
+                    "Comment": "..." }, 
+	  	   {"Name": "Ilka Cussmann",
+                    "Mail": "ilka.cussmann@hs-flensburg.de",
+                    "Date":  "25.10.2016",
+                    "Comment": "Completed json-String" }
+                  ],
+"ToDo": ["Add Licence"],
+"Licence": ["..."],
+"Instructions for proper use": ["..."]
+}';
+
+
 --------------
 -- Calculate electricity consumption per district based on gross value added
 --------------
@@ -43,6 +85,60 @@ ADD PRIMARY KEY (eu_code),
 OWNER TO oeuser;
 
 
+
+COMMENT ON TABLE  orig_ego_consumption.lak_consumption_per_district IS
+'{
+"Name": "Electricity consumption per administrative district",
+"Source": [{
+                  "Name": "open_eGo data-processing",
+                  "URL":  "https://github.com/openego/data_processing" }],
+"Reference date": "2011",
+"Date of collection": "...",
+"Original file": "...",
+"Spatial resolution": ["Germany"],
+"Description": ["Electricity consumption calculated for every administrative district in Germany"],
+"Column": [
+                   {"Name": "eu_code",
+                    "Description": "eu_code for nuts region",
+                    "Unit": "" },
+                   {"Name": "district",
+                    "Description": "name of administrative district",
+                    "Unit": "" },
+                   {"Name": "elec_consumption_industry",
+                    "Description": "electricity consumption of industrial sector",
+                    "Unit": "GWh" },
+                   {"Name": "elec_consumption_tertiary_sector",
+                    "Description": "electricity consumption of tertiary sector",
+                    "Unit": "GWh" },
+                   {"Name": "area_industry",
+                    "Description": "industrial osm-area within the administrative district",
+                    "Unit": "ha" },
+                   {"Name": "area_retail",
+                    "Description": "retail osm-area within the administrative district",
+                    "Unit": "ha" },
+                   {"Name": "area_agricultural",
+                    "Description": "agricultural osm-area within the administrative district",
+                    "Unit": "ha" },
+                   {"Name": "area_tertiary_sector",
+                    "Description": "retail and agricultural osm-area within the administrative district",
+                    "Unit": "ha" },
+                   {"Name": "consumption_per_area_industry",
+                    "Description": "specific consumption of industrial sector per ha within the administrative district",
+                    "Unit": "GWh/ha" }],
+"Changes":[
+                   {"Name": "Mario Kropshofer",
+                    "Mail": "mario.kropshofer2@stud.fh-flensburg.de",
+                    "Date":  "05.10.2016",
+                    "Comment": "..." }, 
+                   {"Name": "Ilka Cussmann",
+                    "Mail": "ilka.cussmann@hs-flensburg.de",
+                    "Date":  "25.10.2016",
+                    "Comment": "Completed meta-dokumentation" }
+                  ],
+"ToDo": ["add licence"],
+"Licence": ["..."],
+"Instructions for proper use": ["..."]
+}';
 
 ------------------
 -- "Export information on the industrial area into calc_ego_loads.landuse_industry"
@@ -196,6 +292,78 @@ CREATE INDEX  	landuse_industry_geom_idx
     ON    	calc_ego_loads.landuse_industry
     USING     	GIST (geom);
 
+-- "Add metadata"
+
+COMMENT ON TABLE  calc_ego_loads.landuse_industry IS
+'{
+"Name": "Industrial landuse area",
+"Source": [{
+                  "Name": "open_eGo data_processing",
+                  "URL":  "https://github.com/openego/data_processing" }],
+"Reference date": "October 2016",
+"Date of collection": "...",
+"Original file": "...",
+"Spatial resolution": ["Germany"],
+"Description": ["Collection of osm polygons with a tag landuse=industrial"],
+"Column": [
+                   {"Name": "gid",
+                    "Description": "unique id",
+                    "Unit": "" },
+                   {"Name": "osm_id",
+                    "Description": "osm-id",
+                    "Unit": "" },
+                   {"Name": "name",
+                    "Description": "name",
+                    "Unit": "" },
+                   {"Name": "sector",
+                    "Description": "Integer to identify the landuse sector",
+                    "Unit": "" },
+                   {"Name": "area_ha",
+                    "Description": "landuse area",
+                    "Unit": "ha" },
+                   {"Name": "tags",
+                    "Description": "osm-tags",
+                    "Unit": "" },
+                   {"Name": "vg250",
+                    "Description": "check if landuse are is inside the german vg250-polygon",
+                    "Unit": "" },
+                   {"Name": "geom",
+                    "Description": "geometry polygon",
+                    "Unit": "" },
+                   {"Name": "geom_centroid",
+                    "Description": "centroid of polygon",
+                    "Unit": "" },
+                   {"Name": "geom_surfacepoint",
+                    "Description": "Surfacepoint of polygon",
+                    "Unit": "" },
+                   {"Name": "geom_centre",
+                    "Description": "centre of polygon",
+                    "Unit": "" },
+                   {"Name": "nuts",
+                    "Description": "nuts code for corresponding administrative district",
+                    "Unit": "" },
+                   {"Name": "consumption",
+                    "Description": "electricity consumption associated with polygon",
+                    "Unit": "GWh" },
+                   {"Name": "peak_load",
+                    "Description": "peak load associated with polygon",
+                    "Unit": "MW" }],
+"Changes":[
+                   {"Name": "Mario Kropshofer",
+                    "Mail": "mario.kropshofer2@stud.fh-flensburg.de",
+                    "Date":  "04.10.2016",
+                    "Comment": "..." }, 
+                   {"Name": "Ilka Cussmann",
+                    "Mail": "ilka.cussmann@hs-flensburg.de",
+                    "Date":  "25.10.2016",
+                    "Comment": "Completed json-string" }
+                  ],
+"ToDo": ["Add licence"],
+"Licence": ["..."],
+"Instructions for proper use": ["..."]
+}';
+
+
 -- Scenario eGo data processing
 INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
 	SELECT	'0.1' AS version,
@@ -206,6 +374,9 @@ INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_na
 		'OK' AS status,
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
 	FROM	calc_ego_loads.landuse_industry;
+
+
+
 	
 -----------------
 -- "Identify large scale consumer"
@@ -240,7 +411,7 @@ ALTER TABLE calc_ego_loads.large_scale_consumer
 	ADD COLUMN otg_id integer,  
 	ADD COLUMN un_id integer,
 	ADD COLUMN consumption numeric, 
-	ADD COLUMN peak_load numeric,
+	ADD COLUMN numeric,
 	ADD COLUMN geom geometry(MultiPolygon,3035),
 	ADD COLUMN geom_centre geometry(Point,3035),
 	ADD PRIMARY KEY (id);
@@ -330,6 +501,70 @@ UPDATE calc_ego_loads.large_scale_consumer a
 	SET otg_id = b.otg_id
 	FROM calc_ego_substation.ego_deu_substations b
 	WHERE a.subst_id = b.subst_id; 
+
+
+COMMENT ON TABLE  calc_ego_loads.large_scale_consumer IS
+'{
+"Name": "Large scale consumer in EHV-level",
+"Source": [{
+                  "Name": "open_eGo data-processing",
+                  "URL":  "https://github.com/openego/data_processing" }],
+"Reference date": "...",
+"Date of collection": "...",
+"Original file": "...",
+"Spatial resolution": ["Germany"],
+"Description": ["Identified industrial large scale consumer with a connection to the EHV-grid"],
+"Column": [
+                   {"Name": "polygon_id",
+                    "Description": "unique id for osm industry-polygon",
+                    "Unit": "" },
+                   {"Name": "area_ha",
+                    "Description": "area of polygon",
+                    "Unit": "ha" },
+                   {"Name": "powerplant_id",
+                    "Description": "id of powerplants on the considered polygons",
+                    "Unit": "" },
+                   {"Name": "voltage_level",
+                    "Description": "voltage level of the consumers grid connection",
+                    "Unit": "" },
+                   {"Name": "id",
+                    "Description": "unique id",
+                    "Unit": "" },
+                   {"Name": "consumption",
+                    "Description": "electricity consumption of associated industry polygon",
+                    "Unit": "GWh" },
+                   {"Name": "peak_load",
+                    "Description": "peak-load of associated industry polygon",
+                    "Unit": "MW" },
+                   {"Name": "geom",
+                    "Description": "geometry of industry-polygon",
+                    "Unit": "" },
+                   {"Name": "geom_centre",
+                    "Description": "centre of industry-polygon",
+                    "Unit": "" },
+                   {"Name": "subst_id",
+                    "Description": "id of associated substation",
+                    "Unit": "" },
+                   {"Name": "otg_id",
+                    "Description": "otg_id of associated substation",
+                    "Unit": "" },
+                   {"Name": "un_id",
+                    "Description": "unique id of loads",
+                    "Unit": "" }],
+"Changes":[
+                   {"Name": "Mario Kropshofer",
+                    "Mail": "mario.kropshofer2@stud.fh-flensburg.de",
+                    "Date":  "04.10.2016",
+                    "Comment": "..." }, 
+                   {"Name": "Ilka Cussmann",
+                    "Mail": "ilka.cussmann@hs-flensburg.de",
+                    "Date":  "25.10.2016",
+                    "Comment": "completed json-string" }
+                  ],
+"ToDo": ["Add licence"],
+"Licence": ["..."],
+"Instructions for proper use": ["..."]
+}';
 
 			  
 -- Scenario eGo data processing
