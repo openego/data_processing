@@ -269,39 +269,43 @@ COMMENT ON TABLE  calc_ego_hv_powerflow.generator IS
                     "Description": "Switch to allow capacity p_nom to be extended",
                     "Unit": "" },
                    {"Name": "p_nom_min",
-                    "Description": "...",
+                    "Description": "If p_nom is extendable, set its minimum value",
                     "Unit": "" },
                    {"Name": "p_nom_max",
-                    "Description": "...",
+                    "Description": "If p_nom is extendable, set its maximum value (e.g. limited by potential)",
                     "Unit": "" },
                    {"Name": "p_min_pu_fixed",
-                    "Description": "...",
-                    "Unit": "" },
+                    "Description": "If control=”flexible” this gives the minimum output per unit of p_nom",
+                    "Unit": "per unit" },
                    {"Name": "p_max_pu_fixed",
-                    "Description": "...",
-                    "Unit": "" },
+                    "Description": "If control=”flexible” this gives the maximum output per unit of p_nom, equivalent to a de-rating factor.",
+                    "Unit": "per unit" },
                    {"Name": "sign",
-                    "Description": "...",
+                    "Description": "power sign",
                     "Unit": "" },
                    {"Name": "source",
-                    "Description": "...",
+                    "Description": "prime mover energy carrier",
                     "Unit": "" },
                    {"Name": "marginal_cost",
-                    "Description": "...",
-                    "Unit": "" },
+                    "Description": "Marginal cost of production of 1 MWh",
+                    "Unit": "€/MWh" },
                    {"Name": "capital_cost",
-                    "Description": "...",
-                    "Unit": "" },
+                    "Description": "Capital cost of extending p_nom by 1 MW",
+                    "Unit": "€/MW" },
                    {"Name": "efficiency",
-                    "Description": "...",
-                    "Unit": "..." }],
+                    "Description": "Ratio between primary energy and electrical energy",
+                    "Unit": "per unit" }],
 "Changes":[
                    {"Name": "Mario Kropshofer",
                     "Mail": "mario.kropshofer2@stud.fh-flensburg.de",
                     "Date":  "04.10.2016",
-                    "Comment": "..." }
+                    "Comment": "..." }, 
+                   {"Name": "Ilka Cussmann",
+                    "Mail": "ilka.cussmann@hs-flensburg.de",
+                    "Date":  "26.10.2016",
+                    "Comment": "completed json-string" }
                   ],
-"ToDo": ["Please complete"],
+"ToDo": ["add licence"],
 "Licence": ["..."],
 "Instructions for proper use": ["..."]
 }';
@@ -334,6 +338,91 @@ WITH (
   OIDS=FALSE
 );
 
+COMMENT ON TABLE  calc_ego_hv_powerflow.line IS
+'{
+"Name": "Lines in hv powerflow",
+"Source": [{
+                  "Name": "open_eGo data-processing",
+                  "URL":  "https://github.com/openego/data_processing" }],
+"Reference date": "...",
+"Date of collection": "...",
+"Original file": "...",
+"Spatial resolution": ["Germany"],
+"Description": ["Electricity lines considered in hv powerflow calculations"],
+"Column": [
+                   {"Name": "scn_name",
+                    "Description": "scenario name",
+                    "Unit": "" },
+                   {"Name": "line_id",
+                    "Description": "unique identifier",
+                    "Unit": "" },                   
+                   {"Name": "bus0",
+                    "Description": "Name of first bus to which branch is attached",
+                    "Unit": "" },
+                   {"Name": "bus1",
+                    "Description": "Name of second bus to which branch is attached",
+                    "Unit": "" },
+                   {"Name": "x",
+                    "Description": "Series reactance",
+                    "Unit": "Ohm" },
+                   {"Name": "r",
+                    "Description": "Series resistance",
+                    "Unit": "Ohm" },
+                   {"Name": "g",
+                    "Description": "Shunt conductivity",
+                    "Unit": "Siemens" }, 
+                   {"Name": "b",
+                    "Description": "Shunt susceptance",
+                    "Unit": "Siemens" }, 
+                   {"Name": "s_nom",
+                    "Description": "Limit of apparent power which can pass through branch",
+                    "Unit": "MVA" }, 
+                   {"Name": "s_nom_extendable",
+                    "Description": "Switch to allow capacity s_nom to be extended",
+                    "Unit": "" }, 
+                   {"Name": "s_nom_min",
+                    "Description": "If s_nom is extendable, set its minimum value",
+                    "Unit": "MVA" }, 
+                   {"Name": "s_nom_max",
+                    "Description": "If s_nom is extendable in OPF, set its maximum value",
+                    "Unit": "MVA" }, 
+                   {"Name": "capital_cost",
+                    "Description": "Capital cost of extending s_nom by 1 MVA",
+                    "Unit": "€/MVA" }, 
+                   {"Name": "length",
+                    "Description": "Length of line",
+                    "Unit": "km" }, 
+                   {"Name": "cables",
+                    "Description": "...",
+                    "Unit": "" }, 
+                   {"Name": "frequency",
+                    "Description": "Frequency of line",
+                    "Unit": "" }, 
+                   {"Name": "terrain_factor",
+                    "Description": "...",
+                    "Unit": "" }, 
+                   {"Name": "geom",
+                    "Description": "geometry that depict the real route of the line",
+                    "Unit": "" }, 
+                   {"Name": "topo",
+                    "Description": "topology that depicts a direct connection between both busses",
+                    "Unit": "..." }],
+"Changes":[
+                   {"Name": "Mario Kropshofer",
+                    "Mail": "mario.kropshofer2@stud.fh-flensburg.de",
+                    "Date":  "04.10.2016",
+                    "Comment": "..." }, 
+                   {"Name": "Ilka Cussmann",
+                    "Mail": "ilka.cussmann@hs-flensburg.de",
+                    "Date":  "26.10.2016",
+                    "Comment": "completed json-string" }
+                  ],
+"ToDo": ["Add licence"],
+"Licence": ["..."],
+"Instructions for proper use": ["..."]
+}';
+
+
 CREATE TABLE calc_ego_hv_powerflow.load
 (
   scn_name character varying NOT NULL DEFAULT 'Status Quo'::character varying,
@@ -347,7 +436,47 @@ WITH (
   OIDS=FALSE
 );
 
-
+COMMENT ON TABLE  calc_ego_hv_powerflow.load IS
+'{
+"Name": "Load in hv powerflow",
+"Source": [{
+                  "Name": "open_eGo data-processing",
+                  "URL":  "https://github.com/openego/data_processing" }],
+"Reference date": "...",
+"Date of collection": "...",
+"Original file": "...",
+"Spatial resolution": ["Germany"],
+"Description": ["Loads considered in hv powerflow calculation"],
+"Column": [
+                   {"Name": "scn_name",
+                    "Description": "scenario name",
+                    "Unit": "" },
+                   {"Name": "load_id",
+                    "Description": "unique id",
+                    "Unit": "" },                   
+                   {"Name": "bus",
+                    "Description": "id of associated bus",
+                    "Unit": "" },
+                   {"Name": "sign",
+                    "Description": "power sign",
+                    "Unit": "" },
+                   {"Name": "e_annual",
+                    "Description": "annual electricity consumption",
+                    "Unit": "GWh" }],
+"Changes":[
+                   {"Name": "Mario Kropshofer",
+                    "Mail": "mario.kropshofer2@stud.fh-flensburg.de",
+                    "Date":  "04.10.2016",
+                    "Comment": "..." }, 
+                   {"Name": "Ilka Cussmann",
+                    "Mail": "ilka.cussmann@hs-flensburg.de",
+                    "Date":  "26.10.2016",
+                    "Comment": "completed json-string" }
+                  ],
+"ToDo": ["add licence"],
+"Licence": ["..."],
+"Instructions for proper use": ["..."]
+}';
 
 CREATE TABLE calc_ego_hv_powerflow.storage
 (
@@ -380,6 +509,100 @@ WITH (
   OIDS=FALSE
 );
 
+COMMENT ON TABLE  calc_ego_hv_powerflow.storage IS
+'{
+"Name": "storage in hv powerflow",
+"Source": [{
+                  "Name": "open_eGo data-processing",
+                  "URL":  "https://github.com/openego/data_processing" }],
+"Reference date": "...",
+"Date of collection": "...",
+"Original file": "...",
+"Spatial resolution": ["Germany"],
+"Description": ["storage units considered in hv powerflow calculations"],
+"Column": [
+                   {"Name": "scn_name",
+                    "Description": "scenario name",
+                    "Unit": "" },
+                   {"Name": "storage_id",
+                    "Description": "unique id",
+                    "Unit": "" },
+                   {"Name": "bus",
+                    "Description": "id of associated bus",
+                    "Unit": "" },
+                   {"Name": "dispatch",
+                    "Description": "Controllability of active power dispatch, must be “flexible” or “variable”",
+                    "Unit": "" },
+                   {"Name": "control",
+                    "Description": "P,Q,V control strategy for PF, must be “PQ”, “PV” or “Slack”",
+                    "Unit": "" },
+                   {"Name": "p_nom",
+                    "Description": "Nominal power",
+                    "Unit": "MW" },
+                   {"Name": "p_nom_extendable",
+                    "Description": "Switch to allow capacity p_nom to be extended",
+                    "Unit": "" },
+                   {"Name": "p_nom_min",
+                    "Description": "If p_nom is extendable in OPF, set its minimum value",
+                    "Unit": "MW" },
+                   {"Name": "p_nom_max",
+                    "Description": "If p_nom is extendable in OPF, set its maximum value (e.g. limited by potential))",
+                    "Unit": "MW" },
+                   {"Name": "p_min_pu_fixed",
+                    "Description": "If control=”flexible” this gives the minimum output per unit of p_nom for the OPF.",
+                    "Unit": "per unit" },
+                   {"Name": "p_max_pu_fixed",
+                    "Description": "If control=”flexible” this gives the maximum output per unit of p_nom for the OPF, equivalent to a de-rating factor",
+                    "Unit": "per unit" },
+                   {"Name": "sign",
+                    "Description": "power sign",
+                    "Unit": "" },
+                   {"Name": "source",
+                    "Description": "Prime mover energy carrier",
+                    "Unit": "" },
+                   {"Name": "marginal_cost",
+                    "Description": "Marginal cost of production of 1 MWh",
+                    "Unit": "€/MWh" },
+                   {"Name": "capital_cost",
+                    "Description": "Capital cost of extending p_nom by 1 MW",
+                    "Unit": "€/MW" },
+                   {"Name": "efficiency",
+                    "Description": "Ratio between primary energy and electrical energy",
+                    "Unit": "per unit" },
+                   {"Name": "soc_initial",
+                    "Description": "State of charge before the snapshots in the OPF.",
+                    "Unit": "MWh" },
+                   {"Name": "soc_cyclic",
+                    "Description": "Switch: if True, then state_of_charge_initial is ignored and the initial state of charge is set to the final state of charge for the group of snapshots in the OPF",
+                    "Unit": "" },
+                   {"Name": "max_hours",
+                    "Description": "Maximum state of charge capacity in terms of hours at full output capacity p_nom",
+                    "Unit": "hours" },
+                   {"Name": "efficiency_store",
+                    "Description": "Efficiency of storage on the way into the storage",
+                    "Unit": "per unit" },                   
+                   {"Name": "efficiency_dispatch",
+                    "Description": "Efficiency of storage on the way out of the storage",
+                    "Unit": "per unit" },
+                   {"Name": "standing_loss",
+                    "Description": "Losses per hour to state of charge",
+                    "Unit": "per unit" }],
+"Changes":[
+                   {"Name": "Mario Kropshofer",
+                    "Mail": "mario.kropshofer2@stud.fh-flensburg.de",
+                    "Date":  "04.10.2016",
+                    "Comment": "..." }, 
+                   {"Name": "Ilka Cussmann",
+                    "Mail": "ilka.cussmann@hs-flensburg.de",
+                    "Date":  "26.10.2016",
+                    "Comment": "Completed json-string" }
+                  ],
+"ToDo": ["add licence"],
+"Licence": ["..."],
+"Instructions for proper use": ["..."]
+}';
+
+
 CREATE TABLE calc_ego_hv_powerflow.temp_resolution
 (
   temp_id bigint NOT NULL,
@@ -391,6 +614,45 @@ CREATE TABLE calc_ego_hv_powerflow.temp_resolution
 WITH (
   OIDS=FALSE
 );
+
+COMMENT ON TABLE  calc_ego_hv_powerflow.temp_resolution IS
+'{
+"Name": "temporal resolution hv powerflow",
+"Source": [{
+                  "Name": "open_eGo data-processing",
+                  "URL":  "https://github.com/openego/data_processing" }],
+"Reference date": "...",
+"Date of collection": "...",
+"Original file": "calc_ego_hv_powerflow.sql",
+"Spatial resolution": ["Germany"],
+"Description": ["Temporal resolution of hv powerflow"],
+"Column": [
+                   {"Name": "temp_id",
+                    "Description": "unique id",
+                    "Unit": "" },
+                   {"Name": "timesteps",
+                    "Description": "timestep",
+                    "Unit": "" },
+                   {"Name": "resolution",
+                    "Description": "temporal resolution",
+                    "Unit": "" },
+                   {"Name": "start_time",
+                    "Description": "start time",
+                    "Unit": "" }],
+"Changes":[
+                   {"Name": "Mario Kropshofer",
+                    "Mail": "mario.kropshofer2@stud.fh-flensburg.de",
+                    "Date":  "04.10.2016",
+                    "Comment": "..." },
+                   {"Name": "Ilka Cussmann",
+                    "Mail": "ilka.cussmann@hs-flensburg.de",
+                    "Date":  "26.10.2016",
+                    "Comment": "completed json-string" }
+                  ],
+"ToDo": ["Add licence"],
+"Licence": ["..."],
+"Instructions for proper use": ["..."]
+}';
 
 CREATE TABLE calc_ego_hv_powerflow.transformer
 (
@@ -417,6 +679,86 @@ WITH (
   OIDS=FALSE
 );
 
+COMMENT ON TABLE  calc_ego_hv_powerflow.transformer IS
+'{
+"Name": "Transformer in hv powerflow",
+"Source": [{
+                  "Name": "open_eGo data-processing",
+                  "URL":  "https://github.com/openego/data_processing" }],
+"Reference date": "...",
+"Date of collection": "...",
+"Original file": "calc_ego_hv_powerflow.sql",
+"Spatial resolution": ["Germany"],
+"Description": ["Transformer converts from one AC voltage level to another"],
+"Column": [
+                   {"Name": "scn_name",
+                    "Description": "scenario name",
+                    "Unit": "" },
+                   {"Name": "trafo_id",
+                    "Description": "unique id",
+                    "Unit": "" },
+                   {"Name": "bus0",
+                    "Description": "Name of first bus to which branch is attached",
+                    "Unit": "" },
+                   {"Name": "bus1",
+                    "Description": "Name of second bus to which branch is attached",
+                    "Unit": "" },
+                   {"Name": "x",
+                    "Description": "Series reactance",
+                    "Unit": "Ohm" },
+                   {"Name": "r",
+                    "Description": "Series resistance",
+                    "Unit": "Ohm" },
+                   {"Name": "g",
+                    "Description": "Shunt conductivity",
+                    "Unit": "Siemens" }, 
+                   {"Name": "b",
+                    "Description": "Shunt susceptance",
+                    "Unit": "Siemens" }, 
+                   {"Name": "s_nom",
+                    "Description": "Limit of apparent power which can pass through branch",
+                    "Unit": "MVA" }, 
+                   {"Name": "s_nom_extendable",
+                    "Description": "Switch to allow capacity s_nom to be extended",
+                    "Unit": "" }, 
+                   {"Name": "s_nom_min",
+                    "Description": "If s_nom is extendable, set its minimum value",
+                    "Unit": "MVA" }, 
+                   {"Name": "s_nom_max",
+                    "Description": "If s_nom is extendable in OPF, set its maximum value",
+                    "Unit": "MVA" }, 
+                   {"Name": "tap_ratio",
+                    "Description": "Ratio of per unit voltages at each bus",
+                    "Unit": "" },
+                   {"Name": "phase_shift",
+                    "Description": "Voltage phase angle shift",
+                    "Unit": "degrees" },
+                   {"Name": "capital_cost",
+                    "Description": "Capital cost of extending s_nom by 1 MVA",
+                    "Unit": "€/MVA" },
+                   {"Name": "geom",
+                    "Description": "geometry",
+                    "Unit": "" },
+                   {"Name": "topo",
+                    "Description": "topology",
+                    "Unit": "" }],
+"Changes":[
+                   {"Name": "Mario Kropshofer",
+                    "Mail": "mario.kropshofer2@stud.fh-flensburg.de",
+                    "Date":  "04.10.2016",
+                    "Comment": "..." }, 
+
+                   {"Name": "Ilka Cussmann",
+                    "Mail": "ilka.cussmann@hs-flensburg.de",
+                    "Date":  "26.10.2016",
+                    "Comment": "completed json-string" }
+                  ],
+"ToDo": ["Add licence"],
+"Licence": ["..."],
+"Instructions for proper use": ["..."]
+}';
+
+
 --------------------------------------------------------------------
 ---------------------- Time series tables --------------------------
 --------------------------------------------------------------------
@@ -432,6 +774,46 @@ CREATE TABLE calc_ego_hv_powerflow.bus_v_mag_set
 WITH (
   OIDS=FALSE
 );
+
+
+COMMENT ON TABLE  calc_ego_hv_powerflow.bus_v_mag_set IS
+'{
+"Name": "...",
+"Source": [{ 	  "Name": "open_eGo data-processing",
+                  "URL":  "https://github.com/openego/data_processing" }],
+"Reference date": "...",
+"Date of collection": "...",
+"Original file": "...",
+"Spatial resolution": ["Germany"],
+"Description": ["..."],
+"Column": [
+                   {"Name": "scn_name",
+                    "Description": "scenario name",
+                    "Unit": "" },
+                   {"Name": "bus_id",
+                    "Description": "unique id of sorresponding bus",
+                    "Unit": "" },
+                   {"Name": "temp_id",
+                    "Description": "id of temporal resolution",
+                    "Unit": "" },
+                   {"Name": "v_mag_pu_set",
+                    "Description": "Voltage magnitude set point, per unit of v_nom",
+                    "Unit": "per unit" }],
+"Changes":[
+                   {"Name": "Mario Kropshofer",
+                    "Mail": "mario.kropshofer2@stud.fh-flensburg.de",
+                    "Date":  "04.10.2016",
+                    "Comment": "..." },
+                   {"Name": "Ilka Cussmann",
+                    "Mail": "ilka.cussmann@hs-flensburg.de",
+                    "Date":  "26.10.2016",
+                    "Comment": "completed json-string" }
+                  ],
+"ToDo": ["Add licence"],
+"Licence": ["..."],
+"Instructions for proper use": ["..."]
+}';
+
 
 CREATE TABLE calc_ego_hv_powerflow.generator_pq_set
 (
@@ -449,6 +831,56 @@ WITH (
   OIDS=FALSE
 );
 
+
+COMMENT ON TABLE  calc_ego_hv_powerflow.generator_pq_set IS
+'{
+"Name": "Generator time series hv powerflow",
+"Source": [{
+                  "Name": "open_eGo data-processing",
+                  "URL":  "https://github.com/openego/data_processing" }],
+"Reference date": "...",
+"Date of collection": "...",
+"Original file": "...",
+"Spatial resolution": ["Germany"],
+"Description": ["Times series for generators considered in hv powerflow"],
+"Column": [
+                   {"Name": "scn_name",
+                    "Description": "scenario name",
+                    "Unit": "" },
+                   {"Name": "generator_id",
+                    "Description": "id of considered generator",
+                    "Unit": "" },                   
+                   {"Name": "temp_id",
+                    "Description": "id of temporal resolution",
+                    "Unit": "" },
+                   {"Name": "p_set",
+                    "Description": "active power set point",
+                    "Unit": "MW" },
+                   {"Name": "q_set",
+                    "Description": "reactive power set point",
+                    "Unit": "MVar" },
+                   {"Name": "p_min_pu",
+                    "Description": "If control=”variable” this gives the minimum output for each snapshot per unit of p_nom for the OPF",
+                    "Unit": "per unit" },
+                   {"Name": "p_max_pu",
+                    "Description": "If control=”variable” this gives the maximum output for each snapshot per unit of p_nom for the OPF, relevant e.g. if for renewables the power output is limited by the weather",
+                    "Unit": "per unit" }],
+"Changes":[
+                   {"Name": "Mario Kropshofer",
+                    "Mail": "mario.kropshofer2@stud.fh-flensburg.de",
+                    "Date":  "04.10.2016",
+                    "Comment": "..." }, 
+                   {"Name": "Ilka Cussmann",
+                    "Mail": "ilka.cussmann@hs-flensburg.de",
+                    "Date":  "26.10.2016",
+                    "Comment": "completed json-string" }
+                  ],
+"ToDo": ["Add licence"],
+"Licence": ["..."],
+"Instructions for proper use": ["..."]
+}';
+
+
 CREATE TABLE calc_ego_hv_powerflow.load_pq_set
 (
   scn_name character varying NOT NULL DEFAULT 'Status Quo'::character varying,
@@ -462,6 +894,49 @@ CREATE TABLE calc_ego_hv_powerflow.load_pq_set
 WITH (
   OIDS=FALSE
 );
+
+COMMENT ON TABLE  calc_ego_hv_powerflow.load_pq_set IS
+'{
+"Name": "Load time series hv powerflow",
+"Source": [{
+                  "Name": "open_eGo data-processing",
+                  "URL":  "https://github.com/openego/data_processing" }],
+"Reference date": "...",
+"Date of collection": "...",
+"Original file": "...",
+"Spatial resolution": ["Germany"],
+"Description": ["Times series for loads considered in hv powerflow"],
+"Column": [
+                   {"Name": "scn_name",
+                    "Description": "scenario name",
+                    "Unit": "" },
+                   {"Name": "load_id",
+                    "Description": "unique load id",
+                    "Unit": "" },                   
+                   {"Name": "temp_id",
+                    "Description": "id of temporal resolution",
+                    "Unit": "" },
+                   {"Name": "p_set",
+                    "Description": "active power set point",
+                    "Unit": "MW" },
+                   {"Name": "q_set",
+                    "Description": "reactive power set point",
+                    "Unit": "MVar" }],
+"Changes":[
+                   {"Name": "Mario Kropshofer",
+                    "Mail": "mario.kropshofer2@stud.fh-flensburg.de",
+                    "Date":  "04.10.2016",
+                    "Comment": "..." }, 
+		    "Name": "Ilka Cussmann",
+                    "Mail": "ilka.cussmann@hs-flensburg.de",
+                    "Date":  "26.10.2016",
+                    "Comment": "completed json-string" }
+                  ],
+"ToDo": ["Add licence"],
+"Licence": ["..."],
+"Instructions for proper use": ["..."]
+}';
+
 
 CREATE TABLE calc_ego_hv_powerflow.storage_pq_set
 (
@@ -481,6 +956,59 @@ WITH (
   OIDS=FALSE
 );
 
+COMMENT ON TABLE  calc_ego_hv_powerflow.storage_pq_set IS
+'{
+"Name": "Storage time series hv powerflow",
+"Source": [{
+                  "Name": "open_eGo data-processing",
+                  "URL":  "https://github.com/openego/data_processing" }],
+"Reference date": "...",
+"Date of collection": "...",
+"Original file": "...",
+"Spatial resolution": ["Germany"],
+"Description": ["Times series for storage units considered in hv powerflow"],
+"Column": [
+                   {"Name": "scn_name",
+                    "Description": "scenario name",
+                    "Unit": "" },
+                   {"Name": "storage_id",
+                    "Description": "unique storage id",
+                    "Unit": "" },
+                   {"Name": "temp_id",
+                    "Description": "id for temporal resolution",
+                    "Unit": "" },
+                   {"Name": "p_set",
+                    "Description": "active power set point",
+                    "Unit": "MW" },
+                   {"Name": "q_set",
+                    "Description": "reactive power set point",
+                    "Unit": "MVar" }],
+                   {"Name": "p_min_pu",
+                    "Description": "If control=”variable” this gives the minimum output for each snapshot per unit of p_nom for the OPF",
+                    "Unit": "per unit" },
+                   {"Name": "p_max_pu",
+                    "Description": "If control=”variable” this gives the maximum output for each snapshot per unit of p_nom for the OPF",
+                    "Unit": "per unit" }],
+                   {"Name": "soc_set",
+                    "Description": "State of charge set points for snapshots in the OPF",
+                    "Unit": "MWh" },
+                   {"Name": "inflow",
+                    "Description": "Inflow to the state of charge, e.g. due to river inflow in hydro reservoir",
+                    "Unit": "MW" }],
+"Changes":[
+                   {"Name": "Mario Kropshofer",
+                    "Mail": "mario.kropshofer2@stud.fh-flensburg.de",
+                    "Date":  "04.10.2016",
+                    "Comment": "..." }, 
+                    "Name": "Ilka Cussmann",
+                    "Mail": "ilka.cussmann@hs-flensburg.de",
+                    "Date":  "26.10.2016",
+                    "Comment": "completed json-string" }
+                  ],
+"ToDo": ["Add licence"],
+"Licence": ["..."],
+"Instructions for proper use": ["..."]
+}';
 
 -------------------------------------------------------------------
 --------------------------- Grant rights --------------------------
