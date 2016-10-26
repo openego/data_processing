@@ -28,6 +28,48 @@ CREATE INDEX loads_total_idx
   (geom);
 
 
+COMMENT ON TABLE  calc_ego_loads.loads_total IS
+'{
+"Name": "Merged loads",
+"Source": [{
+                  "Name": "open_eGo data-processing",
+                  "URL":  "https://github.com/openego/data_processing" }],
+"Reference date": "2016",
+"Date of collection": "20. October 2016",
+"Original file": "assignment_load_bus.sql",
+"Spatial resolution": ["Germany"],
+"Description": ["Unique identifier are assigned to loads from different voltage levels"],
+"Column": [
+                   {"Name": "un_id",
+                    "Description": "unique identifier",
+                    "Unit": "" },
+                   {"Name": "ssc_id",
+                    "Description": "id for small scale consumer",
+                    "Unit": "" },
+                   {"Name": "lsc_id",
+                    "Description": "id for large scale consumer",
+                    "Unit": "" },
+                   {"Name": "geom",
+                    "Description": "geometry",
+                    "Unit": "" }],
+"Changes":[
+                   {"Name": "Mario Kropshofer",
+                    "Mail": "mario.kropshofer2@stud.fh-flensburg.de",
+                    "Date":  "04.10.2016",
+                    "Comment": "..." }, 
+
+                   {"Name": "IlkaCussmann",
+                    "Mail": "ilka.cussmann@hs-flensburg.de",
+                    "Date":  "26.10.2016",
+                    "Comment": "completed json string" }
+                  ],
+"ToDo": ["Add licence"],
+"Licence": ["..."],
+"Instructions for proper use": ["..."]
+}';
+
+
+
 
 -----
 -- Create table to assign single load areas to a bus
@@ -85,6 +127,50 @@ INSERT INTO calc_ego_loads.pf_load_single (load_id, bus, e_annual)
 INSERT INTO calc_ego_loads.pf_load_single (load_id, bus, e_annual)
 	SELECT un_id, otg_id, consumption
 	FROM calc_ego_loads.large_scale_consumer; 
+
+
+COMMENT ON TABLE  calc_ego_loads.pf_load_single IS
+'{
+"Name": "Single loads for powerflow",
+"Source": [{
+                  "Name": "open_eGo data-processing",
+                  "URL":  "https://github.com/openego/data_processing" }],
+"Reference date": "2016",
+"Date of collection": "20. October 2016",
+"Original file": "assignment_load_bus.sql",
+"Spatial resolution": ["Germany"],
+"Description": ["non aggregated loads powerflow-ready"],
+"Column": [
+                   {"Name": "scn_name",
+                    "Description": "name of scenario",
+                    "Unit": "" },
+                   {"Name": "load_id",
+                    "Description": "id for single load",
+                    "Unit": "" },
+                   {"Name": "bus",
+                    "Description": "id of associated bus",
+                    "Unit": "" },
+                   {"Name": "sign",
+                    "Description": "power sign - negative for loads",
+                    "Unit": "" },
+                   {"Name": "e_annual",
+                    "Description": "annual electricity consumption",
+                    "Unit": "GWh" }],
+"Changes":[
+                   {"Name": "Mario Kropshofer",
+                    "Mail": "mario.kropshofer2@stud.fh-flensburg.de",
+                    "Date":  "04.10.2016",
+                    "Comment": "..." }, 
+                   {"Name": "Ilka Cussmann",
+                    "Mail": "ilka.cussmann@hs-flensburg.de",
+                    "Date":  "26.10.2016",
+                    "Comment": "completed json-string" }
+                  ],
+"ToDo": ["add licence"],
+"Licence": ["..."],
+"Instructions for proper use": ["..."]
+}';
+
 
 -------------
 -- Aggregate load per bus and insert into hv_powerflow schema 
