@@ -26,6 +26,71 @@ WITH (
   OIDS=FALSE
 );
 
+COMMENT ON TABLE  calc_ego_hv_powerflow.scenario_settings IS
+'{
+"Name": "Scenario settings hv powerflow",
+"Source": [{
+                  "Name": "open_eGo data-processing",
+                  "URL":  "https://github.com/openego/data_processing" }],
+"Reference date": "2016",
+"Date of collection": "...",
+"Original file": "calc_ego_hv_powerflow.sql",
+"Spatial resolution": ["Germany"],
+"Description": ["Overview of scenarios for the hv powerflow"],
+"Column": [
+                   {"Name": "scn_name",
+                    "Description": "scenario name",
+                    "Unit": "" },
+                   {"Name": "bus",
+                    "Description": "scenario for bus dataset",
+                    "Unit": "" },                   
+                   {"Name": "bus_v_mag_set",
+                    "Description": "scenario for bus dataset",
+                    "Unit": "" },
+                   {"Name": "generator",
+                    "Description": "scenario for generator dataset",
+                    "Unit": "" },
+                   {"Name": "generator_pq_set",
+                    "Description": "scenario for generator dataset",
+                    "Unit": "" },
+                   {"Name": "line",
+                    "Description": "scenario for line dataset",
+                    "Unit": "" },
+                   {"Name": "load",
+                    "Description": "scenario for load dataset",
+                    "Unit": "" },
+                   {"Name": "load_pq_set",
+                    "Description": "scenario for load dataset",
+                    "Unit": "" },
+                   {"Name": "storage",
+                    "Description": "scenario for storage dataset",
+                    "Unit": "" },
+                   {"Name": "storage_pq_set",
+                    "Description": "scenario for storage dataset",
+                    "Unit": "" },
+                   {"Name": "temp_resolution",
+                    "Description": "scenario for temp_resolution",
+                    "Unit": "" },
+                   {"Name": "transformer",
+                    "Description": "scenario for transformer",
+                    "Unit": "" }],
+"Changes":[
+                   {"Name": "Mario Kropshofer",
+                    "Mail": "mario.kropshofer2@stud.fh-flensburg.de",
+                    "Date":  "04.10.2016",
+                    "Comment": "..." }, 
+
+                   {"Name": "Ilka Cussmann",
+                    "Mail": "ilka.cussmann@hs-flensburg.de",
+                    "Date":  "26.10.2016",
+                    "Comment": "completed json-string" }
+                  ],
+"ToDo": ["add licence"],
+"Licence": ["..."],
+"Instructions for proper use": ["..."]
+}';
+
+
 CREATE TABLE calc_ego_hv_powerflow.source
 (
   source_id bigint NOT NULL,
@@ -37,6 +102,47 @@ CREATE TABLE calc_ego_hv_powerflow.source
 WITH (
   OIDS=FALSE
 );
+
+COMMENT ON TABLE  calc_ego_hv_powerflow.source IS
+'{
+"Name": "Sources hv powerflow ",
+"Source": [{
+                  "Name": "open_eGo data-processing",
+                  "URL":  "https://github.com/openego/data_processing" }],
+"Reference date": "...",
+"Date of collection": "...",
+"Original file": "calc_ego_hv_powerflow.sql",
+"Spatial resolution": ["Germany"],
+"Description": ["Different generation types/sources considered in hv powerflow"],
+"Column": [
+                   {"Name": "source_id",
+                    "Description": "unique source id",
+                    "Unit": "" },
+                   {"Name": "name",
+                    "Description": "source name",
+                    "Unit": "" },                   
+                   {"Name": "co2_emissions",
+                    "Description": "technology specific CO2 emissions ",
+                    "Unit": "tonnes/MWh" },
+                   {"Name": "commentary",
+                    "Description": "...",
+                    "Unit": "" }],
+"Changes":[
+                   {"Name": "Mario Kropshofer",
+                    "Mail": "mario.kropshofer2@stud.fh-flensburg.de",
+                    "Date":  "04.10.2016",
+                    "Comment": "..." },
+
+                   {"Name": "Ilka Cussmann",
+                    "Mail": "ilka.cussmann@hs-flensburg.de",
+                    "Date":  "26.10.2016",
+                    "Comment": "completed json-string" } 
+                  ],
+"ToDo": ["add licence"],
+"Licence": ["..."],
+"Instructions for proper use": ["..."]
+}';
+
 
 CREATE TABLE calc_ego_hv_powerflow.bus
 (
@@ -52,6 +158,55 @@ CREATE TABLE calc_ego_hv_powerflow.bus
 WITH (
   OIDS=FALSE
 );
+
+COMMENT ON TABLE  calc_ego_hv_powerflow.bus IS
+'{
+"Name": "hv powerflow bus",
+"Source": [{
+                  "Name": "open_eGo data-processing",
+                  "URL":  "https://github.com/openego/data_processing" }],
+"Reference date": "...",
+"Date of collection": "...",
+"Original file": "calc_ego_hv_powerflow.sql",
+"Spatial resolution": ["Germany"],
+"Description": ["Bus considered in hv powerflow calculation"],
+"Column": [
+                   {"Name": "scn_name",
+                    "Description": "scenario name",
+                    "Unit": "" },
+                   {"Name": "bus_id",
+                    "Description": " unique id for bus, equivalent to id from osmtgmod",
+                    "Unit": "" },
+                   {"Name": "v_nom",
+                    "Description": "nominal voltage",
+                    "Unit": "kV" },
+                   {"Name": "current_type",
+                    "Description": "current type - AC or DC",
+                    "Unit": "" },
+                   {"Name": "v_mag_pu_min",
+                    "Description": "Minimum desired voltage, per unit of v_nom",
+                    "Unit": "per unit" },
+                   {"Name": "v_mag_pu_max",
+                    "Description": "Maximum desired voltage, per unit of v_nom",
+                    "Unit": "per unit" },
+                   {"Name": "geom",
+                    "Description": "geometry of bus",
+                    "Unit": "..." }],
+"Changes":[
+                   {"Name": "Mario Kropshofer",
+                    "Mail": "mario.kropshofer2@stud.fh-flensburg.de",
+                    "Date":  "04.10.2016",
+                    "Comment": "..." }, 
+                   {"Name": "Ilka Cussmann",
+                    "Mail": "ilka.cussmann@hs-flensburg.de",
+                    "Date":  "26.10.2016",
+                    "Comment": "completed json-String" }
+                  ],
+"ToDo": ["add licence"],
+"Licence": ["..."],
+"Instructions for proper use": ["..."]
+}';
+
 
 
 CREATE TABLE calc_ego_hv_powerflow.generator
@@ -79,6 +234,78 @@ CREATE TABLE calc_ego_hv_powerflow.generator
 WITH (
   OIDS=FALSE
 );
+
+COMMENT ON TABLE  calc_ego_hv_powerflow.generator IS
+'{
+"Name": "Generator in hv powerflow",
+"Source": [{
+                  "Name": "open_eGo data-processing",
+                  "URL":  "https://github.com/openego/data_processing" }],
+"Reference date": "...",
+"Date of collection": "...",
+"Original file": "calc_ego_hv_powerflow.sql",
+"Spatial resolution": ["Germany"],
+"Description": ["Generators considered in hv powerflow"],
+"Column": [
+                   {"Name": "scn_name",
+                    "Description": "scenario name",
+                    "Unit": "" },
+                   {"Name": "generator_id",
+                    "Description": "unique id for generators",
+                    "Unit": "" },                   
+                   {"Name": "bus",
+                    "Description": "id of associated bus",
+                    "Unit": "" },
+                   {"Name": "dispatch",
+                    "Description": "Controllability of active power dispatch, must be “flexible” or “variable”.",
+                    "Unit": "" },
+                   {"Name": "control",
+                    "Description": "P,Q,V control strategy, must be “PQ”, “PV” or “Slack”.",
+                    "Unit": "" },
+                   {"Name": "p_nom",
+                    "Description": "Nominal power",
+                    "Unit": "MW" },
+                   {"Name": "p_nom_extendable",
+                    "Description": "Switch to allow capacity p_nom to be extended",
+                    "Unit": "" },
+                   {"Name": "p_nom_min",
+                    "Description": "...",
+                    "Unit": "" },
+                   {"Name": "p_nom_max",
+                    "Description": "...",
+                    "Unit": "" },
+                   {"Name": "p_min_pu_fixed",
+                    "Description": "...",
+                    "Unit": "" },
+                   {"Name": "p_max_pu_fixed",
+                    "Description": "...",
+                    "Unit": "" },
+                   {"Name": "sign",
+                    "Description": "...",
+                    "Unit": "" },
+                   {"Name": "source",
+                    "Description": "...",
+                    "Unit": "" },
+                   {"Name": "marginal_cost",
+                    "Description": "...",
+                    "Unit": "" },
+                   {"Name": "capital_cost",
+                    "Description": "...",
+                    "Unit": "" },
+                   {"Name": "efficiency",
+                    "Description": "...",
+                    "Unit": "..." }],
+"Changes":[
+                   {"Name": "Mario Kropshofer",
+                    "Mail": "mario.kropshofer2@stud.fh-flensburg.de",
+                    "Date":  "04.10.2016",
+                    "Comment": "..." }
+                  ],
+"ToDo": ["Please complete"],
+"Licence": ["..."],
+"Instructions for proper use": ["..."]
+}';
+
 
 CREATE TABLE calc_ego_hv_powerflow.line
 (
