@@ -98,6 +98,40 @@ ALTER TABLE calc_ego_substation.ego_deu_voronoi_ehv
 ALTER TABLE calc_ego_substation.ego_deu_voronoi_ehv
   OWNER TO oeuser;
 
+COMMENT ON TABLE  calc_ego_substation.ego_deu_voronoi_ehv IS
+'{
+"Name": "Voronoi polygons for ehv substations",
+"Source": [{
+                  "Name": "open_eGo data-processing",
+                  "URL":  "https://github.com/openego/data_processing" }],
+"Reference date": "2016",
+"Date of collection": "...",
+"Original file": "voronoi_ehv.sql",
+"Spatial resolution": ["Germany"],
+"Description": ["Voronoi cells calculated on the basis of ehv substations"],
+"Column": [
+                   {"Name": "geom",
+                    "Description": "geometry",
+                    "Unit": "" },
+                   {"Name": "subst_id",
+                    "Description": "unique id of ehv-substations",
+                    "Unit": "" }],
+"Changes":[
+                   {"Name": "Mario Kropshofer",
+                    "Mail": "mario.kropshofer2@stud.fh-flensburg.de",
+                    "Date":  "04.10.2016",
+                    "Comment": "..." }, 
+
+                   {"Name": "Ilka Cussmann",
+                    "Mail": "ilka.cussmann@hs-flensburg.de",
+                    "Date":  "26.10.2016",
+                    "Comment": "completed json-string" }
+                  ],
+"ToDo": ["Add licence"],
+"Licence": ["..."],
+"Instructions for proper use": ["..."]
+}';
+
 -- Scenario eGo data processing
 INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
 	SELECT	'0.1' AS version,

@@ -89,6 +89,41 @@ ALTER TABLE calc_renpass_gis.voronoi_weatherpoint
 ALTER TABLE calc_renpass_gis.voronoi_weatherpoint
   OWNER TO oeuser;
 
+
+COMMENT ON TABLE  calc_renpass_gis.voronoi_weatherpoint IS
+'{
+"Name": "Voronoi weatherpoints",
+"Source": [{
+                  "Name": "open_eGo data-processing",
+                  "URL":  "https://github.com/openego/data_processing" }],
+"Reference date": "...",
+"Date of collection": "...",
+"Original file": "...",
+"Spatial resolution": ["Germany"],
+"Description": ["Voronoi cells calculated on the basis of weatherpoints from renpassGIS"],
+"Column": [
+                   {"Name": "geom",
+                    "Description": "geometry",
+                    "Unit": "" },
+                   {"Name": "id",
+                    "Description": "unique id",
+                    "Unit": "" }],
+"Changes":[
+                   {"Name": "Mario Kropshofer",
+                    "Mail": "mario.kropshofer2@stud.fh-flensburg.de",
+                    "Date":  "04.10.2016",
+                    "Comment": "..." }, 
+                   {"Name": "Ilka Cussmann",
+                    "Mail": "ilka.cussmann@hs-flensburg.de",
+                    "Date":  "26.10.2016",
+                    "Comment": "completed json-string" }
+                  ],
+"ToDo": ["add licence"],
+"Licence": ["..."],
+"Instructions for proper use": ["..."]
+}';
+
+
 -- Scenario eGo data processing
 INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
 	SELECT	'0.1' AS version,
