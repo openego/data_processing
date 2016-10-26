@@ -1,23 +1,13 @@
 ﻿------------
---- nep_2015_scenario_capacities
+--- ego_nep_2015_scenario_capacities
 ------------
 
-CREATE SCHEMA orig_scenario_data
-  AUTHORIZATION oeuser;
-
-GRANT ALL ON SCHEMA orig_scenario_data TO oeuser WITH GRANT OPTION;
-
-ALTER DEFAULT PRIVILEGES IN SCHEMA orig_scenario_data
-    GRANT INSERT, SELECT, UPDATE, DELETE, TRUNCATE, REFERENCES, TRIGGER ON TABLES
-    TO oeuser;
-
-ALTER DEFAULT PRIVILEGES IN SCHEMA orig_scenario_data
-    GRANT SELECT ON TABLES
-    TO oerest;
 
 -- Create table
 
-CREATE TABLE orig_scenario_data.nep_2015_scenario_capacities (
+DROP TABLE IF EXISTS model_draft.ego_nep_2015_scenario_capacities CASCADE;
+
+CREATE TABLE model_draft.ego_nep_2015_scenario_capacities (
     state character(50),            -- Name of federal state 
     generation_type character(25) NOT NULL,    -- Type of fuel or technology
     capacity numeric(15),         -- Electrical capacity in MW
@@ -26,17 +16,10 @@ CREATE TABLE orig_scenario_data.nep_2015_scenario_capacities (
    
 );
 
-ALTER TABLE orig_scenario_data.nep_2015_scenario_capacities
-  OWNER TO oeuser;
-  
-GRANT ALL ON TABLE orig_scenario_data.nep_2015_scenario_capacities TO oeuser;
-GRANT SELECT, UPDATE, INSERT ON TABLE orig_scenario_data.nep_2015_scenario_capacities TO oerest;
-
-
 -- Insert data into table
 -- ToDo check data 
 
-INSERT INTO orig_scenario_data.nep_2015_scenario_capacities(
+INSERT INTO model_draft.ego_nep_2015_scenario_capacities(
             state, generation_type, capacity, nuts, scenario_name)
     VALUES 
 ('Baden-Württemberg','gas','2900','DE1','B12035/B22035'),
@@ -262,7 +245,51 @@ INSERT INTO orig_scenario_data.nep_2015_scenario_capacities(
 ('Niedersachsen','other_renewable','200','DE9','B12035/B22035');
 
 --
-ALTER TABLE ONLY  orig_scenario_data.nep_2015_scenario_capacities
-    ADD CONSTRAINT nep_2015_scenario_capacities_pkey PRIMARY KEY (scenario_name, nuts,  generation_type );
+ALTER TABLE ONLY model_draft.ego_nep_2015_scenario_capacities
+    ADD CONSTRAINT ego_nep_2015_scenario_capacities_pkey PRIMARY KEY (scenario_name, nuts,  generation_type );
 --
+--
+-- Set metadata 
+-- 
+COMMENT ON TABLE  model_draft.ego_nep_2015_scenario_capacities IS
+'{
+"Name": "NEP 2015, Szenario Capacities of Germany",
+"Source": [{
+                  "Name": "NETZENTWICKLUNGSPLAN STROM 2025, VERSION 2015",
+                  "URL":  "http://www.netzentwicklungsplan.de/_NEP_file_transferNEP_2025_1_Entwurf_Teil1.pdf" }],
+"Reference date": "30.10.2015",
+"Date of collection": "30.08.2016",
+"Original file": "http://www.netzentwicklungsplan.de/_NEP_file_transfer/NEP_2025_1_Entwurf_Teil1.pdf",
+"Spatial resolution": ["Germany"],
+"Description": ["This Data set incluedes all electrical Capacities and energy source per federate state in Germany. The set inclueds the scenario B1 2035 / B2 2035 (see NEP 2015, p. 44) "],
+"Column": [
+                   {"Name": "state",
+                    "Description": "Name of federate state",
+                    "Unit": "" },  
+                   {"Name": "generator_type",
+                    "Description": "Name of generator typ / energy source",
+                    "Unit": "" },
+                   {"Name": "capacity",
+                    "Description": "electrical capacity",
+                    "Unit": "GW" },
+                   {"Name": "nuts",
+                    "Description": "federate state NUTS ID",
+                    "Unit": "" },
+                   {"Name": "scenario_name",
+                    "Description": "NEP scenario name",
+                    "Unit": "" }],
+"Changes":[
+                   {"Name": "Wolf-Dieter Bunke",
+                    "Mail": "wolf-dieter.bunke@uni-flensburg.de",
+                    "Date":  "10.10.2016",
+                    "Comment": "" }
+                  ],
+"ToDo": ["singel capacities need to be checked, Check licence"],
+"Licence": ["..."],
+"Instructions for proper use": ["..."]
+}';
+
+
+
+
 
