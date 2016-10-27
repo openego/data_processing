@@ -507,7 +507,7 @@ ALTER TABLE		openstreetmap.osm_deu_polygon_urban_sector_4_agricultural_mview OWN
 
 -- Scenario eGo data processing
 INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
-	SELECT	'0.1' AS version,
+	SELECT	'0.2' AS version,
 		'openstreetmap' AS schema_name,
 		'osm_deu_polygon_urban_sector_4_agricultural_mview' AS table_name,
 		'setup_osm_landuse.sql' AS script_name,

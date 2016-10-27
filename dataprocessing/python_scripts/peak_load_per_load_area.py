@@ -94,9 +94,9 @@ if __name__ == '__main__':
 
     la_index_col = 'id'
 
-    schema = 'calc_ego_loads'
-    table = 'ego_deu_consumption'
-    target_table = 'calc_ego_peak_load_test'
+    schema = 'model_draft'
+    table = 'ego_demand_load_area_peak_load'
+    target_table = 'ego_demand_load_area_peak_load'
     year = 2013
     db_group = 'oeuser'
 

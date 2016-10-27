@@ -16,8 +16,8 @@ import time
 
 def demand_per_mv_grid_district():
     year = 2013
-    schema = 'calc_ego_loads'
-    target_table = 'ego_demand_per_transition_point'
+    schema = 'model_draft'
+    target_table = 'ego_demand_hvmv_demand'
     db_group = 'oeuser'
 
     columns_names = {'h0': 'residential',
@@ -67,8 +67,11 @@ def demand_per_mv_grid_district():
     annual_demand_df = annual_demand_df.loc[~pd.isnull(annual_demand_df.index)]
 
 
-    large_scale_industrial = pd.read_sql_table('large_scale_consumer', conn, schema,
-                                               index_col='id')
+    large_scale_industrial = pd.read_sql_table(
+        'ego_demand_hv_largescaleconsumer',
+        conn,
+        schema,
+        index_col='id')
 
 
     # add extra industrial demand ontop of MV industrial demand
