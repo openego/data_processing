@@ -1,11 +1,11 @@
 -- Add Dummy points 
 INSERT INTO calc_renpass_gis.parameter_solar_feedin (year, geom)
 SELECT '9999', ST_TRANSFORM(geom,4326)
-FROM calc_ego_substation.substations_dummy;
+FROM model_draft.ego_grid_substation_dummy;
 
 
 -- Execute voronoi algorithm with weather points
-DROP TABLE IF EXISTS calc_renpass_gis.voronoi_weatherpoint CASCADE;
+DROP TABLE IF EXISTS model_draft.renpassgis_economic_weatherpoint_voronoi CASCADE;
 WITH 
     -- Sample set of points to work with
     Sample AS (SELECT   ST_SetSRID(ST_Union(pts.geom), 0) AS geom
@@ -35,7 +35,7 @@ WITH
         ) c
     )
 SELECT ST_SetSRID((ST_Dump(ST_Polygonize(ST_Node(ST_LineMerge(ST_Union(v, (SELECT ST_ExteriorRing(ST_ConvexHull(ST_Union(ST_Union(ST_Buffer(edge,20),ct)))) FROM Edges))))))).geom, 2180) geom
-INTO calc_renpass_gis.voronoi_weatherpoint		  -- INPUT 2/2
+INTO model_draft.renpassgis_economic_weatherpoint_voronoi		  -- INPUT 2/2
 FROM (
     SELECT  -- Create voronoi edges and reduce to a multilinestring
         ST_LineMerge(ST_Union(ST_MakeLine(
@@ -59,38 +59,38 @@ FROM (
 
 -- "Create Index GIST (geom)"   (OK!) 11.000ms =0
 CREATE INDEX	voronoi_weatherpoint_geom_idx
-	ON	calc_renpass_gis.voronoi_weatherpoint
+	ON	model_draft.renpassgis_economic_weatherpoint_voronoi
 	USING	GIST (geom);
 
 -- "Set id and SRID"   (OK!) -> 100ms =0
-ALTER TABLE calc_renpass_gis.voronoi_weatherpoint
+ALTER TABLE model_draft.renpassgis_economic_weatherpoint_voronoi
 	ADD COLUMN id integer,
 	ALTER COLUMN geom TYPE geometry(POLYGON,4326) USING ST_SETSRID(geom,4326);
 
-UPDATE calc_renpass_gis.voronoi_weatherpoint a
+UPDATE model_draft.renpassgis_economic_weatherpoint_voronoi a
 	SET id = b.gid
 	FROM calc_renpass_gis.parameter_solar_feedin b
 	WHERE ST_Intersects(a.geom, b.geom) =TRUE; 
 
 -- Delete Dummy-points
 
-DELETE FROM calc_renpass_gis.voronoi_weatherpoint 
+DELETE FROM model_draft.renpassgis_economic_weatherpoint_voronoi 
 	WHERE id IN (SELECT gid FROM calc_renpass_gis.parameter_solar_feedin WHERE year = 9999);
 
-DELETE FROM calc_renpass_gis.voronoi_weatherpoint 
+DELETE FROM model_draft.renpassgis_economic_weatherpoint_voronoi 
 	WHERE id IS NULL; 
 
 DELETE FROM calc_renpass_gis.parameter_solar_feedin WHERE year=9999;
 
 -- Set PK and FK 
-ALTER TABLE calc_renpass_gis.voronoi_weatherpoint
+ALTER TABLE model_draft.renpassgis_economic_weatherpoint_voronoi
 	ADD PRIMARY KEY (id);
 
-ALTER TABLE calc_renpass_gis.voronoi_weatherpoint
+ALTER TABLE model_draft.renpassgis_economic_weatherpoint_voronoi
   OWNER TO oeuser;
 
 
-COMMENT ON TABLE  calc_renpass_gis.voronoi_weatherpoint IS
+COMMENT ON TABLE  model_draft.renpassgis_economic_weatherpoint_voronoi IS
 '{
 "Name": "Voronoi weatherpoints",
 "Source": [{
@@ -133,5 +133,5 @@ INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_na
 		COUNT(id)AS entries,
 		'OK' AS status,
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
-FROM	calc_renpass_gis.voronoi_weatherpoint;
+FROM	model_draft.renpassgis_economic_weatherpoint_voronoi;
 
