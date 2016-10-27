@@ -3,17 +3,17 @@
 ----------------------------------------------------------
 
 -- Add Dummy points 
-INSERT INTO calc_ego_substation.ego_deu_substations_ehv (subst_name, point, subst_id, otg_id, lon, lat, polygon, osm_id, osm_www, status)
+INSERT INTO model_draft.ego_grid_ehv_substation (subst_name, point, subst_id, otg_id, lon, lat, polygon, osm_id, osm_www, status)
 SELECT 'DUMMY', ST_TRANSFORM(geom,4326), subst_id, subst_id, ST_X (ST_Transform (geom, 4326)), ST_Y (ST_Transform (geom, 4326)), 'POLYGON((0 0, 1 0, 1 1, 0 1, 0 0))', 'dummy'||row_number() OVER(), 'dummy', 0
-FROM calc_ego_substation.substations_dummy;
+FROM model_draft.ego_grid_substation_dummy;
 
 
 -- Execute voronoi algorithm with 220 and 380 kV substations
-DROP TABLE IF EXISTS calc_ego_substation.ego_deu_voronoi_ehv CASCADE;
+DROP TABLE IF EXISTS model_draft.ego_grid_ehv_substation_voronoi CASCADE;
 WITH 
     -- Sample set of points to work with
     Sample AS (SELECT   ST_SetSRID(ST_Union(pts.point), 0) AS geom
-		FROM	calc_ego_substation.ego_deu_substations_ehv AS pts
+		FROM	model_draft.ego_grid_ehv_substation AS pts
 		/*WHERE pts.otg_id IS NOT NULL*/),  -- INPUT 1/2, this only includes substations with an otg_id
     -- Build edges and circumscribe points to generate a centroid
     Edges AS (
@@ -40,7 +40,7 @@ WITH
         ) c
     )
 SELECT ST_SetSRID((ST_Dump(ST_Polygonize(ST_Node(ST_LineMerge(ST_Union(v, (SELECT ST_ExteriorRing(ST_ConvexHull(ST_Union(ST_Union(ST_Buffer(edge,20),ct)))) FROM Edges))))))).geom, 2180) geom
-INTO calc_ego_substation.ego_deu_voronoi_ehv		  -- INPUT 2/2
+INTO model_draft.ego_grid_ehv_substation_voronoi		  -- INPUT 2/2
 FROM (
     SELECT  -- Create voronoi edges and reduce to a multilinestring
         ST_LineMerge(ST_Union(ST_MakeLine(
@@ -64,41 +64,41 @@ FROM (
 
 -- "Create Index GIST (geom)"   (OK!) 11.000ms =0
 CREATE INDEX	voronoi_ehv_geom_idx
-	ON	calc_ego_substation.ego_deu_voronoi_ehv
+	ON	model_draft.ego_grid_ehv_substation_voronoi
 	USING	GIST (geom);
 
 -- "Set id and SRID"   (OK!) -> 100ms =0
-ALTER TABLE calc_ego_substation.ego_deu_voronoi_ehv
+ALTER TABLE model_draft.ego_grid_ehv_substation_voronoi
 	ADD COLUMN subst_id integer,
 	ALTER COLUMN geom TYPE geometry(POLYGON,4326) USING ST_SETSRID(geom,4326);
 
-UPDATE calc_ego_substation.ego_deu_voronoi_ehv a
+UPDATE model_draft.ego_grid_ehv_substation_voronoi a
 	SET subst_id = b.subst_id
-	FROM calc_ego_substation.ego_deu_substations_ehv b
+	FROM model_draft.ego_grid_ehv_substation b
 	WHERE ST_Intersects(a.geom, b.point) =TRUE; 
 
 -- Delete Dummy-points from ehv_substations and ehv_voronoi 
 
-DELETE FROM calc_ego_substation.ego_deu_voronoi_ehv 
-	WHERE subst_id IN (SELECT subst_id FROM calc_ego_substation.ego_deu_substations_ehv WHERE subst_name = 'DUMMY');
+DELETE FROM model_draft.ego_grid_ehv_substation_voronoi 
+	WHERE subst_id IN (SELECT subst_id FROM model_draft.ego_grid_ehv_substation WHERE subst_name = 'DUMMY');
 
-DELETE FROM calc_ego_substation.ego_deu_substations_ehv WHERE subst_name='DUMMY';
+DELETE FROM model_draft.ego_grid_ehv_substation WHERE subst_name='DUMMY';
 
 --set unique constraint on subst_id
 
-ALTER TABLE calc_ego_substation.ego_deu_substations_ehv DROP CONSTRAINT IF EXISTS unique_substation;
-ALTER TABLE calc_ego_substation.ego_deu_substations_ehv
+ALTER TABLE model_draft.ego_grid_ehv_substation DROP CONSTRAINT IF EXISTS unique_substation;
+ALTER TABLE model_draft.ego_grid_ehv_substation
 ADD CONSTRAINT unique_substation UNIQUE (subst_id);
 
 -- Set PK and FK 
-ALTER TABLE calc_ego_substation.ego_deu_voronoi_ehv 
-	ADD CONSTRAINT subst_fk FOREIGN KEY (subst_id) REFERENCES calc_ego_substation.ego_deu_substations_ehv (subst_id),
+ALTER TABLE model_draft.ego_grid_ehv_substation_voronoi 
+	ADD CONSTRAINT subst_fk FOREIGN KEY (subst_id) REFERENCES model_draft.ego_grid_ehv_substation (subst_id),
 	ADD PRIMARY KEY (subst_id);
 
-ALTER TABLE calc_ego_substation.ego_deu_voronoi_ehv
+ALTER TABLE model_draft.ego_grid_ehv_substation_voronoi
   OWNER TO oeuser;
 
-COMMENT ON TABLE  calc_ego_substation.ego_deu_voronoi_ehv IS
+COMMENT ON TABLE  model_draft.ego_grid_ehv_substation_voronoi IS
 '{
 "Name": "Voronoi polygons for ehv substations",
 "Source": [{
@@ -141,22 +141,6 @@ INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_na
 		COUNT(subst_id)AS entries,
 		'OK' AS status,
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
-FROM	calc_ego_substation.ego_deu_voronoi_ehv;
+FROM	model_draft.ego_grid_ehv_substation_voronoi;
 
--- Clip voronoi with vg250
-
-/* 
-DROP TABLE IF EXISTS orig_ego.ego_vg250_voronoi_ehv;
-
-SELECT g.id, ST_Intersection ( g.geom, ST_Transform(b.geom,4326)) as geom
-INTO orig_ego.ego_vg250_voronoi_ehv;
-FROM orig_ego.ego_deu_voronoi_ehv; AS g, gis.vg250_sta AS b WHERE gid=9;
-
-ALTER TABLE orig_ego.ego_vg250_voronoi_ehv;
-	ADD PRIMARY KEY (id);
-
-CREATE INDEX	vg250_voronoi_ehv_geom_idx
-	ON	orig_ego.ego_vg250_voronoi_ehv
-	USING	GIST (geom); 
-*/
 
