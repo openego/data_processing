@@ -3,7 +3,7 @@
 ---------- ---------- ----------
 
 DELETE FROM openstreetmap.osm_deu_polygon_urban
-	WHERE gid IN (SELECT polygon_id FROM calc_ego_loads.large_scale_consumer);
+	WHERE gid IN (SELECT polygon_id FROM model_draft.ego_demand_hv_largescaleconsumer);
 
 
 ---------- ---------- ---------- ---------- ---------- ----------
@@ -71,7 +71,7 @@ ALTER TABLE		openstreetmap.ego_deu_loads_osm OWNER TO oeuser;
 
 -- Scenario eGo data processing
 INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
-	SELECT	'0.1' AS version,
+	SELECT	'0.2' AS version,
 		'openstreetmap' AS schema_name,
 		'ego_deu_loads_osm' AS table_name,
 		'process_eGo_osm_loads_industry.sql' AS script_name,

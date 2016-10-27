@@ -7,26 +7,26 @@
 ---------- ---------- ---------- ---------- ---------- ----------
 
 -- "MVIEW with -1"   (OK!) -> 33.00ms =3.177.723
-DROP MATERIALIZED VIEW IF EXISTS	orig_destatis.zensus_population_per_ha_mview CASCADE;
-CREATE MATERIALIZED VIEW         	orig_destatis.zensus_population_per_ha_mview AS
+DROP MATERIALIZED VIEW IF EXISTS	social.zensus_population_per_ha_mview CASCADE;
+CREATE MATERIALIZED VIEW         	social.zensus_population_per_ha_mview AS
 	SELECT	zensus.gid ::integer AS gid,
 		zensus.population ::numeric(10,0) AS population,
 		zensus.geom ::geometry(Point,3035) AS geom
-	FROM	orig_destatis.zensus_population_per_ha AS zensus
+	FROM	social.zensus_population_per_ha AS zensus
 	WHERE	zensus.population >= 0;
 
 -- "Create Index (gid)"   (OK!) -> 1.000ms =0
 CREATE UNIQUE INDEX  	zensus_population_per_ha_mview_gid_idx
-		ON	orig_destatis.zensus_population_per_ha_mview (gid);
+		ON	social.zensus_population_per_ha_mview (gid);
 
 -- "Create Index GIST (geom)"   (OK!) 2.000ms =0
 CREATE INDEX  	zensus_population_per_ha_mview_geom_idx
-    ON    	orig_destatis.zensus_population_per_ha_mview
+    ON    	social.zensus_population_per_ha_mview
     USING     	GIST (geom);
     
 -- "Grant oeuser"   (OK!) -> 100ms =0
-GRANT ALL ON TABLE 	orig_destatis.zensus_population_per_ha_mview TO oeuser WITH GRANT OPTION;
-ALTER TABLE		orig_destatis.zensus_population_per_ha_mview OWNER TO oeuser;
+GRANT ALL ON TABLE 	social.zensus_population_per_ha_mview TO oeuser WITH GRANT OPTION;
+ALTER TABLE		social.zensus_population_per_ha_mview OWNER TO oeuser;
 
 
 
@@ -42,7 +42,7 @@ CREATE TABLE 		orig_destatis.ego_deu_loads_zensus AS
 		zensus.population ::integer AS population,
 		'FALSE' ::boolean AS inside_la,
 		zensus.geom ::geometry(Point,3035) AS geom
-	FROM	orig_destatis.zensus_population_per_ha_mview AS zensus;
+	FROM	social.zensus_population_per_ha_mview AS zensus;
 
 -- "PK"   (OK!) 3.000ms =0
 ALTER TABLE	orig_destatis.ego_deu_loads_zensus
@@ -106,7 +106,7 @@ CREATE INDEX  	ego_deu_loadcluster_geom_grid_idx
 
 -- Scenario eGo data processing
 INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
-	SELECT	'0.1' AS version,
+	SELECT	'0.2' AS version,
 		'orig_destatis' AS schema_name,
 		'ego_deu_loads_zensus' AS table_name,
 		'setup_zensus_population_per_ha.sql' AS script_name,
@@ -240,7 +240,7 @@ DROP MATERIALIZED VIEW IF EXISTS	orig_destatis.zensus_population_per_load_area_s
 CREATE MATERIALIZED VIEW         	orig_destatis.zensus_population_per_load_area_stats_mview AS
 SELECT	'zensus_deu' AS name,
 	SUM(zensus.population) AS people
-FROM	orig_destatis.zensus_population_per_ha_mview AS zensus
+FROM	social.zensus_population_per_ha_mview AS zensus
 	UNION ALL
 SELECT	'zensus_loadpoints' AS name,
 	SUM(lp.population) AS people
