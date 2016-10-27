@@ -1,12 +1,9 @@
-DROP SCHEMA IF EXISTS calc_ego_hv_powerflow CASCADE;
-CREATE SCHEMA calc_ego_hv_powerflow
-  AUTHORIZATION oeuser;
-
 --------------------------------------------------------------------
 -------------------- Static component tables -----------------------
 --------------------------------------------------------------------
+DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_scenario_settings; 
 
-CREATE TABLE calc_ego_hv_powerflow.scenario_settings
+CREATE TABLE model_draft.ego_grid_pf_hv_scenario_settings
 (
   scn_name character varying NOT NULL DEFAULT 'Status Quo'::character varying,
   bus character varying,
@@ -26,7 +23,7 @@ WITH (
   OIDS=FALSE
 );
 
-COMMENT ON TABLE  calc_ego_hv_powerflow.scenario_settings IS
+COMMENT ON TABLE  model_draft.ego_grid_pf_hv_scenario_settings IS
 '{
 "Name": "Scenario settings hv powerflow",
 "Source": [{
@@ -91,7 +88,8 @@ COMMENT ON TABLE  calc_ego_hv_powerflow.scenario_settings IS
 }';
 
 
-CREATE TABLE calc_ego_hv_powerflow.source
+DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_source; 
+CREATE TABLE model_draft.ego_grid_pf_hv_source
 (
   source_id bigint NOT NULL,
   name text, -- Unit: n/a...
@@ -103,7 +101,7 @@ WITH (
   OIDS=FALSE
 );
 
-COMMENT ON TABLE  calc_ego_hv_powerflow.source IS
+COMMENT ON TABLE  model_draft.ego_grid_pf_hv_source IS
 '{
 "Name": "Sources hv powerflow ",
 "Source": [{
@@ -143,8 +141,8 @@ COMMENT ON TABLE  calc_ego_hv_powerflow.source IS
 "Instructions for proper use": ["..."]
 }';
 
-
-CREATE TABLE calc_ego_hv_powerflow.bus
+DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_bus; 
+CREATE TABLE model_draft.ego_grid_pf_hv_bus
 (
   scn_name character varying NOT NULL DEFAULT 'Status Quo'::character varying,
   bus_id bigint NOT NULL, -- Unit: n/a...
@@ -159,7 +157,7 @@ WITH (
   OIDS=FALSE
 );
 
-COMMENT ON TABLE  calc_ego_hv_powerflow.bus IS
+COMMENT ON TABLE  model_draft.ego_grid_pf_hv_bus IS
 '{
 "Name": "hv powerflow bus",
 "Source": [{
@@ -208,8 +206,8 @@ COMMENT ON TABLE  calc_ego_hv_powerflow.bus IS
 }';
 
 
-
-CREATE TABLE calc_ego_hv_powerflow.generator
+DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_generator; 
+CREATE TABLE model_draft.ego_grid_pf_hv_generator
 (
   scn_name character varying NOT NULL DEFAULT 'Status Quo'::character varying,
   generator_id bigint NOT NULL, -- Unit: n/a...
@@ -228,14 +226,14 @@ CREATE TABLE calc_ego_hv_powerflow.generator
   capital_cost double precision, -- Unit: currency/MW...
   efficiency double precision, -- Unit: per unit...
   CONSTRAINT generator_data_pkey PRIMARY KEY (generator_id, scn_name),
-  CONSTRAINT generator_data_source_fkey FOREIGN KEY (source) REFERENCES calc_ego_hv_powerflow.source (source_id)
+  CONSTRAINT generator_data_source_fkey FOREIGN KEY (source) REFERENCES model_draft.ego_grid_pf_hv_source (source_id)
   
 )
 WITH (
   OIDS=FALSE
 );
 
-COMMENT ON TABLE  calc_ego_hv_powerflow.generator IS
+COMMENT ON TABLE  model_draft.ego_grid_pf_hv_generator IS
 '{
 "Name": "Generator in hv powerflow",
 "Source": [{
@@ -310,8 +308,8 @@ COMMENT ON TABLE  calc_ego_hv_powerflow.generator IS
 "Instructions for proper use": ["..."]
 }';
 
-
-CREATE TABLE calc_ego_hv_powerflow.line
+DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_line; 
+CREATE TABLE model_draft.ego_grid_pf_hv_line
 (
   scn_name character varying NOT NULL DEFAULT 'Status Quo'::character varying,
   line_id bigint NOT NULL, -- Unit: n/a...
@@ -338,7 +336,7 @@ WITH (
   OIDS=FALSE
 );
 
-COMMENT ON TABLE  calc_ego_hv_powerflow.line IS
+COMMENT ON TABLE  model_draft.ego_grid_pf_hv_line IS
 '{
 "Name": "Lines in hv powerflow",
 "Source": [{
@@ -422,8 +420,8 @@ COMMENT ON TABLE  calc_ego_hv_powerflow.line IS
 "Instructions for proper use": ["..."]
 }';
 
-
-CREATE TABLE calc_ego_hv_powerflow.load
+DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_load; 
+CREATE TABLE model_draft.ego_grid_pf_hv_load
 (
   scn_name character varying NOT NULL DEFAULT 'Status Quo'::character varying,
   load_id bigint NOT NULL, -- Unit: n/a...
@@ -436,7 +434,7 @@ WITH (
   OIDS=FALSE
 );
 
-COMMENT ON TABLE  calc_ego_hv_powerflow.load IS
+COMMENT ON TABLE  model_draft.ego_grid_pf_hv_load IS
 '{
 "Name": "Load in hv powerflow",
 "Source": [{
@@ -478,7 +476,9 @@ COMMENT ON TABLE  calc_ego_hv_powerflow.load IS
 "Instructions for proper use": ["..."]
 }';
 
-CREATE TABLE calc_ego_hv_powerflow.storage
+
+DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_storage; 
+CREATE TABLE model_draft.ego_grid_pf_hv_storage
 (
   scn_name character varying NOT NULL DEFAULT 'Status Quo'::character varying,
   storage_id bigint NOT NULL, -- Unit: n/a...
@@ -503,13 +503,13 @@ CREATE TABLE calc_ego_hv_powerflow.storage
   efficiency_dispatch double precision, -- Unit: per unit...
   standing_loss double precision, -- Unit: per unit...
   CONSTRAINT storage_data_pkey PRIMARY KEY (storage_id, scn_name),
-  CONSTRAINT storage_data_source_fkey FOREIGN KEY (source) REFERENCES calc_ego_hv_powerflow.source (source_id)
+  CONSTRAINT storage_data_source_fkey FOREIGN KEY (source) REFERENCES model_draft.ego_grid_pf_hv_source (source_id)
 )
 WITH (
   OIDS=FALSE
 );
 
-COMMENT ON TABLE  calc_ego_hv_powerflow.storage IS
+COMMENT ON TABLE  model_draft.ego_grid_pf_hv_storage IS
 '{
 "Name": "storage in hv powerflow",
 "Source": [{
@@ -603,19 +603,20 @@ COMMENT ON TABLE  calc_ego_hv_powerflow.storage IS
 }';
 
 
-CREATE TABLE calc_ego_hv_powerflow.temp_resolution
+DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_temp_resolution; 
+CREATE TABLE model_draft.ego_grid_pf_hv_temp_resolution
 (
   temp_id bigint NOT NULL,
   timesteps bigint NOT NULL,
-  resolution text, -- example: h, 15min...
-  start_time timestamp without time zone, -- style: YYYY-MM-DD HH:MM:SS
+  resolution text, 
+  start_time timestamp without time zone,
   CONSTRAINT temp_resolution_pkey PRIMARY KEY (temp_id)
 )
 WITH (
   OIDS=FALSE
 );
 
-COMMENT ON TABLE  calc_ego_hv_powerflow.temp_resolution IS
+COMMENT ON TABLE  model_draft.ego_grid_pf_hv_temp_resolution IS
 '{
 "Name": "temporal resolution hv powerflow",
 "Source": [{
@@ -637,7 +638,7 @@ COMMENT ON TABLE  calc_ego_hv_powerflow.temp_resolution IS
                     "Description": "temporal resolution",
                     "Unit": "" },
                    {"Name": "start_time",
-                    "Description": "start time",
+                    "Description": "start time with style: YYYY-MM-DD HH:MM:SS",
                     "Unit": "" }],
 "Changes":[
                    {"Name": "Mario Kropshofer",
@@ -654,7 +655,9 @@ COMMENT ON TABLE  calc_ego_hv_powerflow.temp_resolution IS
 "Instructions for proper use": ["..."]
 }';
 
-CREATE TABLE calc_ego_hv_powerflow.transformer
+
+DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_transformer; 
+CREATE TABLE model_draft.ego_grid_pf_hv_transformer
 (
   scn_name character varying NOT NULL DEFAULT 'Status Quo'::character varying,
   trafo_id bigint NOT NULL, -- Unit: n/a...
@@ -679,7 +682,7 @@ WITH (
   OIDS=FALSE
 );
 
-COMMENT ON TABLE  calc_ego_hv_powerflow.transformer IS
+COMMENT ON TABLE  model_draft.ego_grid_pf_hv_transformer IS
 '{
 "Name": "Transformer in hv powerflow",
 "Source": [{
@@ -762,21 +765,23 @@ COMMENT ON TABLE  calc_ego_hv_powerflow.transformer IS
 --------------------------------------------------------------------
 ---------------------- Time series tables --------------------------
 --------------------------------------------------------------------
-CREATE TABLE calc_ego_hv_powerflow.bus_v_mag_set
+
+DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_bus_v_mag_set; 
+CREATE TABLE model_draft.ego_grid_pf_hv_bus_v_mag_set
 (
   scn_name character varying NOT NULL DEFAULT 'Status Quo'::character varying,
   bus_id bigint NOT NULL,
   temp_id integer NOT NULL,
   v_mag_pu_set double precision[], -- Unit: per unit...
   CONSTRAINT bus_v_mag_set_pkey PRIMARY KEY (bus_id, temp_id, scn_name),
-  CONSTRAINT bus_v_mag_set_temp_fkey FOREIGN KEY (temp_id) REFERENCES calc_ego_hv_powerflow.temp_resolution (temp_id)
+  CONSTRAINT bus_v_mag_set_temp_fkey FOREIGN KEY (temp_id) REFERENCES model_draft.ego_grid_pf_hv_temp_resolution (temp_id)
 )
 WITH (
   OIDS=FALSE
 );
 
 
-COMMENT ON TABLE  calc_ego_hv_powerflow.bus_v_mag_set IS
+COMMENT ON TABLE  model_draft.ego_grid_pf_hv_bus_v_mag_set IS
 '{
 "Name": "...",
 "Source": [{ 	  "Name": "open_eGo data-processing",
@@ -815,7 +820,8 @@ COMMENT ON TABLE  calc_ego_hv_powerflow.bus_v_mag_set IS
 }';
 
 
-CREATE TABLE calc_ego_hv_powerflow.generator_pq_set
+DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_generator_pq_set; 
+CREATE TABLE model_draft.ego_grid_pf_hv_generator_pq_set
 (
   scn_name character varying NOT NULL DEFAULT 'Status Quo'::character varying,
   generator_id bigint NOT NULL,
@@ -825,14 +831,14 @@ CREATE TABLE calc_ego_hv_powerflow.generator_pq_set
   p_min_pu double precision[], -- Unit: per unit...
   p_max_pu double precision[], -- Unit: per unit...
   CONSTRAINT generator_pq_set_pkey PRIMARY KEY (generator_id, temp_id, scn_name),
-  CONSTRAINT generator_pq_set_temp_fkey FOREIGN KEY (temp_id) REFERENCES calc_ego_hv_powerflow.temp_resolution (temp_id)
+  CONSTRAINT generator_pq_set_temp_fkey FOREIGN KEY (temp_id) REFERENCES model_draft.ego_grid_pf_hv_temp_resolution (temp_id)
 )
 WITH (
   OIDS=FALSE
 );
 
 
-COMMENT ON TABLE  calc_ego_hv_powerflow.generator_pq_set IS
+COMMENT ON TABLE  model_draft.ego_grid_pf_hv_generator_pq_set IS
 '{
 "Name": "Generator time series hv powerflow",
 "Source": [{
@@ -881,7 +887,9 @@ COMMENT ON TABLE  calc_ego_hv_powerflow.generator_pq_set IS
 }';
 
 
-CREATE TABLE calc_ego_hv_powerflow.load_pq_set
+
+DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_load_pq_set; 
+CREATE TABLE model_draft.ego_grid_pf_hv_load_pq_set
 (
   scn_name character varying NOT NULL DEFAULT 'Status Quo'::character varying,
   load_id bigint NOT NULL,
@@ -889,13 +897,13 @@ CREATE TABLE calc_ego_hv_powerflow.load_pq_set
   p_set double precision[], -- Unit: MW...
   q_set double precision[], -- Unit: MVar...
   CONSTRAINT load_pq_set_pkey PRIMARY KEY (load_id, temp_id, scn_name),
-  CONSTRAINT load_pq_set_temp_fkey FOREIGN KEY (temp_id) REFERENCES calc_ego_hv_powerflow.temp_resolution (temp_id)
+  CONSTRAINT load_pq_set_temp_fkey FOREIGN KEY (temp_id) REFERENCES model_draft.ego_grid_pf_hv_temp_resolution (temp_id)
 )
 WITH (
   OIDS=FALSE
 );
 
-COMMENT ON TABLE  calc_ego_hv_powerflow.load_pq_set IS
+COMMENT ON TABLE  model_draft.ego_grid_pf_hv_load_pq_set IS
 '{
 "Name": "Load time series hv powerflow",
 "Source": [{
@@ -938,7 +946,9 @@ COMMENT ON TABLE  calc_ego_hv_powerflow.load_pq_set IS
 }';
 
 
-CREATE TABLE calc_ego_hv_powerflow.storage_pq_set
+
+DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_storage_pq_set; 
+CREATE TABLE model_draft.ego_grid_pf_hv_storage_pq_set
 (
   scn_name character varying NOT NULL DEFAULT 'Status Quo'::character varying,
   storage_id bigint NOT NULL,
@@ -950,13 +960,13 @@ CREATE TABLE calc_ego_hv_powerflow.storage_pq_set
   soc_set double precision[], -- Unit: MWh...
   inflow double precision[], -- Unit: MW...
     CONSTRAINT storage_pq_set_pkey PRIMARY KEY (storage_id, temp_id, scn_name),
-  CONSTRAINT storage_pq_set_temp_fkey FOREIGN KEY (temp_id) REFERENCES calc_ego_hv_powerflow.temp_resolution (temp_id)
+  CONSTRAINT storage_pq_set_temp_fkey FOREIGN KEY (temp_id) REFERENCES model_draft.ego_grid_pf_hv_temp_resolution (temp_id)
 )
 WITH (
   OIDS=FALSE
 );
 
-COMMENT ON TABLE  calc_ego_hv_powerflow.storage_pq_set IS
+COMMENT ON TABLE  model_draft.ego_grid_pf_hv_storage_pq_set IS
 '{
 "Name": "Storage time series hv powerflow",
 "Source": [{
@@ -1014,330 +1024,330 @@ COMMENT ON TABLE  calc_ego_hv_powerflow.storage_pq_set IS
 --------------------------- Grant rights --------------------------
 -------------------------------------------------------------------
 
-ALTER TABLE calc_ego_hv_powerflow.bus
+ALTER TABLE model_draft.ego_grid_pf_hv_bus
   OWNER TO oeuser;
-GRANT ALL ON TABLE calc_ego_hv_powerflow.bus TO oeuser;
+GRANT ALL ON TABLE model_draft.ego_grid_pf_hv_bus TO oeuser;
 
-ALTER TABLE calc_ego_hv_powerflow.bus_v_mag_set
+ALTER TABLE model_draft.ego_grid_pf_hv_bus_v_mag_set
   OWNER TO oeuser;
-GRANT ALL ON TABLE calc_ego_hv_powerflow.bus_v_mag_set TO oeuser;
+GRANT ALL ON TABLE model_draft.ego_grid_pf_hv_bus_v_mag_set TO oeuser;
 
-ALTER TABLE calc_ego_hv_powerflow.generator
+ALTER TABLE model_draft.ego_grid_pf_hv_generator
   OWNER TO oeuser;
-GRANT ALL ON TABLE calc_ego_hv_powerflow.generator TO oeuser;
+GRANT ALL ON TABLE model_draft.ego_grid_pf_hv_generator TO oeuser;
 
-ALTER TABLE calc_ego_hv_powerflow.generator_pq_set
+ALTER TABLE model_draft.ego_grid_pf_hv_generator_pq_set
   OWNER TO oeuser;
-GRANT ALL ON TABLE calc_ego_hv_powerflow.generator_pq_set TO oeuser;
+GRANT ALL ON TABLE model_draft.ego_grid_pf_hv_generator_pq_set TO oeuser;
 
-ALTER TABLE calc_ego_hv_powerflow.line
+ALTER TABLE model_draft.ego_grid_pf_hv_line
   OWNER TO oeuser;
-GRANT ALL ON TABLE calc_ego_hv_powerflow.line TO oeuser;
+GRANT ALL ON TABLE model_draft.ego_grid_pf_hv_line TO oeuser;
 
-ALTER TABLE calc_ego_hv_powerflow.load
+ALTER TABLE model_draft.ego_grid_pf_hv_load
   OWNER TO oeuser;
-GRANT ALL ON TABLE calc_ego_hv_powerflow.load TO oeuser;
+GRANT ALL ON TABLE model_draft.ego_grid_pf_hv_load TO oeuser;
 
-ALTER TABLE calc_ego_hv_powerflow.load_pq_set
+ALTER TABLE model_draft.ego_grid_pf_hv_load_pq_set
   OWNER TO oeuser;
-GRANT ALL ON TABLE calc_ego_hv_powerflow.load_pq_set TO oeuser;
+GRANT ALL ON TABLE model_draft.ego_grid_pf_hv_load_pq_set TO oeuser;
 
-ALTER TABLE calc_ego_hv_powerflow.scenario_settings
+ALTER TABLE model_draft.ego_grid_pf_hv_scenario_settings
   OWNER TO oeuser;
-GRANT ALL ON TABLE calc_ego_hv_powerflow.scenario_settings TO oeuser;
+GRANT ALL ON TABLE model_draft.ego_grid_pf_hv_scenario_settings TO oeuser;
 
-ALTER TABLE calc_ego_hv_powerflow.source
+ALTER TABLE model_draft.ego_grid_pf_hv_source
   OWNER TO oeuser;
-GRANT ALL ON TABLE calc_ego_hv_powerflow.source TO oeuser;
+GRANT ALL ON TABLE model_draft.ego_grid_pf_hv_source TO oeuser;
 
-ALTER TABLE calc_ego_hv_powerflow.storage
+ALTER TABLE model_draft.ego_grid_pf_hv_storage
   OWNER TO oeuser;
-GRANT ALL ON TABLE calc_ego_hv_powerflow.storage TO oeuser;
+GRANT ALL ON TABLE model_draft.ego_grid_pf_hv_storage TO oeuser;
 
-ALTER TABLE calc_ego_hv_powerflow.storage_pq_set
+ALTER TABLE model_draft.ego_grid_pf_hv_storage_pq_set
   OWNER TO oeuser;
-GRANT ALL ON TABLE calc_ego_hv_powerflow.storage_pq_set TO oeuser;
+GRANT ALL ON TABLE model_draft.ego_grid_pf_hv_storage_pq_set TO oeuser;
 
-ALTER TABLE calc_ego_hv_powerflow.temp_resolution
+ALTER TABLE model_draft.ego_grid_pf_hv_temp_resolution
   OWNER TO oeuser;
-GRANT ALL ON TABLE calc_ego_hv_powerflow.temp_resolution TO oeuser;
+GRANT ALL ON TABLE model_draft.ego_grid_pf_hv_temp_resolution TO oeuser;
 
-ALTER TABLE calc_ego_hv_powerflow.transformer
+ALTER TABLE model_draft.ego_grid_pf_hv_transformer
   OWNER TO oeuser;
-GRANT ALL ON TABLE calc_ego_hv_powerflow.transformer TO oeuser;
+GRANT ALL ON TABLE model_draft.ego_grid_pf_hv_transformer TO oeuser;
 
 -------------------------------------------------------------------
 ----------------------------- Comments ----------------------------
 -------------------------------------------------------------------
-COMMENT ON COLUMN calc_ego_hv_powerflow.bus.bus_id IS 'Unit: n/a
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_bus.bus_id IS 'Unit: n/a
 Description: Unique name
 Status: Input (required)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.bus.v_nom IS 'Unit: kV
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_bus.v_nom IS 'Unit: kV
 Description: Nominal voltage
 Status: Input (optional)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.bus.current_type IS 'Unit: n/a
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_bus.current_type IS 'Unit: n/a
 Description: Type of current (must be either “AC” or “DC”).
 Status: Input (optional)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.bus.v_mag_pu_min IS 'Unit: per unit
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_bus.v_mag_pu_min IS 'Unit: per unit
 Description: Minimum desired voltage, per unit of v_nom
 Status: Input (optional)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.bus.v_mag_pu_max IS 'Unit: per unit
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_bus.v_mag_pu_max IS 'Unit: per unit
 Description: Maximum desired voltage, per unit of v_nom
 Status: Input (optional)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.bus_v_mag_set.v_mag_pu_set IS 'Unit: per unit
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_bus_v_mag_set.v_mag_pu_set IS 'Unit: per unit
 Description: Voltage magnitude set point, per unit of v_nom.
 Status: Input (optional)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.generator.generator_id IS 'Unit: n/a
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_generator.generator_id IS 'Unit: n/a
 Description: Unique name
 Status: Input (required)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.generator.bus IS 'Unit: n/a
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_generator.bus IS 'Unit: n/a
 Description: name of bus to which generator is attached
 Status: Input (required)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.generator.dispatch IS 'Unit: n/a
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_generator.dispatch IS 'Unit: n/a
 Description: Controllability of active power dispatch, must be “flexible” or “variable”.
 Status: Input (optional)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.generator.control IS 'Unit: n/a
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_generator.control IS 'Unit: n/a
 Description: P,Q,V control strategy for PF, must be “PQ”, “PV” or “Slack”.
 Status: Input (optional)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.generator.p_nom IS 'Unit: MW
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_generator.p_nom IS 'Unit: MW
 Description: Nominal power for limits in OPF
 Status: Input (optional)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.generator.p_nom_extendable IS 'Unit: n/a
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_generator.p_nom_extendable IS 'Unit: n/a
 Description: Switch to allow capacity p_nom to be extended in OPF.
 Default: False
 Status: Input (optional)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.generator.p_nom_min IS 'Unit: MW
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_generator.p_nom_min IS 'Unit: MW
 Description: If p_nom is extendable in OPF, set its minimum value.
 Status: Input (optional)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.generator.p_nom_max IS 'Unit: MW
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_generator.p_nom_max IS 'Unit: MW
 Description: If p_nom is extendable in OPF, set its maximum value (e.g. limited by potential).
 Status: Input (optional)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.generator.p_min_pu_fixed IS 'Unit: per unit
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_generator.p_min_pu_fixed IS 'Unit: per unit
 Description: If control=”flexible” this gives the minimum output per unit of p_nom for the OPF.
 Status: Input (optional)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.generator.p_max_pu_fixed IS 'Unit: per unit
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_generator.p_max_pu_fixed IS 'Unit: per unit
 Description: If control=”flexible” this gives the maximum output per unit of p_nom for the OPF, equivalent to a de-rating factor.
 Status: Input (optional)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.generator.sign IS 'Unit: n/a
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_generator.sign IS 'Unit: n/a
 Description: power sign
 Status: Input (optional)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.generator.source IS 'Unit: n/a
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_generator.source IS 'Unit: n/a
 Description: Prime mover (e.g. coal, gas, wind, solar); required for CO2 calculation in OPF
 Status: Input (optional)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.generator.marginal_cost IS 'Unit: currency/MWh
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_generator.marginal_cost IS 'Unit: currency/MWh
 Description: Marginal cost of production of 1 MWh.	
 Status: Input (optional)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.generator.capital_cost IS 'Unit: currency/MW
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_generator.capital_cost IS 'Unit: currency/MW
 Description: Capital cost of extending p_nom by 1 MW.
 Status: Input (optional)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.generator.efficiency IS 'Unit: per unit
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_generator.efficiency IS 'Unit: per unit
 Description: Ratio between primary energy and electrical energy, e.g. takes value 0.4 for gas. This is important for determining CO2 emissions per MWh.
 Status: Input (optional)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.generator_pq_set.p_set IS 'Unit: MW
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_generator_pq_set.p_set IS 'Unit: MW
 Description: active power set point (for PF).
 Status: Input (optional)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.generator_pq_set.q_set IS 'Unit: MVar
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_generator_pq_set.q_set IS 'Unit: MVar
 Description: reactive power set point (for PF).
 Status: Input (optional)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.generator_pq_set.p_min_pu IS 'Unit: per unit
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_generator_pq_set.p_min_pu IS 'Unit: per unit
 Description: If control=”variable” this gives the minimum output for each snapshot per unit of p_nom for the OPF.
 Status: Input (optional)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.generator_pq_set.p_max_pu IS 'Unit: per unit
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_generator_pq_set.p_max_pu IS 'Unit: per unit
 Description: If control=”variable” this gives the maximum output for each snapshot per unit of p_nom for the OPF, relevant e.g. if for renewables the power output is limited by the weather.
 Status: Input (optional)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.line.line_id IS 'Unit: n/a
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_line.line_id IS 'Unit: n/a
 Description: Unique name
 Status: Input (required)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.line.bus0 IS 'Unit: n/a
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_line.bus0 IS 'Unit: n/a
 Description: Name of first bus to which branch is attached. 
 Status: Input (required)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.line.bus1 IS 'Unit: n/a
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_line.bus1 IS 'Unit: n/a
 Description: Name of second bus to which branch is attached.
 Status: Input (required)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.line.x IS 'Unit: Ohm
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_line.x IS 'Unit: Ohm
 Description: series reactance; must be non-zero for AC branch in linear power flow; in non-linear power flow x+jr must be non-zero.
 Status: Input (required)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.line.r IS 'Unit: Ohm
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_line.r IS 'Unit: Ohm
 Description: Series resistance; must be non-zero for DC branch in linear power flow; in non-linear power flow x+jr must be non-zero.
 Status: Input (required)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.line.g IS 'Unit: Siemens
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_line.g IS 'Unit: Siemens
 Description: Shunt conductivity.
 Status: Input (optional)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.line.b IS 'Unit: Siemens
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_line.b IS 'Unit: Siemens
 Description: Shunt susceptance.
 Status: Input (optional)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.line.s_nom IS 'Unit: MVA
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_line.s_nom IS 'Unit: MVA
 Description: Limit of apparent power which can pass through branch.
 Status: Input (optional)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.line.s_nom_extendable IS 'Unit: n/a
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_line.s_nom_extendable IS 'Unit: n/a
 Description: Switch to allow capacity s_nom to be extended in OPF.
 Default: False
 Status: Input (optional)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.line.s_nom_min IS 'Unit: MVA
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_line.s_nom_min IS 'Unit: MVA
 Description: If s_nom is extendable in OPF, set its minimum value.
 Status: Input (optional)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.line.s_nom_max IS 'Unit: MVA
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_line.s_nom_max IS 'Unit: MVA
 Description: If s_nom is extendable in OPF, set its maximum value (e.g. limited by potential).
 Status: Input (optional)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.line.capital_cost IS 'Unit: currency/MVA
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_line.capital_cost IS 'Unit: currency/MVA
 Description: Capital cost of extending s_nom by 1 MVA.
 Status: Input (optional)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.line.length IS 'Unit: km
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_line.length IS 'Unit: km
 Description: Length of line, useful for calculating the capital cost.
 Status: Input (optional)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.line.terrain_factor IS 'Unit: per unit
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_line.terrain_factor IS 'Unit: per unit
 Description: Terrain factor for increasing capital cost.
 Status: Input (optional)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.load.load_id IS 'Unit: n/a
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_load.load_id IS 'Unit: n/a
 Description: Unique name
 Status: Input (required)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.load.bus IS 'Unit: n/a
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_load.bus IS 'Unit: n/a
 Description: Name of bus to which load is attached.
 Status: Input (required)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.load.sign IS 'Unit: n/a
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_load.sign IS 'Unit: n/a
 Description: power sign
 Default: -1
 Status: Input (optional)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.load.e_annual IS 'Unit: MW
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_load.e_annual IS 'Unit: MW
 Description: 
 Status: Input (not needd for PyPSA)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.load_pq_set.p_set IS 'Unit: MW
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_load_pq_set.p_set IS 'Unit: MW
 Description: Active power consumption (positive if the load is consuming power).
 Status: Input (optional)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.load_pq_set.q_set IS 'Unit: MVar
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_load_pq_set.q_set IS 'Unit: MVar
 Description: 	Reactive power consumption (positive if the load is inductive).
 Status: Input (optional)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.source.name IS 'Unit: n/a
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_source.name IS 'Unit: n/a
 Description: Unique name
 Status: Input (required)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.source.co2_emissions IS 'Unit: tonnes/MWh
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_source.co2_emissions IS 'Unit: tonnes/MWh
 Description: Emissions in CO2-tonnes-equivalent per MWh of primary energy (e.g. has has 0.2 tonnes/MWh_thermal).
 Status: Input (required)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.storage.storage_id IS 'Unit: n/a
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage.storage_id IS 'Unit: n/a
 Description: Unique name
 Status: Input (required)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.storage.bus IS 'Unit: n/a
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage.bus IS 'Unit: n/a
 Description: name of bus to which storage is attached
 Status: Input (required)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.storage.dispatch IS 'Unit: n/a
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage.dispatch IS 'Unit: n/a
 Description: Controllability of active power dispatch, must be “flexible” or “variable”.
 Status: Input (optional)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.storage.control IS 'Unit: n/a
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage.control IS 'Unit: n/a
 Description: P,Q,V control strategy for PF, must be “PQ”, “PV” or “Slack”.
 Status: Input (optional)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.storage.p_nom IS 'Unit: MW
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage.p_nom IS 'Unit: MW
 Description: Nominal power for limits in OPF
 Status: Input (optional)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.storage.p_nom_extendable IS 'Unit: n/a
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage.p_nom_extendable IS 'Unit: n/a
 Description: Switch to allow capacity p_nom to be extended in OPF.
 Default: False
 Status: Input (optional)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.storage.p_nom_min IS 'Unit: MW
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage.p_nom_min IS 'Unit: MW
 Description: If p_nom is extendable in OPF, set its minimum value.
 Status: Input (optional)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.storage.p_nom_max IS 'Unit: MW
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage.p_nom_max IS 'Unit: MW
 Description: If p_nom is extendable in OPF, set its maximum value (e.g. limited by potential).
 Status: Input (optional)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.storage.p_min_pu_fixed IS 'Unit: per unit
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage.p_min_pu_fixed IS 'Unit: per unit
 Description: If control=”flexible” this gives the minimum output per unit of p_nom for the OPF.
 Status: Input (optional)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.storage.p_max_pu_fixed IS 'Unit: per unit
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage.p_max_pu_fixed IS 'Unit: per unit
 Description: If control=”flexible” this gives the maximum output per unit of p_nom for the OPF, equivalent to a de-rating factor.
 Status: Input (optional)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.storage.sign IS 'Unit: n/a
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage.sign IS 'Unit: n/a
 Description: power sign
 Status: Input (optional)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.storage.source IS 'Unit: n/a
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage.source IS 'Unit: n/a
 Description: Prime mover (e.g. coal, gas, wind, solar); required for CO2 calculation in OPF
 Status: Input (optional)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.storage.marginal_cost IS 'Unit: currency/MWh
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage.marginal_cost IS 'Unit: currency/MWh
 Description: Marginal cost of production of 1 MWh.	
 Status: Input (optional)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.storage.capital_cost IS 'Unit: currency/MW
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage.capital_cost IS 'Unit: currency/MW
 Description: Capital cost of extending p_nom by 1 MW.
 Status: Input (optional)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.storage.efficiency IS 'Unit: per unit
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage.efficiency IS 'Unit: per unit
 Description: Ratio between primary energy and electrical energy, e.g. takes value 0.4 for gas. This is important for determining CO2 emissions per MWh.
 Status: Input (optional)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.storage.soc_initial IS 'Unit: MWh
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage.soc_initial IS 'Unit: MWh
 Description: State of charge before the snapshots in the OPF.
 Status: Input (optional)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.storage.soc_cyclic IS 'Unit: n/a
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage.soc_cyclic IS 'Unit: n/a
 Description: Switch: if True, then state_of_charge_initial is ignored and the initial state of charge is set to the final state of charge for the group of snapshots in the OPF.
 Status: Input (optional)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.storage.max_hours IS 'Unit: hours
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage.max_hours IS 'Unit: hours
 Description: Maximum state of charge capacity in terms of hours at full output capacity p_nom
 Status: Input (optional)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.storage.efficiency_store IS 'Unit: per unit
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage.efficiency_store IS 'Unit: per unit
 Description: Efficiency of storage on the way into the storage.
 Status: Input (optional)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.storage.efficiency_dispatch IS 'Unit: per unit
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage.efficiency_dispatch IS 'Unit: per unit
 Description: Efficiency of storage on the way out of the storage.
 Status: Input (optional)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.storage.standing_loss IS 'Unit: per unit
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage.standing_loss IS 'Unit: per unit
 Description: Losses per hour to state of charge.
 Status: Input (optional)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.storage_pq_set.p_set IS 'Unit: MW
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage_pq_set.p_set IS 'Unit: MW
 Description: active power set point (for PF).
 Status: Input (optional)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.storage_pq_set.q_set IS 'Unit: MVar
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage_pq_set.q_set IS 'Unit: MVar
 Description: reactive power set point (for PF).
 Status: Input (optional)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.storage_pq_set.p_min_pu IS 'Unit: per unit
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage_pq_set.p_min_pu IS 'Unit: per unit
 Description: If control=”variable” this gives the minimum output for each snapshot per unit of p_nom for the OPF.
 Status: Input (optional)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.storage_pq_set.p_max_pu IS 'Unit: per unit
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage_pq_set.p_max_pu IS 'Unit: per unit
 Description: If control=”variable” this gives the maximum output for each snapshot per unit of p_nom for the OPF, relevant e.g. if for renewables the power output is limited by the weather.
 Status: Input (optional)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.storage_pq_set.soc_set IS 'Unit: MWh
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage_pq_set.soc_set IS 'Unit: MWh
 Description: State of charge set points for snapshots in the OPF.
 Status: Input (optional)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.storage_pq_set.inflow IS 'Unit: MW
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage_pq_set.inflow IS 'Unit: MW
 Description: Inflow to the state of charge, e.g. due to river inflow in hydro reservoir.
 Status: Input (optional)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.temp_resolution.resolution IS 'example: h, 15min...';
-COMMENT ON COLUMN calc_ego_hv_powerflow.temp_resolution.start_time IS 'style: YYYY-MM-DD HH:MM:SS';
-COMMENT ON COLUMN calc_ego_hv_powerflow.transformer.trafo_id IS 'Unit: n/a
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_temp_resolution.resolution IS 'example: h, 15min...';
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_temp_resolution.start_time IS 'style: YYYY-MM-DD HH:MM:SS';
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_transformer.trafo_id IS 'Unit: n/a
 Description: Unique name
 Status: Input (required)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.transformer.bus0 IS 'Unit: n/a
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_transformer.bus0 IS 'Unit: n/a
 Description: Name of first bus to which branch is attached. 
 Status: Input (required)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.transformer.bus1 IS 'Unit: n/a
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_transformer.bus1 IS 'Unit: n/a
 Description: Name of second bus to which branch is attached.
 Status: Input (required)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.transformer.x IS 'Unit: Ohm
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_transformer.x IS 'Unit: Ohm
 Description: eries reactance; must be non-zero for AC branch in linear power flow; in non-linear power flow x+jr must be non-zero.
 Status: Input (required)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.transformer.r IS 'Unit: Ohm
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_transformer.r IS 'Unit: Ohm
 Description: Series resistance; must be non-zero for DC branch in linear power flow; in non-linear power flow x+jr must be non-zero.
 Status: Input (required)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.transformer.g IS 'Unit: Siemens
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_transformer.g IS 'Unit: Siemens
 Description: Shunt conductivity.
 Status: Input (optional)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.transformer.b IS 'Unit: Siemens
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_transformer.b IS 'Unit: Siemens
 Description: Shunt susceptance.
 Status: Input (optional)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.transformer.s_nom IS 'Unit: MVA
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_transformer.s_nom IS 'Unit: MVA
 Description: Limit of apparent power which can pass through branch.
 Status: Input (optional)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.transformer.s_nom_extendable IS 'Unit: n/a
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_transformer.s_nom_extendable IS 'Unit: n/a
 Description: Switch to allow capacity s_nom to be extended in OPF.
 Default: False
 Status: Input (optional)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.transformer.s_nom_min IS 'Unit: MVA
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_transformer.s_nom_min IS 'Unit: MVA
 Description: If s_nom is extendable in OPF, set its minimum value.
 Status: Input (optional)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.transformer.s_nom_max IS 'Unit: MVA
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_transformer.s_nom_max IS 'Unit: MVA
 Description: If s_nom is extendable in OPF, set its maximum value (e.g. limited by potential).
 Status: Input (optional)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.transformer.tap_ratio IS 'Unit: 1
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_transformer.tap_ratio IS 'Unit: 1
 Description: Ratio of per unit voltages at each bus.
 Status: Input (optional)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.transformer.phase_shift IS 'Unit: Degrees
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_transformer.phase_shift IS 'Unit: Degrees
 Description: Voltage phase angle shift.
 Status: Input (optional)';
-COMMENT ON COLUMN calc_ego_hv_powerflow.transformer.capital_cost IS 'Unit: currency/MVA
+COMMENT ON COLUMN model_draft.ego_grid_pf_hv_transformer.capital_cost IS 'Unit: currency/MVA
 Description: Capital cost of extending s_nom by 1 MVA.
 Status: Input (optional)';
 
@@ -1346,22 +1356,22 @@ Status: Input (optional)';
 -------------------------------------------------------------------
 
 CREATE INDEX fki_generator_data_source_fk
-  ON calc_ego_hv_powerflow.generator
+  ON model_draft.ego_grid_pf_hv_generator
   USING btree
   (source);
   
 CREATE INDEX fki_storage_data_source_fk
-  ON calc_ego_hv_powerflow.storage
+  ON model_draft.ego_grid_pf_hv_storage
   USING btree
   (source);
   
  CREATE INDEX fki_trafo_data_bus0_fk
-  ON calc_ego_hv_powerflow.transformer
+  ON model_draft.ego_grid_pf_hv_transformer
   USING btree
   (bus0);
   
  CREATE INDEX fki_trafo_data_bus1_fk
-  ON calc_ego_hv_powerflow.transformer
+  ON model_draft.ego_grid_pf_hv_transformer
   USING btree
   (bus1);
 
@@ -1369,18 +1379,18 @@ CREATE INDEX fki_storage_data_source_fk
 --------------------- FILL SOURCES TABLE --------------------------
 -------------------------------------------------------------------
   
-INSERT INTO calc_ego_hv_powerflow.source VALUES (1, 'gas', NULL, NULL);
-INSERT INTO calc_ego_hv_powerflow.source VALUES (2, 'lignite', NULL, NULL);
-INSERT INTO calc_ego_hv_powerflow.source VALUES (3, 'waste', NULL, NULL);
-INSERT INTO calc_ego_hv_powerflow.source VALUES (4, 'oil', NULL, NULL);
-INSERT INTO calc_ego_hv_powerflow.source VALUES (5, 'uranium', NULL, NULL);
-INSERT INTO calc_ego_hv_powerflow.source VALUES (6, 'biomass', NULL, NULL);
-INSERT INTO calc_ego_hv_powerflow.source VALUES (7, 'eeg_gas', NULL, NULL);
-INSERT INTO calc_ego_hv_powerflow.source VALUES (8, 'coal', NULL, NULL);
-INSERT INTO calc_ego_hv_powerflow.source VALUES (9, 'run_of_river', NULL, NULL);
-INSERT INTO calc_ego_hv_powerflow.source VALUES (10, 'reservoir', NULL, NULL);
-INSERT INTO calc_ego_hv_powerflow.source VALUES (11, 'pumped_storage', NULL, NULL);
-INSERT INTO calc_ego_hv_powerflow.source VALUES (12, 'solar', NULL, NULL);
-INSERT INTO calc_ego_hv_powerflow.source VALUES (13, 'wind', NULL, NULL);
-INSERT INTO calc_ego_hv_powerflow.source VALUES (14, 'geothermal', NULL, NULL);
-INSERT INTO calc_ego_hv_powerflow.source VALUES (15, 'other_non_renewable', NULL, NULL);
+INSERT INTO model_draft.ego_grid_pf_hv_source VALUES (1, 'gas', NULL, NULL);
+INSERT INTO model_draft.ego_grid_pf_hv_source VALUES (2, 'lignite', NULL, NULL);
+INSERT INTO model_draft.ego_grid_pf_hv_source VALUES (3, 'waste', NULL, NULL);
+INSERT INTO model_draft.ego_grid_pf_hv_source VALUES (4, 'oil', NULL, NULL);
+INSERT INTO model_draft.ego_grid_pf_hv_source VALUES (5, 'uranium', NULL, NULL);
+INSERT INTO model_draft.ego_grid_pf_hv_source VALUES (6, 'biomass', NULL, NULL);
+INSERT INTO model_draft.ego_grid_pf_hv_source VALUES (7, 'eeg_gas', NULL, NULL);
+INSERT INTO model_draft.ego_grid_pf_hv_source VALUES (8, 'coal', NULL, NULL);
+INSERT INTO model_draft.ego_grid_pf_hv_source VALUES (9, 'run_of_river', NULL, NULL);
+INSERT INTO model_draft.ego_grid_pf_hv_source VALUES (10, 'reservoir', NULL, NULL);
+INSERT INTO model_draft.ego_grid_pf_hv_source VALUES (11, 'pumped_storage', NULL, NULL);
+INSERT INTO model_draft.ego_grid_pf_hv_source VALUES (12, 'solar', NULL, NULL);
+INSERT INTO model_draft.ego_grid_pf_hv_source VALUES (13, 'wind', NULL, NULL);
+INSERT INTO model_draft.ego_grid_pf_hv_source VALUES (14, 'geothermal', NULL, NULL);
+INSERT INTO model_draft.ego_grid_pf_hv_source VALUES (15, 'other_non_renewable', NULL, NULL);
