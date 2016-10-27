@@ -2,9 +2,9 @@
 -- Create a table that contains all generators (RE and conventional) but no duplicates. 
 ------------
 
-/* DROP TABLE IF EXISTS orig_geo_powerplants.generators_total;
+/* DROP TABLE IF EXISTS model_draft.ego_supply_generator;
 
-CREATE TABLE orig_geo_powerplants.generators_total
+CREATE TABLE model_draft.ego_supply_generator
 (
   un_id serial NOT NULL, 
   re_id integer, 
@@ -15,65 +15,111 @@ CREATE TABLE orig_geo_powerplants.generators_total
   CONSTRAINT generators_total_pkey PRIMARY KEY (un_id)
 );
 
-ALTER TABLE orig_geo_powerplants.generators_total
+ALTER TABLE model_draft.ego_supply_generator
 	OWNER TO oeuser; */
 	
-DELETE FROM orig_geo_powerplants.generators_total; 
+DELETE FROM model_draft.ego_supply_generator; 
 
-DROP INDEX IF EXISTS orig_geo_powerplants.generators_total_idx;
+DROP INDEX IF EXISTS model_draft.ego_supply_generator_idx;
 
-INSERT INTO orig_geo_powerplants.generators_total (re_id, geom) 
+INSERT INTO model_draft.ego_supply_generator (re_id, geom) 
 	SELECT id, geom
-	FROM orig_geo_powerplants.proc_renewable_power_plants_germany
+	FROM supply.ego_res_powerplant
 	WHERE geom IS NOT NULL; 
 
-INSERT INTO orig_geo_powerplants.generators_total (conv_id, geom) 
+INSERT INTO model_draft.ego_supply_generator (conv_id, geom) 
 	SELECT gid, geom
-	FROM orig_geo_powerplants.proc_power_plant_germany
+	FROM supply.ego_conv_powerplant
 	WHERE eeg NOT LIKE 'yes'; -- Duplicates that already occur in the eeg-list are ignored 
  
-CREATE INDEX generators_total_idx
-  ON orig_geo_powerplants.generators_total
+CREATE INDEX ego_supply_generator_idx
+  ON model_draft.ego_supply_generator
   USING gist
   (geom);
+
+COMMENT ON TABLE  model_draft.ego_supply_generator IS
+'{
+"Name": "eGo generators merged",
+"Source": [{
+                  "Name": "open_eGo data-processing",
+                  "URL":  "https://github.com/openego/data_processing" }],
+"Reference date": "...",
+"Date of collection": "...",
+"Original file": "...",
+"Spatial resolution": ["Germany"],
+"Description": ["assignment_generator_bus.sql"],
+"Column": [
+                   {"Name": "un_id",
+                    "Description": "unique id for unified generators (res and conv)",
+                    "Unit": "" },  
+                   {"Name": "re_id",
+                    "Description": "id for res-generators",
+                    "Unit": "" },     
+                   {"Name": "conv_id",
+                    "Description": "id for conventional generators",
+                    "Unit": "" }, 
+                   {"Name": "aggr_id_pf",
+                    "Description": "aggregate id for hv powerflow",
+                    "Unit": "" },
+                   {"Name": "aggr_id_ms",
+                    "Description": "aggregate id for mv powerflow",
+                    "Unit": "" },                        
+                   {"Name": "geom",
+                    "Description": "geometry",
+                    "Unit": "" }],
+"Changes":[
+                   {"Name": "Mario Kropshofer",
+                    "Mail": "mario.kropshofer2@stud.fh-flensburg.de",
+                    "Date":  "05.10.2016",
+                    "Comment": "..." }, 
+                   {"Name": "Ilka Cussmann",
+                    "Mail": "ilka.cussmann@hs-flensburg.de",
+                    "Date":  "27.10.2016",
+                    "Comment": "completed json-string" }
+                  ],
+"ToDo": ["add licence"],
+"Licence": ["..."],
+"Instructions for proper use": ["..."]
+}';
+
 
 
 ---------------
 -- Update table on conventional power plants and add information on unified id of generators and information of relevant bus
 ---------------
 
-/* ALTER TABLE orig_geo_powerplants.proc_power_plant_germany
+/* ALTER TABLE supply.ego_conv_powerplant
 	ADD COLUMN subst_id bigint,
 	ADD COLUMN otg_id bigint,
 	ADD COLUMN un_id bigint; */ 
 
 -- Identify corresponding bus with the help of grid districts
 
-UPDATE orig_geo_powerplants.proc_power_plant_germany a
+UPDATE supply.ego_conv_powerplant a
 	SET subst_id = b.subst_id
-	FROM	calc_ego_grid_district.grid_district b
+	FROM	model_draft.ego_grid_mv_griddistrict b
 	WHERE ST_Intersects (a.geom, ST_TRANSFORM(b.geom,4326))  AND voltage_level >= 3; 
 
 -- Identify corresponding bus with the help of ehv-Voronoi
 
-UPDATE orig_geo_powerplants.proc_power_plant_germany a
+UPDATE supply.ego_conv_powerplant a
 	SET subst_id = b.subst_id
-	FROM calc_ego_substation.ego_deu_voronoi_ehv b
+	FROM model_draft.ego_grid_ehv_substation_voronoi b
 	WHERE ST_Intersects (a.geom, b.geom) =TRUE AND voltage_level <= 2;
 
 -- Insert otg_id of bus
 
-UPDATE orig_geo_powerplants.proc_power_plant_germany a
+UPDATE supply.ego_conv_powerplant a
 	SET otg_id =b.otg_id 
-	FROM calc_ego_substation.ego_deu_substations b
+	FROM model_draft.ego_grid_hvmv_substation b
 	WHERE a.subst_id = b.subst_id;
 
  
 -- Update un_id from generators_total  
 
-UPDATE orig_geo_powerplants.proc_power_plant_germany a
+UPDATE supply.ego_conv_powerplant a
 	SET un_id = b.un_id 
-	FROM orig_geo_powerplants.generators_total b
+	FROM model_draft.ego_supply_generator b
 	WHERE a.gid = b.conv_id; 
 
 
@@ -84,9 +130,9 @@ UPDATE orig_geo_powerplants.proc_power_plant_germany a
 --------------
 
 
-/* DROP TABLE orig_geo_powerplants.pf_generator_single;
+/* DROP TABLE model_draft.ego_supply_pf_generator_single;
 
-CREATE TABLE orig_geo_powerplants.pf_generator_single
+CREATE TABLE model_draft.ego_supply_pf_generator_single
 (
   generator_id bigint NOT NULL,
   bus bigint,
@@ -107,22 +153,103 @@ CREATE TABLE orig_geo_powerplants.pf_generator_single
   aggr_id integer,
   CONSTRAINT generator_data_pkey PRIMARY KEY (generator_id),
   CONSTRAINT generator_data_source_fk FOREIGN KEY (source)
-      REFERENCES calc_ego_hv_powerflow.source (source_id) MATCH SIMPLE
+      REFERENCES model_draft.ego_grid_pf_hv_source (source_id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
-ALTER TABLE orig_geo_powerplants.pf_generator_single
+ALTER TABLE model_draft.ego_supply_pf_generator_single
   OWNER TO oeuser; */
 
 
-DELETE FROM orig_geo_powerplants.pf_generator_single; 
+COMMENT ON TABLE  model_draft.ego_supply_pf_generator_single IS
+'{
+"Name": "Seperated generators for powerflow",
+"Source": [{
+                  "Name": "open_eGo data-processing",
+                  "URL":  "https://github.com/openego/data_processing" }],
+"Reference date": "...",
+"Date of collection": "...",
+"Original file": "...",
+"Spatial resolution": ["Germany"],
+"Description": ["assignment_generator_bus.sql"],
+"Column": [
+                   {"Name": "generator_id",
+                    "Description": "unique id for generators",
+                    "Unit": "" },                   
+                   {"Name": "bus",
+                    "Description": "id of associated bus",
+                    "Unit": "" },
+                   {"Name": "dispatch",
+                    "Description": "Controllability of active power dispatch, must be “flexible” or “variable”.",
+                    "Unit": "" },
+                   {"Name": "control",
+                    "Description": "P,Q,V control strategy, must be “PQ”, “PV” or “Slack”.",
+                    "Unit": "" },
+                   {"Name": "p_nom",
+                    "Description": "Nominal power",
+                    "Unit": "MW" },
+                   {"Name": "p_nom_extendable",
+                    "Description": "Switch to allow capacity p_nom to be extended",
+                    "Unit": "" },
+                   {"Name": "p_nom_min",
+                    "Description": "If p_nom is extendable, set its minimum value",
+                    "Unit": "" },
+                   {"Name": "p_nom_max",
+                    "Description": "If p_nom is extendable, set its maximum value (e.g. limited by potential)",
+                    "Unit": "" },
+                   {"Name": "p_min_pu_fixed",
+                    "Description": "If control=”flexible” this gives the minimum output per unit of p_nom",
+                    "Unit": "per unit" },
+                   {"Name": "p_max_pu_fixed",
+                    "Description": "If control=”flexible” this gives the maximum output per unit of p_nom, equivalent to a de-rating factor.",
+                    "Unit": "per unit" },
+                   {"Name": "sign",
+                    "Description": "power sign",
+                    "Unit": "" },
+                   {"Name": "source",
+                    "Description": "prime mover energy carrier",
+                    "Unit": "" },
+                   {"Name": "marginal_cost",
+                    "Description": "Marginal cost of production of 1 MWh",
+                    "Unit": "€/MWh" },
+                   {"Name": "capital_cost",
+                    "Description": "Capital cost of extending p_nom by 1 MW",
+                    "Unit": "€/MW" },
+                   {"Name": "efficiency",
+                    "Description": "Ratio between primary energy and electrical energy",
+                    "Unit": "per unit" },
+                   {"Name": "w_id",
+                    "Description": "w_id",
+                    "Unit": "" },                        
+                   {"Name": "aggr_id",
+                    "Description": "aggregate id",
+                    "Unit": "" }],
+"Changes":[
+                   {"Name": "Mario Kropshofer",
+                    "Mail": "mario.kropshofer2@stud.fh-flensburg.de",
+                    "Date":  "05.10.2016",
+                    "Comment": "..." }, 
+	           {"Name": "Ilka Cussmann",
+                    "Mail": "ilka.cussmann@hs-flensburg.de",
+                    "Date":  "27.10.2016",
+                    "Comment": "completed json-string" }
+                  ],
+"ToDo": ["add licence"],
+                  ],
+"ToDo": ["Please complete"],
+"Licence": ["..."],
+"Instructions for proper use": ["..."]
+}';
 
-INSERT INTO orig_geo_powerplants.pf_generator_single (generator_id)
+
+DELETE FROM model_draft.ego_supply_pf_generator_single; 
+
+INSERT INTO model_draft.ego_supply_pf_generator_single (generator_id)
 	SELECT un_id
-	FROM orig_geo_powerplants.generators_total
+	FROM model_draft.ego_supply_generator
 	WHERE conv_id NOT IN 
 		(SELECT a.gid 
-		  FROM orig_geo_powerplants.proc_power_plant_germany a
+		  FROM supply.ego_conv_powerplant a
 		  WHERE a.fuel= 'pumped_storage'
 		)
 	 OR re_id IS NOT NULL; -- pumped storage units are ignored here and will be listed in storage table 
@@ -133,37 +260,37 @@ INSERT INTO orig_geo_powerplants.pf_generator_single (generator_id)
 -----------------
 
 
-/* ALTER TABLE orig_geo_powerplants.proc_renewable_power_plants_germany
+/* ALTER TABLE supply.ego_res_powerplant
  	ADD COLUMN subst_id bigint,
  	ADD COLUMN otg_id bigint,
  	ADD COLUMN un_id bigint; */
 
 -- Identify corresponding bus with the help of grid districts
 
-UPDATE orig_geo_powerplants.proc_renewable_power_plants_germany a
+UPDATE supply.ego_res_powerplant a
 	SET subst_id = b.subst_id
-	FROM	calc_ego_grid_district.grid_district b
+	FROM	model_draft.ego_grid_mv_griddistrict b
 	WHERE ST_Intersects (a.geom, ST_TRANSFORM(b.geom,4326))  AND voltage_level >= 3;  
 
 -- Identify corresponding bus with the help of ehv-Voronoi
 
-UPDATE orig_geo_powerplants.proc_renewable_power_plants_germany a
+UPDATE supply.ego_res_powerplant a
 	SET subst_id = b.subst_id
-	FROM calc_ego_substation.ego_deu_voronoi_ehv b
+	FROM model_draft.ego_grid_ehv_substation_voronoi b
 	WHERE ST_Intersects (a.geom, b.geom) =TRUE AND voltage_level <= 2; 
 
 -- Insert otg_id of bus
 
-UPDATE orig_geo_powerplants.proc_renewable_power_plants_germany a
+UPDATE supply.ego_res_powerplant a
 	SET otg_id =b.otg_id 
-	FROM calc_ego_substation.ego_deu_substations b
+	FROM model_draft.ego_grid_hvmv_substation b
 	WHERE a.subst_id = b.subst_id; 
 
 -- Update un_id from generators_total 
 
-UPDATE orig_geo_powerplants.proc_renewable_power_plants_germany a
+UPDATE supply.ego_res_powerplant a
 	SET un_id = b.un_id 
-	FROM orig_geo_powerplants.generators_total b
+	FROM model_draft.ego_supply_generator b
 	WHERE a.id = b.re_id; 
 
 -------------
@@ -172,64 +299,64 @@ UPDATE orig_geo_powerplants.proc_renewable_power_plants_germany a
 
 -- For conventional generators
 
-UPDATE orig_geo_powerplants.pf_generator_single a
+UPDATE model_draft.ego_supply_pf_generator_single a
 	SET bus = b.otg_id, 
 		p_nom = b.capacity, 
 		control = 'PV',  -- For generators with a capacity 50 MW or more control is set to PV
 		source = result.source
 		FROM 
 			(SELECT c.source_id as source, d.fuel as fuel
-			FROM 	calc_ego_hv_powerflow.source c, 
-				orig_geo_powerplants.proc_power_plant_germany d 
+			FROM 	model_draft.ego_grid_pf_hv_source c, 
+				supply.ego_conv_powerplant d 
 			WHERE	d.fuel = c.name) 
 			AS 	result,		
-			orig_geo_powerplants.proc_power_plant_germany b
+			supply.ego_conv_powerplant b
 WHERE a.generator_id = b.un_id and b.capacity >= 50 AND result.fuel = b.fuel;
 
 
-UPDATE orig_geo_powerplants.pf_generator_single a
+UPDATE model_draft.ego_supply_pf_generator_single a
 	SET 	bus = b.otg_id, 
 		p_nom = b.capacity,
 		control = 'PQ', -- For generators with a capacity less than 50 MW control is set to PQ
 		source = result.source
 		FROM 
 			( SELECT c.source_id as source, d.fuel as fuel 
-			  FROM 	calc_ego_hv_powerflow.source c, 
-			       	orig_geo_powerplants.proc_power_plant_germany d
+			  FROM 	model_draft.ego_grid_pf_hv_source c, 
+			       	supply.ego_conv_powerplant d
 			  WHERE	d.fuel = c.name) 
 			AS 	result,		
-				orig_geo_powerplants.proc_power_plant_germany b
+				supply.ego_conv_powerplant b
 WHERE a.generator_id = b.un_id and b.capacity < 50 AND result.fuel = b.fuel;
 
 -- For renewables 
 
-UPDATE orig_geo_powerplants.pf_generator_single a
+UPDATE model_draft.ego_supply_pf_generator_single a
 	SET 	bus = b.otg_id, 
 		p_nom = b.electrical_capacity/1000, -- unit for capacity in RE-register is kW
 		dispatch = 'variable',
 		control = 'PQ' -- For RE generators control is set to PQ
-		FROM orig_geo_powerplants.proc_renewable_power_plants_germany b
+		FROM supply.ego_res_powerplant b
 WHERE a.generator_id = b.un_id;
 
 
-UPDATE orig_geo_powerplants.pf_generator_single a
+UPDATE model_draft.ego_supply_pf_generator_single a
 	SET source = result.source
 		FROM 
 			(SELECT c.source_id as source, d.un_id as un_id
-			  FROM 	calc_ego_hv_powerflow.source c, 
-			       	orig_geo_powerplants.proc_renewable_power_plants_germany d
+			  FROM 	model_draft.ego_grid_pf_hv_source c, 
+			       	supply.ego_res_powerplant d
 			  WHERE	d.generation_type = c.name) 
-			  AS 	result, orig_geo_powerplants.proc_renewable_power_plants_germany b
+			  AS 	result, supply.ego_res_powerplant b
 WHERE a.generator_id = b.un_id AND a.generator_id = result.un_id; 
 
 -- Control is changed to PV for biomass powerplants > 50 MW
 
-UPDATE orig_geo_powerplants.pf_generator_single 
+UPDATE model_draft.ego_supply_pf_generator_single 
 	SET control = 'PV'
 	 
 		FROM 
 			(SELECT source_id as id
-			 FROM calc_ego_hv_powerflow.source a
+			 FROM model_draft.ego_grid_pf_hv_source a
 			 WHERE a.name ='biomass')
 		
 		AS result  
@@ -239,13 +366,13 @@ WHERE p_nom > 50 AND source = result.id;
 -- Identify weather point IDs for each generator
 -----------
 
-UPDATE orig_geo_powerplants.pf_generator_single a
+UPDATE model_draft.ego_supply_pf_generator_single a
 	SET w_id = b.id
 		FROM 
 			(SELECT c.un_id, c.geom 
-			 FROM orig_geo_powerplants.generators_total c)
+			 FROM model_draft.ego_supply_generator c)
 			AS result,
-		calc_renpass_gis.voronoi_weatherpoint b 
+		model_draft.renpassgis_economic_weatherpoint_voronoi b 
 WHERE ST_Intersects (result.geom, b.geom) AND generator_id = result.un_id;
 
 -----------
@@ -253,42 +380,42 @@ WHERE ST_Intersects (result.geom, b.geom) AND generator_id = result.un_id;
 -----------
 -- Create sequence for aggregate ID
 
-DROP SEQUENCE IF EXISTS orig_geo_powerplants.pf_generator_single_aggr_id;
-CREATE SEQUENCE orig_geo_powerplants.pf_generator_single_aggr_id
+DROP SEQUENCE IF EXISTS model_draft.ego_supply_pf_generator_single_aggr_id;
+CREATE SEQUENCE model_draft.ego_supply_pf_generator_single_aggr_id
   INCREMENT 1;
-ALTER TABLE orig_geo_powerplants.pf_generator_single_aggr_id
+ALTER TABLE model_draft.ego_supply_pf_generator_single_aggr_id
   OWNER TO oeuser;
 
 -- source = (wind and solar) and p_nom < 50 MW
 
-UPDATE orig_geo_powerplants.pf_generator_single a
+UPDATE model_draft.ego_supply_pf_generator_single a
 	SET aggr_id = result.aggr_id
 		FROM 
-			(SELECT b.bus, b.w_id, b.source, nextval('orig_geo_powerplants.pf_generator_single_aggr_id') as aggr_id
-			FROM orig_geo_powerplants.pf_generator_single b 
+			(SELECT b.bus, b.w_id, b.source, nextval('model_draft.ego_supply_pf_generator_single_aggr_id') as aggr_id
+			FROM model_draft.ego_supply_pf_generator_single b 
 			WHERE p_nom < 50 AND source IN 
-				(SELECT source_id from calc_ego_hv_powerflow.source WHERE name = 'wind' OR name = 'solar') 
+				(SELECT source_id from model_draft.ego_grid_pf_hv_source WHERE name = 'wind' OR name = 'solar') 
 			GROUP BY bus, w_id, source)
 			as result
 	WHERE a.bus = result.bus AND a.w_id = result.w_id AND a.source = result.source;
 
 -- source != (wind and solar) and p_nom < 50 MW 
 	
-UPDATE orig_geo_powerplants.pf_generator_single a
+UPDATE model_draft.ego_supply_pf_generator_single a
 	SET aggr_id = result.aggr_id
 		FROM 
-			(SELECT b.bus, b.source, nextval('orig_geo_powerplants.pf_generator_single_aggr_id') as aggr_id
-			FROM orig_geo_powerplants.pf_generator_single b 
+			(SELECT b.bus, b.source, nextval('model_draft.ego_supply_pf_generator_single_aggr_id') as aggr_id
+			FROM model_draft.ego_supply_pf_generator_single b 
 			WHERE p_nom < 50 AND source NOT IN 
-				(SELECT source_id from calc_ego_hv_powerflow.source WHERE name = 'wind' OR name = 'solar')
+				(SELECT source_id from model_draft.ego_grid_pf_hv_source WHERE name = 'wind' OR name = 'solar')
 			GROUP BY b.bus, b.source)
 			as result
 	WHERE a.bus = result.bus AND a.source = result.source;
 
 -- all sources and p_nom >= 50MW
 
-UPDATE orig_geo_powerplants.pf_generator_single a
-	SET aggr_id = nextval('orig_geo_powerplants.pf_generator_single_aggr_id')
+UPDATE model_draft.ego_supply_pf_generator_single a
+	SET aggr_id = nextval('model_draft.ego_supply_pf_generator_single_aggr_id')
 	WHERE a.p_nom >= 50;
 
 -----------
@@ -296,7 +423,7 @@ UPDATE orig_geo_powerplants.pf_generator_single a
 -----------
 
 -- source = (wind and solar) and p_nom < 50 MW
-INSERT INTO calc_ego_hv_powerflow.generator (
+INSERT INTO model_draft.ego_grid_pf_hv_generator (
   generator_id,
   bus,
   dispatch,
@@ -321,13 +448,13 @@ SELECT
   max(p_max_pu_fixed),
   max(sign),
   source
-FROM orig_geo_powerplants.pf_generator_single a
+FROM model_draft.ego_supply_pf_generator_single a
 WHERE a.p_nom < 50 AND a.aggr_id IS NOT NULL AND source IN 
-	(SELECT source_id from calc_ego_hv_powerflow.source WHERE name = 'wind' OR name = 'solar')
+	(SELECT source_id from model_draft.ego_grid_pf_hv_source WHERE name = 'wind' OR name = 'solar')
 GROUP BY a.aggr_id, a.bus, a.w_id, a.source;
 
 -- source != (wind and solar) and p_nom < 50 MW 
-INSERT INTO calc_ego_hv_powerflow.generator (
+INSERT INTO model_draft.ego_grid_pf_hv_generator (
   generator_id,
   bus,
   dispatch,
@@ -352,15 +479,15 @@ SELECT
   max(p_max_pu_fixed),
   max(sign),
   source
-FROM orig_geo_powerplants.pf_generator_single a
+FROM model_draft.ego_supply_pf_generator_single a
 WHERE a.p_nom < 50 AND a.aggr_id IS NOT NULL AND source NOT IN 
-	(SELECT source_id from calc_ego_hv_powerflow.source WHERE name = 'wind' OR name = 'solar')
+	(SELECT source_id from model_draft.ego_grid_pf_hv_source WHERE name = 'wind' OR name = 'solar')
 	
 GROUP BY a.aggr_id, a.bus, a.source;
 
 -- all sources and p_nom >= 50MW
 
-INSERT INTO calc_ego_hv_powerflow.generator (
+INSERT INTO model_draft.ego_grid_pf_hv_generator (
   generator_id,
   bus,
   dispatch,
@@ -385,7 +512,7 @@ SELECT
   p_max_pu_fixed,
   sign,
   source
-FROM orig_geo_powerplants.pf_generator_single a
+FROM model_draft.ego_supply_pf_generator_single a
 WHERE a.p_nom >= 50 AND a.aggr_id IS NOT NULL;
 
 
@@ -394,33 +521,33 @@ WHERE a.p_nom >= 50 AND a.aggr_id IS NOT NULL;
 -----------
 -- create sequence for slack generators
 
-DROP SEQUENCE IF EXISTS calc_ego_hv_powerflow.slack_gen_seq; 
-CREATE SEQUENCE calc_ego_hv_powerflow.slack_gen_seq 
+DROP SEQUENCE IF EXISTS model_draft.ego_grid_pf_hv_slack_gen_seq; 
+CREATE SEQUENCE model_draft.ego_grid_pf_hv_slack_gen_seq 
   INCREMENT 1 
   MINVALUE 100000 
   MAXVALUE 9223372036854775807 
   START 100000 
   CACHE 1; 
-ALTER TABLE calc_ego_hv_powerflow.slack_gen_seq
+ALTER TABLE model_draft.ego_grid_pf_hv_slack_gen_seq
   OWNER TO oeuser;
 
  -- insert slack generators into poswerflow schema
  
-INSERT INTO calc_ego_hv_powerflow.generator 
+INSERT INTO model_draft.ego_grid_pf_hv_generator 
  (generator_id, 
  bus, 
  dispatch, 
  control) 
 SELECT 
- nextval('calc_ego_hv_powerflow.slack_gen_seq'), 
+ nextval('model_draft.ego_grid_pf_hv_slack_gen_seq'), 
  bus_i, 
  'flexible', 
  'Slack' 
 FROM 
- calc_ego_osmtgmod.bus_data 
+ grid.otg_ehvhv_bus_data 
 	WHERE cntr_id != 'DE' AND 
 	result_id = GREATEST(result_id) AND
-	bus_i IN (SELECT bus_id FROM calc_ego_hv_powerflow.bus) AND
+	bus_i IN (SELECT bus_id FROM model_draft.ego_grid_pf_hv_bus) AND
 	base_kv > 110;
 
 -- Scenario eGo data processing
@@ -432,5 +559,5 @@ INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_na
 		COUNT(generator_id)AS entries,
 		'OK' AS status,
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
-FROM	calc_ego_hv_powerflow.generator;
+FROM	model_draft.ego_grid_pf_hv_generator;
 
