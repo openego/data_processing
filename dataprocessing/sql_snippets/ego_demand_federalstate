@@ -1,9 +1,4 @@
-------------
--- Table set up for German electricity consumption in 2011 based on http://www.lak‐energiebilanzen.de/seiten/energiebilanzenLaender.cfm 
-------------
-
-
--- CREATE TABLE orig_ego_consumption.lak_consumption_per_federalstate 
+﻿-- CREATE TABLE demand.ego_demand_federalstate
 -- ( 
 --   eu_code character varying(7) NOT NULL, 
 --   federal_states character varying NOT NULL, 
@@ -14,11 +9,10 @@
 -- ) 
 -- ; 
 
-UPDATE orig_ego_consumption.lak_consumption_per_federalstate
-SET eu_code = RPAD(eu_code::text, 5, '0') -- Zero-pads to the right up to the length of 5;
+CREATE TABLE demand.ego_demand_federalstate AS
+	SELECT * FROM orig_ego_consumption.lak_consumption_per_federalstate; 
 
-
-COMMENT ON TABLE  orig_ego_consumption.lak_consumption_per_federalstate IS
+COMMENT ON TABLE  demand.ego_demand_federalstate IS
 '{
 "Name": "Electricity consumption per federal state in Germany",
 "Source": [{
@@ -113,107 +107,3 @@ COMMENT ON TABLE  orig_ego_consumption.lak_consumption_per_federalstate IS
 "Licence": [""],
 "Instructions for proper use": [""]
 }';
-
-SELECT obj_description('orig_ego_consumption.lak_consumption_per_federalstate'::regclass)::json;
-
--------------
--- Table set up for gross value added per German districts (Landkreise) in 2011 based on 
--- https://www.destatis.de/DE/Publikationen/Thematisch/VolkswirtschaftlicheGesamtrechnungen/VGRderLaender/VGR_KreisergebnisseBand1.html 
--------------
-
--- CREATE TABLE orig_ego_consumption.destatis_gva_per_districts
--- ( 
---   eu_code character varying(7) NOT NULL, 
---   district character varying NOT NULL, 
---   total_gva double precision NOT NULL, 
---   gva_industry double precision NOT NULL, 
---   gva_tertiary_sector double precision NOT NULL, ‐‐ Commercial, trading, public buildings etc. 
--- PRIMARY KEY (eu_code) 
--- ) 
--- ;
-
-COMMENT ON TABLE  orig_ego_consumption.destatis_gva_per_districts IS
-'{
-"Name": "Gross value added per district in Germany",
-"Source": [{
-                  "Name": "Statistisches Bundesamt (Destatis)- VGR der Länder",
-                  "URL":  "https://www.destatis.de/DE/Publikationen/Thematisch/VolkswirtschaftlicheGesamtrechnungen/VGRderLaender/VGR_KreisergebnisseBand1.html" }],
-"Reference date": "2011",
-"Date of collection": "15.12.2015",
-"Original file": "VGR_KreisergebnisseBand1_5820009117005.xls",
-"Spatial resolution": ["Germany"],
-"Description": ["Gross value added per administrative district for the business sectors industry and tertiary sector"],
-"Column": [
-                   {"Name": "eu_code",
-                    "Description": "nuts id for district",
-                    "Unit": "" },
-                   {"Name": "district",
-                    "Description": "district name",
-                    "Unit": "" },
-                   {"Name": "total_gva",
-                    "Description": "total gross value added per district",
-                    "Unit": "Million Euro" },
-                   {"Name": "gva_industry",
-                    "Description": "gross value added of industry per district",
-                    "Unit": "Mullion Euro" },
-                   {"Name": "gva_tertiary_sector",
-                    "Description": "gross value added of tertiary sector per district",
-                    "Unit": "Million Euro" }],
-"Changes":[
-                   {"Name": "Mario Kropshofer",
-                    "Mail": "mario.kropshofer2@stud.fh-flensburg.de",
-                    "Date":  "05.10.2016",
-                    "Comment": "..." }, 
-                    
-                   {"Name": "Ilka Cussmann",
-                    "Mail": "ilka.cussmann@hs-flensburg.de",
-                    "Date":  "25.10.2016",
-                    "Comment": "Completed json-string" }
-                    
-                  ],
-"ToDo": [""],
-"Licence": ["unspecified licence"],
-"Instructions for proper use": ["Reproduction and distribution, also of parts, are permitted provided that the source is mentioned. © Statistisches Landesamt Baden-Württemberg, Stuttgart, 2015"]
-}';
-
-
-SELECT obj_description('orig_ego_consumption.destatis_gva_per_districts'::regclass)::json;
-
-
-UPDATE orig_ego_consumption.destatis_gva_per_districts
-SET eu_code = RPAD(eu_code::text, 5, '0') -- Zero-pads to the right up to the length of 5;
-
-
--- The eu_code of some grid districts are inconsistent between orig_ego_consumption.destatis_gva_per_districts
--- and orig_vg250.vg250_4_krs. Therefore some eu_code are renamed in this table to achieve consistency. 
-
-UPDATE orig_ego_consumption.destatis_gva_per_districts
-	SET eu_code = 'DE80J'
-	WHERE eu_code = 'DE805';
-
-
-UPDATE orig_ego_consumption.destatis_gva_per_districts
-	SET eu_code = 'DE80K'
-	WHERE eu_code = 'DE806';
-
-UPDATE orig_ego_consumption.destatis_gva_per_districts
-	SET eu_code = 'DE80L'
-	WHERE eu_code = 'DE807';
-
-
-UPDATE orig_ego_consumption.destatis_gva_per_districts
-	SET eu_code = 'DE80M'
-	WHERE eu_code = 'DE808';
-
-
-UPDATE orig_ego_consumption.destatis_gva_per_districts
-	SET eu_code = 'DE80N'
-	WHERE eu_code = 'DE809';
-
-UPDATE orig_ego_consumption.destatis_gva_per_districts
-	SET eu_code = 'DE80O'
-	WHERE eu_code = 'DE80A';
- 
-
-
-
