@@ -309,7 +309,7 @@ CREATE INDEX  	eGo_paper_data_allocation_mvgd_geom_idx
 
 -- Scenario eGo data processing
 INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
-	SELECT	'0.1' AS version,
+	SELECT	'0.2' AS version,
 		'model_draft' AS schema_name,
 		'eGo_paper_data_allocation_mvgd' AS table_name,
 		'analyse_eGo_paper_result.sql' AS script_name,

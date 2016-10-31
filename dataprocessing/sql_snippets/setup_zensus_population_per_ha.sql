@@ -180,9 +180,9 @@ ALTER TABLE		orig_destatis.ego_deu_loads_zensus_cluster OWNER TO oeuser;
 
 -- Scenario eGo data processing
 INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
-	SELECT	'0.1' AS version,
 		'orig_destatis' AS schema_name,
 		'ego_deu_loads_zensus_cluster' AS table_name,
+	SELECT	'0.2' AS version,
 		'setup_zensus_population_per_ha.sql' AS script_name,
 		COUNT(geom)AS entries,
 		'OK' AS status,

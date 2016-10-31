@@ -134,7 +134,7 @@ COMMENT ON TABLE  model_draft.ego_grid_ehv_substation_voronoi IS
 
 -- Scenario eGo data processing
 INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
-	SELECT	'0.1' AS version,
+	SELECT	'0.2' AS version,
 		'calc_ego_substation' AS schema_name,
 		'ego_deu_voronoi_ehv' AS table_name,
 		'Voronoi_ehv.sql' AS script_name,

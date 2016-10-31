@@ -366,7 +366,7 @@ COMMENT ON TABLE  model_draft.ego_landuse_industry IS
 
 -- Scenario eGo data processing
 INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
-	SELECT	'0.1' AS version,
+	SELECT	'0.2' AS version,
 		'calc_ego_loads' AS schema_name,
 		'landuse_industry' AS table_name,
 		'process_eGo_osm_loads_industry.sql' AS script_name,
@@ -569,7 +569,7 @@ COMMENT ON TABLE  model_draft.ego_demand_hv_largescaleconsumer IS
 			  
 -- Scenario eGo data processing
 INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
-	SELECT	'0.1' AS version,
+	SELECT	'0.2' AS version,
 		'calc_ego_loads' AS schema_name,
 		'large_scale_consumer' AS table_name,
 		'process_eGo_osm_loads_industry.sql' AS script_name,

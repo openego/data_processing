@@ -27,7 +27,7 @@ ALTER TABLE	model_draft.ego_dea_per_generation_type_and_voltage_level
 
 -- scenario log
 INSERT INTO	scenario.ego_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,user_name,timestamp)
-	SELECT	'0.1' AS version,
+	SELECT	'0.2' AS version,
 		'model_draft' AS schema_name,
 		'ego_dea_per_generation_type_and_voltage_level' AS table_name,
 		'process_ego_dea_allocation_methods.sql' AS script_name,
@@ -86,7 +86,7 @@ UPDATE 	model_draft.ego_dea_per_grid_district AS t1
 
 -- scenario log
 INSERT INTO	scenario.ego_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,user_name,timestamp)
-	SELECT	'0.1' AS version,
+	SELECT	'0.2' AS version,
 		'model_draft' AS schema_name,
 		'ego_dea_per_grid_district' AS table_name,
 		'process_ego_dea_allocation_methods.sql' AS script_name,
@@ -136,7 +136,7 @@ FROM	model_draft.ego_dea_per_load_area AS la,
 
 -- scenario log
 INSERT INTO	scenario.ego_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,user_name,timestamp)
-	SELECT	'0.1' AS version,
+	SELECT	'0.2' AS version,
 		'model_draft' AS schema_name,
 		'ego_dea_per_load_area' AS table_name,
 		'process_ego_dea_allocation_methods.sql' AS script_name,
@@ -217,7 +217,7 @@ ALTER TABLE	model_draft.ego_dea_per_method
 
 -- scenario log
 INSERT INTO	scenario.ego_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,user_name,timestamp)
-	SELECT	'0.1' AS version,
+	SELECT	'0.2' AS version,
 		'model_draft' AS schema_name,
 		'ego_dea_per_method' AS table_name,
 		'process_ego_dea_allocation_methods.sql' AS script_name,

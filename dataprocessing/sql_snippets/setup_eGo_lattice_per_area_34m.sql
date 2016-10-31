@@ -81,7 +81,7 @@ WHERE  	t1.gid = t2.gid;
 
 -- Scenario eGo data processing
 INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,user_name,timestamp)
-	SELECT	'0.1' AS version,
+	SELECT	'0.2' AS version,
 		'model_draft' AS schema_name,
 		'eGo_lattice_la_34m' AS table_name,
 		'setup_eGo_lattice_per_area.sql' AS script_name,
@@ -113,7 +113,7 @@ ALTER TABLE			model_draft.eGo_lattice_la_34m_mview OWNER TO oeuser;
 
 -- Scenario eGo data processing
 INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,user_name,timestamp)
-	SELECT	'0.1' AS version,
+	SELECT	'0.2' AS version,
 		'model_draft' AS schema_name,
 		'eGo_lattice_la_34m_mview' AS table_name,
 		'setup_eGo_lattice_per_area.sql' AS script_name,

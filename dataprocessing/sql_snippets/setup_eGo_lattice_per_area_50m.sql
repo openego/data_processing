@@ -80,7 +80,7 @@ UPDATE 	model_draft.ego_lattice_deu_50m AS t1
 
 -- scenario log
 INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,user_name,timestamp)
-	SELECT	'0.1' AS version,
+	SELECT	'0.2' AS version,
 		'model_draft' AS schema_name,
 		'ego_lattice_deu_50m' AS table_name,
 		'setup_eGo_lattice_per_area.sql' AS script_name,
@@ -111,7 +111,7 @@ ALTER TABLE		model_draft.ego_lattice_deu_50m_la_mview OWNER TO oeuser;
 
 -- scenario log
 INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,user_name,timestamp)
-	SELECT	'0.1' AS version,
+	SELECT	'0.2' AS version,
 		'model_draft' AS schema_name,
 		'ego_lattice_deu_50m_la_mview' AS table_name,
 		'setup_eGo_lattice_per_area.sql' AS script_name,

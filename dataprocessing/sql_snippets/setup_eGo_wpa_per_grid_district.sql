@@ -24,7 +24,7 @@ CREATE INDEX eGo_wpa_idx
 
 -- Scenario eGo data processing
 INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,user_name,timestamp)
-	SELECT	'0.1' AS version,
+	SELECT	'0.2' AS version,
 		'model_draft' AS schema_name,
 		'eGo_wpa' AS table_name,
 		'setup_eGo_wpa_per_grid_district.sql' AS script_name,
@@ -88,7 +88,7 @@ WHERE  	t1.id = t2.id;
 
 -- Scenario eGo data processing
 INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,user_name,timestamp)
-	SELECT	'0.1' AS version,
+	SELECT	'0.2' AS version,
 		'model_draft' AS schema_name,
 		'eGo_wpa_per_grid_district' AS table_name,
 		'setup_eGo_wpa_per_grid_district.sql' AS script_name,

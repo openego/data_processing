@@ -16,7 +16,7 @@ INSERT INTO calc_ego_hv_powerflow.load_pq_set (load_id, temp_id, p_set, q_set)
 
 -- Scenario eGo data processing
 INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
-	SELECT	'0.1' AS version,
+	SELECT	'0.2' AS version,
 		'calc_ego_hv_powerflow' AS schema_name,
 		'load_pq_set' AS table_name,
 		'demandseries_TOPF.sql' AS script_name,

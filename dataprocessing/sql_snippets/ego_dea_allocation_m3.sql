@@ -48,7 +48,7 @@ UPDATE 	model_draft.ego_dea_allocation AS dea
 
 -- scenario log
 INSERT INTO	scenario.ego_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,user_name,timestamp)
-	SELECT	'0.1' AS version,
+	SELECT	'0.2' AS version,
 		'model_draft' AS schema_name,
 		'ego_dea_allocation_m3_a_mview' AS table_name,
 		'process_ego_dea_allocation_methods.sql' AS script_name,
@@ -195,7 +195,7 @@ DROP TABLE IF EXISTS 	model_draft.ego_m3_jnt_temp CASCADE;
 
 -- scenario log
 INSERT INTO	scenario.ego_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,user_name,timestamp)
-	SELECT	'0.1' AS version,
+	SELECT	'0.2' AS version,
 		'model_draft' AS schema_name,
 		'ego_dea_allocation_m3_mview' AS table_name,
 		'process_ego_dea_allocation_methods.sql' AS script_name,
@@ -207,7 +207,7 @@ INSERT INTO	scenario.ego_data_processing_clean_run (version,schema_name,table_na
 
 -- scenario log
 INSERT INTO	scenario.ego_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,user_name,timestamp)
-	SELECT	'0.1' AS version,
+	SELECT	'0.2' AS version,
 		'model_draft' AS schema_name,
 		'ego_dea_allocation_m3_rest_mview' AS table_name,
 		'process_ego_dea_allocation_methods.sql' AS script_name,

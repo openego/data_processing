@@ -184,7 +184,7 @@ GROUP BY a.bus;
 
 -- Scenario eGo data processing
 INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
-	SELECT	'0.1' AS version,
+	SELECT	'0.2' AS version,
 		'calc_ego_hv_powerflow' AS schema_name,
 		'load' AS table_name,
 		'assignment_load_bus.sql' AS script_name,

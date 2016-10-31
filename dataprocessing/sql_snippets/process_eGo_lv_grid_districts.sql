@@ -583,7 +583,7 @@ SELECT obj_description('model_draft.ego_grid_lv_grid_district'::regclass)::json;
 
 -- Add entry to scenario logtable
 INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,user_name,timestamp)
-SELECT	'0.1' AS version,
+SELECT	'0.2' AS version,
 	'model_draft' AS schema_name,
 	'ego_grid_lv_grid_district' AS table_name,
 	'process_eGo_lv_grid_districts.sql' AS script_name,

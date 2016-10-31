@@ -126,7 +126,7 @@ COMMENT ON TABLE  model_draft.renpassgis_economic_weatherpoint_voronoi IS
 
 -- Scenario eGo data processing
 INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
-	SELECT	'0.1' AS version,
+	SELECT	'0.2' AS version,
 		'calc_renpass_gis' AS schema_name,
 		'voronoi_weatherpoint' AS table_name,
 		'voronoi_weatherpoint.sql' AS script_name,

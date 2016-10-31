@@ -21,7 +21,7 @@ ALTER TABLE		openstreetmap.osm_deu_landuse_mview OWNER TO oeuser;
 
 -- Scenario eGo data processing
 INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,user_name,timestamp)
-	SELECT	'0.1' AS version,
+	SELECT	'0.2' AS version,
 		'openstreetmap' AS schema_name,
 		'osm_deu_landuse_mview' AS table_name,
 		'analyse_osm_landuse.sql' AS script_name,
@@ -51,7 +51,7 @@ ALTER TABLE		openstreetmap.osm_deu_landuse_20160113_mview OWNER TO oeuser;
 
 -- Scenario eGo data processing
 INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
-	SELECT	'0.1' AS version,
+	SELECT	'0.2' AS version,
 		'openstreetmap' AS schema_name,
 		'osm_deu_landuse_20160113_mview' AS table_name,
 		'analyse_osm_landuse.sql' AS script_name,
@@ -80,7 +80,7 @@ ALTER TABLE		openstreetmap.osm_deu_landuse_20160916_mview OWNER TO oeuser;
 
 -- Scenario eGo data processing
 INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
-	SELECT	'0.1' AS version,
+	SELECT	'0.2' AS version,
 		'openstreetmap' AS schema_name,
 		'osm_deu_landuse_20160916_mview' AS table_name,
 		'analyse_osm_landuse.sql' AS script_name,
@@ -113,7 +113,7 @@ ALTER TABLE		openstreetmap.osm_deu_landuse_20161005_mview OWNER TO oeuser;
 
 -- Scenario eGo data processing
 INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
-	SELECT	'0.1' AS version,
+	SELECT	'0.2' AS version,
 		'openstreetmap' AS schema_name,
 		'osm_deu_landuse_20161005_mview' AS table_name,
 		'analyse_osm_landuse.sql' AS script_name,

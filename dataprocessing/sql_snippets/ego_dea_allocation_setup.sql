@@ -152,7 +152,7 @@ DROP TABLE IF EXISTS	model_draft.ego_dea_allocation_out_nn CASCADE;
 
 -- scenario log
 INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,user_name,timestamp)
-	SELECT	'0.1' AS version,
+	SELECT	'0.2' AS version,
 		'model_draft' AS schema_name,
 		'ego_dea_allocation_out_mview' AS table_name,
 		'process_eGo_dea_allocation_methods.sql' AS script_name,
@@ -205,7 +205,7 @@ ALTER TABLE			model_draft.ego_dea_agricultural_sector_per_grid_district OWNER TO
 
 -- scenario log
 INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,user_name,timestamp)
-	SELECT	'0.1' AS version,
+	SELECT	'0.2' AS version,
 		'model_draft' AS schema_name,
 		'ego_dea_agricultural_sector_per_grid_district' AS table_name,
 		'process_eGo_dea_allocation_methods.sql' AS script_name,
