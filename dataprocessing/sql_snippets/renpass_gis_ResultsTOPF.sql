@@ -14,7 +14,7 @@ as
 select 
 SQ.aggr_id, SQ.source, SQ.p_nom / sum(SQ.p_nom) over (partition by SQ.source) as fraction_of_installed
 from
-(select aggr_id, source, sum(p_nom) as p_nom from orig_geo_powerplants.pf_generator_single group by aggr_id, source) SQ;
+(select aggr_id, source, sum(p_nom) as p_nom from model_draft.ego_supply_pf_generator_single group by aggr_id, source) SQ;
 
  
 -- DROP materialized view calc_renpass_gis.pp_feedin_by_pf_source
@@ -56,14 +56,14 @@ where SQ.source is not null
 group by SQ.source, SQ.datetime;
 
 --
-DELETE FROM calc_ego_hv_powerflow.generator_pq_set;
-DELETE FROM calc_ego_hv_powerflow.temp_resolution;
+DELETE FROM model_draft.ego_grid_pf_hv_generator_pq_set;
+DELETE FROM model_draft.ego_grid_pf_hv_temp_resolution;
 
-INSERT INTO calc_ego_hv_powerflow.temp_resolution (temp_id, timesteps, resolution, start_time)
+INSERT INTO model_draft.ego_grid_pf_hv_temp_resolution (temp_id, timesteps, resolution, start_time)
 SELECT 1, 8760, 'h', TIMESTAMP '2011-01-01 00:00:00';
 
 -- construct array per aggr_id according to source timeseries
-Insert into calc_ego_hv_powerflow.generator_pq_set (scn_name, generator_id, temp_id, p_set)
+Insert into model_draft.ego_grid_pf_hv_generator_pq_set (scn_name, generator_id, temp_id, p_set)
 select 'Status Quo' as scn_name, A.aggr_id, 1 as temp_id, array_agg(A.fraction_of_installed * B.val order by B.datetime) as p_set from calc_renpass_gis.pf_pp_by_source_aggr_id A,
 calc_renpass_gis.pp_feedin_by_pf_source B where A.source = B.source
 group by A.aggr_id;
@@ -72,11 +72,11 @@ group by A.aggr_id;
 -- Scenario eGo data processing
 INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
 	SELECT	'0.2' AS version,
-		'calc_ego_hv_powerflow' AS schema_name,
-		'generator_pq_set' AS table_name,
+		'model_draft' AS schema_name,
+		'ego_grid_pf_hv_generator_pq_set' AS table_name,
 		'renpass_gis_ResultsTOPF.sql' AS script_name,
 		COUNT(generator_id)AS entries,
 		'OK' AS status,
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
-FROM	calc_ego_hv_powerflow.generator_pq_set;
+FROM	model_draft.ego_grid_pf_hv_generator_pq_set;
 

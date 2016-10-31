@@ -1,8 +1,8 @@
 -- Assigment of otg_id for demand time series
 
-DELETE FROM calc_ego_hv_powerflow.load_pq_set;
+DELETE FROM model_draft.ego_grid_pf_hv_load_pq_set;
 
-INSERT INTO calc_ego_hv_powerflow.load_pq_set (load_id, temp_id, p_set, q_set)
+INSERT INTO model_draft.ego_grid_pf_hv_load_pq_set (load_id, temp_id, p_set, q_set)
 	SELECT
 	result.otg_id,
 	1,
@@ -10,8 +10,8 @@ INSERT INTO calc_ego_hv_powerflow.load_pq_set (load_id, temp_id, p_set, q_set)
 	b.q_set
 
 	FROM 
-		(SELECT subst_id, otg_id FROM calc_ego_substation.ego_deu_substations) 
-		AS result, calc_ego_loads.ego_demand_per_transition_point b
+		(SELECT subst_id, otg_id FROM model_draft.ego_grid_hvmv_substation) 
+		AS result, model_draft.ego_demand_hvmv_demand b
 	WHERE b.id = result.otg_id;
 
 -- Scenario eGo data processing
@@ -23,4 +23,4 @@ INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_na
 		COUNT(load_id)AS entries,
 		'OK' AS status,
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
-FROM	calc_ego_hv_powerflow.load_pq_set;
+FROM	model_draft.ego_grid_pf_hv_load_pq_set;
