@@ -34,7 +34,7 @@ CONSTRAINT 	ego_deu_load_area_pkey PRIMARY KEY (id));
 INSERT INTO     model_draft.ego_demand_loadarea (geom)
 	SELECT	loads.geom ::geometry(Polygon,3035)
 	FROM	(SELECT (ST_DUMP(ST_SAFE_INTERSECTION(loads.geom,dis.geom))).geom AS geom
-		FROM	orig_ego.ego_deu_loads_melted AS loads,
+		FROM	model_draft.ego_demand_load_melt AS loads,
 			model_draft.ego_grid_mv_griddistrict AS dis
 		WHERE	loads.geom && dis.geom
 		) AS loads

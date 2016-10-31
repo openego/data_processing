@@ -62,7 +62,7 @@ FROM    (
 	SELECT	grid.gid AS gid,
 		gd.subst_id AS subst_id
 	FROM	model_draft.eGo_lattice_deu_500m AS grid,
-		calc_ego_grid_district.grid_district AS gd
+		model_draft.ego_grid_mv_griddistrict AS gd
 	WHERE  	gd.geom && grid.geom AND
 		ST_CONTAINS(gd.geom,grid.geom)
 	) AS t2
@@ -88,7 +88,7 @@ FROM    (
 	SELECT	grid.gid AS gid,
 		'la' AS area_type
 	FROM	model_draft.eGo_lattice_deu_500m AS grid,
-		calc_ego_loads.ego_deu_load_area AS la
+		model_draft.ego_demand_loadarea AS la
 	WHERE  	la.geom && grid.geom AND
 		ST_CONTAINS(la.geom,grid.geom)
 	) AS t2
@@ -101,7 +101,7 @@ FROM    (
 	SELECT	grid.gid AS gid,
 		'x' AS area_type
 	FROM	model_draft.eGo_lattice_deu_500m AS grid,
-		calc_ego_loads.ego_deu_load_area AS la,
+		model_draft.ego_demand_loadarea AS la,
 		model_draft.eGo_wpa_per_grid_district AS wpa
 	WHERE  	la.geom && grid.geom AND wpa.geom && grid.geom AND
 		ST_CONTAINS(la.geom,grid.geom) AND ST_CONTAINS(wpa.geom,grid.geom)
@@ -322,7 +322,7 @@ SELECT 	'out' ::text AS area_type,
 		ST_xmin (box2d(box.geom)),
 		ST_ymin (box2d(box.geom))
 										),3035)::geometry(POLYGON,3035) AS geom_poly
-	FROM calc_ego_loads.ego_deu_load_area AS box ;
+	FROM model_draft.ego_demand_loadarea AS box ;
 
 -- Create Index GIST (geom_poly)
 CREATE INDEX	eGo_lattice_la_50m_geom_poly_idx
@@ -351,7 +351,7 @@ FROM    (
 	SELECT	grid.gid AS gid,
 		gd.subst_id AS subst_id
 	FROM	model_draft.eGo_lattice_la_50m AS grid,
-		calc_ego_grid_district.grid_district AS gd
+		model_draft.ego_grid_mv_griddistrict AS gd
 	WHERE  	gd.geom && grid.geom AND
 		ST_CONTAINS(gd.geom,grid.geom)
 	) AS t2
@@ -364,7 +364,7 @@ FROM    (
 	SELECT	grid.gid AS gid,
 		'la' AS area_type
 	FROM	model_draft.eGo_lattice_la_50m AS grid,
-		calc_ego_loads.ego_deu_load_area AS la
+		model_draft.ego_demand_loadarea AS la
 	WHERE  	la.geom && grid.geom AND
 		ST_CONTAINS(la.geom,grid.geom)
 	) AS t2
@@ -495,7 +495,7 @@ SELECT 	'out' ::text AS area_type,
 		ST_xmin (box2d(box.geom)),
 		ST_ymin (box2d(box.geom))
 										),3035)::geometry(POLYGON,3035) AS geom_poly
-	FROM calc_ego_loads.ego_deu_load_area AS box ;
+	FROM model_draft.ego_demand_loadarea AS box ;
 
 -- Create Index GIST (geom_poly)
 CREATE INDEX	eGo_lattice_la_34m_geom_poly_idx
@@ -524,7 +524,7 @@ FROM    (
 	SELECT	grid.gid AS gid,
 		gd.subst_id AS subst_id
 	FROM	model_draft.eGo_lattice_la_34m AS grid,
-		calc_ego_grid_district.grid_district AS gd
+		model_draft.ego_grid_mv_griddistrict AS gd
 	WHERE  	gd.geom && grid.geom AND
 		ST_CONTAINS(gd.geom,grid.geom)
 	) AS t2
@@ -537,7 +537,7 @@ FROM    (
 	SELECT	grid.gid AS gid,
 		'la' AS area_type
 	FROM	model_draft.eGo_lattice_la_34m AS grid,
-		calc_ego_loads.ego_deu_load_area AS la
+		model_draft.ego_demand_loadarea AS la
 	WHERE  	la.geom && grid.geom AND
 		ST_CONTAINS(la.geom,grid.geom)
 	) AS t2

@@ -51,7 +51,7 @@ CREATE TABLE model_draft.eGo_lattice_la_50m AS
 		ST_xmin (box2d(geom)),
 		ST_ymin (box2d(geom))
 										),3035)::geometry(POLYGON,3035) AS geom
-	FROM calc_ego_loads.ego_deu_load_area;
+	FROM model_draft.ego_demand_loadarea;
 
 -- Add ID
 ALTER TABLE model_draft.eGo_lattice_la_50m ADD "gid" SERIAL;
@@ -89,7 +89,7 @@ CREATE TABLE model_draft.eGo_lattice_la_34m AS
 		ST_xmin (box2d(geom)),
 		ST_ymin (box2d(geom))
 										),3035)::geometry(POLYGON,3035) AS geom
-	FROM calc_ego_loads.ego_deu_load_area;
+	FROM model_draft.ego_demand_loadarea;
 
 -- Add ID
 ALTER TABLE model_draft.eGo_lattice_la_34m ADD "gid" SERIAL;

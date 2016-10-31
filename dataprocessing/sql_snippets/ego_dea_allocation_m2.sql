@@ -87,7 +87,7 @@ UPDATE 	model_draft.ego_dea_allocation_m2_windfarm AS t1
 		SELECT	farm.farm_id AS farm_id,
 			gd.subst_id AS subst_id
 		FROM	model_draft.ego_dea_allocation_m2_windfarm AS farm,
-			calc_ego_grid_district.grid_district AS gd
+			model_draft.ego_grid_mv_griddistrict AS gd
 		WHERE  	gd.geom && ST_CENTROID(farm.geom) AND
 			ST_CONTAINS(gd.geom,ST_CENTROID(farm.geom))
 		) AS t2

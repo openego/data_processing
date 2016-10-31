@@ -7,30 +7,30 @@
 ---------- ---------- ---------- ---------- ---------- ----------
 
 -- "Loads OSM & Loads Zensus Cluster"   (OK!) 100ms =0
-DROP TABLE IF EXISTS	calc_ego_loads.ego_deu_loads_collect CASCADE;
-CREATE TABLE		calc_ego_loads.ego_deu_loads_collect (
+DROP TABLE IF EXISTS	model_draft.ego_demand_load_collect CASCADE;
+CREATE TABLE		model_draft.ego_demand_load_collect (
 		id SERIAL,
 		geom geometry(Polygon,3035),
-CONSTRAINT	ego_deu_loads_collect_pkey PRIMARY KEY (id));
+CONSTRAINT	ego_demand_load_collect_pkey PRIMARY KEY (id));
 
 -- "Insert Loads OSM"   (OK!) 7.000ms =169.639
-INSERT INTO	calc_ego_loads.ego_deu_loads_collect (geom)
+INSERT INTO	model_draft.ego_demand_load_collect (geom)
 	SELECT	osm.geom
 	FROM	openstreetmap.ego_deu_loads_osm AS osm;
 
 -- "Insert Loads Zensus Cluster"   (OK!) 3.000ms =454.112
-INSERT INTO	calc_ego_loads.ego_deu_loads_collect (geom)
+INSERT INTO	model_draft.ego_demand_load_collect (geom)
 	SELECT	zensus.geom
 	FROM	model_draft.ego_social_zensus_loads_cluster AS zensus;
 
 -- "Create Index GIST (geom)"   (OK!) 7.000ms =0
-CREATE INDEX	ego_deu_loads_collect_geom_idx
-	ON	calc_ego_loads.ego_deu_loads_collect
+CREATE INDEX	ego_demand_load_collect_geom_idx
+	ON	model_draft.ego_demand_load_collect
 	USING	GIST (geom);
 
 -- "Grant oeuser"   (OK!) -> 100ms =600.828
-GRANT ALL ON TABLE	calc_ego_loads.ego_deu_loads_collect TO oeuser WITH GRANT OPTION;
-ALTER TABLE		calc_ego_loads.ego_deu_loads_collect OWNER TO oeuser;
+GRANT ALL ON TABLE	model_draft.ego_demand_load_collect TO oeuser WITH GRANT OPTION;
+ALTER TABLE		model_draft.ego_demand_load_collect OWNER TO oeuser;
 
 
 ---------- ---------- ----------
@@ -38,36 +38,36 @@ ALTER TABLE		calc_ego_loads.ego_deu_loads_collect OWNER TO oeuser;
 ---------- ---------- ----------
 
 -- "Sequence"   (OK!) 100ms =0
-DROP SEQUENCE IF EXISTS 	calc_ego_loads.ego_deu_loads_collect_buffer100_mview_id CASCADE;
-CREATE SEQUENCE 		calc_ego_loads.ego_deu_loads_collect_buffer100_mview_id;
+DROP SEQUENCE IF EXISTS 	model_draft.ego_demand_load_collect_buffer100_mview_id CASCADE;
+CREATE SEQUENCE 		model_draft.ego_demand_load_collect_buffer100_mview_id;
 
 -- "Buffer100"   (OK!) 21.832.000ms =143.227
-DROP MATERIALIZED VIEW IF EXISTS	calc_ego_loads.ego_deu_loads_collect_buffer100_mview CASCADE;
-CREATE MATERIALIZED VIEW		calc_ego_loads.ego_deu_loads_collect_buffer100_mview AS
-	SELECT	nextval('calc_ego_loads.ego_deu_loads_collect_buffer100_mview_id') AS id,
+DROP MATERIALIZED VIEW IF EXISTS	model_draft.ego_demand_load_collect_buffer100_mview CASCADE;
+CREATE MATERIALIZED VIEW		model_draft.ego_demand_load_collect_buffer100_mview AS
+	SELECT	nextval('model_draft.ego_demand_load_collect_buffer100_mview_id') AS id,
 		(ST_DUMP(ST_MULTI(ST_UNION(
 			ST_BUFFER(poly.geom, 100)
 		)))).geom ::geometry(Polygon,3035) AS geom
-	FROM	calc_ego_loads.ego_deu_loads_collect AS poly;
+	FROM	model_draft.ego_demand_load_collect AS poly;
 
 -- "Create Index (id)"   (OK!) -> 1.000ms =0
-CREATE UNIQUE INDEX  	ego_deu_loads_collect_buffer100_mview_id_idx
-		ON	calc_ego_loads.ego_deu_loads_collect_buffer100_mview (id);
+CREATE UNIQUE INDEX  	ego_demand_load_collect_buffer100_mview_id_idx
+		ON	model_draft.ego_demand_load_collect_buffer100_mview (id);
 
 -- "Create Index GIST (geom)"   (OK!) 2.000ms =0
-CREATE INDEX	ego_deu_loads_collect_buffer100_mview_geom_idx
-	ON	calc_ego_loads.ego_deu_loads_collect_buffer100_mview
+CREATE INDEX	ego_demand_load_collect_buffer100_mview_geom_idx
+	ON	model_draft.ego_demand_load_collect_buffer100_mview
 	USING	GIST (geom);
     
 -- "Grant oeuser"   (OK!) -> 100ms =0
-GRANT ALL ON TABLE	calc_ego_loads.ego_deu_loads_collect_buffer100_mview TO oeuser WITH GRANT OPTION;
-ALTER TABLE		calc_ego_loads.ego_deu_loads_collect_buffer100_mview OWNER TO oeuser;
+GRANT ALL ON TABLE	model_draft.ego_demand_load_collect_buffer100_mview TO oeuser WITH GRANT OPTION;
+ALTER TABLE		model_draft.ego_demand_load_collect_buffer100_mview OWNER TO oeuser;
 
 ---------------------------
 
 -- -- "Validate (geom)"   (OK!) -> 100ms =0
--- DROP VIEW IF EXISTS	calc_ego_loads.ego_deu_loads_collect_buffer100_mview_error_geom_view CASCADE;
--- CREATE VIEW		calc_ego_loads.ego_deu_loads_collect_buffer100_mview_error_geom_view AS 
+-- DROP VIEW IF EXISTS	model_draft.ego_demand_load_collect_buffer100_mview_error_geom_view CASCADE;
+-- CREATE VIEW		model_draft.ego_demand_load_collect_buffer100_mview_error_geom_view AS
 -- 	SELECT	test.id,
 -- 		test.error,
 -- 		reason(ST_IsValidDetail(test.geom)) AS error_reason,
@@ -76,16 +76,16 @@ ALTER TABLE		calc_ego_loads.ego_deu_loads_collect_buffer100_mview OWNER TO oeuse
 -- 		SELECT	source.id AS id,					-- PK
 -- 			ST_IsValid(source.geom) AS error,
 -- 			source.geom AS geom
--- 		FROM	calc_ego_loads.ego_deu_loads_collect_buffer100_mview AS source	-- Table
+-- 		FROM	model_draft.ego_demand_load_collect_buffer100_mview AS source	-- Table
 -- 		) AS test
 -- 	WHERE	test.error = FALSE;
 -- 
 -- -- "Grant oeuser"   (OK!) -> 100ms =0
--- GRANT ALL ON TABLE	calc_ego_loads.ego_deu_loads_collect_buffer100_mview_error_geom_view TO oeuser WITH GRANT OPTION;
--- ALTER TABLE		calc_ego_loads.ego_deu_loads_collect_buffer100_mview_error_geom_view OWNER TO oeuser;
+-- GRANT ALL ON TABLE	model_draft.ego_demand_load_collect_buffer100_mview_error_geom_view TO oeuser WITH GRANT OPTION;
+-- ALTER TABLE		model_draft.ego_demand_load_collect_buffer100_mview_error_geom_view OWNER TO oeuser;
 -- 
 -- -- "Drop empty view"   (OK!) -> 5.000ms =1
--- SELECT f_drop_view('{ego_deu_loads_collect_buffer100_mview_error_geom_view}', 'calc_ego_loads');
+-- SELECT f_drop_view('{ego_demand_load_collect_buffer100_mview_error_geom_view}', 'calc_ego_loads');
 
 
 ---------- ---------- ----------
@@ -93,27 +93,27 @@ ALTER TABLE		calc_ego_loads.ego_deu_loads_collect_buffer100_mview OWNER TO oeuse
 ---------- ---------- ----------
 
 -- -- "Create Table"   (OK!) 100ms =0
--- DROP TABLE IF EXISTS	calc_ego_loads.ego_deu_loads_collect_buffer100;
--- CREATE TABLE		calc_ego_loads.ego_deu_loads_collect_buffer100 (
+-- DROP TABLE IF EXISTS	model_draft.ego_demand_load_collect_buffer100;
+-- CREATE TABLE		model_draft.ego_demand_load_collect_buffer100 (
 -- 		id SERIAL,
 -- 		geom geometry(Polygon,3035),
--- CONSTRAINT 	ego_deu_loads_collect_buffer100_pkey PRIMARY KEY (id));
+-- CONSTRAINT 	ego_demand_load_collect_buffer100_pkey PRIMARY KEY (id));
 -- 
 -- -- "Insert Buffer"   (OK!) 3.700.000ms =140.578 (151.436)
--- INSERT INTO	calc_ego_loads.ego_deu_loads_collect_buffer100 (geom)
+-- INSERT INTO	model_draft.ego_demand_load_collect_buffer100 (geom)
 -- 	SELECT	(ST_DUMP(ST_MULTI(ST_UNION(
 -- 			ST_BUFFER(ST_TRANSFORM(poly.geom,3035), 100)
 -- 		)))).geom ::geometry(Polygon,3035) AS geom
--- 	FROM	calc_ego_loads.ego_deu_loads_collect AS poly;
+-- 	FROM	model_draft.ego_demand_load_collect AS poly;
 -- 
 -- -- "Create Index GIST (geom)"   (OK!) 2.000ms =0
--- CREATE INDEX	ego_deu_loads_collect_buffer100_geom_idx
--- 	ON	calc_ego_loads.ego_deu_loads_collect_buffer100
+-- CREATE INDEX	ego_demand_load_collect_buffer100_geom_idx
+-- 	ON	model_draft.ego_demand_load_collect_buffer100
 -- 	USING	GIST (geom);
 --     
 -- -- "Grant oeuser"   (OK!) -> 100ms =0
--- GRANT ALL ON TABLE	calc_ego_loads.ego_deu_loads_collect_buffer100 TO oeuser WITH GRANT OPTION;
--- ALTER TABLE		calc_ego_loads.ego_deu_loads_collect_buffer100 OWNER TO oeuser;
+-- GRANT ALL ON TABLE	model_draft.ego_demand_load_collect_buffer100 TO oeuser WITH GRANT OPTION;
+-- ALTER TABLE		model_draft.ego_demand_load_collect_buffer100 OWNER TO oeuser;
 
 
 
@@ -122,39 +122,39 @@ ALTER TABLE		calc_ego_loads.ego_deu_loads_collect_buffer100_mview OWNER TO oeuse
 ---------- ---------- ---------- ---------- ---------- ----------
 
 -- "Sequence"   (OK!) 100ms =0
-DROP SEQUENCE IF EXISTS 	calc_ego_loads.ego_deu_loads_melted_mview_id CASCADE;
-CREATE SEQUENCE 		calc_ego_loads.ego_deu_loads_melted_mview_id;
+DROP SEQUENCE IF EXISTS 	model_draft.ego_demand_load_melt_mview_id CASCADE;
+CREATE SEQUENCE 		model_draft.ego_demand_load_melt_mview_id;
 
 
 -- "Create Table"   (OK!) 340.000ms =189.104
-DROP TABLE IF EXISTS	calc_ego_loads.ego_deu_loads_melted CASCADE;
-CREATE TABLE		calc_ego_loads.ego_deu_loads_melted AS
-	SELECT	nextval('calc_ego_loads.ego_deu_loads_melted_mview_id') AS id,
+DROP TABLE IF EXISTS	model_draft.ego_demand_load_melt CASCADE;
+CREATE TABLE		model_draft.ego_demand_load_melt AS
+	SELECT	nextval('model_draft.ego_demand_load_melt_mview_id') AS id,
 		(ST_DUMP(ST_MULTI(ST_UNION(
 			ST_BUFFER(buffer.geom, -100)
 		)))).geom ::geometry(Polygon,3035) AS geom
-	FROM	calc_ego_loads.ego_deu_loads_collect_buffer100_mview AS buffer
+	FROM	model_draft.ego_demand_load_collect_buffer100_mview AS buffer
 	GROUP BY buffer.id
 	ORDER BY buffer.id;
 
 -- "Ad PK"   (OK!) 150ms =0
-ALTER TABLE	calc_ego_loads.ego_deu_loads_melted
+ALTER TABLE	model_draft.ego_demand_load_melt
 	ADD PRIMARY KEY (id);
 
 -- "Create Index GIST (geom)"   (OK!) 2.000ms =0
-CREATE INDEX	ego_deu_loads_melted_geom_idx
-	ON	calc_ego_loads.ego_deu_loads_melted
+CREATE INDEX	ego_demand_load_melt_geom_idx
+	ON	model_draft.ego_demand_load_melt
 	USING	GIST (geom);
     
 -- "Grant oeuser"   (OK!) -> 100ms =0
-GRANT ALL ON TABLE	calc_ego_loads.ego_deu_loads_melted TO oeuser WITH GRANT OPTION;
-ALTER TABLE		calc_ego_loads.ego_deu_loads_melted OWNER TO oeuser;
+GRANT ALL ON TABLE	model_draft.ego_demand_load_melt TO oeuser WITH GRANT OPTION;
+ALTER TABLE		model_draft.ego_demand_load_melt OWNER TO oeuser;
 
 ---------- ---------- ----------
 -- 
 -- "Validate (geom)"   (OK!) -> 100ms =0
-DROP VIEW IF EXISTS	calc_ego_loads.ego_deu_loads_melted_error_geom_view CASCADE;
-CREATE VIEW		calc_ego_loads.ego_deu_loads_melted_error_geom_view AS 
+DROP VIEW IF EXISTS	model_draft.ego_demand_load_melt_error_geom_view CASCADE;
+CREATE VIEW		model_draft.ego_demand_load_melt_error_geom_view AS
 	SELECT	test.id,
 		test.error,
 		reason(ST_IsValidDetail(test.geom)) AS error_reason,
@@ -164,94 +164,94 @@ CREATE VIEW		calc_ego_loads.ego_deu_loads_melted_error_geom_view AS
 		SELECT	source.id AS id,				-- PK
 			ST_IsValid(source.geom) AS error,
 			source.geom AS geom
-		FROM	calc_ego_loads.ego_deu_loads_melted AS source	-- Table
+		FROM	model_draft.ego_demand_load_melt AS source	-- Table
 		) AS test
 	WHERE	test.error = FALSE;
 
 -- "Grant oeuser"   (OK!) -> 100ms =0
-GRANT ALL ON TABLE	calc_ego_loads.ego_deu_loads_melted_error_geom_view TO oeuser WITH GRANT OPTION;
-ALTER TABLE		calc_ego_loads.ego_deu_loads_melted_error_geom_view OWNER TO oeuser;
+GRANT ALL ON TABLE	model_draft.ego_demand_load_melt_error_geom_view TO oeuser WITH GRANT OPTION;
+ALTER TABLE		model_draft.ego_demand_load_melt_error_geom_view OWNER TO oeuser;
 
 -- -- "Drop empty view"   (OK!) -> 3.000ms =1
--- SELECT f_drop_view('{ego_deu_loads_melted_error_geom_view}', 'calc_ego_loads');
+-- SELECT f_drop_view('{ego_demand_load_melt_error_geom_view}', 'calc_ego_loads');
 
 -- "Error"   (OK!) 3.753.000ms =143.293
-DROP MATERIALIZED VIEW IF EXISTS	calc_ego_loads.ego_deu_loads_melted_error_geom_mview;
-CREATE MATERIALIZED VIEW		calc_ego_loads.ego_deu_loads_melted_error_geom_mview AS
+DROP MATERIALIZED VIEW IF EXISTS	model_draft.ego_demand_load_melt_error_geom_mview;
+CREATE MATERIALIZED VIEW		model_draft.ego_demand_load_melt_error_geom_mview AS
 	SELECT	error.*
-	FROM	calc_ego_loads.ego_deu_loads_melted_error_geom_view AS error;
+	FROM	model_draft.ego_demand_load_melt_error_geom_view AS error;
 
 -- "Create Index (id)"   (OK!) -> 1.000ms =0
-CREATE UNIQUE INDEX  	ego_deu_loads_melted_error_geom_mview_id_idx
-		ON	calc_ego_loads.ego_deu_loads_melted_error_geom_mview (id);
+CREATE UNIQUE INDEX  	ego_demand_load_melt_error_geom_mview_id_idx
+		ON	model_draft.ego_demand_load_melt_error_geom_mview (id);
 
 -- "Create Index GIST (geom)"   (OK!) 2.000ms =0
-CREATE INDEX	ego_deu_loads_melted_error_geom_mview_geom_idx
-	ON	calc_ego_loads.ego_deu_loads_melted_error_geom_mview
+CREATE INDEX	ego_demand_load_melt_error_geom_mview_geom_idx
+	ON	model_draft.ego_demand_load_melt_error_geom_mview
 	USING	GIST (geom);
     
 -- "Grant oeuser"   (OK!) -> 100ms =0
-GRANT ALL ON TABLE	calc_ego_loads.ego_deu_loads_melted_error_geom_mview TO oeuser WITH GRANT OPTION;
-ALTER TABLE		calc_ego_loads.ego_deu_loads_melted_error_geom_mview OWNER TO oeuser;
+GRANT ALL ON TABLE	model_draft.ego_demand_load_melt_error_geom_mview TO oeuser WITH GRANT OPTION;
+ALTER TABLE		model_draft.ego_demand_load_melt_error_geom_mview OWNER TO oeuser;
 
 ---------- ---------- ----------
 -- Alternative Calculation with Table
 ---------- ---------- ----------
 
 -- -- "Create Table"   (OK!) 100ms =0
--- DROP TABLE IF EXISTS	calc_ego_loads.ego_deu_loads_collect_buffer100_unbuffer CASCADE;
--- CREATE TABLE		calc_ego_loads.ego_deu_loads_collect_buffer100_unbuffer (
+-- DROP TABLE IF EXISTS	model_draft.ego_demand_load_collect_buffer100_unbuffer CASCADE;
+-- CREATE TABLE		model_draft.ego_demand_load_collect_buffer100_unbuffer (
 -- 		id SERIAL,
 -- 		geom geometry(Polygon,3035),
 -- 		geom_centroid geometry(Point,3035),
--- CONSTRAINT	ego_deu_loads_collect_buffer100_unbuffer_pkey PRIMARY KEY (id));
+-- CONSTRAINT	ego_demand_load_collect_buffer100_unbuffer_pkey PRIMARY KEY (id));
 -- 
 -- -- "Insert Unbuffer"   (OK!) 331.000ms =182.430
--- INSERT INTO	calc_ego_loads.ego_deu_loads_collect_buffer100_unbuffer (geom)
+-- INSERT INTO	model_draft.ego_demand_load_collect_buffer100_unbuffer (geom)
 -- 	SELECT	(ST_DUMP(ST_MULTI(ST_UNION(
 -- 			ST_BUFFER(buffer.geom, -100)
 -- 		)))).geom ::geometry(Polygon,3035) AS geom
--- 	FROM	calc_ego_loads.ego_deu_loads_collect_buffer100 AS buffer
+-- 	FROM	model_draft.ego_demand_load_collect_buffer100 AS buffer
 -- 	GROUP BY buffer.id
 -- 	ORDER BY buffer.id;
 -- 
 -- -- "Create Index GIST (geom)"   (OK!) 2.000ms =0
--- CREATE INDEX	ego_deu_loads_collect_buffer100_unbuffer_geom_idx
--- 	ON	calc_ego_loads.ego_deu_loads_collect_buffer100_unbuffer
+-- CREATE INDEX	ego_demand_load_collect_buffer100_unbuffer_geom_idx
+-- 	ON	model_draft.ego_demand_load_collect_buffer100_unbuffer
 -- 	USING	GIST (geom);
 -- 
 -- -- "Grant oeuser"   (OK!) -> 100ms =0
--- GRANT ALL ON TABLE	calc_ego_loads.ego_deu_loads_collect_buffer100_unbuffer TO oeuser WITH GRANT OPTION;
--- ALTER TABLE		calc_ego_loads.ego_deu_loads_collect_buffer100_unbuffer OWNER TO oeuser;
+-- GRANT ALL ON TABLE	model_draft.ego_demand_load_collect_buffer100_unbuffer TO oeuser WITH GRANT OPTION;
+-- ALTER TABLE		model_draft.ego_demand_load_collect_buffer100_unbuffer OWNER TO oeuser;
 
 -- -- "Update Buffer (100m)"   (OK!) -> 230.000ms =202.131
--- UPDATE 	calc_ego_loads.ego_deu_loads_collect_buffer100_unbuffer AS t1
+-- UPDATE 	model_draft.ego_demand_load_collect_buffer100_unbuffer AS t1
 -- SET  	geom_buffer = t2.geom_buffer
 -- FROM    (
 -- 	SELECT	poly.id AS id,
 -- 		ST_BUFFER(ST_TRANSFORM(poly.geom,3035), 100) AS geom_buffer
--- 	FROM	calc_ego_loads.ego_deu_loads_collect_buffer100_unbuffer AS poly
+-- 	FROM	model_draft.ego_demand_load_collect_buffer100_unbuffer AS poly
 -- 	) AS t2
 -- WHERE  	t1.id = t2.id;
 -- 
 -- -- "Create Index GIST (geom_buffer)"   (OK!) 3.000ms =0
--- CREATE INDEX	ego_deu_loads_collect_buffer100_unbuffer_geom_buffer_idx
--- 	ON	calc_ego_loads.ego_deu_loads_collect_buffer100_unbuffer
+-- CREATE INDEX	ego_demand_load_collect_buffer100_unbuffer_geom_buffer_idx
+-- 	ON	model_draft.ego_demand_load_collect_buffer100_unbuffer
 -- 	USING	GIST (geom_buffer);
 
 -- -- "Update Centroid"   (OK!) -> 16.000ms =182.430
--- UPDATE 	calc_ego_loads.ego_deu_loads_collect_buffer100_unbuffer AS t1
+-- UPDATE 	model_draft.ego_demand_load_collect_buffer100_unbuffer AS t1
 -- SET  	geom_centroid = t2.geom_centroid
 -- FROM    (
 -- 	SELECT	la.id AS id,
 -- 		ST_Centroid(la.geom) AS geom_centroid
--- 	FROM	calc_ego_loads.ego_deu_loads_collect_buffer100_unbuffer AS la	
+-- 	FROM	model_draft.ego_demand_load_collect_buffer100_unbuffer AS la
 -- 	) AS t2
 -- WHERE  	t1.id = t2.id;
 -- 
 -- -- "Create Index GIST (geom_centroid)"   (OK!) -> 5.000ms =0
--- CREATE INDEX  	ego_deu_loads_collect_buffer100_unbuffer_geom_centroid_idx
---     ON    	calc_ego_loads.ego_deu_loads_collect_buffer100_unbuffer
+-- CREATE INDEX  	ego_demand_load_collect_buffer100_unbuffer_geom_centroid_idx
+--     ON    	model_draft.ego_demand_load_collect_buffer100_unbuffer
 --     USING     	GIST (geom_centroid);
 
 
@@ -261,8 +261,8 @@ ALTER TABLE		calc_ego_loads.ego_deu_loads_melted_error_geom_mview OWNER TO oeuse
 ---------- ---------- ---------- ---------- ---------- ----------
 
 -- Fix geoms with error (OK!) 25.000ms =3
-DROP MATERIALIZED VIEW IF EXISTS	calc_ego_loads.ego_deu_loads_melted_error_geom_fix_mview CASCADE;
-CREATE MATERIALIZED VIEW 		calc_ego_loads.ego_deu_loads_melted_error_geom_fix_mview AS 
+DROP MATERIALIZED VIEW IF EXISTS	model_draft.ego_demand_load_melt_error_geom_fix_mview CASCADE;
+CREATE MATERIALIZED VIEW 		model_draft.ego_demand_load_melt_error_geom_fix_mview AS
 	SELECT	fix.id AS id,
 		ST_IsValid(fix.geom) AS error,
 		GeometryType(fix.geom) AS geom_type,
@@ -273,22 +273,22 @@ CREATE MATERIALIZED VIEW 		calc_ego_loads.ego_deu_loads_melted_error_geom_fix_mv
 		SELECT	fehler.id AS id,
 			ST_BUFFER(fehler.geom, -1) AS geom_buffer,
 			(ST_DUMP(ST_BUFFER(ST_BUFFER(fehler.geom, -1), 1))).geom AS geom
-		FROM	calc_ego_loads.ego_deu_loads_melted_error_geom_mview AS fehler
+		FROM	model_draft.ego_demand_load_melt_error_geom_mview AS fehler
 		) AS fix
 	ORDER BY fix.id;
 
 -- "Grant oeuser"   (OK!) -> 100ms =0
-GRANT ALL ON TABLE	calc_ego_loads.ego_deu_loads_melted_error_geom_fix_mview TO oeuser WITH GRANT OPTION;
-ALTER TABLE		calc_ego_loads.ego_deu_loads_melted_error_geom_fix_mview OWNER TO oeuser;
+GRANT ALL ON TABLE	model_draft.ego_demand_load_melt_error_geom_fix_mview TO oeuser WITH GRANT OPTION;
+ALTER TABLE		model_draft.ego_demand_load_melt_error_geom_fix_mview OWNER TO oeuser;
 
 
 -- Update Fixed geoms (OK!) 200ms =2
-UPDATE 	calc_ego_loads.ego_deu_loads_melted AS t1
+UPDATE 	model_draft.ego_demand_load_melt AS t1
 SET	geom = t2.geom
 FROM	(
 	SELECT	fix.id AS id,
 		fix.geom AS geom
-	FROM	calc_ego_loads.ego_deu_loads_melted_error_geom_fix_mview AS fix
+	FROM	model_draft.ego_demand_load_melt_error_geom_fix_mview AS fix
 	) AS t2
 WHERE  	t1.id = t2.id;
 
@@ -302,20 +302,20 @@ FROM	(
 	SELECT	source.id AS id,
 		ST_IsValid(source.geom) AS error,
 		source.geom ::geometry(Polygon,3035) AS geom
-	FROM	calc_ego_loads.ego_deu_loads_melted AS source
+	FROM	model_draft.ego_demand_load_melt AS source
 	) AS test
 WHERE	test.error = FALSE;
 
 -- Scenario eGo data processing
 INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
 	SELECT	'0.2' AS version,
-		'calc_ego_loads' AS schema_name,
-		'ego_deu_loads_melted' AS table_name,
+		'model_draft' AS schema_name,
+		'ego_demand_load_melt' AS table_name,
 		'process_eGo_loads_melted.sql' AS script_name,
 		COUNT(geom)AS entries,
 		'OK' AS status,
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
-	FROM	calc_ego_loads.ego_deu_loads_melted;
+	FROM	model_draft.ego_demand_load_melt;
 
 
 
@@ -330,8 +330,8 @@ INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_na
 ---------- ---------- ----------
 -- 
 -- -- Fix geom_buffer with error (OK!) 300ms =8
--- DROP MATERIALIZED VIEW IF EXISTS	calc_ego_loads.ego_deu_loads_collect_buffer100_unbuffer_error_geom_buffer_fix_mview CASCADE;
--- CREATE MATERIALIZED VIEW 		calc_ego_loads.ego_deu_loads_collect_buffer100_unbuffer_error_geom_buffer_fix_mview AS 
+-- DROP MATERIALIZED VIEW IF EXISTS	model_draft.ego_demand_load_collect_buffer100_unbuffer_error_geom_buffer_fix_mview CASCADE;
+-- CREATE MATERIALIZED VIEW 		model_draft.ego_demand_load_collect_buffer100_unbuffer_error_geom_buffer_fix_mview AS
 -- 	SELECT	fix.id AS id,
 -- 		ST_IsValid(fix.geom) AS error,
 -- 		GeometryType(fix.geom) AS geom_type,
@@ -342,22 +342,22 @@ INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_na
 -- 		SELECT	fehler.id AS id,
 -- 			ST_BUFFER(fehler.geom_buffer, -1) AS geom_buffer,
 -- 			(ST_DUMP(ST_BUFFER(ST_BUFFER(fehler.geom_buffer, -1), 1))).geom AS geom
--- 		FROM	calc_ego_loads.ego_deu_loads_collect_buffer100_unbuffer_error_geom_buffer_mview AS fehler
+-- 		FROM	model_draft.ego_demand_load_collect_buffer100_unbuffer_error_geom_buffer_mview AS fehler
 -- 		) AS fix
 -- 	ORDER BY fix.id;
 -- 
 -- -- "Grant oeuser"   (OK!) -> 100ms =0
--- GRANT ALL ON TABLE	calc_ego_loads.ego_deu_loads_collect_buffer100_unbuffer_error_geom_buffer_fix_mview TO oeuser WITH GRANT OPTION;
--- ALTER TABLE		calc_ego_loads.ego_deu_loads_collect_buffer100_unbuffer_error_geom_buffer_fix_mview OWNER TO oeuser;
+-- GRANT ALL ON TABLE	model_draft.ego_demand_load_collect_buffer100_unbuffer_error_geom_buffer_fix_mview TO oeuser WITH GRANT OPTION;
+-- ALTER TABLE		model_draft.ego_demand_load_collect_buffer100_unbuffer_error_geom_buffer_fix_mview OWNER TO oeuser;
 -- 
 -- 
 -- -- Update Fixed geoms (OK!) 200ms =6
--- UPDATE 	calc_ego_loads.ego_deu_loads_collect_buffer100_unbuffer AS t1
+-- UPDATE 	model_draft.ego_demand_load_collect_buffer100_unbuffer AS t1
 -- SET	geom_buffer = t2.geom
 -- FROM	(
 -- 	SELECT	fix.id AS id,
 -- 		fix.geom AS geom
--- 	FROM	calc_ego_loads.ego_deu_loads_collect_buffer100_unbuffer_error_geom_buffer_fix_mview AS fix
+-- 	FROM	model_draft.ego_demand_load_collect_buffer100_unbuffer_error_geom_buffer_fix_mview AS fix
 -- 	) AS t2
 -- WHERE  	t1.id = t2.id;
 -- 
@@ -371,7 +371,7 @@ INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_na
 -- 		SELECT	source.id AS id,
 -- 			ST_IsValid(source.geom_buffer) AS error,
 -- 			source.geom_buffer ::geometry(Polygon,3035) AS geom_buffer
--- 		FROM	calc_ego_loads.ego_deu_loads_collect_buffer100_unbuffer AS source
+-- 		FROM	model_draft.ego_demand_load_collect_buffer100_unbuffer AS source
 -- 		) AS test
 -- 	WHERE	test.error = FALSE;
 
@@ -383,27 +383,27 @@ INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_na
 ---------- ---------- ----------
 
 -- -- "Create Table"   (OK!) 100ms =0
--- DROP TABLE IF EXISTS	calc_ego_loads.ego_deu_loads_melted_cut_gem CASCADE;
--- CREATE TABLE		calc_ego_loads.ego_deu_loads_melted_cut_gem (
+-- DROP TABLE IF EXISTS	model_draft.ego_demand_load_melt_cut_gem CASCADE;
+-- CREATE TABLE		model_draft.ego_demand_load_melt_cut_gem (
 		-- id SERIAL,
 		-- geom geometry(Polygon,3035),
--- CONSTRAINT	ego_deu_loads_melted_cut_gem_pkey PRIMARY KEY (id));
+-- CONSTRAINT	ego_demand_load_melt_cut_gem_pkey PRIMARY KEY (id));
 
 -- -- "Insert Cut"   (OK!) 330.000ms =188.998
--- INSERT INTO	calc_ego_loads.ego_deu_loads_melted_cut_gem (geom)
+-- INSERT INTO	model_draft.ego_demand_load_melt_cut_gem (geom)
 	-- SELECT	(ST_DUMP(ST_INTERSECTION(poly.geom,cut.geom))).geom ::geometry(Polygon,3035) AS geom
-	-- FROM	calc_ego_loads.ego_deu_loads_melted AS poly,
+	-- FROM	model_draft.ego_demand_load_melt AS poly,
 		-- orig_geo_vg250.vg250_6_gem_dump_mview AS cut
 	-- WHERE	poly.geom && cut.geom;
 
 -- -- "Create Index GIST (geom)"   (OK!) 2.500ms =0
--- CREATE INDEX	ego_deu_loads_melted_cut_gem_geom_idx
-	-- ON	calc_ego_loads.ego_deu_loads_melted_cut_gem
+-- CREATE INDEX	ego_demand_load_melt_cut_gem_geom_idx
+	-- ON	model_draft.ego_demand_load_melt_cut_gem
 	-- USING	GIST (geom);
 
 -- -- "Grant oeuser"   (OK!) -> 100ms =0
--- GRANT ALL ON TABLE	calc_ego_loads.ego_deu_loads_melted_cut_gem TO oeuser WITH GRANT OPTION;
--- ALTER TABLE		calc_ego_loads.ego_deu_loads_melted_cut_gem OWNER TO oeuser;
+-- GRANT ALL ON TABLE	model_draft.ego_demand_load_melt_cut_gem TO oeuser WITH GRANT OPTION;
+-- ALTER TABLE		model_draft.ego_demand_load_melt_cut_gem OWNER TO oeuser;
 
 
 

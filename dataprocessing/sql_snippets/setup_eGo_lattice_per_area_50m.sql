@@ -59,7 +59,7 @@ UPDATE 	model_draft.ego_lattice_deu_50m AS t1
 		SELECT	grid.gid AS gid,
 			gd.subst_id AS subst_id
 		FROM	model_draft.ego_lattice_deu_50m AS grid,
-			calc_ego_grid_district.grid_district AS gd
+			model_draft.ego_grid_mv_griddistrict AS gd
 		WHERE  	gd.geom && grid.geom AND
 			ST_CONTAINS(gd.geom,grid.geom)
 		) AS t2
@@ -72,7 +72,7 @@ UPDATE 	model_draft.ego_lattice_deu_50m AS t1
 		SELECT	grid.gid AS gid,
 			'la' AS area_type
 		FROM	model_draft.ego_lattice_deu_50m AS grid,
-			calc_ego_loads.ego_deu_load_area AS la
+			model_draft.ego_demand_loadarea AS la
 		WHERE  	la.geom && grid.geom AND
 			ST_CONTAINS(la.geom,grid.geom)
 		) AS t2

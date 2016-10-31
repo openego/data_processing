@@ -6,7 +6,7 @@ Uses different lattice from setup_ego_wpa_per_grid_district.sql
 
 -- number of grid_district -> 3609
 	SELECT	COUNT(*)
-	FROM	 calc_ego_grid_district.grid_district;
+	FROM	 model_draft.ego_grid_mv_griddistrict;
 
 -- table for allocated dea
 DROP TABLE IF EXISTS model_draft.ego_dea_allocation CASCADE;
@@ -56,7 +56,7 @@ UPDATE 	model_draft.ego_dea_allocation AS t1
 		SELECT	dea.id AS id,
 			gd.subst_id AS subst_id
 		FROM	model_draft.ego_dea_allocation AS dea,
-			calc_ego_grid_district.grid_district AS gd
+			model_draft.ego_grid_mv_griddistrict AS gd
 		WHERE  	gd.geom && dea.geom AND
 			ST_CONTAINS(gd.geom,dea.geom)
 		) AS t2
@@ -180,7 +180,7 @@ CREATE TABLE 		model_draft.ego_dea_agricultural_sector_per_grid_district (
 -- insert data (osm agricultural)
 INSERT INTO	model_draft.ego_dea_agricultural_sector_per_grid_district (area_ha,geom)
 	SELECT	ST_AREA(osm.geom)/10000, osm.geom
-	FROM	calc_ego_loads.urban_sector_per_grid_district_4_agricultural AS osm;
+	FROM	model_draft.ego_osm_sector_per_griddistrict_4_agricultural AS osm;
 	
 -- update subst_id from grid_district
 UPDATE 	model_draft.ego_dea_agricultural_sector_per_grid_district AS t1
@@ -189,7 +189,7 @@ UPDATE 	model_draft.ego_dea_agricultural_sector_per_grid_district AS t1
 		SELECT	osm.id AS id,
 			dis.subst_id AS subst_id
 		FROM	model_draft.ego_dea_agricultural_sector_per_grid_district AS osm,
-			calc_ego_grid_district.grid_district AS dis
+			model_draft.ego_grid_mv_griddistrict AS dis
 		WHERE  	dis.geom && ST_CENTROID(osm.geom) AND
 			ST_CONTAINS(dis.geom,ST_CENTROID(osm.geom))
 		) AS t2

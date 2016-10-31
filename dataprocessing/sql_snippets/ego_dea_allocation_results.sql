@@ -48,7 +48,7 @@ CREATE TABLE 		model_draft.ego_dea_per_grid_district AS
 		'0.0'::decimal lv_dea_capacity,
 		'0'::integer mv_dea_cnt,
 		'0.0'::decimal mv_dea_capacity
-	FROM	calc_ego_grid_district.grid_district AS gd;
+	FROM	model_draft.ego_grid_mv_griddistrict AS gd;
 
 ALTER TABLE	model_draft.ego_dea_per_grid_district
 	ADD PRIMARY KEY (subst_id),
@@ -60,7 +60,7 @@ UPDATE 	model_draft.ego_dea_per_grid_district AS t1
 	FROM	(SELECT	gd.subst_id AS subst_id,
 			COUNT(dea.geom)::integer AS lv_dea_cnt,
 			SUM(electrical_capacity) AS lv_dea_capacity
-		FROM	calc_ego_grid_district.grid_district AS gd,
+		FROM	model_draft.ego_grid_mv_griddistrict AS gd,
 			model_draft.ego_dea_allocation AS dea
 		WHERE  	gd.geom && dea.geom AND
 			ST_CONTAINS(gd.geom,dea.geom) AND
@@ -75,7 +75,7 @@ UPDATE 	model_draft.ego_dea_per_grid_district AS t1
 	FROM	(SELECT	gd.subst_id AS subst_id,
 			COUNT(dea.geom)::integer AS mv_dea_cnt,
 			SUM(electrical_capacity) AS mv_dea_capacity
-		FROM	calc_ego_grid_district.grid_district AS gd,
+		FROM	model_draft.ego_grid_mv_griddistrict AS gd,
 			model_draft.ego_dea_allocation AS dea
 		WHERE  	gd.geom && dea.geom AND
 			ST_CONTAINS(gd.geom,dea.geom) AND
@@ -106,7 +106,7 @@ CREATE TABLE 		model_draft.ego_dea_per_load_area AS
 		la.subst_id,
 		'0'::integer lv_dea_cnt,
 		'0.0'::decimal lv_dea_capacity
-	FROM	calc_ego_loads.ego_deu_load_area AS la;
+	FROM	model_draft.ego_demand_loadarea AS la;
 
 ALTER TABLE	model_draft.ego_dea_per_load_area
 	ADD PRIMARY KEY (id),
@@ -118,7 +118,7 @@ SET  	lv_dea_cnt = t2.lv_dea_cnt,
 FROM	(SELECT	la.id AS id,
 		COUNT(dea.geom)::integer AS lv_dea_cnt,
 		SUM(electrical_capacity) AS lv_dea_capacity
-	FROM	calc_ego_loads.ego_deu_load_area AS la,
+	FROM	model_draft.ego_demand_loadarea AS la,
 		model_draft.ego_dea_allocation AS dea
 	WHERE  	la.geom && dea.geom AND
 		ST_CONTAINS(la.geom,dea.geom) AND

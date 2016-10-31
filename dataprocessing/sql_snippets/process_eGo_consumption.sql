@@ -179,8 +179,8 @@ ALTER TABLE		model_draft.ego_demand_per_load_area OWNER TO oeuser;
 -- Scenario eGo data processing
 INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
 	SELECT	'0.2' AS version,
-		'calc_ego_loads' AS schema_name,
-		'ego_deu_consumption' AS table_name,
+		'ego_demand_per_load_area' AS schema_name,
+		'model_draft' AS table_name,
 		'process_eGo_consumption.sql' AS script_name,
 		COUNT(*)AS entries,
 		'OK' AS status,

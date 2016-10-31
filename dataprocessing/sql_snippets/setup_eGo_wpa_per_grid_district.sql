@@ -68,7 +68,7 @@ INSERT INTO     model_draft.eGo_wpa_per_grid_district (area_ha, geom)
 		cut.geom ::geometry(Polygon,3035)
 	FROM	(SELECT ST_MakeValid((ST_DUMP(ST_MULTI(ST_SAFE_INTERSECTION(pot.geom,dis.geom)))).geom) AS geom
 		FROM	model_draft.eGo_wpa AS pot,
-			calc_ego_grid_district.grid_district AS dis
+			model_draft.ego_grid_mv_griddistrict AS dis
 		WHERE	pot.geom && dis.geom
 		) AS cut
 	WHERE	ST_IsValid(cut.geom) = 't' AND ST_GeometryType(cut.geom) = 'ST_Polygon';
@@ -80,7 +80,7 @@ FROM    (
 	SELECT	pot.id AS id,
 		gd.subst_id AS subst_id
 	FROM	model_draft.eGo_wpa_per_grid_district AS pot,
-		calc_ego_grid_district.grid_district AS gd
+		model_draft.ego_grid_mv_griddistrict AS gd
 	WHERE  	gd.geom && pot.geom AND
 		ST_CONTAINS(gd.geom,ST_PointOnSurface(pot.geom))
 	) AS t2
