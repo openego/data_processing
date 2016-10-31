@@ -37,7 +37,7 @@ FROM    (SELECT	gd.subst_id AS subst_id,
 		(SUM(pts.population)/COUNT(pts.geom))::numeric AS zensus_density,
 		(SUM(pts.population)/gd.area_ha)::numeric AS population_density
 	FROM	calc_ego_grid_district.grid_district_data AS gd,
-		orig_destatis.zensus_population_per_ha_mview AS pts
+		model_draft.zensus_population_per_ha_mview AS pts
 	WHERE  	gd.geom && pts.geom AND
 		ST_CONTAINS(gd.geom,pts.geom)
 	GROUP BY gd.subst_id

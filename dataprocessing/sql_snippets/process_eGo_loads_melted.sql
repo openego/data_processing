@@ -21,7 +21,7 @@ INSERT INTO	calc_ego_loads.ego_deu_loads_collect (geom)
 -- "Insert Loads Zensus Cluster"   (OK!) 3.000ms =454.112
 INSERT INTO	calc_ego_loads.ego_deu_loads_collect (geom)
 	SELECT	zensus.geom
-	FROM	orig_destatis.ego_deu_loads_zensus_cluster AS zensus;
+	FROM	model_draft.ego_social_zensus_loads_cluster AS zensus;
 
 -- "Create Index GIST (geom)"   (OK!) 7.000ms =0
 CREATE INDEX	ego_deu_loads_collect_geom_idx
