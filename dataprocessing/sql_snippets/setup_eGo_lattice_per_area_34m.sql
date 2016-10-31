@@ -157,17 +157,17 @@ COMMENT ON TABLE model_draft.eGo_lattice_la_34m IS
                 "Description": "Geometry point",
                 "Unit": "" }],
 "Changes":[
-                {"Name": "Ludwig Hülk",
+                {"Name": "Ludwig Hï¿½lk",
                 "Mail": "ludwig.huelk@rl-institut.de",
                 "Date":  "01.10.2016",
                 "Comment": "Created table" },
 				
-				{"Name": "Ludwig Hülk",
+				{"Name": "Ludwig Hï¿½lk",
                 "Mail": "ludwig.huelk@rl-institut.de",
                 "Date":  "12.10.2016",
                 "Comment": "Add metadata" },
 				
-				{"Name": "Ludwig Hülk",
+				{"Name": "Ludwig Hï¿½lk",
                 "Mail": "ludwig.huelk@rl-institut.de",
                 "Date":  "14.10.2016",
                 "Comment": "Restructured lattice scripts" }],

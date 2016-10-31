@@ -146,12 +146,12 @@ COMMENT ON TABLE model_draft.eGo_lattice_deu_500m IS
                 "Description": "Geometry",
                 "Unit": "" }],
 "Changes":[
-                {"Name": "Ludwig Hülk",
+                {"Name": "Ludwig Hï¿½lk",
                 "Mail": "ludwig.huelk@rl-institut.de",
                 "Date":  "01.10.2016",
                 "Comment": "Created table" },
 				
-				{"Name": "Ludwig Hülk",
+				{"Name": "Ludwig Hï¿½lk",
                 "Mail": "ludwig.huelk@rl-institut.de",
                 "Date":  "12.10.2016",
                 "Comment": "Add metadata" }],
@@ -193,12 +193,12 @@ COMMENT ON TABLE model_draft.eGo_lattice_la_50m IS
                 "Description": "Geometry",
                 "Unit": "" }],
 "Changes":[
-                {"Name": "Ludwig Hülk",
+                {"Name": "Ludwig Hï¿½lk",
                 "Mail": "ludwig.huelk@rl-institut.de",
                 "Date":  "01.10.2016",
                 "Comment": "Created table" },
 				
-				{"Name": "Ludwig Hülk",
+				{"Name": "Ludwig Hï¿½lk",
                 "Mail": "ludwig.huelk@rl-institut.de",
                 "Date":  "12.10.2016",
                 "Comment": "Add metadata" }],
@@ -240,12 +240,12 @@ COMMENT ON TABLE model_draft.eGo_wpa_per_grid_district IS
                 "Description": "Geometry",
                 "Unit": "" }],
 "Changes":[
-                {"Name": "Ludwig Hülk",
+                {"Name": "Ludwig Hï¿½lk",
                 "Mail": "ludwig.huelk@rl-institut.de",
                 "Date":  "01.10.2016",
                 "Comment": "Created table" },
 				
-				{"Name": "Ludwig Hülk",
+				{"Name": "Ludwig Hï¿½lk",
                 "Mail": "ludwig.huelk@rl-institut.de",
                 "Date":  "12.10.2016",
                 "Comment": "Add metadata" }],
