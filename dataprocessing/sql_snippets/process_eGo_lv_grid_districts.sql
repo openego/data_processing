@@ -128,7 +128,7 @@ CREATE TABLE IF NOT EXISTS model_draft."ego_grid_lv_cut"
 );
  
 TRUNCATE TABLE 	model_draft."ego_grid_lv_cut";
-INSERT INTO		model_draft."ego_grid_lv_cut" 
+INSERT INTO		model_draft."ego_grid_lv_cut" (geom,id)
 	SELECT	(ST_DUMP(ST_INTERSECTION(mun.geom,voi.geom))).geom ::geometry(Polygon,3035) AS geom, mun.id AS load_area_id
 	FROM	model_draft."ego_demand_loadarea" AS mun,
 		model_draft."ego_grid_lv_griddistrictsvoronoi" AS voi
