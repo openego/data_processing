@@ -632,46 +632,38 @@ INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_na
 ---------- ---------- ----------
 
 
--- Calculate the industrial area per district 
-SELECT sum(sector_area_industrial), substr(nuts,1,5) 
-	INTO orig_consumption_znes.temp_table
-	FROM model_draft.ego_demand_loadarea
-	GROUP BY substr(nuts,1,5);
-
-UPDATE orig_consumption_znes.lak_consumption_per_district a
-	SET area_industry = sum
-	FROM orig_consumption_znes.temp_table b
-	WHERE b.substr = substr(a.eu_code,1,5);
-
-DROP TABLE orig_consumption_znes.temp_table;
-
 -- Calculate the retail area per district
 
-SELECT sum(sector_area_retail), substr(nuts,1,5) 
-	INTO orig_consumption_znes.temp_table
+
+UPDATE model_draft.ego_demand_per_district a
+SET area_retail = result.sum
+FROM
+( 
+	SELECT 
+ 	sum(coalesce(sector_area_retail,0)), 
+	substr(nuts,1,5) 
 	FROM model_draft.ego_demand_loadarea
-	GROUP BY substr(nuts,1,5);
+	GROUP BY substr(nuts,1,5)
+) as result
 
-UPDATE orig_consumption_znes.lak_consumption_per_district a
-	SET area_retail = sum
-	FROM orig_consumption_znes.temp_table b
-	WHERE b.substr = substr(a.eu_code,1,5);
+WHERE result.substr = substr(a.eu_code,1,5);
 
-DROP TABLE orig_consumption_znes.temp_table;
 
 -- Calculate the agricultural area per district
 
-SELECT sum(sector_area_agricultural), substr(nuts,1,5) 
-	INTO orig_consumption_znes.temp_table
+UPDATE model_draft.ego_demand_per_district a
+SET area_agriculture = result.sum
+FROM
+( 
+	SELECT 
+	--sum(sector_area_agricultural), --Merge-error???
+	sum(coalesce(sector_area_agricultural,0)), 
+	substr(nuts,1,5) 
 	FROM model_draft.ego_demand_loadarea
-	GROUP BY substr(nuts,1,5);
+	GROUP BY substr(nuts,1,5)
+) as result
 
-UPDATE orig_consumption_znes.lak_consumption_per_district a
-	SET area_agriculture = sum
-	FROM orig_consumption_znes.temp_table b
-	WHERE b.substr = substr(a.eu_code,1,5);
-
-DROP TABLE orig_consumption_znes.temp_table;
+WHERE result.substr = substr(a.eu_code,1,5);
 
 -- Calculate area of tertiary sector by adding agricultural and retail area up
 
@@ -684,8 +676,6 @@ update orig_consumption_znes.lak_consumption_per_district
 UPDATE orig_consumption_znes.lak_consumption_per_district
 	SET consumption_per_area_tertiary_sector = elec_consumption_tertiary_sector/nullif(area_tertiary_sector,0);
 
-UPDATE orig_consumption_znes.lak_consumption_per_district
-	SET consumption_per_area_industry = elec_consumption_industry/nullif(area_industry,0);
 
 
 ---------- ---------- ----------
