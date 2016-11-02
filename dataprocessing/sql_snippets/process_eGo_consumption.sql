@@ -1,6 +1,3 @@
-
-
-
 DROP TABLE IF EXISTS 	model_draft.ego_demand_per_load_area CASCADE;
 CREATE TABLE 		model_draft.ego_demand_per_load_area 
 (
@@ -35,10 +32,10 @@ INSERT INTO 	model_draft.ego_demand_per_load_area (id,subst_id,
 
 -- Calculate the landuse area per district 
 
--- ALTER TABLE model_draft.ego_demand_per_district
--- 	ADD COLUMN area_retail numeric,
--- 	ADD COLUMN area_agriculture numeric,
--- 	ADD COLUMN area_tertiary_sector numeric;
+ALTER TABLE model_draft.ego_demand_per_district
+	ADD COLUMN area_retail double precision,
+ 	ADD COLUMN area_agriculture double precision,
+ 	ADD COLUMN area_tertiary_sector double precision;
 
 
 -- Calculate the retail area per district
@@ -48,7 +45,6 @@ SET area_retail = result.sum
 FROM
 ( 
 	SELECT 
-	--sum(sector_area_retail), --Merge-error???
  	sum(coalesce(sector_area_retail,0)), 
 	substr(nuts,1,5) 
 	FROM model_draft.ego_demand_loadarea
@@ -65,7 +61,6 @@ SET area_agriculture = result.sum
 FROM
 ( 
 	SELECT 
-	--sum(sector_area_agricultural), --Merge-error???
 	sum(coalesce(sector_area_agricultural,0)), 
 	substr(nuts,1,5) 
 	FROM model_draft.ego_demand_loadarea

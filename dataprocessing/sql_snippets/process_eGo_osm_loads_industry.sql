@@ -2,7 +2,7 @@
 -- Calculate specific electricity consumption per million Euro GVA for each federal state
 --------------
 
-DROP TABLE IF EXISTS model_draft.ego_demand_per_gva;
+DROP TABLE IF EXISTS model_draft.ego_demand_per_gva CASCADE;
 
 CREATE TABLE model_draft.ego_demand_per_gva AS 
 ( 
@@ -66,7 +66,7 @@ COMMENT ON TABLE  demand.ego_demand_federalstates_per_gva IS
 --------------
 -- Calculate electricity consumption per district based on gross value added
 --------------
-DROP TABLE IF EXISTS model_draft.ego_demand_per_district;
+DROP TABLE IF EXISTS model_draft.ego_demand_per_district CASCADE;
 
 CREATE TABLE model_draft.ego_demand_per_district as 
 ( 
@@ -80,8 +80,11 @@ FROM  	model_draft.ego_demand_per_gva a,
 WHERE SUBSTR (a.eu_code,1,3) = SUBSTR(b.eu_code,1,3)  
 ) 
 ; 
+
 ALTER TABLE model_draft.ego_demand_per_district
 ADD PRIMARY KEY (eu_code),
+ADD COLUMN area_industry double precision,
+ADD COLUMN consumption_per_area_industry double precision, 
 OWNER TO oeuser;
 
 
@@ -151,22 +154,6 @@ FROM openstreetmap.osm_deu_polygon_urban_sector_3_industrial_mview;
 
 ALTER TABLE  model_draft.ego_landuse_industry OWNER TO oeuser;
 
-
--- "Calculate industrial consumption per industry polygon"
-
-UPDATE 	model_draft.ego_demand_per_district
-SET 	consumption_per_area_industry = elec_consumption_industry/area_industry;
-
-
--- "Export information on industrial area into model_draft.ego_landuse_industry"
-
-DROP TABLE IF EXISTS model_draft.ego_landuse_industry;
-SELECT 	* 
-INTO model_draft.ego_landuse_industry 
-FROM openstreetmap.osm_deu_polygon_urban_sector_3_industrial_mview; 
-
-ALTER TABLE  model_draft.ego_landuse_industry OWNER TO oeuser;
-
 ------------------
 -- "Add and fill new columns with geometry information"
 ------------------
@@ -213,9 +200,6 @@ CREATE INDEX  	landuse_industry_geom_surfacepoint_idx
     USING     	GIST (geom_surfacepoint);
 
 
----------- ---------- ----------
--- "Update Centre"
----------- ---------- ----------
 
 -- "Update Centre with centroid if inside area"   
 UPDATE 	model_draft.ego_landuse_industry AS t1
@@ -245,23 +229,41 @@ CREATE INDEX  	landuse_industry_geom_centre_idx
     ON    	model_draft.ego_landuse_industry
     USING     	GIST (geom_centre);
 
--- -- "Calculate NUTS" = 58.869 -> 154sec
--- UPDATE 	model_draft.ego_landuse_industry a
--- SET 	nuts = b.nuts
--- FROM 	political_boundary.bkg_vg250_4_krs b
--- WHERE 	st_intersects(st_transform(st_setsrid(b.geom, 31467), 3035), a.geom_centre); 
+-- "Calculate NUTS" 
 
--- Using Index and MView
--- "Calculate NUTS" = 58.869 -> 5sec
 UPDATE 	model_draft.ego_landuse_industry a
 SET 	nuts = b.nuts
 FROM 	political_boundary.bkg_vg250_4_krs_mview b
 WHERE 	b.geom && a.geom_centre AND
 	st_intersects(b.geom, a.geom_centre); 
 
+-- "Calculate industrial area per district" 
+
+UPDATE orig_ego_consumption.lak_consumption_per_district a
+SET area_industry = result.sum
+FROM
+( 
+	SELECT 
+ 	sum(coalesce(area_ha,0)), 
+	substr(nuts,1,5) 
+	FROM calc_ego_loads.landuse_industry
+	WHERE nuts IS NOT NULL
+	GROUP BY substr(nuts,1,5)
+) as result
+
+WHERE result.substr = substr(a.eu_code,1,5);
+
+-- "Calculate specific industrial consumption per area"
+
+UPDATE 	model_draft.ego_demand_per_district
+SET 	consumption_per_area_industry = NULL; 
+
+UPDATE 	model_draft.ego_demand_per_district
+SET 	consumption_per_area_industry = elec_consumption_industry/area_industry;
+
 
 -----------------
--- "Calculate the electricty consumption for each industry polygon"
+-- "Calculate the electricity consumption for each industry polygon"
 -----------------
 
 UPDATE 	model_draft.ego_landuse_industry a
