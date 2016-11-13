@@ -34,10 +34,12 @@ allpnodes = []
 allPool = []
 endGateways = []
 
+
 def execGraphmlFile(myFileName):
     print("My file Name------------>",myFileName)
     tree = ET.parse(myFileName)
     root = tree.getroot()
+
 
     ns = {'gml': 'http://graphml.graphdrawing.org/xmlns',
           'tn': 'http://www.yworks.com/xml/graphml'}
@@ -221,6 +223,9 @@ sublist2 = []
 sgFor = None
 sgIndex = 0
 sg = False
+COSrerun = 0
+tempStack = Stack()
+
 
 def runSqlFile(filename,conn): # Function to execute sql scripts
     file = open(filename,'r')
@@ -295,7 +300,7 @@ def getStart():         # fixed start and end at events
                         if ae.target == ap.position:
                             sgFor = ap.position
 
-                            currInd = checkOtherStarts(ae.target, currInd, sg,sublist,sg2,sublist2,s)
+                            currInd = checkOtherStarts(ae.target, currInd, sg,sublist,sg2,sublist2,s,COSrerun)
                             while not s.is_empty():
                                 parsing.append(s.pop())
                                 assign(sg, sg2, sublist, sublist2, newSub, ase, 'start')
@@ -319,7 +324,7 @@ def getStart():         # fixed start and end at events
 
                     for t in alltasks:
                         if ae.target == t.position.name:
-                            currInd = checkOtherStarts(ae.target,currInd, sg,sublist,sg2,sublist2,s)
+                            currInd = checkOtherStarts(ae.target,currInd, sg,sublist,sg2,sublist2,s,COSrerun)
 
                             while not s.is_empty():
                                 parsing.append(s.pop())
@@ -348,7 +353,7 @@ def getStart():         # fixed start and end at events
 
                     if sg==True:
                         parsing.insert(sgIndex, sublist)
-                        assign(sg, sg2, sublist, sublist2, newSub, ase, 'start')
+                        assign(sg, sg2, sublist, sublist2, newSub, ase, 'chnext')
 
 
         if type(ase) is Event and (ase.type == 'EVENT_CHARACTERISTIC_INTERMEDIATE_CATCHING' or ase.type == 'EVENT_CHARACTERISTIC_END'):
@@ -402,7 +407,7 @@ def checkNextParallel(curr_gw,currInd,sg,sublist,sg2,sublist2,s):
 
             if type(newObj) is Task or  type(newObj) is DataObj:
 
-                checkOtherStarts(newObj.position.name, currInd, sg, sublist, sg2, sublist2, s)
+                checkOtherStarts(newObj.position.name, currInd, sg, sublist, sg2, sublist2, s,COSrerun)
                 while not s.is_empty():
                     newElement = s.pop()
                     parsing.append(newElement)
@@ -419,7 +424,7 @@ def checkNextParallel(curr_gw,currInd,sg,sublist,sg2,sublist2,s):
 
             else:
                 if type(newObj) is Gateway:
-                    newObj.name = 'end of Parallel Execution:'
+                    newObj.name = 'end of Parallel Execution'
                     parsing.append(newObj)
                     assign(sg, sg2, sublist, sublist2, None, None, 'chnext')
                     parsing_nodes.append(newObj.position.name)
@@ -427,16 +432,14 @@ def checkNextParallel(curr_gw,currInd,sg,sublist,sg2,sublist2,s):
 
 def checkNext(next,currInd,sg,sublist,sg2,sublist2,s):
     sub = None
-
     for ae in alledges:
         if ae.source == next:
             newObj = findType(ae.target)
 
             if type(newObj) is Gateway:
                 #print('..', newObj.name, sg2)
-                newObj.name = 'end of Parallel Execution:'
+                newObj.name = 'end of Parallel Execution'
                 parsing.append(newObj)
-
                 assign(sg, sg2, sublist, sublist2, None, None, 'chnext')
                 #print('source at position ', parsing.index(findType(ae.source)))
                 #print((findType(ae.source)).name, ' and then event ', newObj.name)
@@ -446,7 +449,8 @@ def checkNext(next,currInd,sg,sublist,sg2,sublist2,s):
                 #endOfPE = parsing.pop()
                 endOfPE = newObj
                 endOfPE.name = endOfPE.name.replace("end","start")
-                endOfPE.name = endOfPE.name.replace(":","")
+                #endOfPE.name = endOfPE.name.replace(":","")
+                endOfPE.name += ":"
 
                 #parsing.append(endOfPE)
                 #assign(sg, sg2, sublist, sublist2, None, None, 'chnext')
@@ -462,7 +466,7 @@ def checkNext(next,currInd,sg,sublist,sg2,sublist2,s):
                 checkNext(newObj.position.name, currInd, sg, sublist, sg2, sublist2, s)
 
             if type(newObj) is DataObj and newObj.position.name not in parsing_nodes:
-                checkOtherStarts(ae.target, currInd, sg,sublist,sg2,sublist2,s)
+                checkOtherStarts(ae.target, currInd, sg,sublist,sg2,sublist2,s,COSrerun)
 
                 while not s.is_empty():
                     other_start = s.pop()
@@ -477,7 +481,7 @@ def checkNext(next,currInd,sg,sublist,sg2,sublist2,s):
 
             if type(newObj) is Task and newObj.position.name not in parsing_nodes:
 
-                checkOtherStarts(ae.target, currInd, sg,sublist,sg2,sublist,s)
+                checkOtherStarts(ae.target, currInd, sg,sublist,sg2,sublist,s,COSrerun)
                 while not s.is_empty():
                     if newObj.name not in parsing_nodes:
                         poppedEle = s.pop()
@@ -501,7 +505,7 @@ def checkNext(next,currInd,sg,sublist,sg2,sublist2,s):
                 checkNext(newObj.position.name, currInd,sg,sublist,sg2,sublist2,s)
 
             if type(newObj) is Node and newObj.position not in parsing_nodes:
-                checkOtherStarts(ae.target, currInd, sg,sublist,sg2,sublist2,s)
+                checkOtherStarts(ae.target, currInd, sg,sublist,sg2,sublist2,s,COSrerun)
                 while not s.is_empty():
                     parsing.append(s.pop())
                     assign(sg, sg2, sublist, sublist2, None, None, 'chnext')
@@ -525,7 +529,7 @@ def checkNext(next,currInd,sg,sublist,sg2,sublist2,s):
                 parsing.insert(sgIndex, sublist2)
     return sub
 
-def checkOtherStarts(target,ind, sg,sublist,sg2,sublist2,s):
+def checkOtherStarts(target,ind, sg,sublist,sg2,sublist2,s,COSrerun):
     for ae in alledges:
         if(ae.target==target and ae.source not in starts):
             newElement = findType(ae.source)
@@ -533,26 +537,32 @@ def checkOtherStarts(target,ind, sg,sublist,sg2,sublist2,s):
 
             if newElement != '' or newElement is not None:
                 if newType is DataObj and newElement.position.name not in parsing_nodes:
-                    s.push(newElement)
+                    #print('for ',newElement.name,' value is ',COSrerun)
+                    if(COSrerun ==0):
+                        s.push(newElement)
+                    else:
+                        tempStack.push(newElement)
                     parsing_nodes.append(newElement.position.name)
-                    ind = checkOtherStarts(newElement.position.name, ind, sg, sublist, sg2, sublist2, s)
+                    ind = checkOtherStarts(newElement.position.name, ind, sg, sublist, sg2, sublist2, s,COSrerun)
 
                 if newType is Gateway:# and 'end' in newElement.position.name:
                     #print('Gateway before',newElement.position.name);
                     endGateways.append(newElement.position.name)
 
                 if newType is Task and newElement.position.name not in parsing_nodes:
-
-                    ind = checkOtherStarts(newElement.position.name, ind, sg, sublist, sg2, sublist2,s)
-                    while not s.is_empty():
-                        parsing.append(s.pop())
+                    COSrerun = 1
+                    ind = checkOtherStarts(newElement.position.name, ind, sg, sublist, sg2, sublist2,s,COSrerun)
+                    while not tempStack.is_empty():
+                        eleToAppend = tempStack.pop()
+                        #print('-',eleToAppend.name)
+                        parsing.append(eleToAppend)
                         assign(sg, sg2, sublist, sublist2, None, None, 'chnext')
                     parsing.append(newElement)
                     assign(sg, sg2, sublist, sublist2, None, None, 'chnext')
                     parsing_nodes.append(newElement.position.name)
 
                 if newType is Node and newElement.position not in parsing_nodes:
-                    ind = checkOtherStarts(newElement.position, ind, sg, sublist, sg2, sublist2,s)
+                    ind = checkOtherStarts(newElement.position, ind, sg, sublist, sg2, sublist2,s,COSrerun)
                     while not s.is_empty():
                         parsing.append(s.pop())
                         assign(sg, sg2, sublist, sublist2, None, None, 'chnext')
