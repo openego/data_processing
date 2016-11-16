@@ -1,4 +1,4 @@
-﻿/*
+/*
 Quick workaround to transfer renpassG!S results into the corresponding powerflow table.
 
 Author: Martin
@@ -27,17 +27,17 @@ SQ.source, SQ.datetime, sum(SQ.val) as val
 from
 	(select 
 	case 
-	when obj_label like '%gas%' Then 1
-	when obj_label like '%lignite%' Then 2
-	when obj_label like '%mixed_fuels%' Then 3
-	when obj_label like '%oil%' Then 4
-	when obj_label like '%uranium%' Then 5
-	when obj_label like '%biomass%' Then 6
-	when obj_label like '%hard_coal%' Then 8
-	when obj_label like '%run_of_river%' Then 9
---	when obj_label like '%storage_phs%' Then 11
-	when obj_label like '%solar%' Then 12
-	when obj_label like '%wind%' Then 13
+	when obj_label like '%%gas%%' Then 1
+	when obj_label like '%%lignite%%' Then 2
+	when obj_label like '%%mixed_fuels%%' Then 3
+	when obj_label like '%%oil%%' Then 4
+	when obj_label like '%%uranium%%' Then 5
+	when obj_label like '%%biomass%%' Then 6
+	when obj_label like '%%hard_coal%%' Then 8
+	when obj_label like '%%run_of_river%%' Then 9
+--	when obj_label like '%%storage_phs%%' Then 11
+	when obj_label like '%%solar%%' Then 12
+	when obj_label like '%%wind%%' Then 13
 	end as source,
 	bus_label,
 	obj_label,
@@ -46,11 +46,11 @@ from
 	val
 		from calc_renpass_gis.renpass_gis_results
 	-- conds
-	where obj_label like '%DE%' -- only Germany
-	and obj_label not like '%powerline%' -- without any powerlines
+	where obj_label like '%%DE%%' -- only Germany
+	and obj_label not like '%%powerline%%' -- without any powerlines
 	and scenario_id = 2 
 	 -- take only one flow (input), storage output flow seems to be the right one (?)
-	and ((obj_label like '%storage%' and type = 'output') or (obj_label not like '%storage%' and type = 'input'))
+	and ((obj_label like '%%storage%%' and type = 'output') or (obj_label not like '%%storage%%' and type = 'input'))
 ) as SQ
 where SQ.source is not null
 group by SQ.source, SQ.datetime;
