@@ -1,40 +1,24 @@
----------- ---------- ----------
----------- --SKRIPT-- WORK! s
----------- ---------- ----------
+/* 
+Copyright 2016 by open_eGo project
+Published under GNU GENERAL PUBLIC LICENSE Version 3 (see https://github.com/openego/data_processing/blob/master/LICENSE)
+Authors: Ludwig Hülk; Guido Pleßmann
+Skript to cut the generated Load Areas with MV Grid Districts
+*/
 
----------- ---------- ---------- ---------- ---------- ----------
--- "LOADS"   2016-04-06 15:17   12s
----------- ---------- ---------- ---------- ---------- ----------
-
--- -- Create schemas for open_eGo
--- DROP SCHEMA IF EXISTS	calc_ego_loads CASCADE;
--- CREATE SCHEMA 		calc_ego_loads;
--- 
--- -- Set default privileges for schema
--- ALTER DEFAULT PRIVILEGES IN SCHEMA calc_ego_loads GRANT ALL ON TABLES TO oeuser;
--- ALTER DEFAULT PRIVILEGES IN SCHEMA calc_ego_loads GRANT ALL ON SEQUENCES TO oeuser;
--- ALTER DEFAULT PRIVILEGES IN SCHEMA calc_ego_loads GRANT ALL ON FUNCTIONS TO oeuser;
--- 
--- -- Grant all in schema
--- GRANT ALL ON SCHEMA 	calc_ego_loads TO oeuser WITH GRANT OPTION;
--- GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA calc_ego_loads TO oeuser;
-
----------- ---------- ----------
--- Cutting Loads with Grid Districts
----------- ---------- ----------
-
--- "Create Table"   (OK!) 200ms =0
+-- create table for loadareas per mv-griddistrict
 DROP TABLE IF EXISTS  	model_draft.ego_demand_loadarea CASCADE;
 CREATE TABLE         	model_draft.ego_demand_loadarea (
-		id SERIAL NOT NULL,
-		geom geometry(Polygon,3035),
-CONSTRAINT 	ego_deu_load_area_pkey PRIMARY KEY (id));
+	id SERIAL NOT NULL,
+	version text,
+	geom geometry(Polygon,3035),
+CONSTRAINT 	ego_demand_loadarea_pkey PRIMARY KEY (id));
 
 -- "Insert Loads"   (OK!) 493.000ms =208.706
-INSERT INTO     model_draft.ego_demand_loadarea (geom)
-	SELECT	loads.geom ::geometry(Polygon,3035)
-	FROM	(SELECT (ST_DUMP(ST_SAFE_INTERSECTION(loads.geom,dis.geom))).geom AS geom
-		FROM	model_draft.ego_demand_load_melt AS loads,
+INSERT INTO     model_draft.ego_demand_loadarea (version, geom)
+	SELECT	'0.2' AS version,
+		loads.geom ::geometry(Polygon,3035)
+	FROM	(SELECT (ST_DUMP(ST_SAFE_INTERSECTION(load.geom,dis.geom))).geom AS geom
+		FROM	model_draft.ego_demand_load_melt AS load,
 			model_draft.ego_grid_mv_griddistrict AS dis
 		WHERE	loads.geom && dis.geom
 		) AS loads
