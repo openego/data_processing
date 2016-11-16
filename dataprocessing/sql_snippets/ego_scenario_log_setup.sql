@@ -1,4 +1,4 @@
-/* 
+﻿/* 
 Copyright 2016 by open_eGo project
 Published under GNU GENERAL PUBLIC LICENSE Version 3 (see https://github.com/openego/data_processing/blob/master/LICENSE)
 Authors: Ludwig Hülk; Guido Pleßmann
@@ -64,7 +64,7 @@ COMMENT ON TABLE model_draft.ego_scenario_log IS '{
 		{"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
 		"Date":  "12.10.2016", "Comment": "Added user_name" },
 		{"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
-		"Date":  "16.11.2016", "Comment": "Added io" }],
+		"Date":  "16.11.2016", "Comment": "Added io" },
 		{"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
 		"Date":  "16.11.2016", "Comment": "Added metadata" }],
 	"ToDo": ["More attributes needed?"],
@@ -89,5 +89,5 @@ SELECT	'0.2' AS version,
 	'OK' AS status,
 	session_user AS user_name,
 	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	SELECT obj_description('model_draft.ego_scenario_log' ::regclass) ::json AS metadata
+	obj_description('model_draft.ego_scenario_log' ::regclass) ::json AS metadata
 FROM	model_draft.ego_scenario_log;
