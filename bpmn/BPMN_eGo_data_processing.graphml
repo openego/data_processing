@@ -121,10 +121,17 @@
               <y:Geometry height="55.0" width="35.0" x="1582.4999999999989" y="778.1449727866574"/>
               <y:Fill color="#99CC00" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
-              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="62.8046875" modelName="custom" textColor="#000000" visible="true" width="218.810546875" x="-91.9052734375" y="59.0">orig_vg250.vg250_1_sta_union_mview
-orig_vg250.vg250_4_krs_mview
-orig_vg250.vg250_6_gem_mview
-orig_vg250.vg250_6_gem_clean_mview<y:LabelModel>
+              <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="165.712890625" modelName="custom" textColor="#000000" visible="true" width="372.923828125" x="-168.9619140625" y="59.0">political_boundary.bkg_vg250_1_sta_mview
+political_boundary.bkg_vg250_1_sta_error_geom_mview
+political_boundary.bkg_vg250_1_sta_union_mview
+political_boundary.bkg_vg250_1_sta_bbox_mview
+political_boundary.bkg_vg250_2_lan_mview
+political_boundary.bkg_vg250_4_krs_mview
+political_boundary.bkg_vg250_6_gem_mview
+political_boundary.bkg_vg250_6_gem_error_geom_mview
+political_boundary.bkg_vg250_6_gem_dump_mview
+model_draft.ego_political_boundary_bkg_vg250_6_gem_hole_mview
+model_draft.ego_political_boundary_bkg_vg250_6_gem_clean<y:LabelModel>
                   <y:SmartNodeLabelModel distance="4.0"/>
                 </y:LabelModel>
                 <y:ModelParameter>
@@ -574,7 +581,7 @@ loads_per_grid_district.sql</y:NodeLabel>
               <y:Geometry height="55.0" width="35.0" x="1582.4999999999989" y="482.5"/>
               <y:Fill color="#00CCFF" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
-              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="48.103515625" modelName="custom" textColor="#000000" visible="true" width="206.1484375" x="-85.57421875" y="-52.103515625">political_boundary.bkg_vg250_1_sta
+              <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="48.103515625" modelName="custom" textColor="#000000" visible="true" width="206.1484375" x="-85.57421875" y="-52.103515625">political_boundary.bkg_vg250_1_sta
 political_boundary.bkg_vg250_4_krs
 political_boundary.bkg_vg250_6_gem<y:LabelModel>
                   <y:SmartNodeLabelModel distance="4.0"/>
