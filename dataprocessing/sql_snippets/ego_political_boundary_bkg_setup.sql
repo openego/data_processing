@@ -23,7 +23,7 @@ SELECT	'0.2' AS version,
 	'OK' AS status,
 	session_user AS user_name,
 	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	SELECT obj_description('political_boundary.bkg_vg250_1_sta' ::regclass) ::json AS metadata
+	obj_description('political_boundary.bkg_vg250_1_sta' ::regclass) ::json AS metadata
 FROM	political_boundary.bkg_vg250_1_sta;
 
 
@@ -87,7 +87,7 @@ COMMENT ON TABLE political_boundary.bkg_vg250_1_sta_mview IS '{
 -- select description
 SELECT obj_description('political_boundary.bkg_vg250_1_sta_mview' ::regclass) ::json;
 
--- add entry to scenario logtable
+-- add entry to scenario log table
 INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
 SELECT	'0.2' AS version,
 	'output' AS io,
@@ -98,7 +98,7 @@ SELECT	'0.2' AS version,
 	'OK' AS status,
 	session_user AS user_name,
 	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	SELECT obj_description('political_boundary.bkg_vg250_1_sta_mview' ::regclass) ::json AS metadata
+	obj_description('political_boundary.bkg_vg250_1_sta_mview' ::regclass) ::json AS metadata
 FROM	political_boundary.bkg_vg250_1_sta_mview;
 
 
@@ -164,7 +164,7 @@ COMMENT ON TABLE political_boundary.bkg_vg250_1_sta_error_geom_mview IS '{
 -- select description
 SELECT obj_description('political_boundary.bkg_vg250_1_sta_error_geom_mview' ::regclass) ::json;
 
--- add entry to scenario logtable
+-- add entry to scenario log table
 INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
 SELECT	'0.2' AS version,
 	'output' AS io,
@@ -175,7 +175,7 @@ SELECT	'0.2' AS version,
 	'OK' AS status,
 	session_user AS user_name,
 	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	SELECT obj_description('political_boundary.bkg_vg250_1_sta_error_geom_mview' ::regclass) ::json AS metadata
+	obj_description('political_boundary.bkg_vg250_1_sta_error_geom_mview' ::regclass) ::json AS metadata
 FROM	political_boundary.bkg_vg250_1_sta_error_geom_mview;
 
 
@@ -238,7 +238,7 @@ COMMENT ON TABLE political_boundary.bkg_vg250_1_sta_union_mview IS '{
 -- select description
 SELECT obj_description('political_boundary.bkg_vg250_1_sta_union_mview' ::regclass) ::json;
 
--- add entry to scenario logtable
+-- add entry to scenario log table
 INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
 SELECT	'0.2' AS version,
 	'output' AS io,
@@ -249,7 +249,7 @@ SELECT	'0.2' AS version,
 	'OK' AS status,
 	session_user AS user_name,
 	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	SELECT obj_description('political_boundary.bkg_vg250_1_sta_union_mview' ::regclass) ::json AS metadata
+	obj_description('political_boundary.bkg_vg250_1_sta_union_mview' ::regclass) ::json AS metadata
 FROM	political_boundary.bkg_vg250_1_sta_union_mview;
 
 
@@ -311,7 +311,7 @@ COMMENT ON TABLE political_boundary.bkg_vg250_1_sta_bbox_mview IS '{
 -- select description
 SELECT obj_description('political_boundary.bkg_vg250_1_sta_bbox_mview' ::regclass) ::json;
 
--- add entry to scenario logtable
+-- add entry to scenario log table
 INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
 SELECT	'0.2' AS version,
 	'output' AS io,
@@ -322,7 +322,7 @@ SELECT	'0.2' AS version,
 	'OK' AS status,
 	session_user AS user_name,
 	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	SELECT obj_description('political_boundary.bkg_vg250_1_sta_bbox_mview' ::regclass) ::json AS metadata
+	obj_description('political_boundary.bkg_vg250_1_sta_bbox_mview' ::regclass) ::json AS metadata
 FROM	political_boundary.bkg_vg250_1_sta_bbox_mview;
 
 	
@@ -339,7 +339,7 @@ SELECT	'0.2' AS version,
 	'OK' AS status,
 	session_user AS user_name,
 	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	SELECT obj_description('political_boundary.bkg_vg250_2_lan' ::regclass) ::json AS metadata
+	obj_description('political_boundary.bkg_vg250_2_lan' ::regclass) ::json AS metadata
 FROM	model_draft.table;
 
 -- 2. federal state - mview with tiny buffer because of intersection (in official data)
@@ -405,7 +405,7 @@ COMMENT ON TABLE political_boundary.bkg_vg250_2_lan_mview IS '{
 -- select description
 SELECT obj_description('political_boundary.bkg_vg250_2_lan_mview' ::regclass) ::json;
 
--- add entry to scenario logtable
+-- add entry to scenario log table
 INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
 SELECT	'0.2' AS version,
 	'output' AS io,
@@ -416,7 +416,7 @@ SELECT	'0.2' AS version,
 	'OK' AS status,
 	session_user AS user_name,
 	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	SELECT obj_description('political_boundary.bkg_vg250_2_lan_mview' ::regclass) ::json AS metadata
+	obj_description('political_boundary.bkg_vg250_2_lan_mview' ::regclass) ::json AS metadata
 FROM	political_boundary.bkg_vg250_2_lan_mview;
 
 
@@ -433,7 +433,7 @@ SELECT	'0.2' AS version,
 	'OK' AS status,
 	session_user AS user_name,
 	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	SELECT obj_description('political_boundary.bkg_vg250_4_krs' ::regclass) ::json AS metadata
+	obj_description('political_boundary.bkg_vg250_4_krs' ::regclass) ::json AS metadata
 FROM	political_boundary.bkg_vg250_4_krs;
 
 
@@ -503,7 +503,7 @@ COMMENT ON TABLE political_boundary.bkg_vg250_4_krs_mview IS '{
 -- select description
 SELECT obj_description('political_boundary.bkg_vg250_4_krs_mview' ::regclass) ::json;
 
--- add entry to scenario logtable
+-- add entry to scenario log table
 INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
 SELECT	'0.2' AS version,
 	'output' AS io,
@@ -514,7 +514,7 @@ SELECT	'0.2' AS version,
 	'OK' AS status,
 	session_user AS user_name,
 	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	SELECT obj_description('political_boundary.bkg_vg250_4_krs_mview' ::regclass) ::json AS metadata
+	obj_description('political_boundary.bkg_vg250_4_krs_mview' ::regclass) ::json AS metadata
 FROM	political_boundary.bkg_vg250_4_krs_mview;
 
 
@@ -531,7 +531,7 @@ SELECT	'0.2' AS version,
 	'OK' AS status,
 	session_user AS user_name,
 	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	SELECT obj_description('political_boundary.bkg_vg250_6_gem' ::regclass) ::json AS metadata
+	obj_description('political_boundary.bkg_vg250_6_gem' ::regclass) ::json AS metadata
 FROM	political_boundary.bkg_vg250_6_gem;
 
 
@@ -602,7 +602,7 @@ COMMENT ON TABLE political_boundary.bkg_vg250_6_gem_mview IS '{
 -- select description
 SELECT obj_description('political_boundary.bkg_vg250_6_gem_mview' ::regclass) ::json;
 
--- add entry to scenario logtable
+-- add entry to scenario log table
 INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
 SELECT	'0.2' AS version,
 	'output' AS io,
@@ -613,7 +613,7 @@ SELECT	'0.2' AS version,
 	'OK' AS status,
 	session_user AS user_name,
 	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	SELECT obj_description('political_boundary.bkg_vg250_6_gem_mview' ::regclass) ::json AS metadata
+	obj_description('political_boundary.bkg_vg250_6_gem_mview' ::regclass) ::json AS metadata
 FROM	political_boundary.bkg_vg250_6_gem_mview;
 
 
@@ -679,7 +679,7 @@ COMMENT ON TABLE political_boundary.bkg_vg250_6_gem_mview_error_geom_view IS '{
 -- select description
 SELECT obj_description('political_boundary.bkg_vg250_6_gem_mview_error_geom_view' ::regclass) ::json;
 
--- add entry to scenario logtable
+-- add entry to scenario log table
 INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
 SELECT	'0.2' AS version,
 	'output' AS io,
@@ -690,7 +690,7 @@ SELECT	'0.2' AS version,
 	'OK' AS status,
 	session_user AS user_name,
 	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	SELECT obj_description('political_boundary.bkg_vg250_6_gem_mview_error_geom_view' ::regclass) ::json AS metadata
+	obj_description('political_boundary.bkg_vg250_6_gem_mview_error_geom_view' ::regclass) ::json AS metadata
 FROM	political_boundary.bkg_vg250_6_gem_mview_error_geom_view;
 
 
@@ -768,7 +768,7 @@ COMMENT ON TABLE political_boundary.bkg_vg250_6_gem_dump_mview IS '{
 -- select description
 SELECT obj_description('political_boundary.bkg_vg250_6_gem_dump_mview' ::regclass) ::json;
 
--- add entry to scenario logtable
+-- add entry to scenario log table
 INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
 SELECT	'0.2' AS version,
 	'output' AS io,
@@ -779,7 +779,7 @@ SELECT	'0.2' AS version,
 	'OK' AS status,
 	session_user AS user_name,
 	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	SELECT obj_description('political_boundary.bkg_vg250_6_gem_dump_mview' ::regclass) ::json AS metadata
+	obj_description('political_boundary.bkg_vg250_6_gem_dump_mview' ::regclass) ::json AS metadata
 FROM	political_boundary.bkg_vg250_6_gem_dump_mview;
 
 
@@ -928,7 +928,7 @@ COMMENT ON TABLE model_draft.ego_political_boundary_bkg_vg250_6_gem_clean_ring_m
 -- select description
 SELECT obj_description('model_draft.ego_political_boundary_bkg_vg250_6_gem_clean_ring_mview' ::regclass) ::json;
 
--- add entry to scenario logtable
+-- add entry to scenario log table
 INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
 SELECT	'0.2' AS version,
 	'output' AS io,
@@ -939,7 +939,7 @@ SELECT	'0.2' AS version,
 	'OK' AS status,
 	session_user AS user_name,
 	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	SELECT obj_description('model_draft.ego_political_boundary_bkg_vg250_6_gem_clean_ring_mview' ::regclass) ::json AS metadata
+	obj_description('model_draft.ego_political_boundary_bkg_vg250_6_gem_clean_ring_mview' ::regclass) ::json AS metadata
 FROM	model_draft.ego_political_boundary_bkg_vg250_6_gem_clean_ring_mview;
 
 
@@ -986,7 +986,7 @@ COMMENT ON TABLE model_draft.ego_political_boundary_bkg_vg250_6_gem_clean IS '{
 -- select description
 SELECT obj_description('model_draft.ego_political_boundary_bkg_vg250_6_gem_clean' ::regclass) ::json;
 
--- add entry to scenario logtable
+-- add entry to scenario log table
 INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
 SELECT	'0.2' AS version,
 	'output' AS io,
@@ -997,7 +997,7 @@ SELECT	'0.2' AS version,
 	'OK' AS status,
 	session_user AS user_name,
 	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	SELECT obj_description('model_draft.ego_political_boundary_bkg_vg250_6_gem_clean' ::regclass) ::json AS metadata
+	obj_description('model_draft.ego_political_boundary_bkg_vg250_6_gem_clean' ::regclass) ::json AS metadata
 FROM	model_draft.ego_political_boundary_bkg_vg250_6_gem_clean;
 
 

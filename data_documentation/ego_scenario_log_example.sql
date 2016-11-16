@@ -17,5 +17,5 @@ SELECT	'0.2' AS version,
 	'OK' AS status,
 	session_user AS user_name,
 	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	SELECT obj_description('model_draft.table' ::regclass) ::json AS metadata
+	obj_description('model_draft.table' ::regclass) ::json AS metadata
 FROM	model_draft.table;
