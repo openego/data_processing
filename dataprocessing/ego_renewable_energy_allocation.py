@@ -19,12 +19,12 @@ logger.addHandler(ch)
 
 # get current time and inform about start
 total_time = time.time()
-logger.info('eGo dea allocation started...')
+logger.info('ego renewable_energy_allocation (ego_rea) started...')
 
 # list of sql_scripts that process the data in correct order
 script_dir = os.path.abspath(
     os.path.join(os.path.dirname(__file__),
-                         'dea_allocation'))
+                         'renewable_energy_allocation'))
 
 scripts = [
     ## 'ego_deu_lattice.sql' 				# create a point grid (lattice) on the bbox of Germany / Only create once!
@@ -32,13 +32,13 @@ scripts = [
     # 'ego_rea_lattice_per_area_500m.sql', 	# prepare 500m lattice
     # 'ego_rea_lattice_per_area_50m.sql', 	# prepare 50m lattice
 	## 'ego_rea_lattice_per_area_34m.sql', 	# prepare 34m lattice -> do not do it, takes ages!
-    # 'ego_dea_allocation_setup.sql',		# setup table for allocation
-    # 'ego_dea_allocation_m1.sql',
-    # 'ego_dea_allocation_m2.sql',
-    # 'ego_dea_allocation_m3.sql',
-    # 'ego_dea_allocation_m4.sql',
-    # 'ego_dea_allocation_m5.sql',
-    # 'ego_dea_allocation_results.sql'
+    # 'ego_rea_setup.sql',					# setup table for allocation
+    # 'ego_rea_m1.sql',
+    # 'ego_rea_m2.sql',
+    # 'ego_rea_m3.sql',
+    # 'ego_rea_m4.sql',
+    # 'ego_rea_m5.sql',
+    # 'ego_rea_results.sql'
     ]
 
 # get database connection
