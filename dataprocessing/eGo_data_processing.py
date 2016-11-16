@@ -32,7 +32,7 @@ def data_processing():
                      'python_scripts'))
 
     snippets = [
-        # # 'scenario_eGo_data_processing.sql', # setup scenario log
+        # # 'ego_scenario_log_setup.sql', # setup scenario log
         # 'setup_bkg_vg250.sql', # setup borders
         'get_substations.sql',
         'get_substations_ehv.sql',

@@ -2,6 +2,7 @@
 Copyright 2016 by open_eGo project
 Published under GNU GENERAL PUBLIC LICENSE Version 3 (see https://github.com/openego/data_processing/blob/master/LICENSE)
 Authors: Ludwig Hülk; Guido Pleßmann
+
 Skript to cut the generated Load Areas with MV Grid Districts
 */
 
@@ -9,14 +10,45 @@ Skript to cut the generated Load Areas with MV Grid Districts
 DROP TABLE IF EXISTS  	model_draft.ego_demand_loadarea CASCADE;
 CREATE TABLE         	model_draft.ego_demand_loadarea (
 	id SERIAL NOT NULL,
-	version text,
-	geom geometry(Polygon,3035),
+	zensus_sum integer,
+	zensus_count integer,
+	zensus_density numeric,
+	ioer_sum numeric,
+	ioer_count integer,
+	ioer_density numeric,
+	area_ha numeric,
+	sector_area_residential numeric,
+	sector_area_retail numeric,
+	sector_area_industrial numeric,
+	sector_area_agricultural numeric,
+	sector_area_sum numeric,	
+	sector_share_residential numeric,
+	sector_share_retail numeric,
+	sector_share_industrial numeric,
+	sector_share_agricultural numeric,
+	sector_share_sum numeric,
+	sector_count_residential integer,
+	sector_count_retail integer,
+	sector_count_industrial integer,
+	sector_count_agricultural integer,
+	sector_consumption_residential numeric,
+	sector_consumption_retail numeric,
+	sector_consumption_industrial numeric,
+	sector_consumption_agricultural numeric,
+	sector_consumption_sum numeric,
+	subst_id integer,
+	nuts varchar(5),
+	rs_0 varchar(12),
+	ags_0 varchar(12),
+	geom geometry(Polygon,3035),	
+	geom_centroid geometry(POINT,3035),
+	geom_surfacepoint geometry(POINT,3035),
+	geom_centre geometry(POINT,3035),
 CONSTRAINT 	ego_demand_loadarea_pkey PRIMARY KEY (id));
 
--- "Insert Loads"   (OK!) 493.000ms =208.706
-INSERT INTO     model_draft.ego_demand_loadarea (version, geom)
-	SELECT	'0.2' AS version,
-		loads.geom ::geometry(Polygon,3035)
+-- insert loads
+INSERT INTO     model_draft.ego_demand_loadarea (geom)
+	SELECT	loads.geom ::geometry(Polygon,3035)
 	FROM	(SELECT (ST_DUMP(ST_SAFE_INTERSECTION(load.geom,dis.geom))).geom AS geom
 		FROM	model_draft.ego_demand_load_melt AS load,
 			model_draft.ego_grid_mv_griddistrict AS dis
@@ -24,79 +56,54 @@ INSERT INTO     model_draft.ego_demand_loadarea (version, geom)
 		) AS loads
 	WHERE	ST_GeometryType(loads.geom) = 'ST_Polygon';
 
--- "Extend Table"   (OK!) 100ms =0
-ALTER TABLE	model_draft.ego_demand_loadarea
-	ADD COLUMN zensus_sum integer,
-	ADD COLUMN zensus_count integer,
-	ADD COLUMN zensus_density numeric,
-	ADD COLUMN ioer_sum numeric,
-	ADD COLUMN ioer_count integer,
-	ADD COLUMN ioer_density numeric,
-	ADD COLUMN area_ha numeric,
-	ADD COLUMN sector_area_residential numeric,
-	ADD COLUMN sector_area_retail numeric,
-	ADD COLUMN sector_area_industrial numeric,
-	ADD COLUMN sector_area_agricultural numeric,
-	ADD COLUMN sector_area_sum numeric,	
-	ADD COLUMN sector_share_residential numeric,
-	ADD COLUMN sector_share_retail numeric,
-	ADD COLUMN sector_share_industrial numeric,
-	ADD COLUMN sector_share_agricultural numeric,
-	ADD COLUMN sector_share_sum numeric,
-	ADD COLUMN sector_count_residential integer,
-	ADD COLUMN sector_count_retail integer,
-	ADD COLUMN sector_count_industrial integer,
-	ADD COLUMN sector_count_agricultural integer,
-	ADD COLUMN sector_consumption_residential numeric,
-	ADD COLUMN sector_consumption_retail numeric,
-	ADD COLUMN sector_consumption_industrial numeric,
-	ADD COLUMN sector_consumption_agricultural numeric,
-	ADD COLUMN sector_consumption_sum numeric,
-	ADD COLUMN subst_id integer,
-	ADD COLUMN nuts varchar(5),
-	ADD COLUMN rs_0 varchar(12),
-	ADD COLUMN ags_0 varchar(12),	
-	ADD COLUMN geom_centroid geometry(POINT,3035),
-	ADD COLUMN geom_surfacepoint geometry(POINT,3035),
-	ADD COLUMN geom_centre geometry(POINT,3035);
-
--- "Create Index GIST (geom)"   (OK!) 2.000ms =0
+-- create index GIST (geom)
 CREATE INDEX  	ego_deu_load_area_geom_idx
-    ON    	model_draft.ego_demand_loadarea
-    USING     	GIST (geom);
+    ON    	model_draft.ego_demand_loadarea USING gist (geom);
 
--- "Grant oeuser"   (OK!) -> 100ms =0
+-- grant (oeuser)
 GRANT ALL ON TABLE 	model_draft.ego_demand_loadarea TO oeuser WITH GRANT OPTION;
 ALTER TABLE		model_draft.ego_demand_loadarea OWNER TO oeuser;
 
----------- ---------- ----------
 
--- "Update Area (area_ha)"   (OK!) -> 31.000ms =208.706
+-- update cutted loads
+
+-- update area (area_ha)
 UPDATE 	model_draft.ego_demand_loadarea AS t1
-SET  	area_ha = t2.area
-FROM    (
-	SELECT	loads.id,
-		ST_AREA(ST_TRANSFORM(loads.geom,3035))/10000 AS area
-	FROM	model_draft.ego_demand_loadarea AS loads
-	) AS t2
-WHERE  	t1.id = t2.id;
+	SET  	area_ha = t2.area
+	FROM    (SELECT	loads.id,
+			ST_AREA(ST_TRANSFORM(loads.geom,3035))/10000 AS area
+		FROM	model_draft.ego_demand_loadarea AS loads
+		) AS t2
+	WHERE  	t1.id = t2.id;
 
--- "Validate Area (area_ha) kleiner 100m²"   (OK!) 500ms =1.860
-DROP MATERIALIZED VIEW IF EXISTS	model_draft.ego_demand_loadarea_error_area_ha_mview CASCADE;
-CREATE MATERIALIZED VIEW 		model_draft.ego_demand_loadarea_error_area_ha_mview AS
+
+-- validate area (area_ha) -> exclude smaller 100m²
+DROP MATERIALIZED VIEW IF EXISTS	model_draft.ego_demand_loadarea_smaller100m2_mview CASCADE;
+CREATE MATERIALIZED VIEW 		model_draft.ego_demand_loadarea_smaller100m2_mview AS
 	SELECT 	loads.id AS id,
 		loads.area_ha AS area_ha,
 		loads.geom AS geom
 	FROM 	model_draft.ego_demand_loadarea AS loads
 	WHERE	loads.area_ha < 0.001;
 	
--- "Grant oeuser"   (OK!) -> 100ms =0
+-- grant (oeuser)
 GRANT ALL ON TABLE 	model_draft.ego_demand_loadarea_error_area_ha_mview TO oeuser WITH GRANT OPTION;
 ALTER TABLE		model_draft.ego_demand_loadarea_error_area_ha_mview OWNER TO oeuser;
 
 -- "Remove Errors (area_ha)"   (OK!) 700ms =1.850
 DELETE FROM	model_draft.ego_demand_loadarea AS loads
 	WHERE	loads.area_ha < 0.001;
+
+-- ego result log
+INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
+	SELECT	'0.2' AS version,
+		'model_draft' AS schema_name,
+		'ego_demand_loadarea' AS table_name,
+		'process_eGo_loads_per_grid_district.sql' AS script_name,
+		COUNT(geom)AS entries,
+		'OK' AS status,
+		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
+	FROM	model_draft.ego_demand_loadarea;
 
 -- -- "Validate Area (area_ha) Check"   (OK!) 84.000ms =81.161
 -- SELECT 	loads.id AS id,

@@ -29,7 +29,7 @@ COMMENT ON TABLE schema.table IS '{
     "Notes": ["Some datasets are odd -&gt; Check numbers against another data"],
     "Licence": [{
 	"Name": "Licence – Version 2.0 (dl-de/by-2-0)", 
-	" URL": "http://www.govdata.de/dl-de/by-2-0" }],
+	"URL": "http://www.govdata.de/dl-de/by-2-0" }],
     "Instructions for proper use": ["Always state licence"]
     }' ;
 
