@@ -147,7 +147,8 @@ orig_vg250.vg250_6_gem_clean_mview<y:LabelModel>
               <y:Geometry height="75.0" width="200.0" x="1499.9999999999989" y="622.4999999999999"/>
               <y:Fill color="#FFFFFFE6" color2="#D4D4D4CC" transparent="false"/>
               <y:BorderStyle color="#123EA2" type="line" width="1.0"/>
-              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="117.419921875" x="41.2900390625" y="28.1494140625">setup_bkg_vg250.sql</y:NodeLabel>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="33.40234375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="134.1015625" x="32.94921875" y="20.798828125">ego_political_boundary_
+bkg_setup.sql</y:NodeLabel>
               <y:StyleProperties>
                 <y:Property class="com.yworks.yfiles.bpmn.view.BPMNTypeEnum" name="com.yworks.bpmn.type" value="ACTIVITY_TYPE"/>
                 <y:Property class="com.yworks.yfiles.bpmn.view.ActivityTypeEnum" name="com.yworks.bpmn.activityType" value="ACTIVITY_TYPE_TASK"/>
@@ -573,9 +574,9 @@ loads_per_grid_district.sql</y:NodeLabel>
               <y:Geometry height="55.0" width="35.0" x="1582.4999999999989" y="482.5"/>
               <y:Fill color="#00CCFF" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
-              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="48.103515625" modelName="custom" textColor="#000000" visible="true" width="142.7734375" x="-53.88671875" y="-52.103515625">orig_vg250.vg250_1_sta
-orig_vg250.vg250_4_krs
-orig_vg250.vg250_6_gem<y:LabelModel>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="48.103515625" modelName="custom" textColor="#000000" visible="true" width="206.1484375" x="-85.57421875" y="-52.103515625">political_boundary.bkg_vg250_1_sta
+political_boundary.bkg_vg250_4_krs
+political_boundary.bkg_vg250_6_gem<y:LabelModel>
                   <y:SmartNodeLabelModel distance="4.0"/>
                 </y:LabelModel>
                 <y:ModelParameter>

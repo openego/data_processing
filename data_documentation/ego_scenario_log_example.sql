@@ -6,7 +6,7 @@ Authors: Ludwig Hülk; Guido Pleßmann
 Example of the ego scenario log
 */
 
--- add entry to scenario logtable
+-- add entry to scenario log table
 INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
 SELECT	'0.2' AS version,
 	'output' AS io,

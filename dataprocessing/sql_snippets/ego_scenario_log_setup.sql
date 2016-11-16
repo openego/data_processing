@@ -66,7 +66,7 @@ COMMENT ON TABLE model_draft.ego_scenario_log IS '{
 		{"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
 		"Date":  "16.11.2016", "Comment": "Added io" },
 		{"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
-		"Date":  "16.11.2016", "Comment": "Added metadata" }],
+		"Date":  "16.11.2016", "Comment": "Added metadata" } ],
 	"ToDo": ["More attributes needed?"],
 	"Licence": [{
 		"Name": "GNU GENERAL PUBLIC LICENSE Version 3", 

@@ -32,8 +32,8 @@ def data_processing():
                      'python_scripts'))
 
     snippets = [
-        # # 'ego_scenario_log_setup.sql', # setup scenario log
-        # 'setup_bkg_vg250.sql', # setup borders
+        # # 'ego_scenario_log_setup.sql', # setup scenario log table
+        # 'ego_political_boundary_bkg_setup.sql', # setup borders
         'get_substations.sql',
         'get_substations_ehv.sql',
         'otg_id_to_substations.sql',
