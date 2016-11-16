@@ -53,7 +53,7 @@ GRANT ALL ON TABLE	political_boundary.bkg_vg250_1_sta_mview TO oeuser WITH GRANT
 ALTER TABLE		political_boundary.bkg_vg250_1_sta_mview OWNER TO oeuser;
 
 -- metadata
-COMMENT ON TABLE political_boundary.bkg_vg250_1_sta_mview IS '{
+COMMENT ON MATERIALIZED VIEW political_boundary.bkg_vg250_1_sta_mview IS '{
     "Name": "BKG - Verwaltungsgebiete 1:250.000 - country mview",
     "Source":   [{
 	"Name": "Dienstleistungszentrum des Bundes für Geoinformation und Geodäsie - Open Data",
@@ -132,7 +132,7 @@ GRANT ALL ON TABLE	political_boundary.bkg_vg250_1_sta_error_geom_mview TO oeuser
 ALTER TABLE		political_boundary.bkg_vg250_1_sta_error_geom_mview OWNER TO oeuser;
 
 -- metadata
-COMMENT ON TABLE political_boundary.bkg_vg250_1_sta_error_geom_mview IS '{
+COMMENT ON MATERIALIZED VIEW political_boundary.bkg_vg250_1_sta_error_geom_mview IS '{
     "Name": "BKG - Verwaltungsgebiete 1:250.000 - country mview errors",
     "Source":   [{
 	"Name": "Dienstleistungszentrum des Bundes für Geoinformation und Geodäsie - Open Data",
@@ -205,7 +205,7 @@ GRANT ALL ON TABLE	political_boundary.bkg_vg250_1_sta_union_mview TO oeuser WITH
 ALTER TABLE		political_boundary.bkg_vg250_1_sta_union_mview OWNER TO oeuser;
 
 -- metadata
-COMMENT ON TABLE political_boundary.bkg_vg250_1_sta_union_mview IS '{
+COMMENT ON MATERIALIZED VIEW political_boundary.bkg_vg250_1_sta_union_mview IS '{
     "Name": "BKG - Verwaltungsgebiete 1:250.000 - country mview union",
     "Source":   [{
 	"Name": "Dienstleistungszentrum des Bundes für Geoinformation und Geodäsie - Open Data",
@@ -278,7 +278,7 @@ GRANT ALL ON TABLE	political_boundary.bkg_vg250_1_sta_bbox_mview TO oeuser WITH 
 ALTER TABLE		political_boundary.bkg_vg250_1_sta_bbox_mview OWNER TO oeuser;
 
 -- metadata
-COMMENT ON TABLE political_boundary.bkg_vg250_1_sta_bbox_mview IS '{
+COMMENT ON MATERIALIZED VIEW political_boundary.bkg_vg250_1_sta_bbox_mview IS '{
     "Name": "BKG - Verwaltungsgebiete 1:250.000 - country mview bounding box",
     "Source":   [{
 	"Name": "Dienstleistungszentrum des Bundes für Geoinformation und Geodäsie - Open Data",
@@ -340,7 +340,7 @@ SELECT	'0.2' AS version,
 	session_user AS user_name,
 	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
 	obj_description('political_boundary.bkg_vg250_2_lan' ::regclass) ::json AS metadata
-FROM	model_draft.table;
+FROM	political_boundary.bkg_vg250_2_lan;
 
 -- 2. federal state - mview with tiny buffer because of intersection (in official data)
 DROP MATERIALIZED VIEW IF EXISTS	political_boundary.bkg_vg250_2_lan_mview CASCADE;
@@ -348,8 +348,7 @@ CREATE MATERIALIZED VIEW		political_boundary.bkg_vg250_2_lan_mview AS
 	SELECT	'2016-01-01' ::text AS reference_date,
 		lan.ags_0 ::character varying(12) AS ags_0,
 		lan.gen ::text AS gen,
-		ST_AREA(ST_TRANSFORM(vg.geom, 3035)) / 10000 ::double precision AS area_km2,
-		ST_UNION(ST_TRANSFORM(vg.geom,3035)) AS geom
+		ST_UNION(ST_TRANSFORM(lan.geom,3035)) AS geom
 	FROM	(SELECT	vg.ags_0,
 			replace( vg.gen, ' (Bodensee)', '') as gen,
 			vg.geom
@@ -372,7 +371,7 @@ GRANT ALL ON TABLE	political_boundary.bkg_vg250_2_lan_mview TO oeuser WITH GRANT
 ALTER TABLE		political_boundary.bkg_vg250_2_lan_mview OWNER TO oeuser;
 
 -- metadata
-COMMENT ON TABLE political_boundary.bkg_vg250_2_lan_mview IS '{
+COMMENT ON MATERIALIZED VIEW political_boundary.bkg_vg250_2_lan_mview IS '{
     "Name": "BKG - Verwaltungsgebiete 1:250.000 - federal state mview",
     "Source":   [{
 	"Name": "Dienstleistungszentrum des Bundes für Geoinformation und Geodäsie - Open Data",
@@ -466,7 +465,7 @@ GRANT ALL ON TABLE	political_boundary.bkg_vg250_4_krs_mview TO oeuser WITH GRANT
 ALTER TABLE		political_boundary.bkg_vg250_4_krs_mview OWNER TO oeuser;
 
 -- metadata
-COMMENT ON TABLE political_boundary.bkg_vg250_4_krs_mview IS '{
+COMMENT ON MATERIALIZED VIEW political_boundary.bkg_vg250_4_krs_mview IS '{
     "Name": "BKG - Verwaltungsgebiete 1:250.000 - federal state mview",
     "Source":   [{
 	"Name": "Dienstleistungszentrum des Bundes für Geoinformation und Geodäsie - Open Data",
@@ -565,7 +564,7 @@ GRANT ALL ON TABLE	political_boundary.bkg_vg250_6_gem_mview TO oeuser WITH GRANT
 ALTER TABLE		political_boundary.bkg_vg250_6_gem_mview OWNER TO oeuser;
 
 -- metadata
-COMMENT ON TABLE political_boundary.bkg_vg250_6_gem_mview IS '{
+COMMENT ON MATERIALIZED VIEW political_boundary.bkg_vg250_6_gem_mview IS '{
     "Name": "BKG - Verwaltungsgebiete 1:250.000 - municipality mview",
     "Source":   [{
 	"Name": "Dienstleistungszentrum des Bundes für Geoinformation und Geodäsie - Open Data",
@@ -618,8 +617,8 @@ FROM	political_boundary.bkg_vg250_6_gem_mview;
 
 
 -- 6. municipality - error geom
-DROP MATERIALIZED VIEW IF EXISTS	political_boundary.bkg_vg250_6_gem_mview_error_geom_view CASCADE;
-CREATE MATERIALIZED VIEW		political_boundary.bkg_vg250_6_gem_mview_error_geom_view AS 
+DROP MATERIALIZED VIEW IF EXISTS	political_boundary.bkg_vg250_6_gem_error_geom_mview CASCADE;
+CREATE MATERIALIZED VIEW		political_boundary.bkg_vg250_6_gem_error_geom_mview AS 
 	SELECT	sub.id AS id,
 		sub.error AS error,
 		sub.error_reason AS error_reason,
@@ -629,25 +628,25 @@ CREATE MATERIALIZED VIEW		political_boundary.bkg_vg250_6_gem_mview_error_geom_vi
 			ST_IsValid(source.geom) AS error,
 			reason(ST_IsValidDetail(source.geom)) AS error_reason,
 			source.geom AS geom
-		FROM	political_boundary.bkg_vg250_1_sta AS source	-- Table
+		FROM	political_boundary.bkg_vg250_6_gem_mview AS source	-- Table
 		WHERE	reference_date = '2016-01-01'
 		) AS sub
 	WHERE	sub.error = FALSE;
 
 -- create index (id)
-CREATE UNIQUE INDEX  	bkg_vg250_6_gem_mview_error_geom_view_id_idx
-		ON	political_boundary.bkg_vg250_6_gem_mview_error_geom_view (id);
+CREATE UNIQUE INDEX  	bkg_vg250_6_gem_error_geom_mview_id_idx
+		ON	political_boundary.bkg_vg250_6_gem_error_geom_mview (id);
 
 -- create index GIST (geom)
-CREATE INDEX  	bkg_vg250_6_gem_mview_error_geom_vieww_geom_idx
-	ON	political_boundary.bkg_vg250_6_gem_mview_error_geom_view USING gist (geom);
+CREATE INDEX  	bkg_vg250_6_gem_error_geom_mview_geom_idx
+	ON	political_boundary.bkg_vg250_6_gem_error_geom_mview USING gist (geom);
 
 -- grant (oeuser)
-GRANT ALL ON TABLE	political_boundary.bkg_vg250_6_gem_mview_error_geom_view TO oeuser WITH GRANT OPTION;
-ALTER TABLE		political_boundary.bkg_vg250_6_gem_mview_error_geom_view OWNER TO oeuser;
+GRANT ALL ON TABLE	political_boundary.bkg_vg250_6_gem_error_geom_mview TO oeuser WITH GRANT OPTION;
+ALTER TABLE		political_boundary.bkg_vg250_6_gem_error_geom_mview OWNER TO oeuser;
 
 -- metadata
-COMMENT ON TABLE political_boundary.bkg_vg250_6_gem_mview_error_geom_view IS '{
+COMMENT ON MATERIALIZED VIEW political_boundary.bkg_vg250_6_gem_error_geom_mview IS '{
     "Name": "BKG - Verwaltungsgebiete 1:250.000 - country mview errors",
     "Source":   [{
 	"Name": "Dienstleistungszentrum des Bundes für Geoinformation und Geodäsie - Open Data",
@@ -677,21 +676,21 @@ COMMENT ON TABLE political_boundary.bkg_vg250_6_gem_mview_error_geom_view IS '{
     }' ;
 
 -- select description
-SELECT obj_description('political_boundary.bkg_vg250_6_gem_mview_error_geom_view' ::regclass) ::json;
+SELECT obj_description('political_boundary.bkg_vg250_6_gem_error_geom_mview' ::regclass) ::json;
 
 -- add entry to scenario log table
 INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
 SELECT	'0.2' AS version,
 	'output' AS io,
 	'political_boundary' AS schema_name,
-	'bkg_vg250_6_gem_mview_error_geom_view' AS table_name,
+	'bkg_vg250_6_gem_error_geom_mview' AS table_name,
 	'ego_political_boundary_bkg_setup.sql' AS script_name,
 	COUNT(*)AS entries,
 	'OK' AS status,
 	session_user AS user_name,
 	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	obj_description('political_boundary.bkg_vg250_6_gem_mview_error_geom_view' ::regclass) ::json AS metadata
-FROM	political_boundary.bkg_vg250_6_gem_mview_error_geom_view;
+	obj_description('political_boundary.bkg_vg250_6_gem_error_geom_mview' ::regclass) ::json AS metadata
+FROM	political_boundary.bkg_vg250_6_gem_error_geom_mview;
 
 
 -- 6. municipality - dump
@@ -730,7 +729,7 @@ GRANT ALL ON TABLE	political_boundary.bkg_vg250_6_gem_dump_mview TO oeuser WITH 
 ALTER TABLE		political_boundary.bkg_vg250_6_gem_dump_mview OWNER TO oeuser;
 
 -- metadata
-COMMENT ON TABLE political_boundary.bkg_vg250_6_gem_dump_mview IS '{
+COMMENT ON MATERIALIZED VIEW political_boundary.bkg_vg250_6_gem_dump_mview IS '{
     "Name": "BKG - Verwaltungsgebiete 1:250.000 - municipality mview",
     "Source":   [{
 	"Name": "Dienstleistungszentrum des Bundes für Geoinformation und Geodäsie - Open Data",
@@ -786,7 +785,7 @@ FROM	political_boundary.bkg_vg250_6_gem_dump_mview;
 
 -- ego
 
--- 6. municipality - error geom
+-- 6. municipality - geom clean of holes
 DROP TABLE IF EXISTS	model_draft.ego_political_boundary_bkg_vg250_6_gem_clean CASCADE;
 CREATE TABLE		model_draft.ego_political_boundary_bkg_vg250_6_gem_clean (
 	id SERIAL,
@@ -798,14 +797,14 @@ CREATE TABLE		model_draft.ego_political_boundary_bkg_vg250_6_gem_clean (
 	rs_0 varchar(12),
 	ags_0 varchar(12),
 	area_km2 decimal,
-	count_ring integer,
-	path,
-	is_ring boolean,
-	geom geometry(Polygon,3035)
+	count_hole integer,
+	path integer[],
+	is_hole boolean,
+	geom geometry(Polygon,3035),
 	CONSTRAINT ego_political_boundary_bkg_vg250_6_gem_pkey PRIMARY KEY (id));
 
 -- insert municipalities with rings
-INSERT INTO	model_draft.ego_political_boundary_bkg_vg250_6_gem_clean (old_id,gen,bez,bem,nuts,rs_0,ags_0,count_ring,path,geom)
+INSERT INTO	model_draft.ego_political_boundary_bkg_vg250_6_gem_clean (old_id,gen,bez,bem,nuts,rs_0,ags_0,area_km2,count_hole,path,geom)
 	SELECT	dump.id ::integer AS old_id,
 		dump.gen ::text AS gen,
 		dump.bez ::text AS bez,
@@ -814,8 +813,8 @@ INSERT INTO	model_draft.ego_political_boundary_bkg_vg250_6_gem_clean (old_id,gen
 		dump.rs_0 ::varchar(12) AS rs_0,
 		dump.ags_0 ::varchar(12) AS ags_0,
 		ST_AREA(dump.geom) / 10000 ::decimal AS area_km2,
-		dump.count_ring ::integer,
-		dump.path AS path,
+		dump.count_hole ::integer,
+		dump.path ::integer[] AS path,
 		dump.geom ::geometry(Polygon,3035) AS geom		
 	FROM	(SELECT vg.id,
 			vg.gen,
@@ -824,10 +823,10 @@ INSERT INTO	model_draft.ego_political_boundary_bkg_vg250_6_gem_clean (old_id,gen
 			vg.nuts,
 			vg.rs_0,
 			vg.ags_0,
-			ST_NumInteriorRings(vg.geom) AS count_ring,
+			ST_NumInteriorRings(vg.geom) AS count_hole,
 			(ST_DumpRings(vg.geom)).path AS path,
 			(ST_DumpRings(vg.geom)).geom AS geom
-		FROM	political_boundary.bkg_vg250_6_gem_dump_mview AS vg) AS dump;
+		FROM	political_boundary.bkg_vg250_6_gem_dump_mview AS vg ) AS dump;
 
 -- create index GIST (geom)
 CREATE INDEX  	ego_political_boundary_bkg_vg250_6_gem_clean_geom_idx
@@ -838,60 +837,28 @@ GRANT ALL ON TABLE	model_draft.ego_political_boundary_bkg_vg250_6_gem_clean TO o
 ALTER TABLE		model_draft.ego_political_boundary_bkg_vg250_6_gem_clean OWNER TO oeuser;
 
 
--- separate all holes
-DROP MATERIALIZED VIEW IF EXISTS	model_draft.ego_political_boundary_bkg_vg250_6_gem_ring_mview CASCADE;
-CREATE MATERIALIZED VIEW 		model_draft.ego_political_boundary_bkg_vg250_6_gem_ring_mview AS 
+-- separate holes
+DROP MATERIALIZED VIEW IF EXISTS	model_draft.ego_political_boundary_bkg_vg250_6_gem_hole_mview CASCADE;
+CREATE MATERIALIZED VIEW 		model_draft.ego_political_boundary_bkg_vg250_6_gem_hole_mview AS 
 SELECT 	mun.*
 FROM	model_draft.ego_political_boundary_bkg_vg250_6_gem_clean AS mun
 WHERE	mun.path[1] <> 0;
 
 -- create index (id)
-CREATE UNIQUE INDEX  	ego_political_boundary_bkg_vg250_6_gem_rings_mview_id_idx
-		ON	model_draft.ego_political_boundary_bkg_vg250_6_gem_ring_mview (id);
+CREATE UNIQUE INDEX  	ego_political_boundary_bkg_vg250_6_gem_hole_mview_id_idx
+		ON	model_draft.ego_political_boundary_bkg_vg250_6_gem_hole_mview (id);
 
 -- create index GIST (geom)
-CREATE INDEX  	ego_political_boundary_bkg_vg250_6_gem_rings_mview_geom_idx
-	ON	model_draft.ego_political_boundary_bkg_vg250_6_gem_ring_mview USING gist (geom);
+CREATE INDEX  	ego_political_boundary_bkg_vg250_6_gem_hole_mview_geom_idx
+	ON	model_draft.ego_political_boundary_bkg_vg250_6_gem_hole_mview USING gist (geom);
 
 -- grant (oeuser)
-GRANT ALL ON TABLE	model_draft.ego_political_boundary_bkg_vg250_6_gem_ring_mview TO oeuser WITH GRANT OPTION;
-ALTER TABLE		model_draft.ego_political_boundary_bkg_vg250_6_gem_ring_mview OWNER TO oeuser;
-
--- update holes if ring
-UPDATE 	model_draft.ego_political_boundary_bkg_vg250_6_gem_clean AS t1
-	SET  	is_ring = t2.is_ring
-	FROM    (
-		SELECT	gem.id AS id,
-			'TRUE' ::boolean AS is_ring
-		FROM	model_draft.ego_political_boundary_bkg_vg250_6_gem_clean AS gem,
-			model_draft.ego_political_boundary_bkg_vg250_6_gem_ring_mview AS ring
-		WHERE  	gem.geom = ring.geom
-		) AS t2
-	WHERE  	t1.id = t2.id;
-
-
--- separate all ringholes
-DROP MATERIALIZED VIEW IF EXISTS	model_draft.ego_political_boundary_bkg_vg250_6_gem_clean_ring_mview CASCADE;
-CREATE MATERIALIZED VIEW 		model_draft.ego_political_boundary_bkg_vg250_6_gem_clean_ring_mview AS
-	SELECT	vg.*
-	FROM	model_draft.ego_political_boundary_bkg_vg250_6_gem_clean AS vg
-	WHERE	vg.is_ring IS TRUE;
-
--- create index (id)
-CREATE UNIQUE INDEX  	ego_political_boundary_bkg_vg250_6_gem_clean_ring_mview_id_idx
-		ON	model_draft.ego_political_boundary_bkg_vg250_6_gem_clean_ring_mview (id);
-
--- create index GIST (geom)
-CREATE INDEX  	ego_political_boundary_bkg_vg250_6_gem_clean_ring_mview_geom_idx
-	ON	model_draft.ego_political_boundary_bkg_vg250_6_gem_clean_ring_mview USING gist (geom);
-
--- grant (oeuser)
-GRANT ALL ON TABLE	model_draft.ego_political_boundary_bkg_vg250_6_gem_clean_ring_mview TO oeuser WITH GRANT OPTION;
-ALTER TABLE		model_draft.ego_political_boundary_bkg_vg250_6_gem_clean_ring_mview OWNER TO oeuser;
+GRANT ALL ON TABLE	model_draft.ego_political_boundary_bkg_vg250_6_gem_hole_mview TO oeuser WITH GRANT OPTION;
+ALTER TABLE		model_draft.ego_political_boundary_bkg_vg250_6_gem_hole_mview OWNER TO oeuser;
 
 -- metadata
-COMMENT ON TABLE model_draft.ego_political_boundary_bkg_vg250_6_gem_clean_ring_mview IS '{
-    "Name": "open_eGo - municipality clean ring",
+COMMENT ON MATERIALIZED VIEW model_draft.ego_political_boundary_bkg_vg250_6_gem_hole_mview IS '{
+    "Name": "open_eGo - municipality holes",
     "Source":   [{
 	"Name": "open_eGo",
 	"URL": "https://github.com/openego/data_processing"}],
@@ -901,7 +868,7 @@ COMMENT ON TABLE model_draft.ego_political_boundary_bkg_vg250_6_gem_clean_ring_m
     "Spatial": [{
 	"Resolution": "1:250.000",
 	"Extend": "Germany; Gemeinde (gem) - municipality (mun)" }],
-    "Description": ["Municipality holes and rings"],
+    "Description": ["Municipality holes"],
     "Column":[
         {"Name": "id", "Description": "Unique identifier", "Unit": " " },
 	{"Name": "old_id", "Description": "vg250 identifier", "Unit": " " },
@@ -912,6 +879,9 @@ COMMENT ON TABLE model_draft.ego_political_boundary_bkg_vg250_6_gem_clean_ring_m
 	{"Name": "rs_0", "Description": "Aufgefüllter Regionalschlüssel", "Unit": " " },
 	{"Name": "ags_0", "Description": "Amtlicher Gemeindeschlüssel", "Unit": " " },
 	{"Name": "area_km2", "Description": "Area in km²", "Unit": "km²" },
+	{"Name": "count_hole", "Description": "Number of holes", "Unit": " " },
+	{"Name": "path", "Description": "Path number", "Unit": " " },
+	{"Name": "hole", "Description": "True if hole", "Unit": " " },
 	{"Name": "geom", "Description": "Geometry", "Unit": " " } ],
     "Changes":	[
         {"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
@@ -926,26 +896,39 @@ COMMENT ON TABLE model_draft.ego_political_boundary_bkg_vg250_6_gem_clean_ring_m
     }' ;
 
 -- select description
-SELECT obj_description('model_draft.ego_political_boundary_bkg_vg250_6_gem_clean_ring_mview' ::regclass) ::json;
+SELECT obj_description('model_draft.ego_political_boundary_bkg_vg250_6_gem_hole_mview' ::regclass) ::json;
 
 -- add entry to scenario log table
 INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
 SELECT	'0.2' AS version,
 	'output' AS io,
 	'model_draft' AS schema_name,
-	'ego_political_boundary_bkg_vg250_6_gem_clean_ring_mview' AS table_name,
+	'ego_political_boundary_bkg_vg250_6_gem_hole_mview' AS table_name,
 	'ego_political_boundary_bkg_setup.sql' AS script_name,
 	COUNT(*)AS entries,
 	'OK' AS status,
 	session_user AS user_name,
 	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	obj_description('model_draft.ego_political_boundary_bkg_vg250_6_gem_clean_ring_mview' ::regclass) ::json AS metadata
-FROM	model_draft.ego_political_boundary_bkg_vg250_6_gem_clean_ring_mview;
+	obj_description('model_draft.ego_political_boundary_bkg_vg250_6_gem_hole_mview' ::regclass) ::json AS metadata
+FROM	model_draft.ego_political_boundary_bkg_vg250_6_gem_hole_mview;
 
 
--- Remove ringholes   (OK!) 1.000ms =682
+-- update holes
+UPDATE 	model_draft.ego_political_boundary_bkg_vg250_6_gem_clean AS t1
+	SET  	is_hole = t2.is_hole
+	FROM    (
+		SELECT	gem.id AS id,
+			'TRUE' ::boolean AS is_hole
+		FROM	model_draft.ego_political_boundary_bkg_vg250_6_gem_clean AS gem,
+			model_draft.ego_political_boundary_bkg_vg250_6_gem_hole_mview AS hole
+		WHERE  	gem.geom = hole.geom
+		) AS t2
+	WHERE  	t1.id = t2.id;
+
+-- remove holes
 DELETE FROM 	model_draft.ego_political_boundary_bkg_vg250_6_gem_clean
-WHERE		is_ring IS TRUE;
+WHERE		is_hole IS TRUE OR
+		id = '9251' OR id = '8362'; -- Two special cases deleted manualy
 
 -- metadata
 COMMENT ON TABLE model_draft.ego_political_boundary_bkg_vg250_6_gem_clean IS '{
@@ -970,6 +953,9 @@ COMMENT ON TABLE model_draft.ego_political_boundary_bkg_vg250_6_gem_clean IS '{
 	{"Name": "rs_0", "Description": "Aufgefüllter Regionalschlüssel", "Unit": " " },
 	{"Name": "ags_0", "Description": "Amtlicher Gemeindeschlüssel", "Unit": " " },
 	{"Name": "area_km2", "Description": "Area in km²", "Unit": "km²" },
+	{"Name": "count_hole", "Description": "Number of holes", "Unit": " " },
+	{"Name": "path", "Description": "Path number", "Unit": " " },
+	{"Name": "hole", "Description": "True if hole", "Unit": " " },
 	{"Name": "geom", "Description": "Geometry", "Unit": " " } ],
     "Changes":	[
         {"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
