@@ -3,8 +3,8 @@ Copyright 2016 by open_eGo project
 Published under GNU GENERAL PUBLIC LICENSE Version 3 (see https://github.com/openego/data_processing/blob/master/LICENSE)
 Authors: Ludwig Hülk; Guido Pleßmann
 
-eGo data processing - data setup of BKG bkg_vg250
-Inputs are german administrative borders (bkg_vg250)
+ego data processing - setup borders
+Inputs are german administrative borders (political_boundary.bkg_vg250)
 Create mviews with transformed (EPSG:3035) and corrected geometries
 Municipalities / Gemeinden are fragmented and cleaned from ringholes (bkg_vg250_6_gem_clean)
  */
@@ -74,9 +74,9 @@ COMMENT ON MATERIALIZED VIEW political_boundary.bkg_vg250_1_sta_mview IS '{
 	{"Name": "geom", "Description": "Geometry", "Unit": " " } ],
     "Changes":	[
         {"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
-		"Date":  "02.09.2015", "Comment": "Created mview" },
-		{"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
-		"Date":  "16.11.2016", "Comment": "Added metadata" } ],
+	"Date":  "02.09.2015", "Comment": "Created mview" },
+	{"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
+	"Date":  "16.11.2016", "Comment": "Added metadata" } ],
     "Notes": ["With tiny buffer because of intersection (in official data)"],
     "Licence": [{
 	"Name": "GNU GENERAL PUBLIC LICENSE Version 3", 
@@ -151,9 +151,9 @@ COMMENT ON MATERIALIZED VIEW political_boundary.bkg_vg250_1_sta_error_geom_mview
 	{"Name": "geom", "Description": "Geometry", "Unit": " " } ],
     "Changes":	[
         {"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
-		"Date":  "02.09.2015", "Comment": "Created mview" },
-		{"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
-		"Date":  "16.11.2016", "Comment": "Added metadata" } ],
+	"Date":  "02.09.2015", "Comment": "Created mview" },
+	{"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
+	"Date":  "16.11.2016", "Comment": "Added metadata" } ],
     "Notes": [""],
     "Licence": [{
 	"Name": "GNU GENERAL PUBLIC LICENSE Version 3", 
@@ -225,9 +225,9 @@ COMMENT ON MATERIALIZED VIEW political_boundary.bkg_vg250_1_sta_union_mview IS '
 	{"Name": "geom", "Description": "Geometry", "Unit": " " } ],
     "Changes":	[
         {"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
-		"Date":  "02.09.2015", "Comment": "Created mview" },
-		{"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
-		"Date":  "16.11.2016", "Comment": "Added metadata" } ],
+	"Date":  "02.09.2015", "Comment": "Created mview" },
+	{"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
+	"Date":  "16.11.2016", "Comment": "Added metadata" } ],
     "Notes": [""],
     "Licence": [{
 	"Name": "GNU GENERAL PUBLIC LICENSE Version 3", 
@@ -298,9 +298,9 @@ COMMENT ON MATERIALIZED VIEW political_boundary.bkg_vg250_1_sta_bbox_mview IS '{
 	{"Name": "geom", "Description": "Geometry", "Unit": " " } ],
     "Changes":	[
         {"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
-		"Date":  "02.09.2015", "Comment": "Created mview" },
-		{"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
-		"Date":  "16.11.2016", "Comment": "Added metadata" } ],
+	"Date":  "02.09.2015", "Comment": "Created mview" },
+	{"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
+	"Date":  "16.11.2016", "Comment": "Added metadata" } ],
     "Notes": [""],
     "Licence": [{
 	"Name": "GNU GENERAL PUBLIC LICENSE Version 3", 
@@ -391,9 +391,9 @@ COMMENT ON MATERIALIZED VIEW political_boundary.bkg_vg250_2_lan_mview IS '{
 	{"Name": "geom", "Description": "Geometry", "Unit": " " } ],
     "Changes":	[
         {"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
-		"Date":  "02.09.2015", "Comment": "Created mview" },
-		{"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
-		"Date":  "16.11.2016", "Comment": "Added metadata" } ],
+	"Date":  "02.09.2015", "Comment": "Created mview" },
+	{"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
+	"Date":  "16.11.2016", "Comment": "Added metadata" } ],
     "Notes": [""],
     "Licence": [{
 	"Name": "GNU GENERAL PUBLIC LICENSE Version 3", 
@@ -489,9 +489,9 @@ COMMENT ON MATERIALIZED VIEW political_boundary.bkg_vg250_4_krs_mview IS '{
 	{"Name": "geom", "Description": "Geometry", "Unit": " " } ],
     "Changes":	[
         {"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
-		"Date":  "02.09.2015", "Comment": "Created mview" },
-		{"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
-		"Date":  "16.11.2016", "Comment": "Added metadata" } ],
+	"Date":  "02.09.2015", "Comment": "Created mview" },
+	{"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
+	"Date":  "16.11.2016", "Comment": "Added metadata" } ],
     "Notes": [""],
     "Licence": [{
 	"Name": "GNU GENERAL PUBLIC LICENSE Version 3", 
@@ -588,9 +588,9 @@ COMMENT ON MATERIALIZED VIEW political_boundary.bkg_vg250_6_gem_mview IS '{
 	{"Name": "geom", "Description": "Geometry", "Unit": " " } ],
     "Changes":	[
         {"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
-		"Date":  "02.09.2015", "Comment": "Created mview" },
-		{"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
-		"Date":  "16.11.2016", "Comment": "Added metadata" } ],
+	"Date":  "02.09.2015", "Comment": "Created mview" },
+	{"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
+	"Date":  "16.11.2016", "Comment": "Added metadata" } ],
     "Notes": [""],
     "Licence": [{
 	"Name": "GNU GENERAL PUBLIC LICENSE Version 3", 
@@ -665,9 +665,9 @@ COMMENT ON MATERIALIZED VIEW political_boundary.bkg_vg250_6_gem_error_geom_mview
 	{"Name": "geom", "Description": "Geometry", "Unit": " " } ],
     "Changes":	[
         {"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
-		"Date":  "02.09.2015", "Comment": "Created mview" },
-		{"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
-		"Date":  "16.11.2016", "Comment": "Added metadata" } ],
+	"Date":  "02.09.2015", "Comment": "Created mview" },
+	{"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
+	"Date":  "16.11.2016", "Comment": "Added metadata" } ],
     "Notes": [""],
     "Licence": [{
 	"Name": "GNU GENERAL PUBLIC LICENSE Version 3", 
@@ -754,9 +754,9 @@ COMMENT ON MATERIALIZED VIEW political_boundary.bkg_vg250_6_gem_dump_mview IS '{
 	{"Name": "geom", "Description": "Geometry", "Unit": " " } ],
     "Changes":	[
         {"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
-		"Date":  "02.09.2015", "Comment": "Created mview" },
-		{"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
-		"Date":  "16.11.2016", "Comment": "Added metadata" } ],
+	"Date":  "02.09.2015", "Comment": "Created mview" },
+	{"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
+	"Date":  "16.11.2016", "Comment": "Added metadata" } ],
     "Notes": [""],
     "Licence": [{
 	"Name": "GNU GENERAL PUBLIC LICENSE Version 3", 
@@ -858,7 +858,7 @@ ALTER TABLE		model_draft.ego_political_boundary_bkg_vg250_6_gem_hole_mview OWNER
 
 -- metadata
 COMMENT ON MATERIALIZED VIEW model_draft.ego_political_boundary_bkg_vg250_6_gem_hole_mview IS '{
-    "Name": "open_eGo - municipality holes",
+    "Name": "ego municipality holes",
     "Source":   [{
 	"Name": "open_eGo",
 	"URL": "https://github.com/openego/data_processing"}],
@@ -885,9 +885,9 @@ COMMENT ON MATERIALIZED VIEW model_draft.ego_political_boundary_bkg_vg250_6_gem_
 	{"Name": "geom", "Description": "Geometry", "Unit": " " } ],
     "Changes":	[
         {"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
-		"Date":  "02.09.2015", "Comment": "Created mview" },
-		{"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
-		"Date":  "16.11.2016", "Comment": "Added metadata" } ],
+	"Date":  "02.09.2015", "Comment": "Created mview" },
+	{"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
+	"Date":  "16.11.2016", "Comment": "Added metadata" } ],
     "Notes": [""],
     "Licence": [{
 	"Name": "GNU GENERAL PUBLIC LICENSE Version 3", 
@@ -932,7 +932,7 @@ WHERE		is_hole IS TRUE OR
 
 -- metadata
 COMMENT ON TABLE model_draft.ego_political_boundary_bkg_vg250_6_gem_clean IS '{
-    "Name": "open_eGo - municipality clean",
+    "Name": "ego municipality clean",
     "Source":   [{
 	"Name": "open_eGo",
 	"URL": "https://github.com/openego/data_processing"}],
@@ -959,9 +959,9 @@ COMMENT ON TABLE model_draft.ego_political_boundary_bkg_vg250_6_gem_clean IS '{
 	{"Name": "geom", "Description": "Geometry", "Unit": " " } ],
     "Changes":	[
         {"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
-		"Date":  "02.09.2015", "Comment": "Created mview" },
-		{"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
-		"Date":  "16.11.2016", "Comment": "Added metadata" } ],
+	"Date":  "02.09.2015", "Comment": "Created mview" },
+	{"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
+	"Date":  "16.11.2016", "Comment": "Added metadata" } ],
     "Notes": [""],
     "Licence": [{
 	"Name": "GNU GENERAL PUBLIC LICENSE Version 3", 
