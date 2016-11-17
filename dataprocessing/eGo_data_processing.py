@@ -56,6 +56,7 @@ def data_processing():
         'assignment_load_bus.sql',
         'demand_per_mv_grid_district.py',
         'demandseries_TOPF.sql',
+        'LOPF_data.sql',
         'peak_load_per_load_area.py',
         'process_eGo_onts.sql',
         'process_eGo_lv_grid_districts.sql'
