@@ -22,6 +22,10 @@ CREATE INDEX osm_deu_line_street_mview_geom_idx
   (geom);
 
 
+CREATE UNIQUE INDEX   osm_deu_line_street_mview_id_idx
+        ON    openstreetmap.osm_deu_line_street_mview (gid);
+
+
 COMMENT ON MATERIALIZED VIEW openstreetmap.osm_deu_line_street_mview
   IS '{
         "Name": "OpenStreetMap - Germany",
@@ -67,7 +71,7 @@ COMMENT ON MATERIALIZED VIEW openstreetmap.osm_deu_line_street_mview
 	   { "name":"Jonas Gütter", 
 	    "mail":" ", 
 	    "date":"08.11.2016", 
-	    "comment":"filtered streets"},		],
+	    "comment":"filtered streets"}		],
 
 	
 
@@ -78,13 +82,15 @@ COMMENT ON MATERIALIZED VIEW openstreetmap.osm_deu_line_street_mview
 
 
  -- Add entry to scenario logtable
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,user_name,timestamp)
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
 SELECT	'0.2' AS version,
+	'output' AS io,
 	'openstreetmap' AS schema_name,
 	'osm_deu_line_street_mview' AS table_name,
 	'osm_deu_line_street_mview.sql' AS script_name,
 	COUNT(*)AS entries,
 	'OK' AS status,
 	session_user AS user_name,
-	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('openstreetmap.osm_deu_line_street_mview' ::regclass) ::json AS metadata
 FROM	openstreetmap.osm_deu_line_street_mview;	
