@@ -1,4 +1,4 @@
--- (08:30 min)
+﻿-- (08:30 min)
 
 CREATE OR REPLACE FUNCTION ST_CreateFishnet(
         nrow integer, ncol integer,
@@ -221,13 +221,15 @@ COMMENT ON TABLE model_draft."ego_grid_mvlv_substation" IS
 SELECT obj_description('model_draft.ego_grid_mvlv_substation'::regclass)::json;
 
 -- Add entry to scenario logtable
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,user_name,timestamp)
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
 SELECT	'0.2' AS version,
+	'output' AS io,
 	'model_draft' AS schema_name,
 	'ego_grid_mvlv_substation' AS table_name,
 	'process_eGo_onts.sql' AS script_name,
 	COUNT(*)AS entries,
 	'OK' AS status,
 	session_user AS user_name,
-	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
-FROM	model_draft.table;
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('ego_grid_mvlv_substation' ::regclass) ::json AS metadata
+FROM	model_draft.ego_grid_mvlv_substation;
