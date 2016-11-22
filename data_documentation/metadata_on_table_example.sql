@@ -8,7 +8,7 @@ A further description can be found on http://wiki.openmod-initiative.org/wiki/Da
 COMMENT ON TABLE schema.table IS '{
 	"title":"Good example title",
 	"description":"example metadata for example data",
-	"keywords":["example", "test"],
+	"keywords":["example", "test", "meta"],
 	"sources": [{
 		"name":"Website",
 		"description":"Data website",
