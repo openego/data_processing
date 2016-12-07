@@ -84,27 +84,21 @@ FROM	model_draft.ego_grid_pf_hv_transformer;
 
 UPDATE model_draft.ego_grid_pf_hv_line a
 	SET 
-		r = r * ((result.v_nom * 1000)^2 / (100 * 10^6)),
-		x = x * ((result.v_nom * 1000)^2 / (100 * 10^6)),
-		b = b * ((result.v_nom * 1000)^2 / (100 * 10^6)) 
-		FROM 
-			(SELECT bus_id, v_nom FROM model_draft.ego_grid_pf_hv_bus)
-			as result
-WHERE a.bus0 = result.bus_id;
-
+		r = r * (((SELECT v_nom 
+				FROM model_draft.ego_grid_pf_hv_bus 
+				WHERE bus_id=bus1)*1000)^2 / (100 * 10^6)),
+		x = x * (((SELECT v_nom 
+				FROM model_draft.ego_grid_pf_hv_bus
+				WHERE bus_id=bus1)*1000)^2 / (100 * 10^6)),
+		b = b * (((SELECT v_nom 
+				FROM model_draft.ego_grid_pf_hv_bus
+				WHERE bus_id=bus1)*1000)^2 / (100 * 10^6));
 
 UPDATE model_draft.ego_grid_pf_hv_transformer a
 	SET 
-		x = x * ((result.v_nom * 1000)^2 / (100 * 10^6))
-		FROM 
-			(SELECT 
-			trafo_id, 
-			GREATEST(
+		x = x * (((GREATEST(
 				(SELECT v_nom as v_nom_bus0 FROM model_draft.ego_grid_pf_hv_bus WHERE bus_id = bus0), 
-				(SELECT v_nom as v_nom_bus1 FROM model_draft.ego_grid_pf_hv_bus WHERE bus_id = bus1)) 
-				as v_nom 
-			FROM model_draft.ego_grid_pf_hv_transformer) as result
-WHERE a.trafo_id = result.trafo_id;
+				(SELECT v_nom as v_nom_bus1 FROM model_draft.ego_grid_pf_hv_bus WHERE bus_id = bus1)))* 1000)^2 / (100 * 10^6))
 
 -- calculate line length (in km) from geoms
 
