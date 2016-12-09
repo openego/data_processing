@@ -40,7 +40,7 @@ def data_processing():
 
     snippets = [
         # 'ego_scenario_log_setup.sql',				# setup scenario log table
-        # 'ego_boundaries_vg250_setup.sql',	# setup borders
+        # 'ego_boundaries_vg250_setup.sql',			# setup borders
         'get_substations.sql',
         'get_substations_ehv.sql',
         'otg_id_to_substations.sql',
