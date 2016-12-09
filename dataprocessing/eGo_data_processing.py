@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+"""ego data processing
+This script opens a oedb database connection and executes different parts of ego.
+Reads python and SQL scripts and gives logging infos during the execution.
+Also see corresponding BPLM diagram.
+"""
+
+__copyright__ = "Copyright ego developer group"
+__license__ = "GPLv3"
 
 import logging
 import time
@@ -33,16 +40,16 @@ def data_processing():
 
     snippets = [
         # 'ego_scenario_log_setup.sql',				# setup scenario log table
-        # 'ego_political_boundary_bkg_setup.sql',	# setup borders
+        # 'ego_boundaries_vg250_setup.sql',	# setup borders
         'get_substations.sql',
         'get_substations_ehv.sql',
         'otg_id_to_substations.sql',
         'ego_grid_hvmv_substation.sql',				# hvmv substation vornoi
         'process_eGo_grid_district.sql',
-        'setup_osm_landuse.sql', # setup OSM
+        'setup_osm_landuse.sql', 					# setup OSM
         'process_eGo_osm_loads_industry.sql',
         'process_eGo_osm_loads.sql',
-        # 'setup_zensus_population_per_ha.sql', # setup zensus
+        # 'setup_zensus_population_per_ha.sql', 	# setup zensus
         'process_eGo_loads_melted.sql',
         'process_eGo_loads_per_grid_district.sql',
         'process_eGo_consumption.sql',

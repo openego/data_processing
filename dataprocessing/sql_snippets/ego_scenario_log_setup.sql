@@ -1,5 +1,5 @@
 ﻿/*
-Scenario log table setup
+Setup scenario log table
 Creates a table to get inserts from other processed tables
 Used inputs are flaged "input" in column io
 Created outputs are flaged "output" in column io
