@@ -1,13 +1,16 @@
-﻿-- 00:41 min
+﻿-- 02:00 min
 
 CREATE MATERIALIZED VIEW openstreetmap.osm_deu_line_street_mview
 
 AS
 
-SELECT * FROM openstreetmap.osm_deu_line 
-		WHERE "highway" = 'motorway' OR "highway" = 'trunk' OR "highway" = 'primary' OR "highway" = 'secondary' OR  "highway" = 'tertiary' 
-			OR  "highway" = 'unclassified' OR "highway" = 'residential' OR "highway" = 'service' OR "highway" = 'living_street' 
-			OR  "highway" = 'pedestrian' OR "highway" = 'bus_guideway' OR "highway" = 'road' OR "highway" = 'footway'
+SELECT * FROM openstreetmap.osm_deu_line AS osm
+		WHERE osm."highway" = 'motorway' OR osm."highway" = 'trunk' OR osm."highway" = 'primary' OR osm."highway" = 'secondary' OR  osm."highway" = 'tertiary' 
+			OR  osm."highway" = 'unclassified' OR osm."highway" = 'residential' OR osm."highway" = 'service' OR osm."highway" = 'living_street' 
+			OR  osm."highway" = 'pedestrian' OR osm."highway" = 'bus_guideway' OR osm."highway" = 'road' OR osm."highway" = 'footway'
+			
+
+
 	
 ;
 
