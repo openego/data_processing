@@ -1,16 +1,13 @@
-﻿/* 
-Copyright 2016 by open_eGo project
-Published under GNU GENERAL PUBLIC LICENSE Version 3 (see https://github.com/openego/data_processing/blob/master/LICENSE)
-Authors: Ludwig Hülk; Guido Pleßmann
-
-ego data processing - clean run scenario log table setup
+﻿/*
+Setup scenario log table
 Creates a table to get inserts from other processed tables
 Used inputs are flaged "input" in column io
-Created outputsflaged "output" in column io
-WARNING: It drops tables and deletes old entries when executed!
-*/
+Created outputs are flaged "output" in column io
+WARNING: It drops the table and deletes old entries when executed!
 
--- SCENARIO LOG
+__copyright__ = "Copyright ego developer group"
+__license__ = "GPLv3"
+*/
 
 -- create scenario log table
 DROP TABLE IF EXISTS	model_draft.ego_scenario_log CASCADE;
@@ -78,7 +75,7 @@ COMMENT ON TABLE model_draft.ego_scenario_log IS '{
 SELECT obj_description('model_draft.ego_scenario_log' ::regclass) ::json;
 
 
--- add entry to scenario logtable
+-- add entry to scenario log table
 INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
 SELECT	'0.2' AS version,
 	'output' AS io,

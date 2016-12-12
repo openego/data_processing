@@ -1,9 +1,8 @@
-﻿/* 
-Copyright 2016 by open_eGo project
-Published under GNU GENERAL PUBLIC LICENSE Version 3 (see https://github.com/openego/data_processing/blob/master/LICENSE)
-Authors: Ludwig Hülk; Guido Pleßmann
-
+﻿/*
 Example of the ego scenario log
+
+__copyright__ = "Copyright ego developer group"
+__license__ = "GPLv3"
 */
 
 -- add entry to scenario log table

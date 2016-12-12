@@ -1,17 +1,14 @@
-﻿/* 
-Copyright 2016 by open_eGo project
-Published under GNU GENERAL PUBLIC LICENSE Version 3 (see https://github.com/openego/data_processing/blob/master/LICENSE)
-Authors: Ludwig Hülk; Guido Pleßmann
-
-ego data processing - setup borders
-Inputs are german administrative borders (political_boundary.bkg_vg250)
+﻿/*
+Setup borders
+Inputs are german administrative borders (boundaries.bkg_vg250).
 Create mviews with transformed (EPSG:3035) and corrected geometries
 Municipalities / Gemeinden are fragmented and cleaned from ringholes (bkg_vg250_6_gem_clean)
- */
 
+__copyright__ = "Copyright ego developer group"
+__license__ = "GPLv3"
+*/
 
 -- 1. Nationalstaat (sta) - country (cntry)
-
 -- add entry to scenario log table
 INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
 SELECT	'0.2' AS version,
