@@ -1,15 +1,29 @@
-﻿CREATE TABLE model_draft.ego_grid_lv_griddistrictpts
+﻿--DROP TABLE IF EXISTS model_draft.ego_grid_lv_griddistrictpts;
+
+CREATE TABLE model_draft.ego_grid_lv_griddistrictpts
 
 (
   id serial NOT NULL,
+  geom geometry (Point,3035),
+  textgeom text,
   ont integer,
   ont_distance integer,
-  CONSTRAINT ego_grid_lv_griddistrictpts PRIMARY KEY (id)
-)
+  CONSTRAINT ego_grid_lv_griddistrictpts_pkey PRIMARY KEY (id)
+);
 
 ALTER TABLE model_draft.ego_grid_lv_griddistrictpts
   OWNER TO oeuser;
 GRANT ALL ON TABLE model_draft.ego_grid_lv_griddistrictpts TO oeuser;
+
+-- Data has to be inserted via python script lv_grid_districts.py
+
+UPDATE model_draft.ego_grid_lv_griddistrictpts
+SET geom = ST_SetSRID (ST_GeomFromText (textgeom),3035);
+
+CREATE INDEX ego_grid_lv_griddistrictpts_geom_idx
+  ON model_draft.ego_grid_lv_griddistrictpts
+  USING gist
+  (geom);
 
 COMMENT ON TABLE model_draft.ego_grid_lv_griddistrictpts
   IS '{
@@ -33,6 +47,12 @@ COMMENT ON TABLE model_draft.ego_grid_lv_griddistrictpts
 
 	{"name":"id",
 	"description":"unique identifier",
+	"unit":" " },
+	{"name":"geom",
+	"description":"geometry",
+	"unit":" " },
+	{"name":"textgeom",
+	"description":"geometry in wkt-format",
 	"unit":" " },
 	{"name":"ont",
 	"description":"points with the same value (within a lv load area) in this field are supplied by the same ont",
