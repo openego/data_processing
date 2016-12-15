@@ -134,6 +134,7 @@ UPDATE supply.ego_conv_powerplant a
 
 CREATE TABLE model_draft.ego_supply_pf_generator_single
 (
+  scn_name character varying DEFAULT 'Status Quo'::character varying,
   generator_id bigint NOT NULL,
   bus bigint,
   dispatch text DEFAULT 'flexible'::text,
@@ -151,7 +152,7 @@ CREATE TABLE model_draft.ego_supply_pf_generator_single
   efficiency double precision,
   w_id integer,
   aggr_id integer,
-  CONSTRAINT generator_data_pkey PRIMARY KEY (generator_id),
+  CONSTRAINT generator_data_pkey PRIMARY KEY (scn_name, generator_id),
   CONSTRAINT generator_data_source_fk FOREIGN KEY (source)
       REFERENCES model_draft.ego_grid_pf_hv_source (source_id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION
@@ -173,7 +174,10 @@ COMMENT ON TABLE  model_draft.ego_supply_pf_generator_single IS
 "Spatial resolution": ["Germany"],
 "Description": ["assignment_generator_bus.sql"],
 "Column": [
-                   {"Name": "generator_id",
+                   {"Name": "scn_name",
+                    "Description": "name of scenario",
+                    "Unit": "" },
+		   {"Name": "generator_id",
                     "Description": "unique id for generators",
                     "Unit": "" },                   
                    {"Name": "bus",
