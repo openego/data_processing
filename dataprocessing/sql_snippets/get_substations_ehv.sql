@@ -29,7 +29,6 @@ DROP VIEW IF EXISTS model_draft.final_result_hoes CASCADE;
 DROP MATERIALIZED VIEW IF EXISTS model_draft.substations_to_drop_hoes CASCADE;
 DROP MATERIALIZED VIEW IF EXISTS model_draft.buffer_75_hoes CASCADE;
 DROP MATERIALIZED VIEW IF EXISTS model_draft.buffer_75_a_hoes CASCADE;
-DROP MATERIALIZED VIEW IF EXISTS model_draft.vg250_1_sta_union_mview CASCADE;
 DROP VIEW IF EXISTS model_draft.summary_de_hoes CASCADE;
 DROP MATERIALIZED VIEW IF EXISTS model_draft.summary_hoes CASCADE;
 DROP VIEW IF EXISTS model_draft.summary_total_hoes CASCADE;
@@ -179,30 +178,20 @@ CREATE INDEX summary_hoes_gix ON model_draft.summary_hoes USING GIST (polygon);
 INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
 SELECT	'0.2' AS version,
 	'input' AS io,
-	'model_draft' AS schema_name,
-	'vg250_1_sta_union_mview' AS table_name,
+	'political_boundary' AS schema_name,
+	'bkg_vg250_1_sta_union_mview' AS table_name,
 	'get_substations_ehv.sql' AS script_name,
 	COUNT(*)AS entries,
 	'OK' AS status,
 	session_user AS user_name,
 	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	obj_description('model_draft.vg250_1_sta_union_mview' ::regclass) ::json AS metadata
-FROM	model_draft.vg250_1_sta_union_mview;
+	obj_description('political_boundary.bkg_vg250_1_sta_union_mview' ::regclass) ::json AS metadata
+FROM	political_boundary.bkg_vg250_1_sta_union_mview;
 
 -- eliminate substation that are not within VG250
-CREATE MATERIALIZED VIEW model_draft.vg250_1_sta_union_mview AS 
- SELECT 1 AS gid,
-    'Bundesrepublik'::text AS bez,
-    st_area(un.geom) / 10000::double precision AS area_km2,
-    un.geom
-   FROM ( SELECT st_union(st_transform(vg.geom, 4326))::geometry(MultiPolygon,4326) AS geom
-          FROM political_boundary.bkg_vg250_20160101_1_sta vg
-          WHERE vg.bez::text = 'Bundesrepublik'::text) un;
-CREATE INDEX vg250_1_sta_union_mview_gix ON model_draft.vg250_1_sta_union_mview USING GIST (geom);
-
 CREATE VIEW model_draft.summary_de_hoes AS
 SELECT *
-FROM model_draft.summary_hoes, model_draft.vg250_1_sta_union_mview as vg
+FROM model_draft.summary_hoes, political_boundary.bkg_vg250_1_sta_union_mview as vg
 WHERE vg.geom && model_draft.summary_hoes.polygon 
 AND ST_CONTAINS(vg.geom,model_draft.summary_hoes.polygon);
 
@@ -240,7 +229,6 @@ DROP VIEW IF EXISTS model_draft.final_result_hoes CASCADE;
 DROP MATERIALIZED VIEW IF EXISTS model_draft.substations_to_drop_hoes CASCADE;
 DROP MATERIALIZED VIEW IF EXISTS model_draft.buffer_75_hoes CASCADE;
 DROP MATERIALIZED VIEW IF EXISTS model_draft.buffer_75_a_hoes CASCADE;
-DROP MATERIALIZED VIEW IF EXISTS model_draft.vg250_1_sta_union_mview CASCADE;
 DROP VIEW IF EXISTS model_draft.summary_de_hoes CASCADE;
 DROP MATERIALIZED VIEW IF EXISTS model_draft.summary_hoes CASCADE;
 DROP VIEW IF EXISTS model_draft.summary_total_hoes CASCADE;

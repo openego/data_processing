@@ -29,7 +29,6 @@ DROP VIEW IF EXISTS model_draft.final_result CASCADE;
 DROP MATERIALIZED VIEW IF EXISTS model_draft.substations_to_drop CASCADE;
 DROP MATERIALIZED VIEW IF EXISTS model_draft.buffer_75 CASCADE;
 DROP MATERIALIZED VIEW IF EXISTS model_draft.buffer_75_a CASCADE;
-DROP MATERIALIZED VIEW IF EXISTS model_draft.vg250_1_sta_union_mview CASCADE;
 DROP VIEW IF EXISTS model_draft.summary_de CASCADE;
 DROP MATERIALIZED VIEW IF EXISTS model_draft.summary CASCADE;
 DROP VIEW IF EXISTS model_draft.summary_total CASCADE;
@@ -181,23 +180,10 @@ SELECT	'0.2' AS version,
 	obj_description('model_draft.bkg_vg250_20160101_1_sta' ::regclass) ::json AS metadata
 FROM	model_draft.bkg_vg250_20160101_1_sta;
 
--- create view of political boundary VG250
-CREATE MATERIALIZED VIEW model_draft.vg250_1_sta_union_mview AS 
-SELECT 1 AS gid,
-    'Bundesrepublik'::text AS bez,
-    st_area(un.geom) / 10000::double precision AS area_km2,
-    un.geom
-FROM ( SELECT st_union(st_transform(vg.geom, 4326))::geometry(MultiPolygon,4326) AS geom
-          FROM political_boundary.bkg_vg250_20160101_1_sta vg
-          WHERE vg.bez::text = 'Bundesrepublik'::text) un;
-
-ALTER MATERIALIZED VIEW model_draft.vg250_1_sta_union_mview OWNER TO oeuser;
-CREATE INDEX vg250_1_sta_union_mview_gix ON model_draft.vg250_1_sta_union_mview USING GIST (geom);
-
 -- eliminate substation that are not within VG250
 CREATE VIEW model_draft.summary_de AS
 SELECT *
-FROM model_draft.summary, model_draft.vg250_1_sta_union_mview as vg
+FROM model_draft.summary, political_boundary.bkg_vg250_1_sta_union_mview as vg
 WHERE vg.geom && model_draft.summary.polygon 
 AND ST_CONTAINS(vg.geom,model_draft.summary.polygon);
 ALTER VIEW model_draft.summary_de OWNER TO oeuser;
@@ -240,7 +226,6 @@ DROP VIEW IF EXISTS model_draft.final_result CASCADE;
 DROP MATERIALIZED VIEW IF EXISTS model_draft.substations_to_drop CASCADE;
 DROP MATERIALIZED VIEW IF EXISTS model_draft.buffer_75 CASCADE;
 DROP MATERIALIZED VIEW IF EXISTS model_draft.buffer_75_a CASCADE;
-DROP MATERIALIZED VIEW IF EXISTS model_draft.vg250_1_sta_union_mview CASCADE;
 DROP VIEW IF EXISTS model_draft.summary_de CASCADE;
 DROP MATERIALIZED VIEW IF EXISTS model_draft.summary CASCADE;
 DROP VIEW IF EXISTS model_draft.summary_total CASCADE;
