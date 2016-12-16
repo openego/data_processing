@@ -6,6 +6,48 @@ __license__ = "GNU GENERAL PUBLIC LICENSE Version 3 (see https://github.com/open
 __author__ = "lukasol, C. Matke"
 */
 
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2' AS version,
+	'input' AS io,
+	'grid' AS schema_name,
+	'otg_ehvhv_bus_data' AS table_name,
+	'get_substations_ehv.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('grid.otg_ehvhv_bus_data' ::regclass) ::json AS metadata
+FROM	grid.otg_ehvhv_bus_data;
+
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2' AS version,
+	'input' AS io,
+	'grid' AS schema_name,
+	'otg_ehvhv_bus_data' AS table_name,
+	'get_substations_ehv.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('grid.otg_ehvhv_bus_data' ::regclass) ::json AS metadata
+FROM	grid.otg_ehvhv_bus_data;
+
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2' AS version,
+	'input' AS io,
+	'grid' AS schema_name,
+	'otg_ehvhv_bus_data' AS table_name,
+	'get_substations_ehv.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('grid.otg_ehvhv_bus_data' ::regclass) ::json AS metadata
+FROM	grid.otg_ehvhv_bus_data;
+
 -- update model_draft.ego_grid_hvmv_substation table with new column of respective osmtgmod bus_i
 ALTER TABLE model_draft.ego_grid_hvmv_substation 
 ADD COLUMN otg_id bigint;
