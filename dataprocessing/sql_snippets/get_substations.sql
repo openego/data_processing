@@ -55,6 +55,20 @@ SELECT	'0.2' AS version,
 	obj_description('openstreetmap.osm_deu_ways' ::regclass) ::json AS metadata
 FROM	openstreetmap.osm_deu_ways;
 
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2' AS version,
+	'input' AS io,
+	'openstreetmap' AS schema_name,
+	'osm_deu_polygon' AS table_name,
+	'get_substations.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('openstreetmap.osm_deu_polygon' ::regclass) ::json AS metadata
+FROM	openstreetmap.osm_deu_polygon;
+
 --> WAY: create view of way substations:
 CREATE VIEW model_draft.way_substations AS
 SELECT openstreetmap.osm_deu_ways.id, openstreetmap.osm_deu_ways.tags, openstreetmap.osm_deu_polygon.geom
@@ -157,15 +171,15 @@ CREATE INDEX summary_gix ON model_draft.summary USING GIST (polygon);
 INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
 SELECT	'0.2' AS version,
 	'input' AS io,
-	'political_boundary' AS schema_name,
-	'bkg_vg250_1_sta_union_mview' AS table_name,
+	'model_draft' AS schema_name,
+	'bkg_vg250_20160101_1_sta' AS table_name,
 	'get_substations.sql' AS script_name,
 	COUNT(*)AS entries,
 	'OK' AS status,
 	session_user AS user_name,
 	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	obj_description('political_boundary.bkg_vg250_1_sta_union_mview' ::regclass) ::json AS metadata
-FROM	political_boundary.bkg_vg250_1_sta_union_mview;
+	obj_description('model_draft.bkg_vg250_20160101_1_sta' ::regclass) ::json AS metadata
+FROM	model_draft.bkg_vg250_20160101_1_sta;
 
 -- create view of political boundary VG250
 CREATE MATERIALIZED VIEW model_draft.vg250_1_sta_union_mview AS 
