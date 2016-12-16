@@ -29,7 +29,6 @@ DROP VIEW IF EXISTS model_draft.final_result CASCADE;
 DROP MATERIALIZED VIEW IF EXISTS model_draft.substations_to_drop CASCADE;
 DROP MATERIALIZED VIEW IF EXISTS model_draft.buffer_75 CASCADE;
 DROP MATERIALIZED VIEW IF EXISTS model_draft.buffer_75_a CASCADE;
-DROP MATERIALIZED VIEW IF EXISTS model_draft.vg250_1_sta_union_mview CASCADE;
 DROP VIEW IF EXISTS model_draft.summary_de CASCADE;
 DROP MATERIALIZED VIEW IF EXISTS model_draft.summary CASCADE;
 DROP VIEW IF EXISTS model_draft.summary_total CASCADE;
@@ -40,6 +39,34 @@ DROP VIEW IF EXISTS model_draft.node_substations_with_110kV CASCADE;
 DROP VIEW IF EXISTS model_draft.way_substations_without_110kV CASCADE;
 DROP VIEW IF EXISTS model_draft.way_substations_with_110kV CASCADE;
 DROP VIEW IF EXISTS model_draft.way_substations CASCADE;
+
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2' AS version,
+	'input' AS io,
+	'openstreetmap' AS schema_name,
+	'osm_deu_ways' AS table_name,
+	'get_substations.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('openstreetmap.osm_deu_ways' ::regclass) ::json AS metadata
+FROM	openstreetmap.osm_deu_ways;
+
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2' AS version,
+	'input' AS io,
+	'openstreetmap' AS schema_name,
+	'osm_deu_polygon' AS table_name,
+	'get_substations.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('openstreetmap.osm_deu_polygon' ::regclass) ::json AS metadata
+FROM	openstreetmap.osm_deu_polygon;
 
 --> WAY: create view of way substations:
 CREATE VIEW model_draft.way_substations AS
@@ -139,23 +166,24 @@ WHERE dbahn = 'no' AND substation NOT IN ('traction','transition');
 ALTER MATERIALIZED VIEW model_draft.summary OWNER TO oeuser;
 CREATE INDEX summary_gix ON model_draft.summary USING GIST (polygon);
 
--- create view of political boundary VG250
-CREATE MATERIALIZED VIEW model_draft.vg250_1_sta_union_mview AS 
-SELECT 1 AS gid,
-    'Bundesrepublik'::text AS bez,
-    st_area(un.geom) / 10000::double precision AS area_km2,
-    un.geom
-FROM ( SELECT st_union(st_transform(vg.geom, 4326))::geometry(MultiPolygon,4326) AS geom
-          FROM political_boundary.bkg_vg250_20160101_1_sta vg
-          WHERE vg.bez::text = 'Bundesrepublik'::text) un;
-
-ALTER MATERIALIZED VIEW model_draft.vg250_1_sta_union_mview OWNER TO oeuser;
-CREATE INDEX vg250_1_sta_union_mview_gix ON model_draft.vg250_1_sta_union_mview USING GIST (geom);
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2' AS version,
+	'input' AS io,
+	'model_draft' AS schema_name,
+	'bkg_vg250_1_sta_union_mview' AS table_name,
+	'get_substations.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('model_draft.bkg_vg250_1_sta_union_mview' ::regclass) ::json AS metadata
+FROM	model_draft.bkg_vg250_1_sta_union_mview;
 
 -- eliminate substation that are not within VG250
 CREATE VIEW model_draft.summary_de AS
 SELECT *
-FROM model_draft.summary, model_draft.vg250_1_sta_union_mview as vg
+FROM model_draft.summary, political_boundary.bkg_vg250_1_sta_union_mview as vg
 WHERE vg.geom && model_draft.summary.polygon 
 AND ST_CONTAINS(vg.geom,model_draft.summary.polygon);
 ALTER VIEW model_draft.summary_de OWNER TO oeuser;
@@ -198,7 +226,6 @@ DROP VIEW IF EXISTS model_draft.final_result CASCADE;
 DROP MATERIALIZED VIEW IF EXISTS model_draft.substations_to_drop CASCADE;
 DROP MATERIALIZED VIEW IF EXISTS model_draft.buffer_75 CASCADE;
 DROP MATERIALIZED VIEW IF EXISTS model_draft.buffer_75_a CASCADE;
-DROP MATERIALIZED VIEW IF EXISTS model_draft.vg250_1_sta_union_mview CASCADE;
 DROP VIEW IF EXISTS model_draft.summary_de CASCADE;
 DROP MATERIALIZED VIEW IF EXISTS model_draft.summary CASCADE;
 DROP VIEW IF EXISTS model_draft.summary_total CASCADE;

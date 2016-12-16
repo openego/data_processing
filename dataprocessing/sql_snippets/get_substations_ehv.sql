@@ -29,7 +29,6 @@ DROP VIEW IF EXISTS model_draft.final_result_hoes CASCADE;
 DROP MATERIALIZED VIEW IF EXISTS model_draft.substations_to_drop_hoes CASCADE;
 DROP MATERIALIZED VIEW IF EXISTS model_draft.buffer_75_hoes CASCADE;
 DROP MATERIALIZED VIEW IF EXISTS model_draft.buffer_75_a_hoes CASCADE;
-DROP MATERIALIZED VIEW IF EXISTS model_draft.vg250_1_sta_union_mview CASCADE;
 DROP VIEW IF EXISTS model_draft.summary_de_hoes CASCADE;
 DROP MATERIALIZED VIEW IF EXISTS model_draft.summary_hoes CASCADE;
 DROP VIEW IF EXISTS model_draft.summary_total_hoes CASCADE;
@@ -38,6 +37,34 @@ DROP VIEW IF EXISTS model_draft.relation_substations_with_hoes CASCADE;
 DROP VIEW IF EXISTS model_draft.node_substations_with_hoes CASCADE;
 DROP VIEW IF EXISTS model_draft.way_substations_with_hoes CASCADE;
 DROP VIEW IF EXISTS model_draft.way_substations CASCADE;
+
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2' AS version,
+	'input' AS io,
+	'openstreetmap' AS schema_name,
+	'osm_deu_ways' AS table_name,
+	'get_substations_ehv.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('openstreetmap.osm_deu_ways' ::regclass) ::json AS metadata
+FROM	openstreetmap.osm_deu_ways;
+
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2' AS version,
+	'input' AS io,
+	'openstreetmap' AS schema_name,
+	'osm_deu_polygon' AS table_name,
+	'get_substations_ehv.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('openstreetmap.osm_deu_polygon' ::regclass) ::json AS metadata
+FROM	openstreetmap.osm_deu_polygon;
 
 --> WAY: Erzeuge einen VIEW aus OSM way substations:
 CREATE VIEW model_draft.way_substations AS
@@ -50,6 +77,20 @@ SELECT *
 FROM model_draft.way_substations
 WHERE '220000' = ANY( string_to_array(hstore(model_draft.way_substations.tags)->'voltage',';')) OR '380000' = ANY( string_to_array(hstore(model_draft.way_substations.tags)->'voltage',';')); 
 
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2' AS version,
+	'input' AS io,
+	'openstreetmap' AS schema_name,
+	'osm_deu_nodes' AS table_name,
+	'get_substations_ehv.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('openstreetmap.osm_deu_nodes' ::regclass) ::json AS metadata
+FROM	openstreetmap.osm_deu_nodes;
+
 --> NODE: Erzeuge einen VIEW aus OSM node substations:
 CREATE VIEW model_draft.node_substations_with_hoes AS
 SELECT openstreetmap.osm_deu_nodes.id, openstreetmap.osm_deu_nodes.tags, openstreetmap.osm_deu_point.geom
@@ -61,6 +102,20 @@ WHERE '220000' = ANY( string_to_array(hstore(openstreetmap.osm_deu_nodes.tags)->
 -- wobei hier der Mittelpunkt aus dem Rechteck ermittelt wird welches entsteht, wenn man die äußersten Korrdinaten für
 -- longitude und latitude wählt
 -- needs st_relation_geometry
+
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2' AS version,
+	'input' AS io,
+	'openstreetmap' AS schema_name,
+	'osm_deu_rels' AS table_name,
+	'get_substations_ehv.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('openstreetmap.osm_deu_rels' ::regclass) ::json AS metadata
+FROM	openstreetmap.osm_deu_rels;
 
 CREATE VIEW model_draft.relation_substations_with_hoes AS
 SELECT openstreetmap.osm_deu_rels.id, openstreetmap.osm_deu_rels.tags, relation_geometry(openstreetmap.osm_deu_rels.members) as way
@@ -119,20 +174,24 @@ WHERE dbahn = 'no' AND substation NOT IN ('traction','transition');
 
 CREATE INDEX summary_hoes_gix ON model_draft.summary_hoes USING GIST (polygon);
 
--- eliminate substation that are not within VG250
-CREATE MATERIALIZED VIEW model_draft.vg250_1_sta_union_mview AS 
- SELECT 1 AS gid,
-    'Bundesrepublik'::text AS bez,
-    st_area(un.geom) / 10000::double precision AS area_km2,
-    un.geom
-   FROM ( SELECT st_union(st_transform(vg.geom, 4326))::geometry(MultiPolygon,4326) AS geom
-          FROM political_boundary.bkg_vg250_20160101_1_sta vg
-          WHERE vg.bez::text = 'Bundesrepublik'::text) un;
-CREATE INDEX vg250_1_sta_union_mview_gix ON model_draft.vg250_1_sta_union_mview USING GIST (geom);
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2' AS version,
+	'input' AS io,
+	'political_boundary' AS schema_name,
+	'bkg_vg250_1_sta_union_mview' AS table_name,
+	'get_substations_ehv.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('political_boundary.bkg_vg250_1_sta_union_mview' ::regclass) ::json AS metadata
+FROM	political_boundary.bkg_vg250_1_sta_union_mview;
 
+-- eliminate substation that are not within VG250
 CREATE VIEW model_draft.summary_de_hoes AS
 SELECT *
-FROM model_draft.summary_hoes, model_draft.vg250_1_sta_union_mview as vg
+FROM model_draft.summary_hoes, political_boundary.bkg_vg250_1_sta_union_mview as vg
 WHERE vg.geom && model_draft.summary_hoes.polygon 
 AND ST_CONTAINS(vg.geom,model_draft.summary_hoes.polygon);
 
@@ -170,7 +229,6 @@ DROP VIEW IF EXISTS model_draft.final_result_hoes CASCADE;
 DROP MATERIALIZED VIEW IF EXISTS model_draft.substations_to_drop_hoes CASCADE;
 DROP MATERIALIZED VIEW IF EXISTS model_draft.buffer_75_hoes CASCADE;
 DROP MATERIALIZED VIEW IF EXISTS model_draft.buffer_75_a_hoes CASCADE;
-DROP MATERIALIZED VIEW IF EXISTS model_draft.vg250_1_sta_union_mview CASCADE;
 DROP VIEW IF EXISTS model_draft.summary_de_hoes CASCADE;
 DROP MATERIALIZED VIEW IF EXISTS model_draft.summary_hoes CASCADE;
 DROP VIEW IF EXISTS model_draft.summary_total_hoes CASCADE;
