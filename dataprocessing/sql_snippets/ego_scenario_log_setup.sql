@@ -78,7 +78,7 @@ SELECT obj_description('model_draft.ego_scenario_log' ::regclass) ::json;
 
 -- add entry to scenario log table
 INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2' AS version,
+SELECT	'0.2.1' AS version,
 	'output' AS io,
 	'model_draft' AS schema_name,
 	'ego_scenario_log' AS table_name,

@@ -10,7 +10,7 @@ Voronoi polygons with eucldean distance / manhattan distance would be better but
 
 -- add entry to scenario log table
 INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2' AS version,
+SELECT	'0.2.1' AS version,
 	'input' AS io,
 	'model_draft' AS schema_name,
 	'ego_grid_hvmv_substation' AS table_name,
@@ -55,7 +55,7 @@ WHERE  	t1.subst_id = t2.subst_id;
 
 -- Scenario eGo data processing
 INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
-	SELECT	'0.2' AS version,
+	SELECT	'0.2.1' AS version,
 		'model_draft' AS schema_name,
 		'ego_grid_hvmv_substation' AS table_name,
 		'process_eGo_substation.sql' AS script_name,
@@ -138,7 +138,7 @@ SELECT obj_description('model_draft.ego_grid_hvmv_substation_dummy' ::regclass) 
 
 -- add entry to scenario log table
 INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2' AS version,
+SELECT	'0.2.1' AS version,
 	'output' AS io,
 	'model_draft' AS schema_name,
 	'ego_grid_hvmv_substation_dummy' AS table_name,
@@ -214,8 +214,9 @@ CREATE INDEX	ego_grid_hvmv_substation_voronoi_geom_idx
 GRANT ALL ON TABLE 	model_draft.ego_grid_hvmv_substation_voronoi TO oeuser WITH GRANT OPTION;
 ALTER TABLE		model_draft.ego_grid_hvmv_substation_voronoi OWNER TO oeuser;
 
--- delete dummy points from substations (18 Points)
+-- delete dummy points from substations and voronoi (18 Points)
 DELETE FROM model_draft.ego_grid_hvmv_substation WHERE subst_name='DUMMY';
+DELETE FROM model_draft.ego_grid_hvmv_substation_voronoi WHERE subst_id IS NULL;
 
 -- metadata
 COMMENT ON TABLE model_draft.ego_grid_hvmv_substation_voronoi IS '{
@@ -252,7 +253,7 @@ SELECT obj_description('model_draft.ego_grid_hvmv_substation_voronoi' ::regclass
 
 -- add entry to scenario log table
 INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2' AS version,
+SELECT	'0.2.1' AS version,
 	'output' AS io,
 	'model_draft' AS schema_name,
 	'ego_grid_hvmv_substation_voronoi' AS table_name,

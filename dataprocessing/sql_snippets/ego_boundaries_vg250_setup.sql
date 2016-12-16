@@ -12,7 +12,7 @@ __author__ = "Ludee"
 -- 1. Nationalstaat (sta) - country (cntry)
 -- add entry to scenario log table
 INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2' AS version,
+SELECT	'0.2.1' AS version,
 	'input' AS io,
 	'political_boundary' AS schema_name,
 	'bkg_vg250_1_sta' AS table_name,
@@ -87,7 +87,7 @@ SELECT obj_description('political_boundary.bkg_vg250_1_sta_mview' ::regclass) ::
 
 -- add entry to scenario log table
 INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2' AS version,
+SELECT	'0.2.1' AS version,
 	'output' AS io,
 	'political_boundary' AS schema_name,
 	'bkg_vg250_1_sta_mview' AS table_name,
@@ -164,7 +164,7 @@ SELECT obj_description('political_boundary.bkg_vg250_1_sta_error_geom_mview' ::r
 
 -- add entry to scenario log table
 INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2' AS version,
+SELECT	'0.2.1' AS version,
 	'output' AS io,
 	'political_boundary' AS schema_name,
 	'bkg_vg250_1_sta_error_geom_mview' AS table_name,
@@ -238,7 +238,7 @@ SELECT obj_description('political_boundary.bkg_vg250_1_sta_union_mview' ::regcla
 
 -- add entry to scenario log table
 INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2' AS version,
+SELECT	'0.2.1' AS version,
 	'output' AS io,
 	'political_boundary' AS schema_name,
 	'bkg_vg250_1_sta_union_mview' AS table_name,
@@ -311,7 +311,7 @@ SELECT obj_description('political_boundary.bkg_vg250_1_sta_bbox_mview' ::regclas
 
 -- add entry to scenario log table
 INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2' AS version,
+SELECT	'0.2.1' AS version,
 	'output' AS io,
 	'political_boundary' AS schema_name,
 	'bkg_vg250_1_sta_bbox_mview' AS table_name,
@@ -328,7 +328,7 @@ FROM	political_boundary.bkg_vg250_1_sta_bbox_mview;
 
 -- add entry to scenario log table
 INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2' AS version,
+SELECT	'0.2.1' AS version,
 	'input' AS io,
 	'political_boundary' AS schema_name,
 	'bkg_vg250_2_lan' AS table_name,
@@ -404,7 +404,7 @@ SELECT obj_description('political_boundary.bkg_vg250_2_lan_mview' ::regclass) ::
 
 -- add entry to scenario log table
 INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2' AS version,
+SELECT	'0.2.1' AS version,
 	'output' AS io,
 	'political_boundary' AS schema_name,
 	'bkg_vg250_2_lan_mview' AS table_name,
@@ -421,7 +421,7 @@ FROM	political_boundary.bkg_vg250_2_lan_mview;
 
 -- add entry to scenario log table
 INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2' AS version,
+SELECT	'0.2.1' AS version,
 	'input' AS io,
 	'political_boundary' AS schema_name,
 	'bkg_vg250_4_krs' AS table_name,
@@ -502,7 +502,7 @@ SELECT obj_description('political_boundary.bkg_vg250_4_krs_mview' ::regclass) ::
 
 -- add entry to scenario log table
 INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2' AS version,
+SELECT	'0.2.1' AS version,
 	'output' AS io,
 	'political_boundary' AS schema_name,
 	'bkg_vg250_4_krs_mview' AS table_name,
@@ -519,7 +519,7 @@ FROM	political_boundary.bkg_vg250_4_krs_mview;
 
 -- add entry to scenario log table
 INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2' AS version,
+SELECT	'0.2.1' AS version,
 	'input' AS io,
 	'political_boundary' AS schema_name,
 	'bkg_vg250_6_gem' AS table_name,
@@ -601,7 +601,7 @@ SELECT obj_description('political_boundary.bkg_vg250_6_gem_mview' ::regclass) ::
 
 -- add entry to scenario log table
 INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2' AS version,
+SELECT	'0.2.1' AS version,
 	'output' AS io,
 	'political_boundary' AS schema_name,
 	'bkg_vg250_6_gem_mview' AS table_name,
@@ -678,7 +678,7 @@ SELECT obj_description('political_boundary.bkg_vg250_6_gem_error_geom_mview' ::r
 
 -- add entry to scenario log table
 INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2' AS version,
+SELECT	'0.2.1' AS version,
 	'output' AS io,
 	'political_boundary' AS schema_name,
 	'bkg_vg250_6_gem_error_geom_mview' AS table_name,
@@ -767,7 +767,7 @@ SELECT obj_description('political_boundary.bkg_vg250_6_gem_dump_mview' ::regclas
 
 -- add entry to scenario log table
 INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2' AS version,
+SELECT	'0.2.1' AS version,
 	'output' AS io,
 	'political_boundary' AS schema_name,
 	'bkg_vg250_6_gem_dump_mview' AS table_name,
@@ -898,7 +898,7 @@ SELECT obj_description('model_draft.ego_political_boundary_bkg_vg250_6_gem_hole_
 
 -- add entry to scenario log table
 INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2' AS version,
+SELECT	'0.2.1' AS version,
 	'output' AS io,
 	'model_draft' AS schema_name,
 	'ego_political_boundary_bkg_vg250_6_gem_hole_mview' AS table_name,
@@ -972,7 +972,7 @@ SELECT obj_description('model_draft.ego_political_boundary_bkg_vg250_6_gem_clean
 
 -- add entry to scenario log table
 INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2' AS version,
+SELECT	'0.2.1' AS version,
 	'output' AS io,
 	'model_draft' AS schema_name,
 	'ego_political_boundary_bkg_vg250_6_gem_clean' AS table_name,
