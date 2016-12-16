@@ -1,3 +1,10 @@
+/*
+osm landuse sector
+
+__copyright__ = "tba"
+__license__ = "tba"
+__author__ = "Ludee"
+*/
 
 ---------- ---------- ---------- ---------- ---------- ---------- 
 -- "2. Data Setup OSM"   2016-04-18 10:00 11s 
@@ -29,6 +36,20 @@
 -- "Filter OSM Urban Landuse"
 ---------- ---------- ----------
 -- ToDo: change "urban" to electrified
+
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2.1' AS version,
+	'input' AS io,
+	'openstreetmap' AS schema_name,
+	'osm_deu_polygon' AS table_name,
+	'setup_osm_landuse.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('openstreetmap.osm_deu_polygon' ::regclass) ::json AS metadata
+FROM	openstreetmap.osm_deu_polygon;
 
 -- "Filter Urban"   (OK!) -> 35.000ms =494.696
 DROP TABLE IF EXISTS	openstreetmap.osm_deu_polygon_urban CASCADE;
@@ -92,14 +113,28 @@ ALTER TABLE		openstreetmap.osm_deu_polygon_urban OWNER TO oeuser;
 ---------- ---------- ----------
 -- "OSM Urban Landuse Inside vg250"
 ---------- ---------- ----------
-	
+
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2.1' AS version,
+	'input' AS io,
+	'political_boundary' AS schema_name,
+	'bkg_vg250_1_sta_union_mview' AS table_name,
+	'setup_osm_landuse.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('political_boundary.bkg_vg250_1_sta_union_mview' ::regclass) ::json AS metadata
+FROM	political_boundary.bkg_vg250_1_sta_union_mview;
+
 -- "Calculate 'inside' vg250"   (OK!) -> 122.000ms =492.890
 UPDATE 	openstreetmap.osm_deu_polygon_urban AS t1
 SET  	vg250 = t2.vg250
 FROM    (
 	SELECT	osm.gid AS gid,
 		'inside' ::text AS vg250
-	FROM	orig_geo_vg250.vg250_1_sta_union_mview AS vg,
+	FROM	political_boundary.bkg_vg250_1_sta_union_mview AS vg,
 		openstreetmap.osm_deu_polygon_urban AS osm
 	WHERE  	vg.geom && osm.geom AND
 		ST_CONTAINS(vg.geom,osm.geom)
@@ -114,13 +149,14 @@ SET  	vg250 = t2.vg250
 FROM    (
 	SELECT	osm.gid AS gid,
 		'crossing' ::text AS vg250
-	FROM	orig_geo_vg250.vg250_1_sta_union_mview AS vg,
+	FROM	political_boundary.bkg_vg250_1_sta_union_mview AS vg,
 		openstreetmap.osm_deu_polygon_urban AS osm
 	WHERE  	osm.vg250 = 'outside' AND
 		vg.geom && osm.geom AND
 		ST_Overlaps(vg.geom,osm.geom)
 	) AS t2
 WHERE  	t1.gid = t2.gid;
+
 
 
 ---------- ---------- ----------
@@ -173,7 +209,7 @@ CREATE MATERIALIZED VIEW		openstreetmap.osm_deu_polygon_urban_vg250_cut_mview AS
 	FROM	(SELECT	poly.*,
 			ST_INTERSECTION(poly.geom,cut.geom) AS geom_new
 		FROM	openstreetmap.osm_deu_polygon_urban_error_geom_vg250_mview AS poly,
-			orig_geo_vg250.vg250_1_sta_union_mview AS cut
+			political_boundary.bkg_vg250_1_sta_union_mview AS cut
 		WHERE	poly.vg250 = 'crossing'
 		) AS cut
 	ORDER BY 	cut.gid;
@@ -282,17 +318,19 @@ INSERT INTO	openstreetmap.osm_deu_polygon_urban
 	FROM	openstreetmap.osm_deu_polygon_urban_vg250_clean_cut_multi_mview AS clean
 	ORDER BY 	clean.gid;
 
--- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
-	SELECT	'0.2' AS version,
-		'openstreetmap' AS schema_name,
-		'osm_deu_polygon_urban' AS table_name,
-		'setup_osm_landuse.sql' AS script_name,
-		COUNT(geom)AS entries,
-		'OK' AS status,
-		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
-	FROM	openstreetmap.osm_deu_polygon_urban;
-	
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2.1' AS version,
+	'output' AS io,
+	'openstreetmap' AS schema_name,
+	'osm_deu_polygon_urban' AS table_name,
+	'setup_osm_landuse.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('openstreetmap.osm_deu_polygon_urban' ::regclass) ::json AS metadata
+FROM	openstreetmap.osm_deu_polygon_urban;
 	
 ---------- ---------- ----------
 -- "(Geo) Data Validation"
@@ -374,16 +412,19 @@ CREATE INDEX  	osm_deu_polygon_urban_sector_1_residential_mview_geom_idx
 GRANT ALL ON TABLE 	openstreetmap.osm_deu_polygon_urban_sector_1_residential_mview TO oeuser WITH GRANT OPTION;
 ALTER TABLE		openstreetmap.osm_deu_polygon_urban_sector_1_residential_mview OWNER TO oeuser;
 
--- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
-	SELECT	'0.2' AS version,
-		'openstreetmap' AS schema_name,
-		'osm_deu_polygon_urban_sector_1_residential_mview' AS table_name,
-		'setup_osm_landuse.sql' AS script_name,
-		COUNT(geom)AS entries,
-		'OK' AS status,
-		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
-	FROM	openstreetmap.osm_deu_polygon_urban_sector_1_residential_mview;
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2.1' AS version,
+	'output' AS io,
+	'openstreetmap' AS schema_name,
+	'osm_deu_polygon_urban_sector_1_residential_mview' AS table_name,
+	'setup_osm_landuse.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('openstreetmap.osm_deu_polygon_urban_sector_1_residential_mview' ::regclass) ::json AS metadata
+FROM	openstreetmap.osm_deu_polygon_urban_sector_1_residential_mview;
 
 ---------- ---------- ----------
 
@@ -417,16 +458,19 @@ CREATE INDEX  	osm_deu_polygon_urban_sector_2_retail_mview_geom_idx
 GRANT ALL ON TABLE 	openstreetmap.osm_deu_polygon_urban_sector_2_retail_mview TO oeuser WITH GRANT OPTION;
 ALTER TABLE		openstreetmap.osm_deu_polygon_urban_sector_2_retail_mview OWNER TO oeuser;
 
--- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
-	SELECT	'0.2' AS version,
-		'openstreetmap' AS schema_name,
-		'osm_deu_polygon_urban_sector_2_retail_mview' AS table_name,
-		'setup_osm_landuse.sql' AS script_name,
-		COUNT(geom)AS entries,
-		'OK' AS status,
-		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
-	FROM	openstreetmap.osm_deu_polygon_urban_sector_2_retail_mview;
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2.1' AS version,
+	'output' AS io,
+	'openstreetmap' AS schema_name,
+	'osm_deu_polygon_urban_sector_2_retail_mview' AS table_name,
+	'setup_osm_landuse.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('openstreetmap.osm_deu_polygon_urban_sector_2_retail_mview' ::regclass) ::json AS metadata
+FROM	openstreetmap.osm_deu_polygon_urban_sector_2_retail_mview;
 	
 ---------- ---------- ----------
 
@@ -463,16 +507,19 @@ CREATE INDEX  	osm_deu_polygon_urban_sector_3_industrial_mview_geom_idx
 GRANT ALL ON TABLE 	openstreetmap.osm_deu_polygon_urban_sector_3_industrial_mview TO oeuser WITH GRANT OPTION;
 ALTER TABLE		openstreetmap.osm_deu_polygon_urban_sector_3_industrial_mview OWNER TO oeuser;
 
--- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
-	SELECT	'0.2' AS version,
-		'openstreetmap' AS schema_name,
-		'osm_deu_polygon_urban_sector_3_industrial_mview' AS table_name,
-		'setup_osm_landuse.sql' AS script_name,
-		COUNT(geom)AS entries,
-		'OK' AS status,
-		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
-	FROM	openstreetmap.osm_deu_polygon_urban_sector_3_industrial_mview;
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2.1' AS version,
+	'output' AS io,
+	'openstreetmap' AS schema_name,
+	'osm_deu_polygon_urban_sector_3_industrial_mview' AS table_name,
+	'setup_osm_landuse.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('openstreetmap.osm_deu_polygon_urban_sector_3_industrial_mview' ::regclass) ::json AS metadata
+FROM	openstreetmap.osm_deu_polygon_urban_sector_3_industrial_mview;
 	
 ---------- ---------- ----------
 
@@ -505,16 +552,19 @@ CREATE INDEX  	osm_deu_polygon_urban_sector_4_agricultural_mview_geom_idx
 GRANT ALL ON TABLE 	openstreetmap.osm_deu_polygon_urban_sector_4_agricultural_mview TO oeuser WITH GRANT OPTION;
 ALTER TABLE		openstreetmap.osm_deu_polygon_urban_sector_4_agricultural_mview OWNER TO oeuser;
 
--- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
-	SELECT	'0.2' AS version,
-		'openstreetmap' AS schema_name,
-		'osm_deu_polygon_urban_sector_4_agricultural_mview' AS table_name,
-		'setup_osm_landuse.sql' AS script_name,
-		COUNT(geom)AS entries,
-		'OK' AS status,
-		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
-	FROM	openstreetmap.osm_deu_polygon_urban_sector_4_agricultural_mview;
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2.1' AS version,
+	'output' AS io,
+	'openstreetmap' AS schema_name,
+	'osm_deu_polygon_urban_sector_4_agricultural_mview' AS table_name,
+	'setup_osm_landuse.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('openstreetmap.osm_deu_polygon_urban_sector_4_agricultural_mview' ::regclass) ::json AS metadata
+FROM	openstreetmap.osm_deu_polygon_urban_sector_4_agricultural_mview;
 	
 ---------- ---------- ----------
 

@@ -39,15 +39,15 @@ def data_processing():
                      'python_scripts'))
 
     snippets = [
-        # 'ego_scenario_log_setup.sql',				# setup scenario log table
-        # 'ego_boundaries_vg250_setup.sql',			# setup borders
-        'get_substations.sql',                      # setup hvmv substaions
-        # 'get_substations_ehv.sql',                # setup ehv substaions
-        # 'otg_id_to_substations.sql',
-        # 'ego_grid_hvmv_substation.sql',				# hvmv substation vornoi
-        # 'process_eGo_grid_district.sql',
-        # 'setup_osm_landuse.sql', 					# setup OSM
-        # 'process_eGo_osm_loads_industry.sql',
+        # 'ego_scenario_log_setup.sql',				    # setup scenario log table
+        # 'ego_boundaries_vg250_setup.sql',			    # setup borders
+        # 'get_substations.sql',                     # setup hvmv substaions
+        # 'get_substations_ehv.sql',                  # setup ehv substaions
+        # 'otg_id_to_substations.sql',                # assign osmTGmod-id
+        # 'ego_grid_hvmv_substation.sql',			    # hvmv substation voronoi
+        # 'process_eGo_grid_district.sql',          # mv griddistrict
+        # 'setup_osm_landuse.sql', 					      # osm landuse sector
+        'process_eGo_osm_loads_industry.sql',       # osm industry
         # 'process_eGo_osm_loads.sql',
         # # 'setup_zensus_population_per_ha.sql', 	# setup zensus
         # 'process_eGo_loads_melted.sql',

@@ -42,7 +42,7 @@ DROP VIEW IF EXISTS model_draft.way_substations CASCADE;
 
 -- add entry to scenario log table
 INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2' AS version,
+SELECT	'0.2.1' AS version,
 	'input' AS io,
 	'openstreetmap' AS schema_name,
 	'osm_deu_ways' AS table_name,
@@ -56,7 +56,7 @@ FROM	openstreetmap.osm_deu_ways;
 
 -- add entry to scenario log table
 INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2' AS version,
+SELECT	'0.2.1' AS version,
 	'input' AS io,
 	'openstreetmap' AS schema_name,
 	'osm_deu_polygon' AS table_name,
@@ -67,6 +67,34 @@ SELECT	'0.2' AS version,
 	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
 	obj_description('openstreetmap.osm_deu_polygon' ::regclass) ::json AS metadata
 FROM	openstreetmap.osm_deu_polygon;
+
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2.1' AS version,
+	'input' AS io,
+	'openstreetmap' AS schema_name,
+	'osm_deu_nodes' AS table_name,
+	'get_substations.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('openstreetmap.osm_deu_nodes' ::regclass) ::json AS metadata
+FROM	openstreetmap.osm_deu_nodes;
+
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2.1' AS version,
+	'input' AS io,
+	'openstreetmap' AS schema_name,
+	'osm_deu_rels' AS table_name,
+	'get_substations_ehv.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('openstreetmap.osm_deu_rels' ::regclass) ::json AS metadata
+FROM	openstreetmap.osm_deu_rels;
 
 --> WAY: create view of way substations:
 CREATE VIEW model_draft.way_substations AS
@@ -168,7 +196,7 @@ CREATE INDEX summary_gix ON model_draft.summary USING GIST (polygon);
 
 -- add entry to scenario log table
 INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2' AS version,
+SELECT	'0.2.1' AS version,
 	'input' AS io,
 	'political_boundary' AS schema_name,
 	'bkg_vg250_1_sta_union_mview' AS table_name,
@@ -184,8 +212,8 @@ FROM	political_boundary.bkg_vg250_1_sta_union_mview;
 CREATE VIEW model_draft.summary_de AS
 SELECT *
 FROM model_draft.summary, political_boundary.bkg_vg250_1_sta_union_mview as vg
-WHERE vg.geom && model_draft.summary.polygon 
-AND ST_CONTAINS(vg.geom,model_draft.summary.polygon);
+WHERE ST_Transform(vg.geom,4326) && model_draft.summary.polygon 
+AND ST_CONTAINS(ST_Transform(vg.geom,4326),model_draft.summary.polygon);
 ALTER VIEW model_draft.summary_de OWNER TO oeuser;
 
 -- create view with buffer of 75m around polygons
@@ -240,14 +268,14 @@ DROP VIEW IF EXISTS model_draft.way_substations CASCADE;
 GRANT ALL ON TABLE model_draft.ego_grid_hvmv_substation TO oeuser WITH GRANT OPTION;
 ALTER TABLE model_draft.ego_grid_hvmv_substation OWNER TO oeuser;
 
--- Add entry to scenario logtable
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,user_name,timestamp)
-SELECT	'0.2' AS version,
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2.1' AS version,
 	'output' AS io,
 	'model_draft' AS schema_name,
 	'ego_grid_hvmv_substation' AS table_name,
 	'get_substations.sql' AS script_name,
-	COUNT(subst_id)AS entries,
+	COUNT(*)AS entries,
 	'OK' AS status,
 	session_user AS user_name,
 	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,

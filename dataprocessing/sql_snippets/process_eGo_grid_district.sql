@@ -1,29 +1,34 @@
----------- ---------- ----------
----------- --SKRIPT-- OK! 7min
----------- ---------- ----------
+/*
+mv griddistrict
 
-/* -- Create schemas for open_eGo
-DROP SCHEMA IF EXISTS	calc_ego_grid_district CASCADE;
-CREATE SCHEMA 		calc_ego_grid_district;
+__copyright__ = "tba"
+__license__ = "tba"
+__author__ = "Ludee"
+*/
 
--- Set default privileges for schema
-ALTER DEFAULT PRIVILEGES IN SCHEMA calc_ego_grid_district GRANT ALL ON TABLES TO oeuser;
-ALTER DEFAULT PRIVILEGES IN SCHEMA calc_ego_grid_district GRANT ALL ON SEQUENCES TO oeuser;
-ALTER DEFAULT PRIVILEGES IN SCHEMA calc_ego_grid_district GRANT ALL ON FUNCTIONS TO oeuser;
-
--- Grant all in schema
-GRANT ALL ON SCHEMA 	calc_ego_grid_district TO oeuser WITH GRANT OPTION;
-GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA calc_ego_grid_district TO oeuser;
- */
 ---------- ---------- ----------
 -- Substations per Municipalities
 ---------- ---------- ----------
+
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2.1' AS version,
+	'input' AS io,
+	'model_draft' AS schema_name,
+	'ego_political_boundary_bkg_vg250_6_gem_clean' AS table_name,
+	'process_eGo_grid_district.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('model_draft.ego_political_boundary_bkg_vg250_6_gem_clean' ::regclass) ::json AS metadata
+FROM	model_draft.ego_political_boundary_bkg_vg250_6_gem_clean;
 
 -- Municipalities   (OK!) -> 28.000ms =12.174
 DROP TABLE IF EXISTS	model_draft.ego_political_boundary_hvmv_subst_per_gem CASCADE;
 CREATE TABLE		model_draft.ego_political_boundary_hvmv_subst_per_gem AS
 	SELECT	vg.*
-	FROM	political_boundary.bkg_vg250_6_gem_clean AS vg;
+	FROM	model_draft.ego_political_boundary_bkg_vg250_6_gem_clean AS vg;
 
 -- Set PK   (OK!) -> 1.000ms =0
 ALTER TABLE model_draft.ego_political_boundary_hvmv_subst_per_gem
@@ -39,6 +44,20 @@ CREATE INDEX  	ego_political_boundary_hvmv_subst_per_gem_geom_idx
 -- Grant oeuser   (OK!) -> 100ms =0
 GRANT ALL ON TABLE	model_draft.ego_political_boundary_hvmv_subst_per_gem TO oeuser WITH GRANT OPTION;
 ALTER TABLE		model_draft.ego_political_boundary_hvmv_subst_per_gem OWNER TO oeuser;
+
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2.1' AS version,
+	'input' AS io,
+	'model_draft' AS schema_name,
+	'ego_grid_hvmv_substation' AS table_name,
+	'process_eGo_grid_district.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('model_draft.ego_grid_hvmv_substation' ::regclass) ::json AS metadata
+FROM	model_draft.ego_grid_hvmv_substation;
 
 -- usw count   (OK!) -> 1.000ms =2.270
 UPDATE 	model_draft.ego_political_boundary_hvmv_subst_per_gem AS t1
@@ -89,16 +108,21 @@ WHERE  	t1.id = t2.id;
 GRANT ALL ON TABLE 	model_draft.ego_political_boundary_hvmv_subst_per_gem_1_mview TO oeuser WITH GRANT OPTION;
 ALTER TABLE		model_draft.ego_political_boundary_hvmv_subst_per_gem_1_mview OWNER TO oeuser;
 
--- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
-	SELECT	'0.2' AS version,
-		'model_draft' AS schema_name,
-		'ego_political_boundary_hvmv_subst_per_gem_1_mview' AS table_name,
-		'process_eGo_grid_district.sql' AS script_name,
-		COUNT(geom)AS entries,
-		'OK' AS status,
-		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
-	FROM	model_draft.ego_political_boundary_hvmv_subst_per_gem_1_mview;
+
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2.1' AS version,
+	'output' AS io,
+	'model_draft' AS schema_name,
+	'ego_political_boundary_hvmv_subst_per_gem_1_mview' AS table_name,
+	'process_eGo_grid_district.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('model_draft.ego_political_boundary_hvmv_subst_per_gem_1_mview' ::regclass) ::json AS metadata
+FROM	model_draft.ego_political_boundary_hvmv_subst_per_gem_1_mview;
+
 
 ---------- ---------- ----------
 
@@ -130,16 +154,19 @@ FROM	(SELECT	mun.id AS id,
 	FROM	model_draft.ego_political_boundary_hvmv_subst_per_gem_2_mview AS mun )AS t2
 WHERE  	t1.id = t2.id;
 
--- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
-	SELECT	'0.2' AS version,
-		'model_draft' AS schema_name,
-		'ego_political_boundary_hvmv_subst_per_gem_2_mview' AS table_name,
-		'process_eGo_grid_district.sql' AS script_name,
-		COUNT(geom)AS entries,
-		'OK' AS status,
-		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
-	FROM	model_draft.ego_political_boundary_hvmv_subst_per_gem_2_mview;
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2.1' AS version,
+	'output' AS io,
+	'model_draft' AS schema_name,
+	'ego_political_boundary_hvmv_subst_per_gem_2_mview' AS table_name,
+	'process_eGo_grid_district.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('model_draft.ego_political_boundary_hvmv_subst_per_gem_2_mview' ::regclass) ::json AS metadata
+FROM	model_draft.ego_political_boundary_hvmv_subst_per_gem_2_mview;
 
 ---------- ---------- ----------
 
@@ -195,16 +222,21 @@ FROM	(SELECT	mun.id AS id,
 	FROM	model_draft.ego_political_boundary_hvmv_subst_per_gem_3_mview AS mun )AS t2
 WHERE  	t1.id = t2.id;
 
--- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
-	SELECT	'0.2' AS version,
-		'model_draft' AS schema_name,
-		'ego_political_boundary_hvmv_subst_per_gem_3_mview' AS table_name,
-		'process_eGo_grid_district.sql' AS script_name,
-		COUNT(geom)AS entries,
-		'OK' AS status,
-		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
-	FROM	model_draft.ego_political_boundary_hvmv_subst_per_gem_3_mview;
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2.1' AS version,
+	'output' AS io,
+	'model_draft' AS schema_name,
+	'ego_political_boundary_hvmv_subst_per_gem_3_mview' AS table_name,
+	'process_eGo_grid_district.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('model_draft.ego_political_boundary_hvmv_subst_per_gem_3_mview' ::regclass) ::json AS metadata
+FROM	model_draft.ego_political_boundary_hvmv_subst_per_gem_3_mview;
+
+
 
 ---------- ---------- ----------
 -- Grid Districts
@@ -262,6 +294,20 @@ WHERE  	t1.ags_0 = t2.ags_0;
 -- II. Gemeinden mit mehreren USW
 ---------- ---------- ---------- ---------- ---------- ----------
 
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2.1' AS version,
+	'input' AS io,
+	'model_draft' AS schema_name,
+	'ego_grid_hvmv_substation_voronoi' AS table_name,
+	'process_eGo_grid_district.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('model_draft.ego_grid_hvmv_substation_voronoi' ::regclass) ::json AS metadata
+FROM	model_draft.ego_grid_hvmv_substation_voronoi;
+
 -- Create Table "ego_deu_substations_voronoi" 
 
 -- Substation ID   (OK!) -> 1.000ms =3.610
@@ -314,6 +360,20 @@ CREATE INDEX  	ego_deu_substations_voronoi_mview_geom_idx
 -- Grant oeuser   (OK!) -> 100ms =0
 GRANT ALL ON TABLE 	model_draft.ego_grid_hvmv_substation_voronoi_mview TO oeuser WITH GRANT OPTION;
 ALTER TABLE		model_draft.ego_grid_hvmv_substation_voronoi_mview OWNER TO oeuser;
+
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2.1' AS version,
+	'output' AS io,
+	'model_draft' AS schema_name,
+	'ego_grid_hvmv_substation_voronoi_mview' AS table_name,
+	'process_eGo_grid_district.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('model_draft.ego_grid_hvmv_substation_voronoi_mview' ::regclass) ::json AS metadata
+FROM	model_draft.ego_grid_hvmv_substation_voronoi_mview;
 
 ---------- ---------- ----------
 -- 
@@ -993,23 +1053,21 @@ FROM	(SELECT	dis.subst_id,
 	)AS t2
 WHERE  	t1.subst_id = t2.subst_id;
 
--- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
-	SELECT	'0.2' AS version,
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+	SELECT	'0.2.1' AS version,
+		'output' AS io,
 		'model_draft' AS schema_name,
 		'ego_grid_mv_griddistrict' AS table_name,
 		'process_eGo_grid_district.sql' AS script_name,
-		COUNT(geom)AS entries,
+		COUNT(*)AS entries,
 		'OK' AS status,
-		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
+		session_user AS user_name,
+		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+		obj_description('model_draft.ego_grid_mv_griddistrict' ::regclass) ::json AS metadata
 	FROM	model_draft.ego_grid_mv_griddistrict;
-
 	
 
----------- ---------- ---------- 
-	
-	
-	
 	
 
 ---------- ---------- ----------
@@ -1090,15 +1148,18 @@ WHERE  	t1.id = t2.id;
 GRANT ALL ON TABLE	model_draft.ego_grid_mv_griddistrict_dump TO oeuser WITH GRANT OPTION;
 ALTER TABLE		model_draft.ego_grid_mv_griddistrict_dump OWNER TO oeuser;
 
--- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
-	SELECT	'0.2' AS version,
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+	SELECT	'0.2.1' AS version,
+		'output' AS io,
 		'model_draft' AS schema_name,
 		'ego_grid_mv_griddistrict_dump' AS table_name,
 		'process_eGo_grid_district.sql' AS script_name,
-		COUNT(geom)AS entries,
-		'BUGS' AS status,
-		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
+		COUNT(*)AS entries,
+		'BUGS?' AS status,
+		session_user AS user_name,
+		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+		obj_description('model_draft.ego_grid_mv_griddistrict_dump' ::regclass) ::json AS metadata
 	FROM	model_draft.ego_grid_mv_griddistrict_dump;
 
 

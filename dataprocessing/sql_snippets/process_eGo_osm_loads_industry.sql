@@ -2,6 +2,34 @@
 -- Calculate specific electricity consumption per million Euro GVA for each federal state
 --------------
 
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2.1' AS version,
+	'input' AS io,
+	'demand' AS schema_name,
+	'ego_demand_federalstate' AS table_name,
+	'process_eGo_osm_loads_industry.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('demand.ego_demand_federalstate' ::regclass) ::json AS metadata
+FROM	demand.ego_demand_federalstate;
+
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2.1' AS version,
+	'input' AS io,
+	'economic' AS schema_name,
+	'destatis_gva_per_district' AS table_name,
+	'process_eGo_osm_loads_industry.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('economic.destatis_gva_per_district' ::regclass) ::json AS metadata
+FROM	economic.destatis_gva_per_district;
+
 DROP TABLE IF EXISTS model_draft.ego_demand_per_gva CASCADE;
 
 CREATE TABLE model_draft.ego_demand_per_gva AS 
@@ -23,7 +51,7 @@ OWNER TO oeuser;
 
 -- "Add Meta-documentation"
 
-COMMENT ON TABLE  demand.ego_demand_federalstates_per_gva IS
+COMMENT ON TABLE  model_draft.ego_demand_per_gva IS
 '{
 "Name": "Specific electricity consumption per gross value added",
 "Source": [{
@@ -62,6 +90,19 @@ COMMENT ON TABLE  demand.ego_demand_federalstates_per_gva IS
 "Instructions for proper use": ["..."]
 }';
 
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2.1' AS version,
+	'output' AS io,
+	'model_draft' AS schema_name,
+	'ego_demand_per_gva' AS table_name,
+	'process_eGo_osm_loads_industry.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('model_draft.ego_demand_per_gva' ::regclass) ::json AS metadata
+FROM	model_draft.ego_demand_per_gva;
 
 --------------
 -- Calculate electricity consumption per district based on gross value added
@@ -147,6 +188,21 @@ COMMENT ON TABLE  model_draft.ego_demand_per_district IS
 -- "Export information on the industrial area into model_draft.ego_landuse_industry"
 ------------------
 
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2.1' AS version,
+	'input' AS io,
+	'model_draft' AS schema_name,
+	'ego_landuse_industry' AS table_name,
+	'process_eGo_osm_loads_industry.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('model_draft.ego_landuse_industry' ::regclass) ::json AS metadata
+FROM	model_draft.ego_landuse_industry;
+
+
 DROP TABLE IF EXISTS model_draft.ego_landuse_industry CASCADE;
 SELECT 	* 
 INTO model_draft.ego_landuse_industry 
@@ -230,6 +286,20 @@ CREATE INDEX  	landuse_industry_geom_centre_idx
     USING     	GIST (geom_centre);
 
 -- "Calculate NUTS" 
+
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2.1' AS version,
+	'input' AS io,
+	'political_boundary' AS schema_name,
+	'bkg_vg250_4_krs_mview' AS table_name,
+	'process_eGo_osm_loads_industry.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('political_boundary.bkg_vg250_4_krs_mview' ::regclass) ::json AS metadata
+FROM	political_boundary.bkg_vg250_4_krs_mview;
 
 UPDATE 	model_draft.ego_landuse_industry a
 SET 	nuts = b.nuts
@@ -365,27 +435,40 @@ COMMENT ON TABLE  model_draft.ego_landuse_industry IS
 "Instructions for proper use": ["..."]
 }';
 
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2.1' AS version,
+	'output' AS io,
+	'model_draft' AS schema_name,
+	'ego_landuse_industry' AS table_name,
+	'process_eGo_osm_loads_industry.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('model_draft.ego_landuse_industry' ::regclass) ::json AS metadata
+FROM	model_draft.ego_landuse_industry;
 
--- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
-	SELECT	'0.2' AS version,
-		'model_draft' AS schema_name,
-		'landuse_industry' AS table_name,
-		'process_eGo_osm_loads_industry.sql' AS script_name,
-		COUNT(geom)AS entries,
-		'OK' AS status,
-		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
-	FROM	model_draft.ego_landuse_industry;
 
-
-
-	
 -----------------
 -- "Identify large scale consumer"
 -----------------
 
-DROP TABLE IF EXISTS model_draft.ego_demand_hv_largescaleconsumer CASCADE;
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2.1' AS version,
+	'input' AS io,
+	'supply' AS schema_name,
+	'ego_conv_powerplant' AS table_name,
+	'process_eGo_osm_loads_industry.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('supply.ego_conv_powerplant' ::regclass) ::json AS metadata
+FROM	supply.ego_conv_powerplant;
 
+DROP TABLE IF EXISTS model_draft.ego_demand_hv_largescaleconsumer CASCADE;
 CREATE TABLE model_draft.ego_demand_hv_largescaleconsumer AS
 	(
 	SELECT	osm_deu_polygon_urban_sector_3_industrial_mview.gid AS polygon_id,
@@ -413,7 +496,7 @@ ALTER TABLE model_draft.ego_demand_hv_largescaleconsumer
 	ADD COLUMN otg_id integer,  
 	ADD COLUMN un_id integer,
 	ADD COLUMN consumption numeric, 
-	ADD COLUMN numeric,
+	ADD COLUMN peak_load numeric,
 	ADD COLUMN geom geometry(MultiPolygon,3035),
 	ADD COLUMN geom_centre geometry(Point,3035),
 	ADD PRIMARY KEY (id);
@@ -494,6 +577,34 @@ CREATE INDEX  	large_scale_consumer_geom_centre_idx
 
 -- Identify corresponding bus for large scale consumer (lsc) with the help of ehv-voronoi
 
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2.1' AS version,
+	'input' AS io,
+	'calc_ego_substation' AS schema_name,
+	'ego_deu_voronoi_ehv' AS table_name,
+	'process_eGo_osm_loads_industry.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('calc_ego_substation.ego_deu_voronoi_ehv' ::regclass) ::json AS metadata
+FROM	calc_ego_substation.ego_deu_voronoi_ehv;
+
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2.1' AS version,
+	'input' AS io,
+	'model_draft' AS schema_name,
+	'ego_grid_hvmv_substation' AS table_name,
+	'process_eGo_osm_loads_industry.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('model_draft.ego_grid_hvmv_substation' ::regclass) ::json AS metadata
+FROM	model_draft.ego_grid_hvmv_substation;
+
 UPDATE model_draft.ego_demand_hv_largescaleconsumer a
 	SET subst_id = b.subst_id
 	FROM calc_ego_substation.ego_deu_voronoi_ehv b
@@ -568,17 +679,20 @@ COMMENT ON TABLE  model_draft.ego_demand_hv_largescaleconsumer IS
 "Instructions for proper use": ["..."]
 }';
 
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2.1' AS version,
+	'output' AS io,
+	'model_draft' AS schema_name,
+	'ego_demand_hv_largescaleconsumer' AS table_name,
+	'process_eGo_osm_loads_industry.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('model_draft.ego_demand_hv_largescaleconsumer' ::regclass) ::json AS metadata
+FROM	model_draft.ego_demand_hv_largescaleconsumer;
 			  
--- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
-	SELECT	'0.2' AS version,
-		'model_draft' AS schema_name,
-		'large_scale_consumer' AS table_name,
-		'process_eGo_osm_loads_industry.sql' AS script_name,
-		COUNT(geom_centre)AS entries,
-		'OK' AS status,
-		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
-	FROM	model_draft.ego_demand_hv_largescaleconsumer;
 
 /*﻿ 
 SELECT polygon_id, 

@@ -40,7 +40,7 @@ DROP VIEW IF EXISTS model_draft.way_substations CASCADE;
 
 -- add entry to scenario log table
 INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2' AS version,
+SELECT	'0.2.1' AS version,
 	'input' AS io,
 	'openstreetmap' AS schema_name,
 	'osm_deu_ways' AS table_name,
@@ -54,7 +54,7 @@ FROM	openstreetmap.osm_deu_ways;
 
 -- add entry to scenario log table
 INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2' AS version,
+SELECT	'0.2.1' AS version,
 	'input' AS io,
 	'openstreetmap' AS schema_name,
 	'osm_deu_polygon' AS table_name,
@@ -65,6 +65,34 @@ SELECT	'0.2' AS version,
 	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
 	obj_description('openstreetmap.osm_deu_polygon' ::regclass) ::json AS metadata
 FROM	openstreetmap.osm_deu_polygon;
+
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2.1' AS version,
+	'input' AS io,
+	'openstreetmap' AS schema_name,
+	'osm_deu_nodes' AS table_name,
+	'get_substations_ehv.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('openstreetmap.osm_deu_nodes' ::regclass) ::json AS metadata
+FROM	openstreetmap.osm_deu_nodes;
+
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2.1' AS version,
+	'input' AS io,
+	'openstreetmap' AS schema_name,
+	'osm_deu_rels' AS table_name,
+	'get_substations_ehv.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('openstreetmap.osm_deu_rels' ::regclass) ::json AS metadata
+FROM	openstreetmap.osm_deu_rels;
 
 --> WAY: Erzeuge einen VIEW aus OSM way substations:
 CREATE VIEW model_draft.way_substations AS
@@ -77,20 +105,6 @@ SELECT *
 FROM model_draft.way_substations
 WHERE '220000' = ANY( string_to_array(hstore(model_draft.way_substations.tags)->'voltage',';')) OR '380000' = ANY( string_to_array(hstore(model_draft.way_substations.tags)->'voltage',';')); 
 
--- add entry to scenario log table
-INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2' AS version,
-	'input' AS io,
-	'openstreetmap' AS schema_name,
-	'osm_deu_nodes' AS table_name,
-	'get_substations_ehv.sql' AS script_name,
-	COUNT(*)AS entries,
-	'OK' AS status,
-	session_user AS user_name,
-	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	obj_description('openstreetmap.osm_deu_nodes' ::regclass) ::json AS metadata
-FROM	openstreetmap.osm_deu_nodes;
-
 --> NODE: Erzeuge einen VIEW aus OSM node substations:
 CREATE VIEW model_draft.node_substations_with_hoes AS
 SELECT openstreetmap.osm_deu_nodes.id, openstreetmap.osm_deu_nodes.tags, openstreetmap.osm_deu_point.geom
@@ -102,20 +116,6 @@ WHERE '220000' = ANY( string_to_array(hstore(openstreetmap.osm_deu_nodes.tags)->
 -- wobei hier der Mittelpunkt aus dem Rechteck ermittelt wird welches entsteht, wenn man die äußersten Korrdinaten für
 -- longitude und latitude wählt
 -- needs st_relation_geometry
-
--- add entry to scenario log table
-INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2' AS version,
-	'input' AS io,
-	'openstreetmap' AS schema_name,
-	'osm_deu_rels' AS table_name,
-	'get_substations_ehv.sql' AS script_name,
-	COUNT(*)AS entries,
-	'OK' AS status,
-	session_user AS user_name,
-	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	obj_description('openstreetmap.osm_deu_rels' ::regclass) ::json AS metadata
-FROM	openstreetmap.osm_deu_rels;
 
 CREATE VIEW model_draft.relation_substations_with_hoes AS
 SELECT openstreetmap.osm_deu_rels.id, openstreetmap.osm_deu_rels.tags, relation_geometry(openstreetmap.osm_deu_rels.members) as way
@@ -176,7 +176,7 @@ CREATE INDEX summary_hoes_gix ON model_draft.summary_hoes USING GIST (polygon);
 
 -- add entry to scenario log table
 INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2' AS version,
+SELECT	'0.2.1' AS version,
 	'input' AS io,
 	'political_boundary' AS schema_name,
 	'bkg_vg250_1_sta_union_mview' AS table_name,
@@ -192,8 +192,8 @@ FROM	political_boundary.bkg_vg250_1_sta_union_mview;
 CREATE VIEW model_draft.summary_de_hoes AS
 SELECT *
 FROM model_draft.summary_hoes, political_boundary.bkg_vg250_1_sta_union_mview as vg
-WHERE vg.geom && model_draft.summary_hoes.polygon 
-AND ST_CONTAINS(vg.geom,model_draft.summary_hoes.polygon);
+WHERE ST_Transform(vg.geom,4326) && model_draft.summary_hoes.polygon 
+AND ST_CONTAINS(ST_Transform(vg.geom,4326),model_draft.summary_hoes.polygon);
 
 -- create view with buffer of 75m around polygons
 CREATE MATERIALIZED VIEW model_draft.buffer_75_hoes AS
@@ -241,14 +241,14 @@ DROP VIEW IF EXISTS model_draft.way_substations CASCADE;
 GRANT ALL ON TABLE model_draft.ego_grid_ehv_substation TO oeuser WITH GRANT OPTION;
 ALTER TABLE model_draft.ego_grid_ehv_substation OWNER TO oeuser;
 
--- Add entry to scenario logtable
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,user_name,timestamp)
-SELECT	'0.2' AS version,
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2.1' AS version,
 	'output' AS io,
 	'model_draft' AS schema_name,
 	'ego_grid_ehv_substation' AS table_name,
 	'get_substations_ehv.sql' AS script_name,
-	COUNT(subst_id)AS entries,
+	COUNT(*)AS entries,
 	'OK' AS status,
 	session_user AS user_name,
 	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
