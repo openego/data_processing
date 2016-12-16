@@ -41,6 +41,20 @@ DROP VIEW IF EXISTS model_draft.way_substations_without_110kV CASCADE;
 DROP VIEW IF EXISTS model_draft.way_substations_with_110kV CASCADE;
 DROP VIEW IF EXISTS model_draft.way_substations CASCADE;
 
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2' AS version,
+	'input' AS io,
+	'openstreetmap' AS schema_name,
+	'osm_deu_ways' AS table_name,
+	'get_substations.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('openstreetmap.osm_deu_ways' ::regclass) ::json AS metadata
+FROM	openstreetmap.osm_deu_ways;
+
 --> WAY: create view of way substations:
 CREATE VIEW model_draft.way_substations AS
 SELECT openstreetmap.osm_deu_ways.id, openstreetmap.osm_deu_ways.tags, openstreetmap.osm_deu_polygon.geom
@@ -138,6 +152,20 @@ FROM model_draft.summary_total
 WHERE dbahn = 'no' AND substation NOT IN ('traction','transition');
 ALTER MATERIALIZED VIEW model_draft.summary OWNER TO oeuser;
 CREATE INDEX summary_gix ON model_draft.summary USING GIST (polygon);
+
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2' AS version,
+	'input' AS io,
+	'political_boundary' AS schema_name,
+	'bkg_vg250_1_sta_union_mview' AS table_name,
+	'get_substations.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('political_boundary.bkg_vg250_1_sta_union_mview' ::regclass) ::json AS metadata
+FROM	political_boundary.bkg_vg250_1_sta_union_mview;
 
 -- create view of political boundary VG250
 CREATE MATERIALIZED VIEW model_draft.vg250_1_sta_union_mview AS 
