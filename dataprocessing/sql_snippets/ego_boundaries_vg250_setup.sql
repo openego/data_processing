@@ -1,4 +1,4 @@
-﻿/*
+/*
 Setup borders
 Inputs are german administrative borders (boundaries.bkg_vg250).
 Create mviews with transformed (EPSG:3035) and corrected geometries
