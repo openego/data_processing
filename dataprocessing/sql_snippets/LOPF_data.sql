@@ -57,6 +57,57 @@ FROM (
 	GROUP BY T2.generator_id
 ) T3 WHERE T3.generator_id = Y.generator_id;
 
+-- set storage parameters to every node with p_nom_extendable as true
+-- by Lukas
+
+INSERT INTO model_draft.ego_grid_pf_hv_storage
+(scn_name,
+  storage_id,
+  bus,
+  dispatch, 
+  control, 
+  p_nom, 
+  p_nom_extendable,
+  p_nom_min,
+  p_nom_max, 
+  p_min_pu_fixed, 
+  p_max_pu_fixed,
+  sign, 
+  source,
+  marginal_cost, 
+  capital_cost, 
+  efficiency,
+  soc_initial, 
+  soc_cyclic, 
+  max_hours,
+  efficiency_store, 
+  efficiency_dispatch, 
+  standing_loss 
+)
+SELECT 'Status Quo',
+  nextval('orig_geo_powerplants.pf_storage_single_aggr_id') as aggr_id,
+  model_draft.ego_grid_hvmv_substation.otg_id,  -- assign one storage to each substation
+  'flexible', 	-- set storage to be flexible
+  'PQ',  -- PQ control
+  0,  -- initial power of storage is 0
+  true, -- storage is extendable
+  0, -- there is no lower limit to storage power
+  1000000, -- inf could not be defined, thus very high number
+  0, -- default
+  1, -- default
+  1, -- default
+  null, -- source could not be set to 0, so null.
+  (39.5156 + 1.5 + 1), -- marginal costs are those of oil / source no.4 plus 1
+  1000, -- this is an assumption as of now, must be defined when calculating for more than 1 or 2 hours
+  1, -- efficiency will be set via efficiency_store and efficiency_dispatch
+  0, -- initial storage level is 0
+  false, -- cyclic state of charge is false
+  10, -- max hours is set to 10, just an assumption as of now
+  1, -- no losses for storing
+  1, -- no losses for dispatch
+  0 -- no standing losses
+FROM model_draft.ego_grid_hvmv_substation;
+
 
 -- Scenario eGo data processing
 INSERT INTO     scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)

@@ -1,5 +1,10 @@
--- Copyright 2016 by NEXT ENERGY
--- Published under GNU GENERAL PUBLIC LICENSE Version 3 (see https://github.com/openego/data_processing/blob/master/LICENSE)
+/*
+[...]
+
+__copyright__ = "NEXT ENERGY"
+__license__ = "GNU GENERAL PUBLIC LICENSE Version 3 (see https://github.com/openego/data_processing/blob/master/LICENSE)"
+__author__ = "lukasol, C. Matke"
+*/
 
 DROP TABLE IF EXISTS model_draft.ego_grid_hvmv_substation CASCADE;
 CREATE TABLE model_draft.ego_grid_hvmv_substation (
@@ -211,21 +216,23 @@ ALTER TABLE model_draft.ego_grid_hvmv_substation OWNER TO oeuser;
 -- Add entry to scenario logtable
 INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,user_name,timestamp)
 SELECT	'0.2' AS version,
+	'output' AS io,
 	'model_draft' AS schema_name,
 	'ego_grid_hvmv_substation' AS table_name,
 	'get_substations.sql' AS script_name,
 	COUNT(subst_id)AS entries,
 	'OK' AS status,
 	session_user AS user_name,
-	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('model_draft.ego_grid_hvmv_substation' ::regclass) ::json AS metadata
 FROM	model_draft.ego_grid_hvmv_substation;
 
 COMMENT ON TABLE  model_draft.ego_grid_hvmv_substation IS
 '{
-"Name": "...",
+"Name": "Abstracted substations between high- and medium voltage",
 "Source": [{
-                  "Name": "...",
-                  "URL":  "..." }],
+                  "Name": "OpenStreetMap",
+                  "URL":  "www.openstreetmap.org" }],
 "Reference date": "...",
 "Date of collection": "...",
 "Original file": "...",
@@ -290,7 +297,10 @@ COMMENT ON TABLE  model_draft.ego_grid_hvmv_substation IS
                     "Comment": "..." }
                   ],
 "ToDo": ["..."],
-"Licence": ["GNU GPL3"],
+"Licence": [{
+	"Name":		"Open Database License (ODbL) v1.0",
+	"URL":		"http://opendatacommons.org/licenses/odbl/1.0/",
+	"Copyright": 	"NEXT ENERGY"}],
 "Instructions for proper use": ["..."]
 }';
 

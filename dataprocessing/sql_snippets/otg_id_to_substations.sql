@@ -1,7 +1,10 @@
--- Copyright 2016 by NEXT ENERGY
--- Published under GNU GENERAL PUBLIC LICENSE Version 3 (see https://github.com/openego/data_processing/blob/master/LICENSE)
+/*
+script to assign osmTGmod-id to substation
 
--- script to assign osmTGmod-id to substation
+__copyright__ = "NEXT ENERGY"
+__license__ = "GNU GENERAL PUBLIC LICENSE Version 3 (see https://github.com/openego/data_processing/blob/master/LICENSE)"
+__author__ = "lukasol, C. Matke"
+*/
 
 -- update model_draft.ego_grid_hvmv_substation table with new column of respective osmtgmod bus_i
 ALTER TABLE model_draft.ego_grid_hvmv_substation 
@@ -16,13 +19,15 @@ WHERE (SELECT TRIM(leading 'n' FROM TRIM(leading 'w' FROM model_draft.ego_grid_h
 -- Add entry to scenario logtable
 INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,user_name,timestamp)
 SELECT	'0.2' AS version,
+	'output' AS io,
 	'model_draft' AS schema_name,
 	'ego_grid_hvmv_substation' AS table_name,
 	'otg_id_to_substations.sql' AS script_name,
 	COUNT(subst_id)AS entries,
 	'OK' AS status,
 	session_user AS user_name,
-	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('model_draft.ego_grid_hvmv_substation' ::regclass) ::json AS metadata
 FROM	model_draft.ego_grid_hvmv_substation;
 
 -- do the same with model_draft.ego_grid_ehv_substation
@@ -40,11 +45,13 @@ WHERE (SELECT TRIM(leading 'n' FROM TRIM(leading 'w' FROM TRIM(leading 'r' FROM 
 -- Add entry to scenario logtable
 INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,user_name,timestamp)
 SELECT	'0.2' AS version,
+	'output' AS io,
 	'model_draft' AS schema_name,
 	'ego_grid_ehv_substation' AS table_name,
 	'otg_id_to_substations.sql' AS script_name,
 	COUNT(subst_id)AS entries,
 	'OK' AS status,
 	session_user AS user_name,
-	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('model_draft.ego_grid_ehv_substation' ::regclass) ::json AS metadata
 FROM	model_draft.ego_grid_ehv_substation;
