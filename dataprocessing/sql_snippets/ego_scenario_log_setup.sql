@@ -5,8 +5,9 @@ Used inputs are flaged "input" in column io
 Created outputs are flaged "output" in column io
 WARNING: It drops the table and deletes old entries when executed!
 
-__copyright__ = "Copyright ego developer group"
-__license__ = "GPLv3"
+__copyright__ = "tba"
+__license__ = "tba"
+__author__ = "Ludee"
 */
 
 -- create scenario log table
@@ -66,8 +67,8 @@ COMMENT ON TABLE model_draft.ego_scenario_log IS '{
 		"Date":  "16.11.2016", "Comment": "Added metadata" } ],
 	"ToDo": ["More attributes needed?"],
 	"Licence": [{
-		"Name": "GNU GENERAL PUBLIC LICENSE Version 3", 
-		"URL": "https://github.com/openego/data_processing/blob/master/LICENSE" }],
+		"Name": "tba", 
+		"URL": "" }],
 	"Instructions for proper use": ["Do not drop table, only once and then insert!"]
 	}'; 
 
