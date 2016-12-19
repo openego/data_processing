@@ -1,12 +1,42 @@
-/* 
-Copyright 2016 by open_eGo project
-Published under GNU GENERAL PUBLIC LICENSE Version 3 (see https://github.com/openego/data_processing/blob/master/LICENSE)
-Authors: Ludwig Hülk; Guido Pleßmann
+/*
+loadareas per mv-griddistrict
+insert cutted load melt
+exclude smaller 100m²
 
-Skript to cut the generated Load Areas with MV Grid Districts
+__copyright__ = "tba" 
+__license__ = "tba" 
+__author__ = "Ludee" 
 */
 
--- create table for loadareas per mv-griddistrict
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2.1' AS version,
+	'input' AS io,
+	'model_draft' AS schema_name,
+	'ego_demand_load_melt' AS table_name,
+	'process_eGo_loads_per_grid_district.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('model_draft.ego_demand_load_melt' ::regclass) ::json AS metadata
+FROM	model_draft.ego_demand_load_melt;
+
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2.1' AS version,
+	'input' AS io,
+	'model_draft' AS schema_name,
+	'ego_grid_mv_griddistrict' AS table_name,
+	'process_eGo_loads_per_grid_district.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('model_draft.ego_grid_mv_griddistrict' ::regclass) ::json AS metadata
+FROM	model_draft.ego_grid_mv_griddistrict;
+
+-- table for loadareas per mv-griddistrict
 DROP TABLE IF EXISTS  	model_draft.ego_demand_loadarea CASCADE;
 CREATE TABLE         	model_draft.ego_demand_loadarea (
 	id SERIAL NOT NULL,
@@ -46,7 +76,7 @@ CREATE TABLE         	model_draft.ego_demand_loadarea (
 	geom_centre geometry(POINT,3035),
 CONSTRAINT 	ego_demand_loadarea_pkey PRIMARY KEY (id));
 
--- insert loads
+-- insert cutted load melt
 INSERT INTO     model_draft.ego_demand_loadarea (geom)
 	SELECT	loads.geom ::geometry(Polygon,3035)
 	FROM	(SELECT (ST_DUMP(ST_SAFE_INTERSECTION(load.geom,dis.geom))).geom AS geom
@@ -60,13 +90,6 @@ INSERT INTO     model_draft.ego_demand_loadarea (geom)
 CREATE INDEX  	ego_deu_load_area_geom_idx
     ON    	model_draft.ego_demand_loadarea USING gist (geom);
 
--- grant (oeuser)
-GRANT ALL ON TABLE 	model_draft.ego_demand_loadarea TO oeuser WITH GRANT OPTION;
-ALTER TABLE		model_draft.ego_demand_loadarea OWNER TO oeuser;
-
-
--- update cutted loads
-
 -- update area (area_ha)
 UPDATE 	model_draft.ego_demand_loadarea AS t1
 	SET  	area_ha = t2.area
@@ -75,6 +98,10 @@ UPDATE 	model_draft.ego_demand_loadarea AS t1
 		FROM	model_draft.ego_demand_loadarea AS loads
 		) AS t2
 	WHERE  	t1.id = t2.id;
+    
+-- grant (oeuser)
+GRANT ALL ON TABLE 	model_draft.ego_demand_loadarea TO oeuser WITH GRANT OPTION;
+ALTER TABLE		model_draft.ego_demand_loadarea OWNER TO oeuser;
 
 
 -- validate area (area_ha) -> exclude smaller 100m²
@@ -90,39 +117,49 @@ CREATE MATERIALIZED VIEW 		model_draft.ego_demand_loadarea_smaller100m2_mview AS
 GRANT ALL ON TABLE 	model_draft.ego_demand_loadarea_error_area_ha_mview TO oeuser WITH GRANT OPTION;
 ALTER TABLE		model_draft.ego_demand_loadarea_error_area_ha_mview OWNER TO oeuser;
 
--- "Remove Errors (area_ha)"   (OK!) 700ms =1.850
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2.1' AS version,
+	'temp' AS io,
+	'model_draft' AS schema_name,
+	'ego_demand_loadarea_error_area_ha_mview' AS table_name,
+	'process_eGo_loads_per_grid_district.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('model_draft.ego_demand_loadarea_error_area_ha_mview' ::regclass) ::json AS metadata
+FROM	model_draft.ego_demand_loadarea_error_area_ha_mview;
+
+
+-- remove errors (area_ha)
 DELETE FROM	model_draft.ego_demand_loadarea AS loads
 	WHERE	loads.area_ha < 0.001;
 
--- ego result log
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
-	SELECT	'0.2' AS version,
-		'model_draft' AS schema_name,
-		'ego_demand_loadarea' AS table_name,
-		'process_eGo_loads_per_grid_district.sql' AS script_name,
-		COUNT(geom)AS entries,
-		'OK' AS status,
-		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
-	FROM	model_draft.ego_demand_loadarea;
+/* -- validate area (area_ha)
+SELECT 	loads.id AS id,
+	loads.area_ha AS area_ha,
+	loads.geom AS geom
+FROM 	model_draft.ego_demand_loadarea AS loads
+WHERE	loads.area_ha <= 2; */
 
--- -- "Validate Area (area_ha) Check"   (OK!) 84.000ms =81.161
--- SELECT 	loads.id AS id,
--- 	loads.area_ha AS area_ha,
--- 	loads.geom AS geom
--- FROM 	model_draft.ego_demand_loadarea AS loads
--- WHERE	loads.area_ha <= 2;
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2.1' AS version,
+	'temp' AS io,
+	'model_draft' AS schema_name,
+	'ego_demand_loadarea' AS table_name,
+	'process_eGo_loads_per_grid_district.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('model_draft.ego_demand_loadarea' ::regclass) ::json AS metadata
+FROM	model_draft.ego_demand_loadarea;
 
 
 
----------- ---------- ---------- ---------- ---------- ----------
--- "Calculate"
----------- ---------- ---------- ---------- ---------- ----------
-
----------- ---------- ----------
--- "Geometries"
----------- ---------- ----------
-
--- "Update Centroid"   (OK!) -> 28.000ms =206.846
+-- centroid
 UPDATE 	model_draft.ego_demand_loadarea AS t1
 SET  	geom_centroid = t2.geom_centroid
 FROM    (
@@ -132,14 +169,12 @@ FROM    (
 	) AS t2
 WHERE  	t1.id = t2.id;
 
--- "Create Index GIST (geom_centroid)"   (OK!) -> 4.000ms =0
+-- create index GIST (geom_centroid)
 CREATE INDEX  	ego_deu_load_area_geom_centroid_idx
-    ON    	model_draft.ego_demand_loadarea
-    USING     	GIST (geom_centroid);
+    ON    	model_draft.ego_demand_loadarea USING GIST (geom_centroid);
     
----------- ---------- ----------
 
--- "Update PointOnSurface"   (OK!) -> 50.000ms =181.173
+-- surfacepoint
 UPDATE 	model_draft.ego_demand_loadarea AS t1
 SET  	geom_surfacepoint = t2.geom_surfacepoint
 FROM    (
@@ -149,17 +184,13 @@ FROM    (
 	) AS t2
 WHERE  	t1.id = t2.id;
 
--- "Create Index GIST (geom_surfacepoint)"   (OK!) ->  3.000ms =0
+-- create index GIST (geom_surfacepoint)
 CREATE INDEX  	ego_deu_load_area_geom_surfacepoint_idx
     ON    	model_draft.ego_demand_loadarea
     USING     	GIST (geom_surfacepoint);
 
 
----------- ---------- ----------
--- "Update Centre"
----------- ---------- ----------
-
--- "Update Centre with centroid if inside area"   (OK!) -> 19.000ms =199.113
+-- centre with centroid if inside loadarea
 UPDATE 	model_draft.ego_demand_loadarea AS t1
 SET  	geom_centre = t2.geom_centre
 FROM	(
@@ -171,7 +202,7 @@ FROM	(
 	)AS t2
 WHERE  	t1.id = t2.id;
 
--- "Update Centre with surfacepoint if outside area"   (OK!) -> 2.000ms =7.733
+-- centre with surfacepoint if outside area
 UPDATE 	model_draft.ego_demand_loadarea AS t1
 SET  	geom_centre = t2.geom_centre
 FROM	(

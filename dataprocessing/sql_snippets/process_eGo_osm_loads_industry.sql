@@ -1,3 +1,11 @@
+/*
+osm industry 
+
+__copyright__ = "tba"
+__license__ = "tba"
+__author__ = "IK"
+*/
+
 --------------
 -- Calculate specific electricity consumption per million Euro GVA for each federal state
 --------------
@@ -7,28 +15,28 @@ INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,scri
 SELECT	'0.2.1' AS version,
 	'input' AS io,
 	'demand' AS schema_name,
-	'ego_demand_federalstate' AS table_name,
+	'lak_consumption_per_federalstate' AS table_name,
 	'process_eGo_osm_loads_industry.sql' AS script_name,
 	COUNT(*)AS entries,
 	'OK' AS status,
 	session_user AS user_name,
 	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	obj_description('demand.ego_demand_federalstate' ::regclass) ::json AS metadata
-FROM	demand.ego_demand_federalstate;
+	obj_description('demand.lak_consumption_per_federalstate' ::regclass) ::json AS metadata
+FROM	demand.lak_consumption_per_federalstate;
 
 -- add entry to scenario log table
 INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
 SELECT	'0.2.1' AS version,
 	'input' AS io,
 	'economic' AS schema_name,
-	'destatis_gva_per_district' AS table_name,
+	'destatis_gva_per_districts' AS table_name,
 	'process_eGo_osm_loads_industry.sql' AS script_name,
 	COUNT(*)AS entries,
 	'OK' AS status,
 	session_user AS user_name,
 	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	obj_description('economic.destatis_gva_per_district' ::regclass) ::json AS metadata
-FROM	economic.destatis_gva_per_district;
+	obj_description('economic.destatis_gva_per_districts' ::regclass) ::json AS metadata
+FROM	economic.destatis_gva_per_districts;
 
 DROP TABLE IF EXISTS model_draft.ego_demand_per_gva CASCADE;
 
@@ -38,8 +46,8 @@ SELECT  a.eu_code,
  	a.federal_states, 
  	a.elec_consumption_industry/b.gva_industry AS elec_consumption_industry, 
  	a.elec_consumption_tertiary_sector/b.gva_tertiary_sector AS elec_consumption_tertiary_sector 
-FROM  	demand.ego_demand_federalstate a, 
- 	economic.destatis_gva_per_district b 
+FROM  	demand.lak_consumption_per_federalstate a,  -- ego_demand_federalstate
+ 	economic.destatis_gva_per_districts b -- destatis_gva_per_district
 WHERE a.eu_code = b.eu_code 
 ORDER BY eu_code 
 ) 
@@ -117,7 +125,7 @@ b.district,
 a.elec_consumption_industry * b.gva_industry as elec_consumption_industry, 
 a.elec_consumption_tertiary_sector * b.gva_tertiary_sector AS elec_consumption_tertiary_sector 
 FROM  	model_draft.ego_demand_per_gva a, 
- 	economic.destatis_gva_per_district b
+ 	economic.destatis_gva_per_districts b -- destatis_gva_per_district
 WHERE SUBSTR (a.eu_code,1,3) = SUBSTR(b.eu_code,1,3)  
 ) 
 ; 
@@ -187,21 +195,6 @@ COMMENT ON TABLE  model_draft.ego_demand_per_district IS
 ------------------
 -- "Export information on the industrial area into model_draft.ego_landuse_industry"
 ------------------
-
--- add entry to scenario log table
-INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2.1' AS version,
-	'input' AS io,
-	'model_draft' AS schema_name,
-	'ego_landuse_industry' AS table_name,
-	'process_eGo_osm_loads_industry.sql' AS script_name,
-	COUNT(*)AS entries,
-	'OK' AS status,
-	session_user AS user_name,
-	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	obj_description('model_draft.ego_landuse_industry' ::regclass) ::json AS metadata
-FROM	model_draft.ego_landuse_industry;
-
 
 DROP TABLE IF EXISTS model_draft.ego_landuse_industry CASCADE;
 SELECT 	* 
@@ -458,27 +451,28 @@ FROM	model_draft.ego_landuse_industry;
 INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
 SELECT	'0.2.1' AS version,
 	'input' AS io,
-	'supply' AS schema_name,
-	'ego_conv_powerplant' AS table_name,
+	'orig_geo_powerplants' AS schema_name,
+	'proc_power_plant_germany' AS table_name,
 	'process_eGo_osm_loads_industry.sql' AS script_name,
 	COUNT(*)AS entries,
 	'OK' AS status,
 	session_user AS user_name,
 	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	obj_description('supply.ego_conv_powerplant' ::regclass) ::json AS metadata
-FROM	supply.ego_conv_powerplant;
+	obj_description('orig_geo_powerplants.proc_power_plant_germany' ::regclass) ::json AS metadata
+FROM	orig_geo_powerplants.proc_power_plant_germany;
 
 DROP TABLE IF EXISTS model_draft.ego_demand_hv_largescaleconsumer CASCADE;
 CREATE TABLE model_draft.ego_demand_hv_largescaleconsumer AS
 	(
-	SELECT	osm_deu_polygon_urban_sector_3_industrial_mview.gid AS polygon_id,
-		osm_deu_polygon_urban_sector_3_industrial_mview.area_ha AS area_ha,
-		proc_power_plant_germany.gid AS powerplant_id,
-		proc_power_plant_germany.voltage_level AS voltage_level
-	FROM 	supply.ego_conv_powerplant, 
-		openstreetmap.osm_deu_polygon_urban_sector_3_industrial_mview
-	WHERE	(voltage_level='3' OR voltage_level='2'OR voltage_level='1')
-	AND 	ST_Intersects (proc_power_plant_germany.geom, (ST_transform (osm_deu_polygon_urban_sector_3_industrial_mview.geom,4326))));
+	SELECT	osm.gid AS polygon_id,
+		osm.area_ha,
+		pp.gid AS powerplant_id,
+		pp.voltage_level
+	FROM 	orig_geo_powerplants.proc_power_plant_germany AS pp, 
+		openstreetmap.osm_deu_polygon_urban_sector_3_industrial_mview AS osm
+	WHERE	(pp.voltage_level='3' OR pp.voltage_level='2' OR pp.voltage_level='1')
+			AND ST_Intersects(pp.geom, ST_transform(osm.geom,4326))
+			AND pp.geom && (ST_transform(osm.geom,4326)) );
 
 ALTER TABLE  model_draft.ego_demand_hv_largescaleconsumer OWNER TO oeuser;
 
