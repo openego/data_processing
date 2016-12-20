@@ -40,6 +40,12 @@ FROM	model_draft.ego_grid_mv_griddistrict;
 DROP TABLE IF EXISTS  	model_draft.ego_demand_loadarea CASCADE;
 CREATE TABLE         	model_draft.ego_demand_loadarea (
 	id SERIAL NOT NULL,
+	subst_id integer,
+	nuts varchar(5),
+	rs_0 varchar(12),
+	ags_0 varchar(12),
+	otg_id integer,
+	un_id integer,
 	zensus_sum integer,
 	zensus_count integer,
 	zensus_density numeric,
@@ -66,15 +72,15 @@ CREATE TABLE         	model_draft.ego_demand_loadarea (
 	sector_consumption_industrial numeric,
 	sector_consumption_agricultural numeric,
 	sector_consumption_sum numeric,
-	subst_id integer,
-	nuts varchar(5),
-	rs_0 varchar(12),
-	ags_0 varchar(12),
 	geom geometry(Polygon,3035),	
 	geom_centroid geometry(POINT,3035),
 	geom_surfacepoint geometry(POINT,3035),
 	geom_centre geometry(POINT,3035),
 CONSTRAINT 	ego_demand_loadarea_pkey PRIMARY KEY (id));
+
+-- grant (oeuser)
+GRANT ALL ON TABLE 	model_draft.ego_demand_loadarea TO oeuser WITH GRANT OPTION;
+ALTER TABLE		model_draft.ego_demand_loadarea OWNER TO oeuser;
 
 -- insert cutted load melt
 INSERT INTO     model_draft.ego_demand_loadarea (geom)
@@ -98,11 +104,6 @@ UPDATE 	model_draft.ego_demand_loadarea AS t1
 		FROM	model_draft.ego_demand_loadarea AS loads
 		) AS t2
 	WHERE  	t1.id = t2.id;
-    
--- grant (oeuser)
-GRANT ALL ON TABLE 	model_draft.ego_demand_loadarea TO oeuser WITH GRANT OPTION;
-ALTER TABLE		model_draft.ego_demand_loadarea OWNER TO oeuser;
-
 
 -- validate area (area_ha) -> exclude smaller 100m²
 DROP MATERIALIZED VIEW IF EXISTS	model_draft.ego_demand_loadarea_smaller100m2_mview CASCADE;
@@ -455,7 +456,6 @@ SELECT	'0.2.1' AS version,
 	obj_description('model_draft.ego_osm_sector_per_griddistrict_2_retail' ::regclass) ::json AS metadata
 FROM	model_draft.ego_osm_sector_per_griddistrict_2_retail;
 
-	
 -- 3. industrial sector
 DROP TABLE IF EXISTS  	model_draft.ego_osm_sector_per_griddistrict_3_industrial CASCADE;
 CREATE TABLE         	model_draft.ego_osm_sector_per_griddistrict_3_industrial	 (
@@ -599,7 +599,6 @@ SELECT	'0.2.1' AS version,
 	obj_description('model_draft.ego_osm_sector_per_griddistrict_4_agricultural' ::regclass) ::json AS metadata
 FROM	model_draft.ego_osm_sector_per_griddistrict_4_agricultural;
 
-
 -- sector stats
 UPDATE 	model_draft.ego_demand_loadarea AS t1
 SET  	sector_area_sum = t2.sector_area_sum,
@@ -618,6 +617,19 @@ FROM    (
 	) AS t2
 WHERE  	t1.id = t2.id;
 
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2.1' AS version,
+	'input' AS io,
+	'model_draft' AS schema_name,
+	'ego_political_boundary_bkg_vg250_6_gem_clean' AS table_name,
+	'process_eGo_loads_per_grid_district.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('model_draft.ego_political_boundary_bkg_vg250_6_gem_clean' ::regclass) ::json AS metadata
+FROM	model_draft.ego_political_boundary_bkg_vg250_6_gem_clean;
 
 -- nuts code
 UPDATE 	model_draft.ego_demand_loadarea AS t1
@@ -626,7 +638,7 @@ FROM    (
 	SELECT	loads.id AS id,
 		vg.nuts AS nuts
 	FROM	model_draft.ego_demand_loadarea AS loads,
-		political_boundary.bkg_vg250_6_gem_clean AS vg
+		model_draft.ego_political_boundary_bkg_vg250_6_gem_clean AS vg
 	WHERE  	vg.geom && loads.geom_centre AND
 		ST_CONTAINS(vg.geom,loads.geom_centre)
 	) AS t2
@@ -639,7 +651,7 @@ FROM    (
 	SELECT	loads.id,
 		vg.rs_0
 	FROM	model_draft.ego_demand_loadarea AS loads,
-		political_boundary.bkg_vg250_6_gem_clean AS vg
+		model_draft.ego_political_boundary_bkg_vg250_6_gem_clean AS vg
 	WHERE  	vg.geom && loads.geom_centre AND
 		ST_CONTAINS(vg.geom,loads.geom_centre)
 	) AS t2
@@ -652,7 +664,7 @@ FROM    (
 	SELECT	loads.id AS id,
 		vg.ags_0 AS ags_0
 	FROM	model_draft.ego_demand_loadarea AS loads,
-		political_boundary.bkg_vg250_6_gem_clean AS vg
+		model_draft.ego_political_boundary_bkg_vg250_6_gem_clean AS vg
 	WHERE  	vg.geom && loads.geom_centre AND
 		ST_CONTAINS(vg.geom,loads.geom_centre)
 	) AS t2
