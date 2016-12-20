@@ -143,14 +143,14 @@ INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,scri
 SELECT	'0.2.1' AS version,
 	'input' AS io,
 	'demand' AS schema_name,
-	'ego_demand_federalstate' AS table_name,
+	'lak_consumption_per_federalstate' AS table_name,
 	'process_eGo_consumption.sql' AS script_name,
 	COUNT(*)AS entries,
 	'OK' AS status,
 	session_user AS user_name,
 	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	obj_description('demand.ego_demand_federalstate' ::regclass) ::json AS metadata
-FROM	demand.ego_demand_federalstate;
+	obj_description('demand.lak_consumption_per_federalstate' ::regclass) ::json AS metadata
+FROM	demand.lak_consumption_per_federalstate;
 	
 -- sector consumption of households per loadarea
 UPDATE model_draft.ego_demand_loadarea a
@@ -161,7 +161,7 @@ UPDATE model_draft.ego_demand_loadarea a
 		c.id,
 		b.elec_consumption_households_per_person * c.zensus_sum as result
 		FROM 
-		demand.ego_demand_federalstate b,
+		demand.lak_consumption_per_federalstate b,
 		model_draft.ego_demand_loadarea c
 		WHERE
 		substring(c.nuts,1,3) = substring(b.eu_code, 1,3)

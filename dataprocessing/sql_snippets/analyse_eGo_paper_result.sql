@@ -1,7 +1,59 @@
+/*
+loadareas per mv-griddistrict
+insert cutted load melt
+exclude smaller 100m²
 
--- calculate results and statistics for substation, load area, MV grid districts and consumption
+__copyright__ = "tba" 
+__license__ = "tba" 
+__author__ = "Ludee" 
+*/
+
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2.1' AS version,
+	'input' AS io,
+	'model_draft' AS schema_name,
+	'ego_grid_hvmv_substation' AS table_name,
+	'analyse_eGo_paper_result.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('model_draft.ego_grid_hvmv_substation' ::regclass) ::json AS metadata
+FROM	model_draft.ego_grid_hvmv_substation;
+
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2.1' AS version,
+	'input' AS io,
+	'model_draft' AS schema_name,
+	'ego_grid_mv_griddistrict' AS table_name,
+	'analyse_eGo_paper_result.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('model_draft.ego_grid_mv_griddistrict' ::regclass) ::json AS metadata
+FROM	model_draft.ego_grid_mv_griddistrict;
+
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2.1' AS version,
+	'input' AS io,
+	'model_draft' AS schema_name,
+	'ego_demand_loadarea' AS table_name,
+	'analyse_eGo_paper_result.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('model_draft.ego_demand_loadarea' ::regclass) ::json AS metadata
+FROM	model_draft.ego_demand_loadarea;
+
+
+-- results and statistics for substation, load area, MV grid districts and consumption
 DROP SEQUENCE IF EXISTS	model_draft.ego_paper_data_allocation_results_seq CASCADE;
-CREATE SEQUENCE model_draft.eGo_paper_data_allocation_results_seq;
+CREATE SEQUENCE 	model_draft.eGo_paper_data_allocation_results_seq;
 
 DROP TABLE IF EXISTS 	model_draft.eGo_paper_data_allocation_results CASCADE;
 CREATE TABLE 		model_draft.eGo_paper_data_allocation_results AS
@@ -115,9 +167,7 @@ SELECT	nextval('model_draft.eGo_paper_data_allocation_results_seq'::regclass) AS
 	MAX(ST_AREA(geom)/10000) ::decimal(10,3) AS result,
 	'ha' ::text AS unit,
 	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
-FROM	model_draft.ego_demand_loadarea
-
-;
+FROM	model_draft.ego_demand_loadarea;
 
 
 -- Set grants and owner
@@ -125,27 +175,29 @@ ALTER TABLE model_draft.ego_paper_data_allocation_results
 	OWNER TO oeuser,
 	ADD PRIMARY KEY (id) ;
 
--- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
-	SELECT	'0.2' AS version,
-		'model_draft' AS schema_name,
-		'ego_paper_data_allocation_results' AS table_name,
-		'analyse_eGo_paper_result.sql' AS script_name,
-		COUNT(id)AS entries,
-		'OK' AS status,
-		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
-	FROM	model_draft.ego_paper_data_allocation_results;
-	
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2.1' AS version,
+	'output' AS io,
+	'model_draft' AS schema_name,
+	'eGo_paper_data_allocation_results' AS table_name,
+	'analyse_eGo_paper_result.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('model_draft.eGo_paper_data_allocation_results' ::regclass) ::json AS metadata
+FROM	model_draft.eGo_paper_data_allocation_results;
 
--- -- --
 
+-- mv-griddistrict types
 DROP TABLE IF EXISTS 	model_draft.eGo_paper_data_allocation_mvgd CASCADE;
 CREATE TABLE		model_draft.eGo_paper_data_allocation_mvgd AS
 -- MVGD types
 SELECT	subst_id,
-	'0' ::integer AS type_1,
-	'0' ::integer AS type_2,
-	'0' ::integer AS type_3,
+	'0' ::integer AS type1,
+	'0' ::integer AS type2,
+	'0' ::integer AS type3,
 	'0' ::integer AS gem,
 	'0' ::integer AS gem_clean,
 	'0' ::integer AS la_count,
@@ -159,10 +211,10 @@ FROM	model_draft.ego_grid_mv_griddistrict AS gd;
 
 -- Type1 1724
 UPDATE 	model_draft.eGo_paper_data_allocation_mvgd AS t1
-SET  	type_1 = t2.type_1
+SET  	type1 = t2.type1
 FROM	(SELECT	gd.subst_id,
-		COUNT(ST_PointOnSurface(typ.geom))::integer AS type_1
-	FROM	model_draft.ego_grid_mv_griddistrict_type_1 AS typ,
+		COUNT(ST_PointOnSurface(typ.geom))::integer AS type1
+	FROM	model_draft.ego_grid_mv_griddistrict_type1 AS typ,
 		model_draft.ego_grid_mv_griddistrict AS gd
 	WHERE	gd.geom && typ.geom AND
 		ST_CONTAINS(gd.geom,ST_PointOnSurface(typ.geom))
@@ -172,10 +224,10 @@ WHERE  	t1.subst_id = t2.subst_id;
 
 -- Type2 1886
 UPDATE 	model_draft.eGo_paper_data_allocation_mvgd AS t1
-SET  	type_2 = t2.type_2
+SET  	type2 = t2.type2
 FROM	(SELECT	gd.subst_id,
-		COUNT(ST_PointOnSurface(typ.geom))::integer AS type_2
-	FROM	model_draft.ego_grid_mv_griddistrict_type_2 AS typ,
+		COUNT(ST_PointOnSurface(typ.geom))::integer AS type2
+	FROM	model_draft.ego_grid_mv_griddistrict_type2 AS typ,
 		model_draft.ego_grid_mv_griddistrict AS gd
 	WHERE	gd.geom && typ.geom AND
 		ST_CONTAINS(gd.geom,ST_PointOnSurface(typ.geom))
@@ -185,10 +237,10 @@ WHERE  	t1.subst_id = t2.subst_id;
 
 -- Type3 2077
 UPDATE 	model_draft.eGo_paper_data_allocation_mvgd AS t1
-SET  	type_3 = t2.type_3
+SET  	type3 = t2.type3
 FROM	(SELECT	gd.subst_id,
-		COUNT(ST_PointOnSurface(typ.geom))::integer AS type_3
-	FROM	model_draft.ego_grid_mv_griddistrict_type_3 AS typ,
+		COUNT(ST_PointOnSurface(typ.geom))::integer AS type3
+	FROM	model_draft.ego_grid_mv_griddistrict_type3 AS typ,
 		model_draft.ego_grid_mv_griddistrict AS gd
 	WHERE	gd.geom && typ.geom AND
 		ST_CONTAINS(gd.geom,ST_PointOnSurface(typ.geom))
@@ -198,7 +250,7 @@ WHERE  	t1.subst_id = t2.subst_id;
 
 DROP MATERIALIZED VIEW IF EXISTS political_boundary.bkg_vg250_6_gem_pts;
 CREATE MATERIALIZED VIEW political_boundary.bkg_vg250_6_gem_pts AS
-SELECT	gid,
+SELECT	id,
 	ags_0,
 	ST_PointOnSurface(geom) AS geom
 FROM	political_boundary.bkg_vg250_6_gem;
@@ -216,27 +268,26 @@ FROM	(SELECT	gd.subst_id,
 	)AS t2
 WHERE  	t1.subst_id = t2.subst_id;
 
-DROP MATERIALIZED VIEW IF EXISTS political_boundary.bkg_vg250_6_gem_clean_pts;
-CREATE MATERIALIZED VIEW political_boundary.bkg_vg250_6_gem_clean_pts AS
+/* -- bkg_vg250_6_gem_clean_pts
+DROP MATERIALIZED VIEW IF EXISTS model_draft.ego_political_boundary_bkg_vg250_6_gem_clean_pts;
+CREATE MATERIALIZED VIEW model_draft.ego_political_boundary_bkg_vg250_6_gem_clean_pts AS
 SELECT	id,
 	ags_0,
 	ST_PointOnSurface(geom) AS geom
-FROM	political_boundary.bkg_vg250_6_gem_clean;
+FROM	model_draft.ego_political_boundary_bkg_vg250_6_gem_clean; */
 
 -- Gem Parts 2731
 UPDATE 	model_draft.eGo_paper_data_allocation_mvgd AS t1
 SET  	gem_clean = t2.gem_clean
 FROM	(SELECT	gd.subst_id,
 		COUNT(ST_PointOnSurface(gem.geom))::integer AS gem_clean
-	FROM	political_boundary.bkg_vg250_6_gem_clean AS gem,
+	FROM	model_draft.ego_political_boundary_bkg_vg250_6_gem_clean AS gem,
 		model_draft.ego_grid_mv_griddistrict AS gd
 	WHERE	gd.geom && gem.geom AND
 		ST_CONTAINS(gd.geom,ST_PointOnSurface(gem.geom))
 	GROUP BY gd.subst_id
 	)AS t2
 WHERE  	t1.subst_id = t2.subst_id;
-
-
 
 -- GD Area 3610
 UPDATE 	model_draft.eGo_paper_data_allocation_mvgd AS t1
@@ -307,22 +358,23 @@ CREATE INDEX  	eGo_paper_data_allocation_mvgd_geom_idx
 	ON	model_draft.eGo_paper_data_allocation_mvgd
 	USING	GIST (geom);
 
--- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
-	SELECT	'0.2' AS version,
-		'model_draft' AS schema_name,
-		'eGo_paper_data_allocation_mvgd' AS table_name,
-		'analyse_eGo_paper_result.sql' AS script_name,
-		COUNT(subst_id)AS entries,
-		'OK' AS status,
-		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
-	FROM	model_draft.eGo_paper_data_allocation_mvgd;
-	
-	
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2.1' AS version,
+	'output' AS io,
+	'model_draft' AS schema_name,
+	'eGo_paper_data_allocation_mvgd' AS table_name,
+	'analyse_eGo_paper_result.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('model_draft.eGo_paper_data_allocation_mvgd' ::regclass) ::json AS metadata
+FROM	model_draft.eGo_paper_data_allocation_mvgd;
 	
 
 -- Calculate statistics for BKG-vg250 
-DROP MATERIALIZED VIEW IF EXISTS political_boundary.bkg_vg250_statistics_mview CASCADE;
+DROP MATERIALIZED VIEW IF EXISTS 	political_boundary.bkg_vg250_statistics_mview CASCADE;
 CREATE MATERIALIZED VIEW		political_boundary.bkg_vg250_statistics_mview AS 
 -- Calculate areas
 SELECT	'1' ::integer AS id,
@@ -363,6 +415,19 @@ WHERE	gf='1' OR gf='2';
 GRANT ALL ON TABLE	political_boundary.bkg_vg250_statistics_mview TO oeuser WITH GRANT OPTION;
 ALTER TABLE		political_boundary.bkg_vg250_statistics_mview OWNER TO oeuser;
 
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2.1' AS version,
+	'output' AS io,
+	'political_boundary' AS schema_name,
+	'bkg_vg250_statistics_mview' AS table_name,
+	'analyse_eGo_paper_result.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('political_boundary.bkg_vg250_statistics_mview' ::regclass) ::json AS metadata
+FROM	political_boundary.bkg_vg250_statistics_mview;
 
 
 
