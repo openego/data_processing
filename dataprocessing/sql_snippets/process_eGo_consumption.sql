@@ -181,24 +181,6 @@ UPDATE model_draft.ego_demand_loadarea a
 	FROM model_draft.ego_grid_hvmv_substation b
 	WHERE a.subst_id = b.subst_id; 
 
-/* -- Grant oeuser
-GRANT ALL ON TABLE 	model_draft.ego_demand_loadarea TO oeuser WITH GRANT OPTION;
-ALTER TABLE		model_draft.ego_demand_loadarea OWNER TO oeuser; */
-
--- add entry to scenario log table
-INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2.1' AS version,
-	'output' AS io,
-	'model_draft' AS schema_name,
-	'ego_demand_loadarea' AS table_name,
-	'process_eGo_consumption.sql' AS script_name,
-	COUNT(*)AS entries,
-	'OK' AS status,
-	session_user AS user_name,
-	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	obj_description('model_draft.ego_demand_loadarea' ::regclass) ::json AS metadata
-FROM	model_draft.ego_demand_loadarea;
-
 -- metadata
 COMMENT ON TABLE  model_draft.ego_demand_loadarea IS
 '{
@@ -256,4 +238,38 @@ COMMENT ON TABLE  model_draft.ego_demand_loadarea IS
 "Instructions for proper use": ["..."]
 }';
 
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2.1' AS version,
+	'output' AS io,
+	'model_draft' AS schema_name,
+	'ego_demand_loadarea' AS table_name,
+	'process_eGo_consumption.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('model_draft.ego_demand_loadarea' ::regclass) ::json AS metadata
+FROM	model_draft.ego_demand_loadarea;
 
+-- backup ;)
+CREATE OR REPLACE VIEW model_draft.ego_demand_per_load_area AS
+	SELECT	*
+	FROM	model_draft.ego_demand_loadarea;
+
+-- grant (oeuser)
+ALTER TABLE		model_draft.ego_demand_per_load_area OWNER TO oeuser;
+
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2.1' AS version,
+	'output' AS io,
+	'model_draft' AS schema_name,
+	'ego_demand_per_load_area' AS table_name,
+	'process_eGo_consumption.sql' AS script_name,
+	COUNT(*)AS entries,
+	'BACKUP!' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('model_draft.ego_demand_per_load_area' ::regclass) ::json AS metadata
+FROM	model_draft.ego_demand_per_load_area;
