@@ -13,7 +13,7 @@ CREATE OR REPLACE FUNCTION ego_scenario_log(
 	_schema_name text,
 	_table_name text,
 	_script_name text,
-	-count 
+	--count 
 	_comment text)
 RETURNS void AS
 $BODY$

@@ -1,160 +1,164 @@
----------- ---------- ----------
----------- --SKRIPT-- OK! 72min
----------- ---------- ----------
+/*
+combine osm and zensus load cluster
+collect loads
+buffer with 100m
+validate geom
+fix geoms with error
 
----------- ---------- ---------- ---------- ---------- ----------
--- "Collect Loads"   2016-04-18 10:00 40s
----------- ---------- ---------- ---------- ---------- ----------
+__copyright__ = "tba" 
+__license__ = "tba" 
+__author__ = "Ludee" 
+*/
 
--- "Loads OSM & Loads Zensus Cluster"   (OK!) 100ms =0
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2.1' AS version,
+	'input' AS io,
+	'model_draft' AS schema_name,
+	'ego_deu_loads_osm' AS table_name,
+	'process_eGo_loads_melted.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('model_draft.ego_deu_loads_osm' ::regclass) ::json AS metadata
+FROM	model_draft.ego_deu_loads_osm;
+
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2.1' AS version,
+	'input' AS io,
+	'model_draft' AS schema_name,
+	'ego_social_zensus_load_cluster' AS table_name,
+	'process_eGo_loads_melted.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('model_draft.ego_social_zensus_load_cluster' ::regclass) ::json AS metadata
+FROM	model_draft.ego_social_zensus_load_cluster;
+
+-- collect loads
 DROP TABLE IF EXISTS	model_draft.ego_demand_load_collect CASCADE;
 CREATE TABLE		model_draft.ego_demand_load_collect (
 		id SERIAL,
 		geom geometry(Polygon,3035),
 CONSTRAINT	ego_demand_load_collect_pkey PRIMARY KEY (id));
 
--- "Insert Loads OSM"   (OK!) 7.000ms =169.639
+-- insert loads OSM
 INSERT INTO	model_draft.ego_demand_load_collect (geom)
 	SELECT	osm.geom
-	FROM	openstreetmap.ego_deu_loads_osm AS osm;
+	FROM	model_draft.ego_deu_loads_osm AS osm;
 
--- "Insert Loads Zensus Cluster"   (OK!) 3.000ms =454.112
+-- insert loads zensus cluster
 INSERT INTO	model_draft.ego_demand_load_collect (geom)
 	SELECT	zensus.geom
-	FROM	model_draft.ego_social_zensus_loads_cluster AS zensus;
+	FROM	model_draft.ego_social_zensus_load_cluster AS zensus;
 
--- "Create Index GIST (geom)"   (OK!) 7.000ms =0
+-- create index GIST (geom)
 CREATE INDEX	ego_demand_load_collect_geom_idx
-	ON	model_draft.ego_demand_load_collect
-	USING	GIST (geom);
+	ON	model_draft.ego_demand_load_collect USING GIST (geom);
 
--- "Grant oeuser"   (OK!) -> 100ms =600.828
+-- grant (oeuser)
 GRANT ALL ON TABLE	model_draft.ego_demand_load_collect TO oeuser WITH GRANT OPTION;
 ALTER TABLE		model_draft.ego_demand_load_collect OWNER TO oeuser;
 
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2.1' AS version,
+	'temp' AS io,
+	'model_draft' AS schema_name,
+	'ego_demand_load_collect' AS table_name,
+	'process_eGo_loads_melted.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('model_draft.ego_demand_load_collect' ::regclass) ::json AS metadata
+FROM	model_draft.ego_demand_load_collect;
 
----------- ---------- ----------
--- "Buffer (100m)"   2016-04-06 11:41 45min (22.000.000s)
----------- ---------- ----------
 
--- "Sequence"   (OK!) 100ms =0
-DROP SEQUENCE IF EXISTS 	model_draft.ego_demand_load_collect_buffer100_mview_id CASCADE;
-CREATE SEQUENCE 		model_draft.ego_demand_load_collect_buffer100_mview_id;
+-- buffer with 100m
+DROP TABLE IF EXISTS	model_draft.ego_demand_load_collect_buffer100 CASCADE;
+CREATE TABLE		model_draft.ego_demand_load_collect_buffer100 (
+		id SERIAL,
+		geom geometry(Polygon,3035),
+CONSTRAINT	ego_demand_load_collect_buffer100_pkey PRIMARY KEY (id));
 
--- "Buffer100"   (OK!) 21.832.000ms =143.227
-DROP MATERIALIZED VIEW IF EXISTS	model_draft.ego_demand_load_collect_buffer100_mview CASCADE;
-CREATE MATERIALIZED VIEW		model_draft.ego_demand_load_collect_buffer100_mview AS
-	SELECT	nextval('model_draft.ego_demand_load_collect_buffer100_mview_id') AS id,
-		(ST_DUMP(ST_MULTI(ST_UNION(
+-- insert buffer
+INSERT INTO	model_draft.ego_demand_load_collect_buffer100 (geom)
+	SELECT	(ST_DUMP(ST_MULTI(ST_UNION(
 			ST_BUFFER(poly.geom, 100)
 		)))).geom ::geometry(Polygon,3035) AS geom
 	FROM	model_draft.ego_demand_load_collect AS poly;
 
--- "Create Index (id)"   (OK!) -> 1.000ms =0
-CREATE UNIQUE INDEX  	ego_demand_load_collect_buffer100_mview_id_idx
-		ON	model_draft.ego_demand_load_collect_buffer100_mview (id);
-
--- "Create Index GIST (geom)"   (OK!) 2.000ms =0
-CREATE INDEX	ego_demand_load_collect_buffer100_mview_geom_idx
-	ON	model_draft.ego_demand_load_collect_buffer100_mview
+-- create index GIST (geom)
+CREATE INDEX	ego_demand_load_collect_buffer100_geom_idx
+	ON	model_draft.ego_demand_load_collect_buffer100
 	USING	GIST (geom);
     
--- "Grant oeuser"   (OK!) -> 100ms =0
-GRANT ALL ON TABLE	model_draft.ego_demand_load_collect_buffer100_mview TO oeuser WITH GRANT OPTION;
-ALTER TABLE		model_draft.ego_demand_load_collect_buffer100_mview OWNER TO oeuser;
+-- grant (oeuser)
+GRANT ALL ON TABLE	model_draft.ego_demand_load_collect_buffer100 TO oeuser WITH GRANT OPTION;
+ALTER TABLE		model_draft.ego_demand_load_collect_buffer100 OWNER TO oeuser;
 
----------------------------
-
--- -- "Validate (geom)"   (OK!) -> 100ms =0
--- DROP VIEW IF EXISTS	model_draft.ego_demand_load_collect_buffer100_mview_error_geom_view CASCADE;
--- CREATE VIEW		model_draft.ego_demand_load_collect_buffer100_mview_error_geom_view AS
--- 	SELECT	test.id,
--- 		test.error,
--- 		reason(ST_IsValidDetail(test.geom)) AS error_reason,
--- 		ST_SetSRID(location(ST_IsValidDetail(test.geom)),3035) ::geometry(Point,3035) AS error_location
--- 	FROM	(
--- 		SELECT	source.id AS id,					-- PK
--- 			ST_IsValid(source.geom) AS error,
--- 			source.geom AS geom
--- 		FROM	model_draft.ego_demand_load_collect_buffer100_mview AS source	-- Table
--- 		) AS test
--- 	WHERE	test.error = FALSE;
--- 
--- -- "Grant oeuser"   (OK!) -> 100ms =0
--- GRANT ALL ON TABLE	model_draft.ego_demand_load_collect_buffer100_mview_error_geom_view TO oeuser WITH GRANT OPTION;
--- ALTER TABLE		model_draft.ego_demand_load_collect_buffer100_mview_error_geom_view OWNER TO oeuser;
--- 
--- -- "Drop empty view"   (OK!) -> 5.000ms =1
--- SELECT f_drop_view('{ego_demand_load_collect_buffer100_mview_error_geom_view}', 'calc_ego_loads');
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2.1' AS version,
+	'temp' AS io,
+	'model_draft' AS schema_name,
+	'ego_demand_load_collect_buffer100' AS table_name,
+	'process_eGo_loads_melted.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('model_draft.ego_demand_load_collect_buffer100' ::regclass) ::json AS metadata
+FROM	model_draft.ego_demand_load_collect_buffer100;
 
 
----------- ---------- ----------
--- Alternative Calculation with Table
----------- ---------- ----------
-
--- -- "Create Table"   (OK!) 100ms =0
--- DROP TABLE IF EXISTS	model_draft.ego_demand_load_collect_buffer100;
--- CREATE TABLE		model_draft.ego_demand_load_collect_buffer100 (
--- 		id SERIAL,
--- 		geom geometry(Polygon,3035),
--- CONSTRAINT 	ego_demand_load_collect_buffer100_pkey PRIMARY KEY (id));
--- 
--- -- "Insert Buffer"   (OK!) 3.700.000ms =140.578 (151.436)
--- INSERT INTO	model_draft.ego_demand_load_collect_buffer100 (geom)
--- 	SELECT	(ST_DUMP(ST_MULTI(ST_UNION(
--- 			ST_BUFFER(ST_TRANSFORM(poly.geom,3035), 100)
--- 		)))).geom ::geometry(Polygon,3035) AS geom
--- 	FROM	model_draft.ego_demand_load_collect AS poly;
--- 
--- -- "Create Index GIST (geom)"   (OK!) 2.000ms =0
--- CREATE INDEX	ego_demand_load_collect_buffer100_geom_idx
--- 	ON	model_draft.ego_demand_load_collect_buffer100
--- 	USING	GIST (geom);
---     
--- -- "Grant oeuser"   (OK!) -> 100ms =0
--- GRANT ALL ON TABLE	model_draft.ego_demand_load_collect_buffer100 TO oeuser WITH GRANT OPTION;
--- ALTER TABLE		model_draft.ego_demand_load_collect_buffer100 OWNER TO oeuser;
-
-
-
----------- ---------- ---------- ---------- ---------- ----------
--- "Unbuffer (-100m)"   2016-04-06 12:57 6min (1.334s)
----------- ---------- ---------- ---------- ---------- ----------
-
--- "Sequence"   (OK!) 100ms =0
-DROP SEQUENCE IF EXISTS 	model_draft.ego_demand_load_melt_mview_id CASCADE;
-CREATE SEQUENCE 		model_draft.ego_demand_load_melt_mview_id;
-
-
--- "Create Table"   (OK!) 340.000ms =189.104
+-- unbuffer with 100m
 DROP TABLE IF EXISTS	model_draft.ego_demand_load_melt CASCADE;
-CREATE TABLE		model_draft.ego_demand_load_melt AS
-	SELECT	nextval('model_draft.ego_demand_load_melt_mview_id') AS id,
-		(ST_DUMP(ST_MULTI(ST_UNION(
+CREATE TABLE		model_draft.ego_demand_load_melt (
+		id SERIAL,
+		geom geometry(Polygon,3035),
+CONSTRAINT	ego_demand_load_melt_pkey PRIMARY KEY (id));
+
+-- insert buffer
+INSERT INTO	model_draft.ego_demand_load_melt (geom)
+	SELECT	(ST_DUMP(ST_MULTI(ST_UNION(
 			ST_BUFFER(buffer.geom, -100)
 		)))).geom ::geometry(Polygon,3035) AS geom
-	FROM	model_draft.ego_demand_load_collect_buffer100_mview AS buffer
+	FROM	model_draft.ego_demand_load_collect_buffer100 AS buffer
 	GROUP BY buffer.id
 	ORDER BY buffer.id;
 
--- "Ad PK"   (OK!) 150ms =0
-ALTER TABLE	model_draft.ego_demand_load_melt
-	ADD PRIMARY KEY (id);
-
--- "Create Index GIST (geom)"   (OK!) 2.000ms =0
+-- create index GIST (geom)
 CREATE INDEX	ego_demand_load_melt_geom_idx
 	ON	model_draft.ego_demand_load_melt
 	USING	GIST (geom);
     
--- "Grant oeuser"   (OK!) -> 100ms =0
+-- grant (oeuser)
 GRANT ALL ON TABLE	model_draft.ego_demand_load_melt TO oeuser WITH GRANT OPTION;
 ALTER TABLE		model_draft.ego_demand_load_melt OWNER TO oeuser;
 
----------- ---------- ----------
--- 
--- "Validate (geom)"   (OK!) -> 100ms =0
-DROP VIEW IF EXISTS	model_draft.ego_demand_load_melt_error_geom_view CASCADE;
-CREATE VIEW		model_draft.ego_demand_load_melt_error_geom_view AS
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2.1' AS version,
+	'temp' AS io,
+	'model_draft' AS schema_name,
+	'ego_demand_load_melt' AS table_name,
+	'process_eGo_loads_melted.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('model_draft.ego_demand_load_melt' ::regclass) ::json AS metadata
+FROM	model_draft.ego_demand_load_melt;
+
+
+-- validate geom
+DROP MATERIALIZED VIEW IF EXISTS	model_draft.ego_demand_load_melt_error_geom_mview;
+CREATE MATERIALIZED VIEW		model_draft.ego_demand_load_melt_error_geom_mview AS
 	SELECT	test.id,
 		test.error,
 		reason(ST_IsValidDetail(test.geom)) AS error_reason,
@@ -168,99 +172,35 @@ CREATE VIEW		model_draft.ego_demand_load_melt_error_geom_view AS
 		) AS test
 	WHERE	test.error = FALSE;
 
--- "Grant oeuser"   (OK!) -> 100ms =0
-GRANT ALL ON TABLE	model_draft.ego_demand_load_melt_error_geom_view TO oeuser WITH GRANT OPTION;
-ALTER TABLE		model_draft.ego_demand_load_melt_error_geom_view OWNER TO oeuser;
-
--- -- "Drop empty view"   (OK!) -> 3.000ms =1
--- SELECT f_drop_view('{ego_demand_load_melt_error_geom_view}', 'calc_ego_loads');
-
--- "Error"   (OK!) 3.753.000ms =143.293
-DROP MATERIALIZED VIEW IF EXISTS	model_draft.ego_demand_load_melt_error_geom_mview;
-CREATE MATERIALIZED VIEW		model_draft.ego_demand_load_melt_error_geom_mview AS
-	SELECT	error.*
-	FROM	model_draft.ego_demand_load_melt_error_geom_view AS error;
-
--- "Create Index (id)"   (OK!) -> 1.000ms =0
+-- create index (id)
 CREATE UNIQUE INDEX  	ego_demand_load_melt_error_geom_mview_id_idx
 		ON	model_draft.ego_demand_load_melt_error_geom_mview (id);
 
--- "Create Index GIST (geom)"   (OK!) 2.000ms =0
+-- create index GIST (geom)
 CREATE INDEX	ego_demand_load_melt_error_geom_mview_geom_idx
 	ON	model_draft.ego_demand_load_melt_error_geom_mview
 	USING	GIST (geom);
-    
--- "Grant oeuser"   (OK!) -> 100ms =0
+	
+-- grant (oeuser)
 GRANT ALL ON TABLE	model_draft.ego_demand_load_melt_error_geom_mview TO oeuser WITH GRANT OPTION;
 ALTER TABLE		model_draft.ego_demand_load_melt_error_geom_mview OWNER TO oeuser;
 
----------- ---------- ----------
--- Alternative Calculation with Table
----------- ---------- ----------
-
--- -- "Create Table"   (OK!) 100ms =0
--- DROP TABLE IF EXISTS	model_draft.ego_demand_load_collect_buffer100_unbuffer CASCADE;
--- CREATE TABLE		model_draft.ego_demand_load_collect_buffer100_unbuffer (
--- 		id SERIAL,
--- 		geom geometry(Polygon,3035),
--- 		geom_centroid geometry(Point,3035),
--- CONSTRAINT	ego_demand_load_collect_buffer100_unbuffer_pkey PRIMARY KEY (id));
--- 
--- -- "Insert Unbuffer"   (OK!) 331.000ms =182.430
--- INSERT INTO	model_draft.ego_demand_load_collect_buffer100_unbuffer (geom)
--- 	SELECT	(ST_DUMP(ST_MULTI(ST_UNION(
--- 			ST_BUFFER(buffer.geom, -100)
--- 		)))).geom ::geometry(Polygon,3035) AS geom
--- 	FROM	model_draft.ego_demand_load_collect_buffer100 AS buffer
--- 	GROUP BY buffer.id
--- 	ORDER BY buffer.id;
--- 
--- -- "Create Index GIST (geom)"   (OK!) 2.000ms =0
--- CREATE INDEX	ego_demand_load_collect_buffer100_unbuffer_geom_idx
--- 	ON	model_draft.ego_demand_load_collect_buffer100_unbuffer
--- 	USING	GIST (geom);
--- 
--- -- "Grant oeuser"   (OK!) -> 100ms =0
--- GRANT ALL ON TABLE	model_draft.ego_demand_load_collect_buffer100_unbuffer TO oeuser WITH GRANT OPTION;
--- ALTER TABLE		model_draft.ego_demand_load_collect_buffer100_unbuffer OWNER TO oeuser;
-
--- -- "Update Buffer (100m)"   (OK!) -> 230.000ms =202.131
--- UPDATE 	model_draft.ego_demand_load_collect_buffer100_unbuffer AS t1
--- SET  	geom_buffer = t2.geom_buffer
--- FROM    (
--- 	SELECT	poly.id AS id,
--- 		ST_BUFFER(ST_TRANSFORM(poly.geom,3035), 100) AS geom_buffer
--- 	FROM	model_draft.ego_demand_load_collect_buffer100_unbuffer AS poly
--- 	) AS t2
--- WHERE  	t1.id = t2.id;
--- 
--- -- "Create Index GIST (geom_buffer)"   (OK!) 3.000ms =0
--- CREATE INDEX	ego_demand_load_collect_buffer100_unbuffer_geom_buffer_idx
--- 	ON	model_draft.ego_demand_load_collect_buffer100_unbuffer
--- 	USING	GIST (geom_buffer);
-
--- -- "Update Centroid"   (OK!) -> 16.000ms =182.430
--- UPDATE 	model_draft.ego_demand_load_collect_buffer100_unbuffer AS t1
--- SET  	geom_centroid = t2.geom_centroid
--- FROM    (
--- 	SELECT	la.id AS id,
--- 		ST_Centroid(la.geom) AS geom_centroid
--- 	FROM	model_draft.ego_demand_load_collect_buffer100_unbuffer AS la
--- 	) AS t2
--- WHERE  	t1.id = t2.id;
--- 
--- -- "Create Index GIST (geom_centroid)"   (OK!) -> 5.000ms =0
--- CREATE INDEX  	ego_demand_load_collect_buffer100_unbuffer_geom_centroid_idx
---     ON    	model_draft.ego_demand_load_collect_buffer100_unbuffer
---     USING     	GIST (geom_centroid);
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2.1' AS version,
+	'temp' AS io,
+	'model_draft' AS schema_name,
+	'ego_demand_load_melt_error_geom_mview' AS table_name,
+	'process_eGo_loads_melted.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('model_draft.ego_demand_load_melt_error_geom_mview' ::regclass) ::json AS metadata
+FROM	model_draft.ego_demand_load_melt_error_geom_mview;
 
 
-
----------- ---------- ---------- ---------- ---------- ----------
--- "Error Fix with Buffer-Unbuffer-Combo"   2016-04-06 13:07   s
----------- ---------- ---------- ---------- ---------- ----------
-
--- Fix geoms with error (OK!) 25.000ms =3
+-- fix geoms with error
 DROP MATERIALIZED VIEW IF EXISTS	model_draft.ego_demand_load_melt_error_geom_fix_mview CASCADE;
 CREATE MATERIALIZED VIEW 		model_draft.ego_demand_load_melt_error_geom_fix_mview AS
 	SELECT	fix.id AS id,
@@ -277,12 +217,7 @@ CREATE MATERIALIZED VIEW 		model_draft.ego_demand_load_melt_error_geom_fix_mview
 		) AS fix
 	ORDER BY fix.id;
 
--- "Grant oeuser"   (OK!) -> 100ms =0
-GRANT ALL ON TABLE	model_draft.ego_demand_load_melt_error_geom_fix_mview TO oeuser WITH GRANT OPTION;
-ALTER TABLE		model_draft.ego_demand_load_melt_error_geom_fix_mview OWNER TO oeuser;
-
-
--- Update Fixed geoms (OK!) 200ms =2
+-- update fixed geoms
 UPDATE 	model_draft.ego_demand_load_melt AS t1
 SET	geom = t2.geom
 FROM	(
@@ -292,7 +227,26 @@ FROM	(
 	) AS t2
 WHERE  	t1.id = t2.id;
 
--- Check for errors again! (OK!) 20.000ms =0
+-- grant (oeuser)
+GRANT ALL ON TABLE	model_draft.ego_demand_load_melt_error_geom_fix_mview TO oeuser WITH GRANT OPTION;
+ALTER TABLE		model_draft.ego_demand_load_melt_error_geom_fix_mview OWNER TO oeuser;
+
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2.1' AS version,
+	'temp' AS io,
+	'model_draft' AS schema_name,
+	'ego_demand_load_melt_error_geom_fix_mview' AS table_name,
+	'process_eGo_loads_melted.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('model_draft.ego_demand_load_melt_error_geom_fix_mview' ::regclass) ::json AS metadata
+FROM	model_draft.ego_demand_load_melt_error_geom_fix_mview;
+
+
+-- check for errors again!
 SELECT	test.id AS id,
 	test.error AS error,
 	reason(ST_IsValidDetail(test.geom)) AS error_reason,
@@ -306,104 +260,24 @@ FROM	(
 	) AS test
 WHERE	test.error = FALSE;
 
--- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
-	SELECT	'0.2' AS version,
-		'model_draft' AS schema_name,
-		'ego_demand_load_melt' AS table_name,
-		'process_eGo_loads_melted.sql' AS script_name,
-		COUNT(geom)AS entries,
-		'OK' AS status,
-		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
-	FROM	model_draft.ego_demand_load_melt;
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2.1' AS version,
+	'output' AS io,
+	'model_draft' AS schema_name,
+	'ego_demand_load_melt' AS table_name,
+	'process_eGo_loads_melted.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('model_draft.ego_demand_load_melt' ::regclass) ::json AS metadata
+FROM	model_draft.ego_demand_load_melt;
 
 
-
-
-
-
-
-
-
----------- ---------- ----------
--- Alternative Calculation with MView
----------- ---------- ----------
--- 
--- -- Fix geom_buffer with error (OK!) 300ms =8
--- DROP MATERIALIZED VIEW IF EXISTS	model_draft.ego_demand_load_collect_buffer100_unbuffer_error_geom_buffer_fix_mview CASCADE;
--- CREATE MATERIALIZED VIEW 		model_draft.ego_demand_load_collect_buffer100_unbuffer_error_geom_buffer_fix_mview AS
--- 	SELECT	fix.id AS id,
--- 		ST_IsValid(fix.geom) AS error,
--- 		GeometryType(fix.geom) AS geom_type,
--- 		ST_AREA(fix.geom) AS area,
--- 		fix.geom_buffer ::geometry(POLYGON,3035) AS geom_buffer,
--- 		fix.geom ::geometry(POLYGON,3035) AS geom
--- 	FROM	(
--- 		SELECT	fehler.id AS id,
--- 			ST_BUFFER(fehler.geom_buffer, -1) AS geom_buffer,
--- 			(ST_DUMP(ST_BUFFER(ST_BUFFER(fehler.geom_buffer, -1), 1))).geom AS geom
--- 		FROM	model_draft.ego_demand_load_collect_buffer100_unbuffer_error_geom_buffer_mview AS fehler
--- 		) AS fix
--- 	ORDER BY fix.id;
--- 
--- -- "Grant oeuser"   (OK!) -> 100ms =0
--- GRANT ALL ON TABLE	model_draft.ego_demand_load_collect_buffer100_unbuffer_error_geom_buffer_fix_mview TO oeuser WITH GRANT OPTION;
--- ALTER TABLE		model_draft.ego_demand_load_collect_buffer100_unbuffer_error_geom_buffer_fix_mview OWNER TO oeuser;
--- 
--- 
--- -- Update Fixed geoms (OK!) 200ms =6
--- UPDATE 	model_draft.ego_demand_load_collect_buffer100_unbuffer AS t1
--- SET	geom_buffer = t2.geom
--- FROM	(
--- 	SELECT	fix.id AS id,
--- 		fix.geom AS geom
--- 	FROM	model_draft.ego_demand_load_collect_buffer100_unbuffer_error_geom_buffer_fix_mview AS fix
--- 	) AS t2
--- WHERE  	t1.id = t2.id;
--- 
--- -- Check for errors again! (OK!) 20.000ms =0
--- SELECT	test.id AS id,
--- 		test.error AS error,
--- 		reason(ST_IsValidDetail(test.geom_buffer)) AS error_reason,
--- 		ST_SetSRID(location(ST_IsValidDetail(test.geom_buffer)),3035) ::geometry(Point,3035) AS error_location,
--- 		ST_TRANSFORM(test.geom_buffer,3035) ::geometry(Polygon,3035) AS geom_buffer
--- 	FROM	(
--- 		SELECT	source.id AS id,
--- 			ST_IsValid(source.geom_buffer) AS error,
--- 			source.geom_buffer ::geometry(Polygon,3035) AS geom_buffer
--- 		FROM	model_draft.ego_demand_load_collect_buffer100_unbuffer AS source
--- 		) AS test
--- 	WHERE	test.error = FALSE;
-
-
-
-
----------- ---------- ----------
--- Cut Loads with vg250_gem_dump 22.837s
----------- ---------- ----------
-
--- -- "Create Table"   (OK!) 100ms =0
--- DROP TABLE IF EXISTS	model_draft.ego_demand_load_melt_cut_gem CASCADE;
--- CREATE TABLE		model_draft.ego_demand_load_melt_cut_gem (
-		-- id SERIAL,
-		-- geom geometry(Polygon,3035),
--- CONSTRAINT	ego_demand_load_melt_cut_gem_pkey PRIMARY KEY (id));
-
--- -- "Insert Cut"   (OK!) 330.000ms =188.998
--- INSERT INTO	model_draft.ego_demand_load_melt_cut_gem (geom)
-	-- SELECT	(ST_DUMP(ST_INTERSECTION(poly.geom,cut.geom))).geom ::geometry(Polygon,3035) AS geom
-	-- FROM	model_draft.ego_demand_load_melt AS poly,
-		-- orig_geo_vg250.vg250_6_gem_dump_mview AS cut
-	-- WHERE	poly.geom && cut.geom;
-
--- -- "Create Index GIST (geom)"   (OK!) 2.500ms =0
--- CREATE INDEX	ego_demand_load_melt_cut_gem_geom_idx
-	-- ON	model_draft.ego_demand_load_melt_cut_gem
-	-- USING	GIST (geom);
-
--- -- "Grant oeuser"   (OK!) -> 100ms =0
--- GRANT ALL ON TABLE	model_draft.ego_demand_load_melt_cut_gem TO oeuser WITH GRANT OPTION;
--- ALTER TABLE		model_draft.ego_demand_load_melt_cut_gem OWNER TO oeuser;
-
-
-
+/* -- drop temp
+DROP TABLE IF EXISTS			model_draft.ego_demand_load_collect CASCADE;
+DROP TABLE IF EXISTS			model_draft.ego_demand_load_collect_buffer100 CASCADE;
+DROP MATERIALIZED VIEW IF EXISTS	model_draft.ego_demand_load_melt_error_geom_mview;
+DROP MATERIALIZED VIEW IF EXISTS	model_draft.ego_demand_load_melt_error_geom_fix_mview CASCADE;
+ */

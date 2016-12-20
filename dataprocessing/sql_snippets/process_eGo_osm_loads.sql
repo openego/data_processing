@@ -1,51 +1,123 @@
----------- ---------- ----------
--- "Exclude large scale consumer"
----------- ---------- ----------
+/*
+osm loads 
+Excludes large scale consumer 
+Buffer osm urban sectors with 100m 
+Unbuffer buffer with -100m 
 
+__copyright__ = "tba" 
+__license__ = "tba" 
+__author__ = "Ludee" 
+*/
+
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2.1' AS version,
+	'input' AS io,
+	'model_draft' AS schema_name,
+	'ego_demand_hv_largescaleconsumer' AS table_name,
+	'process_eGo_osm_loads.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('model_draft.ego_demand_hv_largescaleconsumer' ::regclass) ::json AS metadata
+FROM	model_draft.ego_demand_hv_largescaleconsumer;
+
+-- exclude large scale consumer
 DELETE FROM openstreetmap.osm_deu_polygon_urban
 	WHERE gid IN (SELECT polygon_id FROM model_draft.ego_demand_hv_largescaleconsumer);
 
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2.1' AS version,
+	'ouput' AS io,
+	'openstreetmap' AS schema_name,
+	'osm_deu_polygon_urban' AS table_name,
+	'process_eGo_osm_loads.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('openstreetmap.osm_deu_polygon_urban' ::regclass) ::json AS metadata
+FROM	openstreetmap.osm_deu_polygon_urban;
 
----------- ---------- ---------- ---------- ---------- ----------
--- "Urban Buffer (100m)"   2016-04-18 10:00 s
----------- ---------- ---------- ---------- ---------- ----------
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2.1' AS version,
+	'input' AS io,
+	'openstreetmap' AS schema_name,
+	'osm_deu_polygon_urban' AS table_name,
+	'process_eGo_osm_loads.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('openstreetmap.osm_deu_polygon_urban' ::regclass) ::json AS metadata
+FROM	openstreetmap.osm_deu_polygon_urban;
 
--- "Sequence"   (OK!) 100ms =0
-DROP SEQUENCE IF EXISTS 	openstreetmap.osm_deu_polygon_urban_buffer100_mview_id CASCADE;
-CREATE SEQUENCE 		openstreetmap.osm_deu_polygon_urban_buffer100_mview_id;
+-- sequence
+DROP SEQUENCE IF EXISTS 	model_draft.osm_deu_polygon_urban_buffer100_mview_id CASCADE;
+CREATE SEQUENCE 		model_draft.osm_deu_polygon_urban_buffer100_mview_id;
 
--- "Create Buffer"   (OK!) 1.400.000ms =128.931
-DROP MATERIALIZED VIEW IF EXISTS	openstreetmap.osm_deu_polygon_urban_buffer100_mview CASCADE;
-CREATE MATERIALIZED VIEW		openstreetmap.osm_deu_polygon_urban_buffer100_mview AS
-	SELECT	 nextval('openstreetmap.osm_deu_polygon_urban_buffer100_mview_id') ::integer AS id,
+-- buffer with 100m
+DROP MATERIALIZED VIEW IF EXISTS	model_draft.osm_deu_polygon_urban_buffer100_mview CASCADE;
+CREATE MATERIALIZED VIEW		model_draft.osm_deu_polygon_urban_buffer100_mview AS
+	SELECT	 nextval('model_draft.osm_deu_polygon_urban_buffer100_mview_id') ::integer AS id,
 		(ST_DUMP(ST_MULTI(ST_UNION(
 			ST_BUFFER(osm.geom, 100)
 		)))).geom ::geometry(Polygon,3035) AS geom
 	FROM	openstreetmap.osm_deu_polygon_urban AS osm;
 
--- "Create Index (gid)"   (OK!) -> 1.000ms =0
+-- create index (id)
 CREATE UNIQUE INDEX  	osm_deu_polygon_urban_buffer100_mview_gid_idx
-		ON	openstreetmap.osm_deu_polygon_urban_buffer100_mview (id);
+		ON	model_draft.osm_deu_polygon_urban_buffer100_mview (id);
 
--- "Create Index GIST (geom)"   (OK!) 2.000ms =0
+-- create index GIST (geom)
 CREATE INDEX  	osm_deu_polygon_urban_buffer100_mview_geom_idx
-    ON    	openstreetmap.osm_deu_polygon_urban_buffer100_mview
+    ON    	model_draft.osm_deu_polygon_urban_buffer100_mview
     USING     	GIST (geom);
     
--- "Grant oeuser"   (OK!) -> 100ms =0
-GRANT ALL ON TABLE 	openstreetmap.osm_deu_polygon_urban_buffer100_mview TO oeuser WITH GRANT OPTION;
-ALTER TABLE		openstreetmap.osm_deu_polygon_urban_buffer100_mview OWNER TO oeuser;
+-- grant (oeuser)
+GRANT ALL ON TABLE 	model_draft.osm_deu_polygon_urban_buffer100_mview TO oeuser WITH GRANT OPTION;
+ALTER TABLE		model_draft.osm_deu_polygon_urban_buffer100_mview OWNER TO oeuser;
+
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2.1' AS version,
+	'temp' AS io,
+	'model_draft' AS schema_name,
+	'osm_deu_polygon_urban_buffer100_mview' AS table_name,
+	'process_eGo_osm_loads.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('model_draft.osm_deu_polygon_urban_buffer100_mview' ::regclass) ::json AS metadata
+FROM	model_draft.osm_deu_polygon_urban_buffer100_mview;
 
 
----------- ---------- ----------
--- "Loads OSM"
----------- ---------- ----------
+-- unbuffer with 100m
+DROP TABLE IF EXISTS  	model_draft.ego_deu_loads_osm CASCADE;
+CREATE TABLE         	model_draft.ego_deu_loads_osm (
+		id SERIAL NOT NULL,
+		area_ha double precision,
+		geom geometry(Polygon,3035),
+CONSTRAINT 	ego_deu_loads_osm_pkey PRIMARY KEY (id));
 
--- "Sequence"   (OK!) 100ms =0
+-- insert buffer
+INSERT INTO     model_draft.ego_deu_loads_osm(area_ha,geom)
+	SELECT	ST_AREA(buffer.geom)/10000 ::double precision AS area_ha,
+		buffer.geom ::geometry(Polygon,3035) AS geom
+	FROM	(SELECT	(ST_DUMP(ST_MULTI(ST_UNION(
+			ST_BUFFER(osm.geom, -100)
+			)))).geom ::geometry(Polygon,3035) AS geom
+		FROM	model_draft.osm_deu_polygon_urban_buffer100_mview AS osm) AS buffer;
+
+/* -- sequence
 DROP SEQUENCE IF EXISTS 	openstreetmap.ego_deu_loads_osm_id CASCADE;
 CREATE SEQUENCE 		openstreetmap.ego_deu_loads_osm_id;
 
--- "Unbuffer"   (OK!) 1.394.000ms =169.639 
+-- unbuffer with 100m
 DROP TABLE IF EXISTS	openstreetmap.ego_deu_loads_osm CASCADE;
 CREATE TABLE		openstreetmap.ego_deu_loads_osm AS
 	SELECT	nextval('openstreetmap.ego_deu_loads_osm_id') AS id,
@@ -56,30 +128,65 @@ CREATE TABLE		openstreetmap.ego_deu_loads_osm AS
 			)))).geom ::geometry(Polygon,3035) AS geom
 		FROM	openstreetmap.osm_deu_polygon_urban_buffer100_mview AS osm) AS buffer;
 
--- "Ad PK"   (OK!) 150ms =0
+-- ad PK
 ALTER TABLE	openstreetmap.ego_deu_loads_osm
-	ADD PRIMARY KEY (id);
+	ADD PRIMARY KEY (id); */
 
--- "Create Index GIST (geom)"   (OK!) 2.000ms =0
+-- create index GIST (geom)
 CREATE INDEX  	ego_deu_loads_osm_geom_idx
-    ON    	openstreetmap.ego_deu_loads_osm
-    USING     	GIST (geom);
+    ON    	model_draft.ego_deu_loads_osm USING GIST (geom);
     
--- "Grant oeuser"   (OK!) -> 100ms =0
-GRANT ALL ON TABLE 	openstreetmap.ego_deu_loads_osm TO oeuser WITH GRANT OPTION;
-ALTER TABLE		openstreetmap.ego_deu_loads_osm OWNER TO oeuser;
+-- grant (oeuser)
+GRANT ALL ON TABLE 	model_draft.ego_deu_loads_osm TO oeuser WITH GRANT OPTION;
+ALTER TABLE		model_draft.ego_deu_loads_osm OWNER TO oeuser;
 
--- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
-	SELECT	'0.2' AS version,
-		'openstreetmap' AS schema_name,
-		'ego_deu_loads_osm' AS table_name,
-		'process_eGo_osm_loads_industry.sql' AS script_name,
-		COUNT(geom)AS entries,
-		'OK' AS status,
-		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
-	FROM	openstreetmap.ego_deu_loads_osm;
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2.1' AS version,
+	'ouput' AS io,
+	'model_draft' AS schema_name,
+	'ego_deu_loads_osm' AS table_name,
+	'process_eGo_osm_loads.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('model_draft.ego_deu_loads_osm' ::regclass) ::json AS metadata
+FROM	model_draft.ego_deu_loads_osm;
 
+-- metadata
+COMMENT ON TABLE model_draft.ego_deu_loads_osm IS '{
+    "Name": "ego osm loads",
+    "Source":   [{
+	"Name": "open_eGo",
+	"URL": "https://github.com/openego/data_processing"}],
+    "Reference date": "2016",
+    "Date of collection": "02.09.2016",
+    "Original file": ["ego_grid_hvmv_substation"],
+    "Spatial": [{
+	"Resolution": "",
+	"Extend": "Germany" }],
+    "Description": ["osm laods"],
+    "Column":[
+        {"Name": "id", "Description": "Unique identifier", "Unit": " " },
+        {"Name": "area_ha", "Description": "Area", "Unit": "ha" },
+	{"Name": "geom", "Description": "Geometry", "Unit": " " } ],
+    "Changes":	[
+        {"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
+	"Date":  "02.09.2015", "Comment": "Created mview" },
+	{"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
+	"Date":  "17.12.2016", "Comment": "Added metadata" } ],
+    "Notes": [""],
+    "Licence": [{
+	"Name": "", 
+	"URL": "" }],
+    "Instructions for proper use": [" "]
+    }' ;
+
+-- select description
+SELECT obj_description('model_draft.ego_deu_loads_osm' ::regclass) ::json;
+
+DROP MATERIALIZED VIEW IF EXISTS model_draft.osm_deu_polygon_urban_buffer100_mview CASCADE;
 
 
 ---------- ---------- ----------
