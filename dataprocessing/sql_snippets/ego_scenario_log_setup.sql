@@ -10,7 +10,7 @@ __license__ = "tba"
 __author__ = "Ludee"
 */
 
--- create scenario log table
+-- scenario log table
 DROP TABLE IF EXISTS	model_draft.ego_scenario_log CASCADE;
 CREATE TABLE 		model_draft.ego_scenario_log (
 	id SERIAL,

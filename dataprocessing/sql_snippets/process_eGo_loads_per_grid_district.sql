@@ -82,7 +82,7 @@ INSERT INTO     model_draft.ego_demand_loadarea (geom)
 	FROM	(SELECT (ST_DUMP(ST_SAFE_INTERSECTION(load.geom,dis.geom))).geom AS geom
 		FROM	model_draft.ego_demand_load_melt AS load,
 			model_draft.ego_grid_mv_griddistrict AS dis
-		WHERE	loads.geom && dis.geom
+		WHERE	load.geom && dis.geom
 		) AS loads
 	WHERE	ST_GeometryType(loads.geom) = 'ST_Polygon';
 
@@ -114,22 +114,22 @@ CREATE MATERIALIZED VIEW 		model_draft.ego_demand_loadarea_smaller100m2_mview AS
 	WHERE	loads.area_ha < 0.001;
 	
 -- grant (oeuser)
-GRANT ALL ON TABLE 	model_draft.ego_demand_loadarea_error_area_ha_mview TO oeuser WITH GRANT OPTION;
-ALTER TABLE		model_draft.ego_demand_loadarea_error_area_ha_mview OWNER TO oeuser;
+GRANT ALL ON TABLE 	model_draft.ego_demand_loadarea_smaller100m2_mview TO oeuser WITH GRANT OPTION;
+ALTER TABLE		model_draft.ego_demand_loadarea_smaller100m2_mview OWNER TO oeuser;
 
 -- add entry to scenario log table
 INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
 SELECT	'0.2.1' AS version,
 	'temp' AS io,
 	'model_draft' AS schema_name,
-	'ego_demand_loadarea_error_area_ha_mview' AS table_name,
+	'ego_demand_loadarea_smaller100m2_mview' AS table_name,
 	'process_eGo_loads_per_grid_district.sql' AS script_name,
 	COUNT(*)AS entries,
 	'OK' AS status,
 	session_user AS user_name,
 	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	obj_description('model_draft.ego_demand_loadarea_error_area_ha_mview' ::regclass) ::json AS metadata
-FROM	model_draft.ego_demand_loadarea_error_area_ha_mview;
+	obj_description('model_draft.ego_demand_loadarea_smaller100m2_mview' ::regclass) ::json AS metadata
+FROM	model_draft.ego_demand_loadarea_smaller100m2_mview;
 
 
 -- remove errors (area_ha)
@@ -158,7 +158,6 @@ SELECT	'0.2.1' AS version,
 FROM	model_draft.ego_demand_loadarea;
 
 
-
 -- centroid
 UPDATE 	model_draft.ego_demand_loadarea AS t1
 SET  	geom_centroid = t2.geom_centroid
@@ -172,7 +171,7 @@ WHERE  	t1.id = t2.id;
 -- create index GIST (geom_centroid)
 CREATE INDEX  	ego_deu_load_area_geom_centroid_idx
     ON    	model_draft.ego_demand_loadarea USING GIST (geom_centroid);
-    
+
 
 -- surfacepoint
 UPDATE 	model_draft.ego_demand_loadarea AS t1
@@ -213,19 +212,17 @@ FROM	(
 	)AS t2
 WHERE  	t1.id = t2.id;
 
--- "Create Index GIST (geom_centre)"   (OK!) -> 2.000ms =0
+-- create index GIST (geom_centre)
 CREATE INDEX  	ego_deu_load_area_geom_centre_idx
-    ON    	model_draft.ego_demand_loadarea
-    USING     	GIST (geom_centre);
+    ON    	model_draft.ego_demand_loadarea USING GIST (geom_centre);
 
--- -- "Validate Centre"   (OK!) -> 1.000ms =0
--- 	SELECT	loads.id AS id
--- 	FROM	model_draft.ego_demand_loadarea AS loads
--- 	WHERE  	NOT ST_CONTAINS(loads.geom,loads.geom_centre);
+/* -- validate geom_centre
+	SELECT	loads.id AS id
+	FROM	model_draft.ego_demand_loadarea AS loads
+	WHERE  	NOT ST_CONTAINS(loads.geom,loads.geom_centre); */
 
----------- ---------- ----------
 
--- "Surfacepoint outside area"   (OK!) 2.000ms =7.733
+-- surfacepoint outside area
 DROP MATERIALIZED VIEW IF EXISTS	model_draft.ego_demand_loadarea_centre_mview CASCADE;
 CREATE MATERIALIZED VIEW 		model_draft.ego_demand_loadarea_centre_mview AS
 	SELECT	loads.id AS id,
@@ -233,15 +230,40 @@ CREATE MATERIALIZED VIEW 		model_draft.ego_demand_loadarea_centre_mview AS
 	FROM	model_draft.ego_demand_loadarea AS loads
 	WHERE  	NOT ST_CONTAINS(loads.geom,loads.geom_centroid);
 
--- "Grant oeuser"   (OK!) -> 100ms =0
+-- grant (oeuser)
 GRANT ALL ON TABLE 	model_draft.ego_demand_loadarea_centre_mview TO oeuser WITH GRANT OPTION;
 ALTER TABLE		model_draft.ego_demand_loadarea_centre_mview OWNER TO oeuser;
 
----------- ---------- ----------
--- "Calculate Zensus2011 Population"
----------- ---------- ----------
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2.1' AS version,
+	'temp' AS io,
+	'model_draft' AS schema_name,
+	'ego_demand_loadarea_centre_mview' AS table_name,
+	'process_eGo_loads_per_grid_district.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('model_draft.ego_demand_loadarea_centre_mview' ::regclass) ::json AS metadata
+FROM	model_draft.ego_demand_loadarea_centre_mview;
 
--- "Zensus2011 Population"   (OK!) -> 411.000ms =173.278
+
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2.1' AS version,
+	'input' AS io,
+	'social' AS schema_name,
+	'destatis_zensus_population_per_ha_mview' AS table_name,
+	'process_eGo_loads_per_grid_district.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('social.destatis_zensus_population_per_ha_mview' ::regclass) ::json AS metadata
+FROM	social.destatis_zensus_population_per_ha_mview;
+
+-- zensus 2011 population
 UPDATE 	model_draft.ego_demand_loadarea AS t1
 SET  	zensus_sum = t2.zensus_sum,
 	zensus_count = t2.zensus_count,
@@ -251,18 +273,28 @@ FROM    (SELECT	loads.id AS id,
 		COUNT(pts.geom)::integer AS zensus_count,
 		(SUM(pts.population)/COUNT(pts.geom))::numeric AS zensus_density
 	FROM	model_draft.ego_demand_loadarea AS loads,
-		social.zensus_population_per_ha_mview AS pts
+		social.destatis_zensus_population_per_ha_mview AS pts
 	WHERE  	loads.geom && pts.geom AND
 		ST_CONTAINS(loads.geom,pts.geom)
 	GROUP BY loads.id
 	)AS t2
 WHERE  	t1.id = t2.id;
 
----------- ---------- ----------
--- "Calculate IÖR Industry Share"
----------- ---------- ----------
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2.1' AS version,
+	'input' AS io,
+	'economic' AS schema_name,
+	'ioer_urban_share_industrial_centroid' AS table_name,
+	'process_eGo_loads_per_grid_district.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('economic.ioer_urban_share_industrial_centroid' ::regclass) ::json AS metadata
+FROM	economic.ioer_urban_share_industrial_centroid;
 
--- "IÖR Industry Share"   (OK!) -> 167.000ms =46.105
+-- ioer industry share
 UPDATE 	model_draft.ego_demand_loadarea AS t1
 SET  	ioer_sum = t2.ioer_sum,
 	ioer_count = t2.ioer_count,
@@ -280,20 +312,28 @@ FROM    (SELECT	loads.id AS id,
 WHERE  	t1.id = t2.id;
 
 
----------- ---------- ----------
--- "Calculate Sectors"
----------- ---------- ----------
-
--- 1. Residential
-
--- "Create Table"   (OK!) 200ms =0
+-- 1. residential sector
 DROP TABLE IF EXISTS  	model_draft.ego_osm_sector_per_griddistrict_1_residential CASCADE;
 CREATE TABLE         	model_draft.ego_osm_sector_per_griddistrict_1_residential	 (
 		id SERIAL NOT NULL,
 		geom geometry(Polygon,3035),
 CONSTRAINT 	urban_sector_per_grid_district_1_residential_pkey PRIMARY KEY (id));
 
--- "Insert Loads Residential"   (OK!) 330.000ms =290.559
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2.1' AS version,
+	'input' AS io,
+	'openstreetmap' AS schema_name,
+	'osm_deu_polygon_urban_sector_1_residential_mview' AS table_name,
+	'process_eGo_loads_per_grid_district.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('openstreetmap.osm_deu_polygon_urban_sector_1_residential_mview' ::regclass) ::json AS metadata
+FROM	openstreetmap.osm_deu_polygon_urban_sector_1_residential_mview;
+
+-- intersect sector with mv-griddistrict
 INSERT INTO     model_draft.ego_osm_sector_per_griddistrict_1_residential (geom)
 	SELECT	loads.geom ::geometry(Polygon,3035)
 	FROM	(SELECT (ST_DUMP(ST_SAFE_INTERSECTION(loads.geom,dis.geom))).geom AS geom
@@ -303,18 +343,15 @@ INSERT INTO     model_draft.ego_osm_sector_per_griddistrict_1_residential (geom)
 		) AS loads
 	WHERE	ST_GeometryType(loads.geom) = 'ST_Polygon';
 
--- "Create Index GIST (geom)"   (OK!) 2.000ms =0
+-- create index GIST (geom)
 CREATE INDEX  	urban_sector_per_grid_district_1_residential_geom_idx
-    ON    	model_draft.ego_osm_sector_per_griddistrict_1_residential
-    USING     	GIST (geom);
+    ON    	model_draft.ego_osm_sector_per_griddistrict_1_residential USING GIST (geom);
 
--- "Grant oeuser"   (OK!) -> 100ms =0
+-- grant (oeuser)
 GRANT ALL ON TABLE 	model_draft.ego_osm_sector_per_griddistrict_1_residential TO oeuser WITH GRANT OPTION;
 ALTER TABLE		model_draft.ego_osm_sector_per_griddistrict_1_residential OWNER TO oeuser;
 
----------- ---------- ----------
-
--- "Calculate Sector Residential"   (OK!) -> 47.000ms =102.302
+-- sector stats
 UPDATE 	model_draft.ego_demand_loadarea AS t1
 SET  	sector_area_residential = t2.sector_area,
 	sector_count_residential = t2.sector_count,
@@ -332,29 +369,43 @@ FROM    (
 	) AS t2
 WHERE  	t1.id = t2.id;
 
--- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
-	SELECT	'0.2' AS version,
-		'model_draft' AS schema_name,
-		'ego_osm_sector_per_griddistrict_1_residential' AS table_name,
-		'process_eGo_loads_per_grid_district.sql' AS script_name,
-		COUNT(geom)AS entries,
-		'OK' AS status,
-		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
-	FROM	model_draft.ego_osm_sector_per_griddistrict_1_residential;
-	
----------- ---------- ----------
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2.1' AS version,
+	'output' AS io,
+	'model_draft' AS schema_name,
+	'ego_osm_sector_per_griddistrict_1_residential' AS table_name,
+	'process_eGo_loads_per_grid_district.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('model_draft.ego_osm_sector_per_griddistrict_1_residential' ::regclass) ::json AS metadata
+FROM	model_draft.ego_osm_sector_per_griddistrict_1_residential;
 
--- 2. Retail
 
--- "Create Table"   (OK!) 200ms =0
+-- 2. retail sector
 DROP TABLE IF EXISTS  	model_draft.ego_osm_sector_per_griddistrict_2_retail CASCADE;
 CREATE TABLE         	model_draft.ego_osm_sector_per_griddistrict_2_retail	 (
 		id SERIAL NOT NULL,
 		geom geometry(Polygon,3035),
 CONSTRAINT 	urban_sector_per_grid_district_2_retail_pkey PRIMARY KEY (id));
 
--- "Insert Loads Retail"   (OK!) 32.000ms =37.496
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2.1' AS version,
+	'input' AS io,
+	'openstreetmap' AS schema_name,
+	'osm_deu_polygon_urban_sector_2_retail_mview' AS table_name,
+	'process_eGo_loads_per_grid_district.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('openstreetmap.osm_deu_polygon_urban_sector_2_retail_mview' ::regclass) ::json AS metadata
+FROM	openstreetmap.osm_deu_polygon_urban_sector_2_retail_mview;
+
+-- intersect sector with mv-griddistrict
 INSERT INTO     model_draft.ego_osm_sector_per_griddistrict_2_retail (geom)
 	SELECT	loads.geom ::geometry(Polygon,3035)
 	FROM	(SELECT (ST_DUMP(ST_SAFE_INTERSECTION(loads.geom,dis.geom))).geom AS geom
@@ -364,18 +415,15 @@ INSERT INTO     model_draft.ego_osm_sector_per_griddistrict_2_retail (geom)
 		) AS loads
 	WHERE	ST_GeometryType(loads.geom) = 'ST_Polygon';
 
--- "Create Index GIST (geom)"   (OK!) 2.000ms =0
+-- create index GIST (geom)
 CREATE INDEX  	urban_sector_per_grid_district_2_retail_geom_idx
-    ON    	model_draft.ego_osm_sector_per_griddistrict_2_retail
-    USING     	GIST (geom);
+    ON    	model_draft.ego_osm_sector_per_griddistrict_2_retail USING GIST (geom);
 
--- "Grant oeuser"   (OK!) -> 100ms =0
+-- grant (oeuser)
 GRANT ALL ON TABLE 	model_draft.ego_osm_sector_per_griddistrict_2_retail TO oeuser WITH GRANT OPTION;
 ALTER TABLE		model_draft.ego_osm_sector_per_griddistrict_2_retail OWNER TO oeuser;
 
----------- ---------- ----------
-
--- "Calculate Sector Retail"   (OK!) -> 18.000ms =10.990
+-- sector stats
 UPDATE 	model_draft.ego_demand_loadarea AS t1
 SET  	sector_area_retail = t2.sector_area,
 	sector_count_retail = t2.sector_count,
@@ -393,29 +441,43 @@ FROM    (
 	) AS t2
 WHERE  	t1.id = t2.id;
 
--- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
-	SELECT	'0.2' AS version,
-		'model_draft' AS schema_name,
-		'ego_osm_sector_per_griddistrict_2_retail' AS table_name,
-		'process_eGo_loads_per_grid_district.sql' AS script_name,
-		COUNT(geom)AS entries,
-		'OK' AS status,
-		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
-	FROM	model_draft.ego_osm_sector_per_griddistrict_2_retail;
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2.1' AS version,
+	'output' AS io,
+	'model_draft' AS schema_name,
+	'ego_osm_sector_per_griddistrict_2_retail' AS table_name,
+	'process_eGo_loads_per_grid_district.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('model_draft.ego_osm_sector_per_griddistrict_2_retail' ::regclass) ::json AS metadata
+FROM	model_draft.ego_osm_sector_per_griddistrict_2_retail;
+
 	
----------- ---------- ----------
-
--- 3. Industrial
-
--- "Create Table"   (OK!) 200ms =0
+-- 3. industrial sector
 DROP TABLE IF EXISTS  	model_draft.ego_osm_sector_per_griddistrict_3_industrial CASCADE;
 CREATE TABLE         	model_draft.ego_osm_sector_per_griddistrict_3_industrial	 (
 		id SERIAL NOT NULL,
 		geom geometry(Polygon,3035),
 CONSTRAINT 	urban_sector_per_grid_district_3_industrial_pkey PRIMARY KEY (id));
 
--- "Insert Loads Industrial"   (OK!) 58.000ms =62.181
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2.1' AS version,
+	'input' AS io,
+	'openstreetmap' AS schema_name,
+	'osm_deu_polygon_urban_sector_3_industrial_mview' AS table_name,
+	'process_eGo_loads_per_grid_district.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('openstreetmap.osm_deu_polygon_urban_sector_3_industrial_mview' ::regclass) ::json AS metadata
+FROM	openstreetmap.osm_deu_polygon_urban_sector_3_industrial_mview;
+
+-- intersect sector with mv-griddistrict
 INSERT INTO     model_draft.ego_osm_sector_per_griddistrict_3_industrial (geom)
 	SELECT	loads.geom ::geometry(Polygon,3035)
 	FROM	(SELECT (ST_DUMP(ST_SAFE_INTERSECTION(loads.geom,dis.geom))).geom AS geom
@@ -425,18 +487,15 @@ INSERT INTO     model_draft.ego_osm_sector_per_griddistrict_3_industrial (geom)
 		) AS loads
 	WHERE	ST_GeometryType(loads.geom) = 'ST_Polygon';
 
--- "Create Index GIST (geom)"   (OK!) 2.000ms =0
+-- create index GIST (geom)
 CREATE INDEX  	urban_sector_per_grid_district_3_industrial_geom_idx
-    ON    	model_draft.ego_osm_sector_per_griddistrict_3_industrial
-    USING     	GIST (geom);
+    ON    	model_draft.ego_osm_sector_per_griddistrict_3_industrial USING GIST (geom);
 
--- "Grant oeuser"   (OK!) -> 100ms =0
+-- grant (oeuser)
 GRANT ALL ON TABLE 	model_draft.ego_osm_sector_per_griddistrict_3_industrial TO oeuser WITH GRANT OPTION;
 ALTER TABLE		model_draft.ego_osm_sector_per_griddistrict_3_industrial OWNER TO oeuser;
 
----------- ---------- ----------
-
--- "Calculate Sector Industrial"   (OK!) -> 24.000ms =22.129
+-- sector stats
 UPDATE 	model_draft.ego_demand_loadarea AS t1
 SET  	sector_area_industrial = t2.sector_area,
 	sector_count_industrial = t2.sector_count,
@@ -454,29 +513,43 @@ FROM    (
 	) AS t2
 WHERE  	t1.id = t2.id;
 
--- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
-	SELECT	'0.2' AS version,
-		'model_draft' AS schema_name,
-		'ego_osm_sector_per_griddistrict_3_industrial' AS table_name,
-		'process_eGo_loads_per_grid_district.sql' AS script_name,
-		COUNT(geom)AS entries,
-		'OK' AS status,
-		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
-	FROM	model_draft.ego_osm_sector_per_griddistrict_3_industrial;
-	
----------- ---------- ----------
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2.1' AS version,
+	'output' AS io,
+	'model_draft' AS schema_name,
+	'ego_osm_sector_per_griddistrict_3_industrial' AS table_name,
+	'process_eGo_loads_per_grid_district.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('model_draft.ego_osm_sector_per_griddistrict_3_industrial' ::regclass) ::json AS metadata
+FROM	model_draft.ego_osm_sector_per_griddistrict_3_industrial;
 
--- 4. Agricultural
 
--- "Create Table"   (OK!) 200ms =0
+-- 4. agricultural sector
 DROP TABLE IF EXISTS  	model_draft.ego_osm_sector_per_griddistrict_4_agricultural CASCADE;
 CREATE TABLE         	model_draft.ego_osm_sector_per_griddistrict_4_agricultural	 (
 		id SERIAL NOT NULL,
 		geom geometry(Polygon,3035),
 CONSTRAINT 	urban_sector_per_grid_district_4_agricultural_pkey PRIMARY KEY (id));
 
--- "Insert Loads Agricultural"   (OK!) 130.000ms =124.855
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2.1' AS version,
+	'input' AS io,
+	'openstreetmap' AS schema_name,
+	'osm_deu_polygon_urban_sector_4_agricultural_mview' AS table_name,
+	'process_eGo_loads_per_grid_district.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('openstreetmap.osm_deu_polygon_urban_sector_4_agricultural_mview' ::regclass) ::json AS metadata
+FROM	openstreetmap.osm_deu_polygon_urban_sector_4_agricultural_mview;
+
+-- intersect sector with mv-griddistrict
 INSERT INTO     model_draft.ego_osm_sector_per_griddistrict_4_agricultural (geom)
 	SELECT	loads.geom ::geometry(Polygon,3035)
 	FROM	(SELECT (ST_DUMP(ST_SAFE_INTERSECTION(loads.geom,dis.geom))).geom AS geom
@@ -486,18 +559,15 @@ INSERT INTO     model_draft.ego_osm_sector_per_griddistrict_4_agricultural (geom
 		) AS loads
 	WHERE	ST_GeometryType(loads.geom) = 'ST_Polygon';
 
--- "Create Index GIST (geom)"   (OK!) 2.000ms =0
+-- create index GIST (geom)
 CREATE INDEX  	urban_sector_per_grid_district_4_agricultural_geom_idx
-    ON    	model_draft.ego_osm_sector_per_griddistrict_4_agricultural
-    USING     	GIST (geom);
+    ON    	model_draft.ego_osm_sector_per_griddistrict_4_agricultural USING GIST (geom);
 
--- "Grant oeuser"   (OK!) -> 100ms =0
+-- grant (oeuser)
 GRANT ALL ON TABLE 	model_draft.ego_osm_sector_per_griddistrict_4_agricultural TO oeuser WITH GRANT OPTION;
 ALTER TABLE		model_draft.ego_osm_sector_per_griddistrict_4_agricultural OWNER TO oeuser;
 
----------- ---------- ----------
-
--- "Calculate Sector Agricultural"   (OK!) -> 278.000ms =65.931
+-- sector stats
 UPDATE 	model_draft.ego_demand_loadarea AS t1
 SET  	sector_area_agricultural = t2.sector_area,
 	sector_count_agricultural = t2.sector_count,
@@ -515,20 +585,22 @@ FROM    (
 	) AS t2
 WHERE  	t1.id = t2.id;
 
--- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
-	SELECT	'0.2' AS version,
-		'model_draft' AS schema_name,
-		'ego_osm_sector_per_griddistrict_4_agricultural' AS table_name,
-		'process_eGo_loads_per_grid_district.sql' AS script_name,
-		COUNT(geom)AS entries,
-		'OK' AS status,
-		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
-	FROM	model_draft.ego_osm_sector_per_griddistrict_4_agricultural;
-	
----------- ---------- ----------
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2.1' AS version,
+	'output' AS io,
+	'model_draft' AS schema_name,
+	'ego_osm_sector_per_griddistrict_4_agricultural' AS table_name,
+	'process_eGo_loads_per_grid_district.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('model_draft.ego_osm_sector_per_griddistrict_4_agricultural' ::regclass) ::json AS metadata
+FROM	model_draft.ego_osm_sector_per_griddistrict_4_agricultural;
 
--- "Calculate Sector Stats"   (OK!) -> 42.000ms =206.846
+
+-- sector stats
 UPDATE 	model_draft.ego_demand_loadarea AS t1
 SET  	sector_area_sum = t2.sector_area_sum,
 	sector_share_sum = t2.sector_share_sum
@@ -547,31 +619,7 @@ FROM    (
 WHERE  	t1.id = t2.id;
 
 
-
----------- ---------- ----------
--- "Calculate Codes"   2016-04-06 18:01
----------- ---------- ----------
--- 
--- -- "Transform VG250"   (OK!) -> 2.000ms =11.438
--- DROP MATERIALIZED VIEW IF EXISTS	orig_vg250.vg250_6_gem_mview CASCADE;
--- CREATE MATERIALIZED VIEW		orig_vg250.vg250_6_gem_mview AS
--- 	SELECT	vg.gid,
--- 		vg.gen,
--- 		vg.nuts,
--- 		vg.rs,
--- 		ags_0,
--- 		ST_TRANSFORM(vg.geom,3035) AS geom
--- 	FROM	orig_vg250.vg250_6_gem AS vg
--- 	ORDER BY vg.gid;
--- 
--- -- "Create Index GIST (geom)"   (OK!) -> 150ms =0
--- CREATE INDEX  	vg250_6_gem_mview_geom_idx
--- 	ON	orig_vg250.vg250_6_gem_mview
--- 	USING	GIST (geom);
-
----------- ---------- ----------
-
--- "Calculate NUTS"   (OK!) -> 2.164.000ms =206.815
+-- nuts code
 UPDATE 	model_draft.ego_demand_loadarea AS t1
 SET  	nuts = t2.nuts
 FROM    (
@@ -584,9 +632,7 @@ FROM    (
 	) AS t2
 WHERE  	t1.id = t2.id;
 
----------- ---------- ----------
-
--- "Calculate Regionalschlüssel"   (OK!) -> 47.000ms =181.157
+-- regionalschlüssel (rs_0)
 UPDATE 	model_draft.ego_demand_loadarea AS t1
 SET  	rs_0 = t2.rs_0
 FROM    (
@@ -599,9 +645,7 @@ FROM    (
 	) AS t2
 WHERE  	t1.id = t2.id;
 
----------- ---------- ----------
-
--- "Calculate Gemeindeschlüssel"   (OK!) -> 50.000ms =181.157
+-- gemeindeschlüssel (ags_0)
 UPDATE 	model_draft.ego_demand_loadarea AS t1
 SET  	ags_0 = t2.ags_0
 FROM    (
@@ -614,17 +658,7 @@ FROM    (
 	) AS t2
 WHERE  	t1.id = t2.id;
 
--- "Loads without AGS"   (OK!) 500ms =16
-DROP MATERIALIZED VIEW IF EXISTS	model_draft.ego_demand_loadarea_error_noags_mview CASCADE;
-CREATE MATERIALIZED VIEW 		model_draft.ego_demand_loadarea_error_noags_mview AS
-	SELECT	loads.id,
-		loads.geom
-	FROM	model_draft.ego_demand_loadarea AS loads
-	WHERE  	loads.ags_0 IS NULL;
-
----------- ---------- ----------
-
--- "Calculate Substation ID"   (OK!) -> 2.305.000ms =206.815
+-- substation id
 UPDATE 	model_draft.ego_demand_loadarea AS t1
 SET  	subst_id = t2.subst_id
 FROM    (
@@ -637,16 +671,47 @@ FROM    (
 	) AS t2
 WHERE  	t1.id = t2.id;
 
--- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
-	SELECT	'0.2' AS version,
-		'model_draft' AS schema_name,
-		'ego_demand_loadarea' AS table_name,
-		'process_eGo_loads_per_grid_district.sql' AS script_name,
-		COUNT(geom)AS entries,
-		'OK' AS status,
-		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
-	FROM	model_draft.ego_demand_loadarea;
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2.1' AS version,
+	'output' AS io,
+	'model_draft' AS schema_name,
+	'ego_demand_loadarea' AS table_name,
+	'process_eGo_loads_per_grid_district.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('model_draft.ego_demand_loadarea' ::regclass) ::json AS metadata
+FROM	model_draft.ego_demand_loadarea;
+
+
+-- loads without ags_0
+DROP MATERIALIZED VIEW IF EXISTS	model_draft.ego_demand_loadarea_error_noags_mview CASCADE;
+CREATE MATERIALIZED VIEW 		model_draft.ego_demand_loadarea_error_noags_mview AS
+	SELECT	loads.id,
+		loads.geom
+	FROM	model_draft.ego_demand_loadarea AS loads
+	WHERE  	loads.ags_0 IS NULL;
+
+-- grant (oeuser)
+GRANT ALL ON TABLE 	model_draft.ego_demand_loadarea_error_noags_mview TO oeuser WITH GRANT OPTION;
+ALTER TABLE		model_draft.ego_demand_loadarea_error_noags_mview OWNER TO oeuser;
+
+-- add entry to scenario log table
+INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+SELECT	'0.2.1' AS version,
+	'temp' AS io,
+	'model_draft' AS schema_name,
+	'ego_demand_loadarea_error_noags_mview' AS table_name,
+	'process_eGo_loads_per_grid_district.sql' AS script_name,
+	COUNT(*)AS entries,
+	'OK' AS status,
+	session_user AS user_name,
+	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
+	obj_description('model_draft.ego_demand_loadarea_error_noags_mview' ::regclass) ::json AS metadata
+FROM	model_draft.ego_demand_loadarea_error_noags_mview;
+
 
 /* 
 ---------- ---------- ----------
@@ -787,10 +852,7 @@ WHERE	sub.id = a.id; */
 
 
 
-
-
----------- ---------- ----------
-
+/* 
 -- Create Test Area   (OK!) -> 3.000ms =1.020
 DROP TABLE IF EXISTS	model_draft.ego_demand_loadarea_ta CASCADE;
 CREATE TABLE 		model_draft.ego_demand_loadarea_ta AS
@@ -822,7 +884,7 @@ CREATE INDEX	ego_deu_load_area_ta_geom_idx
 -- Grant oeuser   (OK!) -> 100ms =0
 GRANT ALL ON TABLE	model_draft.ego_demand_loadarea_ta TO oeuser WITH GRANT OPTION;
 ALTER TABLE		model_draft.ego_demand_loadarea_ta OWNER TO oeuser;
-
+ */
 -- 
 -- ---------- ---------- ----------
 -- -- "Create SPF"   2016-04-07 11:34   3s
@@ -852,6 +914,6 @@ ALTER TABLE		model_draft.ego_demand_loadarea_ta OWNER TO oeuser;
 --     ON    	model_draft.ego_demand_loadarea_spf
 --     USING     	GIST (geom_centre);
 -- 
--- -- "Grant oeuser"   (OK!) -> 100ms =0
+-- -- grant (oeuser)
 -- GRANT ALL ON TABLE 	model_draft.ego_demand_loadarea_spf TO oeuser WITH GRANT OPTION;
 -- ALTER TABLE		model_draft.ego_demand_loadarea_spf OWNER TO oeuser;
