@@ -3,7 +3,7 @@ osm industry
 
 __copyright__ = "tba"
 __license__ = "tba"
-__author__ = "IK"
+__author__ = "IlkaCu"
 */
 
 --------------
@@ -15,28 +15,28 @@ INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,scri
 SELECT	'0.2.1' AS version,
 	'input' AS io,
 	'demand' AS schema_name,
-	'lak_consumption_per_federalstate' AS table_name,
+	'ego_demand_federalstate' AS table_name,
 	'process_eGo_osm_loads_industry.sql' AS script_name,
 	COUNT(*)AS entries,
 	'OK' AS status,
 	session_user AS user_name,
 	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	obj_description('demand.lak_consumption_per_federalstate' ::regclass) ::json AS metadata
-FROM	demand.lak_consumption_per_federalstate;
+	obj_description('demand.ego_demand_federalstate' ::regclass) ::json AS metadata
+FROM	demand.ego_demand_federalstate;
 
 -- add entry to scenario log table
 INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
 SELECT	'0.2.1' AS version,
 	'input' AS io,
 	'economic' AS schema_name,
-	'destatis_gva_per_districts' AS table_name,
+	'destatis_gva_per_district' AS table_name,
 	'process_eGo_osm_loads_industry.sql' AS script_name,
 	COUNT(*)AS entries,
 	'OK' AS status,
 	session_user AS user_name,
 	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	obj_description('economic.destatis_gva_per_districts' ::regclass) ::json AS metadata
-FROM	economic.destatis_gva_per_districts;
+	obj_description('economic.destatis_gva_per_district' ::regclass) ::json AS metadata
+FROM	economic.destatis_gva_per_district;
 
 DROP TABLE IF EXISTS model_draft.ego_demand_per_gva CASCADE;
 
@@ -46,8 +46,8 @@ SELECT  a.eu_code,
  	a.federal_states, 
  	a.elec_consumption_industry/b.gva_industry AS elec_consumption_industry, 
  	a.elec_consumption_tertiary_sector/b.gva_tertiary_sector AS elec_consumption_tertiary_sector 
-FROM  	demand.lak_consumption_per_federalstate a,  -- ego_demand_federalstate
- 	economic.destatis_gva_per_districts b -- destatis_gva_per_district
+FROM  	demand.ego_demand_federalstate a,  -- ego_demand_federalstate
+ 	economic.destatis_gva_per_district b -- destatis_gva_per_district
 WHERE a.eu_code = b.eu_code 
 ORDER BY eu_code 
 ) 
@@ -125,7 +125,7 @@ b.district,
 a.elec_consumption_industry * b.gva_industry as elec_consumption_industry, 
 a.elec_consumption_tertiary_sector * b.gva_tertiary_sector AS elec_consumption_tertiary_sector 
 FROM  	model_draft.ego_demand_per_gva a, 
- 	economic.destatis_gva_per_districts b -- destatis_gva_per_district
+ 	economic.destatis_gva_per_district b -- destatis_gva_per_district
 WHERE SUBSTR (a.eu_code,1,3) = SUBSTR(b.eu_code,1,3)  
 ) 
 ; 
@@ -451,15 +451,15 @@ FROM	model_draft.ego_landuse_industry;
 INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
 SELECT	'0.2.1' AS version,
 	'input' AS io,
-	'orig_geo_powerplants' AS schema_name,
-	'proc_power_plant_germany' AS table_name,
+	'supply' AS schema_name,
+	'ego_conv_powerplant' AS table_name,
 	'process_eGo_osm_loads_industry.sql' AS script_name,
 	COUNT(*)AS entries,
 	'OK' AS status,
 	session_user AS user_name,
 	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	obj_description('orig_geo_powerplants.proc_power_plant_germany' ::regclass) ::json AS metadata
-FROM	orig_geo_powerplants.proc_power_plant_germany;
+	obj_description('supply.ego_conv_powerplant' ::regclass) ::json AS metadata
+FROM	supply.ego_conv_powerplant;
 
 DROP TABLE IF EXISTS model_draft.ego_demand_hv_largescaleconsumer CASCADE;
 CREATE TABLE model_draft.ego_demand_hv_largescaleconsumer AS
@@ -468,7 +468,7 @@ CREATE TABLE model_draft.ego_demand_hv_largescaleconsumer AS
 		osm.area_ha,
 		pp.gid AS powerplant_id,
 		pp.voltage_level
-	FROM 	orig_geo_powerplants.proc_power_plant_germany AS pp, 
+	FROM 	supply.ego_conv_powerplant AS pp, 
 		openstreetmap.osm_deu_polygon_urban_sector_3_industrial_mview AS osm
 	WHERE	(pp.voltage_level='3' OR pp.voltage_level='2' OR pp.voltage_level='1')
 			AND ST_Intersects(pp.geom, ST_transform(osm.geom,4326))
