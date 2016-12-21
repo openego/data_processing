@@ -41,6 +41,21 @@ WHERE     schemaname='public'
 --     TO oeuser;
 
 
+-- 0. grant oeuser
+DO
+$$
+DECLARE
+    row record;
+BEGIN
+    FOR row IN SELECT tablename FROM pg_tables WHERE schemaname = 'public' AND tablename LIKE 'osm_test_%'
+    LOOP
+        EXECUTE 'ALTER TABLE public.' || quote_ident(row.tablename) || ' OWNER TO oeuser;';
+    END LOOP;
+END;
+$$;
+
+
+
 -- 1. Remove wrong index
 -- 1.1 Remove all wrong 'pkey' (_line, _point, _polygon, _roads)
 DO

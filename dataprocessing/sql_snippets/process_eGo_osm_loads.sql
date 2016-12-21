@@ -30,20 +30,6 @@ DELETE FROM openstreetmap.osm_deu_polygon_urban
 -- add entry to scenario log table
 INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
 SELECT	'0.2.1' AS version,
-	'ouput' AS io,
-	'openstreetmap' AS schema_name,
-	'osm_deu_polygon_urban' AS table_name,
-	'process_eGo_osm_loads.sql' AS script_name,
-	COUNT(*)AS entries,
-	'OK' AS status,
-	session_user AS user_name,
-	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	obj_description('openstreetmap.osm_deu_polygon_urban' ::regclass) ::json AS metadata
-FROM	openstreetmap.osm_deu_polygon_urban;
-
--- add entry to scenario log table
-INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2.1' AS version,
 	'input' AS io,
 	'openstreetmap' AS schema_name,
 	'osm_deu_polygon_urban' AS table_name,
