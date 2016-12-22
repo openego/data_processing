@@ -52,7 +52,7 @@ def data_processing():
         # 'setup_zensus_population_per_ha.sql',   		# setup zensus
         # 'process_eGo_loads_melted.sql',        		# melt osm and zensus cluster
         # 'process_eGo_loads_per_grid_district.sql', 	# loadarea per mv-griddistrict
-        # 'process_eGo_consumption.sql',			   	# consumption per loadarea
+        'process_eGo_consumption.sql',			   	# consumption per loadarea
         # 'analyse_eGo_paper_result.sql',				# results and statistics
         # 'Voronoi_ehv.sql',						#
         # 'voronoi_weatherpoint.sql',				#
