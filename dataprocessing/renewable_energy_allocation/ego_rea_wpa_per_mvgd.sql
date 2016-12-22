@@ -1,7 +1,10 @@
-/* 
-Skript to process potential areas for wind power plants - Wind Potential Area (wpa)
-Starting from geo_pot_area
-*/ 
+/*
+potential areas for wind power plants - Wind Potential Area (wpa)
+
+__copyright__ = "tba"
+__license__ = "tba"
+__author__ = "Ludee"
+*/
 
 -- "Create Table"   (OK!) 200ms =0
 DROP TABLE IF EXISTS  	model_draft.eGo_wpa CASCADE;
