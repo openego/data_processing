@@ -36,11 +36,11 @@ CREATE MATERIALIZED VIEW         	social.destatis_zensus_population_per_ha_mview
 CREATE UNIQUE INDEX  	destatis_zensus_population_per_ha_mview_gid_idx
 		ON	social.destatis_zensus_population_per_ha_mview (gid);
 
--- create index GIST (geom_point)
+-- index gist (geom_point)
 CREATE INDEX  	destatis_zensus_population_per_ha_mview_geom_point_idx
     ON    	social.destatis_zensus_population_per_ha_mview USING GIST (geom_point);
     
--- create index GIST (geom)
+-- index gist (geom)
 CREATE INDEX  	destatis_zensus_population_per_ha_mview_geom_idx
     ON    	social.destatis_zensus_population_per_ha_mview USING GIST (geom);
     
@@ -115,11 +115,11 @@ INSERT INTO	model_draft.ego_social_zensus_load (gid,population,inside_la,geom_po
 		zensus.geom ::geometry(Polygon,3035)
 	FROM	social.destatis_zensus_population_per_ha_mview AS zensus;
 
--- create index GIST (geom_point)
+-- index gist (geom_point)
 CREATE INDEX  	ego_social_zensus_load_geom_point_idx
 	ON	model_draft.ego_social_zensus_load USING GIST (geom_point);
 
--- create index GIST (geom)
+-- index gist (geom)
 CREATE INDEX  	ego_social_zensus_load_geom_idx
 	ON	model_draft.ego_social_zensus_load USING GIST (geom);
 	
@@ -168,7 +168,7 @@ FROM    (
 	) AS t2
 WHERE  	t1.id = t2.id; 
 
--- create index GIST (geom)
+-- index gist (geom)
 CREATE INDEX  	ego_deu_loadcluster_geom_idx
 	ON	model_draft.ego_social_zensus_load USING GIST (geom);
 */
@@ -241,7 +241,7 @@ INSERT INTO	model_draft.ego_social_zensus_load_cluster(geom)
 	SELECT	(ST_DUMP(ST_MULTI(ST_UNION(grid.geom)))).geom ::geometry(Polygon,3035) AS geom
 	FROM    model_draft.ego_social_zensus_load AS grid;
 
--- create index GIST (geom)
+-- index gist (geom)
 CREATE INDEX	ego_social_zensus_load_cluster_geom_idx
 	ON	model_draft.ego_social_zensus_load_cluster
 	USING	GIST (geom);
@@ -269,12 +269,12 @@ FROM    (
 	) AS t2
 WHERE  	t1.cid = t2.cid;
 
--- create index GIST (geom)
+-- index gist (geom)
 CREATE INDEX	ego_social_zensus_load_cluster_geom_centroid_idx
 	ON	model_draft.ego_social_zensus_load_cluster
 	USING	GIST (geom_centroid);
 
--- create index GIST (geom)
+-- index gist (geom)
 CREATE INDEX	ego_social_zensus_load_cluster_geom_surfacepoint_idx
 	ON	model_draft.ego_social_zensus_load_cluster
 	USING	GIST (geom_surfacepoint);
@@ -348,22 +348,22 @@ FROM	model_draft.ego_social_zensus_load_cluster;
 -- ALTER TABLE	model_draft.ego_social_zensus_load_cluster_spf
 -- 	ADD PRIMARY KEY (cid);
 -- 
--- -- create index GIST (geom)
+-- -- index gist (geom)
 -- CREATE INDEX  	ego_social_zensus_load_cluster_spf_geom_idx
 -- 	ON	model_draft.ego_social_zensus_load_cluster_spf
 -- 	USING	GIST (geom);
 -- 
--- -- create index GIST (geom)
+-- -- index gist (geom)
 -- CREATE INDEX  	ego_social_zensus_load_cluster_spf_geom_surfacepoint_idx
 --     ON    	model_draft.ego_social_zensus_load_cluster_spf
 --     USING     	GIST (geom_surfacepoint);
 -- 
--- -- create index GIST (geom_centroid)
+-- -- index gist (geom_centroid)
 -- CREATE INDEX  	ego_social_zensus_load_cluster_spf_geom_centroid_idx
 --     ON    	model_draft.ego_social_zensus_load_cluster_spf
 --     USING     	GIST (geom_centroid);
 -- 
--- -- create index GIST (geom_buffer)
+-- -- index gist (geom_buffer)
 -- CREATE INDEX  	ego_social_zensus_load_cluster_spf_geom_buffer_idx
 --     ON    	model_draft.ego_social_zensus_load_cluster_spf
 --     USING     	GIST (geom_buffer);
