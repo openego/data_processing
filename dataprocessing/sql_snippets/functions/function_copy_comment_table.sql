@@ -14,3 +14,6 @@ BEGIN
         RETURN 1;
 END;
 $PROC$ LANGUAGE plpgsql;
+
+-- grant (oeuser)
+ALTER FUNCTION	copy_comment_table(varchar,varchar) OWNER TO oeuser;

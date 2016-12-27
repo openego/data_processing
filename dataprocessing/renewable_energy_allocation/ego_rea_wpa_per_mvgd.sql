@@ -31,9 +31,8 @@ SELECT	'0.2.1' AS version,
 FROM	supply.soethe_wind_potential_area;
 
 -- insert wpa dump
-INSERT INTO     model_draft.ego_supply_wpa (region_key,geom)
-	SELECT	wpa.region_key
-		(ST_DUMP(ST_MULTI(ST_UNION(
+INSERT INTO     model_draft.ego_supply_wpa (geom)
+	SELECT	(ST_DUMP(ST_MULTI(ST_UNION(
 			ST_BUFFER(ST_BUFFER(ST_TRANSFORM(wpa.geom,3035),-0,01),0,01)
 		)))).geom AS geom
 	FROM	supply.soethe_wind_potential_area AS wpa; -- calc_ego_re.geo_pot_area
