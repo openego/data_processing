@@ -92,8 +92,7 @@ CREATE INDEX 	ego_lattice_la_50m_la_mview_geom_idx
 ALTER TABLE	model_draft.ego_lattice_la_50m_la_mview OWNER TO oeuser;
 
 -- metadata
-COMMENT ON TABLE model_draft.ego_lattice_la_50m_la_mview 
-	IS obj_description('model_draft.ego_lattice_la_50m' ::regclass) ::json;
+SELECT copy_comment_mview('model_draft.ego_lattice_la_50m','model_draft.ego_lattice_la_50m_la_mview');
 
 -- add entry to scenario log table
 INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)

@@ -143,8 +143,7 @@ CREATE INDEX 	ego_lattice_deu_500m_wpa_mview_geom_idx
 ALTER TABLE	model_draft.ego_lattice_deu_500m_wpa_mview OWNER TO oeuser;
 
 -- metadata
-COMMENT ON TABLE model_draft.ego_lattice_deu_500m_wpa_mview 
-	IS obj_description('model_draft.ego_lattice_deu_500m' ::regclass) ::json;
+SELECT copy_comment_mview('model_draft.ego_lattice_deu_500m','model_draft.ego_lattice_deu_500m_wpa_mview');
 
 -- add entry to scenario log table
 INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
@@ -160,7 +159,7 @@ SELECT	'0.2.1' AS version,
 	obj_description('model_draft.ego_lattice_deu_500m_wpa_mview' ::regclass) ::json AS metadata
 FROM	model_draft.ego_lattice_deu_500m_wpa_mview;
 
-	
+
 -- mview points inside la
 DROP MATERIALIZED VIEW IF EXISTS  	model_draft.ego_lattice_deu_500m_la_mview CASCADE;
 CREATE MATERIALIZED VIEW         	model_draft.ego_lattice_deu_500m_la_mview AS
@@ -176,8 +175,7 @@ CREATE INDEX 	ego_lattice_deu_500m_la_mview_geom_idx
 ALTER TABLE	model_draft.ego_lattice_deu_500m_la_mview OWNER TO oeuser;
 
 -- metadata
-COMMENT ON TABLE model_draft.ego_lattice_deu_500m_la_mview 
-	IS obj_description('model_draft.ego_lattice_deu_500m' ::regclass) ::json;
+SELECT copy_comment_mview('model_draft.ego_lattice_deu_500m','model_draft.ego_lattice_deu_500m_la_mview');
 
 -- add entry to scenario log table
 INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
@@ -209,8 +207,7 @@ CREATE INDEX 	ego_lattice_deu_500m_x_mview_geom_idx
 ALTER TABLE	model_draft.ego_lattice_deu_500m_x_mview OWNER TO oeuser;
 
 -- metadata
-COMMENT ON TABLE model_draft.ego_lattice_deu_500m_x_mview 
-	IS obj_description('model_draft.ego_lattice_deu_500m' ::regclass) ::json;
+SELECT copy_comment_mview('model_draft.ego_lattice_deu_500m','model_draft.ego_lattice_deu_500m_x_mview');
 
 -- add entry to scenario log table
 INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
@@ -242,8 +239,7 @@ CREATE INDEX 	ego_lattice_deu_500m_out_mview_geom_idx
 ALTER TABLE	model_draft.ego_lattice_deu_500m_out_mview OWNER TO oeuser;
 
 -- metadata
-COMMENT ON TABLE model_draft.ego_lattice_deu_500m_out_mview 
-	IS obj_description('model_draft.ego_lattice_deu_500m' ::regclass) ::json;
+SELECT copy_comment_mview('model_draft.ego_lattice_deu_500m','model_draft.ego_lattice_deu_500m_out_mview');
 
 -- add entry to scenario log table
 INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
