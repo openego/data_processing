@@ -16,19 +16,8 @@ CREATE TABLE         	model_draft.ego_supply_wpa (
 		geom geometry(Polygon,3035),
 CONSTRAINT 	ego_supply_wpa_pkey PRIMARY KEY (id));
 
--- add entry to scenario log table
-INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2.1' AS version,
-	'input' AS io,
-	'supply' AS schema_name,
-	'soethe_wind_potential_area' AS table_name,
-	'ego_rea_wpa_per_mvgd.sql' AS script_name,
-	COUNT(*)AS entries,
-	'OK' AS status,
-	session_user AS user_name,
-	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	obj_description('supply.soethe_wind_potential_area' ::regclass) ::json AS metadata
-FROM	supply.soethe_wind_potential_area;
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.2','input','supply','soethe_wind_potential_area','ego_rea_wpa_per_mvgd.sql','');
 
 -- insert wpa dump
 INSERT INTO     model_draft.ego_supply_wpa (geom)
@@ -44,19 +33,8 @@ CREATE INDEX 	ego_supply_wpa_geom_idx
 -- grant (oeuser)
 ALTER TABLE	model_draft.ego_supply_wpa OWNER TO oeuser;
 
--- add entry to scenario log table
-INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2.1' AS version,
-	'temp' AS io,
-	'model_draft' AS schema_name,
-	'ego_supply_wpa' AS table_name,
-	'ego_rea_wpa_per_mvgd.sql' AS script_name,
-	COUNT(*)AS entries,
-	'drop' AS status,
-	session_user AS user_name,
-	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	obj_description('model_draft.ego_supply_wpa' ::regclass) ::json AS metadata
-FROM	model_draft.ego_supply_wpa;
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.2','temp','model_draft','ego_supply_wpa','ego_rea_wpa_per_mvgd.sql','');
 
 /* -- validate (geom)
 DROP VIEW IF EXISTS	model_draft.ego_supply_wpa_error_geom_view CASCADE;
@@ -86,19 +64,8 @@ CREATE TABLE         	model_draft.ego_supply_wpa_per_mvgd (
 		geom geometry(Polygon,3035),
 CONSTRAINT 	ego_supply_wpa_per_mvgd_pkey PRIMARY KEY (id));
 
--- add entry to scenario log table
-INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2.1' AS version,
-	'input' AS io,
-	'model_draft' AS schema_name,
-	'ego_grid_mv_griddistrict' AS table_name,
-	'ego_rea_wpa_per_mvgd.sql' AS script_name,
-	COUNT(*)AS entries,
-	'OK' AS status,
-	session_user AS user_name,
-	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	obj_description('model_draft.ego_grid_mv_griddistrict' ::regclass) ::json AS metadata
-FROM	model_draft.ego_grid_mv_griddistrict;
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.2','input','model_draft','ego_grid_mv_griddistrict','ego_rea_wpa_per_mvgd.sql','');
 
 -- insert wpa per mv-griddistrict
 INSERT INTO     model_draft.ego_supply_wpa_per_mvgd (area_ha, geom)
@@ -130,20 +97,6 @@ CREATE INDEX 	ego_supply_wpa_per_mvgd_geom_idx
 
 -- grant (oeuser)
 ALTER TABLE	model_draft.ego_supply_wpa_per_mvgd OWNER TO oeuser;
-
--- add entry to scenario log table
-INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2.1' AS version,
-	'output' AS io,
-	'model_draft' AS schema_name,
-	'ego_supply_wpa_per_mvgd' AS table_name,
-	'ego_rea_wpa_per_mvgd.sql' AS script_name,
-	COUNT(*)AS entries,
-	'OK' AS status,
-	session_user AS user_name,
-	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	obj_description('model_draft.ego_supply_wpa_per_mvgd' ::regclass) ::json AS metadata
-FROM	model_draft.ego_supply_wpa_per_mvgd;
 
 -- metadata
 COMMENT ON TABLE model_draft.ego_supply_wpa_per_mvgd IS '{
@@ -181,3 +134,6 @@ COMMENT ON TABLE model_draft.ego_supply_wpa_per_mvgd IS '{
 
 -- select description
 SELECT obj_description('model_draft.ego_supply_wpa_per_mvgd' ::regclass) ::json;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.2','output','model_draft','ego_supply_wpa_per_mvgd','ego_rea_wpa_per_mvgd.sql','');
