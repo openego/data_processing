@@ -21,7 +21,7 @@ UPDATE 	model_draft.ego_lattice_la_50m AS t1
 	WHERE  	t1.id = t2.id;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.2','input','model_draft','ego_grid_mv_griddistrict','ego_rea_lattice_per_area_50m.sql','');
+SELECT ego_scenario_log('v0.2.2','input','model_draft','ego_grid_mv_griddistrict','ego_rea_lattice_per_area_50m.sql',' ');
 
 -- area type for loadarea (la)
 UPDATE 	model_draft.ego_lattice_la_50m AS t1
@@ -37,10 +37,10 @@ UPDATE 	model_draft.ego_lattice_la_50m AS t1
 	WHERE  	t1.id = t2.id;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.2','input','model_draft','ego_demand_loadarea','ego_rea_lattice_per_area_50m.sql','');
+SELECT ego_scenario_log('v0.2.2','input','model_draft','ego_demand_loadarea','ego_rea_lattice_per_area_50m.sql',' ');
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.2','output','model_draft','ego_lattice_la_50m','ego_rea_lattice_per_area_50m.sql','');
+SELECT ego_scenario_log('v0.2.2','output','model_draft','ego_lattice_la_50m','ego_rea_lattice_per_area_50m.sql',' ');
 
 
 -- mview points inside la
@@ -61,4 +61,4 @@ ALTER TABLE	model_draft.ego_lattice_la_50m_la_mview OWNER TO oeuser;
 SELECT copy_comment_mview('model_draft.ego_lattice_la_50m','model_draft.ego_lattice_la_50m_la_mview');
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.2','output','model_draft','ego_lattice_la_50m_la_mview','ego_rea_lattice_per_area_50m.sql','');
+SELECT ego_scenario_log('v0.2.2','output','model_draft','ego_lattice_la_50m_la_mview','ego_rea_lattice_per_area_50m.sql',' ');
