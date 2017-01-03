@@ -2,7 +2,7 @@
 -- Create a table that contains all generators (RE and conventional) but no duplicates. 
 ------------
 
-/* DROP TABLE IF EXISTS model_draft.ego_supply_generator;
+DROP TABLE IF EXISTS model_draft.ego_supply_generator;
 
 CREATE TABLE model_draft.ego_supply_generator
 (
@@ -16,7 +16,7 @@ CREATE TABLE model_draft.ego_supply_generator
 );
 
 ALTER TABLE model_draft.ego_supply_generator
-	OWNER TO oeuser; */
+	OWNER TO oeuser;
 	
 DELETE FROM model_draft.ego_supply_generator; 
 

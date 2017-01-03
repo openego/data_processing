@@ -98,7 +98,7 @@ UPDATE model_draft.ego_grid_pf_hv_transformer a
 	SET 
 		x = x * (((GREATEST(
 				(SELECT v_nom as v_nom_bus0 FROM model_draft.ego_grid_pf_hv_bus WHERE bus_id = bus0), 
-				(SELECT v_nom as v_nom_bus1 FROM model_draft.ego_grid_pf_hv_bus WHERE bus_id = bus1)))* 1000)^2 / (100 * 10^6))
+				(SELECT v_nom as v_nom_bus1 FROM model_draft.ego_grid_pf_hv_bus WHERE bus_id = bus1)))* 1000)^2 / (100 * 10^6));
 
 -- calculate line length (in km) from geoms
 

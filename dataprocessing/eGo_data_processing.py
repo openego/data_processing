@@ -55,9 +55,9 @@ def data_processing():
         # 'process_eGo_consumption.sql',			   	# consumption per loadarea
         ## 'analyse_eGo_paper_result.sql',				# results and statistics
         # 'Voronoi_ehv.sql',						#
-         'voronoi_weatherpoint.sql',				#
-         'calc_ego_hv_powerflow.sql',				#
-         'osmtgmod_to_pypsa.sql',					#
+        # 'voronoi_weatherpoint.sql',				#
+        # 'calc_ego_hv_powerflow.sql',				#
+        # 'osmtgmod_to_pypsa.sql',					#
          'assignment_generator_bus.sql',			#
          'renpass_gis_ResultsTOPF.sql',			#
          'assignment_load_bus.sql',				#
