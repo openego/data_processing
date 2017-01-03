@@ -5,7 +5,7 @@
 -- Add Dummy points 
 INSERT INTO model_draft.ego_grid_ehv_substation (subst_name, point, subst_id, otg_id, lon, lat, polygon, osm_id, osm_www, status)
 SELECT 'DUMMY', ST_TRANSFORM(geom,4326), subst_id, subst_id, ST_X (ST_Transform (geom, 4326)), ST_Y (ST_Transform (geom, 4326)), 'POLYGON((0 0, 1 0, 1 1, 0 1, 0 0))', 'dummy'||row_number() OVER(), 'dummy', 0
-FROM model_draft.ego_grid_substation_dummy;
+FROM model_draft.ego_grid_hvmv_substation_dummy;
 
 
 -- Execute voronoi algorithm with 220 and 380 kV substations

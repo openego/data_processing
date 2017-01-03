@@ -1,7 +1,7 @@
 -- Add Dummy points 
 INSERT INTO calc_renpass_gis.parameter_solar_feedin (year, geom)
 SELECT '9999', ST_TRANSFORM(geom,4326)
-FROM model_draft.ego_grid_substation_dummy;
+FROM model_draft.ego_grid_hvmv_substation_dummy;
 
 
 -- Execute voronoi algorithm with weather points
