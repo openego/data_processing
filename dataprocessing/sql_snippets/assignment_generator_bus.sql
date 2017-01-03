@@ -130,7 +130,7 @@ UPDATE supply.ego_conv_powerplant a
 --------------
 
 
-/* DROP TABLE model_draft.ego_supply_pf_generator_single;
+DROP TABLE model_draft.ego_supply_pf_generator_single;
 
 CREATE TABLE model_draft.ego_supply_pf_generator_single
 (
@@ -159,7 +159,7 @@ CREATE TABLE model_draft.ego_supply_pf_generator_single
 );
 
 ALTER TABLE model_draft.ego_supply_pf_generator_single
-  OWNER TO oeuser; */
+  OWNER TO oeuser;
 
 
 COMMENT ON TABLE  model_draft.ego_supply_pf_generator_single IS
