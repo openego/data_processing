@@ -9,193 +9,140 @@ __author__ = "Ludee"
 */
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.2','input','model_draft','ego_lattice_deu_500m','ego_lattice_deu.sql',' ');
+SELECT ego_scenario_log('v0.2.2','input','model_draft','ego_grid_hvmv_substation','ego_paper_result.sql',' ');
 
--- add entry to scenario log table
-INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2.1' AS version,
-	'input' AS io,
-	'model_draft' AS schema_name,
-	'ego_grid_hvmv_substation' AS table_name,
-	'analyse_eGo_paper_result.sql' AS script_name,
-	COUNT(*)AS entries,
-	'OK' AS status,
-	session_user AS user_name,
-	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	obj_description('model_draft.ego_grid_hvmv_substation' ::regclass) ::json AS metadata
-FROM	model_draft.ego_grid_hvmv_substation;
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.2','input','model_draft','ego_grid_mv_griddistrict','ego_paper_result.sql',' ');
 
--- add entry to scenario log table
-INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2.1' AS version,
-	'input' AS io,
-	'model_draft' AS schema_name,
-	'ego_grid_mv_griddistrict' AS table_name,
-	'analyse_eGo_paper_result.sql' AS script_name,
-	COUNT(*)AS entries,
-	'OK' AS status,
-	session_user AS user_name,
-	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	obj_description('model_draft.ego_grid_mv_griddistrict' ::regclass) ::json AS metadata
-FROM	model_draft.ego_grid_mv_griddistrict;
-
--- add entry to scenario log table
-INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2.1' AS version,
-	'input' AS io,
-	'model_draft' AS schema_name,
-	'ego_demand_loadarea' AS table_name,
-	'analyse_eGo_paper_result.sql' AS script_name,
-	COUNT(*)AS entries,
-	'OK' AS status,
-	session_user AS user_name,
-	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	obj_description('model_draft.ego_demand_loadarea' ::regclass) ::json AS metadata
-FROM	model_draft.ego_demand_loadarea;
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.2','input','model_draft','ego_demand_loadarea','ego_paper_result.sql',' ');
 
 
 -- results and statistics for substation, load area, MV grid districts and consumption
-DROP SEQUENCE IF EXISTS	model_draft.ego_paper_data_allocation_results_seq CASCADE;
-CREATE SEQUENCE 	model_draft.eGo_paper_data_allocation_results_seq;
+DROP TABLE IF EXISTS 	model_draft.ego_data_processing_results CASCADE;
+CREATE TABLE 		model_draft.ego_data_processing_results (
+	id SERIAL PRIMARY KEY,
+	schema_name text,
+	table_name text,
+	description text,
+	result integer,
+	unit text,
+	timestamp timestamp,
+	CONSTRAINT ego_data_processing_results_pkey PRIMARY KEY (id));
 
-DROP TABLE IF EXISTS 	model_draft.eGo_paper_data_allocation_results CASCADE;
-CREATE TABLE 		model_draft.eGo_paper_data_allocation_results AS
--- Count SUB
-SELECT	nextval('model_draft.eGo_paper_data_allocation_results_seq'::regclass) AS id,
-	'model_draft' ::text AS schema,
-	'ego_grid_hvmv_substation' ::text AS table,
-	'Number of substations' ::text AS descript_nameion,
-	COUNT(subst_id) ::integer AS result,
-	' ' ::text AS unit,
-	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
-FROM	model_draft.ego_grid_hvmv_substation
-UNION ALL
--- Count MVGD
-SELECT	nextval('model_draft.eGo_paper_data_allocation_results_seq'::regclass) AS id,
-	'model_draft' ::text AS schema,
-	'ego_grid_mv_griddistrict' ::text AS table,
-	'Number of grid districts' ::text AS descript_nameion,
-	COUNT(subst_id) ::integer AS result,
-	' ' ::text AS unit,
-	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
-FROM	model_draft.ego_grid_mv_griddistrict
+INSERT INTO model_draft.ego_data_processing_results (schema_name,table_name,description,result,unit,timestamp)
+	-- Count SUB
+	SELECT	'model_draft',
+		'ego_grid_hvmv_substation',
+		'Number of substations',
+		COUNT(subst_id) ::integer AS result,
+		' ' ::text AS unit,
+		NOW() AT TIME ZONE 'Europe/Berlin'
+	FROM	model_draft.ego_grid_hvmv_substation
+	UNION ALL
+	-- Count MVGD
+	SELECT	'model_draft',
+		'ego_grid_mv_griddistrict',
+		'Number of grid districts',
+		COUNT(subst_id) ::integer AS result,
+		' ' ::text AS unit,
+		NOW() AT TIME ZONE 'Europe/Berlin'
+	FROM	model_draft.ego_grid_mv_griddistrict
 
-UNION ALL
--- Area vg250.gem
-SELECT	nextval('model_draft.eGo_paper_data_allocation_results_seq'::regclass) AS id,
-	'political_boundary' ::text AS schema,
-	'bkg_vg250_6_gem' ::text AS table,
-	'Gemeinde area' ::text AS descript_nameion,
-	SUM(ST_AREA(ST_TRANSFORM(geom,3025))/10000) ::integer AS result,
-	'ha' ::text AS unit,
-	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
-FROM	political_boundary.bkg_vg250_6_gem
-UNION ALL
--- Area GD
-SELECT	nextval('model_draft.eGo_paper_data_allocation_results_seq'::regclass) AS id,
-	'model_draft' ::text AS schema,
-	'ego_grid_mv_griddistrict' ::text AS table,
-	'Grid District area' ::text AS descript_nameion,
-	SUM(ST_AREA(geom)/10000) ::integer AS result,
-	'ha' ::text AS unit,
-	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
-FROM	model_draft.ego_grid_mv_griddistrict
-UNION ALL
--- Min area GD calc
-SELECT	nextval('model_draft.eGo_paper_data_allocation_results_seq'::regclass) AS id,
-	'model_draft' ::text AS schema,
-	'ego_grid_mv_griddistrict' ::text AS table,
-	'Minmal GD area' ::text AS descript_nameion,
-	MIN(ST_AREA(geom)/10000) ::decimal(10,1) AS result,
-	'ha' ::text AS unit,
-	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
-FROM	model_draft.ego_grid_mv_griddistrict
-UNION ALL
--- Min area GD area
-SELECT	nextval('model_draft.eGo_paper_data_allocation_results_seq'::regclass) AS id,
-	'model_draft' ::text AS schema,
-	'ego_grid_mv_griddistrict' ::text AS table,
-	'Minmal GD area' ::text AS descript_nameion,
-	MIN(area_ha) ::decimal(10,1) AS result,
-	'ha' ::text AS unit,
-	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
-FROM	model_draft.ego_grid_mv_griddistrict
-UNION ALL
--- Max area GD
-SELECT	nextval('model_draft.eGo_paper_data_allocation_results_seq'::regclass) AS id,
-	'model_draft' ::text AS schema,
-	'ego_grid_mv_griddistrict' ::text AS table,
-	'Maximal GD area' ::text AS descript_nameion,
-	MAX(ST_AREA(geom)/10000) ::decimal(10,1) AS result,
-	'ha' ::text AS unit,
-	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
-FROM	model_draft.ego_grid_mv_griddistrict
-UNION ALL
--- Count LA
-SELECT	nextval('model_draft.eGo_paper_data_allocation_results_seq'::regclass) AS id,
-	'model_draft' ::text AS schema,
-	'ego_demand_loadarea' ::text AS table,
-	'Number of Load Areas' ::text AS descript_nameion,
-	COUNT(id) ::integer AS result,
-	' ' ::text AS unit,
-	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
-FROM	model_draft.ego_demand_loadarea
-UNION ALL
--- Area LA
-SELECT	nextval('model_draft.eGo_paper_data_allocation_results_seq'::regclass) AS id,
-	'model_draft' ::text AS schema,
-	'ego_demand_loadarea' ::text AS table,
-	'Load Areas area' ::text AS descript_nameion,
-	SUM(ST_AREA(geom)/10000) ::decimal(10,1) AS result,
-	'ha' ::text AS unit,
-	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
-FROM	model_draft.ego_demand_loadarea
+	UNION ALL
+	-- Area vg250.gem
+	SELECT	'political_boundary',
+		'bkg_vg250_6_gem',
+		'Gemeinde area',
+		SUM(ST_AREA(ST_TRANSFORM(geom,3025))/10000) ::integer AS result,
+		'ha' ::text AS unit,
+		NOW() AT TIME ZONE 'Europe/Berlin'
+	FROM	political_boundary.bkg_vg250_6_gem
+	UNION ALL
+	-- Area GD
+	SELECT	'model_draft',
+		'ego_grid_mv_griddistrict',
+		'Grid District area',
+		SUM(ST_AREA(geom)/10000) ::integer AS result,
+		'ha' ::text AS unit,
+		NOW() AT TIME ZONE 'Europe/Berlin'
+	FROM	model_draft.ego_grid_mv_griddistrict
+	UNION ALL
+	-- Min area GD calc
+	SELECT	'model_draft',
+		'ego_grid_mv_griddistrict',
+		'Minmal GD area',
+		MIN(ST_AREA(geom)/10000) ::decimal(10,1) AS result,
+		'ha' ::text AS unit,
+		NOW() AT TIME ZONE 'Europe/Berlin'
+	FROM	model_draft.ego_grid_mv_griddistrict
+	UNION ALL
+	-- Min area GD area
+	SELECT	'model_draft',
+		'ego_grid_mv_griddistrict',
+		'Minmal GD area',
+		MIN(area_ha) ::decimal(10,1) AS result,
+		'ha' ::text AS unit,
+		NOW() AT TIME ZONE 'Europe/Berlin'
+	FROM	model_draft.ego_grid_mv_griddistrict
+	UNION ALL
+	-- Max area GD
+	SELECT	'model_draft',
+		'ego_grid_mv_griddistrict',
+		'Maximal GD area',
+		MAX(ST_AREA(geom)/10000) ::decimal(10,1) AS result,
+		'ha' ::text AS unit,
+		NOW() AT TIME ZONE 'Europe/Berlin'
+	FROM	model_draft.ego_grid_mv_griddistrict
+	UNION ALL
+	-- Count LA
+	SELECT	'model_draft',
+		'ego_demand_loadarea',
+		'Number of Load Areas',
+		COUNT(id) ::integer AS result,
+		' ' ::text AS unit,
+		NOW() AT TIME ZONE 'Europe/Berlin'
+	FROM	model_draft.ego_demand_loadarea
+	UNION ALL
+	-- Area LA
+	SELECT	'model_draft',
+		'ego_demand_loadarea',
+		'Load Areas area',
+		SUM(ST_AREA(geom)/10000) ::decimal(10,1) AS result,
+		'ha' ::text AS unit,
+		NOW() AT TIME ZONE 'Europe/Berlin'
+	FROM	model_draft.ego_demand_loadarea
 
-UNION ALL
--- Min area LA
-SELECT	nextval('model_draft.eGo_paper_data_allocation_results_seq'::regclass) AS id,
-	'model_draft' ::text AS schema,
-	'ego_demand_loadarea' ::text AS table,
-	'Minmal LA area' ::text AS descript_nameion,
-	MIN(ST_AREA(geom)/10000) ::decimal(10,3) AS result,
-	'ha' ::text AS unit,
-	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
-FROM	model_draft.ego_demand_loadarea
-UNION ALL
--- Max area LA
-SELECT	nextval('model_draft.eGo_paper_data_allocation_results_seq'::regclass) AS id,
-	'model_draft' ::text AS schema,
-	'ego_demand_loadarea' ::text AS table,
-	'Maximal LA area' ::text AS descript_nameion,
-	MAX(ST_AREA(geom)/10000) ::decimal(10,3) AS result,
-	'ha' ::text AS unit,
-	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
-FROM	model_draft.ego_demand_loadarea;
-
+	UNION ALL
+	-- Min area LA
+	SELECT	'model_draft',
+		'ego_demand_loadarea',
+		'Minmal LA area',
+		MIN(ST_AREA(geom)/10000) ::decimal(10,3) AS result,
+		'ha' ::text AS unit,
+		NOW() AT TIME ZONE 'Europe/Berlin'
+	FROM	model_draft.ego_demand_loadarea
+	UNION ALL
+	-- Max area LA
+	SELECT	'model_draft',
+		'ego_demand_loadarea',
+		'Maximal LA area',
+		MAX(ST_AREA(geom)/10000) ::decimal(10,3) AS result,
+		'ha' ::text AS unit,
+		NOW() AT TIME ZONE 'Europe/Berlin'
+	FROM	model_draft.ego_demand_loadarea;
 
 -- Set grants and owner
-ALTER TABLE model_draft.ego_paper_data_allocation_results 
-	OWNER TO oeuser,
-	ADD PRIMARY KEY (id) ;
+ALTER TABLE model_draft.ego_data_processing_results OWNER TO oeuser;
 
--- add entry to scenario log table
-INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2.1' AS version,
-	'output' AS io,
-	'model_draft' AS schema_name,
-	'eGo_paper_data_allocation_results' AS table_name,
-	'analyse_eGo_paper_result.sql' AS script_name,
-	COUNT(*)AS entries,
-	'OK' AS status,
-	session_user AS user_name,
-	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	obj_description('model_draft.eGo_paper_data_allocation_results' ::regclass) ::json AS metadata
-FROM	model_draft.eGo_paper_data_allocation_results;
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.2','output','model_draft','ego_data_processing_results','ego_paper_result.sql',' ');
+
 
 
 -- mv-griddistrict types
-DROP TABLE IF EXISTS 	model_draft.eGo_paper_data_allocation_mvgd CASCADE;
-CREATE TABLE		model_draft.eGo_paper_data_allocation_mvgd AS
+DROP TABLE IF EXISTS 	model_draft.ego_data_processing_results_mvgd CASCADE;
+CREATE TABLE		model_draft.ego_data_processing_results_mvgd AS
 -- MVGD types
 SELECT	subst_id,
 	'0' ::integer AS type1,
@@ -213,7 +160,7 @@ SELECT	subst_id,
 FROM	model_draft.ego_grid_mv_griddistrict AS gd;
 
 -- Type1 1724
-UPDATE 	model_draft.eGo_paper_data_allocation_mvgd AS t1
+UPDATE 	model_draft.ego_data_processing_results_mvgd AS t1
 SET  	type1 = t2.type1
 FROM	(SELECT	gd.subst_id,
 		COUNT(ST_PointOnSurface(typ.geom))::integer AS type1
@@ -226,7 +173,7 @@ FROM	(SELECT	gd.subst_id,
 WHERE  	t1.subst_id = t2.subst_id;
 
 -- Type2 1886
-UPDATE 	model_draft.eGo_paper_data_allocation_mvgd AS t1
+UPDATE 	model_draft.ego_data_processing_results_mvgd AS t1
 SET  	type2 = t2.type2
 FROM	(SELECT	gd.subst_id,
 		COUNT(ST_PointOnSurface(typ.geom))::integer AS type2
@@ -239,7 +186,7 @@ FROM	(SELECT	gd.subst_id,
 WHERE  	t1.subst_id = t2.subst_id;
 
 -- Type3 2077
-UPDATE 	model_draft.eGo_paper_data_allocation_mvgd AS t1
+UPDATE 	model_draft.ego_data_processing_results_mvgd AS t1
 SET  	type3 = t2.type3
 FROM	(SELECT	gd.subst_id,
 		COUNT(ST_PointOnSurface(typ.geom))::integer AS type3
@@ -259,7 +206,7 @@ SELECT	id,
 FROM	political_boundary.bkg_vg250_6_gem;
 
 -- Gem 2716
-UPDATE 	model_draft.eGo_paper_data_allocation_mvgd AS t1
+UPDATE 	model_draft.ego_data_processing_results_mvgd AS t1
 SET  	gem = t2.gem
 FROM	(SELECT	gd.subst_id,
 		COUNT(ST_PointOnSurface(gem.geom))::integer AS gem
@@ -280,7 +227,7 @@ SELECT	id,
 FROM	model_draft.ego_political_boundary_bkg_vg250_6_gem_clean; */
 
 -- Gem Parts 2731
-UPDATE 	model_draft.eGo_paper_data_allocation_mvgd AS t1
+UPDATE 	model_draft.ego_data_processing_results_mvgd AS t1
 SET  	gem_clean = t2.gem_clean
 FROM	(SELECT	gd.subst_id,
 		COUNT(ST_PointOnSurface(gem.geom))::integer AS gem_clean
@@ -293,7 +240,7 @@ FROM	(SELECT	gd.subst_id,
 WHERE  	t1.subst_id = t2.subst_id;
 
 -- GD Area 3610
-UPDATE 	model_draft.eGo_paper_data_allocation_mvgd AS t1
+UPDATE 	model_draft.ego_data_processing_results_mvgd AS t1
 SET  	area_ha = t2.area_ha
 FROM	(SELECT	gd.subst_id,
 		ST_AREA(gd.geom)/10000 AS area_ha
@@ -302,7 +249,7 @@ FROM	(SELECT	gd.subst_id,
 WHERE  	t1.subst_id = t2.subst_id;
 
 -- LA Count
-UPDATE 	model_draft.eGo_paper_data_allocation_mvgd AS t1
+UPDATE 	model_draft.ego_data_processing_results_mvgd AS t1
 SET  	la_count = t2.la_count
 FROM	(SELECT	gd.subst_id,
 		COUNT(ST_PointOnSurface(la.geom))::integer AS la_count
@@ -315,7 +262,7 @@ FROM	(SELECT	gd.subst_id,
 WHERE  	t1.subst_id = t2.subst_id;
 
 -- LA Area 3606
-UPDATE 	model_draft.eGo_paper_data_allocation_mvgd AS t1
+UPDATE 	model_draft.ego_data_processing_results_mvgd AS t1
 SET  	la_area = t2.la_area
 FROM	(SELECT	gd.subst_id,
 		SUM(ST_AREA(la.geom)/10000) ::decimal(10,3) AS la_area
@@ -328,52 +275,41 @@ FROM	(SELECT	gd.subst_id,
 WHERE  	t1.subst_id = t2.subst_id;
 
 -- not LA Area (free_area)
-UPDATE 	model_draft.eGo_paper_data_allocation_mvgd AS t1
+UPDATE 	model_draft.ego_data_processing_results_mvgd AS t1
 SET  	free_area = t2.free_area
 FROM	(SELECT	gd.subst_id,
 		SUM(gd.area_ha)-SUM(gd.la_area) AS free_area
-	FROM	model_draft.eGo_paper_data_allocation_mvgd as gd
+	FROM	model_draft.ego_data_processing_results_mvgd as gd
 	GROUP BY gd.subst_id
 	)AS t2
 WHERE  	t1.subst_id = t2.subst_id;
 
 -- not LA Area (free_area)
-UPDATE 	model_draft.eGo_paper_data_allocation_mvgd AS t1
+UPDATE 	model_draft.ego_data_processing_results_mvgd AS t1
 SET  	area_share = t2.area_share
 FROM	(SELECT	gd.subst_id,
 		SUM(gd.la_area)/SUM(gd.area_ha)*100 AS area_share
-	FROM	model_draft.eGo_paper_data_allocation_mvgd as gd
+	FROM	model_draft.ego_data_processing_results_mvgd as gd
 	GROUP BY gd.subst_id
 	)AS t2
 WHERE  	t1.subst_id = t2.subst_id;
 
 SELECT	MAX(area_share) AS max,
 	MIN(area_share) AS min
-FROM	model_draft.eGo_paper_data_allocation_mvgd ;
+FROM	model_draft.ego_data_processing_results_mvgd ;
 
 -- Set grants and owner
-ALTER TABLE model_draft.eGo_paper_data_allocation_mvgd
+ALTER TABLE model_draft.ego_data_processing_results_mvgd
 	OWNER TO oeuser,
 	ADD PRIMARY KEY (subst_id) ;
 
 -- Create Index GIST (geom)   (OK!) -> 100ms =0
-CREATE INDEX  	eGo_paper_data_allocation_mvgd_geom_idx
-	ON	model_draft.eGo_paper_data_allocation_mvgd
-	USING	GIST (geom);
+CREATE INDEX  	ego_data_processing_results_mvgd_geom_idx
+	ON	model_draft.ego_data_processing_results_mvgd USING GIST (geom);
 
--- add entry to scenario log table
-INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2.1' AS version,
-	'output' AS io,
-	'model_draft' AS schema_name,
-	'eGo_paper_data_allocation_mvgd' AS table_name,
-	'analyse_eGo_paper_result.sql' AS script_name,
-	COUNT(*)AS entries,
-	'OK' AS status,
-	session_user AS user_name,
-	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	obj_description('model_draft.eGo_paper_data_allocation_mvgd' ::regclass) ::json AS metadata
-FROM	model_draft.eGo_paper_data_allocation_mvgd;
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.2','output','model_draft','ego_data_processing_results_mvgd','ego_paper_result.sql',' ');
+
 	
 
 -- Calculate statistics for BKG-vg250 
@@ -418,20 +354,8 @@ WHERE	gf='1' OR gf='2';
 GRANT ALL ON TABLE	political_boundary.bkg_vg250_statistics_mview TO oeuser WITH GRANT OPTION;
 ALTER TABLE		political_boundary.bkg_vg250_statistics_mview OWNER TO oeuser;
 
--- add entry to scenario log table
-INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2.1' AS version,
-	'output' AS io,
-	'political_boundary' AS schema_name,
-	'bkg_vg250_statistics_mview' AS table_name,
-	'analyse_eGo_paper_result.sql' AS script_name,
-	COUNT(*)AS entries,
-	'OK' AS status,
-	session_user AS user_name,
-	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	obj_description('political_boundary.bkg_vg250_statistics_mview' ::regclass) ::json AS metadata
-FROM	political_boundary.bkg_vg250_statistics_mview;
-
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.2','output','model_draft','bkg_vg250_statistics_mview','ego_paper_result.sql',' ');
 
 
 /* -- EWE Validation
