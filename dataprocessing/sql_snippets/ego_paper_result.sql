@@ -1,12 +1,15 @@
 /*
 loadareas per mv-griddistrict
 insert cutted load melt
-exclude smaller 100m²
+exclude smaller 100m2
 
 __copyright__ = "tba" 
 __license__ = "tba" 
 __author__ = "Ludee" 
 */
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.2','input','model_draft','ego_lattice_deu_500m','ego_lattice_deu.sql',' ');
 
 -- add entry to scenario log table
 INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
