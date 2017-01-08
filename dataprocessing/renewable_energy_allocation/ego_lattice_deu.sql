@@ -122,7 +122,7 @@ CREATE INDEX 	ego_lattice_la_50m_geom_idx
 ALTER TABLE	model_draft.ego_lattice_la_50m OWNER TO oeuser;
 
 -- metadata
-COMMENT ON TABLE model_draft.ego_lattice_deu_500m IS '{
+COMMENT ON TABLE model_draft.ego_lattice_la_50m IS '{
 	"title": "eGoDP - lattice on loadarea with 50m",
 	"description": "lattice (regular point grid)",
 	"language": [ "eng" ],
@@ -156,7 +156,7 @@ COMMENT ON TABLE model_draft.ego_lattice_deu_500m IS '{
 		"meta_version": "1.0"}] }';
 
 -- select description
-SELECT obj_description('model_draft.ego_lattice_deu_500m' ::regclass) ::json;
+SELECT obj_description('model_draft.ego_lattice_la_50m' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.2','output','model_draft','ego_lattice_deu_500m','ego_lattice_deu.sql','');
+SELECT ego_scenario_log('v0.2.2','output','model_draft','ego_lattice_la_50m','ego_lattice_deu.sql','');

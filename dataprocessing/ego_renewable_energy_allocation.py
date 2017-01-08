@@ -28,8 +28,8 @@ script_dir = os.path.abspath(
 
 scripts = [
     # 'ego_lattice_deu.sql', 					# lattice (point grid)
-	'ego_rea_wpa_per_mvgd.sql', 			# wind potential area per mv-griddistrict
-    'ego_rea_lattice_per_area_500m.sql', 	# prepare 500m lattice
+	# 'ego_rea_wpa_per_mvgd.sql', 			# wind potential area per mv-griddistrict
+    # 'ego_rea_lattice_per_area_500m.sql', 	# prepare 500m lattice
     'ego_rea_lattice_per_area_50m.sql', 	# prepare 50m lattice
 	## 'ego_rea_lattice_per_area_34m.sql', 	# prepare 34m lattice -> do not do it, takes ages!
     # 'ego_rea_setup.sql',					# setup table for allocation
