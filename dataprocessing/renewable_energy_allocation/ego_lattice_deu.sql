@@ -75,19 +75,8 @@ COMMENT ON TABLE model_draft.ego_lattice_deu_500m IS '{
 -- select description
 SELECT obj_description('model_draft.ego_lattice_deu_500m' ::regclass) ::json;
 
--- add entry to scenario log table
-INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2.1' AS version,
-	'output' AS io,
-	'model_draft' AS schema_name,
-	'ego_lattice_deu_500m' AS table_name,
-	'ego_lattice_deu.sql' AS script_name,
-	COUNT(*)AS entries,
-	'OK' AS status,
-	session_user AS user_name,
-	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	obj_description('model_draft.ego_lattice_deu_500m' ::regclass) ::json AS metadata
-FROM	model_draft.ego_lattice_deu_500m;
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.2','output','model_draft','ego_lattice_deu_500m','ego_lattice_deu.sql',' ');
 
 
 -- lattice on bbox of loadarea with 50m
