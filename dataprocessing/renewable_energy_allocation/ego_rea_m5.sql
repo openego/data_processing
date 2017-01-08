@@ -1,18 +1,24 @@
-/* 
+/*
 Skript to allocate decentralized renewable power plants (dea)
 Methods base on technology and voltage level
 Uses different lattice from setup_ego_wpa_per_grid_district.sql
-*/
 
+__copyright__ = "tba"
+__license__ = "tba"
+__author__ = "Ludee"
+*/
 
 /* 6. M5
 Relocate "solar" with "06 (MS/NS)" & "07 (NS)" to la_grid.
 There should be no rest.
 */
 
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.2','input','model_draft','ego_supply_rea','ego_rea_m5.sql',' ');
+
 -- MView M5 DEA   (OK!) -> 1.000ms =1.524.674
-DROP MATERIALIZED VIEW IF EXISTS 	model_draft.ego_dea_allocation_m5_a_mview CASCADE;
-CREATE MATERIALIZED VIEW 		model_draft.ego_dea_allocation_m5_a_mview AS
+DROP MATERIALIZED VIEW IF EXISTS 	model_draft.ego_supply_rea_m5_a_mview CASCADE;
+CREATE MATERIALIZED VIEW 		model_draft.ego_supply_rea_m5_a_mview AS
 	SELECT	id,
 		electrical_capacity,
 		generation_type,
@@ -21,7 +27,7 @@ CREATE MATERIALIZED VIEW 		model_draft.ego_dea_allocation_m5_a_mview AS
 		subst_id,
 		geom,
 		flag
-	FROM 	model_draft.ego_dea_allocation AS dea
+	FROM 	model_draft.ego_supply_rea AS dea
 	WHERE 	(dea.voltage_level = '06 (MS/NS)' 
 			OR dea.voltage_level = '07 (NS)'
 			OR dea.voltage_level IS NULL)
@@ -29,15 +35,18 @@ CREATE MATERIALIZED VIEW 		model_draft.ego_dea_allocation_m5_a_mview AS
 		OR (dea.voltage_level = '07 (NS)' AND dea.generation_type = 'wind');
 		
 -- create index GIST (geom)
-CREATE INDEX ego_dea_allocation_m5_a_mview_geom_idx
-	ON model_draft.ego_dea_allocation_m5_a_mview USING gist (geom);
+CREATE INDEX ego_supply_rea_m5_a_mview_geom_idx
+	ON model_draft.ego_supply_rea_m5_a_mview USING gist (geom);
 
 -- grant (oeuser)
-GRANT ALL ON TABLE	model_draft.ego_dea_allocation_m5_a_mview TO oeuser WITH GRANT OPTION;
-ALTER TABLE		model_draft.ego_dea_allocation_m5_a_mview OWNER TO oeuser;  
+ALTER TABLE model_draft.ego_supply_rea_m5_a_mview OWNER TO oeuser;  
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.2','output','model_draft','ego_supply_rea_m5_a_mview','ego_rea_m5.sql',' ');
+
 
 -- flag M5
-UPDATE 	model_draft.ego_dea_allocation AS dea
+UPDATE 	model_draft.ego_supply_rea AS dea
 	SET	flag = 'M5_rest'
 	WHERE 	(dea.voltage_level = '06 (MS/NS)' 
 			OR dea.voltage_level = '07 (NS)'
@@ -46,20 +55,8 @@ UPDATE 	model_draft.ego_dea_allocation AS dea
 		OR (dea.voltage_level = '07 (NS)' AND dea.generation_type = 'wind')
 		AND dea.subst_id IS NOT NULL;
 
--- scenario log
-INSERT INTO	scenario.ego_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,user_name,timestamp)
-	SELECT	'0.2' AS version,
-		'model_draft' AS schema_name,
-		'ego_dea_allocation_m5_a_mview' AS table_name,
-		'process_ego_dea_allocation_methods.sql' AS script_name,
-		COUNT(*)AS entries,
-		'OK' AS status,
-		session_user AS user_name,
-		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
-	FROM	model_draft.ego_dea_allocation_m5_a_mview;
 
-
--- create temporary tables for the loop
+-- temporary tables for the loop
 DROP TABLE IF EXISTS 	model_draft.ego_m5_dea_temp CASCADE;
 CREATE TABLE 		model_draft.ego_m5_dea_temp (
 	sorted bigint NOT NULL,
@@ -75,7 +72,10 @@ CREATE TABLE 		model_draft.ego_m5_dea_temp (
 
 CREATE INDEX ego_m5_dea_temp_geom_idx
 	ON model_draft.ego_m5_dea_temp USING gist (geom);
-  
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.2','temp','model_draft','ego_m5_dea_temp','ego_rea_m5.sql',' ');
+
 DROP TABLE IF EXISTS 	model_draft.ego_m5_grid_la_temp CASCADE;
 CREATE TABLE 		model_draft.ego_m5_grid_la_temp (
 	sorted bigint NOT NULL,
@@ -86,7 +86,10 @@ CREATE TABLE 		model_draft.ego_m5_grid_la_temp (
 
 CREATE INDEX ego_m5_grid_la_temp_geom_idx
 	ON model_draft.ego_m5_grid_la_temp USING gist (geom);
-  
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.2','temp','model_draft','ego_m5_grid_la_temp','ego_rea_m5.sql',' ');
+
 DROP TABLE IF EXISTS 	model_draft.ego_m5_jnt_temp CASCADE;
 CREATE TABLE 		model_draft.ego_m5_jnt_temp (
 	sorted bigint NOT NULL,
@@ -97,6 +100,10 @@ CREATE TABLE 		model_draft.ego_m5_jnt_temp (
 
 CREATE INDEX ego_m5_jnt_temp_geom_idx
 	ON model_draft.ego_m5_jnt_temp USING gist (geom);
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.2','temp','model_draft','ego_m5_jnt_temp','ego_rea_m5.sql',' ');
+
 
 -- loop for grid_district
 DO
@@ -109,7 +116,7 @@ BEGIN
 		INSERT INTO model_draft.ego_m5_dea_temp
 			SELECT	row_number() over (ORDER BY dea.electrical_capacity DESC)as sorted,
 			dea.*
-			FROM 	model_draft.ego_dea_allocation_m5_a_mview AS dea
+			FROM 	model_draft.ego_supply_rea_m5_a_mview AS dea
 			WHERE 	dea.subst_id =' || gd || ';
 
 		INSERT INTO model_draft.ego_m5_grid_la_temp
@@ -126,7 +133,7 @@ BEGIN
 			FROM	model_draft.ego_m5_dea_temp AS dea
 			INNER JOIN model_draft.ego_m5_grid_la_temp AS la ON (dea.sorted = la.sorted);
 
-		UPDATE 	model_draft.ego_dea_allocation AS t1
+		UPDATE 	model_draft.ego_supply_rea AS t1
 			SET  	geom_new = t2.geom_new,
 				geom_line = t2.geom_line,
 				flag = ''M5''
@@ -144,31 +151,34 @@ END;
 $$;
 
 -- M5 result
-DROP MATERIALIZED VIEW IF EXISTS 	model_draft.ego_dea_allocation_m5_mview CASCADE;
-CREATE MATERIALIZED VIEW 		model_draft.ego_dea_allocation_m5_mview AS
+DROP MATERIALIZED VIEW IF EXISTS 	model_draft.ego_supply_rea_m5_mview CASCADE;
+CREATE MATERIALIZED VIEW 		model_draft.ego_supply_rea_m5_mview AS
 	SELECT 	dea.*
-	FROM	model_draft.ego_dea_allocation AS dea
+	FROM	model_draft.ego_supply_rea AS dea
 	WHERE	flag = 'M5';
 
 -- create index GIST (geom)
-CREATE INDEX ego_dea_allocation_m5_mview_geom_idx
-	ON model_draft.ego_dea_allocation_m5_mview USING gist (geom);
+CREATE INDEX ego_supply_rea_m5_mview_geom_idx
+	ON model_draft.ego_supply_rea_m5_mview USING gist (geom);
 
 -- create index GIST (geom_line)
-CREATE INDEX ego_dea_allocation_m5_mview_geom_line_idx
-	ON model_draft.ego_dea_allocation_m5_mview USING gist (geom_line);
+CREATE INDEX ego_supply_rea_m5_mview_geom_line_idx
+	ON model_draft.ego_supply_rea_m5_mview USING gist (geom_line);
 
 -- create index GIST (geom_new)
-CREATE INDEX ego_dea_allocation_m5_mview_geom_new_idx
-	ON model_draft.ego_dea_allocation_m5_mview USING gist (geom_new);	
+CREATE INDEX ego_supply_rea_m5_mview_geom_new_idx
+	ON model_draft.ego_supply_rea_m5_mview USING gist (geom_new);	
 
 -- grant (oeuser)
-GRANT ALL ON TABLE	model_draft.ego_dea_allocation_m5_mview TO oeuser WITH GRANT OPTION;
-ALTER TABLE		model_draft.ego_dea_allocation_m5_mview OWNER TO oeuser;
+ALTER TABLE model_draft.ego_supply_rea_m5_mview OWNER TO oeuser;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.2','output','model_draft','ego_supply_rea_m5_mview','ego_rea_m5.sql',' ');
+
 
 -- M5 rest
-DROP MATERIALIZED VIEW IF EXISTS 	model_draft.ego_dea_allocation_m5_rest_mview CASCADE;
-CREATE MATERIALIZED VIEW 		model_draft.ego_dea_allocation_m5_rest_mview AS
+DROP MATERIALIZED VIEW IF EXISTS 	model_draft.ego_supply_rea_m5_rest_mview CASCADE;
+CREATE MATERIALIZED VIEW 		model_draft.ego_supply_rea_m5_rest_mview AS
 	SELECT 	id,
 		electrical_capacity,
 		generation_type,
@@ -177,42 +187,21 @@ CREATE MATERIALIZED VIEW 		model_draft.ego_dea_allocation_m5_rest_mview AS
 		subst_id,
 		geom,
 		flag
-	FROM	model_draft.ego_dea_allocation AS dea
+	FROM	model_draft.ego_supply_rea AS dea
 	WHERE	dea.flag = 'M5_rest';
 
 -- create index GIST (geom)
-CREATE INDEX ego_dea_allocation_m5_rest_mview_geom_idx
-	ON model_draft.ego_dea_allocation_m5_rest_mview USING gist (geom);
+CREATE INDEX ego_supply_rea_m5_rest_mview_geom_idx
+	ON model_draft.ego_supply_rea_m5_rest_mview USING gist (geom);
 
 -- grant (oeuser)
-GRANT ALL ON TABLE	model_draft.ego_dea_allocation_m5_rest_mview TO oeuser WITH GRANT OPTION;
-ALTER TABLE		model_draft.ego_dea_allocation_m5_rest_mview OWNER TO oeuser;  
+ALTER TABLE model_draft.ego_supply_rea_m5_rest_mview OWNER TO oeuser;  
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.2','output','model_draft','ego_supply_rea_m5_rest_mview','ego_rea_m5.sql',' ');
+
 
 -- Drop temp
 DROP TABLE IF EXISTS 	model_draft.ego_m5_dea_temp CASCADE;
 DROP TABLE IF EXISTS 	model_draft.ego_m5_grid_la_temp CASCADE;
 DROP TABLE IF EXISTS 	model_draft.ego_m5_jnt_temp CASCADE;
-
--- scenario log
-INSERT INTO	scenario.ego_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,user_name,timestamp)
-	SELECT	'0.2' AS version,
-		'model_draft' AS schema_name,
-		'ego_dea_allocation_m5_mview' AS table_name,
-		'process_ego_dea_allocation_methods.sql' AS script_name,
-		COUNT(*)AS entries,
-		'OK' AS status,
-		session_user AS user_name,
-		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
-	FROM	model_draft.ego_dea_allocation_m5_mview;
-
--- scenario log
-INSERT INTO	scenario.ego_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,user_name,timestamp)
-	SELECT	'0.2' AS version,
-		'model_draft' AS schema_name,
-		'ego_dea_allocation_m5_rest_mview' AS table_name,
-		'process_ego_dea_allocation_methods.sql' AS script_name,
-		COUNT(*)AS entries,
-		'OK' AS status,
-		session_user AS user_name,
-		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
-	FROM	model_draft.ego_dea_allocation_m5_rest_mview;
