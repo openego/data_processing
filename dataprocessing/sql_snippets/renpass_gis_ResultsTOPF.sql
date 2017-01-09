@@ -12,7 +12,7 @@ FROM
 	aggr_id,
 	source,
 	sum(p_nom) AS p_nom
-	FROM orig_geo_powerplants.pf_generator_single
+	FROM model_draft.ego_supply_pf_generator_single
 	WHERE scn_name = 'Status Quo'
 	GROUP BY aggr_id, source) SQ;
 
@@ -54,14 +54,14 @@ WHERE SQ.source IS not NULL
 GROUP BY SQ.source, SQ.datetime;
 
 --
-DELETE FROM calc_ego_hv_powerflow.generator_pq_set;
+DELETE FROM model_draft.ego_grid_pf_hv_generator_pq_set;
 --DELETE FROM calc_ego_hv_powerflow.temp_resolution;
 
 --INSERT INTO calc_ego_hv_powerflow.temp_resolution (temp_id, timesteps, resolution, start_time)
 --SELECT 1, 8760, 'h', TIMESTAMP '2011-01-01 00:00:00';
 
 -- construct array per aggr_id according to source timeseries
-INSERT into calc_ego_hv_powerflow.generator_pq_set (scn_name, generator_id, temp_id, p_set)
+INSERT into model_draft.ego_grid_pf_hv_generator_pq_set (scn_name, generator_id, temp_id, p_set)
 SELECT
 	'Status Quo' AS scn_name,
 	A.aggr_id,
@@ -85,7 +85,7 @@ FROM
 	aggr_id,
 	source,
 	sum(p_nom) AS p_nom
-	FROM orig_geo_powerplants.pf_generator_single
+	FROM model_draft.ego_supply_pf_generator_single
 	WHERE scn_name = 'NEP 2035'
 	GROUP BY aggr_id, source) SQ;
 
@@ -127,7 +127,7 @@ WHERE SQ.source IS not NULL
 GROUP BY SQ.source, SQ.datetime;
 
 -- construct array per aggr_id according to source timeseries
-INSERT into calc_ego_hv_powerflow.generator_pq_set (scn_name, generator_id, temp_id, p_set)
+INSERT into model_draft.ego_grid_pf_hv_generator_pq_set (scn_name, generator_id, temp_id, p_set)
 SELECT
 	'NEP 2035' AS scn_name,
 	A.aggr_id,
@@ -139,14 +139,16 @@ WHERE A.source = B.source
 GROUP BY A.aggr_id;
 */
 
--- 1
--- SELECT * FROM calc_ego_hv_powerflow.generator WHERE bus > 280000 AND scn_name = 'Status Quo';
-DELETE FROM calc_ego_hv_powerflow.generator WHERE bus > 280000 AND scn_name = 'Status Quo';
 
--- INSERT params of LinearTransformers in calc_ego_hv_powerflow.generator (countries besides Germany)
+/* ------------------ NEIGHBOURING COUNTRIES
+-- 1
+-- SELECT * FROM model_draft.ego_grid_pf_hv_generator WHERE bus > 280000 AND scn_name = 'Status Quo';
+DELETE FROM model_draft.ego_grid_pf_hv_generator WHERE bus > 280000 AND scn_name = 'Status Quo';
+
+-- INSERT params of LinearTransformers in model_draft.ego_grid_pf_hv_generator (countries besides Germany)
 -- starting generator_id at 200000, bus_id for neighbouring countries > 2800000 atm
 -- Status Quo
-INSERT into calc_ego_hv_powerflow.generator
+INSERT into model_draft.ego_grid_pf_hv_generator
 
 	SELECT
 	'Status Quo' AS scn_name,
@@ -188,9 +190,9 @@ INSERT into calc_ego_hv_powerflow.generator
 	AND A.source not LIKE '%%powerline%%'
 	AND A.scenario_id = 6;
 
-/*
+
 -- NEP 2035
-INSERT into calc_ego_hv_powerflow.generator
+INSERT into model_draft.ego_grid_pf_hv_generator
 
 	SELECT
 	'NEP 2035' AS scn_name,
@@ -232,15 +234,14 @@ INSERT into calc_ego_hv_powerflow.generator
 	AND A.source not LIKE '%%powerline%%'
 	AND A.scenario_id = 7;
 
-*/
 
--- INSERT params of Source in calc_ego_hv_powerflow.generator (countries besides Germany)
+-- INSERT params of Source in model_draft.ego_grid_pf_hv_generator (countries besides Germany)
 -- Status Quo
-INSERT into calc_ego_hv_powerflow.generator
+INSERT into model_draft.ego_grid_pf_hv_generator
 
 	SELECT
 	'Status Quo' AS scn_name,
-	row_number() over () + (SELECT max(generator_id) FROM calc_ego_hv_powerflow.generator) AS generator_id,
+	row_number() over () + (SELECT max(generator_id) FROM model_draft.ego_grid_pf_hv_generator) AS generator_id,
 	B.bus_id AS bus,
 	'variable' AS dispatch,
 	'PV' AS control,
@@ -273,12 +274,12 @@ INSERT into calc_ego_hv_powerflow.generator
 	AND A.scenario_id = 6;
 
 -- NEP 2035
-/*
-INSERT into calc_ego_hv_powerflow.generator
+
+INSERT into model_draft.ego_grid_pf_hv_generator
 
 	SELECT
 	'NEP 2035' AS scn_name,
-	row_number() over () + (SELECT max(generator_id) FROM calc_ego_hv_powerflow.generator) AS generator_id,
+	row_number() over () + (SELECT max(generator_id) FROM model_draft.ego_grid_pf_hv_generator) AS generator_id,
 	B.bus_id AS bus,
 	'variable' AS dispatch,
 	'PV' AS control,
@@ -310,13 +311,12 @@ INSERT into calc_ego_hv_powerflow.generator
 	AND A.nominal_value[1] > 0.001
 	AND A.scenario_id = 7;
 
-*/
 
 -- Copy timeseries data
--- SELECT * FROM calc_ego_hv_powerflow.generator_pq_set WHERE generator_id in (SELECT generator_id FROM calc_ego_hv_powerflow.generator WHERE bus > 280000);
-DELETE FROM calc_ego_hv_powerflow.generator_pq_set
+-- SELECT * FROM model_draft.ego_grid_pf_hv_generator_pq_set WHERE generator_id in (SELECT generator_id FROM model_draft.ego_grid_pf_hv_generator WHERE bus > 280000);
+DELETE FROM model_draft.ego_grid_pf_hv_generator_pq_set
 WHERE generator_id in (
-	SELECT generator_id FROM calc_ego_hv_powerflow.generator WHERE bus > 280000
+	SELECT generator_id FROM model_draft.ego_grid_pf_hv_generator WHERE bus > 280000
 	);
 
 
@@ -344,7 +344,7 @@ CREATE MATERIALIZED VIEW calc_renpass_gis.translate_to_pf AS
 			WHEN A.source =  12 THEN  'solar'
 			WHEN A.source =  13 THEN  'wind'
 		END AS renpass_gis_source
-			FROM calc_ego_hv_powerflow.generator A join
+			FROM model_draft.ego_grid_pf_hv_generator A join
 			calc_ego_neighbouring_states.bus B
 			ON (A.bus = B.bus_id)
 		WHERE A.generator_id > 200000
@@ -357,7 +357,7 @@ CREATE MATERIALIZED VIEW calc_renpass_gis.translate_to_pf AS
 	AND C.type = 'to_bus';
 
 -- Make an array, INSERT into generator_pq_set
-INSERT into calc_ego_hv_powerflow.generator_pq_set (scn_name, generator_id, temp_id, p_set)
+INSERT into model_draft.ego_grid_pf_hv_generator_pq_set (scn_name, generator_id, temp_id, p_set)
 
 	SELECT 'Status Quo' AS scn_name,
 	SQ.generator_id,
@@ -370,13 +370,13 @@ INSERT into calc_ego_hv_powerflow.generator_pq_set (scn_name, generator_id, temp
 		A.datetime,
 		A.val AS val
 			FROM calc_renpass_gis.translate_to_pf A join
-			calc_ego_hv_powerflow.generator B
+			model_draft.ego_grid_pf_hv_generator B
 			USING (generator_id)
 		) SQ
 	GROUP BY generator_id;
 
 -- NEP 2035
-/*
+
 Drop MATERIALIZED VIEW IF EXISTS calc_renpass_gis.translate_to_pf;
 
 CREATE MATERIALIZED VIEW calc_renpass_gis.translate_to_pf AS
@@ -398,7 +398,7 @@ CREATE MATERIALIZED VIEW calc_renpass_gis.translate_to_pf AS
 			WHEN A.source =  12 THEN  'solar'
 			WHEN A.source =  13 THEN  'wind'
 		END AS renpass_gis_source
-			FROM calc_ego_hv_powerflow.generator A join
+			FROM model_draft.ego_grid_pf_hv_generator A join
 			calc_ego_neighbouring_states.bus B
 			ON (A.bus = B.bus_id)
 		WHERE A.generator_id > 200000
@@ -411,7 +411,7 @@ CREATE MATERIALIZED VIEW calc_renpass_gis.translate_to_pf AS
 	AND C.type = 'to_bus';
 
 -- Make an array, INSERT into generator_pq_set
-INSERT into calc_ego_hv_powerflow.generator_pq_set (scn_name, generator_id, temp_id, p_set)
+INSERT into model_draft.ego_grid_pf_hv_generator_pq_set (scn_name, generator_id, temp_id, p_set)
 
 	SELECT 'NEP 2035' AS scn_name,
 	SQ.generator_id,
@@ -424,11 +424,11 @@ INSERT into calc_ego_hv_powerflow.generator_pq_set (scn_name, generator_id, temp
 		A.datetime,
 		A.val AS val
 			FROM calc_renpass_gis.translate_to_pf A join
-			calc_ego_hv_powerflow.generator B
+			model_draft.ego_grid_pf_hv_generator B
 			USING (generator_id)
 		) SQ
 	GROUP BY generator_id;
-*/
+
 
 -- SELECT * FROM calc_ego_hv_powerflow.load WHERE bus > 280000;
 DELETE FROM calc_ego_hv_powerflow.load WHERE bus > 280000;
@@ -454,7 +454,7 @@ INSERT into calc_ego_hv_powerflow.load (scn_name, load_id, bus, sign)
 	WHERE v_nom = max_v_nom;
 
 -- NEP 2035
-/*
+
 INSERT into calc_ego_hv_powerflow.load (scn_name, load_id, bus, sign)
 
 	SELECT
@@ -472,7 +472,7 @@ INSERT into calc_ego_hv_powerflow.load (scn_name, load_id, bus, sign)
 		FROM calc_ego_neighbouring_states.bus
 		) SQ
 	WHERE v_nom = max_v_nom;
-*/
+
 
 -- SELECT * FROM calc_ego_hv_powerflow.load_pq_set WHERE load_id in (SELECT load_id FROM calc_ego_hv_powerflow.load WHERE bus > 280000)
 DELETE FROM calc_ego_hv_powerflow.load_pq_set;
@@ -503,7 +503,7 @@ INSERT INTO calc_ego_hv_powerflow.load_pq_set (scn_name, load_id, temp_id, p_set
 	GROUP BY C.load_id;
 
 -- NEP 2035
-/*
+
 INSERT INTO calc_ego_hv_powerflow.load_pq_set (scn_name, load_id, temp_id, p_set)
 
 	SELECT
@@ -530,11 +530,11 @@ INSERT INTO calc_ego_hv_powerflow.load_pq_set (scn_name, load_id, temp_id, p_set
 
 -- Scenario eGo data processing
 INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
-	SELECT	'0.1' AS version,
+	SELECT	'0.2' AS version,
 		'calc_ego_hv_powerflow' AS schema_name,
 		'generator_pq_set' AS table_name,
 		'renpass_gis_ResultsTOPF.sql' AS script_name,
 		COUNT(generator_id)AS entries,
 		'OK' AS status,
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
-FROM	calc_ego_hv_powerflow.generator_pq_set;
+FROM	model_draft.ego_grid_pf_hv_generator_pq_set;
