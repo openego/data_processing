@@ -1,7 +1,6 @@
 /*
 Quick workaround to transfer renpassG!S results into the corresponding powerflow table.
 
-Author: Martin
 
 TODO: storage in storage_pqset #1069
 */
