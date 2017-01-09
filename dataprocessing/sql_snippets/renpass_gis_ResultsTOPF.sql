@@ -1,4 +1,10 @@
-﻿
+/*
+Quick workaround to transfer renpassG!S results into the corresponding powerflow table.
+
+Author: Martin
+
+TODO: storage in storage_pqset #1069
+*/
 
 -- Status Quo
 -- aggregate nominal capacity on aggr_id FROM powerflow generators, keeping the source
@@ -529,12 +535,12 @@ INSERT INTO calc_ego_hv_powerflow.load_pq_set (scn_name, load_id, temp_id, p_set
 */
 
 -- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
-	SELECT	'0.2' AS version,
-		'calc_ego_hv_powerflow' AS schema_name,
-		'generator_pq_set' AS table_name,
-		'renpass_gis_ResultsTOPF.sql' AS script_name,
-		COUNT(generator_id)AS entries,
-		'OK' AS status,
-		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
-FROM	model_draft.ego_grid_pf_hv_generator_pq_set;
+INSERT INTO     scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
+        SELECT  '0.2' AS version,
+                'model_draft' AS schema_name,
+                'ego_grid_pf_hv_generator_pq_set' AS table_name,
+                'renpass_gis_ResultsTOPF.sql' AS script_name,
+                COUNT(generator_id)AS entries,
+                'OK' AS status,
+                NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
+FROM    model_draft.ego_grid_pf_hv_generator_pq_set;
