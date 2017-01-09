@@ -145,7 +145,7 @@ GROUP BY A.aggr_id;
 */
 
 
-/* ------------------ NEIGHBOURING COUNTRIES
+------------------ NEIGHBOURING COUNTRIES
 -- 1
 -- SELECT * FROM model_draft.ego_grid_pf_hv_generator WHERE bus > 280000 AND scn_name = 'Status Quo';
 DELETE FROM model_draft.ego_grid_pf_hv_generator WHERE bus > 280000 AND scn_name = 'Status Quo';
@@ -197,6 +197,7 @@ INSERT into model_draft.ego_grid_pf_hv_generator
 
 
 -- NEP 2035
+/*
 INSERT into model_draft.ego_grid_pf_hv_generator
 
 	SELECT
@@ -238,7 +239,7 @@ INSERT into model_draft.ego_grid_pf_hv_generator
 	AND A.nominal_value[1] > 0.001
 	AND A.source not LIKE '%%powerline%%'
 	AND A.scenario_id = 7;
-
+*/
 
 -- INSERT params of Source in model_draft.ego_grid_pf_hv_generator (countries besides Germany)
 -- Status Quo
@@ -279,7 +280,7 @@ INSERT into model_draft.ego_grid_pf_hv_generator
 	AND A.scenario_id = 6;
 
 -- NEP 2035
-
+/*
 INSERT into model_draft.ego_grid_pf_hv_generator
 
 	SELECT
@@ -316,7 +317,7 @@ INSERT into model_draft.ego_grid_pf_hv_generator
 	AND A.nominal_value[1] > 0.001
 	AND A.scenario_id = 7;
 
-
+*/
 -- Copy timeseries data
 -- SELECT * FROM model_draft.ego_grid_pf_hv_generator_pq_set WHERE generator_id in (SELECT generator_id FROM model_draft.ego_grid_pf_hv_generator WHERE bus > 280000);
 DELETE FROM model_draft.ego_grid_pf_hv_generator_pq_set
@@ -381,7 +382,7 @@ INSERT into model_draft.ego_grid_pf_hv_generator_pq_set (scn_name, generator_id,
 	GROUP BY generator_id;
 
 -- NEP 2035
-
+/*
 Drop MATERIALIZED VIEW IF EXISTS calc_renpass_gis.translate_to_pf;
 
 CREATE MATERIALIZED VIEW calc_renpass_gis.translate_to_pf AS
@@ -434,7 +435,7 @@ INSERT into model_draft.ego_grid_pf_hv_generator_pq_set (scn_name, generator_id,
 		) SQ
 	GROUP BY generator_id;
 
-
+*/
 -- SELECT * FROM calc_ego_hv_powerflow.load WHERE bus > 280000;
 DELETE FROM calc_ego_hv_powerflow.load WHERE bus > 280000;
 
@@ -459,7 +460,7 @@ INSERT into calc_ego_hv_powerflow.load (scn_name, load_id, bus, sign)
 	WHERE v_nom = max_v_nom;
 
 -- NEP 2035
-
+/*
 INSERT into calc_ego_hv_powerflow.load (scn_name, load_id, bus, sign)
 
 	SELECT
@@ -478,7 +479,7 @@ INSERT into calc_ego_hv_powerflow.load (scn_name, load_id, bus, sign)
 		) SQ
 	WHERE v_nom = max_v_nom;
 
-
+*/
 -- SELECT * FROM calc_ego_hv_powerflow.load_pq_set WHERE load_id in (SELECT load_id FROM calc_ego_hv_powerflow.load WHERE bus > 280000)
 DELETE FROM calc_ego_hv_powerflow.load_pq_set;
 
@@ -508,7 +509,7 @@ INSERT INTO calc_ego_hv_powerflow.load_pq_set (scn_name, load_id, temp_id, p_set
 	GROUP BY C.load_id;
 
 -- NEP 2035
-
+/*
 INSERT INTO calc_ego_hv_powerflow.load_pq_set (scn_name, load_id, temp_id, p_set)
 
 	SELECT
