@@ -8,7 +8,7 @@ __license__ = "tba"
 __author__ = "Ludee"
 */
 
--- number of grid_district -> 3609
+-- number of grid_district -> 3606
 	SELECT	COUNT(*)
 	FROM	 model_draft.ego_grid_mv_griddistrict;
 
@@ -32,7 +32,7 @@ CREATE TABLE 		model_draft.ego_supply_rea (
 CONSTRAINT ego_supply_rea_pkey PRIMARY KEY (id));
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.2','input','supply','ego_renewable_power_plants_germany','ego_rea_setup.sql',' ');
+SELECT ego_scenario_log('v0.2.3','input','supply','ego_renewable_power_plants_germany','ego_rea_setup.sql',' ');
 
 -- insert DEA, with no geom excluded
 INSERT INTO model_draft.ego_supply_rea (id, electrical_capacity, generation_type, generation_subtype, voltage_level, postcode, source, geom)
@@ -56,7 +56,7 @@ CREATE INDEX ego_supply_rea_geom_new_idx
 ALTER TABLE model_draft.ego_supply_rea OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.2','input','model_draft','ego_grid_mv_griddistrict','ego_rea_setup.sql',' ');
+SELECT ego_scenario_log('v0.2.3','input','model_draft','ego_grid_mv_griddistrict','ego_rea_setup.sql',' ');
 
 -- update subst_id from mv-griddistrict
 UPDATE 	model_draft.ego_supply_rea AS t1
@@ -98,7 +98,7 @@ Some re are outside Germany because of unknown inaccuracies.
 They are moved to the next substation before the allocation methods.
 Offshore wind power plants are not moved.
 */ 
-    
+
 -- re outside mv-griddistrict
 DROP MATERIALIZED VIEW IF EXISTS 	model_draft.ego_supply_rea_out_mview CASCADE;
 CREATE MATERIALIZED VIEW 		model_draft.ego_supply_rea_out_mview AS
@@ -122,7 +122,11 @@ CREATE INDEX ego_supply_rea_out_mview_geom_new_idx
 ALTER TABLE model_draft.ego_supply_rea_out_mview OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.2','temp','model_draft','ego_supply_rea_out_mview','ego_rea_setup.sql',' ');
+SELECT ego_scenario_log('v0.2.3','temp','model_draft','ego_supply_rea_out_mview','ego_rea_setup.sql',' ');
+
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.3','input','model_draft','ego_grid_hvmv_substation','ego_rea_setup.sql',' ');
 
 -- New geom, DEA to next substation
 DROP TABLE IF EXISTS	model_draft.ego_supply_rea_out_nn CASCADE;
@@ -135,7 +139,7 @@ CREATE TABLE 		model_draft.ego_supply_rea_out_nn AS
 		ST_Distance(dea.geom,sub.geom) AS distance,
 		dea.geom ::geometry(Point,3035) AS geom
 	FROM 	model_draft.ego_supply_rea_out_mview AS dea,
-		calc_ego_substation.ego_deu_substations AS sub
+		model_draft.ego_grid_hvmv_substation AS sub
 	WHERE 	ST_DWithin(dea.geom,sub.geom, 100000) -- In a 100 km radius
 	ORDER BY 	dea.id, ST_Distance(dea.geom,sub.geom);
 
@@ -144,7 +148,7 @@ ALTER TABLE	model_draft.ego_supply_rea_out_nn
 	OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.2','temp','model_draft','ego_supply_rea_out_nn','ego_rea_setup.sql',' ');
+SELECT ego_scenario_log('v0.2.3','temp','model_draft','ego_supply_rea_out_nn','ego_rea_setup.sql',' ');
 	
 -- new subst_id and geom_new with line
 UPDATE 	model_draft.ego_supply_rea AS t1
@@ -180,7 +184,7 @@ CREATE TABLE 		model_draft.ego_osm_agriculture_per_mvgd (
 	CONSTRAINT ego_osm_agriculture_per_mvgd_pkey PRIMARY KEY (id));
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.2','input','model_draft','ego_osm_sector_per_griddistrict_4_agricultural','ego_rea_setup.sql',' ');
+SELECT ego_scenario_log('v0.2.3','input','model_draft','ego_osm_sector_per_griddistrict_4_agricultural','ego_rea_setup.sql',' ');
 	
 -- insert data (osm agricultural)
 INSERT INTO	model_draft.ego_osm_agriculture_per_mvgd (area_ha,geom)
@@ -208,7 +212,7 @@ CREATE INDEX ego_osm_agriculture_per_mvgd_geom_idx
 ALTER TABLE model_draft.ego_osm_agriculture_per_mvgd OWNER TO oeuser;  
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.2','output','model_draft','ego_osm_agriculture_per_mvgd','ego_rea_setup.sql',' ');
+SELECT ego_scenario_log('v0.2.3','output','model_draft','ego_osm_agriculture_per_mvgd','ego_rea_setup.sql',' ');
 
 
 /* BNetzA MView
