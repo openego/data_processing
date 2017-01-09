@@ -122,7 +122,10 @@ BEGIN
 
 		INSERT INTO model_draft.ego_m3_grid_wpa_temp
 			SELECT 	row_number() over (ORDER BY RANDOM())as sorted,
-				wpa.*
+				wpa.id,
+				wpa.subst_id,
+				wpa.area_type,
+				(wpa.geom)
 			FROM 	model_draft.ego_lattice_deu_500m_wpa_mview AS wpa
 			WHERE 	wpa.subst_id =' || gd || ';
 
