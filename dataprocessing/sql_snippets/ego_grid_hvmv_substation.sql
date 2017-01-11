@@ -1,27 +1,14 @@
-/* 
-Copyright 2016 by open_eGo project
-Published under GNU GENERAL PUBLIC LICENSE Version 3 (see https://github.com/openego/data_processing/blob/master/LICENSE)
-Authors: Ludwig Hülk; Guido Pleßmann; Ilka 
+/*
+hvmv substation voronoi
+voronoi polygons with eucldean distance / manhattan distance would be better but not available in sql
 
-ego data processing - hvmv substation vornoi
-Input is hvmv substation (model_draft.ego_grid_hvmv_substation)
-Voronoi polygons with eucldean distance / manhattan distance would be better but not available in sql
- */
+__copyright__ = "tba"
+__license__ = "tba"
+__author__ = "Ludee"
+*/
 
--- add entry to scenario log table
-INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2.1' AS version,
-	'input' AS io,
-	'model_draft' AS schema_name,
-	'ego_grid_hvmv_substation' AS table_name,
-	'ego_grid_hvmv_substation.sql' AS script_name,
-	COUNT(*)AS entries,
-	'OK' AS status,
-	session_user AS user_name,
-	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	obj_description('model_draft.ego_grid_hvmv_substation' ::regclass) ::json AS metadata
-FROM	model_draft.ego_grid_hvmv_substation;
-
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.3','input','model_draft','ego_grid_hvmv_substation','ego_grid_hvmv_substation.sql',' ');
 
 -- set id as subst_id
 ALTER TABLE	model_draft.ego_grid_hvmv_substation
@@ -31,38 +18,29 @@ ALTER TABLE	model_draft.ego_grid_hvmv_substation
 	ADD COLUMN 		geom geometry(Point,3035);
 
 UPDATE 	model_draft.ego_grid_hvmv_substation t1
-SET  	geom = ST_TRANSFORM(t1.point,3035)
-FROM	model_draft.ego_grid_hvmv_substation t2
-WHERE  	t1.subst_id = t2.subst_id;
+	SET  	geom = ST_TRANSFORM(t1.point,3035)
+	FROM	model_draft.ego_grid_hvmv_substation t2
+	WHERE  	t1.subst_id = t2.subst_id;
 
--- "Create Index GIST (geom)"   (OK!) 11.000ms =0
-CREATE INDEX	ego_grid_hvmv_substation_idx
-	ON	model_draft.ego_grid_hvmv_substation
-	USING	GIST (geom);
+-- index GIST (geom)
+CREATE INDEX	ego_grid_hvmv_substation_geom_idx
+	ON	model_draft.ego_grid_hvmv_substation USING GIST (geom);
 
--- calculate Gemeindeschlüssel
+-- Gemeindeschlüssel
 UPDATE 	model_draft.ego_grid_hvmv_substation AS t1
-SET  	ags_0 = t2.ags_0
-FROM    (
-	SELECT	sub.subst_id AS subst_id,
-		vg.ags_0 AS ags_0
-	FROM	model_draft.ego_grid_hvmv_substation AS sub,
-		orig_vg250.vg250_6_gem_clean AS vg
-	WHERE  	vg.geom && sub.geom AND
-		ST_CONTAINS(vg.geom,sub.geom)
-	) AS t2
-WHERE  	t1.subst_id = t2.subst_id;
+	SET  	ags_0 = t2.ags_0
+	FROM    (
+		SELECT	sub.subst_id AS subst_id,
+			vg.ags_0 AS ags_0
+		FROM	model_draft.ego_grid_hvmv_substation AS sub,
+			orig_vg250.vg250_6_gem_clean AS vg
+		WHERE  	vg.geom && sub.geom AND
+			ST_CONTAINS(vg.geom,sub.geom)
+		) AS t2
+	WHERE  	t1.subst_id = t2.subst_id;
 
--- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
-	SELECT	'0.2.1' AS version,
-		'model_draft' AS schema_name,
-		'ego_grid_hvmv_substation' AS table_name,
-		'process_eGo_substation.sql' AS script_name,
-		COUNT(geom)AS entries,
-		'OK' AS status,
-		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
-	FROM	model_draft.ego_grid_hvmv_substation;
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.3','output','model_draft','ego_grid_hvmv_substation','ego_grid_hvmv_substation.sql',' ');
 
 
 -- create dummy points for voronoi calculation
@@ -136,19 +114,8 @@ COMMENT ON TABLE model_draft.ego_grid_hvmv_substation_dummy IS '{
 -- select description
 SELECT obj_description('model_draft.ego_grid_hvmv_substation_dummy' ::regclass) ::json;
 
--- add entry to scenario log table
-INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2.1' AS version,
-	'output' AS io,
-	'model_draft' AS schema_name,
-	'ego_grid_hvmv_substation_dummy' AS table_name,
-	'ego_grid_hvmv_substation.sql' AS script_name,
-	COUNT(*)AS entries,
-	'OK' AS status,
-	session_user AS user_name,
-	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	obj_description('model_draft.ego_grid_hvmv_substation_dummy' ::regclass) ::json AS metadata
-FROM	model_draft.ego_grid_hvmv_substation_dummy;
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.3','output','model_draft','ego_grid_hvmv_substation_dummy','ego_grid_hvmv_substation.sql',' ');
 
 
 -- voronoi polygons with eucldean distance
@@ -211,12 +178,11 @@ CREATE INDEX	ego_grid_hvmv_substation_voronoi_geom_idx
 	ON	model_draft.ego_grid_hvmv_substation_voronoi USING gist (geom);
 
 -- grant (oeuser)
-GRANT ALL ON TABLE 	model_draft.ego_grid_hvmv_substation_voronoi TO oeuser WITH GRANT OPTION;
-ALTER TABLE		model_draft.ego_grid_hvmv_substation_voronoi OWNER TO oeuser;
+ALTER TABLE model_draft.ego_grid_hvmv_substation_voronoi OWNER TO oeuser;
 
--- delete dummy points from substations and voronoi (18 Points)
+/* -- delete dummy points from substations and voronoi (18 Points)
 DELETE FROM model_draft.ego_grid_hvmv_substation WHERE subst_name='DUMMY';
-DELETE FROM model_draft.ego_grid_hvmv_substation_voronoi WHERE subst_id IS NULL;
+DELETE FROM model_draft.ego_grid_hvmv_substation_voronoi WHERE subst_id IS NULL; */
 
 -- metadata
 COMMENT ON TABLE model_draft.ego_grid_hvmv_substation_voronoi IS '{
@@ -251,16 +217,5 @@ COMMENT ON TABLE model_draft.ego_grid_hvmv_substation_voronoi IS '{
 -- select description
 SELECT obj_description('model_draft.ego_grid_hvmv_substation_voronoi' ::regclass) ::json;
 
--- add entry to scenario log table
-INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2.1' AS version,
-	'output' AS io,
-	'model_draft' AS schema_name,
-	'ego_grid_hvmv_substation_voronoi' AS table_name,
-	'ego_grid_hvmv_substation.sql' AS script_name,
-	COUNT(*)AS entries,
-	'OK' AS status,
-	session_user AS user_name,
-	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	obj_description('model_draft.ego_grid_hvmv_substation_voronoi' ::regclass) ::json AS metadata
-FROM	model_draft.ego_grid_hvmv_substation_voronoi;
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.3','output','model_draft','ego_grid_hvmv_substation_voronoi','ego_grid_hvmv_substation.sql',' ');
