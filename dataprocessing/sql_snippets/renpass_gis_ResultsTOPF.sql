@@ -60,10 +60,10 @@ GROUP BY SQ.source, SQ.datetime;
 
 --
 DELETE FROM model_draft.ego_grid_pf_hv_generator_pq_set;
---DELETE FROM calc_ego_hv_powerflow.temp_resolution;
+DELETE FROM calc_ego_hv_powerflow.temp_resolution;
 
---INSERT INTO calc_ego_hv_powerflow.temp_resolution (temp_id, timesteps, resolution, start_time)
---SELECT 1, 8760, 'h', TIMESTAMP '2011-01-01 00:00:00';
+INSERT INTO calc_ego_hv_powerflow.temp_resolution (temp_id, timesteps, resolution, start_time)
+SELECT 1, 8760, 'h', TIMESTAMP '2011-01-01 00:00:00';
 
 -- construct array per aggr_id according to source timeseries
 INSERT into model_draft.ego_grid_pf_hv_generator_pq_set (scn_name, generator_id, temp_id, p_set)
