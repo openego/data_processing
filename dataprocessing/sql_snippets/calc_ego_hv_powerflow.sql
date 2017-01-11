@@ -1,7 +1,8 @@
 --------------------------------------------------------------------
 -------------------- Static component tables -----------------------
 --------------------------------------------------------------------
-DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_scenario_settings; 
+
+DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_scenario_settings CASCADE; 
 
 CREATE TABLE model_draft.ego_grid_pf_hv_scenario_settings
 (
@@ -88,7 +89,7 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_scenario_settings IS
 }';
 
 
-DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_source; 
+DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_source CASCADE; 
 CREATE TABLE model_draft.ego_grid_pf_hv_source
 (
   source_id bigint NOT NULL,
@@ -141,7 +142,7 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_source IS
 "Instructions for proper use": ["..."]
 }';
 
-DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_bus; 
+DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_bus CASCADE; 
 CREATE TABLE model_draft.ego_grid_pf_hv_bus
 (
   scn_name character varying NOT NULL DEFAULT 'Status Quo'::character varying,
@@ -206,7 +207,7 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_bus IS
 }';
 
 
-DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_generator; 
+DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_generator CASCADE; 
 CREATE TABLE model_draft.ego_grid_pf_hv_generator
 (
   scn_name character varying NOT NULL DEFAULT 'Status Quo'::character varying,
@@ -308,7 +309,7 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_generator IS
 "Instructions for proper use": ["..."]
 }';
 
-DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_line; 
+DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_line CASCADE; 
 CREATE TABLE model_draft.ego_grid_pf_hv_line
 (
   scn_name character varying NOT NULL DEFAULT 'Status Quo'::character varying,
@@ -420,7 +421,7 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_line IS
 "Instructions for proper use": ["..."]
 }';
 
-DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_load; 
+DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_load CASCADE; 
 CREATE TABLE model_draft.ego_grid_pf_hv_load
 (
   scn_name character varying NOT NULL DEFAULT 'Status Quo'::character varying,
@@ -477,7 +478,7 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_load IS
 }';
 
 
-DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_storage; 
+DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_storage CASCADE; 
 CREATE TABLE model_draft.ego_grid_pf_hv_storage
 (
   scn_name character varying NOT NULL DEFAULT 'Status Quo'::character varying,
@@ -603,7 +604,7 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_storage IS
 }';
 
 
-DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_temp_resolution; 
+DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_temp_resolution CASCADE; 
 CREATE TABLE model_draft.ego_grid_pf_hv_temp_resolution
 (
   temp_id bigint NOT NULL,
@@ -656,7 +657,7 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_temp_resolution IS
 }';
 
 
-DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_transformer; 
+DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_transformer CASCADE; 
 CREATE TABLE model_draft.ego_grid_pf_hv_transformer
 (
   scn_name character varying NOT NULL DEFAULT 'Status Quo'::character varying,
@@ -766,7 +767,7 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_transformer IS
 ---------------------- Time series tables --------------------------
 --------------------------------------------------------------------
 
-DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_bus_v_mag_set; 
+DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_bus_v_mag_set CASCADE; 
 CREATE TABLE model_draft.ego_grid_pf_hv_bus_v_mag_set
 (
   scn_name character varying NOT NULL DEFAULT 'Status Quo'::character varying,
@@ -820,7 +821,7 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_bus_v_mag_set IS
 }';
 
 
-DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_generator_pq_set; 
+DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_generator_pq_set CASCADE; 
 CREATE TABLE model_draft.ego_grid_pf_hv_generator_pq_set
 (
   scn_name character varying NOT NULL DEFAULT 'Status Quo'::character varying,
@@ -888,7 +889,7 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_generator_pq_set IS
 
 
 
-DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_load_pq_set; 
+DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_load_pq_set CASCADE; 
 CREATE TABLE model_draft.ego_grid_pf_hv_load_pq_set
 (
   scn_name character varying NOT NULL DEFAULT 'Status Quo'::character varying,
@@ -947,7 +948,7 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_load_pq_set IS
 
 
 
-DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_storage_pq_set; 
+DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_storage_pq_set CASCADE; 
 CREATE TABLE model_draft.ego_grid_pf_hv_storage_pq_set
 (
   scn_name character varying NOT NULL DEFAULT 'Status Quo'::character varying,
