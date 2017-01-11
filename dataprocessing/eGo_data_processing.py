@@ -56,8 +56,8 @@ def data_processing():
         # 'ego_paper_result.sql',						# results and statistics
         # 'Voronoi_ehv.sql',						#
         # 'voronoi_weatherpoint.sql',				#
-        # 'calc_ego_hv_powerflow.sql',				#
-        # 'osmtgmod_to_pypsa.sql',					#
+         'calc_ego_hv_powerflow.sql',				#
+         'osmtgmod_to_pypsa.sql',					#
          'assignment_generator_bus.sql',			#
          'renpass_gis_ResultsTOPF.sql',			#
          'assignment_load_bus.sql',				#
