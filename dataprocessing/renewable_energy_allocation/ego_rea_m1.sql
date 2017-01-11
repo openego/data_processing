@@ -41,7 +41,7 @@ CREATE INDEX ego_supply_rea_m1_1_a_mview_geom_idx
 ALTER TABLE model_draft.ego_supply_rea_m1_1_a_mview OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.3','output','model_draft','ego_supply_rea_m1_1_a_mview','ego_rea_m1.sql',' ');
+SELECT ego_scenario_log('v0.2.3','temp','model_draft','ego_supply_rea_m1_1_a_mview','ego_rea_m1.sql',' ');
 
 
 -- flag M1-1
@@ -102,6 +102,9 @@ CREATE INDEX ego_supply_rea_m1_1_jnt_temp_geom_idx
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.3','temp','model_draft','ego_supply_rea_m1_1_jnt_temp','ego_rea_m1.sql',' ');
 
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.3','input','model_draft','ego_osm_agriculture_per_mvgd','ego_rea_m1.sql',' ');
+
 -- loop for grid_district
 DO
 $$
@@ -119,7 +122,7 @@ BEGIN
 		INSERT INTO model_draft.ego_supply_rea_m1_1_osm_temp
 			SELECT 	row_number() over (ORDER BY osm.area_ha DESC)as sorted,
 					osm.*
-			FROM 	model_draft.ego_dea_agricultural_sector_per_grid_district AS osm
+			FROM 	model_draft.ego_osm_agriculture_per_mvgd AS osm
 			WHERE 	osm.subst_id =' || gd || ';
 
 		INSERT INTO model_draft.ego_supply_rea_m1_1_jnt_temp
@@ -231,7 +234,7 @@ CREATE INDEX ego_supply_rea_m1_2_a_mview_geom_idx
 ALTER TABLE model_draft.ego_supply_rea_m1_2_a_mview OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.3','output','model_draft','ego_supply_rea_m1_2_a_mview','ego_rea_m1.sql',' ');
+SELECT ego_scenario_log('v0.2.3','temp','model_draft','ego_supply_rea_m1_2_a_mview','ego_rea_m1.sql',' ');
 
 
 -- flag M1-2
@@ -313,7 +316,7 @@ BEGIN
 		INSERT INTO model_draft.ego_supply_rea_m1_2_osm_temp
 			SELECT 	row_number() over (ORDER BY osm.area_ha DESC)as sorted,
 			osm.*
-			FROM 	model_draft.ego_dea_agricultural_sector_per_grid_district AS osm
+			FROM 	model_draft.ego_osm_agriculture_per_mvgd AS osm
 			WHERE 	subst_id =' || gd || ';
 
 		INSERT INTO model_draft.ego_supply_rea_m1_2_jnt_temp

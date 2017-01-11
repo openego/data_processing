@@ -40,15 +40,15 @@ INSERT INTO model_draft.ego_supply_rea (id, electrical_capacity, generation_type
 	FROM	supply.ego_renewable_power_plants_germany
 	WHERE	geom IS NOT NULL;
 
--- create index GIST (geom)
+-- index GIST (geom)
 CREATE INDEX	ego_supply_rea_geom_idx
 	ON	model_draft.ego_supply_rea USING GIST (geom);
 
--- create index GIST (geom_line)
+-- index GIST (geom_line)
 CREATE INDEX ego_supply_rea_geom_line_idx
 	ON model_draft.ego_supply_rea USING gist (geom_line);
 
--- create index GIST (geom_new)
+-- index GIST (geom_new)
 CREATE INDEX ego_supply_rea_geom_new_idx
 	ON model_draft.ego_supply_rea USING gist (geom_new);
 
@@ -92,6 +92,9 @@ UPDATE 	model_draft.ego_supply_rea AS dea
 	WHERE	dea.subst_id IS NULL AND
 		dea.generation_type = 'wind';
 
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.3','output','model_draft','ego_supply_rea','ego_rea_setup.sql',' ');
+
 
 /*
 Some re are outside Germany because of unknown inaccuracies.
@@ -106,15 +109,15 @@ CREATE MATERIALIZED VIEW 		model_draft.ego_supply_rea_out_mview AS
 	FROM 	model_draft.ego_supply_rea AS dea
 	WHERE	flag = 'out' OR flag = 'offshore';
 
--- create index GIST (geom)
+-- index GIST (geom)
 CREATE INDEX ego_supply_rea_out_mview_geom_idx
 	ON model_draft.ego_supply_rea_out_mview USING gist (geom);
 
--- create index GIST (geom_line)
+-- index GIST (geom_line)
 CREATE INDEX ego_supply_rea_out_mview_geom_line_idx
 	ON model_draft.ego_supply_rea_out_mview USING gist (geom_line);
 
--- create index GIST (geom_new)
+-- index GIST (geom_new)
 CREATE INDEX ego_supply_rea_out_mview_geom_new_idx
 	ON model_draft.ego_supply_rea_out_mview USING gist (geom_new);	
 
@@ -128,7 +131,8 @@ SELECT ego_scenario_log('v0.2.3','temp','model_draft','ego_supply_rea_out_mview'
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.3','input','model_draft','ego_grid_hvmv_substation','ego_rea_setup.sql',' ');
 
--- New geom, DEA to next substation
+
+-- new geom, DEA to next substation
 DROP TABLE IF EXISTS	model_draft.ego_supply_rea_out_nn CASCADE;
 CREATE TABLE 		model_draft.ego_supply_rea_out_nn AS 
 	SELECT DISTINCT ON (dea.id)
@@ -185,7 +189,7 @@ CREATE TABLE 		model_draft.ego_osm_agriculture_per_mvgd (
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.3','input','model_draft','ego_osm_sector_per_griddistrict_4_agricultural','ego_rea_setup.sql',' ');
-	
+
 -- insert data (osm agricultural)
 INSERT INTO	model_draft.ego_osm_agriculture_per_mvgd (area_ha,geom)
 	SELECT	ST_AREA(osm.geom)/10000, osm.geom
@@ -204,7 +208,7 @@ UPDATE 	model_draft.ego_osm_agriculture_per_mvgd AS t1
 		) AS t2
 	WHERE  	t1.id = t2.id;
 
--- create index GIST (geom)
+-- index GIST (geom)
 CREATE INDEX ego_osm_agriculture_per_mvgd_geom_idx
 	ON model_draft.ego_osm_agriculture_per_mvgd USING gist (geom);
 
@@ -213,6 +217,10 @@ ALTER TABLE model_draft.ego_osm_agriculture_per_mvgd OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.3','output','model_draft','ego_osm_agriculture_per_mvgd','ego_rea_setup.sql',' ');
+
+
+-- DROP MATERIALIZED VIEW IF EXISTS 	model_draft.ego_supply_rea_out_mview CASCADE;
+
 
 
 /* BNetzA MView

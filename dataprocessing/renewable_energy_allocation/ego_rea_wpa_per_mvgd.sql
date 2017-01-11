@@ -137,3 +137,6 @@ SELECT obj_description('model_draft.ego_supply_wpa_per_mvgd' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.3','output','model_draft','ego_supply_wpa_per_mvgd','ego_rea_wpa_per_mvgd.sql',' ');
+
+
+-- DROP TABLE IF EXISTS  	model_draft.ego_supply_wpa CASCADE;

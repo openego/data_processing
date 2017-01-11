@@ -281,3 +281,4 @@ SELECT ego_scenario_log('v0.2.3','output','model_draft','ego_supply_rea_m2_rest_
 DROP TABLE IF EXISTS 	model_draft.ego_supply_rea_m2_farm_temp CASCADE;
 DROP TABLE IF EXISTS 	model_draft.ego_supply_rea_m2_wpa_temp CASCADE;
 DROP TABLE IF EXISTS 	model_draft.ego_supply_rea_m2_jnt_temp CASCADE;
+DROP TABLE IF EXISTS 	model_draft.ego_supply_rea_m2_windfarm CASCADE;
