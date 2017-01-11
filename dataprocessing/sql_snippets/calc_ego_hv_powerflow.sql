@@ -617,6 +617,9 @@ WITH (
   OIDS=FALSE
 );
 
+INSERT INTO calc_ego_hv_powerflow.temp_resolution (temp_id, timesteps, resolution, start_time)
+SELECT 1, 8760, 'h', TIMESTAMP '2011-01-01 00:00:00';
+
 COMMENT ON TABLE  model_draft.ego_grid_pf_hv_temp_resolution IS
 '{
 "Name": "temporal resolution hv powerflow",
