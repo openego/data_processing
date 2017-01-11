@@ -21,7 +21,7 @@ SELECT ego_scenario_log('v0.2.2','input','model_draft','ego_demand_loadarea','eg
 -- results and statistics for substation, load area, MV grid districts and consumption
 DROP TABLE IF EXISTS 	model_draft.ego_data_processing_results CASCADE;
 CREATE TABLE 		model_draft.ego_data_processing_results (
-	id SERIAL PRIMARY KEY,
+	id SERIAL,
 	schema_name text,
 	table_name text,
 	description text,
@@ -298,12 +298,12 @@ SELECT	MAX(area_share) AS max,
 	MIN(area_share) AS min
 FROM	model_draft.ego_data_processing_results_mvgd ;
 
--- Set grants and owner
+-- grant (oeuser)
 ALTER TABLE model_draft.ego_data_processing_results_mvgd
 	OWNER TO oeuser,
 	ADD PRIMARY KEY (subst_id) ;
 
--- Create Index GIST (geom)   (OK!) -> 100ms =0
+-- index GIST (geom)
 CREATE INDEX  	ego_data_processing_results_mvgd_geom_idx
 	ON	model_draft.ego_data_processing_results_mvgd USING GIST (geom);
 
@@ -350,8 +350,7 @@ SELECT	'6' ::integer AS id,
 FROM	political_boundary.bkg_vg250_1_sta_mview AS vg
 WHERE	gf='1' OR gf='2';
 
--- Grant oeuser   (OK!) -> 100ms =0
-GRANT ALL ON TABLE	political_boundary.bkg_vg250_statistics_mview TO oeuser WITH GRANT OPTION;
+-- grant (oeuser)
 ALTER TABLE		political_boundary.bkg_vg250_statistics_mview OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)

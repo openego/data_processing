@@ -17,7 +17,7 @@ CREATE TABLE         	model_draft.ego_supply_wpa (
 CONSTRAINT 	ego_supply_wpa_pkey PRIMARY KEY (id));
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.2','input','supply','soethe_wind_potential_area','ego_rea_wpa_per_mvgd.sql',' ');
+SELECT ego_scenario_log('v0.2.3','input','supply','soethe_wind_potential_area','ego_rea_wpa_per_mvgd.sql',' ');
 
 -- insert wpa dump
 INSERT INTO     model_draft.ego_supply_wpa (geom)
@@ -34,7 +34,7 @@ CREATE INDEX 	ego_supply_wpa_geom_idx
 ALTER TABLE	model_draft.ego_supply_wpa OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.2','temp','model_draft','ego_supply_wpa','ego_rea_wpa_per_mvgd.sql',' ');
+SELECT ego_scenario_log('v0.2.3','temp','model_draft','ego_supply_wpa','ego_rea_wpa_per_mvgd.sql',' ');
 
 /* -- validate (geom)
 DROP VIEW IF EXISTS	model_draft.ego_supply_wpa_error_geom_view CASCADE;
@@ -65,7 +65,7 @@ CREATE TABLE         	model_draft.ego_supply_wpa_per_mvgd (
 CONSTRAINT 	ego_supply_wpa_per_mvgd_pkey PRIMARY KEY (id));
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.2','input','model_draft','ego_grid_mv_griddistrict','ego_rea_wpa_per_mvgd.sql',' ');
+SELECT ego_scenario_log('v0.2.3','input','model_draft','ego_grid_mv_griddistrict','ego_rea_wpa_per_mvgd.sql',' ');
 
 -- insert wpa per mv-griddistrict
 INSERT INTO     model_draft.ego_supply_wpa_per_mvgd (area_ha, geom)
@@ -136,4 +136,7 @@ COMMENT ON TABLE model_draft.ego_supply_wpa_per_mvgd IS '{
 SELECT obj_description('model_draft.ego_supply_wpa_per_mvgd' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.2','output','model_draft','ego_supply_wpa_per_mvgd','ego_rea_wpa_per_mvgd.sql',' ');
+SELECT ego_scenario_log('v0.2.3','output','model_draft','ego_supply_wpa_per_mvgd','ego_rea_wpa_per_mvgd.sql',' ');
+
+
+-- DROP TABLE IF EXISTS  	model_draft.ego_supply_wpa CASCADE;

@@ -13,7 +13,7 @@ Results
 */ 
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.2','input','model_draft','renewable_power_plants_germany','ego_rea_results.sql',' ');
+SELECT ego_scenario_log('v0.2.3','input','model_draft','renewable_power_plants_germany','ego_rea_results.sql',' ');
 
 -- dea capacity and count per generation types and voltage level
 DROP TABLE IF EXISTS 	model_draft.ego_supply_rea_per_gentype_and_voltlevel CASCADE;
@@ -33,7 +33,7 @@ ALTER TABLE	model_draft.ego_supply_rea_per_gentype_and_voltlevel
 	OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.2','output','model_draft','ego_supply_rea_per_gentype_and_voltlevel','ego_rea_results.sql',' ');
+SELECT ego_scenario_log('v0.2.3','output','model_draft','ego_supply_rea_per_gentype_and_voltlevel','ego_rea_results.sql',' ');
 
 	
 /* 
@@ -83,7 +83,7 @@ UPDATE 	model_draft.ego_supply_rea_per_mvgd AS t1
 	WHERE  	t1.subst_id = t2.subst_id;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.2','output','model_draft','ego_supply_rea_per_mvgd','ego_rea_results.sql',' ');
+SELECT ego_scenario_log('v0.2.3','output','model_draft','ego_supply_rea_per_mvgd','ego_rea_results.sql',' ');
 
 
 	
@@ -125,7 +125,7 @@ FROM	model_draft.ego_supply_rea_per_loadarea AS la,
 */
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.2','output','model_draft','ego_supply_rea_per_loadarea','ego_rea_results.sql',' ');
+SELECT ego_scenario_log('v0.2.3','output','model_draft','ego_supply_rea_per_loadarea','ego_rea_results.sql',' ');
 
 
 /* 
@@ -198,4 +198,4 @@ ALTER TABLE	model_draft.ego_supply_rea_per_method
 	OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.2','output','model_draft','ego_supply_rea_per_method','ego_rea_results.sql',' ');
+SELECT ego_scenario_log('v0.2.3','output','model_draft','ego_supply_rea_per_method','ego_rea_results.sql',' ');
