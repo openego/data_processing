@@ -100,6 +100,10 @@ FROM	openstreetmap.osm_deu_rels;
 CREATE VIEW model_draft.way_substations AS
 SELECT openstreetmap.osm_deu_ways.id, openstreetmap.osm_deu_ways.tags, openstreetmap.osm_deu_polygon.geom
 FROM openstreetmap.osm_deu_ways JOIN openstreetmap.osm_deu_polygon ON openstreetmap.osm_deu_ways.id = openstreetmap.osm_deu_polygon.osm_id
+WHERE hstore(openstreetmap.osm_deu_ways.tags)->'power' in ('substation','sub_station','station')
+UNION 
+SELECT openstreetmap.osm_deu_ways.id, openstreetmap.osm_deu_ways.tags, openstreetmap.osm_deu_line.geom
+FROM openstreetmap.osm_deu_ways JOIN openstreetmap.osm_deu_line ON openstreetmap.osm_deu_ways.id = openstreetmap.osm_deu_line.osm_id
 WHERE hstore(openstreetmap.osm_deu_ways.tags)->'power' in ('substation','sub_station','station');
 ALTER VIEW model_draft.way_substations OWNER TO oeuser;
 
