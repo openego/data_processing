@@ -53,12 +53,12 @@ def data_processing():
         # 'process_eGo_loads_melted.sql',        		# melt osm and zensus cluster
         # 'process_eGo_loads_per_grid_district.sql', 	# loadarea per mv-griddistrict
         # 'process_eGo_consumption.sql',			   	# consumption per loadarea
-        'ego_paper_result.sql',						# results and statistics
+        # 'ego_paper_result.sql',						# results and statistics
         # 'Voronoi_ehv.sql',						#
         # 'voronoi_weatherpoint.sql',				#
-         'calc_ego_hv_powerflow.sql',				#
-         'osmtgmod_to_pypsa.sql',					#
-         'assignment_generator_bus.sql',			#
+        # 'calc_ego_hv_powerflow.sql',				#
+        # 'osmtgmod_to_pypsa.sql',					#
+        # 'assignment_generator_bus.sql',			#
          'renpass_gis_ResultsTOPF.sql',			#
          'assignment_load_bus.sql',				#
          'demand_per_mv_grid_district.py',			#
