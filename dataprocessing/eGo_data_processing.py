@@ -41,8 +41,8 @@ def data_processing():
     snippets = [
         # 'ego_scenario_log_setup.sql',					# setup scenario log table
         # 'ego_boundaries_vg250_setup.sql',				# setup borders
-        # 'get_substations.sql',                 		# setup hvmv substaions
-        # 'get_substations_ehv.sql',             		# setup ehv substaions
+        'get_substations.sql',                 		# setup hvmv substations
+        # 'get_substations_ehv.sql',             		# setup ehv substations
         # 'otg_id_to_substations.sql',           		# assign osmTGmod-id
         # 'ego_grid_hvmv_substation.sql',				# hvmv substation voronoi
         # 'process_eGo_grid_district.sql',          	# mv griddistrict
@@ -53,7 +53,7 @@ def data_processing():
         # 'process_eGo_loads_melted.sql',        		# melt osm and zensus cluster
         # 'process_eGo_loads_per_grid_district.sql', 	# loadarea per mv-griddistrict
         # 'process_eGo_consumption.sql',			   	# consumption per loadarea
-        'ego_paper_result.sql',						# results and statistics
+        # 'ego_paper_result.sql',						# results and statistics
         # 'Voronoi_ehv.sql',						#
         # 'voronoi_weatherpoint.sql',				#
         # 'calc_ego_hv_powerflow.sql',				#

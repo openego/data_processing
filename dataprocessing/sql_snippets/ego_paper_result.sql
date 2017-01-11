@@ -351,10 +351,10 @@ FROM	political_boundary.bkg_vg250_1_sta_mview AS vg
 WHERE	gf='1' OR gf='2';
 
 -- grant (oeuser)
-ALTER TABLE		political_boundary.bkg_vg250_statistics_mview OWNER TO oeuser;
+ALTER TABLE political_boundary.bkg_vg250_statistics_mview OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.2','output','model_draft','bkg_vg250_statistics_mview','ego_paper_result.sql',' ');
+SELECT ego_scenario_log('v0.2.2','output','political_boundary','bkg_vg250_statistics_mview','ego_paper_result.sql',' ');
 
 
 /* -- EWE Validation

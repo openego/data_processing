@@ -8,9 +8,9 @@ __author__ = "Ludee"
 */
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.3','input','model_draft','ego_grid_hvmv_substation','ego_grid_hvmv_substation.sql',' ');
+SELECT ego_scenario_log('v0.2.5','input','model_draft','ego_grid_hvmv_substation','ego_grid_hvmv_substation.sql',' ');
 
--- set id as subst_id
+-- set id as subst_id - move to get_substation.sql
 ALTER TABLE	model_draft.ego_grid_hvmv_substation
 	DROP COLUMN IF EXISTS 	ags_0 CASCADE,
 	ADD COLUMN 		ags_0 text,
@@ -26,6 +26,9 @@ UPDATE 	model_draft.ego_grid_hvmv_substation t1
 CREATE INDEX	ego_grid_hvmv_substation_geom_idx
 	ON	model_draft.ego_grid_hvmv_substation USING GIST (geom);
 
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','input','model_draft','ego_political_boundary_bkg_vg250_6_gem_clean','ego_grid_hvmv_substation.sql',' ');
+
 -- Gemeindeschlüssel
 UPDATE 	model_draft.ego_grid_hvmv_substation AS t1
 	SET  	ags_0 = t2.ags_0
@@ -33,14 +36,14 @@ UPDATE 	model_draft.ego_grid_hvmv_substation AS t1
 		SELECT	sub.subst_id AS subst_id,
 			vg.ags_0 AS ags_0
 		FROM	model_draft.ego_grid_hvmv_substation AS sub,
-			orig_vg250.vg250_6_gem_clean AS vg
+			model_draft.ego_political_boundary_bkg_vg250_6_gem_clean AS vg
 		WHERE  	vg.geom && sub.geom AND
 			ST_CONTAINS(vg.geom,sub.geom)
 		) AS t2
 	WHERE  	t1.subst_id = t2.subst_id;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.3','output','model_draft','ego_grid_hvmv_substation','ego_grid_hvmv_substation.sql',' ');
+SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_grid_hvmv_substation','ego_grid_hvmv_substation.sql',' ');
 
 
 -- create dummy points for voronoi calculation
@@ -77,8 +80,7 @@ CREATE INDEX	substations_dummy_geom_idx
 	ON	model_draft.ego_grid_hvmv_substation_dummy USING gist (geom);
 
 -- Grant oeuser   (OK!) -> 100ms =0
-GRANT ALL ON TABLE 	model_draft.ego_grid_hvmv_substation_dummy TO oeuser WITH GRANT OPTION;
-ALTER TABLE		model_draft.ego_grid_hvmv_substation_dummy OWNER TO oeuser;
+ALTER TABLE	model_draft.ego_grid_hvmv_substation_dummy OWNER TO oeuser;
 
 -- metadata
 COMMENT ON TABLE model_draft.ego_grid_hvmv_substation_dummy IS '{
@@ -115,7 +117,7 @@ COMMENT ON TABLE model_draft.ego_grid_hvmv_substation_dummy IS '{
 SELECT obj_description('model_draft.ego_grid_hvmv_substation_dummy' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.3','output','model_draft','ego_grid_hvmv_substation_dummy','ego_grid_hvmv_substation.sql',' ');
+SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_grid_hvmv_substation_dummy','ego_grid_hvmv_substation.sql',' ');
 
 
 -- voronoi polygons with eucldean distance
@@ -178,7 +180,7 @@ CREATE INDEX	ego_grid_hvmv_substation_voronoi_geom_idx
 	ON	model_draft.ego_grid_hvmv_substation_voronoi USING gist (geom);
 
 -- grant (oeuser)
-ALTER TABLE model_draft.ego_grid_hvmv_substation_voronoi OWNER TO oeuser;
+ALTER TABLE 	model_draft.ego_grid_hvmv_substation_voronoi OWNER TO oeuser;
 
 /* -- delete dummy points from substations and voronoi (18 Points)
 DELETE FROM model_draft.ego_grid_hvmv_substation WHERE subst_name='DUMMY';
@@ -218,4 +220,4 @@ COMMENT ON TABLE model_draft.ego_grid_hvmv_substation_voronoi IS '{
 SELECT obj_description('model_draft.ego_grid_hvmv_substation_voronoi' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.3','output','model_draft','ego_grid_hvmv_substation_voronoi','ego_grid_hvmv_substation.sql',' ');
+SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_grid_hvmv_substation_voronoi','ego_grid_hvmv_substation.sql',' ');
