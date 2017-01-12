@@ -38,23 +38,9 @@ __author__ = "Ludee"
 -- ToDo: change "urban" to electrified
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_grid_mv_griddistrict_dump','process_eGo_grid_district.sql',' ');
+SELECT ego_scenario_log('v0.2.5','input','openstreetmap','osm_deu_polygon','setup_osm_landuse.sql',' ');
 
--- add entry to scenario log table
-INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2.1' AS version,
-	'input' AS io,
-	'openstreetmap' AS schema_name,
-	'osm_deu_polygon' AS table_name,
-	'setup_osm_landuse.sql' AS script_name,
-	COUNT(*)AS entries,
-	'OK' AS status,
-	session_user AS user_name,
-	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	obj_description('openstreetmap.osm_deu_polygon' ::regclass) ::json AS metadata
-FROM	openstreetmap.osm_deu_polygon;
-
--- "Filter Urban"   (OK!) -> 35.000ms =494.696
+-- filter urban
 DROP TABLE IF EXISTS	openstreetmap.osm_deu_polygon_urban CASCADE;
 CREATE TABLE		openstreetmap.osm_deu_polygon_urban AS
 	SELECT	osm.gid ::integer AS gid,
@@ -99,103 +85,81 @@ CREATE TABLE		openstreetmap.osm_deu_polygon_urban AS
 		--osm.landuse='greenhouse_horticulture'
 	ORDER BY	osm.gid;
 
--- "Set PK"   (OK!) -> 1.000ms =0
+-- PK
 ALTER TABLE openstreetmap.osm_deu_polygon_urban
 	ADD PRIMARY KEY (gid);
 
--- "Create Index GIST (geom)"   (OK!) -> 6.000ms =0
+-- index GIST (geom)
 CREATE INDEX  	osm_deu_polygon_urban_geom_idx
-	ON	openstreetmap.osm_deu_polygon_urban
-	USING	GIST (geom);
+	ON	openstreetmap.osm_deu_polygon_urban USING GIST (geom);
 
 -- grant (oeuser)
-GRANT ALL ON TABLE	openstreetmap.osm_deu_polygon_urban TO oeuser WITH GRANT OPTION;
-ALTER TABLE		openstreetmap.osm_deu_polygon_urban OWNER TO oeuser;
+ALTER TABLE	openstreetmap.osm_deu_polygon_urban OWNER TO oeuser;
 
 
----------- ---------- ----------
--- "OSM Urban Landuse Inside vg250"
----------- ---------- ----------
+-- OSM Urban Landuse Inside vg250
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_grid_mv_griddistrict_dump','process_eGo_grid_district.sql',' ');
+SELECT ego_scenario_log('v0.2.5','input','political_boundary','bkg_vg250_1_sta_union_mview','setup_osm_landuse.sql',' ');
 
--- add entry to scenario log table
-INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2.1' AS version,
-	'input' AS io,
-	'political_boundary' AS schema_name,
-	'bkg_vg250_1_sta_union_mview' AS table_name,
-	'setup_osm_landuse.sql' AS script_name,
-	COUNT(*)AS entries,
-	'OK' AS status,
-	session_user AS user_name,
-	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	obj_description('political_boundary.bkg_vg250_1_sta_union_mview' ::regclass) ::json AS metadata
-FROM	political_boundary.bkg_vg250_1_sta_union_mview;
-
--- "Calculate 'inside' vg250"   (OK!) -> 122.000ms =492.890
+-- Calculate 'inside' vg250
 UPDATE 	openstreetmap.osm_deu_polygon_urban AS t1
-SET  	vg250 = t2.vg250
-FROM    (
-	SELECT	osm.gid AS gid,
-		'inside' ::text AS vg250
-	FROM	political_boundary.bkg_vg250_1_sta_union_mview AS vg,
-		openstreetmap.osm_deu_polygon_urban AS osm
-	WHERE  	vg.geom && osm.geom AND
-		ST_CONTAINS(vg.geom,osm.geom)
-	) AS t2
-WHERE  	t1.gid = t2.gid;
+	SET  	vg250 = t2.vg250
+	FROM    (
+		SELECT	osm.gid AS gid,
+			'inside' ::text AS vg250
+		FROM	political_boundary.bkg_vg250_1_sta_union_mview AS vg,
+			openstreetmap.osm_deu_polygon_urban AS osm
+		WHERE  	vg.geom && osm.geom AND
+			ST_CONTAINS(vg.geom,osm.geom)
+		) AS t2
+	WHERE  	t1.gid = t2.gid;
 
----------- ---------- ----------
-	
--- "Calculate 'crossing' vg250"   (OK!) -> 17.000ms =291
+-- Calculate 'crossing' vg250
 UPDATE 	openstreetmap.osm_deu_polygon_urban AS t1
-SET  	vg250 = t2.vg250
-FROM    (
-	SELECT	osm.gid AS gid,
-		'crossing' ::text AS vg250
-	FROM	political_boundary.bkg_vg250_1_sta_union_mview AS vg,
-		openstreetmap.osm_deu_polygon_urban AS osm
-	WHERE  	osm.vg250 = 'outside' AND
-		vg.geom && osm.geom AND
-		ST_Overlaps(vg.geom,osm.geom)
-	) AS t2
-WHERE  	t1.gid = t2.gid;
+	SET  	vg250 = t2.vg250
+	FROM    (
+		SELECT	osm.gid AS gid,
+			'crossing' ::text AS vg250
+		FROM	political_boundary.bkg_vg250_1_sta_union_mview AS vg,
+			openstreetmap.osm_deu_polygon_urban AS osm
+		WHERE  	osm.vg250 = 'outside' AND
+			vg.geom && osm.geom AND
+			ST_Overlaps(vg.geom,osm.geom)
+		) AS t2
+	WHERE  	t1.gid = t2.gid;
 
 
-
----------- ---------- ----------
 -- OSM outside of vg250
----------- ---------- ----------
 
--- "OSM error vg250"   (OK!) -> 400ms =1.806
+-- OSM error vg250
 DROP MATERIALIZED VIEW IF EXISTS	openstreetmap.osm_deu_polygon_urban_error_geom_vg250_mview CASCADE;
 CREATE MATERIALIZED VIEW		openstreetmap.osm_deu_polygon_urban_error_geom_vg250_mview AS
 	SELECT	osm.*
 	FROM	openstreetmap.osm_deu_polygon_urban AS osm
 	WHERE	osm.vg250 = 'outside' OR osm.vg250 = 'crossing';
 
--- "Create Index (gid)"   (OK!) -> 100ms =0
+-- index (id)
 CREATE UNIQUE INDEX  	osm_deu_polygon_urban_error_geom_vg250_mview_gid_idx
 		ON	openstreetmap.osm_deu_polygon_urban_error_geom_vg250_mview (gid);
 
--- "Create Index GIST (geom)"   (OK!) -> 150ms =0
+-- index GIST (geom)
 CREATE INDEX  	osm_deu_polygon_urban_error_geom_vg250_mview_geom_idx
 	ON	openstreetmap.osm_deu_polygon_urban_error_geom_vg250_mview
 	USING	GIST (geom);
 
 -- grant (oeuser)
-GRANT ALL ON TABLE	openstreetmap.osm_deu_polygon_urban_error_geom_vg250_mview TO oeuser WITH GRANT OPTION;
-ALTER TABLE		openstreetmap.osm_deu_polygon_urban_error_geom_vg250_mview OWNER TO oeuser;	
+ALTER TABLE	openstreetmap.osm_deu_polygon_urban_error_geom_vg250_mview OWNER TO oeuser;	
 
----------- ---------- ----------
 
--- "Sequence"   (OK!) 100ms =0
+-- Sequence
 DROP SEQUENCE IF EXISTS 	openstreetmap.osm_deu_polygon_urban_vg250_cut_mview_id CASCADE;
 CREATE SEQUENCE 		openstreetmap.osm_deu_polygon_urban_vg250_cut_mview_id;
 
--- "Cutting 'crossing' with vg250"   (OK!) 12.000ms =291
+-- grant (oeuser)
+ALTER SEQUENCE		openstreetmap.osm_deu_polygon_urban_vg250_cut_mview_id OWNER TO oeuser;
+
+-- Cutting 'crossing' with vg250
 DROP MATERIALIZED VIEW IF EXISTS	openstreetmap.osm_deu_polygon_urban_vg250_cut_mview;
 CREATE MATERIALIZED VIEW		openstreetmap.osm_deu_polygon_urban_vg250_cut_mview AS
 	SELECT	nextval('openstreetmap.osm_deu_polygon_urban_vg250_cut_mview_id') ::integer AS id,
@@ -224,14 +188,13 @@ CREATE MATERIALIZED VIEW		openstreetmap.osm_deu_polygon_urban_vg250_cut_mview AS
 CREATE UNIQUE INDEX  	osm_deu_polygon_urban_vg250_cut_mview_gid_idx
 		ON	openstreetmap.osm_deu_polygon_urban_vg250_cut_mview (gid);
 
--- "Create Index GIST (geom)"   (OK!) -> 100ms =0
+-- index GIST (geom)
 CREATE INDEX  	osm_deu_polygon_urban_vg250_cut_mview_geom_idx
 	ON	openstreetmap.osm_deu_polygon_urban_vg250_cut_mview
 	USING	GIST (geom);
 
 -- grant (oeuser)
-GRANT ALL ON TABLE	openstreetmap.osm_deu_polygon_urban_vg250_cut_mview TO oeuser WITH GRANT OPTION;
-ALTER TABLE		openstreetmap.osm_deu_polygon_urban_vg250_cut_mview OWNER TO oeuser;
+ALTER TABLE	openstreetmap.osm_deu_polygon_urban_vg250_cut_mview OWNER TO oeuser;
 
 -- Find double entries (OK!) -> =0
 -- SELECT 		gid, count(*)
@@ -239,9 +202,8 @@ ALTER TABLE		openstreetmap.osm_deu_polygon_urban_vg250_cut_mview OWNER TO oeuser
 -- GROUP BY 	gid
 -- HAVING 		count(*) > 1;
 
----------- ---------- ----------
 
--- "'crossing' Polygon to MultiPolygon"   (OK!) 1.000ms =255
+-- 'crossing' Polygon to MultiPolygon
 DROP MATERIALIZED VIEW IF EXISTS	openstreetmap.osm_deu_polygon_urban_vg250_clean_cut_multi_mview;
 CREATE MATERIALIZED VIEW		openstreetmap.osm_deu_polygon_urban_vg250_clean_cut_multi_mview AS
 	SELECT	nextval('openstreetmap.osm_deu_polygon_gid_seq'::regclass) ::integer AS gid,
@@ -263,14 +225,13 @@ CREATE MATERIALIZED VIEW		openstreetmap.osm_deu_polygon_urban_vg250_clean_cut_mu
 CREATE UNIQUE INDEX  	osm_deu_polygon_urban_vg250_clean_cut_multi_mview_gid_idx
 		ON	openstreetmap.osm_deu_polygon_urban_vg250_clean_cut_multi_mview (gid);
 
--- "Create Index GIST (geom)"   (OK!) -> 100ms =0
+-- index GIST (geom)
 CREATE INDEX  	osm_deu_polygon_urban_vg250_clean_cut_multi_mview_geom_idx
 	ON	openstreetmap.osm_deu_polygon_urban_vg250_clean_cut_multi_mview
 	USING	GIST (geom);
 
 -- grant (oeuser)
-GRANT ALL ON TABLE	openstreetmap.osm_deu_polygon_urban_vg250_clean_cut_multi_mview TO oeuser WITH GRANT OPTION;
-ALTER TABLE		openstreetmap.osm_deu_polygon_urban_vg250_clean_cut_multi_mview OWNER TO oeuser;
+ALTER TABLE	openstreetmap.osm_deu_polygon_urban_vg250_clean_cut_multi_mview OWNER TO oeuser;
 
 -- Find double entries (OK!) -> =0
 -- SELECT 		gid, count(*)
@@ -280,7 +241,7 @@ ALTER TABLE		openstreetmap.osm_deu_polygon_urban_vg250_clean_cut_multi_mview OWN
 
 ---------- ---------- ----------
 
--- "clean cut"   (OK!) 100ms =36
+-- clean cut
 DROP MATERIALIZED VIEW IF EXISTS	openstreetmap.osm_deu_polygon_urban_vg250_clean_cut_mview;
 CREATE MATERIALIZED VIEW		openstreetmap.osm_deu_polygon_urban_vg250_clean_cut_mview AS
 	SELECT	nextval('openstreetmap.osm_deu_polygon_gid_seq'::regclass) ::integer AS gid,
@@ -302,44 +263,30 @@ CREATE MATERIALIZED VIEW		openstreetmap.osm_deu_polygon_urban_vg250_clean_cut_mv
 CREATE UNIQUE INDEX  	osm_deu_polygon_urban_vg250_clean_cut_mview_gid_idx
 		ON	openstreetmap.osm_deu_polygon_urban_vg250_clean_cut_mview (gid);
 
----------- ---------- ----------
 
--- "Remove 'outside' vg250"   (OK!) 300ms =1515
+-- remove 'outside' vg250
 DELETE FROM	openstreetmap.osm_deu_polygon_urban AS osm
 	WHERE	osm.vg250 = 'outside';
 
--- "Remove 'outside' vg250"   (OK!) 300ms =618
+-- remove 'outside' vg250
 DELETE FROM	openstreetmap.osm_deu_polygon_urban AS osm
 	WHERE	osm.vg250 = 'crossing';
 
--- "Insert cut"   (OK!) 300ms =36
+-- insert cut
 INSERT INTO	openstreetmap.osm_deu_polygon_urban
 	SELECT	clean.*
 	FROM	openstreetmap.osm_deu_polygon_urban_vg250_clean_cut_mview AS clean
 	ORDER BY 	clean.gid;
 
--- "Insert cut multi"   (ungleiche spalten!) 300ms =255
+-- insert cut multi
 INSERT INTO	openstreetmap.osm_deu_polygon_urban
 	SELECT	clean.*
 	FROM	openstreetmap.osm_deu_polygon_urban_vg250_clean_cut_multi_mview AS clean
 	ORDER BY 	clean.gid;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_grid_mv_griddistrict_dump','process_eGo_grid_district.sql',' ');
+SELECT ego_scenario_log('v0.2.5','output','openstreetmap','osm_deu_polygon_urban','setup_osm_landuse.sql',' ');
 
--- add entry to scenario log table
-INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2.1' AS version,
-	'output' AS io,
-	'openstreetmap' AS schema_name,
-	'osm_deu_polygon_urban' AS table_name,
-	'setup_osm_landuse.sql' AS script_name,
-	COUNT(*)AS entries,
-	'OK' AS status,
-	session_user AS user_name,
-	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	obj_description('openstreetmap.osm_deu_polygon_urban' ::regclass) ::json AS metadata
-FROM	openstreetmap.osm_deu_polygon_urban;
 	
 ---------- ---------- ----------
 -- "(Geo) Data Validation"
@@ -389,18 +336,15 @@ FROM	openstreetmap.osm_deu_polygon_urban;
 -- SELECT f_drop_view('{osm_deu_polygon_urban_error_geom_view}', 'orig_osm');
 
 
----------- ---------- ----------
 -- "Filter by Sector"
----------- ---------- ----------
 
--- "Sector 1. Residential"
-
--- "Update Sector"   (OK!) -> 122.000ms =492.890
+-- Sector 1. Residential
+-- update sector
 UPDATE 	openstreetmap.osm_deu_polygon_urban
 SET  	sector = '1'
 WHERE	tags @> '"landuse"=>"residential"'::hstore;
 
--- "Filter Residential"   (OK!) -> 3.000ms =276.513
+-- filter residential
 DROP MATERIALIZED VIEW IF EXISTS	openstreetmap.osm_deu_polygon_urban_sector_1_residential_mview CASCADE;
 CREATE MATERIALIZED VIEW		openstreetmap.osm_deu_polygon_urban_sector_1_residential_mview AS
 	SELECT	osm.*
@@ -412,41 +356,27 @@ ORDER BY	osm.gid;
 CREATE UNIQUE INDEX  	osm_deu_polygon_urban_sector_1_residential_mview_gid_idx
 		ON	openstreetmap.osm_deu_polygon_urban_sector_1_residential_mview (gid);
 
--- "Create Index GIST (geom)"   (OK!) -> 4.000ms =0
+-- index GIST (geom)
 CREATE INDEX  	osm_deu_polygon_urban_sector_1_residential_mview_geom_idx
 	ON	openstreetmap.osm_deu_polygon_urban_sector_1_residential_mview
 	USING	GIST (geom);
 	
 -- grant (oeuser)
-GRANT ALL ON TABLE 	openstreetmap.osm_deu_polygon_urban_sector_1_residential_mview TO oeuser WITH GRANT OPTION;
-ALTER TABLE		openstreetmap.osm_deu_polygon_urban_sector_1_residential_mview OWNER TO oeuser;
+ALTER TABLE	openstreetmap.osm_deu_polygon_urban_sector_1_residential_mview OWNER TO oeuser;
 
--- add entry to scenario log table
-INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2.1' AS version,
-	'output' AS io,
-	'openstreetmap' AS schema_name,
-	'osm_deu_polygon_urban_sector_1_residential_mview' AS table_name,
-	'setup_osm_landuse.sql' AS script_name,
-	COUNT(*)AS entries,
-	'OK' AS status,
-	session_user AS user_name,
-	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	obj_description('openstreetmap.osm_deu_polygon_urban_sector_1_residential_mview' ::regclass) ::json AS metadata
-FROM	openstreetmap.osm_deu_polygon_urban_sector_1_residential_mview;
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','output','openstreetmap','osm_deu_polygon_urban_sector_1_residential_mview','setup_osm_landuse.sql',' ');
 
----------- ---------- ----------
 
--- "Sector 2. Retail"
-
--- "Update Sector"   (OK!) -> 122.000ms =492.890
+-- Sector 2. Retail
+-- update sector
 UPDATE 	openstreetmap.osm_deu_polygon_urban
 SET  	sector = '2'
 WHERE	tags @> '"landuse"=>"commercial"'::hstore OR 
 		tags @> '"landuse"=>"retail"'::hstore OR 
 		tags @> '"landuse"=>"industrial;retail"'::hstore;
 
--- "Filter Retail"   (OK!) -> 1.000ms =35.527
+-- Filter Retail
 DROP MATERIALIZED VIEW IF EXISTS	openstreetmap.osm_deu_polygon_urban_sector_2_retail_mview CASCADE;
 CREATE MATERIALIZED VIEW		openstreetmap.osm_deu_polygon_urban_sector_2_retail_mview AS
 	SELECT	osm.*
@@ -464,31 +394,14 @@ CREATE INDEX  	osm_deu_polygon_urban_sector_2_retail_mview_geom_idx
 	USING	GIST (geom);
 	
 -- grant (oeuser)
-GRANT ALL ON TABLE 	openstreetmap.osm_deu_polygon_urban_sector_2_retail_mview TO oeuser WITH GRANT OPTION;
-ALTER TABLE		openstreetmap.osm_deu_polygon_urban_sector_2_retail_mview OWNER TO oeuser;
+ALTER TABLE	openstreetmap.osm_deu_polygon_urban_sector_2_retail_mview OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_grid_mv_griddistrict_dump','process_eGo_grid_district.sql',' ');
+SELECT ego_scenario_log('v0.2.5','output','openstreetmap','osm_deu_polygon_urban_sector_2_retail_mview','setup_osm_landuse.sql',' ');
 
--- add entry to scenario log table
-INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2.1' AS version,
-	'output' AS io,
-	'openstreetmap' AS schema_name,
-	'osm_deu_polygon_urban_sector_2_retail_mview' AS table_name,
-	'setup_osm_landuse.sql' AS script_name,
-	COUNT(*)AS entries,
-	'OK' AS status,
-	session_user AS user_name,
-	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	obj_description('openstreetmap.osm_deu_polygon_urban_sector_2_retail_mview' ::regclass) ::json AS metadata
-FROM	openstreetmap.osm_deu_polygon_urban_sector_2_retail_mview;
-	
----------- ---------- ----------
 
--- "Sector 3. Industrial"
-
--- "Update Sector"   (OK!) -> 122.000ms =492.890
+-- Sector 3. Industrial
+-- update sector
 UPDATE 	openstreetmap.osm_deu_polygon_urban
 SET  	sector = '3'
 WHERE	tags @> '"landuse"=>"industrial"'::hstore OR 
@@ -498,7 +411,8 @@ WHERE	tags @> '"landuse"=>"industrial"'::hstore OR
 		tags @> '"aeroway"=>"gate"'::hstore OR 
 		tags @> '"man_made"=>"works"'::hstore;
 
--- "Filter Industrial"   (OK!) -> 1.000ms =58.870
+
+-- filter Industrial
 DROP MATERIALIZED VIEW IF EXISTS	openstreetmap.osm_deu_polygon_urban_sector_3_industrial_mview CASCADE;
 CREATE MATERIALIZED VIEW		openstreetmap.osm_deu_polygon_urban_sector_3_industrial_mview AS
 	SELECT	osm.*
@@ -520,23 +434,8 @@ GRANT ALL ON TABLE 	openstreetmap.osm_deu_polygon_urban_sector_3_industrial_mvie
 ALTER TABLE		openstreetmap.osm_deu_polygon_urban_sector_3_industrial_mview OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_grid_mv_griddistrict_dump','process_eGo_grid_district.sql',' ');
+SELECT ego_scenario_log('v0.2.5','output','openstreetmap','osm_deu_polygon_urban_sector_3_industrial_mview','setup_osm_landuse.sql',' ');
 
--- add entry to scenario log table
-INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2.1' AS version,
-	'output' AS io,
-	'openstreetmap' AS schema_name,
-	'osm_deu_polygon_urban_sector_3_industrial_mview' AS table_name,
-	'setup_osm_landuse.sql' AS script_name,
-	COUNT(*)AS entries,
-	'OK' AS status,
-	session_user AS user_name,
-	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	obj_description('openstreetmap.osm_deu_polygon_urban_sector_3_industrial_mview' ::regclass) ::json AS metadata
-FROM	openstreetmap.osm_deu_polygon_urban_sector_3_industrial_mview;
-	
----------- ---------- ----------
 
 -- sector 4. Agricultural
 -- update sector
@@ -567,8 +466,7 @@ ALTER TABLE	openstreetmap.osm_deu_polygon_urban_sector_4_agricultural_mview OWNE
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.5','output','openstreetmap','osm_deu_polygon_urban_sector_4_agricultural_mview','setup_osm_landuse.sql',' ');
-	
----------- ---------- ----------
+
 
 -- -- "Validate (geom)"   (OK!) -> 22.000ms =0
 -- DROP VIEW IF EXISTS	openstreetmap.osm_deu_polygon_urban_sector_4_agricultural_mview_error_geom_view CASCADE;

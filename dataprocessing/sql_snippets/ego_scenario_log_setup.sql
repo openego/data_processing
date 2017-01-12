@@ -25,10 +25,9 @@ CREATE TABLE 		model_draft.ego_scenario_log (
 	timestamp timestamp,
 	metadata text,
 	CONSTRAINT ego_scenario_log_pkey PRIMARY KEY (id));
-	
+
 -- grant (oeuser)
-GRANT ALL ON TABLE	model_draft.ego_scenario_log TO oeuser WITH GRANT OPTION;
-ALTER TABLE		model_draft.ego_scenario_log OWNER TO oeuser; 
+ALTER TABLE	model_draft.ego_scenario_log OWNER TO oeuser; 
 
 -- metadata
 COMMENT ON TABLE model_draft.ego_scenario_log IS '{
@@ -75,17 +74,5 @@ COMMENT ON TABLE model_draft.ego_scenario_log IS '{
 -- select description
 SELECT obj_description('model_draft.ego_scenario_log' ::regclass) ::json;
 
-
--- add entry to scenario log table
-INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2.1' AS version,
-	'output' AS io,
-	'model_draft' AS schema_name,
-	'ego_scenario_log' AS table_name,
-	'ego_scenario_log_setup.sql' AS script_name,
-	COUNT(*)AS entries,
-	'OK' AS status,
-	session_user AS user_name,
-	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	obj_description('model_draft.ego_scenario_log' ::regclass) ::json AS metadata
-FROM	model_draft.ego_scenario_log;
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_scenario_log','ego_scenario_log_setup.sql',' ');
