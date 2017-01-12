@@ -41,8 +41,8 @@ def data_processing():
     snippets = [
         # 'ego_scenario_log_setup.sql',					# setup scenario log table
         # 'ego_boundaries_vg250_setup.sql',				# setup borders
-        # 'get_substations.sql',                 		# setup hvmv substaions
-        # 'get_substations_ehv.sql',             		# setup ehv substaions
+        # 'get_substations.sql',                 		# setup hvmv substations
+        # 'get_substations_ehv.sql',             		# setup ehv substations
         # 'otg_id_to_substations.sql',           		# assign osmTGmod-id
         # 'ego_grid_hvmv_substation.sql',				# hvmv substation voronoi
         # 'process_eGo_grid_district.sql',          	# mv griddistrict

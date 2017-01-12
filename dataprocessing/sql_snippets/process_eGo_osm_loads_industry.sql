@@ -10,36 +10,14 @@ __author__ = "IlkaCu"
 -- Calculate specific electricity consumption per million Euro GVA for each federal state
 --------------
 
--- add entry to scenario log table
-INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2.1' AS version,
-	'input' AS io,
-	'demand' AS schema_name,
-	'ego_demand_federalstate' AS table_name,
-	'process_eGo_osm_loads_industry.sql' AS script_name,
-	COUNT(*)AS entries,
-	'OK' AS status,
-	session_user AS user_name,
-	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	obj_description('demand.ego_demand_federalstate' ::regclass) ::json AS metadata
-FROM	demand.ego_demand_federalstate;
 
--- add entry to scenario log table
-INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2.1' AS version,
-	'input' AS io,
-	'economic' AS schema_name,
-	'destatis_gva_per_district' AS table_name,
-	'process_eGo_osm_loads_industry.sql' AS script_name,
-	COUNT(*)AS entries,
-	'OK' AS status,
-	session_user AS user_name,
-	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	obj_description('economic.destatis_gva_per_district' ::regclass) ::json AS metadata
-FROM	economic.destatis_gva_per_district;
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','input','demand','ego_demand_federalstate','process_eGo_osm_loads_industry.sql',' ');
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','input','economic','destatis_gva_per_district','process_eGo_osm_loads_industry.sql',' ');
 
 DROP TABLE IF EXISTS model_draft.ego_demand_per_gva CASCADE;
-
 CREATE TABLE model_draft.ego_demand_per_gva AS 
 ( 
 SELECT  a.eu_code, 
@@ -49,16 +27,14 @@ SELECT  a.eu_code,
 FROM  	demand.ego_demand_federalstate a,  -- ego_demand_federalstate
  	economic.destatis_gva_per_district b -- destatis_gva_per_district
 WHERE a.eu_code = b.eu_code 
-ORDER BY eu_code 
-) 
-; 
+ORDER BY eu_code ); 
+
 ALTER TABLE model_draft.ego_demand_per_gva
-ADD PRIMARY KEY (eu_code),
-OWNER TO oeuser;
+	ADD PRIMARY KEY (eu_code),
+	OWNER TO oeuser;
 
 
 -- "Add Meta-documentation"
-
 COMMENT ON TABLE  model_draft.ego_demand_per_gva IS
 '{
 "Name": "Specific electricity consumption per gross value added",
@@ -98,19 +74,8 @@ COMMENT ON TABLE  model_draft.ego_demand_per_gva IS
 "Instructions for proper use": ["..."]
 }';
 
--- add entry to scenario log table
-INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2.1' AS version,
-	'output' AS io,
-	'model_draft' AS schema_name,
-	'ego_demand_per_gva' AS table_name,
-	'process_eGo_osm_loads_industry.sql' AS script_name,
-	COUNT(*)AS entries,
-	'OK' AS status,
-	session_user AS user_name,
-	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	obj_description('model_draft.ego_demand_per_gva' ::regclass) ::json AS metadata
-FROM	model_draft.ego_demand_per_gva;
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_demand_per_gva','process_eGo_osm_loads_industry.sql',' ');
 
 --------------
 -- Calculate electricity consumption per district based on gross value added
@@ -119,14 +84,14 @@ DROP TABLE IF EXISTS model_draft.ego_demand_per_district CASCADE;
 
 CREATE TABLE model_draft.ego_demand_per_district as 
 ( 
-SELECT b.eu_code, 
- 
-b.district, 
-a.elec_consumption_industry * b.gva_industry as elec_consumption_industry, 
-a.elec_consumption_tertiary_sector * b.gva_tertiary_sector AS elec_consumption_tertiary_sector 
-FROM  	model_draft.ego_demand_per_gva a, 
- 	economic.destatis_gva_per_district b -- destatis_gva_per_district
-WHERE SUBSTR (a.eu_code,1,3) = SUBSTR(b.eu_code,1,3)  
+	SELECT b.eu_code, 
+
+	b.district, 
+	a.elec_consumption_industry * b.gva_industry as elec_consumption_industry, 
+	a.elec_consumption_tertiary_sector * b.gva_tertiary_sector AS elec_consumption_tertiary_sector 
+	FROM  	model_draft.ego_demand_per_gva a, 
+		economic.destatis_gva_per_district b -- destatis_gva_per_district
+	WHERE SUBSTR (a.eu_code,1,3) = SUBSTR(b.eu_code,1,3)  
 ) 
 ; 
 
@@ -197,11 +162,11 @@ COMMENT ON TABLE  model_draft.ego_demand_per_district IS
 ------------------
 
 DROP TABLE IF EXISTS model_draft.ego_landuse_industry CASCADE;
-SELECT 	* 
-INTO model_draft.ego_landuse_industry 
-FROM openstreetmap.osm_deu_polygon_urban_sector_3_industrial_mview; 
+	SELECT 	* 
+	INTO model_draft.ego_landuse_industry 
+	FROM openstreetmap.osm_deu_polygon_urban_sector_3_industrial_mview; 
 
-ALTER TABLE  model_draft.ego_landuse_industry OWNER TO oeuser;
+	ALTER TABLE  model_draft.ego_landuse_industry OWNER TO oeuser;
 
 ------------------
 -- "Add and fill new columns with geometry information"
@@ -220,13 +185,13 @@ ALTER TABLE model_draft.ego_landuse_industry
 
 -- "Update Centroid"   
 UPDATE 	model_draft.ego_landuse_industry AS t1
-SET  	geom_centroid = t2.geom_centroid
-FROM    (
-	SELECT	ind.gid AS gid,
-		ST_Centroid(ind.geom) AS geom_centroid
-	FROM	model_draft.ego_landuse_industry AS ind
-	) AS t2
-WHERE  	t1.gid = t2.gid;
+	SET  	geom_centroid = t2.geom_centroid
+	FROM    (
+		SELECT	ind.gid AS gid,
+			ST_Centroid(ind.geom) AS geom_centroid
+		FROM	model_draft.ego_landuse_industry AS ind
+		) AS t2
+	WHERE  	t1.gid = t2.gid;
 
 -- "Create Index GIST (geom_centroid)"
 CREATE INDEX  	landuse_industry_geom_centroid_idx
@@ -235,13 +200,13 @@ CREATE INDEX  	landuse_industry_geom_centroid_idx
 
 -- "Update PointOnSurface" 
 UPDATE 	model_draft.ego_landuse_industry AS t1
-SET  	geom_surfacepoint = t2.geom_surfacepoint
-FROM    (
-	SELECT	ind.gid AS gid,
-		ST_PointOnSurface(ind.geom) AS geom_surfacepoint
-	FROM	model_draft.ego_landuse_industry AS ind
-	) AS t2
-WHERE  	t1.gid = t2.gid;
+	SET  	geom_surfacepoint = t2.geom_surfacepoint
+	FROM    (
+		SELECT	ind.gid AS gid,
+			ST_PointOnSurface(ind.geom) AS geom_surfacepoint
+		FROM	model_draft.ego_landuse_industry AS ind
+		) AS t2
+	WHERE  	t1.gid = t2.gid;
 
 -- "Create Index GIST (geom_surfacepoint)"
 CREATE INDEX  	landuse_industry_geom_surfacepoint_idx
@@ -252,47 +217,36 @@ CREATE INDEX  	landuse_industry_geom_surfacepoint_idx
 
 -- "Update Centre with centroid if inside area"   
 UPDATE 	model_draft.ego_landuse_industry AS t1
-SET  	geom_centre = t2.geom_centre
-FROM	(
-	SELECT	ind.gid AS gid,
-		ind.geom_centroid AS geom_centre
-	FROM	model_draft.ego_landuse_industry AS ind
-	WHERE  	ind.geom && ind.geom_centroid AND
-		ST_CONTAINS(ind.geom,ind.geom_centroid)
-	)AS t2
-WHERE  	t1.gid = t2.gid;
+	SET  	geom_centre = t2.geom_centre
+	FROM	(
+		SELECT	ind.gid AS gid,
+			ind.geom_centroid AS geom_centre
+		FROM	model_draft.ego_landuse_industry AS ind
+		WHERE  	ind.geom && ind.geom_centroid AND
+			ST_CONTAINS(ind.geom,ind.geom_centroid)
+		)AS t2
+	WHERE  	t1.gid = t2.gid;
 
 -- "Update Centre with surfacepoint if outside area"   
 UPDATE 	model_draft.ego_landuse_industry AS t1
-SET  	geom_centre = t2.geom_centre
-FROM	(
-	SELECT	ind.gid AS gid,
-		ind.geom_surfacepoint AS geom_centre
-	FROM	model_draft.ego_landuse_industry AS ind
-	WHERE  	ind.geom_centre IS NULL
-	)AS t2
-WHERE  	t1.gid = t2.gid;
+	SET  	geom_centre = t2.geom_centre
+	FROM	(
+		SELECT	ind.gid AS gid,
+			ind.geom_surfacepoint AS geom_centre
+		FROM	model_draft.ego_landuse_industry AS ind
+		WHERE  	ind.geom_centre IS NULL
+		)AS t2
+	WHERE  	t1.gid = t2.gid;
 
--- "Create Index GIST (geom_centre)"   
+-- Create Index GIST (geom_centre)
 CREATE INDEX  	landuse_industry_geom_centre_idx
     ON    	model_draft.ego_landuse_industry
     USING     	GIST (geom_centre);
 
--- "Calculate NUTS" 
+-- Calculate NUTS
 
--- add entry to scenario log table
-INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2.1' AS version,
-	'input' AS io,
-	'political_boundary' AS schema_name,
-	'bkg_vg250_4_krs_mview' AS table_name,
-	'process_eGo_osm_loads_industry.sql' AS script_name,
-	COUNT(*)AS entries,
-	'OK' AS status,
-	session_user AS user_name,
-	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	obj_description('political_boundary.bkg_vg250_4_krs_mview' ::regclass) ::json AS metadata
-FROM	political_boundary.bkg_vg250_4_krs_mview;
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','input','political_boundary','bkg_vg250_4_krs_mview','process_eGo_osm_loads_industry.sql',' ');
 
 UPDATE 	model_draft.ego_landuse_industry a
 SET 	nuts = b.nuts
@@ -300,8 +254,7 @@ FROM 	political_boundary.bkg_vg250_4_krs_mview b
 WHERE 	b.geom && a.geom_centre AND
 	st_intersects(b.geom, a.geom_centre); 
 
--- "Calculate industrial area per district" 
-
+-- Calculate industrial area per district
 UPDATE orig_ego_consumption.lak_consumption_per_district a
 SET area_industry = result.sum
 FROM
@@ -316,8 +269,7 @@ FROM
 
 WHERE result.substr = substr(a.eu_code,1,5);
 
--- "Calculate specific industrial consumption per area"
-
+-- Calculate specific industrial consumption per area
 UPDATE 	model_draft.ego_demand_per_district
 SET 	consumption_per_area_industry = NULL; 
 
@@ -325,10 +277,7 @@ UPDATE 	model_draft.ego_demand_per_district
 SET 	consumption_per_area_industry = elec_consumption_industry/area_industry;
 
 
------------------
--- "Calculate the electricity consumption for each industry polygon"
------------------
-
+-- Calculate the electricity consumption for each industry polygon
 UPDATE 	model_draft.ego_landuse_industry a
 SET   	consumption = sub.result 
 FROM
@@ -345,10 +294,8 @@ FROM
 WHERE
 sub.gid = a.gid;
 
------------------
--- "Calculate the peak load for each industry polygon"
------------------
 
+-- Calculate the peak load for each industry polygon
 UPDATE model_draft.ego_landuse_industry
 SET peak_load = consumption*(0.00013247226362); -- Add different factor to calculate the peak load
 
@@ -357,8 +304,7 @@ CREATE INDEX  	landuse_industry_geom_idx
     ON    	model_draft.ego_landuse_industry
     USING     	GIST (geom);
 
--- "Add metadata"
-
+-- Add metadata
 COMMENT ON TABLE  model_draft.ego_landuse_industry IS
 '{
 "Name": "Industrial landuse area",
@@ -428,38 +374,14 @@ COMMENT ON TABLE  model_draft.ego_landuse_industry IS
 "Instructions for proper use": ["..."]
 }';
 
--- add entry to scenario log table
-INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2.1' AS version,
-	'output' AS io,
-	'model_draft' AS schema_name,
-	'ego_landuse_industry' AS table_name,
-	'process_eGo_osm_loads_industry.sql' AS script_name,
-	COUNT(*)AS entries,
-	'OK' AS status,
-	session_user AS user_name,
-	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	obj_description('model_draft.ego_landuse_industry' ::regclass) ::json AS metadata
-FROM	model_draft.ego_landuse_industry;
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_landuse_industry','process_eGo_osm_loads_industry.sql',' ');
 
 
------------------
--- "Identify large scale consumer"
------------------
+-- Identify large scale consumer
 
--- add entry to scenario log table
-INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2.1' AS version,
-	'input' AS io,
-	'supply' AS schema_name,
-	'ego_conv_powerplant' AS table_name,
-	'process_eGo_osm_loads_industry.sql' AS script_name,
-	COUNT(*)AS entries,
-	'OK' AS status,
-	session_user AS user_name,
-	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	obj_description('supply.ego_conv_powerplant' ::regclass) ::json AS metadata
-FROM	supply.ego_conv_powerplant;
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','input','supply','ego_conv_powerplant','process_eGo_osm_loads_industry.sql',' ');
 
 DROP TABLE IF EXISTS model_draft.ego_demand_hv_largescaleconsumer CASCADE;
 CREATE TABLE model_draft.ego_demand_hv_largescaleconsumer AS
@@ -478,11 +400,11 @@ ALTER TABLE  model_draft.ego_demand_hv_largescaleconsumer OWNER TO oeuser;
 
 
 DELETE FROM model_draft.ego_demand_hv_largescaleconsumer
-WHERE polygon_id IN (SELECT polygon_id
-              FROM (SELECT polygon_id,
-                             ROW_NUMBER() OVER (partition BY powerplant_id ORDER BY (-area_ha)) AS rnum
-                     FROM model_draft.ego_demand_hv_largescaleconsumer) t
-              WHERE t.rnum > 1);
+	WHERE polygon_id IN 	(SELECT polygon_id
+				FROM 	(SELECT polygon_id,
+					ROW_NUMBER() OVER (partition BY powerplant_id ORDER BY (-area_ha)) AS rnum
+					FROM model_draft.ego_demand_hv_largescaleconsumer) t
+				WHERE t.rnum > 1);
 
 ALTER TABLE model_draft.ego_demand_hv_largescaleconsumer
 	ADD COLUMN id serial,
@@ -498,17 +420,13 @@ ALTER TABLE model_draft.ego_demand_hv_largescaleconsumer
 ALTER TABLE model_draft.ego_demand_hv_largescaleconsumer ALTER COLUMN polygon_id SET DEFAULT NULL;
 
 
-----------------
 -- Add industrial areas where limit value of peak load exceeds 17.5 MW
-----------------
-
 INSERT INTO model_draft.ego_demand_hv_largescaleconsumer (polygon_id, area_ha) 
 	SELECT gid, area_ha
 	FROM model_draft.ego_landuse_industry
 	WHERE peak_load >= 0.0175; 
 
 -- Add consumption, peak_load and geom_centre for industry polygons
-
 UPDATE model_draft.ego_demand_hv_largescaleconsumer
 	SET geom = b.geom
 	FROM model_draft.ego_landuse_industry b
@@ -530,7 +448,6 @@ UPDATE model_draft.ego_demand_hv_largescaleconsumer
 	WHERE polygon_id = b.gid;
  
 -- Update voltage_level for polygons without powerplant 
-
 UPDATE model_draft.ego_demand_hv_largescaleconsumer
 	SET voltage_level = '3'
 	WHERE peak_load >= 0.0175 AND peak_load < 0.12 AND powerplant_id IS NULL; 
@@ -541,22 +458,20 @@ UPDATE model_draft.ego_demand_hv_largescaleconsumer
 
 
 -- Delete duplicates of polygon_id with the same voltage_level 
-
 DELETE FROM model_draft.ego_demand_hv_largescaleconsumer
-WHERE id IN (SELECT id
-              FROM (SELECT id,
-                             ROW_NUMBER() OVER (partition BY polygon_id, voltage_level ORDER BY (id)) AS rnum
-                     FROM model_draft.ego_demand_hv_largescaleconsumer) t
-              WHERE t.rnum > 1);
+	WHERE 	id IN 	(SELECT id
+			FROM 	(SELECT id,
+				ROW_NUMBER() OVER (partition BY polygon_id, voltage_level ORDER BY (id)) AS rnum
+				FROM model_draft.ego_demand_hv_largescaleconsumer) t
+			WHERE t.rnum > 1);
 
 -- Delete duplicates of polygon_id ordered by voltage_level 
-
 DELETE FROM model_draft.ego_demand_hv_largescaleconsumer
-WHERE id IN (SELECT id
-              FROM (SELECT id,
-                             ROW_NUMBER() OVER (partition BY polygon_id ORDER BY (voltage_level)) AS rnum
-                     FROM model_draft.ego_demand_hv_largescaleconsumer) t
-              WHERE t.rnum > 1);
+	WHERE 	id IN 	(SELECT id
+			FROM 	(SELECT id,
+				ROW_NUMBER() OVER (partition BY polygon_id ORDER BY (voltage_level)) AS rnum
+				FROM model_draft.ego_demand_hv_largescaleconsumer) t
+			WHERE t.rnum > 1);
 
 -- "Create Index GIST (geom)"   (OK!) 2.000ms =0
 CREATE INDEX  	large_scale_consumer_geom_idx
@@ -571,33 +486,11 @@ CREATE INDEX  	large_scale_consumer_geom_centre_idx
 
 -- Identify corresponding bus for large scale consumer (lsc) with the help of ehv-voronoi
 
--- add entry to scenario log table
-INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2.1' AS version,
-	'input' AS io,
-	'calc_ego_substation' AS schema_name,
-	'ego_deu_voronoi_ehv' AS table_name,
-	'process_eGo_osm_loads_industry.sql' AS script_name,
-	COUNT(*)AS entries,
-	'OK' AS status,
-	session_user AS user_name,
-	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	obj_description('calc_ego_substation.ego_deu_voronoi_ehv' ::regclass) ::json AS metadata
-FROM	calc_ego_substation.ego_deu_voronoi_ehv;
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','input','calc_ego_substation','ego_deu_voronoi_ehv','process_eGo_osm_loads_industry.sql',' ');
 
--- add entry to scenario log table
-INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2.1' AS version,
-	'input' AS io,
-	'model_draft' AS schema_name,
-	'ego_grid_hvmv_substation' AS table_name,
-	'process_eGo_osm_loads_industry.sql' AS script_name,
-	COUNT(*)AS entries,
-	'OK' AS status,
-	session_user AS user_name,
-	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	obj_description('model_draft.ego_grid_hvmv_substation' ::regclass) ::json AS metadata
-FROM	model_draft.ego_grid_hvmv_substation;
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','input','model_draft','ego_grid_hvmv_substation','process_eGo_osm_loads_industry.sql',' ');
 
 UPDATE model_draft.ego_demand_hv_largescaleconsumer a
 	SET subst_id = b.subst_id
@@ -673,19 +566,11 @@ COMMENT ON TABLE  model_draft.ego_demand_hv_largescaleconsumer IS
 "Instructions for proper use": ["..."]
 }';
 
--- add entry to scenario log table
-INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2.1' AS version,
-	'output' AS io,
-	'model_draft' AS schema_name,
-	'ego_demand_hv_largescaleconsumer' AS table_name,
-	'process_eGo_osm_loads_industry.sql' AS script_name,
-	COUNT(*)AS entries,
-	'OK' AS status,
-	session_user AS user_name,
-	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	obj_description('model_draft.ego_demand_hv_largescaleconsumer' ::regclass) ::json AS metadata
-FROM	model_draft.ego_demand_hv_largescaleconsumer;
+-- select description
+SELECT obj_description('model_draft.ego_demand_hv_largescaleconsumer' ::regclass) ::json;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_demand_hv_largescaleconsumer','process_eGo_osm_loads_industry.sql',' ');
 			  
 
 /*﻿ 

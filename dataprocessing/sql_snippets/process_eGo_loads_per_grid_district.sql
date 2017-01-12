@@ -884,16 +884,16 @@ CREATE TABLE 		model_draft.ego_demand_loadarea_ta AS
 		subst_id = '571' OR
 		subst_id = '593';
 
--- Ad PK   (OK!) 150ms =0
+-- PK
 ALTER TABLE	model_draft.ego_demand_loadarea_ta
 	ADD PRIMARY KEY (id);
 
--- Create Index GIST (geom)   (OK!) 2.500ms =0
+-- index GIST (geom)
 CREATE INDEX	ego_deu_load_area_ta_geom_idx
 	ON	model_draft.ego_demand_loadarea_ta
 	USING	GIST (geom);
 
--- Grant oeuser   (OK!) -> 100ms =0
+-- grant (oeuser)
 GRANT ALL ON TABLE	model_draft.ego_demand_loadarea_ta TO oeuser WITH GRANT OPTION;
 ALTER TABLE		model_draft.ego_demand_loadarea_ta OWNER TO oeuser;
  */
