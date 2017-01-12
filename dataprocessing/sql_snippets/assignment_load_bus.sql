@@ -6,7 +6,7 @@ CREATE TABLE model_draft.ego_demand_loads
   ssc_id integer, 
   lsc_id integer,
   geom geometry(MultiPolygon,3035),
-  CONSTRAINT generators_total_pkey PRIMARY KEY (un_id)
+  CONSTRAINT loads_total_pkey PRIMARY KEY (un_id)
 );
 
 ALTER TABLE model_draft.ego_demand_loads
@@ -83,7 +83,7 @@ CREATE TABLE model_draft.ego_demand_pf_load_single
   bus bigint, -- Unit: n/a...
   sign double precision DEFAULT (-1), -- Unit: n/a...
   e_annual double precision, -- Unit: MW...
-  CONSTRAINT load_data_pkey PRIMARY KEY (load_id),
+  CONSTRAINT load_single_pkey PRIMARY KEY (load_id),
   CONSTRAINT load_data_bus_fk FOREIGN KEY (bus, scn_name)
       REFERENCES model_draft.ego_grid_pf_hv_bus (bus_id, scn_name) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION
@@ -112,7 +112,7 @@ UPDATE model_draft.ego_demand_hv_largescaleconsumer a
 	WHERE a.id = b.lsc_id; 
 
 -------------
--- Insert load data into powerflow schema, that contains all generators seperately 
+-- Insert load data into powerflow schema, that contains all loads seperately 
 -------------
 
 -- Add data for small scale consumer to pf_load_single 
