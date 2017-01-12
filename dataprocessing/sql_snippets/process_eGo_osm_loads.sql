@@ -192,7 +192,7 @@ DROP MATERIALIZED VIEW IF EXISTS model_draft.osm_deu_polygon_urban_buffer100_mvi
 -- 		) AS test
 -- 	WHERE	test.error = FALSE;
 -- 
--- -- "Grant oeuser"   (OK!) -> 100ms =0
+-- -- grant (oeuser)
 -- GRANT ALL ON TABLE	openstreetmap.ego_deu_loads_osm_error_geom_view TO oeuser WITH GRANT OPTION;
 -- ALTER TABLE		openstreetmap.ego_deu_loads_osm_error_geom_view OWNER TO oeuser;
 -- 
@@ -255,7 +255,7 @@ DROP MATERIALIZED VIEW IF EXISTS model_draft.osm_deu_polygon_urban_buffer100_mvi
 --     ON    	openstreetmap.osm_deu_polygon_urban_buffer100_unbuffer
 --     USING     	GIST (geom);
 -- 
--- -- "Grant oeuser"   (OK!) -> 100ms =0
+-- -- grant (oeuser)
 -- GRANT ALL ON TABLE 	openstreetmap.osm_deu_polygon_urban_buffer100_unbuffer TO oeuser WITH GRANT OPTION;
 -- ALTER TABLE		openstreetmap.osm_deu_polygon_urban_buffer100_unbuffer OWNER TO oeuser;
 

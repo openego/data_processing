@@ -79,7 +79,7 @@ INSERT INTO	model_draft.ego_grid_hvmv_substation_dummy (subst_id,subst_name,geom
 CREATE INDEX	substations_dummy_geom_idx
 	ON	model_draft.ego_grid_hvmv_substation_dummy USING gist (geom);
 
--- Grant oeuser   (OK!) -> 100ms =0
+-- grant (oeuser)
 ALTER TABLE	model_draft.ego_grid_hvmv_substation_dummy OWNER TO oeuser;
 
 -- metadata

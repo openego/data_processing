@@ -53,12 +53,15 @@ SELECT	'0.2.1' AS version,
 	obj_description('model_draft.ego_demand_per_district' ::regclass) ::json AS metadata
 FROM	model_draft.ego_demand_per_district;
 	 
-/* -- landuse area per district 
+-- landuse area per district 
 ALTER TABLE model_draft.ego_demand_per_district
+	DROP COLUMN IF EXISTS 	area_retail CASCADE,
 	ADD COLUMN area_retail double precision,
+	DROP COLUMN IF EXISTS 	area_agriculture CASCADE,
  	ADD COLUMN area_agriculture double precision,
+	DROP COLUMN IF EXISTS 	area_tertiary_sector CASCADE,
  	ADD COLUMN area_tertiary_sector double precision;
- */
+ 
 -- retail area per district
 UPDATE model_draft.ego_demand_per_district a
 	SET area_retail = result.sum

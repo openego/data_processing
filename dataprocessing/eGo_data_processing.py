@@ -41,7 +41,7 @@ def data_processing():
     snippets = [
         # 'ego_scenario_log_setup.sql',					# setup scenario log table
         # 'ego_boundaries_vg250_setup.sql',				# setup borders
-        'get_substations.sql',                 		# setup hvmv substations
+        # 'get_substations.sql',                 		# setup hvmv substations
         # 'get_substations_ehv.sql',             		# setup ehv substations
         # 'otg_id_to_substations.sql',           		# assign osmTGmod-id
         # 'ego_grid_hvmv_substation.sql',				# hvmv substation voronoi
@@ -59,11 +59,11 @@ def data_processing():
         # 'calc_ego_hv_powerflow.sql',				#
         # 'osmtgmod_to_pypsa.sql',					#
         # 'assignment_generator_bus.sql',			#
-         'renpass_gis_ResultsTOPF.sql',			#
-         'assignment_load_bus.sql',				#
-         'demand_per_mv_grid_district.py',			#
-         'demandseries_TOPF.sql',					#
-         'LOPF_data.sql',							#
+        # 'renpass_gis_ResultsTOPF.sql',			#
+        # 'assignment_load_bus.sql',				#
+        # 'demand_per_mv_grid_district.py',			#
+        # 'demandseries_TOPF.sql',					#
+        # 'LOPF_data.sql',							#
         # 'peak_load_per_load_area.py',				#
         # 'process_eGo_onts.sql',					#
         # 'process_eGo_lv_grid_districts.sql'		#

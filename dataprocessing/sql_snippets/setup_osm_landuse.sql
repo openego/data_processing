@@ -25,7 +25,7 @@ __author__ = "Ludee"
 -- 		) AS test
 -- 	WHERE	test.error = FALSE;
 -- 
--- -- "Grant oeuser"   (OK!) -> 100ms =0
+-- -- grant (oeuser)
 -- GRANT ALL ON TABLE	openstreetmap.osm_deu_polygon_error_geom_view TO oeuser WITH GRANT OPTION;
 -- ALTER TABLE		openstreetmap.osm_deu_polygon_error_geom_view OWNER TO oeuser;
 -- 
@@ -36,6 +36,9 @@ __author__ = "Ludee"
 -- "Filter OSM Urban Landuse"
 ---------- ---------- ----------
 -- ToDo: change "urban" to electrified
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_grid_mv_griddistrict_dump','process_eGo_grid_district.sql',' ');
 
 -- add entry to scenario log table
 INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
@@ -105,7 +108,7 @@ CREATE INDEX  	osm_deu_polygon_urban_geom_idx
 	ON	openstreetmap.osm_deu_polygon_urban
 	USING	GIST (geom);
 
--- "Grant oeuser"   (OK!) -> 100ms =0
+-- grant (oeuser)
 GRANT ALL ON TABLE	openstreetmap.osm_deu_polygon_urban TO oeuser WITH GRANT OPTION;
 ALTER TABLE		openstreetmap.osm_deu_polygon_urban OWNER TO oeuser;
 
@@ -113,6 +116,9 @@ ALTER TABLE		openstreetmap.osm_deu_polygon_urban OWNER TO oeuser;
 ---------- ---------- ----------
 -- "OSM Urban Landuse Inside vg250"
 ---------- ---------- ----------
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_grid_mv_griddistrict_dump','process_eGo_grid_district.sql',' ');
 
 -- add entry to scenario log table
 INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
@@ -179,7 +185,7 @@ CREATE INDEX  	osm_deu_polygon_urban_error_geom_vg250_mview_geom_idx
 	ON	openstreetmap.osm_deu_polygon_urban_error_geom_vg250_mview
 	USING	GIST (geom);
 
--- "Grant oeuser"   (OK!) -> 100ms =0
+-- grant (oeuser)
 GRANT ALL ON TABLE	openstreetmap.osm_deu_polygon_urban_error_geom_vg250_mview TO oeuser WITH GRANT OPTION;
 ALTER TABLE		openstreetmap.osm_deu_polygon_urban_error_geom_vg250_mview OWNER TO oeuser;	
 
@@ -214,7 +220,7 @@ CREATE MATERIALIZED VIEW		openstreetmap.osm_deu_polygon_urban_vg250_cut_mview AS
 		) AS cut
 	ORDER BY 	cut.gid;
 
--- "Create Index (gid)"   (OK!) -> 1.000ms =0
+-- index (id)
 CREATE UNIQUE INDEX  	osm_deu_polygon_urban_vg250_cut_mview_gid_idx
 		ON	openstreetmap.osm_deu_polygon_urban_vg250_cut_mview (gid);
 
@@ -223,7 +229,7 @@ CREATE INDEX  	osm_deu_polygon_urban_vg250_cut_mview_geom_idx
 	ON	openstreetmap.osm_deu_polygon_urban_vg250_cut_mview
 	USING	GIST (geom);
 
--- "Grant oeuser"   (OK!) -> 100ms =0
+-- grant (oeuser)
 GRANT ALL ON TABLE	openstreetmap.osm_deu_polygon_urban_vg250_cut_mview TO oeuser WITH GRANT OPTION;
 ALTER TABLE		openstreetmap.osm_deu_polygon_urban_vg250_cut_mview OWNER TO oeuser;
 
@@ -253,7 +259,7 @@ CREATE MATERIALIZED VIEW		openstreetmap.osm_deu_polygon_urban_vg250_clean_cut_mu
 	FROM	openstreetmap.osm_deu_polygon_urban_vg250_cut_mview AS cut
 	WHERE	cut.geom_type = 'POLYGON';
 
--- "Create Index (gid)"   (OK!) -> 1.000ms =0
+-- index (id)
 CREATE UNIQUE INDEX  	osm_deu_polygon_urban_vg250_clean_cut_multi_mview_gid_idx
 		ON	openstreetmap.osm_deu_polygon_urban_vg250_clean_cut_multi_mview (gid);
 
@@ -262,7 +268,7 @@ CREATE INDEX  	osm_deu_polygon_urban_vg250_clean_cut_multi_mview_geom_idx
 	ON	openstreetmap.osm_deu_polygon_urban_vg250_clean_cut_multi_mview
 	USING	GIST (geom);
 
--- "Grant oeuser"   (OK!) -> 100ms =0
+-- grant (oeuser)
 GRANT ALL ON TABLE	openstreetmap.osm_deu_polygon_urban_vg250_clean_cut_multi_mview TO oeuser WITH GRANT OPTION;
 ALTER TABLE		openstreetmap.osm_deu_polygon_urban_vg250_clean_cut_multi_mview OWNER TO oeuser;
 
@@ -292,7 +298,7 @@ CREATE MATERIALIZED VIEW		openstreetmap.osm_deu_polygon_urban_vg250_clean_cut_mv
 	FROM	openstreetmap.osm_deu_polygon_urban_vg250_cut_mview AS cut
 	WHERE	cut.geom_type = 'MULTIPOLYGON';
 
--- "Create Index (gid)"   (OK!) -> 1.000ms =0
+-- index (id)
 CREATE UNIQUE INDEX  	osm_deu_polygon_urban_vg250_clean_cut_mview_gid_idx
 		ON	openstreetmap.osm_deu_polygon_urban_vg250_clean_cut_mview (gid);
 
@@ -317,6 +323,9 @@ INSERT INTO	openstreetmap.osm_deu_polygon_urban
 	SELECT	clean.*
 	FROM	openstreetmap.osm_deu_polygon_urban_vg250_clean_cut_multi_mview AS clean
 	ORDER BY 	clean.gid;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_grid_mv_griddistrict_dump','process_eGo_grid_district.sql',' ');
 
 -- add entry to scenario log table
 INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
@@ -351,7 +360,7 @@ FROM	openstreetmap.osm_deu_polygon_urban;
 -- 		) AS test
 -- 	WHERE	test.error = FALSE;
 -- 
--- -- "Grant oeuser"   (OK!) -> 100ms =0
+-- -- grant (oeuser)
 -- GRANT ALL ON TABLE	openstreetmap.osm_deu_polygon_urban_error_geom_view TO oeuser WITH GRANT OPTION;
 -- ALTER TABLE		openstreetmap.osm_deu_polygon_urban_error_geom_view OWNER TO oeuser;
 
@@ -372,7 +381,7 @@ FROM	openstreetmap.osm_deu_polygon_urban;
 -- 		) AS test
 -- 	WHERE	test.error = FALSE;
 -- 
--- -- "Grant oeuser"   (OK!) -> 100ms =0
+-- -- grant (oeuser)
 -- GRANT ALL ON TABLE	openstreetmap.osm_deu_polygon_urban_error_geom_view TO oeuser WITH GRANT OPTION;
 -- ALTER TABLE		openstreetmap.osm_deu_polygon_urban_error_geom_view OWNER TO oeuser;
 -- 
@@ -399,7 +408,7 @@ CREATE MATERIALIZED VIEW		openstreetmap.osm_deu_polygon_urban_sector_1_residenti
 	WHERE	sector = '1'
 ORDER BY	osm.gid;
 
--- "Create Index (gid)"   (OK!) -> 1.000ms =0
+-- index (id)
 CREATE UNIQUE INDEX  	osm_deu_polygon_urban_sector_1_residential_mview_gid_idx
 		ON	openstreetmap.osm_deu_polygon_urban_sector_1_residential_mview (gid);
 
@@ -408,7 +417,7 @@ CREATE INDEX  	osm_deu_polygon_urban_sector_1_residential_mview_geom_idx
 	ON	openstreetmap.osm_deu_polygon_urban_sector_1_residential_mview
 	USING	GIST (geom);
 	
--- "Grant oeuser"   (OK!) -> 100ms =0
+-- grant (oeuser)
 GRANT ALL ON TABLE 	openstreetmap.osm_deu_polygon_urban_sector_1_residential_mview TO oeuser WITH GRANT OPTION;
 ALTER TABLE		openstreetmap.osm_deu_polygon_urban_sector_1_residential_mview OWNER TO oeuser;
 
@@ -445,18 +454,21 @@ CREATE MATERIALIZED VIEW		openstreetmap.osm_deu_polygon_urban_sector_2_retail_mv
 	WHERE	sector = '2'
 ORDER BY	osm.gid;
     
--- "Create Index (gid)"   (OK!) -> 1.000ms =0
+-- index (id)
 CREATE UNIQUE INDEX  	osm_deu_polygon_urban_sector_2_retail_mview_gid_idx
 		ON	openstreetmap.osm_deu_polygon_urban_sector_2_retail_mview (gid);
 
--- "Create Index GIST (geom)"   (OK!) -> 1.000ms =0
+-- index GIST (geom)
 CREATE INDEX  	osm_deu_polygon_urban_sector_2_retail_mview_geom_idx
 	ON	openstreetmap.osm_deu_polygon_urban_sector_2_retail_mview
 	USING	GIST (geom);
 	
--- "Grant oeuser"   (OK!) -> 100ms =0
+-- grant (oeuser)
 GRANT ALL ON TABLE 	openstreetmap.osm_deu_polygon_urban_sector_2_retail_mview TO oeuser WITH GRANT OPTION;
 ALTER TABLE		openstreetmap.osm_deu_polygon_urban_sector_2_retail_mview OWNER TO oeuser;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_grid_mv_griddistrict_dump','process_eGo_grid_district.sql',' ');
 
 -- add entry to scenario log table
 INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
@@ -494,18 +506,21 @@ CREATE MATERIALIZED VIEW		openstreetmap.osm_deu_polygon_urban_sector_3_industria
 	WHERE	sector = '3'
 ORDER BY	osm.gid;
 
--- "Create Index (gid)"   (OK!) -> 1.000ms =0
+-- index (id)
 CREATE UNIQUE INDEX  	osm_deu_polygon_urban_sector_3_industrial_mview_gid_idx
 		ON	openstreetmap.osm_deu_polygon_urban_sector_3_industrial_mview (gid);
 
--- "Create Index GIST (geom)"   (OK!) -> 1.000ms =0
+-- index GIST (geom)
 CREATE INDEX  	osm_deu_polygon_urban_sector_3_industrial_mview_geom_idx
 	ON	openstreetmap.osm_deu_polygon_urban_sector_3_industrial_mview
 	USING	GIST (geom);
 	
--- "Grant oeuser"   (OK!) -> 100ms =0
+-- grant (oeuser)
 GRANT ALL ON TABLE 	openstreetmap.osm_deu_polygon_urban_sector_3_industrial_mview TO oeuser WITH GRANT OPTION;
 ALTER TABLE		openstreetmap.osm_deu_polygon_urban_sector_3_industrial_mview OWNER TO oeuser;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_grid_mv_griddistrict_dump','process_eGo_grid_district.sql',' ');
 
 -- add entry to scenario log table
 INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
@@ -523,48 +538,35 @@ FROM	openstreetmap.osm_deu_polygon_urban_sector_3_industrial_mview;
 	
 ---------- ---------- ----------
 
--- "Sector 4. Agricultural"
-
--- "Update Sector"   (OK!) -> 122.000ms =492.890
+-- sector 4. Agricultural
+-- update sector
 UPDATE 	openstreetmap.osm_deu_polygon_urban
-SET  	sector = '4'
-WHERE	tags @> '"landuse"=>"farmyard"'::hstore OR 
-	tags @> '"landuse"=>"greenhouse_horticulture"'::hstore;
+	SET  	sector = '4'
+	WHERE	tags @> '"landuse"=>"farmyard"'::hstore OR 
+		tags @> '"landuse"=>"greenhouse_horticulture"'::hstore;
 
--- "Filter Agricultural"   (OK!) -> 2.000ms =122.406
+-- filter agricultural
 DROP MATERIALIZED VIEW IF EXISTS	openstreetmap.osm_deu_polygon_urban_sector_4_agricultural_mview CASCADE;
 CREATE MATERIALIZED VIEW		openstreetmap.osm_deu_polygon_urban_sector_4_agricultural_mview AS
 	SELECT	osm.*
 	FROM	openstreetmap.osm_deu_polygon_urban AS osm
 	WHERE	sector = '4'
-ORDER BY	osm.gid;
+	ORDER BY	osm.gid;
 
--- "Create Index (gid)"   (OK!) -> 1.000ms =0
+-- index (id)
 CREATE UNIQUE INDEX  	osm_deu_polygon_urban_sector_4_agricultural_mview_gid_idx
 		ON	openstreetmap.osm_deu_polygon_urban_sector_4_agricultural_mview (gid);
-    
--- "Create Index GIST (geom)"   (OK!) -> 1.000ms =0
+
+-- index GIST (geom)
 CREATE INDEX  	osm_deu_polygon_urban_sector_4_agricultural_mview_geom_idx
 	ON	openstreetmap.osm_deu_polygon_urban_sector_4_agricultural_mview
 	USING	GIST (geom);
-	
--- "Grant oeuser"   (OK!) -> 100ms =0
-GRANT ALL ON TABLE 	openstreetmap.osm_deu_polygon_urban_sector_4_agricultural_mview TO oeuser WITH GRANT OPTION;
-ALTER TABLE		openstreetmap.osm_deu_polygon_urban_sector_4_agricultural_mview OWNER TO oeuser;
 
--- add entry to scenario log table
-INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2.1' AS version,
-	'output' AS io,
-	'openstreetmap' AS schema_name,
-	'osm_deu_polygon_urban_sector_4_agricultural_mview' AS table_name,
-	'setup_osm_landuse.sql' AS script_name,
-	COUNT(*)AS entries,
-	'OK' AS status,
-	session_user AS user_name,
-	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	obj_description('openstreetmap.osm_deu_polygon_urban_sector_4_agricultural_mview' ::regclass) ::json AS metadata
-FROM	openstreetmap.osm_deu_polygon_urban_sector_4_agricultural_mview;
+-- grant (oeuser)
+ALTER TABLE	openstreetmap.osm_deu_polygon_urban_sector_4_agricultural_mview OWNER TO oeuser;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','output','openstreetmap','osm_deu_polygon_urban_sector_4_agricultural_mview','setup_osm_landuse.sql',' ');
 	
 ---------- ---------- ----------
 
@@ -583,7 +585,7 @@ FROM	openstreetmap.osm_deu_polygon_urban_sector_4_agricultural_mview;
 -- 		) AS test
 -- 	WHERE	test.error = FALSE;
 -- 
--- -- "Grant oeuser"   (OK!) -> 100ms =0
+-- -- grant (oeuser)
 -- GRANT ALL ON TABLE	openstreetmap.osm_deu_polygon_urban_sector_4_agricultural_mview_error_geom_view TO oeuser WITH GRANT OPTION;
 -- ALTER TABLE		openstreetmap.osm_deu_polygon_urban_sector_4_agricultural_mview_error_geom_view OWNER TO oeuser;
 -- 
