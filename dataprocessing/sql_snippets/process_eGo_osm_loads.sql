@@ -12,12 +12,15 @@ __author__ = "Ludee"
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.5','input','model_draft','ego_demand_hv_largescaleconsumer','process_eGo_osm_loads.sql',' ');
 
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','input','openstreetmap','osm_deu_polygon_urban','process_eGo_osm_loads.sql',' ');
+
 -- exclude large scale consumer
 DELETE FROM openstreetmap.osm_deu_polygon_urban
 	WHERE gid IN (SELECT polygon_id FROM model_draft.ego_demand_hv_largescaleconsumer);
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','input','openstreetmap','osm_deu_polygon_urban','process_eGo_osm_loads.sql',' ');
+SELECT ego_scenario_log('v0.2.5','output','openstreetmap','osm_deu_polygon_urban','process_eGo_osm_loads.sql',' ');
 
 -- sequence
 DROP SEQUENCE IF EXISTS 	model_draft.osm_deu_polygon_urban_buffer100_mview_id CASCADE;
@@ -37,12 +40,11 @@ CREATE MATERIALIZED VIEW		model_draft.osm_deu_polygon_urban_buffer100_mview AS
 
 -- index (id)
 CREATE UNIQUE INDEX  	osm_deu_polygon_urban_buffer100_mview_gid_idx
-		ON	model_draft.osm_deu_polygon_urban_buffer100_mview (id);
+	ON	model_draft.osm_deu_polygon_urban_buffer100_mview (id);
 
 -- index GIST (geom)
 CREATE INDEX  	osm_deu_polygon_urban_buffer100_mview_geom_idx
-    ON    	model_draft.osm_deu_polygon_urban_buffer100_mview
-    USING     	GIST (geom);
+	ON	model_draft.osm_deu_polygon_urban_buffer100_mview USING GIST (geom);
     
 -- grant (oeuser)
 ALTER TABLE	model_draft.osm_deu_polygon_urban_buffer100_mview OWNER TO oeuser;
@@ -54,10 +56,10 @@ SELECT ego_scenario_log('v0.2.5','temp','model_draft','osm_deu_polygon_urban_buf
 -- unbuffer with 100m
 DROP TABLE IF EXISTS  	model_draft.ego_deu_loads_osm CASCADE;
 CREATE TABLE         	model_draft.ego_deu_loads_osm (
-		id SERIAL NOT NULL,
-		area_ha double precision,
-		geom geometry(Polygon,3035),
-CONSTRAINT 	ego_deu_loads_osm_pkey PRIMARY KEY (id));
+	id SERIAL NOT NULL,
+	area_ha double precision,
+	geom geometry(Polygon,3035),
+	CONSTRAINT ego_deu_loads_osm_pkey PRIMARY KEY (id));
 
 -- insert buffer
 INSERT INTO     model_draft.ego_deu_loads_osm(area_ha,geom)
@@ -68,28 +70,9 @@ INSERT INTO     model_draft.ego_deu_loads_osm(area_ha,geom)
 			)))).geom ::geometry(Polygon,3035) AS geom
 		FROM	model_draft.osm_deu_polygon_urban_buffer100_mview AS osm) AS buffer;
 
-/* -- sequence
-DROP SEQUENCE IF EXISTS 	openstreetmap.ego_deu_loads_osm_id CASCADE;
-CREATE SEQUENCE 		openstreetmap.ego_deu_loads_osm_id;
-
--- unbuffer with 100m
-DROP TABLE IF EXISTS	openstreetmap.ego_deu_loads_osm CASCADE;
-CREATE TABLE		openstreetmap.ego_deu_loads_osm AS
-	SELECT	nextval('openstreetmap.ego_deu_loads_osm_id') AS id,
-		ST_AREA(buffer.geom)/10000 ::double precision AS area_ha,
-		buffer.geom ::geometry(Polygon,3035) AS geom
-	FROM	(SELECT	(ST_DUMP(ST_MULTI(ST_UNION(
-			ST_BUFFER(osm.geom, -100)
-			)))).geom ::geometry(Polygon,3035) AS geom
-		FROM	openstreetmap.osm_deu_polygon_urban_buffer100_mview AS osm) AS buffer;
-
--- ad PK
-ALTER TABLE	openstreetmap.ego_deu_loads_osm
-	ADD PRIMARY KEY (id); */
-
 -- index GIST (geom)
 CREATE INDEX  	ego_deu_loads_osm_geom_idx
-    ON    	model_draft.ego_deu_loads_osm USING GIST (geom);
+	ON    	model_draft.ego_deu_loads_osm USING GIST (geom);
 
 -- grant (oeuser)
 ALTER TABLE	model_draft.ego_deu_loads_osm OWNER TO oeuser;
@@ -130,7 +113,7 @@ SELECT obj_description('model_draft.ego_deu_loads_osm' ::regclass) ::json;
 SELECT ego_scenario_log('v0.2.5','ouput','model_draft','ego_deu_loads_osm','process_eGo_osm_loads.sql',' ');
 
 
-DROP MATERIALIZED VIEW IF EXISTS model_draft.osm_deu_polygon_urban_buffer100_mview CASCADE;
+-- DROP MATERIALIZED VIEW IF EXISTS model_draft.osm_deu_polygon_urban_buffer100_mview CASCADE;
 
 
 ---------- ---------- ----------
@@ -208,7 +191,7 @@ DROP MATERIALIZED VIEW IF EXISTS model_draft.osm_deu_polygon_urban_buffer100_mvi
 -- -- 	ADD COLUMN geom_surfacepoint geometry(POINT,3035),
 -- -- 	ADD COLUMN geom_buffer geometry(Polygon,3035);
 -- 
--- -- "Create Index GIST (geom)"   (OK!) 2.000ms =0
+-- -- index GIST (geom)
 -- CREATE INDEX  	osm_deu_polygon_urban_buffer100_unbuffer_geom_idx
 --     ON    	openstreetmap.osm_deu_polygon_urban_buffer100_unbuffer
 --     USING     	GIST (geom);

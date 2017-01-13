@@ -9,13 +9,13 @@ __author__ = "Ludee"
 */
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.2','input','model_draft','ego_grid_hvmv_substation','ego_paper_result.sql',' ');
+SELECT ego_scenario_log('v0.2.5','input','model_draft','ego_grid_hvmv_substation','ego_paper_result.sql',' ');
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.2','input','model_draft','ego_grid_mv_griddistrict','ego_paper_result.sql',' ');
+SELECT ego_scenario_log('v0.2.5','input','model_draft','ego_grid_mv_griddistrict','ego_paper_result.sql',' ');
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.2','input','model_draft','ego_demand_loadarea','ego_paper_result.sql',' ');
+SELECT ego_scenario_log('v0.2.5','input','model_draft','ego_demand_loadarea','ego_paper_result.sql',' ');
 
 
 -- results and statistics for substation, load area, MV grid districts and consumption
@@ -136,7 +136,7 @@ INSERT INTO model_draft.ego_data_processing_results (schema_name,table_name,desc
 ALTER TABLE model_draft.ego_data_processing_results OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.2','output','model_draft','ego_data_processing_results','ego_paper_result.sql',' ');
+SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_data_processing_results','ego_paper_result.sql',' ');
 
 
 
@@ -308,7 +308,7 @@ CREATE INDEX  	ego_data_processing_results_mvgd_geom_idx
 	ON	model_draft.ego_data_processing_results_mvgd USING GIST (geom);
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.2','output','model_draft','ego_data_processing_results_mvgd','ego_paper_result.sql',' ');
+SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_data_processing_results_mvgd','ego_paper_result.sql',' ');
 
 	
 
@@ -354,7 +354,7 @@ WHERE	gf='1' OR gf='2';
 ALTER TABLE political_boundary.bkg_vg250_statistics_mview OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.2','output','political_boundary','bkg_vg250_statistics_mview','ego_paper_result.sql',' ');
+SELECT ego_scenario_log('v0.2.5','output','political_boundary','bkg_vg250_statistics_mview','ego_paper_result.sql',' ');
 
 
 /* -- EWE Validation
@@ -368,7 +368,7 @@ CREATE MATERIALIZED VIEW         	model_draft.ego_grid_hvmv_substation_ewe_mview
 	WHERE  	ST_TRANSFORM(ewe.geom,3035) && subs.geom AND
 		ST_CONTAINS(ST_TRANSFORM(ewe.geom,3035),subs.geom) ;
 
--- Create Index GIST (geom)   (OK!) 1.000ms =*
+-- index GIST (geom)   (OK!) 1.000ms =*
 CREATE INDEX	ego_deu_substations_ewe_mview_geom_idx
 	ON	model_draft.ego_grid_hvmv_substation_ewe_mview
 	USING	GIST (geom);

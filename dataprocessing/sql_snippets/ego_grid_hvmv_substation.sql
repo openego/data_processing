@@ -75,7 +75,7 @@ INSERT INTO	model_draft.ego_grid_hvmv_substation_dummy (subst_id,subst_name,geom
 	SELECT '9017' ::integer AS subst_id, 'DUMMY' AS subst_name, ST_SetSRID(ST_GeomFromText('POINT(3852322.49802 2849800.43518705)'),3035) ::geometry(Point,3035) AS geom UNION ALL 
 	SELECT '9018' ::integer AS subst_id, 'DUMMY' AS subst_name, ST_SetSRID(ST_GeomFromText('POINT(3843258.70046489 3109607.27281094)'),3035) ::geometry(Point,3035) AS geom;
 
--- create index GIST (geom)
+-- index GIST (geom)
 CREATE INDEX	substations_dummy_geom_idx
 	ON	model_draft.ego_grid_hvmv_substation_dummy USING gist (geom);
 
@@ -175,7 +175,7 @@ ALTER TABLE model_draft.ego_grid_hvmv_substation_voronoi
 	ADD PRIMARY KEY (id),
 	ALTER COLUMN geom TYPE geometry(POLYGON,3035) USING ST_SETSRID(geom,3035);
 
--- create index GIST (geom)
+-- index GIST (geom)
 CREATE INDEX	ego_grid_hvmv_substation_voronoi_geom_idx
 	ON	model_draft.ego_grid_hvmv_substation_voronoi USING gist (geom);
 

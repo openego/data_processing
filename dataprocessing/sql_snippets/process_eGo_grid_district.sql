@@ -959,7 +959,7 @@ ALTER TABLE	model_draft.ego_grid_mv_griddistrict
 	ADD COLUMN geom_type text,
 	ADD PRIMARY KEY (subst_id);
 
--- Create Index GIST (geom)
+-- index GIST (geom)
 CREATE INDEX	grid_district_geom_idx
 	ON	model_draft.ego_grid_mv_griddistrict
 	USING	GIST (geom);

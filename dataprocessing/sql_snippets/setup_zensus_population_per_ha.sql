@@ -8,19 +8,8 @@ __license__ = "tba"
 __author__ = "Ludee" 
 */
 
--- add entry to scenario log table
-INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2.1' AS version,
-	'input' AS io,
-	'social' AS schema_name,
-	'destatis_zensus_population_per_ha' AS table_name,
-	'setup_zensus_population_per_ha.sql' AS script_name,
-	COUNT(*)AS entries,
-	'OK' AS status,
-	session_user AS user_name,
-	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	obj_description('social.destatis_zensus_population_per_ha' ::regclass) ::json AS metadata
-FROM	social.destatis_zensus_population_per_ha;
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','input','social','destatis_zensus_population_per_ha','setup_zensus_population_per_ha.sql',' ');
 
 -- zensus points with population 
 DROP MATERIALIZED VIEW IF EXISTS	social.destatis_zensus_population_per_ha_mview CASCADE;
@@ -32,21 +21,20 @@ CREATE MATERIALIZED VIEW         	social.destatis_zensus_population_per_ha_mview
 	FROM	social.destatis_zensus_population_per_ha AS zensus
 	WHERE	zensus.population >= 0;
 	
--- create index (id)
+-- index (id)
 CREATE UNIQUE INDEX  	destatis_zensus_population_per_ha_mview_gid_idx
-		ON	social.destatis_zensus_population_per_ha_mview (gid);
+	ON	social.destatis_zensus_population_per_ha_mview (gid);
 
 -- index gist (geom_point)
 CREATE INDEX  	destatis_zensus_population_per_ha_mview_geom_point_idx
-    ON    	social.destatis_zensus_population_per_ha_mview USING GIST (geom_point);
+	ON    	social.destatis_zensus_population_per_ha_mview USING GIST (geom_point);
     
 -- index gist (geom)
 CREATE INDEX  	destatis_zensus_population_per_ha_mview_geom_idx
-    ON    	social.destatis_zensus_population_per_ha_mview USING GIST (geom);
+	ON    	social.destatis_zensus_population_per_ha_mview USING GIST (geom);
     
 -- grant (oeuser)
-GRANT ALL ON TABLE 	social.destatis_zensus_population_per_ha_mview TO oeuser WITH GRANT OPTION;
-ALTER TABLE		social.destatis_zensus_population_per_ha_mview OWNER TO oeuser;
+ALTER TABLE	social.destatis_zensus_population_per_ha_mview OWNER TO oeuser;
 
 -- metadata
 COMMENT ON MATERIALIZED VIEW social.destatis_zensus_population_per_ha_mview IS '{
@@ -80,31 +68,20 @@ COMMENT ON MATERIALIZED VIEW social.destatis_zensus_population_per_ha_mview IS '
 -- select description
 SELECT obj_description('social.destatis_zensus_population_per_ha_mview' ::regclass) ::json;
 
--- add entry to scenario log table
-INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-	SELECT	'0.2.1' AS version,
-		'output' AS io,
-		'social' AS schema_name,
-		'destatis_zensus_population_per_ha_mview' AS table_name,
-		'setup_zensus_population_per_ha.sql' AS script_name,
-		COUNT(*)AS entries,
-		'OK' AS status,
-		session_user AS user_name,
-		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-		obj_description('social.destatis_zensus_population_per_ha_mview' ::regclass) ::json AS metadata
-	FROM	social.destatis_zensus_population_per_ha_mview;
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','output','social','destatis_zensus_population_per_ha_mview','setup_zensus_population_per_ha.sql',' ');
 
 
--- zensus loads
+-- zensus load
 DROP TABLE IF EXISTS  	model_draft.ego_social_zensus_load CASCADE;
 CREATE TABLE         	model_draft.ego_social_zensus_load (
-		id SERIAL NOT NULL,
-		gid integer,
-		population integer,
-		inside_la boolean,
-		geom_point geometry(Point,3035),
-		geom geometry(Polygon,3035),
-CONSTRAINT 	ego_social_zensus_load_pkey PRIMARY KEY (id));
+	id SERIAL NOT NULL,
+	gid integer,
+	population integer,
+	inside_la boolean,
+	geom_point geometry(Point,3035),
+	geom geometry(Polygon,3035),
+	CONSTRAINT ego_social_zensus_load_pkey PRIMARY KEY (id));
 
 -- insert zensus loads
 INSERT INTO	model_draft.ego_social_zensus_load (gid,population,inside_la,geom_point,geom)
@@ -122,60 +99,29 @@ CREATE INDEX  	ego_social_zensus_load_geom_point_idx
 -- index gist (geom)
 CREATE INDEX  	ego_social_zensus_load_geom_idx
 	ON	model_draft.ego_social_zensus_load USING GIST (geom);
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','input','model_draft','ego_deu_loads_osm','setup_zensus_population_per_ha.sql',' ');
 	
--- add entry to scenario log table
-INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2.1' AS version,
-	'input' AS io,
-	'model_draft' AS schema_name,
-	'ego_deu_loads_osm' AS table_name,
-	'setup_zensus_population_per_ha.sql' AS script_name,
-	COUNT(*)AS entries,
-	'OK' AS status,
-	session_user AS user_name,
-	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	obj_description('model_draft.ego_deu_loads_osm' ::regclass) ::json AS metadata
-FROM	model_draft.ego_deu_loads_osm;
-	
--- identify population in osm loads
+-- population in osm loads
 UPDATE 	model_draft.ego_social_zensus_load AS t1
-SET  	inside_la = t2.inside_la
-FROM    (
-	SELECT	zensus.id AS id,
-		'TRUE' ::boolean AS inside_la
-	FROM	model_draft.ego_social_zensus_load AS zensus,
-		model_draft.ego_deu_loads_osm AS osm
-	WHERE  	osm.geom && zensus.geom_point AND
-		ST_CONTAINS(osm.geom,zensus.geom_point)
-	) AS t2
-WHERE  	t1.id = t2.id;
+	SET  	inside_la = t2.inside_la
+	FROM    (
+		SELECT	zensus.id AS id,
+			'TRUE' ::boolean AS inside_la
+		FROM	model_draft.ego_social_zensus_load AS zensus,
+			model_draft.ego_deu_loads_osm AS osm
+		WHERE  	osm.geom && zensus.geom_point AND
+			ST_CONTAINS(osm.geom,zensus.geom_point)
+		) AS t2
+	WHERE  	t1.id = t2.id;
 
 -- remove identified population
 DELETE FROM	model_draft.ego_social_zensus_load AS lp
 	WHERE	lp.inside_la IS TRUE;
 
-/* -- make lattice from population
-UPDATE 	model_draft.ego_social_zensus_load AS t1
-SET  	geom = t2.geom
-FROM    (
-	SELECT	lp.id AS id,
-		ST_SetSRID((ST_MakeEnvelope(
-			ST_X(lp.geom)-50,
-			ST_Y(lp.geom)-50,
-			ST_X(lp.geom)+50,
-			ST_Y(lp.geom)+50)),3035) AS geom
-	FROM	model_draft.ego_social_zensus_load AS lp
-	) AS t2
-WHERE  	t1.id = t2.id; 
-
--- index gist (geom)
-CREATE INDEX  	ego_deu_loadcluster_geom_idx
-	ON	model_draft.ego_social_zensus_load USING GIST (geom);
-*/
-
 -- grant (oeuser)
-GRANT ALL ON TABLE 	model_draft.ego_social_zensus_load TO oeuser WITH GRANT OPTION;
-ALTER TABLE		model_draft.ego_social_zensus_load OWNER TO oeuser;	
+ALTER TABLE	model_draft.ego_social_zensus_load OWNER TO oeuser;	
 
 -- metadata
 COMMENT ON TABLE model_draft.ego_social_zensus_load IS '{
@@ -209,19 +155,8 @@ COMMENT ON TABLE model_draft.ego_social_zensus_load IS '{
 -- select description
 SELECT obj_description('model_draft.ego_social_zensus_load' ::regclass) ::json;
 
--- add entry to scenario log table
-INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2.1' AS version,
-	'output' AS io,
-	'model_draft' AS schema_name,
-	'ego_social_zensus_load' AS table_name,
-	'setup_zensus_population_per_ha.sql' AS script_name,
-	COUNT(*)AS entries,
-	'OK' AS status,
-	session_user AS user_name,
-	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	obj_description('model_draft.ego_social_zensus_load' ::regclass) ::json AS metadata
-FROM	model_draft.ego_social_zensus_load;
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_social_zensus_load','setup_zensus_population_per_ha.sql',' ');
 
 
 -- cluster from zensus load lattice
@@ -234,7 +169,7 @@ CREATE TABLE         	model_draft.ego_social_zensus_load_cluster (
 	geom_buffer geometry(Polygon,3035),
 	geom_centroid geometry(Point,3035),
 	geom_surfacepoint geometry(Point,3035),
-CONSTRAINT ego_social_zensus_load_cluster_pkey PRIMARY KEY (cid));
+	CONSTRAINT ego_social_zensus_load_cluster_pkey PRIMARY KEY (cid));
 
 -- insert cluster
 INSERT INTO	model_draft.ego_social_zensus_load_cluster(geom)
@@ -243,45 +178,41 @@ INSERT INTO	model_draft.ego_social_zensus_load_cluster(geom)
 
 -- index gist (geom)
 CREATE INDEX	ego_social_zensus_load_cluster_geom_idx
-	ON	model_draft.ego_social_zensus_load_cluster
-	USING	GIST (geom);
+	ON 	model_draft.ego_social_zensus_load_cluster USING GIST (geom);
 
--- calculate cluster
+-- cluster data
 UPDATE 	model_draft.ego_social_zensus_load_cluster AS t1
-SET  	zensus_sum = t2.zensus_sum,
-	area_ha = t2.area_ha,
-	geom_buffer = t2.geom_buffer,
-	geom_centroid = t2.geom_centroid,
-	geom_surfacepoint = t2.geom_surfacepoint
-FROM    (
-	SELECT	cl.cid AS cid,
-		SUM(lp.population) AS zensus_sum,
-		COUNT(lp.geom) AS area_ha,
-		ST_BUFFER(cl.geom, 100) AS geom_buffer,
-		ST_Centroid(cl.geom) AS geom_centroid,
-		ST_PointOnSurface(cl.geom) AS geom_surfacepoint
-	FROM	model_draft.ego_social_zensus_load AS lp,
-		model_draft.ego_social_zensus_load_cluster AS cl
-	WHERE  	cl.geom && lp.geom AND
-		ST_CONTAINS(cl.geom,lp.geom)
-	GROUP BY	cl.cid
-	ORDER BY	cl.cid
-	) AS t2
-WHERE  	t1.cid = t2.cid;
+	SET  	zensus_sum = t2.zensus_sum,
+		area_ha = t2.area_ha,
+		geom_buffer = t2.geom_buffer,
+		geom_centroid = t2.geom_centroid,
+		geom_surfacepoint = t2.geom_surfacepoint
+	FROM    (
+		SELECT	cl.cid AS cid,
+			SUM(lp.population) AS zensus_sum,
+			COUNT(lp.geom) AS area_ha,
+			ST_BUFFER(cl.geom, 100) AS geom_buffer,
+			ST_Centroid(cl.geom) AS geom_centroid,
+			ST_PointOnSurface(cl.geom) AS geom_surfacepoint
+		FROM	model_draft.ego_social_zensus_load AS lp,
+			model_draft.ego_social_zensus_load_cluster AS cl
+		WHERE  	cl.geom && lp.geom AND
+			ST_CONTAINS(cl.geom,lp.geom)
+		GROUP BY	cl.cid
+		ORDER BY	cl.cid
+		) AS t2
+	WHERE  	t1.cid = t2.cid;
 
--- index gist (geom)
+-- index gist (geom_centroid)
 CREATE INDEX	ego_social_zensus_load_cluster_geom_centroid_idx
-	ON	model_draft.ego_social_zensus_load_cluster
-	USING	GIST (geom_centroid);
+	ON	model_draft.ego_social_zensus_load_cluster USING GIST (geom_centroid);
 
--- index gist (geom)
+-- index gist (geom_surfacepoint)
 CREATE INDEX	ego_social_zensus_load_cluster_geom_surfacepoint_idx
-	ON	model_draft.ego_social_zensus_load_cluster
-	USING	GIST (geom_surfacepoint);
+	ON	model_draft.ego_social_zensus_load_cluster USING GIST (geom_surfacepoint);
 
 -- grant (oeuser)
-GRANT ALL ON TABLE 	model_draft.ego_social_zensus_load_cluster TO oeuser WITH GRANT OPTION;
-ALTER TABLE		model_draft.ego_social_zensus_load_cluster OWNER TO oeuser;
+ALTER TABLE	model_draft.ego_social_zensus_load_cluster OWNER TO oeuser;
 
 -- metadata
 COMMENT ON TABLE model_draft.ego_social_zensus_load_cluster IS '{
@@ -315,93 +246,27 @@ COMMENT ON TABLE model_draft.ego_social_zensus_load_cluster IS '{
 -- select description
 SELECT obj_description('model_draft.ego_social_zensus_load_cluster' ::regclass) ::json;
 
-
--- add entry to scenario log table
-INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2.1' AS version,
-	'output' AS io,
-	'model_draft' AS schema_name,
-	'ego_social_zensus_load_cluster' AS table_name,
-	'setup_zensus_population_per_ha.sql' AS script_name,
-	COUNT(*)AS entries,
-	'OK' AS status,
-	session_user AS user_name,
-	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	obj_description('model_draft.ego_social_zensus_load_cluster' ::regclass) ::json AS metadata
-FROM	model_draft.ego_social_zensus_load_cluster;
-
-
----------- ---------- ---------- ---------- ---------- ----------
--- "Create SPF"   2016-04-13 16:22  5s
----------- ---------- ---------- ---------- ---------- ----------
-
--- -- "Create Table SPF"   (OK!) 2.000ms =406
--- DROP TABLE IF EXISTS  	model_draft.ego_social_zensus_load_cluster_spf;
--- CREATE TABLE         	model_draft.ego_social_zensus_load_cluster_spf AS
--- 	SELECT	lp.*
--- 	FROM	model_draft.ego_social_zensus_load_cluster AS lp,
--- 		orig_geo_vg250.vg250_4_krs_spf_mview AS spf
--- 	WHERE	ST_TRANSFORM(spf.geom,3035) && lp.geom_centroid  AND  
--- 		ST_CONTAINS(ST_TRANSFORM(spf.geom,3035), lp.geom_centroid);
--- 
--- -- "Ad PK"   (OK!) 150ms =0
--- ALTER TABLE	model_draft.ego_social_zensus_load_cluster_spf
--- 	ADD PRIMARY KEY (cid);
--- 
--- -- index gist (geom)
--- CREATE INDEX  	ego_social_zensus_load_cluster_spf_geom_idx
--- 	ON	model_draft.ego_social_zensus_load_cluster_spf
--- 	USING	GIST (geom);
--- 
--- -- index gist (geom)
--- CREATE INDEX  	ego_social_zensus_load_cluster_spf_geom_surfacepoint_idx
---     ON    	model_draft.ego_social_zensus_load_cluster_spf
---     USING     	GIST (geom_surfacepoint);
--- 
--- -- index gist (geom_centroid)
--- CREATE INDEX  	ego_social_zensus_load_cluster_spf_geom_centroid_idx
---     ON    	model_draft.ego_social_zensus_load_cluster_spf
---     USING     	GIST (geom_centroid);
--- 
--- -- index gist (geom_buffer)
--- CREATE INDEX  	ego_social_zensus_load_cluster_spf_geom_buffer_idx
---     ON    	model_draft.ego_social_zensus_load_cluster_spf
---     USING     	GIST (geom_buffer);
--- 
--- -- grant (oeuser)
--- GRANT ALL ON TABLE 	model_draft.ego_deu_loads_zensus_cluster_spf TO oeuser WITH GRANT OPTION;
--- ALTER TABLE		model_draft.ego_deu_loads_zensus_cluster_spf OWNER TO oeuser;
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_social_zensus_load_cluster','setup_zensus_population_per_ha.sql',' ');
 
 
 -- zensus stats
-DROP MATERIALIZED VIEW IF EXISTS	model_draft.zensus_population_per_load_area_stats_mview CASCADE;
-CREATE MATERIALIZED VIEW         	model_draft.zensus_population_per_load_area_stats_mview AS
-SELECT	'zensus_deu' AS name,
-	SUM(zensus.population) AS population
-FROM	social.destatis_zensus_population_per_ha_mview AS zensus
+DROP MATERIALIZED VIEW IF EXISTS	model_draft.ego_social_zensus_per_la_mview CASCADE;
+CREATE MATERIALIZED VIEW         	model_draft.ego_social_zensus_per_la_mview AS
+	SELECT	'zensus_deu' AS name,
+		SUM(zensus.population) AS population
+	FROM	social.destatis_zensus_population_per_ha_mview AS zensus
 	UNION ALL
-SELECT	'zensus_loadpoints' AS name,
-	SUM(lp.population) AS population
-FROM	model_draft.ego_social_zensus_load AS lp
+	SELECT	'zensus_loadpoints' AS name,
+		SUM(lp.population) AS population
+	FROM	model_draft.ego_social_zensus_load AS lp
 	UNION ALL
-SELECT	'zensus_loadpoints_cluster' AS name,
-	SUM(cl.zensus_sum) AS population
-FROM	model_draft.ego_social_zensus_load_cluster AS cl;
+	SELECT	'zensus_loadpoints_cluster' AS name,
+		SUM(cl.zensus_sum) AS population
+	FROM	model_draft.ego_social_zensus_load_cluster AS cl;
 
 -- grant (oeuser)
-GRANT ALL ON TABLE 	model_draft.zensus_population_per_load_area_stats_mview TO oeuser WITH GRANT OPTION;
-ALTER TABLE		model_draft.zensus_population_per_load_area_stats_mview OWNER TO oeuser;
+ALTER TABLE	model_draft.ego_social_zensus_per_la_mview OWNER TO oeuser;
 
--- add entry to scenario log table
-INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2.1' AS version,
-	'output' AS io,
-	'model_draft' AS schema_name,
-	'zensus_population_per_load_area_stats_mview' AS table_name,
-	'setup_zensus_population_per_ha.sql' AS script_name,
-	COUNT(*)AS entries,
-	'OK' AS status,
-	session_user AS user_name,
-	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	obj_description('model_draft.zensus_population_per_load_area_stats_mview' ::regclass) ::json AS metadata
-FROM	model_draft.zensus_population_per_load_area_stats_mview;
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_social_zensus_per_la_mview','setup_zensus_population_per_ha.sql',' ');

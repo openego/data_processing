@@ -6,35 +6,30 @@ __license__ = "tba"
 __author__ = "IlkaCu"
 */
 
---------------
--- Calculate specific electricity consumption per million Euro GVA for each federal state
---------------
-
-
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.5','input','demand','ego_demand_federalstate','process_eGo_osm_loads_industry.sql',' ');
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.5','input','economic','destatis_gva_per_district','process_eGo_osm_loads_industry.sql',' ');
 
+-- Calculate specific electricity consumption per million Euro GVA for each federal state
 DROP TABLE IF EXISTS model_draft.ego_demand_per_gva CASCADE;
 CREATE TABLE model_draft.ego_demand_per_gva AS 
-( 
-SELECT  a.eu_code, 
- 	a.federal_states, 
- 	a.elec_consumption_industry/b.gva_industry AS elec_consumption_industry, 
- 	a.elec_consumption_tertiary_sector/b.gva_tertiary_sector AS elec_consumption_tertiary_sector 
-FROM  	demand.ego_demand_federalstate a,  -- ego_demand_federalstate
- 	economic.destatis_gva_per_district b -- destatis_gva_per_district
-WHERE a.eu_code = b.eu_code 
-ORDER BY eu_code ); 
+	(SELECT	a.eu_code, 
+		a.federal_states, 
+		a.elec_consumption_industry/b.gva_industry AS elec_consumption_industry, 
+		a.elec_consumption_tertiary_sector/b.gva_tertiary_sector AS elec_consumption_tertiary_sector 
+	FROM  	demand.ego_demand_federalstate a,  -- ego_demand_federalstate
+		economic.destatis_gva_per_district b -- destatis_gva_per_district
+	WHERE a.eu_code = b.eu_code 
+	ORDER BY eu_code ); 
 
+-- PK
 ALTER TABLE model_draft.ego_demand_per_gva
 	ADD PRIMARY KEY (eu_code),
 	OWNER TO oeuser;
 
-
--- "Add Meta-documentation"
+-- metadata
 COMMENT ON TABLE  model_draft.ego_demand_per_gva IS
 '{
 "Name": "Specific electricity consumption per gross value added",
@@ -77,32 +72,25 @@ COMMENT ON TABLE  model_draft.ego_demand_per_gva IS
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_demand_per_gva','process_eGo_osm_loads_industry.sql',' ');
 
---------------
--- Calculate electricity consumption per district based on gross value added
---------------
-DROP TABLE IF EXISTS model_draft.ego_demand_per_district CASCADE;
+-- electricity consumption per district based on gross value added
+DROP TABLE IF EXISTS 	model_draft.ego_demand_per_district CASCADE;
+CREATE TABLE 		model_draft.ego_demand_per_district as 
+	(SELECT b.eu_code, 
+		b.district, 
+		a.elec_consumption_industry * b.gva_industry as elec_consumption_industry, 
+		a.elec_consumption_tertiary_sector * b.gva_tertiary_sector AS elec_consumption_tertiary_sector 
+		FROM  	model_draft.ego_demand_per_gva a, 
+			economic.destatis_gva_per_district b -- destatis_gva_per_district
+		WHERE SUBSTR (a.eu_code,1,3) = SUBSTR(b.eu_code,1,3) ); 
 
-CREATE TABLE model_draft.ego_demand_per_district as 
-( 
-	SELECT b.eu_code, 
-
-	b.district, 
-	a.elec_consumption_industry * b.gva_industry as elec_consumption_industry, 
-	a.elec_consumption_tertiary_sector * b.gva_tertiary_sector AS elec_consumption_tertiary_sector 
-	FROM  	model_draft.ego_demand_per_gva a, 
-		economic.destatis_gva_per_district b -- destatis_gva_per_district
-	WHERE SUBSTR (a.eu_code,1,3) = SUBSTR(b.eu_code,1,3)  
-) 
-; 
-
+-- PK
 ALTER TABLE model_draft.ego_demand_per_district
-ADD PRIMARY KEY (eu_code),
-ADD COLUMN area_industry double precision,
-ADD COLUMN consumption_per_area_industry double precision, 
-OWNER TO oeuser;
+	ADD PRIMARY KEY (eu_code),
+	ADD COLUMN area_industry double precision,
+	ADD COLUMN consumption_per_area_industry double precision, 
+	OWNER TO oeuser;
 
-
-
+-- metadata
 COMMENT ON TABLE  model_draft.ego_demand_per_district IS
 '{
 "Name": "Electricity consumption per administrative district",
@@ -157,10 +145,8 @@ COMMENT ON TABLE  model_draft.ego_demand_per_district IS
 "Instructions for proper use": ["..."]
 }';
 
-------------------
--- "Export information on the industrial area into model_draft.ego_landuse_industry"
-------------------
 
+-- export information on the industrial area into model_draft.ego_landuse_industry
 DROP TABLE IF EXISTS model_draft.ego_landuse_industry CASCADE;
 	SELECT 	* 
 	INTO model_draft.ego_landuse_industry 
@@ -168,11 +154,8 @@ DROP TABLE IF EXISTS model_draft.ego_landuse_industry CASCADE;
 
 	ALTER TABLE  model_draft.ego_landuse_industry OWNER TO oeuser;
 
-------------------
--- "Add and fill new columns with geometry information"
-------------------
 
-
+-- add and fill new columns with geometry information
 ALTER TABLE model_draft.ego_landuse_industry
 	ADD COLUMN geom_centroid geometry(POINT,3035),
 	ADD COLUMN geom_surfacepoint geometry(POINT,3035),
@@ -183,7 +166,7 @@ ALTER TABLE model_draft.ego_landuse_industry
 	ADD PRIMARY KEY (gid);
 
 
--- "Update Centroid"   
+-- update centroid 
 UPDATE 	model_draft.ego_landuse_industry AS t1
 	SET  	geom_centroid = t2.geom_centroid
 	FROM    (
@@ -193,12 +176,11 @@ UPDATE 	model_draft.ego_landuse_industry AS t1
 		) AS t2
 	WHERE  	t1.gid = t2.gid;
 
--- "Create Index GIST (geom_centroid)"
+-- index GIST (geom_centroid)
 CREATE INDEX  	landuse_industry_geom_centroid_idx
-    ON    	model_draft.ego_landuse_industry
-    USING     	GIST (geom_centroid);
+	ON    	model_draft.ego_landuse_industry USING GIST (geom_centroid);
 
--- "Update PointOnSurface" 
+-- update PointOnSurface
 UPDATE 	model_draft.ego_landuse_industry AS t1
 	SET  	geom_surfacepoint = t2.geom_surfacepoint
 	FROM    (
@@ -208,14 +190,13 @@ UPDATE 	model_draft.ego_landuse_industry AS t1
 		) AS t2
 	WHERE  	t1.gid = t2.gid;
 
--- "Create Index GIST (geom_surfacepoint)"
+-- index GIST (geom_surfacepoint)
 CREATE INDEX  	landuse_industry_geom_surfacepoint_idx
-    ON    	model_draft.ego_landuse_industry
-    USING     	GIST (geom_surfacepoint);
+	ON    	model_draft.ego_landuse_industry USING GIST (geom_surfacepoint);
 
 
 
--- "Update Centre with centroid if inside area"   
+-- update Centre with centroid if inside area 
 UPDATE 	model_draft.ego_landuse_industry AS t1
 	SET  	geom_centre = t2.geom_centre
 	FROM	(
@@ -227,7 +208,7 @@ UPDATE 	model_draft.ego_landuse_industry AS t1
 		)AS t2
 	WHERE  	t1.gid = t2.gid;
 
--- "Update Centre with surfacepoint if outside area"   
+-- update Centre with surfacepoint if outside area
 UPDATE 	model_draft.ego_landuse_industry AS t1
 	SET  	geom_centre = t2.geom_centre
 	FROM	(
@@ -238,10 +219,9 @@ UPDATE 	model_draft.ego_landuse_industry AS t1
 		)AS t2
 	WHERE  	t1.gid = t2.gid;
 
--- Create Index GIST (geom_centre)
+-- index GIST (geom_centre)
 CREATE INDEX  	landuse_industry_geom_centre_idx
-    ON    	model_draft.ego_landuse_industry
-    USING     	GIST (geom_centre);
+	ON    	model_draft.ego_landuse_industry USING GIST (geom_centre);
 
 -- Calculate NUTS
 
@@ -249,60 +229,59 @@ CREATE INDEX  	landuse_industry_geom_centre_idx
 SELECT ego_scenario_log('v0.2.5','input','political_boundary','bkg_vg250_4_krs_mview','process_eGo_osm_loads_industry.sql',' ');
 
 UPDATE 	model_draft.ego_landuse_industry a
-SET 	nuts = b.nuts
-FROM 	political_boundary.bkg_vg250_4_krs_mview b
-WHERE 	b.geom && a.geom_centre AND
-	st_intersects(b.geom, a.geom_centre); 
+	SET 	nuts = b.nuts
+	FROM 	political_boundary.bkg_vg250_4_krs_mview b
+	WHERE 	b.geom && a.geom_centre AND
+		st_intersects(b.geom, a.geom_centre); 
 
 -- Calculate industrial area per district
 UPDATE orig_ego_consumption.lak_consumption_per_district a
-SET area_industry = result.sum
-FROM
-( 
-	SELECT 
- 	sum(coalesce(area_ha,0)), 
-	substr(nuts,1,5) 
-	FROM calc_ego_loads.landuse_industry
-	WHERE nuts IS NOT NULL
-	GROUP BY substr(nuts,1,5)
-) as result
+	SET area_industry = result.sum
+	FROM
+	( 
+		SELECT 
+		sum(coalesce(area_ha,0)), 
+		substr(nuts,1,5) 
+		FROM calc_ego_loads.landuse_industry
+		WHERE nuts IS NOT NULL
+		GROUP BY substr(nuts,1,5)
+	) as result
 
 WHERE result.substr = substr(a.eu_code,1,5);
 
 -- Calculate specific industrial consumption per area
 UPDATE 	model_draft.ego_demand_per_district
-SET 	consumption_per_area_industry = NULL; 
+	SET 	consumption_per_area_industry = NULL; 
 
 UPDATE 	model_draft.ego_demand_per_district
-SET 	consumption_per_area_industry = elec_consumption_industry/area_industry;
+	SET 	consumption_per_area_industry = elec_consumption_industry/area_industry;
 
 
 -- Calculate the electricity consumption for each industry polygon
 UPDATE 	model_draft.ego_landuse_industry a
-SET   	consumption = sub.result 
-FROM
-(
-	SELECT
-	c.gid,
-	b.elec_consumption_industry/b.area_industry * c.area_ha as result
+	SET   	consumption = sub.result 
 	FROM
-	model_draft.ego_demand_per_district b,
-	model_draft.ego_landuse_industry c
+	(
+		SELECT
+		c.gid,
+		b.elec_consumption_industry/b.area_industry * c.area_ha as result
+		FROM
+		model_draft.ego_demand_per_district b,
+		model_draft.ego_landuse_industry c
+		WHERE
+		c.nuts = b.eu_code
+	) AS sub
 	WHERE
-	c.nuts = b.eu_code
-) AS sub
-WHERE
-sub.gid = a.gid;
+	sub.gid = a.gid;
 
 
 -- Calculate the peak load for each industry polygon
 UPDATE model_draft.ego_landuse_industry
-SET peak_load = consumption*(0.00013247226362); -- Add different factor to calculate the peak load
+	SET peak_load = consumption*(0.00013247226362); -- Add different factor to calculate the peak load
 
--- "Create Index GIST (geom)"   (OK!) 2.000ms =0
+-- index GIST (geom)
 CREATE INDEX  	landuse_industry_geom_idx
-    ON    	model_draft.ego_landuse_industry
-    USING     	GIST (geom);
+	ON    	model_draft.ego_landuse_industry USING GIST (geom);
 
 -- Add metadata
 COMMENT ON TABLE  model_draft.ego_landuse_industry IS
@@ -473,15 +452,13 @@ DELETE FROM model_draft.ego_demand_hv_largescaleconsumer
 				FROM model_draft.ego_demand_hv_largescaleconsumer) t
 			WHERE t.rnum > 1);
 
--- "Create Index GIST (geom)"   (OK!) 2.000ms =0
+-- index GIST (geom)
 CREATE INDEX  	large_scale_consumer_geom_idx
-    ON    	model_draft.ego_demand_hv_largescaleconsumer
-    USING     	GIST (geom);
+	ON    	model_draft.ego_demand_hv_largescaleconsumer USING GIST (geom);
 			  
--- "Create Index GIST (geom_centre)"   (OK!) 2.000ms =0
+-- index GIST (geom_centre)
 CREATE INDEX  	large_scale_consumer_geom_centre_idx
-    ON    	model_draft.ego_demand_hv_largescaleconsumer
-    USING     	GIST (geom_centre);
+	ON    	model_draft.ego_demand_hv_largescaleconsumer USING GIST (geom_centre);
 
 
 -- Identify corresponding bus for large scale consumer (lsc) with the help of ehv-voronoi
@@ -583,4 +560,3 @@ HAVING ( COUNT(polygon_id) > 1 )
 
 
 -- Remove industrial loads from openstreetmap.ego_deu_loads_osm
-

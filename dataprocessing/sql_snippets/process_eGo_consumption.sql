@@ -26,7 +26,7 @@ CREATE TABLE 		model_draft.ego_demand_per_load_area
 	CONSTRAINT ego_deu_consumption_pkey PRIMARY KEY (id)
 ); */
 
-/* -- Set ID   (OK!) -> 100ms =206.846
+/* -- Set ID
 INSERT INTO 	model_draft.ego_demand_per_load_area (id,subst_id,
 		sector_area_residential,sector_area_retail,
 		sector_area_industrial,sector_area_agricultural)
@@ -39,20 +39,12 @@ INSERT INTO 	model_draft.ego_demand_per_load_area (id,subst_id,
 	FROM 	model_draft.ego_demand_loadarea;
 	 */
 
--- add entry to scenario log table
-INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2.1' AS version,
-	'input' AS io,
-	'model_draft' AS schema_name,
-	'ego_demand_per_district' AS table_name,
-	'process_eGo_consumption.sql' AS script_name,
-	COUNT(*)AS entries,
-	'OK' AS status,
-	session_user AS user_name,
-	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	obj_description('model_draft.ego_demand_per_district' ::regclass) ::json AS metadata
-FROM	model_draft.ego_demand_per_district;
-	 
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','input','model_draft','ego_demand_per_district','process_eGo_consumption.sql',' ');
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','input','model_draft','ego_demand_loadarea','process_eGo_consumption.sql',' ');
+
 -- landuse area per district 
 ALTER TABLE model_draft.ego_demand_per_district
 	DROP COLUMN IF EXISTS 	area_retail CASCADE,
@@ -73,7 +65,7 @@ UPDATE model_draft.ego_demand_per_district a
 		FROM model_draft.ego_demand_loadarea
 		GROUP BY substr(nuts,1,5)
 	) as result
-WHERE result.substr = substr(a.eu_code,1,5);
+	WHERE result.substr = substr(a.eu_code,1,5);
 
 -- agricultural area per district
 UPDATE model_draft.ego_demand_per_district a
@@ -86,12 +78,12 @@ UPDATE model_draft.ego_demand_per_district a
 		FROM model_draft.ego_demand_loadarea
 		GROUP BY substr(nuts,1,5)
 	) as result
-WHERE result.substr = substr(a.eu_code,1,5);
-
+	WHERE result.substr = substr(a.eu_code,1,5);
 
 -- area of tertiary sector by adding agricultural and retail area up
 UPDATE model_draft.ego_demand_per_district 
 	SET area_tertiary_sector = coalesce(area_retail,0) + coalesce(area_agriculture,0);
+
 
 -- sector consumption of industry per loadarea
 UPDATE model_draft.ego_demand_loadarea a
@@ -109,7 +101,7 @@ UPDATE model_draft.ego_demand_loadarea a
 	) AS sub
 	WHERE sub.id = a.id;
 
--- sector consumption of tertiary sector per loadarea
+-- sector consumption of retail per loadarea
 UPDATE model_draft.ego_demand_loadarea a
 	SET   sector_consumption_retail = sub.result 
 	FROM
@@ -141,21 +133,11 @@ UPDATE model_draft.ego_demand_loadarea a
 	) AS sub
 	WHERE sub.id = a.id;
 
--- add entry to scenario log table
-INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2.1' AS version,
-	'input' AS io,
-	'demand' AS schema_name,
-	'ego_demand_federalstate' AS table_name,
-	'process_eGo_consumption.sql' AS script_name,
-	COUNT(*)AS entries,
-	'OK' AS status,
-	session_user AS user_name,
-	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	obj_description('demand.ego_demand_federalstate' ::regclass) ::json AS metadata
-FROM	demand.ego_demand_federalstate;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','input','demand','ego_demand_federalstate','process_eGo_consumption.sql',' ');
 	
--- sector consumption of households per loadarea
+-- sector consumption of residential per loadarea
 UPDATE model_draft.ego_demand_loadarea a
 	SET   sector_consumption_residential = sub.result 
 	FROM
@@ -172,17 +154,17 @@ UPDATE model_draft.ego_demand_loadarea a
 	) AS sub
 	WHERE sub.id = a.id;
 
--- Add Geometry information in consumption table
+/* -- geometry in consumption table -> SELF UPDATE?
 UPDATE model_draft.ego_demand_loadarea a
 	SET geom = b.geom
 	FROM model_draft.ego_demand_loadarea b
-	WHERE a.id = b.id;
+	WHERE a.id = b.id; */
 
--- Identify corresponding otg_id
+-- corresponding otg_id
 UPDATE model_draft.ego_demand_loadarea a
-	SET otg_id = b.otg_id
-	FROM model_draft.ego_grid_hvmv_substation b
-	WHERE a.subst_id = b.subst_id; 
+	SET 	otg_id = b.otg_id
+	FROM 	model_draft.ego_grid_hvmv_substation b
+	WHERE 	a.subst_id = b.subst_id; 
 
 -- metadata
 COMMENT ON TABLE  model_draft.ego_demand_loadarea IS
@@ -241,38 +223,20 @@ COMMENT ON TABLE  model_draft.ego_demand_loadarea IS
 "Instructions for proper use": ["..."]
 }';
 
--- add entry to scenario log table
-INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2.1' AS version,
-	'output' AS io,
-	'model_draft' AS schema_name,
-	'ego_demand_loadarea' AS table_name,
-	'process_eGo_consumption.sql' AS script_name,
-	COUNT(*)AS entries,
-	'OK' AS status,
-	session_user AS user_name,
-	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	obj_description('model_draft.ego_demand_loadarea' ::regclass) ::json AS metadata
-FROM	model_draft.ego_demand_loadarea;
+-- select description
+SELECT obj_description('model_draft.ego_demand_loadarea' ::regclass) ::json;
 
--- backup ;)
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_demand_loadarea','process_eGo_consumption.sql',' ');
+	
+
+-- backup view
 CREATE OR REPLACE VIEW model_draft.ego_demand_per_load_area AS
 	SELECT	*
 	FROM	model_draft.ego_demand_loadarea;
 
 -- grant (oeuser)
-ALTER TABLE		model_draft.ego_demand_per_load_area OWNER TO oeuser;
+ALTER TABLE	model_draft.ego_demand_per_load_area OWNER TO oeuser;
 
--- add entry to scenario log table
-INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2.1' AS version,
-	'output' AS io,
-	'model_draft' AS schema_name,
-	'ego_demand_per_load_area' AS table_name,
-	'process_eGo_consumption.sql' AS script_name,
-	COUNT(*)AS entries,
-	'BACKUP!' AS status,
-	session_user AS user_name,
-	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	obj_description('model_draft.ego_demand_per_load_area' ::regclass) ::json AS metadata
-FROM	model_draft.ego_demand_per_load_area;
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','temp','model_draft','ego_demand_per_load_area','process_eGo_consumption.sql','BACKUP use ego_demand_loadarea');

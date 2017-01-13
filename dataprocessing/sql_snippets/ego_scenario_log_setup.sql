@@ -75,4 +75,4 @@ COMMENT ON TABLE model_draft.ego_scenario_log IS '{
 SELECT obj_description('model_draft.ego_scenario_log' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_scenario_log','ego_scenario_log_setup.sql',' ');
+SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_scenario_log','ego_scenario_log_setup.sql','Reset scenario log');
