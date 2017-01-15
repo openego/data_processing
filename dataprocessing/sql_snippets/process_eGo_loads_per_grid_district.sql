@@ -420,7 +420,8 @@ SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_osm_sector_per_grid
 -- sector stats
 UPDATE 	model_draft.ego_demand_loadarea AS t1
 	SET  	sector_area_sum = t2.sector_area_sum,
-		sector_share_sum = t2.sector_share_sum
+		sector_share_sum = t2.sector_share_sum,
+		sector_count_sum = t2.sector_count_sum
 	FROM    (
 		SELECT	id,
 			coalesce(load.sector_area_residential,0) + 
@@ -430,7 +431,11 @@ UPDATE 	model_draft.ego_demand_loadarea AS t1
 			coalesce(load.sector_share_residential,0) + 
 				coalesce(load.sector_share_retail,0) + 
 				coalesce(load.sector_share_industrial,0) + 
-				coalesce(load.sector_share_agricultural,0) AS sector_share_sum		
+				coalesce(load.sector_share_agricultural,0) AS sector_share_sum,
+			coalesce(load.sector_count_residential,0) + 
+				coalesce(load.sector_count_retail,0) + 
+				coalesce(load.sector_count_industrial,0) + 
+				coalesce(load.sector_count_agricultural,0) AS sector_count_sum					
 		FROM	model_draft.ego_demand_loadarea AS load
 		) AS t2
 	WHERE  	t1.id = t2.id;

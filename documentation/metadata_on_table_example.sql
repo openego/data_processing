@@ -3,8 +3,8 @@ This script provides an SQL example of the metadata documentation
 A definition of metadata can be found in the openmod glossary http://wiki.openmod-initiative.org/wiki/Metadata
 A further description can be found on http://wiki.openmod-initiative.org/wiki/DatabaseRules
 
-__copyright__ = "Copyright ego developer group"
-__license__ = "GPLv3"
+__copyright__ = "tba"
+__license__ = "tba"
 */
 
 -- metadata
@@ -20,11 +20,11 @@ COMMENT ON TABLE schema.table IS '{
 		{"extend": "europe",
 		"resolution": "100mx100m"} ],
 	"license": [
-		{"id": "GPL-3.0",
-		"name": "GNU General Public License 3.0",
-		"version": "3.0",
-		"url": "https://opensource.org/licenses/GPL-3.0",
-		"instruction": "You may copy, distribute and modify the software as long as you track changes/dates in source files. Any modifications to or software including (via compiler) GPL-licensed code must also be made available under the GPL along with build & install instructions."} ],
+		{"id": "tba",
+		"name": "tba",
+		"version": "tba",
+		"url": "tba",
+		"instruction": "tba"} ],
 	"contributors": [
 		{"name": "Ludwig Hülk",	"email": "ludwig.huelk@rl-institut.de",
 		"date": "16.06.2016", "comment": "created metadata"},

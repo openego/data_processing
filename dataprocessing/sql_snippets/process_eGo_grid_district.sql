@@ -996,6 +996,15 @@ WHERE  	t1.subst_id = t2.subst_id;
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_grid_mv_griddistrict','process_eGo_grid_district.sql',' ');
 
+-- versioning
+INSERT INTO grid.ego_mv_griddistrict (version, subst_id, subst_sum, area_ha, geom_type, geom)
+	SELECT	'v0.2.5',
+		subst_id, subst_sum, area_ha, geom_type, geom
+	FROM	model_draft.ego_grid_mv_griddistrict;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','result','grid','ego_mv_griddistrict','process_eGo_grid_district.sql','versioning');
+
 
 
 /* -- Create Test Area
