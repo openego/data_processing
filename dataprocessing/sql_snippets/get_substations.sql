@@ -9,22 +9,22 @@ __author__ = "lukasol, C. Matke"
 -- hvmv substations
 DROP TABLE IF EXISTS 	model_draft.ego_grid_hvmv_substation CASCADE;
 CREATE TABLE 		model_draft.ego_grid_hvmv_substation (
-            subst_id       serial NOT NULL,
-            lon            float NOT NULL,
-            lat            float NOT NULL,
-            point	   geometry(Point,4326) NOT NULL,
-            polygon	   geometry NOT NULL,	
-            voltage        text,
-            power_type     text,
-            substation     text,
-            osm_id         text PRIMARY KEY NOT NULL,
-            osm_www        text NOT NULL,
-            frequency      text,
-            subst_name     text,
-            ref            text,
-            operator       text,
-            dbahn          text,
-            status   	   smallint NOT NULL);
+	subst_id       	serial NOT NULL,
+	lon            	float NOT NULL,
+	lat            	float NOT NULL,
+	point	   	geometry(Point,4326) NOT NULL,
+	polygon	   	geometry NOT NULL,	
+	voltage        	text,
+	power_type     	text,
+	substation     	text,
+	osm_id         	text PRIMARY KEY,
+	osm_www        	text NOT NULL,
+	frequency      	text,
+	subst_name     	text,
+	ref            	text,
+	operator       	text,
+	dbahn          	text,
+	status		smallint NOT NULL);
 
 DROP VIEW IF EXISTS model_draft.final_result CASCADE;
 DROP MATERIALIZED VIEW IF EXISTS model_draft.substations_to_drop CASCADE;

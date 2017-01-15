@@ -76,3 +76,103 @@ SELECT obj_description('model_draft.ego_scenario_log' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_scenario_log','ego_scenario_log_setup.sql','Reset scenario log');
+
+
+-- hvmv substation
+DROP TABLE IF EXISTS	grid.ego_hvmv_substation CASCADE;
+CREATE TABLE 		grid.ego_hvmv_substation (
+	version 	text,
+	subst_id       	serial NOT NULL,
+	subst_name     	text,
+	ags_0 		text,
+	voltage        	text,
+	power_type     	text,
+	substation     	text,
+	osm_id         	text,
+	osm_www        	text NOT NULL,
+	frequency      	text,
+	"ref"      	text,
+	"operator"     	text,
+	dbahn          	text,
+	status		smallint NOT NULL,
+	lat            	float NOT NULL,
+	lon            	float NOT NULL,
+	point	   	geometry(Point,4326) NOT NULL,
+	polygon	   	geometry(Polygon,4326) NOT NULL,
+	geom 		geometry(Point,3035),
+	CONSTRAINT ego_hvmv_substation_pkey PRIMARY KEY (version,subst_id));
+
+-- grant (oeuser)
+-- ALTER TABLE	grid.ego_hvmv_substation OWNER TO oeuser;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','output','grid','ego_hvmv_substation','ego_scenario_log_setup.sql','hvmv substation');
+
+
+-- load area
+DROP TABLE IF EXISTS	demand.ego_loadarea CASCADE;
+CREATE TABLE 		demand.ego_loadarea (
+	version 	text,
+	id 		integer,
+	subst_id 	integer,
+	area_ha 	numeric,
+	nuts 		varchar(5),
+	rs_0 		varchar(12),
+	ags_0 		varchar(12),
+	otg_id 		integer,
+	un_id 		integer,
+	zensus_sum 	integer,
+	zensus_count 	integer,
+	zensus_density 	numeric,
+	ioer_sum 	numeric,
+	ioer_count 	integer,
+	ioer_density 	numeric,
+	sector_area_residential 	numeric,
+	sector_area_retail 		numeric,
+	sector_area_industrial 		numeric,
+	sector_area_agricultural 	numeric,
+	sector_area_sum 		numeric,	
+	sector_share_residential 	numeric,
+	sector_share_retail 		numeric,
+	sector_share_industrial 	numeric,
+	sector_share_agricultural 	numeric,
+	sector_share_sum 		numeric,
+	sector_count_residential 	integer,
+	sector_count_retail 		integer,
+	sector_count_industrial 	integer,
+	sector_count_agricultural 	integer,
+	sector_count_sum 		integer,
+	sector_consumption_residential 	numeric,
+	sector_consumption_retail 	numeric,
+	sector_consumption_industrial	numeric,
+	sector_consumption_agricultural numeric,
+	sector_consumption_sum 		numeric,
+	geom_centroid 		geometry(Point,3035),
+	geom_surfacepoint 	geometry(Point,3035),
+	geom_centre 		geometry(Point,3035),
+	geom 			geometry(Polygon,3035),
+	CONSTRAINTego_loadarea_pkey PRIMARY KEY (version,id));
+
+-- grant (oeuser)
+-- ALTER TABLE	demand.ego_loadarea OWNER TO oeuser;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','output','demand','ego_loadarea','ego_scenario_log_setup.sql','hvmv substation');
+
+
+-- hvmv substation
+DROP TABLE IF EXISTS	grid.ego_mv_griddistrict CASCADE;
+CREATE TABLE 		grid.ego_mv_griddistrict (
+	version 	text,
+	subst_id       	serial NOT NULL,
+	subst_sum	text,
+	area_ha 	numeric,
+	geom_type 	text,
+	geom 		geometry(MultiPolygon,3035),
+	CONSTRAINT ego_hvmv_substation_pkey PRIMARY KEY (version,subst_id));
+
+-- grant (oeuser)
+-- ALTER TABLE	grid.ego_hvmv_substation OWNER TO oeuser;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','output','grid','ego_hvmv_substation','ego_scenario_log_setup.sql','hvmv substation');
