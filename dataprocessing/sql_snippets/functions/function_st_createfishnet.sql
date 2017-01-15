@@ -1,4 +1,11 @@
--- Funtion that creates a lattice of squares
+/*
+Funtion that creates a lattice of squares
+
+__copyright__ = "tba"
+__license__ = "tba"
+__author__ = "ludee"
+*/
+
 CREATE OR REPLACE FUNCTION ST_CreateFishnet(
         nrow integer, ncol integer,
         xsize float8, ysize float8,
@@ -14,3 +21,6 @@ FROM generate_series(0, $1 - 1) AS i,
 SELECT ('POLYGON((0 0, 0 '||$4||', '||$3||' '||$4||', '||$3||' 0,0 0))')::geometry AS cell
 ) AS foo;
 $$ LANGUAGE sql IMMUTABLE STRICT;
+
+-- grant (oeuser)
+ALTER FUNCTION		ST_CreateFishnet(integer, integer, double precision, double precision, double precision, double precision) OWNER TO oeuser;
