@@ -6,10 +6,13 @@ __license__ = "tba"
 __author__ = "IlkaCu" 
 */
 
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','input','calc_renpass_gis','parameter_solar_feedin','voronoi_weatherpoint.sql',' ');
+
 -- Add Dummy points 
 INSERT INTO calc_renpass_gis.parameter_solar_feedin (year, geom)
-SELECT '9999', ST_TRANSFORM(geom,4326)
-FROM model_draft.ego_grid_hvmv_substation_dummy;
+	SELECT 	'9999', ST_TRANSFORM(geom,4326)
+	FROM 	model_draft.ego_grid_hvmv_substation_dummy;
 
 
 -- Execute voronoi algorithm with weather points
@@ -65,12 +68,11 @@ FROM (
         Edges y ON x.id <> y.id AND ST_Equals(x.edge,y.edge)
     ) z;
 
--- "Create Index GIST (geom)"   (OK!) 11.000ms =0
+-- index GIST (geom)
 CREATE INDEX	voronoi_weatherpoint_geom_idx
-	ON	model_draft.renpassgis_economic_weatherpoint_voronoi
-	USING	GIST (geom);
+	ON	model_draft.renpassgis_economic_weatherpoint_voronoi USING GIST (geom);
 
--- "Set id and SRID"   (OK!) -> 100ms =0
+-- set id and SRID
 ALTER TABLE model_draft.renpassgis_economic_weatherpoint_voronoi
 	ADD COLUMN id integer,
 	ALTER COLUMN geom TYPE geometry(POLYGON,4326) USING ST_SETSRID(geom,4326);
@@ -81,7 +83,6 @@ UPDATE model_draft.renpassgis_economic_weatherpoint_voronoi a
 	WHERE ST_Intersects(a.geom, b.geom) =TRUE; 
 
 -- Delete Dummy-points
-
 DELETE FROM model_draft.renpassgis_economic_weatherpoint_voronoi 
 	WHERE id IN (SELECT gid FROM calc_renpass_gis.parameter_solar_feedin WHERE year = 9999);
 
@@ -94,10 +95,10 @@ DELETE FROM calc_renpass_gis.parameter_solar_feedin WHERE year=9999;
 ALTER TABLE model_draft.renpassgis_economic_weatherpoint_voronoi
 	ADD PRIMARY KEY (id);
 
-ALTER TABLE model_draft.renpassgis_economic_weatherpoint_voronoi
-  OWNER TO oeuser;
+-- grant (oeuser)
+ALTER TABLE model_draft.renpassgis_economic_weatherpoint_voronoi OWNER TO oeuser;
 
-
+-- metadata
 COMMENT ON TABLE  model_draft.renpassgis_economic_weatherpoint_voronoi IS
 '{
 "Name": "Voronoi weatherpoints",

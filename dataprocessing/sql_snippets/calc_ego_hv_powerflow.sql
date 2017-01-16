@@ -1,5 +1,19 @@
 /*
+setup for hv powerflow
 
+PF HV scenario settings
+PF HV source
+PF HV bus
+PF HV generator
+PF HV line
+PF HV load
+PF HV storage
+PF HV temp resolution
+PF HV transformer
+PF HV mag set
+PF HV generator PQ set		
+PF HV load PQ set		
+PF HV storage PQ set		
 
 __copyright__ = "tba" 
 __license__ = "tba" 
@@ -10,27 +24,24 @@ __author__ = ""
 -------------------- Static component tables -----------------------
 --------------------------------------------------------------------
 
-DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_scenario_settings CASCADE; 
-CREATE TABLE model_draft.ego_grid_pf_hv_scenario_settings
-(
-  scn_name character varying NOT NULL DEFAULT 'Status Quo'::character varying,
-  bus character varying,
-  bus_v_mag_set character varying,
-  generator character varying,
-  generator_pq_set character varying,
-  line character varying,
-  load character varying,
-  load_pq_set character varying,
-  storage character varying,
-  storage_pq_set character varying,
-  temp_resolution character varying,
-  transformer character varying,
-  CONSTRAINT scenario_settings_pkey PRIMARY KEY (scn_name)
-)
-WITH (
-  OIDS=FALSE
-);
+-- PF HV scenario settings
+DROP TABLE IF EXISTS 	model_draft.ego_grid_pf_hv_scenario_settings CASCADE; 
+CREATE TABLE 		model_draft.ego_grid_pf_hv_scenario_settings (
+	scn_name character varying NOT NULL DEFAULT 'Status Quo'::character varying,
+	bus character varying,
+	bus_v_mag_set character varying,
+	generator character varying,
+	generator_pq_set character varying,
+	line character varying,
+	load character varying,
+	load_pq_set character varying,
+	storage character varying,
+	storage_pq_set character varying,
+	temp_resolution character varying,
+	transformer character varying,
+	CONSTRAINT scenario_settings_pkey PRIMARY KEY (scn_name) ) WITH ( OIDS=FALSE );
 
+-- metadata
 COMMENT ON TABLE  model_draft.ego_grid_pf_hv_scenario_settings IS
 '{
 "Name": "Scenario settings hv powerflow",
@@ -95,20 +106,23 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_scenario_settings IS
 "Instructions for proper use": ["..."]
 }';
 
+-- select description
+SELECT obj_description('model_draft.ego_grid_pf_hv_scenario_settings' ::regclass) ::json;
 
-DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_source CASCADE; 
-CREATE TABLE model_draft.ego_grid_pf_hv_source
-(
-  source_id bigint NOT NULL,
-  name text, -- Unit: n/a...
-  co2_emissions double precision, -- Unit: tonnes/MWh...
-  commentary text,
-  CONSTRAINT source_data_pkey PRIMARY KEY (source_id)
-)
-WITH (
-  OIDS=FALSE
-);
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_grid_pf_hv_scenario_settings','calc_ego_hv_powerflow.sql',' ');
 
+
+-- PF HV source
+DROP TABLE IF EXISTS 	model_draft.ego_grid_pf_hv_source CASCADE; 
+CREATE TABLE 		model_draft.ego_grid_pf_hv_source (
+	source_id bigint NOT NULL,
+	name text, -- Unit: n/a...
+	co2_emissions double precision, -- Unit: tonnes/MWh...
+	commentary text,
+	CONSTRAINT source_data_pkey PRIMARY KEY (source_id) ) WITH ( OIDS=FALSE );
+
+-- metadata
 COMMENT ON TABLE  model_draft.ego_grid_pf_hv_source IS
 '{
 "Name": "Sources hv powerflow ",
@@ -149,9 +163,16 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_source IS
 "Instructions for proper use": ["..."]
 }';
 
-DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_bus CASCADE; 
-CREATE TABLE model_draft.ego_grid_pf_hv_bus
-(
+-- select description
+SELECT obj_description('model_draft.ego_grid_pf_hv_source' ::regclass) ::json;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_grid_pf_hv_source','calc_ego_hv_powerflow.sql',' ');
+
+
+-- PF HV bus
+DROP TABLE IF EXISTS 	model_draft.ego_grid_pf_hv_bus CASCADE; 
+CREATE TABLE 		model_draft.ego_grid_pf_hv_bus (
   scn_name character varying NOT NULL DEFAULT 'Status Quo'::character varying,
   bus_id bigint NOT NULL, -- Unit: n/a...
   v_nom double precision, -- Unit: kV...
@@ -159,12 +180,9 @@ CREATE TABLE model_draft.ego_grid_pf_hv_bus
   v_mag_pu_min double precision DEFAULT 0, -- Unit: per unit...
   v_mag_pu_max double precision, -- Unit: per unit...
   geom geometry(Point,4326),
-  CONSTRAINT bus_data_pkey PRIMARY KEY (bus_id, scn_name)
-)
-WITH (
-  OIDS=FALSE
-);
+  CONSTRAINT bus_data_pkey PRIMARY KEY (bus_id, scn_name) ) WITH ( OIDS=FALSE );
 
+-- metadata
 COMMENT ON TABLE  model_draft.ego_grid_pf_hv_bus IS
 '{
 "Name": "hv powerflow bus",
@@ -213,34 +231,37 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_bus IS
 "Instructions for proper use": ["..."]
 }';
 
+-- select description
+SELECT obj_description('model_draft.ego_grid_pf_hv_bus' ::regclass) ::json;
 
-DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_generator CASCADE; 
-CREATE TABLE model_draft.ego_grid_pf_hv_generator
-(
-  scn_name character varying NOT NULL DEFAULT 'Status Quo'::character varying,
-  generator_id bigint NOT NULL, -- Unit: n/a...
-  bus bigint, -- Unit: n/a...
-  dispatch text DEFAULT 'flexible'::text, -- Unit: n/a...
-  control text DEFAULT 'PQ'::text, -- Unit: n/a...
-  p_nom double precision DEFAULT 0, -- Unit: MW...
-  p_nom_extendable boolean DEFAULT false, -- Unit: n/a...
-  p_nom_min double precision DEFAULT 0, -- Unit: MW...
-  p_nom_max double precision, -- Unit: MW...
-  p_min_pu_fixed double precision DEFAULT 0, -- Unit: per unit...
-  p_max_pu_fixed double precision DEFAULT 1, -- Unit: per unit...
-  sign double precision DEFAULT 1, -- Unit: n/a...
-  source bigint, -- Unit: n/a...
-  marginal_cost double precision, -- Unit: currency/MWh...
-  capital_cost double precision, -- Unit: currency/MW...
-  efficiency double precision, -- Unit: per unit...
-  CONSTRAINT generator_data_pkey PRIMARY KEY (generator_id, scn_name),
-  CONSTRAINT generator_data_source_fkey FOREIGN KEY (source) REFERENCES model_draft.ego_grid_pf_hv_source (source_id)
-  
-)
-WITH (
-  OIDS=FALSE
-);
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_grid_pf_hv_bus','calc_ego_hv_powerflow.sql',' ');
 
+
+-- PF HV generator
+DROP TABLE IF EXISTS 	model_draft.ego_grid_pf_hv_generator CASCADE; 
+CREATE TABLE 		model_draft.ego_grid_pf_hv_generator (
+	scn_name character varying NOT NULL DEFAULT 'Status Quo'::character varying,
+	generator_id bigint NOT NULL, -- Unit: n/a...
+	bus bigint, -- Unit: n/a...
+	dispatch text DEFAULT 'flexible'::text, -- Unit: n/a...
+	control text DEFAULT 'PQ'::text, -- Unit: n/a...
+	p_nom double precision DEFAULT 0, -- Unit: MW...
+	p_nom_extendable boolean DEFAULT false, -- Unit: n/a...
+	p_nom_min double precision DEFAULT 0, -- Unit: MW...
+	p_nom_max double precision, -- Unit: MW...
+	p_min_pu_fixed double precision DEFAULT 0, -- Unit: per unit...
+	p_max_pu_fixed double precision DEFAULT 1, -- Unit: per unit...
+	sign double precision DEFAULT 1, -- Unit: n/a...
+	source bigint, -- Unit: n/a...
+	marginal_cost double precision, -- Unit: currency/MWh...
+	capital_cost double precision, -- Unit: currency/MW...
+	efficiency double precision, -- Unit: per unit...
+	CONSTRAINT generator_data_pkey PRIMARY KEY (generator_id, scn_name),
+	CONSTRAINT generator_data_source_fkey FOREIGN KEY (source) 
+		REFERENCES model_draft.ego_grid_pf_hv_source (source_id) ) WITH ( OIDS=FALSE );
+
+-- metadata
 COMMENT ON TABLE  model_draft.ego_grid_pf_hv_generator IS
 '{
 "Name": "Generator in hv powerflow",
@@ -263,10 +284,10 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_generator IS
                     "Description": "id of associated bus",
                     "Unit": "" },
                    {"Name": "dispatch",
-                    "Description": "Controllability of active power dispatch, must be "flexible" or "variable".",
+                    "Description": "Controllability of active power dispatch, must be flexible or variable.",
                     "Unit": "" },
                    {"Name": "control",
-                    "Description": "P,Q,V control strategy, must be "PQ", "PV" or "Slack".",
+                    "Description": "P,Q,V control strategy, must be PQ, PV or Slack.",
                     "Unit": "" },
                    {"Name": "p_nom",
                     "Description": "Nominal power",
@@ -281,10 +302,10 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_generator IS
                     "Description": "If p_nom is extendable, set its maximum value (e.g. limited by potential)",
                     "Unit": "" },
                    {"Name": "p_min_pu_fixed",
-                    "Description": "If control="flexible" this gives the minimum output per unit of p_nom",
+                    "Description": "If control=flexible this gives the minimum output per unit of p_nom",
                     "Unit": "per unit" },
                    {"Name": "p_max_pu_fixed",
-                    "Description": "If control="flexible" this gives the maximum output per unit of p_nom, equivalent to a de-rating factor.",
+                    "Description": "If control=flexible this gives the maximum output per unit of p_nom, equivalent to a de-rating factor.",
                     "Unit": "per unit" },
                    {"Name": "sign",
                     "Description": "power sign",
@@ -316,34 +337,38 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_generator IS
 "Instructions for proper use": ["..."]
 }';
 
-DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_line CASCADE; 
-CREATE TABLE model_draft.ego_grid_pf_hv_line
-(
-  scn_name character varying NOT NULL DEFAULT 'Status Quo'::character varying,
-  line_id bigint NOT NULL, -- Unit: n/a...
-  bus0 bigint, -- Unit: n/a...
-  bus1 bigint, -- Unit: n/a...
-  x numeric DEFAULT 0, -- Unit: Ohm...
-  r numeric DEFAULT 0, -- Unit: Ohm...
-  g numeric DEFAULT 0, -- Unit: Siemens...
-  b numeric DEFAULT 0, -- Unit: Siemens...
-  s_nom numeric DEFAULT 0, -- Unit: MVA...
-  s_nom_extendable boolean DEFAULT false, -- Unit: n/a...
-  s_nom_min double precision DEFAULT 0, -- Unit: MVA...
-  s_nom_max double precision, -- Unit: MVA...
-  capital_cost double precision, -- Unit: currency/MVA...
-  length double precision, -- Unit: km...
-  cables integer,
-  frequency numeric,
-  terrain_factor double precision DEFAULT 1, -- Unit: per unit...
-  geom geometry(MultiLineString,4326),
-  topo geometry(LineString,4326),
-  CONSTRAINT line_data_pkey PRIMARY KEY (line_id, scn_name)
-)
-WITH (
-  OIDS=FALSE
-);
+-- select description
+SELECT obj_description('model_draft.ego_grid_pf_hv_generator' ::regclass) ::json;
 
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_grid_pf_hv_generator','calc_ego_hv_powerflow.sql',' ');
+
+
+-- PF HV line
+DROP TABLE IF EXISTS 	model_draft.ego_grid_pf_hv_line CASCADE; 
+CREATE TABLE 		model_draft.ego_grid_pf_hv_line (
+	scn_name character varying NOT NULL DEFAULT 'Status Quo'::character varying,
+	line_id bigint NOT NULL, -- Unit: n/a...
+	bus0 bigint, -- Unit: n/a...
+	bus1 bigint, -- Unit: n/a...
+	x numeric DEFAULT 0, -- Unit: Ohm...
+	r numeric DEFAULT 0, -- Unit: Ohm...
+	g numeric DEFAULT 0, -- Unit: Siemens...
+	b numeric DEFAULT 0, -- Unit: Siemens...
+	s_nom numeric DEFAULT 0, -- Unit: MVA...
+	s_nom_extendable boolean DEFAULT false, -- Unit: n/a...
+	s_nom_min double precision DEFAULT 0, -- Unit: MVA...
+	s_nom_max double precision, -- Unit: MVA...
+	capital_cost double precision, -- Unit: currency/MVA...
+	length double precision, -- Unit: km...
+	cables integer,
+	frequency numeric,
+	terrain_factor double precision DEFAULT 1, -- Unit: per unit...
+	geom geometry(MultiLineString,4326),
+	topo geometry(LineString,4326),
+	CONSTRAINT line_data_pkey PRIMARY KEY (line_id, scn_name) ) WITH ( OIDS=FALSE );
+
+-- metadata
 COMMENT ON TABLE  model_draft.ego_grid_pf_hv_line IS
 '{
 "Name": "Lines in hv powerflow",
@@ -428,20 +453,24 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_line IS
 "Instructions for proper use": ["..."]
 }';
 
-DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_load CASCADE; 
-CREATE TABLE model_draft.ego_grid_pf_hv_load
-(
-  scn_name character varying NOT NULL DEFAULT 'Status Quo'::character varying,
-  load_id bigint NOT NULL, -- Unit: n/a...
-  bus bigint, -- Unit: n/a...
-  sign double precision DEFAULT (-1), -- Unit: n/a...
-  e_annual double precision, -- Unit: MW...
-  CONSTRAINT load_data_pkey PRIMARY KEY (load_id, scn_name)
-)
-WITH (
-  OIDS=FALSE
-);
+-- select description
+SELECT obj_description('model_draft.ego_grid_pf_hv_line' ::regclass) ::json;
 
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_grid_pf_hv_line','calc_ego_hv_powerflow.sql',' ');
+
+
+-- PF HV load
+DROP TABLE IF EXISTS 	model_draft.ego_grid_pf_hv_load CASCADE; 
+CREATE TABLE 		model_draft.ego_grid_pf_hv_load (
+	scn_name character varying NOT NULL DEFAULT 'Status Quo'::character varying,
+	load_id bigint NOT NULL, -- Unit: n/a...
+	bus bigint, -- Unit: n/a...
+	sign double precision DEFAULT (-1), -- Unit: n/a...
+	e_annual double precision, -- Unit: MW...
+	CONSTRAINT load_data_pkey PRIMARY KEY (load_id, scn_name) ) WITH ( OIDS=FALSE );
+
+-- metadata
 COMMENT ON TABLE  model_draft.ego_grid_pf_hv_load IS
 '{
 "Name": "Load in hv powerflow",
@@ -484,39 +513,43 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_load IS
 "Instructions for proper use": ["..."]
 }';
 
+-- select description
+SELECT obj_description('model_draft.ego_grid_pf_hv_load' ::regclass) ::json;
 
-DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_storage CASCADE; 
-CREATE TABLE model_draft.ego_grid_pf_hv_storage
-(
-  scn_name character varying NOT NULL DEFAULT 'Status Quo'::character varying,
-  storage_id bigint NOT NULL, -- Unit: n/a...
-  bus bigint, -- Unit: n/a...
-  dispatch text DEFAULT 'flexible'::text, -- Unit: n/a...
-  control text DEFAULT 'PQ'::text, -- Unit: n/a...
-  p_nom double precision DEFAULT 0, -- Unit: MW...
-  p_nom_extendable boolean DEFAULT false, -- Unit: n/a...
-  p_nom_min double precision DEFAULT 0, -- Unit: MW...
-  p_nom_max double precision, -- Unit: MW...
-  p_min_pu_fixed double precision DEFAULT 0, -- Unit: per unit...
-  p_max_pu_fixed double precision DEFAULT 1, -- Unit: per unit...
-  sign double precision DEFAULT 1, -- Unit: n/a...
-  source bigint, -- Unit: n/a...
-  marginal_cost double precision, -- Unit: currency/MWh...
-  capital_cost double precision, -- Unit: currency/MW...
-  efficiency double precision, -- Unit: per unit...
-  soc_initial double precision, -- Unit: MWh...
-  soc_cyclic boolean DEFAULT false, -- Unit: n/a...
-  max_hours double precision, -- Unit: hours...
-  efficiency_store double precision, -- Unit: per unit...
-  efficiency_dispatch double precision, -- Unit: per unit...
-  standing_loss double precision, -- Unit: per unit...
-  CONSTRAINT storage_data_pkey PRIMARY KEY (storage_id, scn_name),
-  CONSTRAINT storage_data_source_fkey FOREIGN KEY (source) REFERENCES model_draft.ego_grid_pf_hv_source (source_id)
-)
-WITH (
-  OIDS=FALSE
-);
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_grid_pf_hv_load','calc_ego_hv_powerflow.sql',' ');
 
+
+-- PF HV storage
+DROP TABLE IF EXISTS 	model_draft.ego_grid_pf_hv_storage CASCADE; 
+CREATE TABLE 		model_draft.ego_grid_pf_hv_storage (
+	scn_name character varying NOT NULL DEFAULT 'Status Quo'::character varying,
+	storage_id bigint NOT NULL, -- Unit: n/a...
+	bus bigint, -- Unit: n/a...
+	dispatch text DEFAULT 'flexible'::text, -- Unit: n/a...
+	control text DEFAULT 'PQ'::text, -- Unit: n/a...
+	p_nom double precision DEFAULT 0, -- Unit: MW...
+	p_nom_extendable boolean DEFAULT false, -- Unit: n/a...
+	p_nom_min double precision DEFAULT 0, -- Unit: MW...
+	p_nom_max double precision, -- Unit: MW...
+	p_min_pu_fixed double precision DEFAULT 0, -- Unit: per unit...
+	p_max_pu_fixed double precision DEFAULT 1, -- Unit: per unit...
+	sign double precision DEFAULT 1, -- Unit: n/a...
+	source bigint, -- Unit: n/a...
+	marginal_cost double precision, -- Unit: currency/MWh...
+	capital_cost double precision, -- Unit: currency/MW...
+	efficiency double precision, -- Unit: per unit...
+	soc_initial double precision, -- Unit: MWh...
+	soc_cyclic boolean DEFAULT false, -- Unit: n/a...
+	max_hours double precision, -- Unit: hours...
+	efficiency_store double precision, -- Unit: per unit...
+	efficiency_dispatch double precision, -- Unit: per unit...
+	standing_loss double precision, -- Unit: per unit...
+	CONSTRAINT storage_data_pkey PRIMARY KEY (storage_id, scn_name),
+	CONSTRAINT storage_data_source_fkey FOREIGN KEY (source) 
+		REFERENCES model_draft.ego_grid_pf_hv_source (source_id) ) WITH ( OIDS=FALSE );
+
+-- metadata
 COMMENT ON TABLE  model_draft.ego_grid_pf_hv_storage IS
 '{
 "Name": "storage in hv powerflow",
@@ -539,10 +572,10 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_storage IS
                     "Description": "id of associated bus",
                     "Unit": "" },
                    {"Name": "dispatch",
-                    "Description": "Controllability of active power dispatch, must be "flexible" or "variable"",
+                    "Description": "Controllability of active power dispatch, must be flexible or variable",
                     "Unit": "" },
                    {"Name": "control",
-                    "Description": "P,Q,V control strategy for PF, must be "PQ", "PV" or "Slack"",
+                    "Description": "P,Q,V control strategy for PF, must be PQ, PV or Slack",
                     "Unit": "" },
                    {"Name": "p_nom",
                     "Description": "Nominal power",
@@ -557,10 +590,10 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_storage IS
                     "Description": "If p_nom is extendable in OPF, set its maximum value (e.g. limited by potential))",
                     "Unit": "MW" },
                    {"Name": "p_min_pu_fixed",
-                    "Description": "If control="flexible" this gives the minimum output per unit of p_nom for the OPF.",
+                    "Description": "If control=flexible this gives the minimum output per unit of p_nom for the OPF.",
                     "Unit": "per unit" },
                    {"Name": "p_max_pu_fixed",
-                    "Description": "If control="flexible" this gives the maximum output per unit of p_nom for the OPF, equivalent to a de-rating factor",
+                    "Description": "If control=flexible this gives the maximum output per unit of p_nom for the OPF, equivalent to a de-rating factor",
                     "Unit": "per unit" },
                    {"Name": "sign",
                     "Description": "power sign",
@@ -610,23 +643,27 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_storage IS
 "Instructions for proper use": ["..."]
 }';
 
+-- select description
+SELECT obj_description('model_draft.ego_grid_pf_hv_storage' ::regclass) ::json;
 
-DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_temp_resolution CASCADE; 
-CREATE TABLE model_draft.ego_grid_pf_hv_temp_resolution
-(
-  temp_id bigint NOT NULL,
-  timesteps bigint NOT NULL,
-  resolution text, 
-  start_time timestamp without time zone,
-  CONSTRAINT temp_resolution_pkey PRIMARY KEY (temp_id)
-)
-WITH (
-  OIDS=FALSE
-);
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_grid_pf_hv_storage','calc_ego_hv_powerflow.sql',' ');
 
+
+-- PF HV temp resolution
+DROP TABLE IF EXISTS 	model_draft.ego_grid_pf_hv_temp_resolution CASCADE; 
+CREATE TABLE 		model_draft.ego_grid_pf_hv_temp_resolution (
+	temp_id bigint NOT NULL,
+	timesteps bigint NOT NULL,
+	resolution text, 
+	start_time timestamp without time zone,
+	CONSTRAINT temp_resolution_pkey PRIMARY KEY (temp_id) ) WITH ( OIDS=FALSE );
+
+-- temp resolution
 INSERT INTO model_draft.ego_grid_pf_hv_temp_resolution (temp_id, timesteps, resolution, start_time)
 SELECT 1, 8760, 'h', TIMESTAMP '2011-01-01 00:00:00';
 
+-- metadata
 COMMENT ON TABLE  model_draft.ego_grid_pf_hv_temp_resolution IS
 '{
 "Name": "temporal resolution hv powerflow",
@@ -666,33 +703,36 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_temp_resolution IS
 "Instructions for proper use": ["..."]
 }';
 
+-- select description
+SELECT obj_description('model_draft.ego_grid_pf_hv_temp_resolution' ::regclass) ::json;
 
-DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_transformer CASCADE; 
-CREATE TABLE model_draft.ego_grid_pf_hv_transformer
-(
-  scn_name character varying NOT NULL DEFAULT 'Status Quo'::character varying,
-  trafo_id bigint NOT NULL, -- Unit: n/a...
-  bus0 bigint, -- Unit: n/a...
-  bus1 bigint, -- Unit: n/a...
-  x numeric DEFAULT 0, -- Unit: Ohm...
-  r numeric DEFAULT 0, -- Unit: Ohm...
-  g numeric DEFAULT 0, -- Unit: Siemens...
-  b numeric DEFAULT 0, -- Unit: Siemens...
-  s_nom double precision DEFAULT 0, -- Unit: MVA...
-  s_nom_extendable boolean DEFAULT false, -- Unit: n/a...
-  s_nom_min double precision DEFAULT 0, -- Unit: MVA...
-  s_nom_max double precision, -- Unit: MVA...
-  tap_ratio double precision, -- Unit: 1...
-  phase_shift double precision, -- Unit: Degrees...
-  capital_cost double precision DEFAULT 0, -- Unit: currency/MVA...
-  geom geometry(MultiLineString,4326),
-  topo geometry(LineString,4326),
-  CONSTRAINT transformer_data_pkey PRIMARY KEY (trafo_id, scn_name)
-)
-WITH (
-  OIDS=FALSE
-);
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_grid_pf_hv_temp_resolution','calc_ego_hv_powerflow.sql',' ');
 
+
+-- PF HV transformer
+DROP TABLE IF EXISTS 	model_draft.ego_grid_pf_hv_transformer CASCADE; 
+CREATE TABLE 		model_draft.ego_grid_pf_hv_transformer (
+	scn_name character varying NOT NULL DEFAULT 'Status Quo'::character varying,
+	trafo_id bigint NOT NULL, -- Unit: n/a...
+	bus0 bigint, -- Unit: n/a...
+	bus1 bigint, -- Unit: n/a...
+	x numeric DEFAULT 0, -- Unit: Ohm...
+	r numeric DEFAULT 0, -- Unit: Ohm...
+	g numeric DEFAULT 0, -- Unit: Siemens...
+	b numeric DEFAULT 0, -- Unit: Siemens...
+	s_nom double precision DEFAULT 0, -- Unit: MVA...
+	s_nom_extendable boolean DEFAULT false, -- Unit: n/a...
+	s_nom_min double precision DEFAULT 0, -- Unit: MVA...
+	s_nom_max double precision, -- Unit: MVA...
+	tap_ratio double precision, -- Unit: 1...
+	phase_shift double precision, -- Unit: Degrees...
+	capital_cost double precision DEFAULT 0, -- Unit: currency/MVA...
+	geom geometry(MultiLineString,4326),
+	topo geometry(LineString,4326),
+	CONSTRAINT transformer_data_pkey PRIMARY KEY (trafo_id, scn_name) ) WITH ( OIDS=FALSE );
+
+-- metadata
 COMMENT ON TABLE  model_draft.ego_grid_pf_hv_transformer IS
 '{
 "Name": "Transformer in hv powerflow",
@@ -772,26 +812,29 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_transformer IS
 "Instructions for proper use": ["..."]
 }';
 
+-- select description
+SELECT obj_description('model_draft.ego_grid_pf_hv_transformer' ::regclass) ::json;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_grid_pf_hv_transformer','calc_ego_hv_powerflow.sql',' ');
+
 
 --------------------------------------------------------------------
 ---------------------- Time series tables --------------------------
 --------------------------------------------------------------------
 
+-- PF HV mag set
 DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_bus_v_mag_set CASCADE; 
-CREATE TABLE model_draft.ego_grid_pf_hv_bus_v_mag_set
-(
-  scn_name character varying NOT NULL DEFAULT 'Status Quo'::character varying,
-  bus_id bigint NOT NULL,
-  temp_id integer NOT NULL,
-  v_mag_pu_set double precision[], -- Unit: per unit...
-  CONSTRAINT bus_v_mag_set_pkey PRIMARY KEY (bus_id, temp_id, scn_name),
-  CONSTRAINT bus_v_mag_set_temp_fkey FOREIGN KEY (temp_id) REFERENCES model_draft.ego_grid_pf_hv_temp_resolution (temp_id)
-)
-WITH (
-  OIDS=FALSE
-);
+CREATE TABLE model_draft.ego_grid_pf_hv_bus_v_mag_set (
+	scn_name character varying NOT NULL DEFAULT 'Status Quo'::character varying,
+	bus_id bigint NOT NULL,
+	temp_id integer NOT NULL,
+	v_mag_pu_set double precision[], -- Unit: per unit...
+	CONSTRAINT bus_v_mag_set_pkey PRIMARY KEY (bus_id, temp_id, scn_name),
+	CONSTRAINT bus_v_mag_set_temp_fkey FOREIGN KEY (temp_id) 
+		REFERENCES model_draft.ego_grid_pf_hv_temp_resolution (temp_id) ) WITH ( OIDS=FALSE );
 
-
+-- metadata
 COMMENT ON TABLE  model_draft.ego_grid_pf_hv_bus_v_mag_set IS
 '{
 "Name": "...",
@@ -830,25 +873,28 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_bus_v_mag_set IS
 "Instructions for proper use": ["..."]
 }';
 
+-- select description
+SELECT obj_description('model_draft.ego_grid_pf_hv_bus_v_mag_set' ::regclass) ::json;
 
-DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_generator_pq_set CASCADE; 
-CREATE TABLE model_draft.ego_grid_pf_hv_generator_pq_set
-(
-  scn_name character varying NOT NULL DEFAULT 'Status Quo'::character varying,
-  generator_id bigint NOT NULL,
-  temp_id integer NOT NULL,
-  p_set double precision[], -- Unit: MW...
-  q_set double precision[], -- Unit: MVar...
-  p_min_pu double precision[], -- Unit: per unit...
-  p_max_pu double precision[], -- Unit: per unit...
-  CONSTRAINT generator_pq_set_pkey PRIMARY KEY (generator_id, temp_id, scn_name),
-  CONSTRAINT generator_pq_set_temp_fkey FOREIGN KEY (temp_id) REFERENCES model_draft.ego_grid_pf_hv_temp_resolution (temp_id)
-)
-WITH (
-  OIDS=FALSE
-);
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_grid_pf_hv_bus_v_mag_set','calc_ego_hv_powerflow.sql',' ');
 
 
+-- PF HV generator PQ set
+DROP TABLE IF EXISTS 	model_draft.ego_grid_pf_hv_generator_pq_set CASCADE; 
+CREATE TABLE 		model_draft.ego_grid_pf_hv_generator_pq_set (
+	scn_name character varying NOT NULL DEFAULT 'Status Quo'::character varying,
+	generator_id bigint NOT NULL,
+	temp_id integer NOT NULL,
+	p_set double precision[], -- Unit: MW...
+	q_set double precision[], -- Unit: MVar...
+	p_min_pu double precision[], -- Unit: per unit...
+	p_max_pu double precision[], -- Unit: per unit...
+	CONSTRAINT generator_pq_set_pkey PRIMARY KEY (generator_id, temp_id, scn_name),
+	CONSTRAINT generator_pq_set_temp_fkey FOREIGN KEY (temp_id) 
+		REFERENCES model_draft.ego_grid_pf_hv_temp_resolution (temp_id) ) WITH ( OIDS=FALSE );
+
+-- metadata
 COMMENT ON TABLE  model_draft.ego_grid_pf_hv_generator_pq_set IS
 '{
 "Name": "Generator time series hv powerflow",
@@ -877,10 +923,10 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_generator_pq_set IS
                     "Description": "reactive power set point",
                     "Unit": "MVar" },
                    {"Name": "p_min_pu",
-                    "Description": "If control="variable" this gives the minimum output for each snapshot per unit of p_nom for the OPF",
+                    "Description": "If control=variable this gives the minimum output for each snapshot per unit of p_nom for the OPF",
                     "Unit": "per unit" },
                    {"Name": "p_max_pu",
-                    "Description": "If control="variable" this gives the maximum output for each snapshot per unit of p_nom for the OPF, relevant e.g. if for renewables the power output is limited by the weather",
+                    "Description": "If control=variable this gives the maximum output for each snapshot per unit of p_nom for the OPF, relevant e.g. if for renewables the power output is limited by the weather",
                     "Unit": "per unit" }],
 "Changes":[
                    {"Name": "Mario Kropshofer",
@@ -897,23 +943,26 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_generator_pq_set IS
 "Instructions for proper use": ["..."]
 }';
 
+-- select description
+SELECT obj_description('model_draft.ego_grid_pf_hv_generator_pq_set' ::regclass) ::json;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_grid_pf_hv_generator_pq_set','calc_ego_hv_powerflow.sql',' ');
 
 
-DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_load_pq_set CASCADE; 
-CREATE TABLE model_draft.ego_grid_pf_hv_load_pq_set
-(
-  scn_name character varying NOT NULL DEFAULT 'Status Quo'::character varying,
-  load_id bigint NOT NULL,
-  temp_id integer NOT NULL,
-  p_set double precision[], -- Unit: MW...
-  q_set double precision[], -- Unit: MVar...
-  CONSTRAINT load_pq_set_pkey PRIMARY KEY (load_id, temp_id, scn_name),
-  CONSTRAINT load_pq_set_temp_fkey FOREIGN KEY (temp_id) REFERENCES model_draft.ego_grid_pf_hv_temp_resolution (temp_id)
-)
-WITH (
-  OIDS=FALSE
-);
+-- PF HV load PQ set
+DROP TABLE IF EXISTS 	model_draft.ego_grid_pf_hv_load_pq_set CASCADE; 
+CREATE TABLE 		model_draft.ego_grid_pf_hv_load_pq_set (
+	scn_name character varying NOT NULL DEFAULT 'Status Quo'::character varying,
+	load_id bigint NOT NULL,
+	temp_id integer NOT NULL,
+	p_set double precision[], -- Unit: MW...
+	q_set double precision[], -- Unit: MVar...
+	CONSTRAINT load_pq_set_pkey PRIMARY KEY (load_id, temp_id, scn_name),
+	CONSTRAINT load_pq_set_temp_fkey FOREIGN KEY (temp_id) 
+		REFERENCES model_draft.ego_grid_pf_hv_temp_resolution (temp_id) ) WITH ( OIDS=FALSE );
 
+-- metadata
 COMMENT ON TABLE  model_draft.ego_grid_pf_hv_load_pq_set IS
 '{
 "Name": "Load time series hv powerflow",
@@ -946,7 +995,7 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_load_pq_set IS
                     "Mail": "mario.kropshofer2@stud.fh-flensburg.de",
                     "Date":  "04.10.2016",
                     "Comment": "..." }, 
-		    "Name": "Ilka Cussmann",
+		    {"Name": "Ilka Cussmann",
                     "Mail": "ilka.cussmann@hs-flensburg.de",
                     "Date":  "26.10.2016",
                     "Comment": "completed json-string" }
@@ -956,27 +1005,30 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_load_pq_set IS
 "Instructions for proper use": ["..."]
 }';
 
+-- select description
+SELECT obj_description('model_draft.ego_grid_pf_hv_load_pq_set' ::regclass) ::json;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_grid_pf_hv_load_pq_set','calc_ego_hv_powerflow.sql',' ');
 
 
-DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_storage_pq_set CASCADE; 
-CREATE TABLE model_draft.ego_grid_pf_hv_storage_pq_set
-(
-  scn_name character varying NOT NULL DEFAULT 'Status Quo'::character varying,
-  storage_id bigint NOT NULL,
-  temp_id integer NOT NULL,
-  p_set double precision[], -- Unit: MW...
-  q_set double precision[], -- Unit: MVar...
-  p_min_pu double precision[], -- Unit: per unit...
-  p_max_pu double precision[], -- Unit: per unit...
-  soc_set double precision[], -- Unit: MWh...
-  inflow double precision[], -- Unit: MW...
-    CONSTRAINT storage_pq_set_pkey PRIMARY KEY (storage_id, temp_id, scn_name),
-  CONSTRAINT storage_pq_set_temp_fkey FOREIGN KEY (temp_id) REFERENCES model_draft.ego_grid_pf_hv_temp_resolution (temp_id)
-)
-WITH (
-  OIDS=FALSE
-);
+-- PF HV storage PQ set
+DROP TABLE IF EXISTS 	model_draft.ego_grid_pf_hv_storage_pq_set CASCADE; 
+CREATE TABLE 		model_draft.ego_grid_pf_hv_storage_pq_set (
+	scn_name character varying NOT NULL DEFAULT 'Status Quo'::character varying,
+	storage_id bigint NOT NULL,
+	temp_id integer NOT NULL,
+	p_set double precision[], -- Unit: MW...
+	q_set double precision[], -- Unit: MVar...
+	p_min_pu double precision[], -- Unit: per unit...
+	p_max_pu double precision[], -- Unit: per unit...
+	soc_set double precision[], -- Unit: MWh...
+	inflow double precision[], -- Unit: MW...
+	CONSTRAINT storage_pq_set_pkey PRIMARY KEY (storage_id, temp_id, scn_name),
+	CONSTRAINT storage_pq_set_temp_fkey FOREIGN KEY (temp_id) 
+		REFERENCES model_draft.ego_grid_pf_hv_temp_resolution (temp_id) ) WITH ( OIDS=FALSE );
 
+-- metadata
 COMMENT ON TABLE  model_draft.ego_grid_pf_hv_storage_pq_set IS
 '{
 "Name": "Storage time series hv powerflow",
@@ -1003,13 +1055,13 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_storage_pq_set IS
                     "Unit": "MW" },
                    {"Name": "q_set",
                     "Description": "reactive power set point",
-                    "Unit": "MVar" }],
+                    "Unit": "MVar" },
                    {"Name": "p_min_pu",
-                    "Description": "If control="variable" this gives the minimum output for each snapshot per unit of p_nom for the OPF",
+                    "Description": "If control=variable this gives the minimum output for each snapshot per unit of p_nom for the OPF",
                     "Unit": "per unit" },
                    {"Name": "p_max_pu",
-                    "Description": "If control="variable" this gives the maximum output for each snapshot per unit of p_nom for the OPF",
-                    "Unit": "per unit" }],
+                    "Description": "If control=variable this gives the maximum output for each snapshot per unit of p_nom for the OPF",
+                    "Unit": "per unit" },
                    {"Name": "soc_set",
                     "Description": "State of charge set points for snapshots in the OPF",
                     "Unit": "MWh" },
@@ -1021,7 +1073,7 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_storage_pq_set IS
                     "Mail": "mario.kropshofer2@stud.fh-flensburg.de",
                     "Date":  "04.10.2016",
                     "Comment": "..." }, 
-                    "Name": "Ilka Cussmann",
+                    {"Name": "Ilka Cussmann",
                     "Mail": "ilka.cussmann@hs-flensburg.de",
                     "Date":  "26.10.2016",
                     "Comment": "completed json-string" }
@@ -1030,6 +1082,13 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_storage_pq_set IS
 "Licence": ["..."],
 "Instructions for proper use": ["..."]
 }';
+
+-- select description
+SELECT obj_description('model_draft.ego_grid_pf_hv_storage_pq_set' ::regclass) ::json;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_grid_pf_hv_storage_pq_set','calc_ego_hv_powerflow.sql',' ');
+
 
 -------------------------------------------------------------------
 --------------------------- Grant rights --------------------------
@@ -1115,10 +1174,10 @@ COMMENT ON COLUMN model_draft.ego_grid_pf_hv_generator.bus IS 'Unit: n/a
 Description: name of bus to which generator is attached
 Status: Input (required)';
 COMMENT ON COLUMN model_draft.ego_grid_pf_hv_generator.dispatch IS 'Unit: n/a
-Description: Controllability of active power dispatch, must be "flexible" or "variable".
+Description: Controllability of active power dispatch, must be flexible or variable.
 Status: Input (optional)';
 COMMENT ON COLUMN model_draft.ego_grid_pf_hv_generator.control IS 'Unit: n/a
-Description: P,Q,V control strategy for PF, must be "PQ", "PV" or "Slack".
+Description: P,Q,V control strategy for PF, must be PQ, PV or Slack.
 Status: Input (optional)';
 COMMENT ON COLUMN model_draft.ego_grid_pf_hv_generator.p_nom IS 'Unit: MW
 Description: Nominal power for limits in OPF
@@ -1134,10 +1193,10 @@ COMMENT ON COLUMN model_draft.ego_grid_pf_hv_generator.p_nom_max IS 'Unit: MW
 Description: If p_nom is extendable in OPF, set its maximum value (e.g. limited by potential).
 Status: Input (optional)';
 COMMENT ON COLUMN model_draft.ego_grid_pf_hv_generator.p_min_pu_fixed IS 'Unit: per unit
-Description: If control="flexible" this gives the minimum output per unit of p_nom for the OPF.
+Description: If control=flexible this gives the minimum output per unit of p_nom for the OPF.
 Status: Input (optional)';
 COMMENT ON COLUMN model_draft.ego_grid_pf_hv_generator.p_max_pu_fixed IS 'Unit: per unit
-Description: If control="flexible" this gives the maximum output per unit of p_nom for the OPF, equivalent to a de-rating factor.
+Description: If control=flexible this gives the maximum output per unit of p_nom for the OPF, equivalent to a de-rating factor.
 Status: Input (optional)';
 COMMENT ON COLUMN model_draft.ego_grid_pf_hv_generator.sign IS 'Unit: n/a
 Description: power sign
@@ -1161,10 +1220,10 @@ COMMENT ON COLUMN model_draft.ego_grid_pf_hv_generator_pq_set.q_set IS 'Unit: MV
 Description: reactive power set point (for PF).
 Status: Input (optional)';
 COMMENT ON COLUMN model_draft.ego_grid_pf_hv_generator_pq_set.p_min_pu IS 'Unit: per unit
-Description: If control="variable" this gives the minimum output for each snapshot per unit of p_nom for the OPF.
+Description: If control=variable this gives the minimum output for each snapshot per unit of p_nom for the OPF.
 Status: Input (optional)';
 COMMENT ON COLUMN model_draft.ego_grid_pf_hv_generator_pq_set.p_max_pu IS 'Unit: per unit
-Description: If control="variable" this gives the maximum output for each snapshot per unit of p_nom for the OPF, relevant e.g. if for renewables the power output is limited by the weather.
+Description: If control=variable this gives the maximum output for each snapshot per unit of p_nom for the OPF, relevant e.g. if for renewables the power output is limited by the weather.
 Status: Input (optional)';
 COMMENT ON COLUMN model_draft.ego_grid_pf_hv_line.line_id IS 'Unit: n/a
 Description: Unique name
@@ -1241,10 +1300,10 @@ COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage.bus IS 'Unit: n/a
 Description: name of bus to which storage is attached
 Status: Input (required)';
 COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage.dispatch IS 'Unit: n/a
-Description: Controllability of active power dispatch, must be "flexible" or "variable".
+Description: Controllability of active power dispatch, must be flexible or variable.
 Status: Input (optional)';
 COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage.control IS 'Unit: n/a
-Description: P,Q,V control strategy for PF, must be "PQ", "PV" or "Slack".
+Description: P,Q,V control strategy for PF, must be PQ, PV or Slack.
 Status: Input (optional)';
 COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage.p_nom IS 'Unit: MW
 Description: Nominal power for limits in OPF
@@ -1260,10 +1319,10 @@ COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage.p_nom_max IS 'Unit: MW
 Description: If p_nom is extendable in OPF, set its maximum value (e.g. limited by potential).
 Status: Input (optional)';
 COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage.p_min_pu_fixed IS 'Unit: per unit
-Description: If control="flexible" this gives the minimum output per unit of p_nom for the OPF.
+Description: If control=flexible this gives the minimum output per unit of p_nom for the OPF.
 Status: Input (optional)';
 COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage.p_max_pu_fixed IS 'Unit: per unit
-Description: If control="flexible" this gives the maximum output per unit of p_nom for the OPF, equivalent to a de-rating factor.
+Description: If control=flexible this gives the maximum output per unit of p_nom for the OPF, equivalent to a de-rating factor.
 Status: Input (optional)';
 COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage.sign IS 'Unit: n/a
 Description: power sign
@@ -1305,10 +1364,10 @@ COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage_pq_set.q_set IS 'Unit: MVar
 Description: reactive power set point (for PF).
 Status: Input (optional)';
 COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage_pq_set.p_min_pu IS 'Unit: per unit
-Description: If control="variable" this gives the minimum output for each snapshot per unit of p_nom for the OPF.
+Description: If control=variable this gives the minimum output for each snapshot per unit of p_nom for the OPF.
 Status: Input (optional)';
 COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage_pq_set.p_max_pu IS 'Unit: per unit
-Description: If control="variable" this gives the maximum output for each snapshot per unit of p_nom for the OPF, relevant e.g. if for renewables the power output is limited by the weather.
+Description: If control=variable this gives the maximum output for each snapshot per unit of p_nom for the OPF, relevant e.g. if for renewables the power output is limited by the weather.
 Status: Input (optional)';
 COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage_pq_set.soc_set IS 'Unit: MWh
 Description: State of charge set points for snapshots in the OPF.
