@@ -4274,7 +4274,8 @@ zensus_population_per_ha.sql</y:NodeLabel>
               <y:Geometry height="55.0" width="35.0" x="2032.5" y="1172.5"/>
               <y:Fill color="#99CC00" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
-              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="214.12890625" x="-89.564453125" y="59.0">model_draft.ego_grid_hvmv_substation<y:LabelModel>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="33.40234375" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="214.12890625" x="-89.564453125" y="59.0">model_draft.ego_grid_hvmv_substation
+grid.ego_hvmv_substation<y:LabelModel>
                   <y:SmartNodeLabelModel distance="4.0"/>
                 </y:LabelModel>
                 <y:ModelParameter>
@@ -4839,6 +4840,52 @@ model_draft.ego_supply_rea_m1_2_rest_mview<y:LabelModel>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill" value="#ffffffe6"/>
                 <y:Property class="com.yworks.yfiles.bpmn.view.BPMNTypeEnum" name="com.yworks.bpmn.type" value="ARTIFACT_TYPE_DATA_OBJECT"/>
                 <y:Property class="com.yworks.yfiles.bpmn.view.DataObjectTypeEnum" name="com.yworks.bpmn.dataObjectType" value="DATA_OBJECT_TYPE_OUTPUT"/>
+              </y:StyleProperties>
+            </y:GenericNode>
+          </data>
+        </node>
+        <node id="n0::n209">
+          <data key="d6">
+            <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
+              <y:Geometry height="55.0" width="35.0" x="1132.5" y="472.5"/>
+              <y:Fill color="#99CC00" transparent="false"/>
+              <y:BorderStyle color="#000000" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="338.248046875" x="-151.6240234375" y="59.0">model_draft.ego_political_boundary_bkg_vg250_6_gem_clean<y:LabelModel>
+                  <y:SmartNodeLabelModel distance="4.0"/>
+                </y:LabelModel>
+                <y:ModelParameter>
+                  <y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="-0.5" nodeRatioX="0.0" nodeRatioY="0.5" offsetX="0.0" offsetY="4.0" upX="0.0" upY="-1.0"/>
+                </y:ModelParameter>
+              </y:NodeLabel>
+              <y:StyleProperties>
+                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.line.color" value="#000000"/>
+                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill2" value="#d4d4d4cc"/>
+                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill" value="#ffffffe6"/>
+                <y:Property class="com.yworks.yfiles.bpmn.view.BPMNTypeEnum" name="com.yworks.bpmn.type" value="ARTIFACT_TYPE_DATA_OBJECT"/>
+                <y:Property class="com.yworks.yfiles.bpmn.view.DataObjectTypeEnum" name="com.yworks.bpmn.dataObjectType" value="DATA_OBJECT_TYPE_OUTPUT"/>
+              </y:StyleProperties>
+            </y:GenericNode>
+          </data>
+        </node>
+        <node id="n0::n210">
+          <data key="d6">
+            <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
+              <y:Geometry height="30.0" width="230.0" x="1035.0000000000005" y="435.0"/>
+              <y:Fill color="#FFFF99" transparent="false"/>
+              <y:BorderStyle color="#000000" type="line" width="1.0"/>
+              <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="10" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="28.501953125" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="210.34765625" x="9.826171875" y="0.7490234375">Geodatenzugangsgesetz (GeoZG)
+© GeoBasis-DE / BKG 2016 (Daten verändert)<y:LabelModel>
+                  <y:SmartNodeLabelModel distance="4.0"/>
+                </y:LabelModel>
+                <y:ModelParameter>
+                  <y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/>
+                </y:ModelParameter>
+              </y:NodeLabel>
+              <y:StyleProperties>
+                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.line.color" value="#000000"/>
+                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill2" value="#d4d4d4cc"/>
+                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill" value="#ffffffe6"/>
+                <y:Property class="com.yworks.yfiles.bpmn.view.BPMNTypeEnum" name="com.yworks.bpmn.type" value="ARTIFACT_TYPE_ANNOTATION"/>
               </y:StyleProperties>
             </y:GenericNode>
           </data>
@@ -6991,7 +7038,7 @@ model_draft.ego_supply_rea_m1_2_rest_mview<y:LabelModel>
         </y:GenericEdge>
       </data>
     </edge>
-    <edge id="n0::e178" source="n0::n109" target="n0::n184">
+    <edge id="n0::e178" source="n0::n11" target="n0::n187">
       <data key="d10">
         <y:GenericEdge configuration="com.yworks.bpmn.Connection">
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -7003,19 +7050,7 @@ model_draft.ego_supply_rea_m1_2_rest_mview<y:LabelModel>
         </y:GenericEdge>
       </data>
     </edge>
-    <edge id="n0::e179" source="n0::n11" target="n0::n187">
-      <data key="d10">
-        <y:GenericEdge configuration="com.yworks.bpmn.Connection">
-          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
-          <y:LineStyle color="#000000" type="dashed_dotted" width="1.0"/>
-          <y:Arrows source="none" target="concave"/>
-          <y:StyleProperties>
-            <y:Property class="com.yworks.yfiles.bpmn.view.BPMNTypeEnum" name="com.yworks.bpmn.type" value="CONNECTION_TYPE_DIRECTED_ASSOCIATION"/>
-          </y:StyleProperties>
-        </y:GenericEdge>
-      </data>
-    </edge>
-    <edge id="n0::e180" source="n0::n198" target="n0::n195">
+    <edge id="n0::e179" source="n0::n198" target="n0::n195">
       <data key="d10">
         <y:GenericEdge configuration="com.yworks.bpmn.Connection">
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -7027,7 +7062,7 @@ model_draft.ego_supply_rea_m1_2_rest_mview<y:LabelModel>
         </y:GenericEdge>
       </data>
     </edge>
-    <edge id="n0::e181" source="n0::n197" target="n0::n195">
+    <edge id="n0::e180" source="n0::n197" target="n0::n195">
       <data key="d10">
         <y:GenericEdge configuration="com.yworks.bpmn.Connection">
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -7039,7 +7074,7 @@ model_draft.ego_supply_rea_m1_2_rest_mview<y:LabelModel>
         </y:GenericEdge>
       </data>
     </edge>
-    <edge id="n0::e182" source="n0::n195" target="n0::n196">
+    <edge id="n0::e181" source="n0::n195" target="n0::n196">
       <data key="d10">
         <y:GenericEdge configuration="com.yworks.bpmn.Connection">
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -7051,7 +7086,7 @@ model_draft.ego_supply_rea_m1_2_rest_mview<y:LabelModel>
         </y:GenericEdge>
       </data>
     </edge>
-    <edge id="n0::e183" source="n0::n73" target="n0::n195">
+    <edge id="n0::e182" source="n0::n73" target="n0::n195">
       <data key="d10">
         <y:GenericEdge configuration="com.yworks.bpmn.Connection">
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -7063,7 +7098,7 @@ model_draft.ego_supply_rea_m1_2_rest_mview<y:LabelModel>
         </y:GenericEdge>
       </data>
     </edge>
-    <edge id="n0::e184" source="n0::n195" target="n0::n65">
+    <edge id="n0::e183" source="n0::n195" target="n0::n65">
       <data key="d10">
         <y:GenericEdge configuration="com.yworks.bpmn.Connection">
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -7075,7 +7110,7 @@ model_draft.ego_supply_rea_m1_2_rest_mview<y:LabelModel>
         </y:GenericEdge>
       </data>
     </edge>
-    <edge id="n0::e185" source="n0::n200" target="n0::n197">
+    <edge id="n0::e184" source="n0::n200" target="n0::n197">
       <data key="d10">
         <y:GenericEdge configuration="com.yworks.bpmn.Connection">
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -7087,7 +7122,7 @@ model_draft.ego_supply_rea_m1_2_rest_mview<y:LabelModel>
         </y:GenericEdge>
       </data>
     </edge>
-    <edge id="n0::e186" source="n0::n205" target="n0::n67">
+    <edge id="n0::e185" source="n0::n205" target="n0::n67">
       <data key="d10">
         <y:GenericEdge configuration="com.yworks.bpmn.Connection">
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -7099,7 +7134,7 @@ model_draft.ego_supply_rea_m1_2_rest_mview<y:LabelModel>
         </y:GenericEdge>
       </data>
     </edge>
-    <edge id="n0::e187" source="n0::n57" target="n0::n197">
+    <edge id="n0::e186" source="n0::n57" target="n0::n197">
       <data key="d10">
         <y:GenericEdge configuration="com.yworks.bpmn.Connection">
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -7111,7 +7146,7 @@ model_draft.ego_supply_rea_m1_2_rest_mview<y:LabelModel>
         </y:GenericEdge>
       </data>
     </edge>
-    <edge id="n0::e188" source="n0::n187" target="n0::n67">
+    <edge id="n0::e187" source="n0::n187" target="n0::n67">
       <data key="d10">
         <y:GenericEdge configuration="com.yworks.bpmn.Connection">
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -7123,7 +7158,7 @@ model_draft.ego_supply_rea_m1_2_rest_mview<y:LabelModel>
         </y:GenericEdge>
       </data>
     </edge>
-    <edge id="n0::e189" source="n0::n66" target="n0::n90">
+    <edge id="n0::e188" source="n0::n66" target="n0::n90">
       <data key="d10">
         <y:GenericEdge configuration="com.yworks.bpmn.Connection">
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -7135,7 +7170,7 @@ model_draft.ego_supply_rea_m1_2_rest_mview<y:LabelModel>
         </y:GenericEdge>
       </data>
     </edge>
-    <edge id="n0::e190" source="n0::n207" target="n0::n50">
+    <edge id="n0::e189" source="n0::n207" target="n0::n50">
       <data key="d10">
         <y:GenericEdge configuration="com.yworks.bpmn.Connection">
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -7147,7 +7182,31 @@ model_draft.ego_supply_rea_m1_2_rest_mview<y:LabelModel>
         </y:GenericEdge>
       </data>
     </edge>
-    <edge id="n0::e191" source="n0::n50" target="n0::n208">
+    <edge id="n0::e190" source="n0::n50" target="n0::n208">
+      <data key="d10">
+        <y:GenericEdge configuration="com.yworks.bpmn.Connection">
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="dashed_dotted" width="3.0"/>
+          <y:Arrows source="none" target="concave"/>
+          <y:StyleProperties>
+            <y:Property class="com.yworks.yfiles.bpmn.view.BPMNTypeEnum" name="com.yworks.bpmn.type" value="CONNECTION_TYPE_DIRECTED_ASSOCIATION"/>
+          </y:StyleProperties>
+        </y:GenericEdge>
+      </data>
+    </edge>
+    <edge id="n0::e191" source="n0::n2" target="n0::n209">
+      <data key="d10">
+        <y:GenericEdge configuration="com.yworks.bpmn.Connection">
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="dashed_dotted" width="3.0"/>
+          <y:Arrows source="none" target="concave"/>
+          <y:StyleProperties>
+            <y:Property class="com.yworks.yfiles.bpmn.view.BPMNTypeEnum" name="com.yworks.bpmn.type" value="CONNECTION_TYPE_DIRECTED_ASSOCIATION"/>
+          </y:StyleProperties>
+        </y:GenericEdge>
+      </data>
+    </edge>
+    <edge id="n0::e192" source="n0::n8" target="n0::n184">
       <data key="d10">
         <y:GenericEdge configuration="com.yworks.bpmn.Connection">
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>

@@ -26,8 +26,7 @@ ALTER TABLE model_draft.ego_political_boundary_hvmv_subst_per_gem
 
 -- index GIST (geom)
 CREATE INDEX  	ego_political_boundary_hvmv_subst_per_gem_geom_idx
-	ON	model_draft.ego_political_boundary_hvmv_subst_per_gem
-	USING	GIST (geom);
+	ON	model_draft.ego_political_boundary_hvmv_subst_per_gem USING GIST (geom);
 
 -- grant (oeuser)
 ALTER TABLE	model_draft.ego_political_boundary_hvmv_subst_per_gem OWNER TO oeuser;
@@ -101,7 +100,7 @@ CREATE MATERIALIZED VIEW		model_draft.ego_political_boundary_hvmv_subst_per_gem_
 
 -- index (id)
 CREATE UNIQUE INDEX  	ego_political_boundary_hvmv_subst_per_gem_2_mview_gid_idx
-		ON	model_draft.ego_political_boundary_hvmv_subst_per_gem_2_mview (id);
+	ON	model_draft.ego_political_boundary_hvmv_subst_per_gem_2_mview (id);
 
 -- grant (oeuser)
 ALTER TABLE	model_draft.ego_political_boundary_hvmv_subst_per_gem_2_mview OWNER TO oeuser;
@@ -132,11 +131,10 @@ CREATE MATERIALIZED VIEW		model_draft.ego_grid_hvmv_substation_mun_2_mview AS
 
 -- index (subst_id)
 CREATE UNIQUE INDEX  	ego_grid_hvmv_substation_mun_2_mview_subst_id_idx
-		ON	model_draft.ego_grid_hvmv_substation_mun_2_mview (subst_id);
+	ON	model_draft.ego_grid_hvmv_substation_mun_2_mview (subst_id);
 
 -- grant (oeuser)
-GRANT ALL ON TABLE 	model_draft.ego_grid_hvmv_substation_mun_2_mview TO oeuser WITH GRANT OPTION;
-ALTER TABLE		model_draft.ego_grid_hvmv_substation_mun_2_mview OWNER TO oeuser;
+ALTER TABLE	model_draft.ego_grid_hvmv_substation_mun_2_mview OWNER TO oeuser;
 
 
 ---------- ---------- ----------
@@ -155,7 +153,7 @@ CREATE MATERIALIZED VIEW		model_draft.ego_political_boundary_hvmv_subst_per_gem_
 
 -- index (id)
 CREATE UNIQUE INDEX  	ego_political_boundary_hvmv_subst_per_gem_3_mview_gid_idx
-		ON	model_draft.ego_political_boundary_hvmv_subst_per_gem_3_mview (id);
+	ON	model_draft.ego_political_boundary_hvmv_subst_per_gem_3_mview (id);
 
 -- grant (oeuser)
 ALTER TABLE	model_draft.ego_political_boundary_hvmv_subst_per_gem_3_mview OWNER TO oeuser;
@@ -203,8 +201,7 @@ CREATE INDEX  	grid_district_type_1_geom_subst_idx
 
 -- index GIST (geom)
 CREATE INDEX  	grid_district_type_1_geom_mun_idx
-	ON	model_draft.ego_grid_mv_griddistrict_type1
-	USING	GIST (geom);
+	ON	model_draft.ego_grid_mv_griddistrict_type1 USING GIST (geom);
 
 -- grant (oeuser)
 ALTER TABLE	model_draft.ego_grid_mv_griddistrict_type1 OWNER TO oeuser;

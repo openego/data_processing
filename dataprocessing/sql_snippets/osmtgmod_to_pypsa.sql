@@ -58,18 +58,9 @@ SELECT
   topo
   FROM grid.otg_ehvhv_branch_data
   WHERE result_id = 1 and link_type = 'transformer';
-  
-  
--- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
-	SELECT	'0.2' AS version,
-		'calc_ego_hv_powerflow' AS schema_name,
-		'transformer' AS table_name,
-		'osmtgmod_to_pypsa.sql' AS script_name,
-		COUNT(trafo_id)AS entries,
-		'OK' AS status,
-		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
-FROM	model_draft.ego_grid_pf_hv_transformer;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_grid_pf_hv_transformer','osmtgmod_to_pypsa.sql',' ');
 
 -- per unit to absolute values
 

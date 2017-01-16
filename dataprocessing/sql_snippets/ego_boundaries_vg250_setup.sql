@@ -276,7 +276,7 @@ CREATE MATERIALIZED VIEW		political_boundary.bkg_vg250_2_lan_mview AS
 	SELECT	'2016-01-01' ::text AS reference_date,
 		lan.ags_0 ::character varying(12) AS ags_0,
 		lan.gen ::text AS gen,
-		ST_UNION(ST_TRANSFORM(lan.geom,3035)) AS geom
+		ST_MULTI(ST_UNION(ST_TRANSFORM(lan.geom,3035))) ::geometry(Multipolygon,3035) AS geom
 	FROM	(SELECT	vg.ags_0,
 			replace( vg.gen, ' (Bodensee)', '') as gen,
 			vg.geom
