@@ -1,4 +1,12 @@
 /*
+
+
+__copyright__ = "tba" 
+__license__ = "tba" 
+__author__ = "" 
+*/
+
+/*
 Quick workaround to transfer renpassG!S results into the corresponding powerflow table.
 
 
@@ -530,13 +538,5 @@ INSERT INTO model_draft.ego_grid_pf_hv_load_pq_set (scn_name, load_id, temp_id, 
 	GROUP BY C.load_id;
 */
 
--- Scenario eGo data processing
-INSERT INTO     scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
-        SELECT  '0.2' AS version,
-                'model_draft' AS schema_name,
-                'ego_grid_pf_hv_generator_pq_set' AS table_name,
-                'renpass_gis_ResultsTOPF.sql' AS script_name,
-                COUNT(generator_id)AS entries,
-                'OK' AS status,
-                NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
-FROM    model_draft.ego_grid_pf_hv_generator_pq_set;
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_grid_pf_hv_generator_pq_set','renpass_gis_ResultsTOPF.sql',' ');

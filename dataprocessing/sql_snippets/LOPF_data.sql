@@ -1,4 +1,12 @@
-﻿/* 
+﻿/*
+
+
+__copyright__ = "tba" 
+__license__ = "tba" 
+__author__ = "" 
+*/
+
+/* 
 LOPF data -
 Setting marginal_cost ( operating cost + fuel cost + CO2 crt cost ) 
 in model_draft.ego_grid_pf_hv_generator according to renpass_gis, NEP 2014 scenario.
@@ -23,17 +31,8 @@ ELSE 0                      -- run_of_river/reservoir/pumped_storage/solar/wind/
 END);
 
 
--- Scenario eGo data processing
-INSERT INTO     scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
-    SELECT  '0.2' AS version,
-    'model_draft' AS schema_name,
-    'ego_grid_pf_hv_generator' AS table_name,
-    'LOPF_data.sql' AS script_name,
-    COUNT(marginal_cost)AS entries,
-    'OK' AS status,
-    NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
-    FROM    model_draft.ego_grid_pf_hv_generator;
-
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_grid_pf_hv_generator','LOPF_data.sql',' ');
 
 -- set p_max_pu
 -- TODO: outermost subquery needed?
@@ -108,15 +107,5 @@ SELECT 'Status Quo',
   0 -- no standing losses
 FROM model_draft.ego_grid_hvmv_substation;
 
-
--- Scenario eGo data processing
-INSERT INTO     scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
-    SELECT  '0.2' AS version,
-    'model_draft' AS schema_name,
-    'ego_grid_pf_hv_generator_pq_set' AS table_name,
-    'LOPF_data.sql' AS script_name,
-    COUNT(p_max_pu)AS entries,
-    'OK' AS status,
-    NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
-    FROM    model_draft.ego_grid_pf_hv_generator_pq_set;
-
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_grid_pf_hv_generator_pq_set','LOPF_data.sql',' ');

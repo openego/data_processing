@@ -1,3 +1,11 @@
+/*
+
+
+__copyright__ = "tba" 
+__license__ = "tba" 
+__author__ = "" 
+*/
+
 DROP TABLE IF EXISTS model_draft.ego_demand_loads CASCADE;
 
 CREATE TABLE model_draft.ego_demand_loads
@@ -182,13 +190,5 @@ FROM model_draft.ego_demand_pf_load_single a
 WHERE a.bus IS NOT NULL
 GROUP BY a.bus;
 
--- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
-	SELECT	'0.2' AS version,
-		'calc_ego_hv_powerflow' AS schema_name,
-		'load' AS table_name,
-		'assignment_load_bus.sql' AS script_name,
-		COUNT(load_id)AS entries,
-		'OK' AS status,
-		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
-FROM	model_draft.ego_grid_pf_hv_load;
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_grid_pf_hv_load','assignment_load_bus.sql',' ');

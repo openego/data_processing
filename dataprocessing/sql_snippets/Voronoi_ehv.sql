@@ -1,3 +1,11 @@
+/*
+voronoi with ehv substations
+
+__copyright__ = "tba" 
+__license__ = "tba" 
+__author__ = "IlkaCu" 
+*/
+
 ----------------------------------------------------------
 -- VORONOI with  220 and 380 kV substations
 ----------------------------------------------------------
@@ -95,8 +103,7 @@ ALTER TABLE model_draft.ego_grid_ehv_substation_voronoi
 	ADD CONSTRAINT subst_fk FOREIGN KEY (subst_id) REFERENCES model_draft.ego_grid_ehv_substation (subst_id),
 	ADD PRIMARY KEY (subst_id);
 
-ALTER TABLE model_draft.ego_grid_ehv_substation_voronoi
-  OWNER TO oeuser;
+ALTER TABLE model_draft.ego_grid_ehv_substation_voronoi OWNER TO oeuser;
 
 COMMENT ON TABLE  model_draft.ego_grid_ehv_substation_voronoi IS
 '{
@@ -132,15 +139,5 @@ COMMENT ON TABLE  model_draft.ego_grid_ehv_substation_voronoi IS
 "Instructions for proper use": ["..."]
 }';
 
--- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
-	SELECT	'0.2' AS version,
-		'calc_ego_substation' AS schema_name,
-		'ego_deu_voronoi_ehv' AS table_name,
-		'Voronoi_ehv.sql' AS script_name,
-		COUNT(subst_id)AS entries,
-		'OK' AS status,
-		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
-FROM	model_draft.ego_grid_ehv_substation_voronoi;
-
-
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_grid_ehv_substation_voronoi','Voronoi_ehv.sql',' ');

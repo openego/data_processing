@@ -1,3 +1,11 @@
+/*
+voronoi with weatherpoints
+
+__copyright__ = "tba" 
+__license__ = "tba" 
+__author__ = "IlkaCu" 
+*/
+
 -- Add Dummy points 
 INSERT INTO calc_renpass_gis.parameter_solar_feedin (year, geom)
 SELECT '9999', ST_TRANSFORM(geom,4326)
@@ -123,15 +131,5 @@ COMMENT ON TABLE  model_draft.renpassgis_economic_weatherpoint_voronoi IS
 "Instructions for proper use": ["..."]
 }';
 
-
--- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
-	SELECT	'0.2' AS version,
-		'calc_renpass_gis' AS schema_name,
-		'voronoi_weatherpoint' AS table_name,
-		'voronoi_weatherpoint.sql' AS script_name,
-		COUNT(id)AS entries,
-		'OK' AS status,
-		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
-FROM	model_draft.renpassgis_economic_weatherpoint_voronoi;
-
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','output','model_draft','renpassgis_economic_weatherpoint_voronoi','voronoi_weatherpoint.sql',' ');

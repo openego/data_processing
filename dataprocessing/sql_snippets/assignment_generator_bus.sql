@@ -1,3 +1,11 @@
+/*
+
+
+__copyright__ = "tba" 
+__license__ = "tba" 
+__author__ = "" 
+*/
+
 ------------
 -- Create a table that contains all generators (RE and conventional) but no duplicates. 
 ------------
@@ -184,10 +192,10 @@ COMMENT ON TABLE  model_draft.ego_supply_pf_generator_single IS
                     "Description": "id of associated bus",
                     "Unit": "" },
                    {"Name": "dispatch",
-                    "Description": "Controllability of active power dispatch, must be “flexible” or “variable”.",
+                    "Description": "Controllability of active power dispatch, must be "flexible" or "variable".",
                     "Unit": "" },
                    {"Name": "control",
-                    "Description": "P,Q,V control strategy, must be “PQ”, “PV” or “Slack”.",
+                    "Description": "P,Q,V control strategy, must be "PQ", "PV" or "Slack".",
                     "Unit": "" },
                    {"Name": "p_nom",
                     "Description": "Nominal power",
@@ -202,10 +210,10 @@ COMMENT ON TABLE  model_draft.ego_supply_pf_generator_single IS
                     "Description": "If p_nom is extendable, set its maximum value (e.g. limited by potential)",
                     "Unit": "" },
                    {"Name": "p_min_pu_fixed",
-                    "Description": "If control=”flexible” this gives the minimum output per unit of p_nom",
+                    "Description": "If control="flexible" this gives the minimum output per unit of p_nom",
                     "Unit": "per unit" },
                    {"Name": "p_max_pu_fixed",
-                    "Description": "If control=”flexible” this gives the maximum output per unit of p_nom, equivalent to a de-rating factor.",
+                    "Description": "If control="flexible" this gives the maximum output per unit of p_nom, equivalent to a de-rating factor.",
                     "Unit": "per unit" },
                    {"Name": "sign",
                     "Description": "power sign",
@@ -554,14 +562,5 @@ FROM
 	bus_i IN (SELECT bus_id FROM model_draft.ego_grid_pf_hv_bus) AND
 	base_kv > 110;
 
--- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,timestamp)
-	SELECT	'0.2' AS version,
-		'calc_ego_hv_powerflow' AS schema_name,
-		'generator' AS table_name,
-		'assignment_generator_bus.sql' AS script_name,
-		COUNT(generator_id)AS entries,
-		'OK' AS status,
-		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
-FROM	model_draft.ego_grid_pf_hv_generator;
-
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_grid_pf_hv_generator','assignment_generator_bus.sql',' ');

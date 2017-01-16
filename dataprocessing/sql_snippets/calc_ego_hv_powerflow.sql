@@ -1,9 +1,16 @@
+/*
+
+
+__copyright__ = "tba" 
+__license__ = "tba" 
+__author__ = "" 
+*/
+
 --------------------------------------------------------------------
 -------------------- Static component tables -----------------------
 --------------------------------------------------------------------
 
 DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_scenario_settings CASCADE; 
-
 CREATE TABLE model_draft.ego_grid_pf_hv_scenario_settings
 (
   scn_name character varying NOT NULL DEFAULT 'Status Quo'::character varying,
@@ -256,10 +263,10 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_generator IS
                     "Description": "id of associated bus",
                     "Unit": "" },
                    {"Name": "dispatch",
-                    "Description": "Controllability of active power dispatch, must be “flexible” or “variable”.",
+                    "Description": "Controllability of active power dispatch, must be "flexible" or "variable".",
                     "Unit": "" },
                    {"Name": "control",
-                    "Description": "P,Q,V control strategy, must be “PQ”, “PV” or “Slack”.",
+                    "Description": "P,Q,V control strategy, must be "PQ", "PV" or "Slack".",
                     "Unit": "" },
                    {"Name": "p_nom",
                     "Description": "Nominal power",
@@ -274,10 +281,10 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_generator IS
                     "Description": "If p_nom is extendable, set its maximum value (e.g. limited by potential)",
                     "Unit": "" },
                    {"Name": "p_min_pu_fixed",
-                    "Description": "If control=”flexible” this gives the minimum output per unit of p_nom",
+                    "Description": "If control="flexible" this gives the minimum output per unit of p_nom",
                     "Unit": "per unit" },
                    {"Name": "p_max_pu_fixed",
-                    "Description": "If control=”flexible” this gives the maximum output per unit of p_nom, equivalent to a de-rating factor.",
+                    "Description": "If control="flexible" this gives the maximum output per unit of p_nom, equivalent to a de-rating factor.",
                     "Unit": "per unit" },
                    {"Name": "sign",
                     "Description": "power sign",
@@ -532,10 +539,10 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_storage IS
                     "Description": "id of associated bus",
                     "Unit": "" },
                    {"Name": "dispatch",
-                    "Description": "Controllability of active power dispatch, must be “flexible” or “variable”",
+                    "Description": "Controllability of active power dispatch, must be "flexible" or "variable"",
                     "Unit": "" },
                    {"Name": "control",
-                    "Description": "P,Q,V control strategy for PF, must be “PQ”, “PV” or “Slack”",
+                    "Description": "P,Q,V control strategy for PF, must be "PQ", "PV" or "Slack"",
                     "Unit": "" },
                    {"Name": "p_nom",
                     "Description": "Nominal power",
@@ -550,10 +557,10 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_storage IS
                     "Description": "If p_nom is extendable in OPF, set its maximum value (e.g. limited by potential))",
                     "Unit": "MW" },
                    {"Name": "p_min_pu_fixed",
-                    "Description": "If control=”flexible” this gives the minimum output per unit of p_nom for the OPF.",
+                    "Description": "If control="flexible" this gives the minimum output per unit of p_nom for the OPF.",
                     "Unit": "per unit" },
                    {"Name": "p_max_pu_fixed",
-                    "Description": "If control=”flexible” this gives the maximum output per unit of p_nom for the OPF, equivalent to a de-rating factor",
+                    "Description": "If control="flexible" this gives the maximum output per unit of p_nom for the OPF, equivalent to a de-rating factor",
                     "Unit": "per unit" },
                    {"Name": "sign",
                     "Description": "power sign",
@@ -870,10 +877,10 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_generator_pq_set IS
                     "Description": "reactive power set point",
                     "Unit": "MVar" },
                    {"Name": "p_min_pu",
-                    "Description": "If control=”variable” this gives the minimum output for each snapshot per unit of p_nom for the OPF",
+                    "Description": "If control="variable" this gives the minimum output for each snapshot per unit of p_nom for the OPF",
                     "Unit": "per unit" },
                    {"Name": "p_max_pu",
-                    "Description": "If control=”variable” this gives the maximum output for each snapshot per unit of p_nom for the OPF, relevant e.g. if for renewables the power output is limited by the weather",
+                    "Description": "If control="variable" this gives the maximum output for each snapshot per unit of p_nom for the OPF, relevant e.g. if for renewables the power output is limited by the weather",
                     "Unit": "per unit" }],
 "Changes":[
                    {"Name": "Mario Kropshofer",
@@ -998,10 +1005,10 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_storage_pq_set IS
                     "Description": "reactive power set point",
                     "Unit": "MVar" }],
                    {"Name": "p_min_pu",
-                    "Description": "If control=”variable” this gives the minimum output for each snapshot per unit of p_nom for the OPF",
+                    "Description": "If control="variable" this gives the minimum output for each snapshot per unit of p_nom for the OPF",
                     "Unit": "per unit" },
                    {"Name": "p_max_pu",
-                    "Description": "If control=”variable” this gives the maximum output for each snapshot per unit of p_nom for the OPF",
+                    "Description": "If control="variable" this gives the maximum output for each snapshot per unit of p_nom for the OPF",
                     "Unit": "per unit" }],
                    {"Name": "soc_set",
                     "Description": "State of charge set points for snapshots in the OPF",
@@ -1090,7 +1097,7 @@ COMMENT ON COLUMN model_draft.ego_grid_pf_hv_bus.v_nom IS 'Unit: kV
 Description: Nominal voltage
 Status: Input (optional)';
 COMMENT ON COLUMN model_draft.ego_grid_pf_hv_bus.current_type IS 'Unit: n/a
-Description: Type of current (must be either “AC” or “DC”).
+Description: Type of current (must be either "AC" or "DC").
 Status: Input (optional)';
 COMMENT ON COLUMN model_draft.ego_grid_pf_hv_bus.v_mag_pu_min IS 'Unit: per unit
 Description: Minimum desired voltage, per unit of v_nom
@@ -1108,10 +1115,10 @@ COMMENT ON COLUMN model_draft.ego_grid_pf_hv_generator.bus IS 'Unit: n/a
 Description: name of bus to which generator is attached
 Status: Input (required)';
 COMMENT ON COLUMN model_draft.ego_grid_pf_hv_generator.dispatch IS 'Unit: n/a
-Description: Controllability of active power dispatch, must be “flexible” or “variable”.
+Description: Controllability of active power dispatch, must be "flexible" or "variable".
 Status: Input (optional)';
 COMMENT ON COLUMN model_draft.ego_grid_pf_hv_generator.control IS 'Unit: n/a
-Description: P,Q,V control strategy for PF, must be “PQ”, “PV” or “Slack”.
+Description: P,Q,V control strategy for PF, must be "PQ", "PV" or "Slack".
 Status: Input (optional)';
 COMMENT ON COLUMN model_draft.ego_grid_pf_hv_generator.p_nom IS 'Unit: MW
 Description: Nominal power for limits in OPF
@@ -1127,10 +1134,10 @@ COMMENT ON COLUMN model_draft.ego_grid_pf_hv_generator.p_nom_max IS 'Unit: MW
 Description: If p_nom is extendable in OPF, set its maximum value (e.g. limited by potential).
 Status: Input (optional)';
 COMMENT ON COLUMN model_draft.ego_grid_pf_hv_generator.p_min_pu_fixed IS 'Unit: per unit
-Description: If control=”flexible” this gives the minimum output per unit of p_nom for the OPF.
+Description: If control="flexible" this gives the minimum output per unit of p_nom for the OPF.
 Status: Input (optional)';
 COMMENT ON COLUMN model_draft.ego_grid_pf_hv_generator.p_max_pu_fixed IS 'Unit: per unit
-Description: If control=”flexible” this gives the maximum output per unit of p_nom for the OPF, equivalent to a de-rating factor.
+Description: If control="flexible" this gives the maximum output per unit of p_nom for the OPF, equivalent to a de-rating factor.
 Status: Input (optional)';
 COMMENT ON COLUMN model_draft.ego_grid_pf_hv_generator.sign IS 'Unit: n/a
 Description: power sign
@@ -1154,10 +1161,10 @@ COMMENT ON COLUMN model_draft.ego_grid_pf_hv_generator_pq_set.q_set IS 'Unit: MV
 Description: reactive power set point (for PF).
 Status: Input (optional)';
 COMMENT ON COLUMN model_draft.ego_grid_pf_hv_generator_pq_set.p_min_pu IS 'Unit: per unit
-Description: If control=”variable” this gives the minimum output for each snapshot per unit of p_nom for the OPF.
+Description: If control="variable" this gives the minimum output for each snapshot per unit of p_nom for the OPF.
 Status: Input (optional)';
 COMMENT ON COLUMN model_draft.ego_grid_pf_hv_generator_pq_set.p_max_pu IS 'Unit: per unit
-Description: If control=”variable” this gives the maximum output for each snapshot per unit of p_nom for the OPF, relevant e.g. if for renewables the power output is limited by the weather.
+Description: If control="variable" this gives the maximum output for each snapshot per unit of p_nom for the OPF, relevant e.g. if for renewables the power output is limited by the weather.
 Status: Input (optional)';
 COMMENT ON COLUMN model_draft.ego_grid_pf_hv_line.line_id IS 'Unit: n/a
 Description: Unique name
@@ -1234,10 +1241,10 @@ COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage.bus IS 'Unit: n/a
 Description: name of bus to which storage is attached
 Status: Input (required)';
 COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage.dispatch IS 'Unit: n/a
-Description: Controllability of active power dispatch, must be “flexible” or “variable”.
+Description: Controllability of active power dispatch, must be "flexible" or "variable".
 Status: Input (optional)';
 COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage.control IS 'Unit: n/a
-Description: P,Q,V control strategy for PF, must be “PQ”, “PV” or “Slack”.
+Description: P,Q,V control strategy for PF, must be "PQ", "PV" or "Slack".
 Status: Input (optional)';
 COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage.p_nom IS 'Unit: MW
 Description: Nominal power for limits in OPF
@@ -1253,10 +1260,10 @@ COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage.p_nom_max IS 'Unit: MW
 Description: If p_nom is extendable in OPF, set its maximum value (e.g. limited by potential).
 Status: Input (optional)';
 COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage.p_min_pu_fixed IS 'Unit: per unit
-Description: If control=”flexible” this gives the minimum output per unit of p_nom for the OPF.
+Description: If control="flexible" this gives the minimum output per unit of p_nom for the OPF.
 Status: Input (optional)';
 COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage.p_max_pu_fixed IS 'Unit: per unit
-Description: If control=”flexible” this gives the maximum output per unit of p_nom for the OPF, equivalent to a de-rating factor.
+Description: If control="flexible" this gives the maximum output per unit of p_nom for the OPF, equivalent to a de-rating factor.
 Status: Input (optional)';
 COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage.sign IS 'Unit: n/a
 Description: power sign
@@ -1298,10 +1305,10 @@ COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage_pq_set.q_set IS 'Unit: MVar
 Description: reactive power set point (for PF).
 Status: Input (optional)';
 COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage_pq_set.p_min_pu IS 'Unit: per unit
-Description: If control=”variable” this gives the minimum output for each snapshot per unit of p_nom for the OPF.
+Description: If control="variable" this gives the minimum output for each snapshot per unit of p_nom for the OPF.
 Status: Input (optional)';
 COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage_pq_set.p_max_pu IS 'Unit: per unit
-Description: If control=”variable” this gives the maximum output for each snapshot per unit of p_nom for the OPF, relevant e.g. if for renewables the power output is limited by the weather.
+Description: If control="variable" this gives the maximum output for each snapshot per unit of p_nom for the OPF, relevant e.g. if for renewables the power output is limited by the weather.
 Status: Input (optional)';
 COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage_pq_set.soc_set IS 'Unit: MWh
 Description: State of charge set points for snapshots in the OPF.
