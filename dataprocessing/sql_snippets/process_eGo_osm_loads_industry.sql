@@ -235,14 +235,14 @@ UPDATE 	model_draft.ego_landuse_industry a
 		st_intersects(b.geom, a.geom_centre); 
 
 -- Calculate industrial area per district
-UPDATE orig_ego_consumption.lak_consumption_per_district a
+UPDATE model_draft.ego_demand_per_district a
 	SET area_industry = result.sum
 	FROM
 	( 
 		SELECT 
 		sum(coalesce(area_ha,0)), 
 		substr(nuts,1,5) 
-		FROM calc_ego_loads.landuse_industry
+		FROM model_draft.ego_landuse_industry
 		WHERE nuts IS NOT NULL
 		GROUP BY substr(nuts,1,5)
 	) as result
@@ -471,7 +471,7 @@ SELECT ego_scenario_log('v0.2.5','input','model_draft','ego_grid_hvmv_substation
 
 UPDATE model_draft.ego_demand_hv_largescaleconsumer a
 	SET subst_id = b.subst_id
-	FROM calc_ego_substation.ego_deu_voronoi_ehv b
+	FROM model_draft.ego_grid_ehv_substation_voronoi b
 	WHERE ST_Intersects (ST_Transform(a.geom,4326), b.geom) =TRUE;
 
 UPDATE model_draft.ego_demand_hv_largescaleconsumer a
