@@ -4,7 +4,7 @@ Runtime 08:30 min
 
 __copyright__ = "tba"
 __license__ = "tba"
-__author__ = "Ludee"
+__author__ = "jong42, Ludee"
 */
 
 -- LV ONT GRID
