@@ -160,6 +160,19 @@ UPDATE model_draft.ego_demand_loadarea a
 	FROM model_draft.ego_demand_loadarea b
 	WHERE a.id = b.id; */
 
+-- sector sum
+UPDATE 	model_draft.ego_demand_loadarea AS t1
+	SET  	sector_consumption_sum = t2.sector_consumption_sum
+	FROM    (
+		SELECT	id,
+			coalesce(load.sector_consumption_residential,0) + 
+				coalesce(load.sector_consumption_retail,0) + 
+				coalesce(load.sector_consumption_industrial,0) + 
+				coalesce(load.sector_consumption_agricultural,0) AS sector_consumption_sum			
+		FROM	model_draft.ego_demand_loadarea AS load
+		) AS t2
+	WHERE  	t1.id = t2.id;
+
 -- corresponding otg_id
 UPDATE model_draft.ego_demand_loadarea a
 	SET 	otg_id = b.otg_id
