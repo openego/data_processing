@@ -47,26 +47,26 @@ def data_processing():
         # 'ego_grid_hvmv_substation.sql',				# hvmv substation voronoi
         # 'process_eGo_grid_district.sql',          	# mv griddistrict
         # 'setup_osm_landuse.sql', 						# osm landuse sector
-        # 'process_eGo_osm_loads_industry.sql', 		# osm industry
-        # 'process_eGo_osm_loads.sql',            		# osm loads
-        # 'setup_zensus_population_per_ha.sql',   		# setup zensus
-        # 'process_eGo_loads_melted.sql',        		# melt osm and zensus cluster
-        # 'process_eGo_loads_per_grid_district.sql', 	# loadarea per mv-griddistrict
-        # 'process_eGo_consumption.sql',			   	# consumption per loadarea
-        # 'ego_paper_result.sql',						# results and statistics
-        # 'Voronoi_ehv.sql',						#
-        # 'voronoi_weatherpoint.sql',				#
-        # 'calc_ego_hv_powerflow.sql',				#
-        # 'osmtgmod_to_pypsa.sql',					#
-        # 'assignment_generator_bus.sql',
-        # 'assignment_load_bus.sql',                   #
-        # 'renpass_gis_ResultsTOPF.sql',			#
-         'demand_per_mv_grid_district.py',			#
-         'demandseries_TOPF.sql',					#
-         'LOPF_data.sql',							#
-        # 'peak_load_per_load_area.py',				#
-        # 'process_eGo_onts.sql',					#
-        # 'process_eGo_lv_grid_districts.sql'		#
+        'process_eGo_osm_loads_industry.sql', 		# osm industry
+        'process_eGo_osm_loads.sql',            		# osm loads
+        'setup_zensus_population_per_ha.sql',   		# setup zensus
+        'process_eGo_loads_melted.sql',        		# melt osm and zensus cluster
+        'process_eGo_loads_per_grid_district.sql', 	# loadarea per mv-griddistrict
+        'process_eGo_consumption.sql',			   	# consumption per loadarea
+        'ego_paper_result.sql',						# results and statistics
+        # 'Voronoi_ehv.sql',						# 
+        # 'voronoi_weatherpoint.sql',				# 
+        # 'calc_ego_hv_powerflow.sql',				# 
+        # 'osmtgmod_to_pypsa.sql',					# 
+        # 'assignment_generator_bus.sql',           # 
+        # 'assignment_load_bus.sql',                # 
+        # 'renpass_gis_ResultsTOPF.sql',			# 
+        # 'demand_per_mv_grid_district.py',			# 
+        # 'demandseries_TOPF.sql',					# 
+        # 'LOPF_data.sql',							# 
+        # 'peak_load_per_load_area.py',				# 
+        # 'process_eGo_onts.sql',					# 
+        # 'process_eGo_lv_grid_districts.sql'		# 
         ]
 
     # get database connection

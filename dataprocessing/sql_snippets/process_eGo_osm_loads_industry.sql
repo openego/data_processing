@@ -237,17 +237,14 @@ UPDATE 	model_draft.ego_landuse_industry a
 -- Calculate industrial area per district
 UPDATE model_draft.ego_demand_per_district a
 	SET area_industry = result.sum
-	FROM
-	( 
-		SELECT 
+	FROM (	SELECT 
 		sum(coalesce(area_ha,0)), 
 		substr(nuts,1,5) 
 		FROM model_draft.ego_landuse_industry
 		WHERE nuts IS NOT NULL
 		GROUP BY substr(nuts,1,5)
 	) as result
-
-WHERE result.substr = substr(a.eu_code,1,5);
+	WHERE result.substr = substr(a.eu_code,1,5);
 
 -- Calculate specific industrial consumption per area
 UPDATE 	model_draft.ego_demand_per_district
@@ -271,8 +268,7 @@ UPDATE 	model_draft.ego_landuse_industry a
 		WHERE
 		c.nuts = b.eu_code
 	) AS sub
-	WHERE
-	sub.gid = a.gid;
+	WHERE sub.gid = a.gid;
 
 
 -- Calculate the peak load for each industry polygon

@@ -1,3 +1,11 @@
+/*
+generate ONT
+Runtime 08:30 min
+
+__copyright__ = "tba"
+__license__ = "tba"
+__author__ = "jong42, Ludee"
+*/
 
 
 -- Add Dummy points to substations (18 Points)
