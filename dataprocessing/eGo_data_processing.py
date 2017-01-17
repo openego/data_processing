@@ -60,11 +60,11 @@ def data_processing():
        
         # 'voronoi_weatherpoint.sql',				    # weatherpoint voronoi
         # 'calc_ego_hv_powerflow.sql',				    # setup for hv powerflow
-        'osmtgmod_to_pypsa.sql',					    # osmTGmod2pyPSA
-        'assignment_generator_bus.sql',               # 
-        'assignment_load_bus.sql',                    # 
-        'renpass_gis_ResultsTOPF.sql',			    # 
-        'demand_per_mv_grid_district.py',			    # 
+        # 'osmtgmod_to_pypsa.sql',					    # osmTGmod2pyPSA
+        # 'assignment_generator_bus.sql',               # generators
+        # 'assignment_load_bus.sql',                    # loads
+        # 'renpass_gis_ResultsTOPF.sql',			    # 
+        # 'demand_per_mv_grid_district.py',			    # 
         # 'demandseries_TOPF.sql',					    # 
         # 'LOPF_data.sql',							    # 
         # 'peak_load_per_load_area.py',				    # 

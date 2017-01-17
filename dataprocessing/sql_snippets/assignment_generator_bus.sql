@@ -1,5 +1,5 @@
 /*
-
+generator to bus
 
 __copyright__ = "tba" 
 __license__ = "tba" 
@@ -7,7 +7,7 @@ __author__ = ""
 */
 
 -- contains all generators (RE and conventional) but no duplicates
-DROP TABLE IF EXISTS 	model_draft.ego_supply_generator;
+DROP TABLE IF EXISTS 	model_draft.ego_supply_generator CASCADE;
 CREATE TABLE 		model_draft.ego_supply_generator (
 	un_id 		serial NOT NULL, 
 	re_id 		integer, 
@@ -161,7 +161,7 @@ CREATE TABLE 		model_draft.ego_supply_pf_generator_single (
 		ON UPDATE NO ACTION ON DELETE NO ACTION );
 
 -- not needed
--- DELETE FROM model_draft.ego_supply_pf_generator_single; 
+DELETE FROM model_draft.ego_supply_pf_generator_single; 
 
 -- 
 INSERT INTO model_draft.ego_supply_pf_generator_single (generator_id)
@@ -268,7 +268,9 @@ SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_supply_pf_generator
 -- Update table on renewable power plants and add information on unified id of generators and information of relevant bus
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_supply_pf_generator_single','assignment_generator_bus.sql',' ');
+SELECT ego_scenario_log('v0.2.5','input','model_draft','ego_grid_mv_griddistrict','assignment_generator_bus.sql',' ');
+SELECT ego_scenario_log('v0.2.5','input','model_draft','ego_grid_ehv_substation_voronoi','assignment_generator_bus.sql',' ');
+SELECT ego_scenario_log('v0.2.5','input','model_draft','ego_grid_hvmv_substation','assignment_generator_bus.sql',' ');
 
 /* ALTER TABLE supply.ego_res_powerplant
  	ADD COLUMN subst_id bigint,
@@ -308,6 +310,9 @@ SELECT ego_scenario_log('v0.2.5','output','supply','ego_res_powerplant','assignm
 
 
 -- Insert generator data into powerflow schema, that contains all generators seperately 
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','input','model_draft','ego_grid_pf_hv_source','assignment_generator_bus.sql',' ');
 
 -- For conventional generators
 UPDATE model_draft.ego_supply_pf_generator_single a
@@ -364,6 +369,8 @@ UPDATE model_draft.ego_supply_pf_generator_single
 			WHERE a.name ='biomass') AS result  
 		WHERE p_nom > 50 AND source = result.id;
 
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','input','model_draft','renpassgis_economic_weatherpoint_voronoi','assignment_generator_bus.sql',' ');
 
 -- Identify weather point IDs for each generator
 UPDATE model_draft.ego_supply_pf_generator_single a
@@ -542,4 +549,4 @@ INSERT INTO model_draft.ego_grid_pf_hv_generator
 		AND base_kv > 110;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
--- SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_grid_pf_hv_generator','assignment_generator_bus.sql',' ');
+SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_grid_pf_hv_generator','assignment_generator_bus.sql',' ');

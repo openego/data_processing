@@ -58,6 +58,15 @@ INSERT INTO model_draft.ego_data_processing_results (schema_name,table_name,desc
 		'ha' ::text AS unit,
 		NOW() AT TIME ZONE 'Europe/Berlin'
 	FROM	political_boundary.bkg_vg250_6_gem
+	UNION ALL	
+	-- Area vg250.gem_clean
+	SELECT	'model_draft',
+		'ego_political_boundary_bkg_vg250_6_gem_clean',
+		'Processed gemeinde area',
+		SUM(ST_AREA(ST_TRANSFORM(geom,3025))/10000) ::integer AS result,
+		'ha' ::text AS unit,
+		NOW() AT TIME ZONE 'Europe/Berlin'
+	FROM	model_draft.ego_political_boundary_bkg_vg250_6_gem_clean
 	UNION ALL
 	-- Area GD
 	SELECT	'model_draft',
@@ -143,23 +152,25 @@ SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_data_processing_res
 -- mv-griddistrict types
 DROP TABLE IF EXISTS 	model_draft.ego_data_processing_results_mvgd CASCADE;
 CREATE TABLE		model_draft.ego_data_processing_results_mvgd AS
--- MVGD types
-SELECT	subst_id,
-	'0' ::integer AS type1,
-	'0' ::integer AS type2,
-	'0' ::integer AS type3,
-	'0' ::integer AS gem,
-	'0' ::integer AS gem_clean,
-	'0' ::integer AS la_count,
-	'0' ::decimal(10,1) AS area_ha,	
-	'0' ::decimal(10,1) AS la_area,
-	'0' ::decimal(10,1) AS free_area,
-	'0' ::decimal(4,1) AS area_share,		
-	geom,
-	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
-FROM	model_draft.ego_grid_mv_griddistrict AS gd;
+	SELECT	subst_id,
+		'0' ::integer AS type1,
+		'0' ::integer AS type1_cnt,
+		'0' ::integer AS type2,
+		'0' ::integer AS type2_cnt,
+		'0' ::integer AS type3,
+		'0' ::integer AS type3_cnt,
+		'0' ::integer AS gem,
+		'0' ::integer AS gem_clean,
+		'0' ::integer AS la_count,
+		'0' ::decimal(10,1) AS area_ha,	
+		'0' ::decimal(10,1) AS la_area,
+		'0' ::decimal(10,1) AS free_area,
+		'0' ::decimal(4,1) AS area_share,		
+		geom,
+		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
+	FROM	model_draft.ego_grid_mv_griddistrict AS gd;
 
--- Type1 1724
+-- Type1
 UPDATE 	model_draft.ego_data_processing_results_mvgd AS t1
 SET  	type1 = t2.type1
 FROM	(SELECT	gd.subst_id,
@@ -172,7 +183,19 @@ FROM	(SELECT	gd.subst_id,
 	)AS t2
 WHERE  	t1.subst_id = t2.subst_id;
 
--- Type2 1886
+UPDATE 	model_draft.ego_data_processing_results_mvgd AS t1
+SET  	type1_cnt = t2.type_cnt
+FROM	(SELECT	gd.subst_id,
+		COUNT(ST_PointOnSurface(typ.geom))::integer AS type_cnt
+	FROM	model_draft.ego_political_boundary_hvmv_subst_per_gem_1_mview AS typ,
+		model_draft.ego_grid_mv_griddistrict AS gd
+	WHERE	gd.geom && typ.geom AND
+		ST_CONTAINS(gd.geom,ST_PointOnSurface(typ.geom))
+	GROUP BY gd.subst_id
+	)AS t2
+WHERE  	t1.subst_id = t2.subst_id;
+
+-- Type2
 UPDATE 	model_draft.ego_data_processing_results_mvgd AS t1
 SET  	type2 = t2.type2
 FROM	(SELECT	gd.subst_id,
@@ -185,7 +208,20 @@ FROM	(SELECT	gd.subst_id,
 	)AS t2
 WHERE  	t1.subst_id = t2.subst_id;
 
--- Type3 2077
+UPDATE 	model_draft.ego_data_processing_results_mvgd AS t1
+SET  	type2_cnt = t2.type_cnt
+FROM	(SELECT	gd.subst_id,
+		COUNT(ST_PointOnSurface(typ.geom))::integer AS type_cnt
+	FROM	model_draft.ego_grid_hvmv_substation_voronoi_cut AS typ,
+		model_draft.ego_grid_mv_griddistrict AS gd
+	WHERE	gd.geom && typ.geom AND
+		ST_CONTAINS(gd.geom,ST_PointOnSurface(typ.geom))
+	GROUP BY gd.subst_id
+	)AS t2
+WHERE  	t1.subst_id = t2.subst_id;
+
+
+-- Type3
 UPDATE 	model_draft.ego_data_processing_results_mvgd AS t1
 SET  	type3 = t2.type3
 FROM	(SELECT	gd.subst_id,
@@ -198,6 +234,19 @@ FROM	(SELECT	gd.subst_id,
 	)AS t2
 WHERE  	t1.subst_id = t2.subst_id;
 
+UPDATE 	model_draft.ego_data_processing_results_mvgd AS t1
+SET  	type3_cnt = t2.type_cnt
+FROM	(SELECT	gd.subst_id,
+		COUNT(ST_PointOnSurface(typ.geom))::integer AS type_cnt
+	FROM	model_draft.ego_political_boundary_hvmv_subst_per_gem_3_mview AS typ,
+		model_draft.ego_grid_mv_griddistrict AS gd
+	WHERE	gd.geom && typ.geom AND
+		ST_CONTAINS(gd.geom,ST_PointOnSurface(typ.geom))
+	GROUP BY gd.subst_id
+	)AS t2
+WHERE  	t1.subst_id = t2.subst_id;
+
+
 DROP MATERIALIZED VIEW IF EXISTS political_boundary.bkg_vg250_6_gem_pts;
 CREATE MATERIALIZED VIEW political_boundary.bkg_vg250_6_gem_pts AS
 SELECT	id,
@@ -205,7 +254,7 @@ SELECT	id,
 	ST_PointOnSurface(geom) AS geom
 FROM	political_boundary.bkg_vg250_6_gem;
 
--- Gem 2716
+-- Gemeinden
 UPDATE 	model_draft.ego_data_processing_results_mvgd AS t1
 SET  	gem = t2.gem
 FROM	(SELECT	gd.subst_id,
@@ -226,7 +275,7 @@ SELECT	id,
 	ST_PointOnSurface(geom) AS geom
 FROM	model_draft.ego_political_boundary_bkg_vg250_6_gem_clean; */
 
--- Gem Parts 2731
+-- Gemeinde Parts
 UPDATE 	model_draft.ego_data_processing_results_mvgd AS t1
 SET  	gem_clean = t2.gem_clean
 FROM	(SELECT	gd.subst_id,
