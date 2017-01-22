@@ -128,6 +128,8 @@ meta_definition(meta=meta, conn=conn)
 
 # map classes, automap does not gather all classes
 Base = automap_base(metadata=meta)
+
+# map other classes; TODO: classes are locals of func
 Located, Scheduled, Typified, Region = other_classes()
 Base.prepare()
 
