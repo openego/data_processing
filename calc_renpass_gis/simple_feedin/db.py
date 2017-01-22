@@ -79,8 +79,17 @@ def meta_definition(meta, conn):
     meta.reflect(bind=conn, schema='app_renpassgis', only=['parameter_region'])
 
 
-def addclasses(Base):
+def other_classes():
     """ Maps additional classes not mapped by SQLAlchemy automap.
+
+    Parameters
+    ----------
+    base : AutomapBase
+        Auto-generates mapped classes.
+
+    Notes
+    -----
+    Here define classes explicitly, if they are not auto-generated.
     """
 
     class Located(Base):
@@ -101,6 +110,9 @@ def addclasses(Base):
 
     # Base.metadata.create_all()
 
+    return Located, Scheduled, Typified, Region
+
+print('Connecting to database.')
 
 # read configuration file
 path = os.path.join(os.path.expanduser("~"), '.open_eGo', 'config.ini')
@@ -116,7 +128,7 @@ meta_definition(meta=meta, conn=conn)
 
 # map classes, automap does not gather all classes
 Base = automap_base(metadata=meta)
-addclasses(Base)
+Located, Scheduled, Typified, Region = other_classes()
 Base.prepare()
 
 # simplify class names
@@ -125,3 +137,5 @@ Datatype, Projection, Spatial, Timeseries, Year = Base.classes.datatype,\
     Base.classes.year
 
 session = sessionmaker(bind=conn)()
+
+print('Done!')
