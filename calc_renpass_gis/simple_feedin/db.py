@@ -1,88 +1,127 @@
+#!/bin/python
 # -*- coding: utf-8 -*-
-from sqlalchemy import (Column, Float, ForeignKey, Integer, MetaData, String,
-                        Table, join, create_engine,ForeignKeyConstraint,
-                        Boolean, DateTime, Sequence)
-from sqlalchemy.orm import sessionmaker, relationship, configure_mappers
-from sqlalchemy.ext.declarative import declarative_base
+"""
+This module uses the ORM of SQLAlchemy to create classes of relations of the
+CoastDat2 database schema.
+
+You have to create a configuration file in ~/.open_eGo/config.ini .
+
+    [home]
+    username =
+    password =
+    host =
+    port =
+    db =
+
+"""
+
+from sqlalchemy import MetaData, create_engine
+from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.automap import automap_base
-from geoalchemy2 import Geometry, shape
+from geoalchemy2 import Geometry # used by SQLA
 import configparser as cp
-from sqlalchemy.sql import func
-from sqlalchemy.dialects import postgresql
-import os.path as path
+import os
 
-FILENAME = 'config.ini'
-FILE = path.join(path.expanduser("~"), '.open_eGo', FILENAME)
-cfg = cp.ConfigParser()
-cfg.read(FILE)
 
-print("Connecting to database")
+def readcfg(path):
+    """ Reads the configuration file
 
-section = 'Connection'
-conn = create_engine(
-    "postgresql+psycopg2://{user}:{password}@{host}:{port}/{db}".format(
-        user=cfg.get(section, 'username'),
-        password=cfg.get(section, 'password'),
-        host=cfg.get(section, 'host'),
-        port=cfg.get(section, 'port'),
-        db=cfg.get(section, 'db')))
+    Parameters
+    ----------
 
-session = sessionmaker(bind=conn)()
+    path : str
+        Filepath.
 
+    Returns
+    -------
+    cfg : configparser.ConfigParser
+        Used for configuration file parser language.
+
+    """
+
+    cfg = cp.ConfigParser()
+    cfg.read(path)
+
+    return cfg
+
+
+def dbconnect(section, cfg):
+    """ Uses db connection parameters to establish a connection.
+
+    Parameters
+    ----------
+    section : str
+        Section in configuration file.
+    cfg : configparser.ConfigParser
+        Used for configuration file parser language.
+
+    Returs
+    ------
+    conn : sqlalchemy.engine.Engine
+
+    """
+
+    conn = create_engine(
+        "postgresql+psycopg2://{user}:{password}@{host}:{port}/{db}".format(
+            user=cfg.get(section, 'username'),
+            password=cfg.get(section, 'password'),
+            host=cfg.get(section, 'host'),
+            port=cfg.get(section, 'port'),
+            db=cfg.get(section, 'db')))
+    return conn
+
+
+def meta_definition(meta, conn):
+    """ Populates SQLAlchemy Meta object
+    """
+    meta.reflect(bind=conn, schema='coastdat')
+    meta.reflect(bind=conn, schema='public')
+    meta.reflect(bind=conn, schema='app_renpassgis', only=['parameter_region'])
+
+
+def addclasses(Base):
+    """ Maps additional classes not mapped by SQLAlchemy automap.
+    """
+
+    class Located(Base):
+        __tablename__ = 'coastdat.located'
+        __table_args__ = ({'autoload': True},)
+
+    class Scheduled(Base):
+        __tablename__ = 'coastdat.scheduled'
+        __table_args__ = ({'autoload': True},)
+
+    class Typified(Base):
+        __tablename__ = 'coastdat.typified'
+        __table_args__ = ({'autoload': True},)
+
+    class Region(Base):
+        __tablename__ = 'app_renpassgis.parameter_region'
+        __table_args__ = ({'autoload': True},)
+
+    # Base.metadata.create_all()
+
+
+# read configuration file
+path = os.path.join(os.path.expanduser("~"), '.open_eGo', 'config.ini')
+config = readcfg(path=path)
+
+# establish DB connection
+section = 'home'
+conn = dbconnect(section=section, cfg=config)
+
+# instantiate container object MetaData
 meta = MetaData()
-meta.bind = conn
-meta.reflect(bind=conn, schema='coastdat')
+meta_definition(meta=meta, conn=conn)
 
+# map classes, automap does not gather all classes
 Base = automap_base(metadata=meta)
-
-class Located(Base):
-    __tablename__ = 'coastdat.located'
-    __table_args__ = ({'autoload': True},)
-
-class Scheduled(Base):
-    __tablename__ = 'coastdat.scheduled'
-    __table_args__ = ({'autoload': True},)
-
-class Typified(Base):
-    __tablename__ = 'coastdat.typified'
-    __table_args__ = ({'autoload': True},)
-
-meta.reflect(bind=conn, schema='calc_renpass_gis')
-
-class Region(Base):
-    __tablename__ = 'calc_renpass_gis.parameter_region'
-    __table_args__ = ({'autoload': True},)
-
-# create new relations in target scheme calc_renpass_gis
-class WindFeedin(Base):
-    __tablename__ = 'parameter_wind_feedin'
-    __table_args__ = ({'schema': 'calc_renpass_gis',
-                       'extend_existing': True},)
-    gid = Column(Integer,
-                 #ForeignKey('coastdat.spatial.gid'),
-                 primary_key=True)
-    myyear = Column('year', Integer)
-                  #ForeignKey('coastdat.year.year'))
-    feedin = Column(postgresql.ARRAY(Float))
-    geom = Column(Geometry('POINT', 4326))
-
-class SolarFeedin(Base):
-    __tablename__ = 'parameter_solar_feedin'
-    __table_args__ = ({'schema': 'calc_renpass_gis',
-                       'extend_existing': True},)
-    gid = Column(Integer,
-                 #ForeignKey('coastdat.spatial.gid'),
-                 primary_key=True)
-    myyear = Column('year', Integer)
-                 #ForeignKey('coastdat.year.year'))
-    feedin = Column(postgresql.ARRAY(Float))
-    geom = Column(Geometry('POINT', 4326))
-
-Base.metadata.create_all()
-
+addclasses(Base)
 Base.prepare()
 
-# map other classes
+# simplify class names
 Datatype, Projection, Spatial, Timeseries, Year = Base.classes.datatype,\
     Base.classes.projection, Base.classes.spatial, Base.classes.timeseries,\
     Base.classes.year
+
+session = sessionmaker(bind=conn)()
