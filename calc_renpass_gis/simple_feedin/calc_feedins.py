@@ -1,57 +1,70 @@
 # -*- coding: utf-8 -*-
+"""
+"""
 from geoalchemy2 import Geometry, shape
-import configparser as cp
-from oemof.db.config import get
-from sqlalchemy.sql import func
+
 from feedinlib import powerplants as plants, weather
+
 from oemof.db import coastdat
-from db import session, WindFeedin, SolarFeedin, Spatial, Region, conn
 
-# load config parameters
-FILE = "config.ini"
-cfg = cp.ConfigParser()
-cfg.read(FILE)
+from db import session, readcfg, Spatial, Region, conn
+from sqlalchemy.sql import func
 
-def asnum(x):
+import pandas as pd
+
+
+def asnumber(x):
+    """
+    """
     try:
         return int(x)
     except ValueError:
+
         try:
             return float(x)
         except ValueError:
             return x
 
-# retrieve all coastDat2 locations for Germany
-spatial_ids = session.query(Spatial.gid, Spatial.geom).\
-    filter(func.ST_Intersects(Spatial.geom, Region.geom)).\
-           filter(Region.u_region_id == 'DE').all()
-spatial_ids = [(gid, shape.to_shape(geom)) for gid, geom in spatial_ids]
 
-# weather year
-year = 2011
-# create powerplants, specified by configuration file
-enerconE126 = {k: asnum(v) for k,v in cfg.items('WindTurbine')}
-E126_power_plant = plants.WindPowerPlant(**enerconE126)
-yingli210 = {k: asnum(v) for k,v in cfg.items('PhotovoltaikModule')}
-yingli_module = plants.Photovoltaic(**yingli210)
+def points():
+    """
+    """
+    query = session.query(Region.u_region_id, Region.geom_point).\
+        filter(func.length(Region.u_region_id) < 3)
+    return [(name, shape.to_shape(geom),
+             'solar') for name, geom in query.all()]
 
-for gid, geom in spatial_ids:
-    # create weather object
-    wea = coastdat.get_weather(conn, geom, year)
 
-    # create entry wind feedin
-    wind = WindFeedin()
-    wind.gid, wind.myyear, wind.feedin, wind.geom = gid, year,\
-        E126_power_plant.feedin(weather=wea, installed_capacity=1).values,\
-        shape.from_shape(geom, srid=4326)
-    session.add(wind)
+def to_dictionary(cfg, section):
+    """
+    """
+    return {k: asnumber(v) for k,v in cfg.items(section)}
 
-    # create entry solar feedin
-    solar = SolarFeedin()
-    solar.gid, solar.myyear, solar.feedin, solar.geom = gid, year,\
-        yingli_module.feedin(weather=wea, peak_power=1).values,\
-        shape.from_shape(geom, srid=4326)
-    session.add(solar)
-    session.flush()
 
-session.commit()
+
+def main():
+
+    results = {}
+    powerplants = {}
+    weather_year = 2011
+    cfg = readcfg('config.ini')
+
+
+    powerplants['windonshore'] = plants.WindPowerPlant(
+        **to_dictionary(cfg=cfg, section='WindTurbineOnshore'))
+
+    powerplants['windoffshore'] = plants.WindPowerPlant(
+        **to_dictionary(cfg=cfg, section='WindTurbineOffshore'))
+
+    powerplants['solar'] = plants.Photovoltaic(
+        **to_dictionary(cfg=cfg, section='Photovoltaic'))
+
+    for gid, geom, type_of_generation in points():
+        weather = coastdat.get_weather(conn, geom, weather_year)
+        if type_of_generation != 'solar':
+            feedin = powerplants[type_of_generation].\
+                feedin(weather=weather, installed_capacity=1)
+        else:
+            feedin = powerplants[type_of_generation].\
+                feedin(weather=weather, peak_power=1)
+        results[(gid, type_of_generation)] = feedin
