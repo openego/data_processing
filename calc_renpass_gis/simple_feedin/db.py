@@ -18,7 +18,7 @@ You have to create a configuration file in ~/.open_eGo/config.ini .
 from sqlalchemy import MetaData, create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.automap import automap_base
-from geoalchemy2 import Geometry # used by SQLA
+from geoalchemy2 import Geometry  # used by SQLA
 import configparser as cp
 import os
 
