@@ -2,7 +2,7 @@
 script to assign osmTGmod-id to substation
 
 __copyright__ = "NEXT ENERGY"
-__license__ = "GNU GENERAL PUBLIC LICENSE Version 3 (see https://github.com/openego/data_processing/blob/master/LICENSE)"
+__license__ = "GNU Affero GENERAL PUBLIC LICENSE Version 3 (see https://github.com/openego/data_processing/blob/master/LICENSE)"
 __author__ = "lukasol, C. Matke"
 */
 

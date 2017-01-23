@@ -1,8 +1,8 @@
 /*
-[...]
+This script abstracts substations of the high voltage level from openstreetmap data. All substations that are relevant transition points between the transmission and distribution grid are identified, irrelevant ones are disregarded.
 
 __copyright__ = "NEXT ENERGY"
-__license__ = "GNU GENERAL PUBLIC LICENSE Version 3 (see https://github.com/openego/data_processing/blob/master/LICENSE)"
+__license__ = "GNU Affero GENERAL PUBLIC LICENSE Version 3 (see https://github.com/openego/data_processing/blob/master/LICENSE)"
 __author__ = "lukasol, C. Matke"
 */
 
