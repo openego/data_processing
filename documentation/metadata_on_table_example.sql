@@ -3,8 +3,10 @@ This script provides an SQL example of the metadata documentation
 A definition of metadata can be found in the openmod glossary http://wiki.openmod-initiative.org/wiki/Metadata
 A further description can be found on http://wiki.openmod-initiative.org/wiki/DatabaseRules
 
-__copyright__ = "tba"
-__license__ = "tba"
+__copyright__ 	= "Reiner Lemoine Institut gGmbH"
+__license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
+__url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
+__author__ 	= "Ludee"
 */
 
 -- metadata

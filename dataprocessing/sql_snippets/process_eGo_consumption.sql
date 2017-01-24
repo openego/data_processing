@@ -3,7 +3,7 @@ consumption per loadarea
 
 __copyright__ = "tba" 
 __license__ = "tba" 
-__author__ = "IlkaCu" 
+__author__ = "IlkaCu, Ludee" 
 */
 
 /* -- -> insert into model_draft.ego_demand_loadarea

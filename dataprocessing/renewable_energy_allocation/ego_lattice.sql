@@ -3,9 +3,10 @@ lattice (regular point grid)
 lattice on bbox of Germany with 500m
 lattice on bbox of loadarea with 50m
 
-__copyright__ = "tba"
-__license__ = "tba"
-__author__ = "Ludee"
+__copyright__ 	= "Reiner Lemoine Institut gGmbH"
+__license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
+__url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
+__author__ 	= "Ludee"
 */
 
 -- table for lattice 500m

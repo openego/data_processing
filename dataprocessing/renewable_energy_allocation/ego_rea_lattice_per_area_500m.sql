@@ -5,9 +5,10 @@ la 	- points inside loadarea
 x 	- points inside wind potential area and loadarea
 out	- points outside area
 
-__copyright__ = "tba"
-__license__ = "tba"
-__author__ = "Ludee"
+__copyright__ 	= "Reiner Lemoine Institut gGmbH"
+__license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
+__url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
+__author__ 	= "Ludee"
 */
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)

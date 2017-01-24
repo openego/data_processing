@@ -5,9 +5,10 @@ Used inputs are flaged "input" in column io
 Created outputs are flaged "output" in column io
 WARNING: It drops the table and deletes old entries when executed!
 
-__copyright__ = "tba"
-__license__ = "tba"
-__author__ = "Ludee"
+__copyright__ 	= "Reiner Lemoine Institut gGmbH"
+__license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
+__url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
+__author__ 	= "Ludee"
 */
 
 -- scenario list

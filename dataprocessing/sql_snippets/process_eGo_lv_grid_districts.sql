@@ -2,9 +2,10 @@
 generate ONT
 Runtime 08:30 min
 
-__copyright__ = "tba"
-__license__ = "tba"
-__author__ = "jong42, Ludee"
+__copyright__ 	= "Reiner Lemoine Institut gGmbH"
+__license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
+__url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
+__author__ 	= "jong42, Ludee"
 */
 
 
