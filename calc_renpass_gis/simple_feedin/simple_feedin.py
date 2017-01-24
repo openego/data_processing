@@ -38,7 +38,7 @@ import pandas as pd
 points = db.Points
 conn = db.conn
 weather_year = 2011
-filename = 'SimpleFeedin.csv'
+filename = '~/open_eGo/scenario/simple_feedin.csv'
 config = 'config.ini'
 
 
