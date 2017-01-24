@@ -18,7 +18,7 @@ You have to create a configuration file in ~/.open_eGo/config.ini .
 from sqlalchemy import MetaData, create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.automap import automap_base
-from geoalchemy2 import Geometry  # used by SQLA
+from geoalchemy2 import Geometry, shape  # Geometry type used by SQLA
 import configparser as cp
 import os
 
@@ -75,8 +75,8 @@ def meta_definition(meta, conn):
     """ Populates SQLAlchemy Meta object
     """
     meta.reflect(bind=conn, schema='coastdat')
-    meta.reflect(bind=conn, schema='public')
-    meta.reflect(bind=conn, schema='app_renpassgis', only=['parameter_region'])
+    meta.reflect(bind=conn, schema='public',
+                 only=['weather_measurement_point'])
 
 
 def other_classes():
@@ -104,13 +104,9 @@ def other_classes():
         __tablename__ = 'coastdat.typified'
         __table_args__ = ({'autoload': True},)
 
-    class Region(Base):
-        __tablename__ = 'app_renpassgis.parameter_region'
-        __table_args__ = ({'autoload': True},)
-
     # Base.metadata.create_all()
 
-    return Located, Scheduled, Typified, Region
+    return Located, Scheduled, Typified
 
 print('Connecting to database.')
 
@@ -130,14 +126,21 @@ meta_definition(meta=meta, conn=conn)
 Base = automap_base(metadata=meta)
 
 # map other classes; TODO: classes are locals of func
-Located, Scheduled, Typified, Region = other_classes()
+Located, Scheduled, Typified = other_classes()
+
 Base.prepare()
 
 # simplify class names
-Datatype, Projection, Spatial, Timeseries, Year = Base.classes.datatype,\
-    Base.classes.projection, Base.classes.spatial, Base.classes.timeseries,\
-    Base.classes.year
+Datatype, Projection, Spatial, Timeseries, Year, Point =\
+    Base.classes.datatype, Base.classes.projection, Base.classes.spatial,\
+    Base.classes.timeseries, Base.classes.year,\
+    Base.classes.weather_measurement_point
 
 session = sessionmaker(bind=conn)()
+
+print('Retrieve data...')
+query = session.query(Point.name, Point.type_of_generation, Point.geom)
+Points =  [(name, type_of_generation, shape.to_shape(geom))
+           for name, type_of_generation, geom in query.all()]
 
 print('Done!')
