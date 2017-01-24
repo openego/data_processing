@@ -2,7 +2,8 @@
 This script abstracts substations of the extra high voltage level from openstreetmap data. 
 
 __copyright__ = "NEXT ENERGY"
-__license__ = "GNU Affero GENERAL PUBLIC LICENSE Version 3 (see https://github.com/openego/data_processing/blob/master/LICENSE)"
+__license__ = "GNU Affero General Public License Version 3 (AGPL-3.0)"
+__url__ = "https://github.com/openego/data_processing/blob/master/LICENSE"
 __author__ = "lukasol, C. Matke"
 */
 
