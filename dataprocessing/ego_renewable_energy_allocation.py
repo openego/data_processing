@@ -1,5 +1,13 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+"""eGo Data Processing (eGoDP) - Renewable Energy Allocation (REA)
+This script opens a oedb database connection and executes different parts of eGo.
+Reads SQL scripts and gives logging infos during the execution.
+Also see corresponding BPML diagram.
+"""
+
+__copyright__ = "Reiner Lemoine Institut gGmbH"
+__license__ = "GNU Affero General Public License Version 3 (AGPL-3.0)"
+__url__ = "https://github.com/openego/data_processing/blob/master/LICENSE"
+__author__ = "Ludee"
 
 import logging
 import time
@@ -32,12 +40,12 @@ scripts = [
     'ego_rea_lattice_per_area_500m.sql', 	# prepare 500m lattice
     'ego_rea_lattice_per_area_50m.sql', 	# prepare 50m lattice
     'ego_rea_setup.sql',					# setup table for allocation
-    # 'ego_rea_m1.sql',
-    # 'ego_rea_m2.sql',
-    # 'ego_rea_m3.sql',
-    # 'ego_rea_m4.sql',
-    # 'ego_rea_m5.sql',
-    # 'ego_rea_results.sql'
+    'ego_rea_m1.sql',
+    'ego_rea_m2.sql',
+    'ego_rea_m3.sql',
+    'ego_rea_m4.sql',
+    'ego_rea_m5.sql',
+    'ego_rea_results.sql'
     ]
 
 # get database connection

@@ -160,13 +160,16 @@ CREATE TABLE		model_draft.ego_data_processing_results_mvgd AS
 		'0' ::integer AS type2_cnt,
 		'0' ::integer AS type3,
 		'0' ::integer AS type3_cnt,
+		'0' ::char(1) AS "group",
 		'0' ::integer AS gem,
 		'0' ::integer AS gem_clean,
 		'0' ::integer AS la_count,
 		'0' ::decimal(10,1) AS area_ha,	
 		'0' ::decimal(10,1) AS la_area,
 		'0' ::decimal(10,1) AS free_area,
-		'0' ::decimal(4,1) AS area_share,		
+		'0' ::decimal(4,1) AS area_share,
+		'0' ::numeric AS consumption,
+		'0' ::numeric AS consumption_per_area,
 		geom,
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
 	FROM	model_draft.ego_grid_mv_griddistrict AS gd;
@@ -246,6 +249,17 @@ FROM	(SELECT	gd.subst_id,
 	GROUP BY gd.subst_id
 	)AS t2
 WHERE  	t1.subst_id = t2.subst_id;
+
+
+-- Group
+UPDATE 	model_draft.ego_data_processing_results_mvgd
+SET  	"group" = (SELECT	
+		CASE
+			WHEN	type1 = '1' AND type2 = '0' AND type3 = '1' THEN 'A' -- ländlich
+			WHEN	type1 = '0' AND type2 = '1' AND type3 = '1' THEN 'B'
+			WHEN	type1 = '1' AND type2 = '0' AND type3 = '0' THEN 'C'
+			WHEN	type1 = '0' AND type2 = '1' AND type3 = '0' THEN 'D' -- städtisch
+		END);
 
 
 DROP MATERIALIZED VIEW IF EXISTS political_boundary.bkg_vg250_6_gem_pts;
@@ -347,6 +361,22 @@ WHERE  	t1.subst_id = t2.subst_id;
 SELECT	MAX(area_share) AS max,
 	MIN(area_share) AS min
 FROM	model_draft.ego_data_processing_results_mvgd ;
+
+
+-- Consumption
+UPDATE 	model_draft.ego_data_processing_results_mvgd AS t1
+	SET  	consumption = t2.consumption
+	FROM	(SELECT	gd.subst_id,
+			SUM(la.sector_consumption_sum)::numeric AS consumption
+		FROM	model_draft.ego_demand_loadarea AS la,
+			model_draft.ego_grid_mv_griddistrict AS gd
+		WHERE	gd.subst_id = la.subst_id
+		GROUP BY gd.subst_id
+		)AS t2
+	WHERE  	t1.subst_id = t2.subst_id;
+	
+UPDATE 	model_draft.ego_data_processing_results_mvgd AS t1
+	SET  	consumption_per_area = consumption *1000000 / area_ha;
 
 -- grant (oeuser)
 ALTER TABLE model_draft.ego_data_processing_results_mvgd

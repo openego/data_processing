@@ -1,19 +1,19 @@
-#!/usr/bin/env python3
-"""ego data processing
-This script opens a oedb database connection and executes different parts of ego.
+"""eGo Data Processing (eGoDP)
+This script opens a oedb database connection and executes different parts of eGo.
 Reads python and SQL scripts and gives logging infos during the execution.
 Also see corresponding BPML diagram.
 """
 
-__copyright__ = "Copyright ego developer group"
-__license__ = "GPLv3"
+__copyright__ = "Reiner Lemoine Institut gGmbH"
+__license__ = "GNU Affero General Public License Version 3 (AGPL-3.0)"
+__url__ = "https://github.com/openego/data_processing/blob/master/LICENSE"
+__author__ = "gplssm, Ludee"
 
 import logging
 import time
 import os
 import codecs
 from tools import io
-
 
 def data_processing():
     # Configure logging
