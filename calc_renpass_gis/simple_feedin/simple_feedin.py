@@ -16,6 +16,8 @@ weather_year: int
     Year of CoastDat2 data.
 conn : sqlalchemy.engine.Engine
     Database containing CoastDat2 schema.
+correction : float
+    Correction factor for windonshore feedin.
 
 Notes
 -----
@@ -24,6 +26,9 @@ Notes
 
         [(<name_of_location>, <type>, <shapely.geometry.point.Point>),
          (<name_of_location>, ...)]
+
+    Default correction factor based on Wiese 2015, p.83
+    http://www.reiner-lemoine-stiftung.de/pdf/dissertationen/Dissertation_Frauke_Wiese.pdf
 
 TODO
 ----
@@ -40,6 +45,7 @@ conn = db.conn
 weather_year = 2011
 filename = '~/open_eGo/scenario/simple_feedin.csv'
 config = 'config.ini'
+correction = 0.8
 
 
 def asnumber(x):
@@ -106,8 +112,11 @@ def main():
 
         weather = coastdat.get_weather(conn, geom, weather_year)
 
-        if type_of_generation != 'solar':
+        if type_of_generation == 'windoffshore':
             feedin = powerplants[type_of_generation].\
+                feedin(weather=weather, installed_capacity=1)
+        elif type_of_generation == 'windonshore':
+            feedin = correction * powerplants[type_of_generation].\
                 feedin(weather=weather, installed_capacity=1)
         else:
             feedin = powerplants[type_of_generation].\
