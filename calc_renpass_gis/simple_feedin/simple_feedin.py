@@ -16,8 +16,10 @@ weather_year: int
     Year of CoastDat2 data.
 conn : sqlalchemy.engine.Engine
     Database containing CoastDat2 schema.
-correction : float
-    Correction factor for windonshore feedin.
+correction_offshore : float
+    Correction factor for windoffshore feedin.
+correction_solar : float
+    Correction factor for solar feedin.
 
 Notes
 -----
@@ -45,7 +47,8 @@ conn = db.conn
 weather_year = 2011
 filename = '~/open_eGo/scenario/simple_feedin.csv'
 config = 'config.ini'
-correction = 0.8
+correction_offshore = 0.83
+correction_solar = 0.8
 
 
 def asnumber(x):
@@ -107,19 +110,19 @@ def main():
         **to_dictionary(cfg=cfg, section='Photovoltaic'))
 
     print('Calculating feedins...')
-    # calculate feedins
+    # calculate feedins applying correction factors
     for name, type_of_generation, geom in points:
 
         weather = coastdat.get_weather(conn, geom, weather_year)
 
         if type_of_generation == 'windoffshore':
-            feedin = powerplants[type_of_generation].\
+            feedin = correction_offshore * powerplants[type_of_generation].\
                 feedin(weather=weather, installed_capacity=1)
         elif type_of_generation == 'windonshore':
-            feedin = correction * powerplants[type_of_generation].\
+            feedin = powerplants[type_of_generation].\
                 feedin(weather=weather, installed_capacity=1)
         else:
-            feedin = powerplants[type_of_generation].\
+            feedin = correction_solar * powerplants[type_of_generation].\
                 feedin(weather=weather, peak_power=1)
 
         temp[(name, type_of_generation)] = feedin
