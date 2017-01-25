@@ -29,7 +29,7 @@ Notes
         [(<name_of_location>, <type>, <shapely.geometry.point.Point>),
          (<name_of_location>, ...)]
 
-    Default correction factor based on Wiese 2015, p.83
+    Introduction of correction factors based on Wiese 2015, p.83
     http://www.reiner-lemoine-stiftung.de/pdf/dissertationen/Dissertation_Frauke_Wiese.pdf
 
 TODO
