@@ -16,16 +16,16 @@ __author__ 	= "Ludee"
 -- table for allocated dea
 DROP TABLE IF EXISTS 	model_draft.ego_supply_rea CASCADE;
 CREATE TABLE 		model_draft.ego_supply_rea (
-	id integer,
-	sort integer,
+	id bigint,
 	electrical_capacity numeric,
 	generation_type text,
 	generation_subtype character varying,
 	voltage_level character varying,
 	postcode character varying,
-	subst_id integer,
 	source character varying,
+	subst_id bigint,
 	la_id integer,
+	sort integer,
 	flag character varying,
 	geom geometry(Point,3035),
 	geom_line geometry(LineString,3035),
@@ -33,12 +33,12 @@ CREATE TABLE 		model_draft.ego_supply_rea (
 CONSTRAINT ego_supply_rea_pkey PRIMARY KEY (id));
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.3','input','supply','ego_renewable_power_plants_germany','ego_rea_setup.sql',' ');
+SELECT ego_scenario_log('v0.2.3','input','supply','ego_res_powerplant','ego_rea_setup.sql',' ');
 
 -- insert DEA, with no geom excluded
 INSERT INTO model_draft.ego_supply_rea (id, electrical_capacity, generation_type, generation_subtype, voltage_level, postcode, source, geom)
 	SELECT	id, electrical_capacity, generation_type, generation_subtype, voltage_level, postcode, source, ST_TRANSFORM(geom,3035)
-	FROM	supply.ego_renewable_power_plants_germany
+	FROM	supply.ego_res_powerplant
 	WHERE	geom IS NOT NULL;
 
 -- index GIST (geom)
@@ -229,7 +229,7 @@ SELECT ego_scenario_log('v0.2.3','output','model_draft','ego_osm_agriculture_per
 
 -- Check for sources
 	SELECT	dea.source
-	FROM 	supply.ego_renewable_power_plants_germany AS dea
+	FROM 	supply.ego_res_powerplant AS dea
 	GROUP BY dea.source
 
 -- Flag BNetzA
