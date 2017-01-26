@@ -555,4 +555,4 @@ HAVING ( COUNT(polygon_id) > 1 )
 */
 
 
--- Remove industrial loads from openstreetmap.ego_deu_loads_osm
+-- Remove industrial loads from openstreetmap.ego_demand_la_osm

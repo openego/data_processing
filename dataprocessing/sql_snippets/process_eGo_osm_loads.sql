@@ -55,15 +55,15 @@ SELECT ego_scenario_log('v0.2.5','temp','model_draft','osm_deu_polygon_urban_buf
 
 
 -- unbuffer with 100m
-DROP TABLE IF EXISTS  	model_draft.ego_deu_loads_osm CASCADE;
-CREATE TABLE         	model_draft.ego_deu_loads_osm (
+DROP TABLE IF EXISTS  	model_draft.ego_demand_la_osm CASCADE;
+CREATE TABLE         	model_draft.ego_demand_la_osm (
 	id SERIAL NOT NULL,
 	area_ha double precision,
 	geom geometry(Polygon,3035),
-	CONSTRAINT ego_deu_loads_osm_pkey PRIMARY KEY (id));
+	CONSTRAINT ego_demand_la_osm_pkey PRIMARY KEY (id));
 
 -- insert buffer
-INSERT INTO     model_draft.ego_deu_loads_osm(area_ha,geom)
+INSERT INTO     model_draft.ego_demand_la_osm(area_ha,geom)
 	SELECT	ST_AREA(buffer.geom)/10000 ::double precision AS area_ha,
 		buffer.geom ::geometry(Polygon,3035) AS geom
 	FROM	(SELECT	(ST_DUMP(ST_MULTI(ST_UNION(
@@ -72,14 +72,14 @@ INSERT INTO     model_draft.ego_deu_loads_osm(area_ha,geom)
 		FROM	model_draft.osm_deu_polygon_urban_buffer100_mview AS osm) AS buffer;
 
 -- index GIST (geom)
-CREATE INDEX  	ego_deu_loads_osm_geom_idx
-	ON    	model_draft.ego_deu_loads_osm USING GIST (geom);
+CREATE INDEX  	ego_demand_la_osm_geom_idx
+	ON    	model_draft.ego_demand_la_osm USING GIST (geom);
 
 -- grant (oeuser)
-ALTER TABLE	model_draft.ego_deu_loads_osm OWNER TO oeuser;
+ALTER TABLE	model_draft.ego_demand_la_osm OWNER TO oeuser;
 
 -- metadata
-COMMENT ON TABLE model_draft.ego_deu_loads_osm IS '{
+COMMENT ON TABLE model_draft.ego_demand_la_osm IS '{
     "Name": "ego osm loads",
     "Source":   [{
 	"Name": "open_eGo",
@@ -108,10 +108,10 @@ COMMENT ON TABLE model_draft.ego_deu_loads_osm IS '{
     }' ;
 
 -- select description
-SELECT obj_description('model_draft.ego_deu_loads_osm' ::regclass) ::json;
+SELECT obj_description('model_draft.ego_demand_la_osm' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','ouput','model_draft','ego_deu_loads_osm','process_eGo_osm_loads.sql',' ');
+SELECT ego_scenario_log('v0.2.5','ouput','model_draft','ego_demand_la_osm','process_eGo_osm_loads.sql',' ');
 
 
 -- DROP MATERIALIZED VIEW IF EXISTS model_draft.osm_deu_polygon_urban_buffer100_mview CASCADE;
@@ -120,8 +120,8 @@ SELECT ego_scenario_log('v0.2.5','ouput','model_draft','ego_deu_loads_osm','proc
 ---------- ---------- ----------
 
 -- -- "Validate (geom)"   (OK!) -> 22.000ms =0
--- DROP VIEW IF EXISTS	openstreetmap.ego_deu_loads_osm_error_geom_view CASCADE;
--- CREATE VIEW		openstreetmap.ego_deu_loads_osm_error_geom_view AS 
+-- DROP VIEW IF EXISTS	openstreetmap.ego_demand_la_osm_error_geom_view CASCADE;
+-- CREATE VIEW		openstreetmap.ego_demand_la_osm_error_geom_view AS 
 -- 	SELECT	test.id,
 -- 		test.error,
 -- 		reason(ST_IsValidDetail(test.geom)) AS error_reason,
@@ -130,16 +130,16 @@ SELECT ego_scenario_log('v0.2.5','ouput','model_draft','ego_deu_loads_osm','proc
 -- 		SELECT	source.id AS id,			-- PK
 -- 			ST_IsValid(source.geom) AS error,
 -- 			source.geom AS geom
--- 		FROM	openstreetmap.ego_deu_loads_osm AS source	-- Table
+-- 		FROM	openstreetmap.ego_demand_la_osm AS source	-- Table
 -- 		) AS test
 -- 	WHERE	test.error = FALSE;
 -- 
 -- -- grant (oeuser)
--- GRANT ALL ON TABLE	openstreetmap.ego_deu_loads_osm_error_geom_view TO oeuser WITH GRANT OPTION;
--- ALTER TABLE		openstreetmap.ego_deu_loads_osm_error_geom_view OWNER TO oeuser;
+-- GRANT ALL ON TABLE	openstreetmap.ego_demand_la_osm_error_geom_view TO oeuser WITH GRANT OPTION;
+-- ALTER TABLE		openstreetmap.ego_demand_la_osm_error_geom_view OWNER TO oeuser;
 -- 
 -- -- "Drop empty view"   (OK!) -> 100ms =1
--- SELECT f_drop_view('{ego_deu_loads_osm_error_geom_view}', 'openstreetmap');
+-- SELECT f_drop_view('{ego_demand_la_osm_error_geom_view}', 'openstreetmap');
 
 
 ---------- ---------- ----------

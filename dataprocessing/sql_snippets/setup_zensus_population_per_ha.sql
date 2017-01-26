@@ -74,18 +74,18 @@ SELECT ego_scenario_log('v0.2.5','output','social','destatis_zensus_population_p
 
 
 -- zensus load
-DROP TABLE IF EXISTS  	model_draft.ego_social_zensus_load CASCADE;
-CREATE TABLE         	model_draft.ego_social_zensus_load (
+DROP TABLE IF EXISTS  	model_draft.ego_demand_la_zensus CASCADE;
+CREATE TABLE         	model_draft.ego_demand_la_zensus (
 	id SERIAL NOT NULL,
 	gid integer,
 	population integer,
 	inside_la boolean,
 	geom_point geometry(Point,3035),
 	geom geometry(Polygon,3035),
-	CONSTRAINT ego_social_zensus_load_pkey PRIMARY KEY (id));
+	CONSTRAINT ego_demand_la_zensus_pkey PRIMARY KEY (id));
 
 -- insert zensus loads
-INSERT INTO	model_draft.ego_social_zensus_load (gid,population,inside_la,geom_point,geom)
+INSERT INTO	model_draft.ego_demand_la_zensus (gid,population,inside_la,geom_point,geom)
 	SELECT	zensus.gid ::integer,
 		zensus.population ::integer,
 		'FALSE' ::boolean AS inside_la,
@@ -94,38 +94,38 @@ INSERT INTO	model_draft.ego_social_zensus_load (gid,population,inside_la,geom_po
 	FROM	social.destatis_zensus_population_per_ha_mview AS zensus;
 
 -- index gist (geom_point)
-CREATE INDEX  	ego_social_zensus_load_geom_point_idx
-	ON	model_draft.ego_social_zensus_load USING GIST (geom_point);
+CREATE INDEX  	ego_demand_la_zensus_geom_point_idx
+	ON	model_draft.ego_demand_la_zensus USING GIST (geom_point);
 
 -- index gist (geom)
-CREATE INDEX  	ego_social_zensus_load_geom_idx
-	ON	model_draft.ego_social_zensus_load USING GIST (geom);
+CREATE INDEX  	ego_demand_la_zensus_geom_idx
+	ON	model_draft.ego_demand_la_zensus USING GIST (geom);
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','input','model_draft','ego_deu_loads_osm','setup_zensus_population_per_ha.sql',' ');
+SELECT ego_scenario_log('v0.2.5','input','model_draft','ego_demand_la_osm','setup_zensus_population_per_ha.sql',' ');
 	
 -- population in osm loads
-UPDATE 	model_draft.ego_social_zensus_load AS t1
+UPDATE 	model_draft.ego_demand_la_zensus AS t1
 	SET  	inside_la = t2.inside_la
 	FROM    (
 		SELECT	zensus.id AS id,
 			'TRUE' ::boolean AS inside_la
-		FROM	model_draft.ego_social_zensus_load AS zensus,
-			model_draft.ego_deu_loads_osm AS osm
+		FROM	model_draft.ego_demand_la_zensus AS zensus,
+			model_draft.ego_demand_la_osm AS osm
 		WHERE  	osm.geom && zensus.geom_point AND
 			ST_CONTAINS(osm.geom,zensus.geom_point)
 		) AS t2
 	WHERE  	t1.id = t2.id;
 
 -- remove identified population
-DELETE FROM	model_draft.ego_social_zensus_load AS lp
+DELETE FROM	model_draft.ego_demand_la_zensus AS lp
 	WHERE	lp.inside_la IS TRUE;
 
 -- grant (oeuser)
-ALTER TABLE	model_draft.ego_social_zensus_load OWNER TO oeuser;	
+ALTER TABLE	model_draft.ego_demand_la_zensus OWNER TO oeuser;	
 
 -- metadata
-COMMENT ON TABLE model_draft.ego_social_zensus_load IS '{
+COMMENT ON TABLE model_draft.ego_demand_la_zensus IS '{
     "Name": "ego zensus loads",
     "Source":   [{
 	"Name": "open_eGo",
@@ -154,15 +154,15 @@ COMMENT ON TABLE model_draft.ego_social_zensus_load IS '{
     }' ;
 
 -- select description
-SELECT obj_description('model_draft.ego_social_zensus_load' ::regclass) ::json;
+SELECT obj_description('model_draft.ego_demand_la_zensus' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_social_zensus_load','setup_zensus_population_per_ha.sql',' ');
+SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_demand_la_zensus','setup_zensus_population_per_ha.sql',' ');
 
 
 -- cluster from zensus load lattice
-DROP TABLE IF EXISTS	model_draft.ego_social_zensus_load_cluster CASCADE;
-CREATE TABLE         	model_draft.ego_social_zensus_load_cluster (
+DROP TABLE IF EXISTS	model_draft.ego_demand_la_zensus_cluster CASCADE;
+CREATE TABLE         	model_draft.ego_demand_la_zensus_cluster (
 	cid serial,
 	zensus_sum INT,
 	area_ha INT,
@@ -170,19 +170,19 @@ CREATE TABLE         	model_draft.ego_social_zensus_load_cluster (
 	geom_buffer geometry(Polygon,3035),
 	geom_centroid geometry(Point,3035),
 	geom_surfacepoint geometry(Point,3035),
-	CONSTRAINT ego_social_zensus_load_cluster_pkey PRIMARY KEY (cid));
+	CONSTRAINT ego_demand_la_zensus_cluster_pkey PRIMARY KEY (cid));
 
 -- insert cluster
-INSERT INTO	model_draft.ego_social_zensus_load_cluster(geom)
+INSERT INTO	model_draft.ego_demand_la_zensus_cluster(geom)
 	SELECT	(ST_DUMP(ST_MULTI(ST_UNION(grid.geom)))).geom ::geometry(Polygon,3035) AS geom
-	FROM    model_draft.ego_social_zensus_load AS grid;
+	FROM    model_draft.ego_demand_la_zensus AS grid;
 
 -- index gist (geom)
-CREATE INDEX	ego_social_zensus_load_cluster_geom_idx
-	ON 	model_draft.ego_social_zensus_load_cluster USING GIST (geom);
+CREATE INDEX	ego_demand_la_zensus_cluster_geom_idx
+	ON 	model_draft.ego_demand_la_zensus_cluster USING GIST (geom);
 
 -- cluster data
-UPDATE 	model_draft.ego_social_zensus_load_cluster AS t1
+UPDATE 	model_draft.ego_demand_la_zensus_cluster AS t1
 	SET  	zensus_sum = t2.zensus_sum,
 		area_ha = t2.area_ha,
 		geom_buffer = t2.geom_buffer,
@@ -195,8 +195,8 @@ UPDATE 	model_draft.ego_social_zensus_load_cluster AS t1
 			ST_BUFFER(cl.geom, 100) AS geom_buffer,
 			ST_Centroid(cl.geom) AS geom_centroid,
 			ST_PointOnSurface(cl.geom) AS geom_surfacepoint
-		FROM	model_draft.ego_social_zensus_load AS lp,
-			model_draft.ego_social_zensus_load_cluster AS cl
+		FROM	model_draft.ego_demand_la_zensus AS lp,
+			model_draft.ego_demand_la_zensus_cluster AS cl
 		WHERE  	cl.geom && lp.geom AND
 			ST_CONTAINS(cl.geom,lp.geom)
 		GROUP BY	cl.cid
@@ -205,18 +205,18 @@ UPDATE 	model_draft.ego_social_zensus_load_cluster AS t1
 	WHERE  	t1.cid = t2.cid;
 
 -- index gist (geom_centroid)
-CREATE INDEX	ego_social_zensus_load_cluster_geom_centroid_idx
-	ON	model_draft.ego_social_zensus_load_cluster USING GIST (geom_centroid);
+CREATE INDEX	ego_demand_la_zensus_cluster_geom_centroid_idx
+	ON	model_draft.ego_demand_la_zensus_cluster USING GIST (geom_centroid);
 
 -- index gist (geom_surfacepoint)
-CREATE INDEX	ego_social_zensus_load_cluster_geom_surfacepoint_idx
-	ON	model_draft.ego_social_zensus_load_cluster USING GIST (geom_surfacepoint);
+CREATE INDEX	ego_demand_la_zensus_cluster_geom_surfacepoint_idx
+	ON	model_draft.ego_demand_la_zensus_cluster USING GIST (geom_surfacepoint);
 
 -- grant (oeuser)
-ALTER TABLE	model_draft.ego_social_zensus_load_cluster OWNER TO oeuser;
+ALTER TABLE	model_draft.ego_demand_la_zensus_cluster OWNER TO oeuser;
 
 -- metadata
-COMMENT ON TABLE model_draft.ego_social_zensus_load_cluster IS '{
+COMMENT ON TABLE model_draft.ego_demand_la_zensus_cluster IS '{
     "Name": "ego zensus loads cluster",
     "Source":   [{
 	"Name": "open_eGo",
@@ -245,10 +245,10 @@ COMMENT ON TABLE model_draft.ego_social_zensus_load_cluster IS '{
     }' ;
 
 -- select description
-SELECT obj_description('model_draft.ego_social_zensus_load_cluster' ::regclass) ::json;
+SELECT obj_description('model_draft.ego_demand_la_zensus_cluster' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_social_zensus_load_cluster','setup_zensus_population_per_ha.sql',' ');
+SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_demand_la_zensus_cluster','setup_zensus_population_per_ha.sql',' ');
 
 
 -- zensus stats
@@ -260,11 +260,11 @@ CREATE MATERIALIZED VIEW         	model_draft.ego_social_zensus_per_la_mview AS
 	UNION ALL
 	SELECT	'zensus_loadpoints' AS name,
 		SUM(lp.population) AS population
-	FROM	model_draft.ego_social_zensus_load AS lp
+	FROM	model_draft.ego_demand_la_zensus AS lp
 	UNION ALL
 	SELECT	'zensus_loadpoints_cluster' AS name,
 		SUM(cl.zensus_sum) AS population
-	FROM	model_draft.ego_social_zensus_load_cluster AS cl;
+	FROM	model_draft.ego_demand_la_zensus_cluster AS cl;
 
 -- grant (oeuser)
 ALTER TABLE	model_draft.ego_social_zensus_per_la_mview OWNER TO oeuser;

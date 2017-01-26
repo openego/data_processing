@@ -263,8 +263,8 @@ osm_deu_polygon_urban_sector_4_agricultural_mview<y:LabelModel>
               <y:Fill color="#FFFFFF" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="62.8046875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="327.54296875" x="-146.271484375" y="59.0">social.destatis_zensus_population_per_ha_mview
-model_draft.ego_social_zensus_load
-model_draft.ego_social_zensus_load_cluster
+model_draft.ego_demand_la_zensus
+model_draft.ego_demand_la_zensus_cluster
 model_draft.zensus_population_per_load_area_stats_mview<y:LabelModel>
                   <y:SmartNodeLabelModel distance="4.0"/>
                 </y:LabelModel>
@@ -674,7 +674,7 @@ political_bkg_vg250_1_sta_union_mview<y:LabelModel>
               <y:Fill color="#FFFFFFE6" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="33.40234375" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="230.16015625" x="-97.580078125" y="-37.40234375">social.destatis_zensus_population_per_ha
-model_draft.ego_deu_loads_osm<y:LabelModel>
+model_draft.ego_demand_la_osm<y:LabelModel>
                   <y:SmartNodeLabelModel distance="4.0"/>
                 </y:LabelModel>
                 <y:ModelParameter>
@@ -858,7 +858,7 @@ osm_loads.sql</y:NodeLabel>
               <y:Geometry height="55.0" width="35.0" x="1032.5" y="2672.5"/>
               <y:Fill color="#FFFFFF" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
-              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="182.125" x="-73.5625" y="59.0">model_draft.ego_deu_loads_osm<y:LabelModel>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="186.12109375" x="-75.560546875" y="59.0">model_draft.ego_demand_la_osm<y:LabelModel>
                   <y:SmartNodeLabelModel distance="4.0"/>
                 </y:LabelModel>
                 <y:ModelParameter>

@@ -19,20 +19,20 @@ CREATE TABLE		model_draft.ego_demand_load_collect (
 	CONSTRAINT ego_demand_load_collect_pkey PRIMARY KEY (id));
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','input','model_draft','ego_deu_loads_osm','process_eGo_loads_melted.sql',' ');
+SELECT ego_scenario_log('v0.2.5','input','model_draft','ego_demand_la_osm','process_eGo_loads_melted.sql',' ');
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','input','model_draft','ego_social_zensus_load_cluster','process_eGo_loads_melted.sql',' ');
+SELECT ego_scenario_log('v0.2.5','input','model_draft','ego_demand_la_zensus_cluster','process_eGo_loads_melted.sql',' ');
 
 -- insert loads OSM
 INSERT INTO	model_draft.ego_demand_load_collect (geom)
 	SELECT	osm.geom
-	FROM	model_draft.ego_deu_loads_osm AS osm;
+	FROM	model_draft.ego_demand_la_osm AS osm;
 
 -- insert loads zensus cluster
 INSERT INTO	model_draft.ego_demand_load_collect (geom)
 	SELECT	zensus.geom
-	FROM	model_draft.ego_social_zensus_load_cluster AS zensus;
+	FROM	model_draft.ego_demand_la_zensus_cluster AS zensus;
 
 -- index GIST (geom)
 CREATE INDEX	ego_demand_load_collect_geom_idx
