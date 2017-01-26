@@ -941,26 +941,48 @@ SELECT ego_scenario_log('v0.2.5','temp','model_draft','ego_grid_mv_griddistrict_
 -- 		GROUP BY dis.subst_id) AS un;
 -- --::geometry(MultiPolygon,3035)
 
--- union mun
+-- create grid district
 DROP TABLE IF EXISTS	model_draft.ego_grid_mv_griddistrict CASCADE;
-CREATE TABLE 		model_draft.ego_grid_mv_griddistrict AS
+CREATE TABLE 		model_draft.ego_grid_mv_griddistrict 
+	subst_id	integer,
+	subst_sum	integer,
+	type1 		integer,
+	type1_cnt 	integer,
+	type2 		integer,
+	type2_cnt	integer,
+	type3		integer,
+	type3_cnt	integer,
+	"group"		char(1),
+	gem		integer,
+	gem_clean	integer,
+	la_count	integer,
+	area_ha		decimal,	
+	la_area		decimal(10,1),
+	free_area	decimal(10,1),
+	area_share	decimal(4,1),
+	consumption	numeric,
+	consumption_per_area	numeric,
+	dea_cnt		integer,
+	dea_capacity	numeric,
+	lv_dea_cnt	integer,
+	lv_dea_capacity	decimal,
+	mv_dea_cnt	integer,
+	mv_dea_capacity	decimal,
+	geom_type	text,
+	geom		geometry(MultiPolygon,3035),
+	CONSTRAINT ego_grid_mv_griddistrict_pkey PRIMARY KEY (subst_id));
+
+-- insert mvgd
+INSERT INTO	model_draft.ego_grid_mv_griddistrict (subst_id,geom)
 	SELECT DISTINCT ON 	(dis.subst_id)
 				dis.subst_id AS subst_id,
 				ST_MULTI(ST_UNION(dis.geom)) ::geometry(MultiPolygon,3035) AS geom
 			FROM	model_draft.ego_grid_mv_griddistrict_collect AS dis
 		GROUP BY 	dis.subst_id;
 
--- PK
-ALTER TABLE	model_draft.ego_grid_mv_griddistrict
-	ADD COLUMN subst_sum integer,
-	ADD COLUMN area_ha decimal,
-	ADD COLUMN geom_type text,
-	ADD PRIMARY KEY (subst_id);
-
 -- index GIST (geom)
 CREATE INDEX	grid_district_geom_idx
-	ON	model_draft.ego_grid_mv_griddistrict
-	USING	GIST (geom);
+	ON	model_draft.ego_grid_mv_griddistrict USING GIST (geom);
 
 -- grant (oeuser)
 ALTER TABLE	model_draft.ego_grid_mv_griddistrict OWNER TO oeuser;

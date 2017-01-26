@@ -40,20 +40,46 @@ SELECT ego_scenario_log('v0.2.3','output','model_draft','ego_supply_rea_per_gent
 /* 
 DEA capacity and count per grid_district
 */ 
+/*  -- integrate in MVGD
 DROP TABLE IF EXISTS 	model_draft.ego_supply_rea_per_mvgd CASCADE;
 CREATE TABLE 		model_draft.ego_supply_rea_per_mvgd AS
 	SELECT	gd.subst_id,
+		'0'::integer dea_cnt,
+		'0'::numeric dea_capacity,
 		'0'::integer lv_dea_cnt,
 		'0.0'::decimal lv_dea_capacity,
 		'0'::integer mv_dea_cnt,
-		'0.0'::decimal mv_dea_capacity
+		'0.0'::decimal mv_dea_capacity,
+		gd.geom
 	FROM	model_draft.ego_grid_mv_griddistrict AS gd;
 
 ALTER TABLE	model_draft.ego_supply_rea_per_mvgd
 	ADD PRIMARY KEY (subst_id),
 	OWNER TO oeuser;
+		
+-- create index GIST (geom)
+CREATE INDEX ego_supply_rea_per_mvgd_geom_idx
+	ON model_draft.ego_supply_rea_per_mvgd USING gist (geom);
 
-UPDATE 	model_draft.ego_supply_rea_per_mvgd AS t1
+-- grant (oeuser)
+ALTER TABLE model_draft.ego_supply_rea_per_mvgd OWNER TO oeuser;  
+ */
+ 
+UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
+	SET  	dea_cnt = t2.dea_cnt,
+		dea_capacity = t2.dea_capacity
+	FROM	(SELECT	gd.subst_id AS subst_id,
+			COUNT(dea.geom)::integer AS dea_cnt,
+			SUM(electrical_capacity) AS dea_capacity
+		FROM	model_draft.ego_grid_mv_griddistrict AS gd,
+			model_draft.ego_supply_rea AS dea
+		WHERE  	gd.geom && dea.geom AND
+			ST_CONTAINS(gd.geom,dea.geom)
+		GROUP BY gd.subst_id
+		)AS t2
+	WHERE  	t1.subst_id = t2.subst_id;
+	
+UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
 	SET  	lv_dea_cnt = t2.lv_dea_cnt,
 		lv_dea_capacity = t2.lv_dea_capacity
 	FROM	(SELECT	gd.subst_id AS subst_id,
@@ -68,7 +94,7 @@ UPDATE 	model_draft.ego_supply_rea_per_mvgd AS t1
 		)AS t2
 	WHERE  	t1.subst_id = t2.subst_id;
 
-UPDATE 	model_draft.ego_supply_rea_per_mvgd AS t1
+UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
 	SET  	mv_dea_cnt = t2.mv_dea_cnt,
 		mv_dea_capacity = t2.mv_dea_capacity
 	FROM	(SELECT	gd.subst_id AS subst_id,
@@ -84,7 +110,7 @@ UPDATE 	model_draft.ego_supply_rea_per_mvgd AS t1
 	WHERE  	t1.subst_id = t2.subst_id;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.3','output','model_draft','ego_supply_rea_per_mvgd','ego_rea_results.sql',' ');
+SELECT ego_scenario_log('v0.2.3','output','model_draft','ego_grid_mv_griddistrict','ego_rea_results.sql',' ');
 
 
 	
@@ -122,7 +148,7 @@ WHERE  	t1.id = t2.id;
 SELECT	SUM(la.lv_dea_cnt) AS lv_dea,
 	SUM(gd.lv_dea_cnt) - SUM(la.lv_dea_cnt) AS missing 
 FROM	model_draft.ego_supply_rea_per_loadarea AS la,
-	model_draft.ego_supply_rea_per_mvgd AS gd;
+	model_draft.ego_grid_mv_griddistrict AS gd;
 */
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
