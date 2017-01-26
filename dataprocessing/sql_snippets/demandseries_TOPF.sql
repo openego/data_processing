@@ -1,9 +1,10 @@
 /*
+jedem TOPF sein Script
 
-
-__copyright__ = "tba" 
-__license__ = "tba" 
-__author__ = "" 
+__copyright__ 	= "Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems"
+__license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
+__url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
+__author__ 	= "IlkaCu" 
 */
 
 -- Assigment of otg_id for demand time series

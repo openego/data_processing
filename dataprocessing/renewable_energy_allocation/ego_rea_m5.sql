@@ -82,6 +82,8 @@ CREATE TABLE 		model_draft.ego_supply_rea_m5_grid_la_temp (
 	sorted bigint NOT NULL,
 	id integer,
 	subst_id integer,
+	area_type text,
+	geom_box geometry(Polygon,3035),
 	geom geometry(Point,3035),
 	CONSTRAINT ego_supply_rea_m5_grid_la_temp_pkey PRIMARY KEY (sorted));
 
@@ -111,7 +113,7 @@ DO
 $$
 DECLARE	gd integer;
 BEGIN
-	FOR gd IN 1..3609	-- subst_id
+	FOR gd IN 1..3606	-- subst_id
 	LOOP
         EXECUTE '
 		INSERT INTO model_draft.ego_supply_rea_m5_dea_temp
@@ -123,7 +125,7 @@ BEGIN
 		INSERT INTO model_draft.ego_supply_rea_m5_grid_la_temp
 			SELECT 	row_number() over (ORDER BY RANDOM())as sorted,
 			la.*
-			FROM 	model_draft.ego_lattice_deu_50m_la_mview AS la	-- INPUT LATTICE
+			FROM 	model_draft.ego_lattice_50m_la_mview AS la	-- INPUT LATTICE
 			WHERE 	la.subst_id =' || gd || ';
 
 		INSERT INTO model_draft.ego_supply_rea_m5_jnt_temp

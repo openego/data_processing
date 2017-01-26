@@ -90,6 +90,7 @@ CREATE TABLE 		model_draft.ego_supply_rea_m4_grid_wpa_temp (
 	id integer,
 	subst_id integer,
 	area_type text,
+	geom_box geometry(Polygon,3035),
 	geom geometry(Point,3035),
 	CONSTRAINT ego_supply_rea_m4_grid_wpa_temp_pkey PRIMARY KEY (sorted));
 
@@ -119,11 +120,11 @@ DO
 $$
 DECLARE	gd integer;
 BEGIN
-	FOR gd IN 1..3609	-- subst_id
+	FOR gd IN 1..3606	-- subst_id
 	LOOP
         EXECUTE '
 		INSERT INTO model_draft.ego_supply_rea_m4_dea_temp
-			SELECT	row_number() over (ORDER BY dea.electrical_capacity DESC)as sorted,
+			SELECT	row_number() over (ORDER BY dea.electrical_capacity DESC) AS sorted,
 				dea.*
 			FROM 	model_draft.ego_supply_rea_m4_a_mview AS dea
 			WHERE 	dea.subst_id =' || gd || ';
