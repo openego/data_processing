@@ -14,7 +14,7 @@ Results
 */ 
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.3','input','model_draft','renewable_power_plants_germany','ego_rea_results.sql',' ');
+SELECT ego_scenario_log('v0.2.3','input','supply','ego_res_powerplant','ego_rea_results.sql',' ');
 
 -- dea capacity and count per generation types and voltage level
 DROP TABLE IF EXISTS 	model_draft.ego_supply_rea_per_gentype_and_voltlevel CASCADE;
@@ -25,7 +25,7 @@ CREATE TABLE 		model_draft.ego_supply_rea_per_gentype_and_voltlevel AS
 		ee.voltage_level,
 		SUM(ee.electrical_capacity) AS capacity,
 		COUNT(ee.geom) AS count
-	FROM 	orig_geo_opsd.renewable_power_plants_germany AS ee
+	FROM 	supply.ego_res_powerplant AS ee
 	GROUP BY	ee.voltage_level, ee.generation_type, ee.generation_subtype
 	ORDER BY 	ee.voltage_level, ee.generation_type, ee.generation_subtype;
 

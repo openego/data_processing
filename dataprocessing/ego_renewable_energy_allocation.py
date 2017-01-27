@@ -45,7 +45,7 @@ scripts = [
     # 'ego_rea_m2.sql',
     # 'ego_rea_m3.sql',
     # 'ego_rea_m4.sql',
-    'ego_rea_m5.sql',
+    # 'ego_rea_m5.sql',
     'ego_rea_results.sql'
     ]
 

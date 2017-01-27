@@ -458,7 +458,52 @@ SELECT	'LA/VOI' AS name,
 	ST_Perimeter(ST_Collect(la.geom))/1000000 AS perimeter_in_tkm 
 FROM	model_draft.ego_demand_loadarea_voi AS la;
 
+/* 
+-- simplytry
+DROP TABLE IF EXISTS model_draft.ego_grid_mv_griddistrict_simple;
+CREATE TABLE model_draft.ego_grid_mv_griddistrict_simple
+(
+  subst_id integer NOT NULL,
+  factor text,
+  geom geometry(MultiPolygon,3035),
+  CONSTRAINT ego_grid_mv_griddistrict_simple_pkey PRIMARY KEY (subst_id,factor)
+);
 
+INSERT INTO model_draft.ego_grid_mv_griddistrict_simple
+	SELECT	gd.subst_id,
+		'0.1',
+		ST_Simplify(gd.geom,0.1)
+	FROM	model_draft.ego_grid_mv_griddistrict gd
+	WHERE	gd.subst_id = 406 ;
+
+INSERT INTO model_draft.ego_grid_mv_griddistrict_simple
+	SELECT	gd.subst_id,
+		'1',
+		ST_Simplify(gd.geom,1)
+	FROM	model_draft.ego_grid_mv_griddistrict gd
+	WHERE	gd.subst_id = 406 ;
+
+INSERT INTO model_draft.ego_grid_mv_griddistrict_simple
+	SELECT	gd.subst_id,
+		'10',
+		ST_Simplify(gd.geom,10)
+	FROM	model_draft.ego_grid_mv_griddistrict gd
+	WHERE	gd.subst_id = 406 ;
+
+INSERT INTO model_draft.ego_grid_mv_griddistrict_simple
+	SELECT	gd.subst_id,
+		'100',
+		ST_Simplify(gd.geom,100)
+	FROM	model_draft.ego_grid_mv_griddistrict gd
+	WHERE	gd.subst_id = 406 ;
+
+INSERT INTO model_draft.ego_grid_mv_griddistrict_simple
+	SELECT	gd.subst_id,
+		'1000',
+		ST_Simplify(gd.geom,1000)
+	FROM	model_draft.ego_grid_mv_griddistrict gd
+	WHERE	gd.subst_id = 406 ;
+ */
 
 /* -- EWE Validation
 
