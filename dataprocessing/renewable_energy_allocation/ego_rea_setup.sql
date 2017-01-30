@@ -126,10 +126,6 @@ CREATE INDEX ego_supply_rea_out_mview_geom_new_idx
 ALTER TABLE model_draft.ego_supply_rea_out_mview OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.3','temp','model_draft','ego_supply_rea_out_mview','ego_rea_setup.sql',' ');
-
-
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.3','input','model_draft','ego_grid_hvmv_substation','ego_rea_setup.sql',' ');
 
 
@@ -169,6 +165,31 @@ UPDATE 	model_draft.ego_supply_rea AS t1
 		WHERE  	flag = 'out'
 		)AS t2
 	WHERE  	t1.id = t2.dea_id;
+	
+-- re outside mv-griddistrict
+DROP MATERIALIZED VIEW IF EXISTS 	model_draft.ego_supply_rea_out_mview CASCADE;
+CREATE MATERIALIZED VIEW 		model_draft.ego_supply_rea_out_mview AS
+	SELECT	dea.*
+	FROM 	model_draft.ego_supply_rea AS dea
+	WHERE	flag = 'out' OR flag = 'offshore';
+
+-- index GIST (geom)
+CREATE INDEX ego_supply_rea_out_mview_geom_idx
+	ON model_draft.ego_supply_rea_out_mview USING gist (geom);
+
+-- index GIST (geom_line)
+CREATE INDEX ego_supply_rea_out_mview_geom_line_idx
+	ON model_draft.ego_supply_rea_out_mview USING gist (geom_line);
+
+-- index GIST (geom_new)
+CREATE INDEX ego_supply_rea_out_mview_geom_new_idx
+	ON model_draft.ego_supply_rea_out_mview USING gist (geom_new);	
+
+-- grant (oeuser)
+ALTER TABLE model_draft.ego_supply_rea_out_mview OWNER TO oeuser;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.3','temp','model_draft','ego_supply_rea_out_mview','ego_rea_setup.sql',' ');
 
 -- drop
 DROP TABLE IF EXISTS	model_draft.ego_supply_rea_out_nn CASCADE;

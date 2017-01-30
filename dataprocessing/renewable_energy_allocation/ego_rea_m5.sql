@@ -10,14 +10,14 @@ __author__ 	= "Ludee"
 */
 
 /* 6. M5
-Relocate "solar" with "06 (MS/NS)" & "07 (NS)" to la_grid.
+Relocate "solar" with "6" & "7" to la_grid.
 There should be no rest.
 */
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.3','input','model_draft','ego_supply_rea','ego_rea_m5.sql',' ');
 
--- MView M5 DEA   (OK!) -> 1.000ms =1.524.674
+-- MView M5 DEA 
 DROP MATERIALIZED VIEW IF EXISTS 	model_draft.ego_supply_rea_m5_a_mview CASCADE;
 CREATE MATERIALIZED VIEW 		model_draft.ego_supply_rea_m5_a_mview AS
 	SELECT	id,
@@ -29,11 +29,11 @@ CREATE MATERIALIZED VIEW 		model_draft.ego_supply_rea_m5_a_mview AS
 		geom,
 		flag
 	FROM 	model_draft.ego_supply_rea AS dea
-	WHERE 	(dea.voltage_level = '06 (MS/NS)' 
-			OR dea.voltage_level = '07 (NS)'
+	WHERE 	(dea.voltage_level = '6' 
+			OR dea.voltage_level = '7'
 			OR dea.voltage_level IS NULL)
 		AND 	dea.generation_type = 'solar'
-		OR (dea.voltage_level = '07 (NS)' AND dea.generation_type = 'wind');
+		OR (dea.voltage_level = '7' AND dea.generation_type = 'wind');
 		
 -- create index GIST (geom)
 CREATE INDEX ego_supply_rea_m5_a_mview_geom_idx
@@ -49,11 +49,11 @@ SELECT ego_scenario_log('v0.2.3','output','model_draft','ego_supply_rea_m5_a_mvi
 -- flag M5
 UPDATE 	model_draft.ego_supply_rea AS dea
 	SET	flag = 'M5_rest'
-	WHERE 	(dea.voltage_level = '06 (MS/NS)' 
-			OR dea.voltage_level = '07 (NS)'
+	WHERE 	(dea.voltage_level = '6' 
+			OR dea.voltage_level = '7'
 			OR dea.voltage_level IS NULL)
 		AND 	dea.generation_type = 'solar'
-		OR (dea.voltage_level = '07 (NS)' AND dea.generation_type = 'wind')
+		OR (dea.voltage_level = '7' AND dea.generation_type = 'wind')
 		AND dea.subst_id IS NOT NULL;
 
 
@@ -203,6 +203,19 @@ ALTER TABLE model_draft.ego_supply_rea_m5_rest_mview OWNER TO oeuser;
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.3','output','model_draft','ego_supply_rea_m5_rest_mview','ego_rea_m5.sql',' ');
 
+
+-- update la_id from loadarea
+UPDATE 	model_draft.ego_supply_rea AS t1
+	SET  	la_id = t2.la_id
+	FROM    (
+		SELECT	dea.id AS id,
+			la.id AS la_id
+		FROM	model_draft.ego_supply_rea AS dea,
+			model_draft.ego_demand_loadarea AS la
+		WHERE  	la.geom && dea.geom_new AND
+			ST_CONTAINS(la.geom,dea.geom_new)
+		) AS t2
+	WHERE  	t1.id = t2.id;
 
 -- Drop temp
 DROP TABLE IF EXISTS 	model_draft.ego_supply_rea_m5_dea_temp CASCADE;

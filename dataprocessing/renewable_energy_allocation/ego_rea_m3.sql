@@ -10,7 +10,7 @@ __author__ 	= "Ludee"
 */
 
 /* 4. M3 
-Move "wind" with "05 (MS)" & "06 (MS/NS)" to wpa_grid.
+Move "wind" with "5" & "6" to wpa_grid.
 Also considers rest of M2.
 The rest could not be allocated, consider in M4.
 */ 
@@ -30,8 +30,8 @@ CREATE MATERIALIZED VIEW 		model_draft.ego_supply_rea_m3_a_mview AS
 		geom,
 		flag
 	FROM 	model_draft.ego_supply_rea AS dea
-	WHERE 	(dea.voltage_level = '05 (MS)' OR 
-		dea.voltage_level = '06 (MS/NS)') AND 
+	WHERE 	(dea.voltage_level = '5' OR 
+		dea.voltage_level = '6') AND 
 		dea.generation_type = 'wind' OR 
 		dea.flag = 'M2_rest' AND
 		dea.subst_id IS NOT NULL ;
@@ -50,8 +50,8 @@ SELECT ego_scenario_log('v0.2.3','output','model_draft','ego_supply_rea_m3_a_mvi
 -- flag M3
 UPDATE 	model_draft.ego_supply_rea AS dea
 	SET	flag = 'M3_rest'
-	WHERE	(dea.voltage_level = '05 (MS)' OR 
-		dea.voltage_level = '06 (MS/NS)') AND 
+	WHERE	(dea.voltage_level = '5' OR 
+		dea.voltage_level = '6') AND 
 		dea.generation_type = 'wind' OR 
 		dea.flag = 'M2_rest' AND
 		dea.subst_id IS NOT NULL ;

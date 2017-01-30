@@ -10,7 +10,7 @@ __author__ 	= "Ludee"
 */
 
 /* 3. M2
-Move "wind" with "04 (HS/MS)" to WPA as wind farms.
+Move "wind" with "4" to WPA as wind farms.
 The rest could not be allocated, consider in M4.
 */
 
@@ -29,7 +29,7 @@ CREATE MATERIALIZED VIEW 		model_draft.ego_supply_rea_m2_a_mview AS
 		geom,
 		flag
 	FROM 	model_draft.ego_supply_rea AS dea
-	WHERE 	(dea.voltage_level = '04 (HS/MS)' AND 
+	WHERE 	(dea.voltage_level = '4' AND 
 		dea.generation_type = 'wind');
 
 -- create index GIST (geom)
@@ -46,7 +46,7 @@ SELECT ego_scenario_log('v0.2.3','output','model_draft','ego_supply_rea_m2_a_mvi
 -- flag M2
 UPDATE 	model_draft.ego_supply_rea AS dea
 	SET	flag = 'M2_rest'
-	WHERE	dea.voltage_level = '04 (HS/MS)' AND 
+	WHERE	dea.voltage_level = '4' AND 
 		dea.generation_type = 'wind';
 
 
@@ -71,7 +71,7 @@ INSERT INTO model_draft.ego_supply_rea_m2_windfarm (area_ha,geom)
 				ST_BUFFER(dea.geom, 1000)
 			)))).geom ::geometry(Polygon,3035) AS geom_farm
 		FROM 	model_draft.ego_supply_rea AS dea
-		WHERE 	(dea.voltage_level = '04 (HS/MS)') AND
+		WHERE 	(dea.voltage_level = '4') AND
 			(dea.generation_type = 'wind')
 		) AS farm;
 
@@ -102,7 +102,7 @@ UPDATE 	model_draft.ego_supply_rea_m2_windfarm AS t1
 			SUM(dea.electrical_capacity) AS electrical_capacity_sum
 		FROM	model_draft.ego_supply_rea AS dea,
 			model_draft.ego_supply_rea_m2_windfarm AS farm
-		WHERE  	(dea.voltage_level = '04 (HS/MS)' AND
+		WHERE  	(dea.voltage_level = '4' AND
 			dea.generation_type = 'wind') AND
 			(farm.geom && dea.geom AND
 			ST_CONTAINS(farm.geom,dea.geom))
@@ -121,7 +121,7 @@ UPDATE 	model_draft.ego_supply_rea AS t1
 			farm.farm_id AS farm_id
 		FROM	model_draft.ego_supply_rea AS dea,
 			model_draft.ego_supply_rea_m2_windfarm AS farm
-		WHERE  	(dea.voltage_level = '04 (HS/MS)' AND
+		WHERE  	(dea.voltage_level = '4' AND
 			dea.generation_type = 'wind') AND
 			(farm.geom && dea.geom AND
 			ST_CONTAINS(farm.geom,dea.geom))
@@ -180,6 +180,9 @@ CREATE INDEX ego_supply_rea_m2_jnt_temp_geom_idx
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.3','temp','model_draft','ego_supply_rea_m2_jnt_temp','ego_rea_m2.sql',' ');
 
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.3','input','model_draft','ego_supply_wpa_per_mvgd','ego_rea_m2.sql',' ');
+
 
 -- loop for grid_district
 DO
@@ -198,7 +201,7 @@ BEGIN
 		INSERT INTO model_draft.ego_supply_rea_m2_wpa_temp
 			SELECT 	row_number() over (ORDER BY wpa.area_ha DESC)as sorted,
 				wpa.*
-			FROM 	model_draft.ego_wpa_per_grid_district AS wpa
+			FROM 	model_draft.ego_supply_wpa_per_mvgd AS wpa
 			WHERE 	wpa.subst_id =' || gd || ';
 
 		INSERT INTO model_draft.ego_supply_rea_m2_jnt_temp
@@ -282,4 +285,4 @@ SELECT ego_scenario_log('v0.2.3','output','model_draft','ego_supply_rea_m2_rest_
 DROP TABLE IF EXISTS 	model_draft.ego_supply_rea_m2_farm_temp CASCADE;
 DROP TABLE IF EXISTS 	model_draft.ego_supply_rea_m2_wpa_temp CASCADE;
 DROP TABLE IF EXISTS 	model_draft.ego_supply_rea_m2_jnt_temp CASCADE;
-DROP TABLE IF EXISTS 	model_draft.ego_supply_rea_m2_windfarm CASCADE;
+-- DROP TABLE IF EXISTS 	model_draft.ego_supply_rea_m2_windfarm CASCADE;
