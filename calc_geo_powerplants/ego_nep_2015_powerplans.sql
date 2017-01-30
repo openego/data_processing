@@ -1,5 +1,24 @@
----
----
+/*
+SQL Script which prepare and insert the NEP 2015 power plant data 
+
+__copyright__ = "Europa-Universität Flensburg - ZNES"
+__license__ = "GNU Affero General Public License Version 3 (AGPL-3.0)"
+__url__ = "https://github.com/openego/data_processing/blob/master/LICENSE"
+__author__ = "wolfbunke"
+*/
+
+-- -- --- -- --- -- -- ---- -- --- -- -- - ---- ---- --- -----
+-- Autor: Wolf-Dieter Bunke
+-- Date:  12.12.2016
+-- -- --- -- --- -- -- ---- -- --- -- -- - ---- ---- --- -----
+-- NEP scenario power plant list
+-- Create an separate table with filter 
+--	 power_plant_name = 'KWK-Anlagen <10MW'
+-- Set and update Meta data on:
+-- 	supply.nep_powerplant
+
+-- -- --- -- --- -- -- ---- -- --- -- -- - ---- ---- --- -----
+
 DROP SEQUENCE IF EXISTS	supply.nep_powerplant_seq CASCADE;
 CREATE SEQUENCE supply.nep_powerplant_seq;
 
@@ -25,15 +44,15 @@ CREATE TABLE supply.nep_powerplant
   lon double precision,
   location_checked text,
   geom geometry(Point,4326),
-  gid integer NOT NULL DEFAULT nextval('model_draft.nep_powerplant_seq'::regclass),
+  gid integer NOT NULL DEFAULT nextval('supply.nep_powerplant_seq'::regclass),
   CONSTRAINT nep_powerplants_pkey PRIMARY KEY (gid)
 );
 
---
+-- -- --- -- --- -- -- ---- -- --- -- -- - ---- ---- --- -----
 -- Set metadata
 --
 
-COMMENT ON TABLE  orig_geo_powerplants.nep_2015_powerplants IS
+COMMENT ON TABLE  supply.nep_powerplant IS
 '{
 "Name": "NEP 2015 List of Powerplants in Germany",
 "Source": [{
@@ -106,13 +125,33 @@ COMMENT ON TABLE  orig_geo_powerplants.nep_2015_powerplants IS
                    {"Name": "Wolf-Dieter Bunke",
                     "Mail": "wolf-dieter.bunke@uni-flensburg.de",
                     "Date":  "26.10.2016",
-                    "Comment": "change of meta documentation" }
+                    "Comment": "change of meta documentation" },
+                     {"Name": "Wolf-Dieter Bunke",
+                    "Mail": "wolf-dieter.bunke@uni-flensburg.de",
+                    "Date":  "30.01.2017",
+                    "Comment": "add license" }
                   ],
-"ToDo": ["Check licence"],
-"Licence": ["..."],
-"Instructions for proper use": ["..."]
+"Notes": ["Check licence, meta style V 0.01"],
+"Licence": [{
+            "Name":		"Open Database License (ODbL) v1.0",
+	          "URL":		"http://opendatacommons.org/licenses/odbl/1.0/",
+	          "Copyright": 	"ZNES EUF"}],
+"Instructions for proper use": ["..."]            
+             
 }';
-
+-- -- --- -- --- -- -- ---- -- --- -- -- - ---- ---- --- -----
 -- check metadata
---
-SELECT obj_description('orig_geo_powerplants.nep_2015_powerplants'::regclass)::json;
+
+SELECT obj_description('supply.nep_powerplant'::regclass)::json;
+-- -- --- -- --- -- -- ---- -- --- -- -- - ---- ---- --- -----
+
+-- -- --- -- --- -- -- ---- -- --- -- -- - ---- ---- --- -----
+-- Insert data from V1
+
+INSERT INTO   supply.nep_powerplant
+	SELECT *
+	FROM  orig_geo_powerplants.ego_conventional_power_plants_nep2035;
+
+-- -- --- -- --- -- -- ---- -- --- -- -- - ---- ---- --- -----
+-- END
+
