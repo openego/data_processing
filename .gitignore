@@ -11,5 +11,8 @@
 /ego_deu_loads_per_grid_district/2016-04-26_ego_deu_mv_loads.pdf
 
 /data_processing.egg-info/*
+/data_processing.egg-info/
+/calc_geo_powerplants/Comments_res_scenario.txt
+gurobi.log
 
 *.pyc
