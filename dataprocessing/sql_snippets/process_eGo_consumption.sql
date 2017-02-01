@@ -8,8 +8,8 @@ __author__ 	= "IlkaCu, Ludee"
 */
 
 /* -- -> insert into model_draft.ego_demand_loadarea
-DROP TABLE IF EXISTS 	model_draft.ego_demand_per_load_area CASCADE;
-CREATE TABLE 		model_draft.ego_demand_per_load_area 
+DROP TABLE IF EXISTS 	model_draft.ego_demand_per_loadarea CASCADE;
+CREATE TABLE 		model_draft.ego_demand_per_loadarea 
 (
 	id integer NOT NULL,
 	subst_id integer,
@@ -19,10 +19,14 @@ CREATE TABLE 		model_draft.ego_demand_per_load_area
 	sector_area_retail numeric,
 	sector_area_industrial numeric,
 	sector_area_agricultural numeric,
-	sector_consumption_residential numeric,
-	sector_consumption_retail numeric,
-	sector_consumption_industrial numeric,
-	sector_consumption_agricultural numeric,
+	sector_consumption_residential double precision,
+	sector_consumption_retail double precision,
+	sector_consumption_industrial double precision,
+	sector_consumption_agricultural double precision,
+	sector_consumption_sum double precision,
+	geom_centroid geometry(Point,3035),
+        geom_surfacepoint geometry(Point,3035),
+        geom_centre geometry(Point,3035),
 	geom geometry (Polygon,3035), 
 	CONSTRAINT ego_deu_consumption_pkey PRIMARY KEY (id)
 ); */
