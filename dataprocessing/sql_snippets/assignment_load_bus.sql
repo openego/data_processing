@@ -1,5 +1,5 @@
 /*
-load to bus
+Assignment of loads to the relevant bus in the grid model based on grid districts or voronoi cells according to the grid level of the loads considered. 
 
 __copyright__ 	= "Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems"
 __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"

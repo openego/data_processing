@@ -18,7 +18,7 @@ PF HV storage PQ set
 __copyright__ 	= "Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems"
 __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
 __url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
-__author__ 	= "IlkaCu, Ludee" 
+__author__ 	= "mariusves, IlkaCu, Ludee" 
 */
 
 --------------------------------------------------------------------

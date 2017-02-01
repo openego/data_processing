@@ -1,20 +1,16 @@
 ﻿/*
-LOPF
-
-__copyright__ 	= "Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems"
-__license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
-__url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
-__author__ 	= "IlkaCu"
-*/
-
-/* 
 LOPF data -
 Setting marginal_cost ( operating cost + fuel cost + CO2 crt cost ) 
 in model_draft.ego_grid_pf_hv_generator according to renpass_gis, NEP 2014 scenario.
 In addition p_max_pu is set for all generators with variable dispatch based on p_max_pu = p_set / p_nom .
 
-Martin
+__copyright__ 	= "Europa-Universität Flensburg, Centre for Sustainable Energy Systems"
+__license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
+__url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
+__author__ 	= "mrtnsth"
 */
+
+
 
 UPDATE model_draft.ego_grid_pf_hv_generator
 SET marginal_cost =        -- operating costs + fuel costs + CO2 crt cost

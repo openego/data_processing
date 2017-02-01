@@ -1,4 +1,15 @@
-﻿-- CREATE TABLE demand.ego_demand_federalstate
+﻿/*
+Setup for table demand.ego_demand_federalstate		
+
+__copyright__ 	= "Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems"
+__license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
+__url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
+__author__ 	= "IlkaCu" 
+*/
+
+
+
+-- CREATE TABLE demand.ego_demand_federalstate
 -- ( 
 --   eu_code character varying(7) NOT NULL, 
 --   federal_states character varying NOT NULL, 
@@ -101,9 +112,17 @@ COMMENT ON TABLE  demand.ego_demand_federalstate IS
                    {"Name": "Ilka Cussmann",
                     "Mail": "ilka.cussmann@hs-flensburg.de",
                     "Date":  "24.10.2016",
-                    "Comment": "Add json-string" }
+                    "Comment": "Add json-string" }, 
+
+                   {"Name": "Ilka Cussmann",
+                    "Mail": "ilka.cussmann@hs-flensburg.de",
+                    "Date":  "01.02.2017",
+                    "Comment": "Add licence" },
                   ],
-"ToDo": ["Add licence"],
-"Licence": [""],
+"ToDo": [""],
+"Licence": ["
+	"Name":		"Open Database License (ODbL) v1.0",
+	"URL":		"http://opendatacommons.org/licenses/odbl/1.0/",
+	"Copyright": 	"Flensburg University of Applied Sciences""],
 "Instructions for proper use": [""]
 }';
