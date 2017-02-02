@@ -445,18 +445,144 @@ ALTER TABLE political_boundary.bkg_vg250_statistics_mview OWNER TO oeuser;
 SELECT ego_scenario_log('v0.2.5','output','political_boundary','bkg_vg250_statistics_mview','ego_paper_result.sql',' ');
 
 
+-- drid district
+/* SELECT	count(geom)
+FROM	model_draft.ego_grid_mv_griddistrict_type1
+WHERE	geom IS NOT NULL;
+
+SELECT	count(geom)
+FROM	model_draft.ego_grid_mv_griddistrict_type2
+WHERE	geom IS NOT NULL;
+
+SELECT	count(geom)
+FROM	model_draft.ego_grid_mv_griddistrict_type3
+WHERE	geom IS NOT NULL;
+
+
+SELECT	count(id)
+FROM	model_draft.ego_political_boundary_hvmv_subst_per_gem
+WHERE	subst_type = '1';
+
+SELECT	count(id)
+FROM	model_draft.ego_political_boundary_hvmv_subst_per_gem
+WHERE	subst_type = '2';
+
+SELECT	count(id)
+FROM	model_draft.ego_political_boundary_hvmv_subst_per_gem
+WHERE	subst_type = '3'; */
+
+-- LA Sizes
+SELECT	'< 5 ha' AS name,
+	count(la.geom)::integer AS count,
+	count(*)::double precision / 208486 * 100 AS share,
+	sum(la.area_ha) ::integer AS area
+	FROM	model_draft.ego_demand_loadarea AS la
+WHERE	area_ha < '5'
+UNION ALL
+SELECT	'> 500 ha' AS name,
+	count(la.geom) AS count,
+	count(la.geom)::double precision / 208486 * 100 AS share,
+	sum(la.area_ha) ::integer AS area
+	FROM	model_draft.ego_demand_loadarea AS la
+WHERE	area_ha > '500';
+
+
 -- Schnittlängen (Umrisse)
 SELECT	'Raw LA' AS name,
+	count(la.geom) AS number,
 	ST_Perimeter(ST_Collect(la.geom))/1000000 AS perimeter_in_tkm 
 FROM	model_draft.ego_demand_load_melt AS la
 UNION ALL
 SELECT	'LA/GD' AS name,
+	count(la.geom) AS number,
 	ST_Perimeter(ST_Collect(la.geom))/1000000 AS perimeter_in_tkm 
 FROM	model_draft.ego_demand_loadarea AS la
 UNION ALL
 SELECT	'LA/VOI' AS name,
+	count(la.geom) AS number,
 	ST_Perimeter(ST_Collect(la.geom))/1000000 AS perimeter_in_tkm 
 FROM	model_draft.ego_demand_loadarea_voi AS la;
+
+
+-- Teil 2
+SELECT	'Raw LA' AS name,
+	'>500 EW/km2' AS PD,
+	ST_Perimeter(ST_Collect(lapd.geom))/1000000 AS perimeter_in_tkm
+FROM	(SELECT	la.id,
+		la.subst_id,
+		gem.pd_km2,
+		la.ags_0 AS ags_0_la,
+		gem.ags_0 AS ags_0_gem,
+		la.geom
+	FROM	model_draft.ego_demand_load_melt AS la JOIN political_boundary.bkg_vg250_6_gem_mview AS gem ON (la.ags_0 = gem.ags_0)
+	) AS  lapd
+WHERE	lapd.pd_km2 > '500'
+UNION ALL
+
+SELECT	'LA/GD' AS name,
+	'>500 EW/km2' AS PD,
+	ST_Perimeter(ST_Collect(lapd.geom))/1000000 AS perimeter_in_tkm
+FROM	(SELECT	la.id,
+		la.subst_id,
+		gem.pd_km2,
+		la.ags_0 AS ags_0_la,
+		gem.ags_0 AS ags_0_gem,
+		la.geom
+	FROM	model_draft.ego_demand_loadarea AS la JOIN political_boundary.bkg_vg250_6_gem_mview AS gem ON (la.ags_0 = gem.ags_0)
+	) AS  lapd
+WHERE	lapd.pd_km2 > '500'
+UNION ALL
+SELECT	'LA/GD' AS name,
+	'<500 EW/km2' AS PD,
+	ST_Perimeter(ST_Collect(lapd.geom))/1000000 AS perimeter_in_tkm
+FROM	(SELECT	la.id,
+		la.subst_id,
+		gem.pd_km2,
+		la.ags_0 AS ags_0_la,
+		gem.ags_0 AS ags_0_gem,
+		la.geom
+	FROM	model_draft.ego_demand_loadarea AS la JOIN political_boundary.bkg_vg250_6_gem_mview AS gem ON (la.ags_0 = gem.ags_0)
+	) AS  lapd
+WHERE	lapd.pd_km2 < '500'
+UNION ALL
+
+SELECT	'LA/VOI' AS name,
+	'>500 EW/km2' AS PD,
+	ST_Perimeter(ST_Collect(lapd.geom))/1000000 AS perimeter_in_tkm
+FROM	(SELECT	la.id,
+		la.subst_id,
+		gem.pd_km2,
+		la.ags_0 AS ags_0_la,
+		gem.ags_0 AS ags_0_gem,
+		la.geom
+	FROM	model_draft.ego_demand_loadarea_voi AS la JOIN political_boundary.bkg_vg250_6_gem_mview AS gem ON (la.ags_0 = gem.ags_0)
+	) AS  lapd
+WHERE	lapd.pd_km2 > '500'
+UNION ALL
+SELECT	'LA/VOI' AS name,
+	'<500 EW/km2' AS PD,
+	ST_Perimeter(ST_Collect(lapd.geom))/1000000 AS perimeter_in_tkm
+FROM	(SELECT	la.id,
+		la.subst_id,
+		gem.pd_km2,
+		la.ags_0 AS ags_0_la,
+		gem.ags_0 AS ags_0_gem,
+		la.geom
+	FROM	model_draft.ego_demand_loadarea_voi AS la JOIN political_boundary.bkg_vg250_6_gem_mview AS gem ON (la.ags_0 = gem.ags_0)
+	) AS  lapd
+WHERE	lapd.pd_km2 < '500';
+
+/* name; pd; perimeter_in_tkm
+"LA/GD";">500 EW/km2";62,4983117960233
+"LA/VOI";">500 EW/km2";63,6139317047565
+
+"LA/GD";"<500 EW/km2";312,901787628691
+"LA/VOI";"<500 EW/km2";316,858435576254
+
+delta_L_>500 = 0,5578099543666 tkm
+delta_L_<500 = 1,9783239737815 tkm
+*/
+
 
 /* 
 -- simplytry

@@ -22,7 +22,7 @@ CREATE MATERIALIZED VIEW		political_boundary.bkg_vg250_1_sta_mview AS
 		vg.id ::integer,
 		vg.bez ::text,
 		vg.gf ::double precision,
-		ST_AREA(ST_TRANSFORM(vg.geom, 3035)) / 10000 ::double precision AS area_km2,
+		ST_AREA(ST_TRANSFORM(vg.geom, 3035)) / 10000 ::double precision AS area_ha,
 		ST_MULTI(ST_BUFFER(ST_TRANSFORM(vg.geom,3035),-0.001)) ::geometry(MultiPolygon,3035) AS geom
 	FROM	political_boundary.bkg_vg250_1_sta AS vg
 	WHERE	vg.reference_date = '2016-01-01'
@@ -57,7 +57,7 @@ COMMENT ON MATERIALIZED VIEW political_boundary.bkg_vg250_1_sta_mview IS '{
         {"Name": "id", "Description": "Unique identifier", "Unit": " " },
         {"Name": "bez", "Description": "Bezeichnung der Verwaltungseinheit", "Unit": " " },
 	{"Name": "gf", "Description": "Geofaktor", "Unit": " " },
-	{"Name": "area_km2", "Description": "Area in km²", "Unit": "km²" },
+	{"Name": "area_ha", "Description": "Area in ha", "Unit": "ha" },
 	{"Name": "geom", "Description": "Geometry", "Unit": " " } ],
     "Changes":	[
         {"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
@@ -149,7 +149,7 @@ CREATE MATERIALIZED VIEW		political_boundary.bkg_vg250_1_sta_union_mview AS
 	SELECT	'2016-01-01' ::text AS reference_date,
 		'1' ::integer AS id,
 		'Bundesrepublik' ::text AS bez,
-		ST_AREA(un.geom) / 10000 ::double precision AS area_km2,
+		ST_AREA(un.geom) / 10000 ::double precision AS area_ha,
 		un.geom ::geometry(MultiPolygon,3035) AS geom
 	FROM	(SELECT	ST_MakeValid(ST_UNION(ST_TRANSFORM(vg.geom,3035))) ::geometry(MultiPolygon,3035) AS geom
 		FROM	political_boundary.bkg_vg250_1_sta AS vg
@@ -184,7 +184,7 @@ COMMENT ON MATERIALIZED VIEW political_boundary.bkg_vg250_1_sta_union_mview IS '
         {"Name": "reference_date", "Description": "Reference Year", "Unit": " " },
         {"Name": "id", "Description": "Unique identifier", "Unit": " " },
         {"Name": "bez", "Description": "Bezeichnung der Verwaltungseinheit", "Unit": " " },
-	{"Name": "area_km2", "Description": "Area in km²", "Unit": "km²" },
+	{"Name": "area_ha", "Description": "Area in ha", "Unit": "ha" },
 	{"Name": "geom", "Description": "Geometry", "Unit": " " } ],
     "Changes":	[
         {"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
@@ -211,7 +211,7 @@ CREATE MATERIALIZED VIEW		political_boundary.bkg_vg250_1_sta_bbox_mview AS
 	SELECT	'2016-01-01' ::text AS reference_date,
 		'1' ::integer AS id,
 		'Bundesrepublik' ::text AS bez,
-		ST_AREA(un.geom) / 10000 ::double precision AS area_km2,
+		ST_AREA(un.geom) / 10000 ::double precision AS area_ha,
 		un.geom ::geometry(Polygon,3035) AS geom
 	FROM	(SELECT	ST_SetSRID(Box2D(vg.geom),3035) ::geometry(Polygon,3035) AS geom
 		FROM	political_boundary.bkg_vg250_1_sta_union_mview AS vg
@@ -245,7 +245,7 @@ COMMENT ON MATERIALIZED VIEW political_boundary.bkg_vg250_1_sta_bbox_mview IS '{
         {"Name": "reference_date", "Description": "Reference Year", "Unit": " " },
         {"Name": "id", "Description": "Unique identifier", "Unit": " " },
         {"Name": "bez", "Description": "Bezeichnung der Verwaltungseinheit", "Unit": " " },
-	{"Name": "area_km2", "Description": "Area in km²", "Unit": "km²" },
+	{"Name": "area_ha", "Description": "Area in ha", "Unit": "ha" },
 	{"Name": "geom", "Description": "Geometry", "Unit": " " } ],
     "Changes":	[
         {"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
@@ -315,7 +315,7 @@ COMMENT ON MATERIALIZED VIEW political_boundary.bkg_vg250_2_lan_mview IS '{
         {"Name": "reference_date", "Description": "Reference Year", "Unit": " " },
         {"Name": "ags_0", "Description": "Amtlicher Gemeindeschlüssel", "Unit": " " },
         {"Name": "gen", "Description": "Geografischer Name", "Unit": " " },
-	{"Name": "area_km2", "Description": "Area in km²", "Unit": "km²" },
+	{"Name": "area_ha", "Description": "Area in ha", "Unit": "ha" },
 	{"Name": "geom", "Description": "Geometry", "Unit": " " } ],
     "Changes":	[
         {"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
@@ -351,7 +351,7 @@ CREATE MATERIALIZED VIEW		political_boundary.bkg_vg250_4_krs_mview AS
 		vg.nuts ::varchar(5) AS nuts,
 		vg.rs_0 ::varchar(12) AS rs_0,
 		vg.ags_0 ::varchar(12) AS ags_0,
-		ST_AREA(vg.geom) / 10000 ::double precision AS area_km2,
+		ST_AREA(vg.geom) / 10000 ::double precision AS area_ha,
 		ST_TRANSFORM(vg.geom,3035) ::geometry(MultiPolygon,3035) AS geom
 	FROM	political_boundary.bkg_vg250_4_krs AS vg
 	WHERE	vg.reference_date = '2016-01-01'
@@ -389,7 +389,7 @@ COMMENT ON MATERIALIZED VIEW political_boundary.bkg_vg250_4_krs_mview IS '{
 	{"Name": "nuts", "Description": "Europäischer Statistikschlüssel", "Unit": " " },
 	{"Name": "rs_0", "Description": "Aufgefüllter Regionalschlüssel", "Unit": " " },
 	{"Name": "ags_0", "Description": "Amtlicher Gemeindeschlüssel", "Unit": " " },
-	{"Name": "area_km2", "Description": "Area in km²", "Unit": "km²" },
+	{"Name": "area_ha", "Description": "Area in ha", "Unit": "ha" },
 	{"Name": "geom", "Description": "Geometry", "Unit": " " } ],
     "Changes":	[
         {"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
@@ -412,6 +412,57 @@ SELECT ego_scenario_log('v0.2.5','output','political_boundary','bkg_vg250_4_krs_
 
 -- 6. Gemeinde (gem) - municipality (mun)
 
+/* 
+-- census data per municipality
+DROP TABLE IF EXISTS	social.destatis_zensus_population_per_bkg_vg250_6_gem;
+CREATE TABLE		social.destatis_zensus_population_per_bkg_vg250_6_gem (
+	reference_date 	date NOT NULL,
+	gem_id 		integer,
+	ags_0 		character varying(12),
+	census_sum 	integer,
+	census_count 	integer,
+	census_density 	integer,
+	CONSTRAINT destatis_zensus_population_per_bkg_vg250_6_gem_pkey PRIMARY KEY (reference_date, gem_id) );
+
+INSERT INTO social.destatis_zensus_population_per_bkg_vg250_6_gem (reference_date,gem_id,ags_0)
+	SELECT	vg.reference_date,
+		vg.id,
+		vg.ags_0
+	FROM	political_boundary.bkg_vg250_6_gem AS vg
+	ORDER BY vg.id;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','input','social','destatis_zensus_population_per_ha_mview','ego_political_boundary_bkg_setup.sql',' ');
+
+-- zensus 2011 population
+UPDATE 	social.destatis_zensus_population_per_bkg_vg250_6_gem AS t1
+	SET  	census_sum = t2.census_sum,
+		census_count = t2.census_count,
+		census_density = t2.census_density
+	FROM    (SELECT	gem.id AS id,
+			SUM(coalesce(pts.population,0))::integer AS census_sum,
+			COUNT(pts.geom)::integer AS census_count,
+			coalesce(SUM(pts.population)/COUNT(pts.geom),0)::numeric AS census_density
+		FROM	political_boundary.bkg_vg250_6_gem AS gem,
+			social.destatis_zensus_population_per_ha_mview AS pts
+		WHERE  	ST_TRANSFORM(gem.geom,3035) && pts.geom_point AND
+			ST_CONTAINS(ST_TRANSFORM(gem.geom,3035),pts.geom_point)
+		GROUP BY gem.id
+		)AS t2
+	WHERE  	t1.gem_id = t2.id;
+
+-- NULL to 0
+UPDATE 	social.destatis_zensus_population_per_bkg_vg250_6_gem AS ce
+	SET	census_sum = '0'
+	WHERE	census_sum IS NULL;
+UPDATE 	social.destatis_zensus_population_per_bkg_vg250_6_gem AS ce
+	SET	census_count = '0'
+	WHERE	census_count IS NULL;
+UPDATE 	social.destatis_zensus_population_per_bkg_vg250_6_gem AS ce
+	SET	census_density = '0'
+	WHERE	census_density IS NULL;
+ */
+
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.5','input','political_boundary','bkg_vg250_6_gem','ego_political_boundary_bkg_setup.sql',' ');
 
@@ -419,16 +470,21 @@ SELECT ego_scenario_log('v0.2.5','input','political_boundary','bkg_vg250_6_gem',
 DROP MATERIALIZED VIEW IF EXISTS	political_boundary.bkg_vg250_6_gem_mview CASCADE;
 CREATE MATERIALIZED VIEW		political_boundary.bkg_vg250_6_gem_mview AS
 	SELECT	vg.reference_date ::text AS reference_date,
-		vg.id ::integer AS id,
-		vg.gen ::text AS gen,
-		vg.bez ::text AS bez,
-		vg.bem ::text AS bem,
-		vg.nuts ::varchar(5) AS nuts,
-		vg.rs_0 ::varchar(12) AS rs_0,
-		vg.ags_0 ::varchar(12) AS ags_0,
-		ST_AREA(vg.geom) / 1000 ::double precision AS area_ha,
+		vg.id ::integer,
+		vg.gen ::text,
+		vg.bez ::text,
+		vg.bem ::text,
+		vg.nuts ::varchar(5),
+		vg.rs_0 ::varchar(12),
+		vg.ags_0 ::varchar(12),
+		ST_AREA(vg.geom) / 10000 ::double precision AS area_ha,
+		ST_AREA(vg.geom) / 1000000 ::double precision AS area_km2,
+		ce.census_sum ::integer,
+		ce.census_count ::integer,
+		ce.census_density ::integer,
+		ce.census_sum / (ST_AREA(vg.geom) / 1000000) ::double precision AS pd,
 		ST_TRANSFORM(vg.geom,3035) ::geometry(MultiPolygon,3035) AS geom
-	FROM	political_boundary.bkg_vg250_6_gem AS vg
+	FROM	political_boundary.bkg_vg250_6_gem AS vg JOIN social.destatis_zensus_population_per_bkg_vg250_6_gem AS ce ON (vg.id = ce.gem_id)
 	WHERE	vg.reference_date = '2016-01-01'
 	ORDER BY vg.id;
 
@@ -464,7 +520,7 @@ COMMENT ON MATERIALIZED VIEW political_boundary.bkg_vg250_6_gem_mview IS '{
 	{"Name": "nuts", "Description": "Europäischer Statistikschlüssel", "Unit": " " },
 	{"Name": "rs_0", "Description": "Aufgefüllter Regionalschlüssel", "Unit": " " },
 	{"Name": "ags_0", "Description": "Amtlicher Gemeindeschlüssel", "Unit": " " },
-	{"Name": "area_km2", "Description": "Area in km²", "Unit": "km²" },
+	{"Name": "area_ha", "Description": "Area in ha", "Unit": "ha" },
 	{"Name": "geom", "Description": "Geometry", "Unit": " " } ],
     "Changes":	[
         {"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
@@ -570,7 +626,7 @@ CREATE MATERIALIZED VIEW		political_boundary.bkg_vg250_6_gem_dump_mview AS
 		vg.nuts ::varchar(5) AS nuts,
 		vg.rs_0 ::varchar(12) AS rs_0,
 		vg.ags_0 ::varchar(12) AS ags_0,
-		ST_AREA(vg.geom) / 10000 ::double precision AS area_km2,
+		ST_AREA(vg.geom) / 10000 ::double precision AS area_ha,
 		ST_MakeValid((ST_DUMP(ST_TRANSFORM(vg.geom,3035))).geom) ::geometry(Polygon,3035) AS geom
 	FROM	political_boundary.bkg_vg250_6_gem AS vg
 	WHERE	gf = '4' -- Without water
@@ -609,7 +665,7 @@ COMMENT ON MATERIALIZED VIEW political_boundary.bkg_vg250_6_gem_dump_mview IS '{
 	{"Name": "nuts", "Description": "Europäischer Statistikschlüssel", "Unit": " " },
 	{"Name": "rs_0", "Description": "Aufgefüllter Regionalschlüssel", "Unit": " " },
 	{"Name": "ags_0", "Description": "Amtlicher Gemeindeschlüssel", "Unit": " " },
-	{"Name": "area_km2", "Description": "Area in km²", "Unit": "km²" },
+	{"Name": "area_ha", "Description": "Area in ha", "Unit": "ha" },
 	{"Name": "geom", "Description": "Geometry", "Unit": " " } ],
     "Changes":	[
         {"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
@@ -643,7 +699,7 @@ CREATE TABLE		model_draft.ego_political_boundary_bkg_vg250_6_gem_clean (
 	nuts varchar(5),
 	rs_0 varchar(12),
 	ags_0 varchar(12),
-	area_km2 decimal,
+	area_ha decimal,
 	count_hole integer,
 	path integer[],
 	is_hole boolean,
@@ -651,7 +707,7 @@ CREATE TABLE		model_draft.ego_political_boundary_bkg_vg250_6_gem_clean (
 	CONSTRAINT ego_political_boundary_bkg_vg250_6_gem_pkey PRIMARY KEY (id));
 
 -- insert municipalities with rings
-INSERT INTO	model_draft.ego_political_boundary_bkg_vg250_6_gem_clean (old_id,gen,bez,bem,nuts,rs_0,ags_0,area_km2,count_hole,path,geom)
+INSERT INTO	model_draft.ego_political_boundary_bkg_vg250_6_gem_clean (old_id,gen,bez,bem,nuts,rs_0,ags_0,area_ha,count_hole,path,geom)
 	SELECT	dump.id ::integer AS old_id,
 		dump.gen ::text AS gen,
 		dump.bez ::text AS bez,
@@ -659,7 +715,7 @@ INSERT INTO	model_draft.ego_political_boundary_bkg_vg250_6_gem_clean (old_id,gen
 		dump.nuts ::varchar(5) AS nuts,
 		dump.rs_0 ::varchar(12) AS rs_0,
 		dump.ags_0 ::varchar(12) AS ags_0,
-		ST_AREA(dump.geom) / 10000 ::decimal AS area_km2,
+		ST_AREA(dump.geom) / 10000 ::decimal AS area_ha,
 		dump.count_hole ::integer,
 		dump.path ::integer[] AS path,
 		dump.geom ::geometry(Polygon,3035) AS geom		
@@ -723,7 +779,7 @@ COMMENT ON MATERIALIZED VIEW model_draft.ego_political_boundary_bkg_vg250_6_gem_
 	{"Name": "nuts", "Description": "Europäischer Statistikschlüssel", "Unit": " " },
 	{"Name": "rs_0", "Description": "Aufgefüllter Regionalschlüssel", "Unit": " " },
 	{"Name": "ags_0", "Description": "Amtlicher Gemeindeschlüssel", "Unit": " " },
-	{"Name": "area_km2", "Description": "Area in km²", "Unit": "km²" },
+	{"Name": "area_ha", "Description": "Area in ha", "Unit": "ha" },
 	{"Name": "count_hole", "Description": "Number of holes", "Unit": " " },
 	{"Name": "path", "Description": "Path number", "Unit": " " },
 	{"Name": "hole", "Description": "True if hole", "Unit": " " },
@@ -786,7 +842,7 @@ COMMENT ON TABLE model_draft.ego_political_boundary_bkg_vg250_6_gem_clean IS '{
 	{"Name": "nuts", "Description": "Europäischer Statistikschlüssel", "Unit": " " },
 	{"Name": "rs_0", "Description": "Aufgefüllter Regionalschlüssel", "Unit": " " },
 	{"Name": "ags_0", "Description": "Amtlicher Gemeindeschlüssel", "Unit": " " },
-	{"Name": "area_km2", "Description": "Area in km²", "Unit": "km²" },
+	{"Name": "area_ha", "Description": "Area in ha", "Unit": "ha" },
 	{"Name": "count_hole", "Description": "Number of holes", "Unit": " " },
 	{"Name": "path", "Description": "Path number", "Unit": " " },
 	{"Name": "hole", "Description": "True if hole", "Unit": " " },
@@ -813,32 +869,32 @@ SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_political_boundary_
 -- validation
 CREATE OR REPLACE VIEW political_boundary.bkg_vg250_statistics_view AS
 -- Area Sum
--- 38162814 km²
+-- 38162814 ha
 SELECT	'vg' ::text AS id,
-	SUM(vg.area_km2) ::integer AS area_sum_km2
+	SUM(vg.area_ha) ::integer AS area_sum_ha
 FROM	political_boundary.bkg_vg250_1_sta_mview AS vg
 UNION ALL
--- 38141292 km²
+-- 38141292 ha
 SELECT	'deu' ::text AS id,
-	SUM(vg.area_km2) ::integer AS area_sum_km2
+	SUM(vg.area_ha) ::integer AS area_sum_ha
 FROM	political_boundary.bkg_vg250_1_sta_mview AS vg
 WHERE	bez='Bundesrepublik'
 UNION ALL
--- 38141292 km²
+-- 38141292 ha
 SELECT	'NOT deu' ::text AS id,
-	SUM(vg.area_km2) ::integer AS area_sum_km2
+	SUM(vg.area_ha) ::integer AS area_sum_ha
 FROM	political_boundary.bkg_vg250_1_sta_mview AS vg
 WHERE	bez='--'
 UNION ALL
--- 35718841 km²
+-- 35718841 ha
 SELECT	'land' ::text AS id,
-	SUM(vg.area_km2) ::integer AS area_sum_km2
+	SUM(vg.area_ha) ::integer AS area_sum_ha
 FROM	political_boundary.bkg_vg250_1_sta_mview AS vg
 WHERE	gf='3' OR gf='4'
 UNION ALL
--- 35718841 km²
+-- 35718841 ha
 SELECT	'water' ::text AS id,
-	SUM(vg.area_km2) ::integer AS area_sum_km2
+	SUM(vg.area_ha) ::integer AS area_sum_ha
 FROM	political_boundary.bkg_vg250_1_sta_mview AS vg
 WHERE	gf='1' OR gf='2';
 
