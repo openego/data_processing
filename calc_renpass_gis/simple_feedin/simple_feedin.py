@@ -1,8 +1,8 @@
 #!/bin/python
 # -*- coding: utf-8 -*-
 """
-Module to calculate solar, windonshore and windoffshore feedins. Exports the
-data to a CSV-file.
+Module to calculate solar, windonshore and windoffshore feedins based on
+feedinlib. (https://github.com/oemof/feedinlib) Exports the data to a CSV-file.
 
 Attributes
 ----------
