@@ -80,9 +80,9 @@ COMMENT ON TABLE supply.ego_conv_powerplant
                   "Name": "Open Power System Data",
                   "URL":  "data.open-power-system-data.org/conventional_power_plants/" }                 
                                       ],
-"Reference date": "20160208",
-"Date of collection": "2016",
-"Original file": "proc_power_plant_germany.sql",
+"Reference date": ["08.02.2016"],
+"Date of collection": ["01.01.2016"],
+"Original file": ["proc_power_plant_germany.sql"],
 "Spatial resolution": ["Germany"],
 "Description": ["This dataset contains processed information on powerplants from BNetzA and UBA-list from Germany"],
 "Column": [
