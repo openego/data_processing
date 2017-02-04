@@ -1,11 +1,11 @@
 """
-peak load
+Calculates peak load per load area
 """
 
-__copyright__ 	= "Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems"
+__copyright__ 	= "Reiner Lemoine Institut gGmbH, Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems"
 __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
 __url__ 		= "https://github.com/openego/data_processing/blob/master/LICENSE"
-__author__ 		= "IlkaCu" 
+__author__ 		= "gplssm, IlkaCu" 
 
 import pandas as pd
 from workalendar.europe import Germany
