@@ -1,5 +1,5 @@
 /*
-Extract OSM strets
+Extract OSM streets
 
 __copyright__ 	= "Reiner Lemoine Institut gGmbH"
 __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
