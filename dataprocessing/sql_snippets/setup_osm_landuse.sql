@@ -431,8 +431,7 @@ CREATE INDEX  	osm_deu_polygon_urban_sector_3_industrial_mview_geom_idx
 	USING	GIST (geom);
 	
 -- grant (oeuser)
-GRANT ALL ON TABLE 	openstreetmap.osm_deu_polygon_urban_sector_3_industrial_mview TO oeuser WITH GRANT OPTION;
-ALTER TABLE		openstreetmap.osm_deu_polygon_urban_sector_3_industrial_mview OWNER TO oeuser;
+ALTER TABLE	openstreetmap.osm_deu_polygon_urban_sector_3_industrial_mview OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.5','output','openstreetmap','osm_deu_polygon_urban_sector_3_industrial_mview','setup_osm_landuse.sql',' ');

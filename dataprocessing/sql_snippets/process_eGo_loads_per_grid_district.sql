@@ -320,6 +320,44 @@ UPDATE 	model_draft.ego_demand_loadarea AS t1
 SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_osm_sector_per_griddistrict_2_retail','process_eGo_loads_per_grid_district.sql',' ');
 
 
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','input','openstreetmap','osm_deu_polygon_urban','process_eGo_loads_per_grid_district.sql',' ');
+
+-- filter Industrial without largescale
+DROP MATERIALIZED VIEW IF EXISTS	openstreetmap.osm_deu_polygon_urban_sector_3_industrial_nolargescale_mview CASCADE;
+CREATE MATERIALIZED VIEW		openstreetmap.osm_deu_polygon_urban_sector_3_industrial_nolargescale_mview AS
+	SELECT	osm.*
+	FROM	openstreetmap.osm_deu_polygon_urban AS osm
+	WHERE	sector = '3' AND gid NOT IN (SELECT polygon_id FROM model_draft.ego_demand_hv_largescaleconsumer)
+ORDER BY	osm.gid;
+
+-- index (id)
+CREATE UNIQUE INDEX  	osm_deu_polygon_urban_sector_3_industrial_nolargescale_mview_gid_idx
+		ON	openstreetmap.osm_deu_polygon_urban_sector_3_industrial_nolargescale_mview (gid);
+
+-- index GIST (geom)
+CREATE INDEX  	osm_deu_polygon_urban_sector_3_industrial_nolargescale_mview_geom_idx
+	ON	openstreetmap.osm_deu_polygon_urban_sector_3_industrial_nolargescale_mview USING GIST (geom);
+	
+-- grant (oeuser)
+ALTER TABLE	openstreetmap.osm_deu_polygon_urban_sector_3_industrial_nolargescale_mview OWNER TO oeuser;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','output','openstreetmap','osm_deu_polygon_urban_sector_3_industrial_nolargescale_mview','setup_osm_landuse.sql',' ');
+
+-- check
+SELECT	'industrial' AS name,
+	count(ind.*) AS cnt
+FROM	openstreetmap.osm_deu_polygon_urban_sector_3_industrial_mview ind
+UNION ALL
+SELECT	'largescale' AS name,
+	count(ls.*) AS cnt
+FROM	model_draft.ego_demand_hv_largescaleconsumer ls
+UNION ALL
+SELECT	'nolargescale' AS name,
+	count(nols.*) AS cnt
+FROM	openstreetmap.osm_deu_polygon_urban_sector_3_industrial_nolargescale_mview nols;
+
 -- 3. industrial sector
 DROP TABLE IF EXISTS  	model_draft.ego_osm_sector_per_griddistrict_3_industrial CASCADE;
 CREATE TABLE         	model_draft.ego_osm_sector_per_griddistrict_3_industrial	 (
@@ -327,14 +365,11 @@ CREATE TABLE         	model_draft.ego_osm_sector_per_griddistrict_3_industrial	 
 	geom geometry(Polygon,3035),
 	CONSTRAINT urban_sector_per_grid_district_3_industrial_pkey PRIMARY KEY (id));
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','input','openstreetmap','osm_deu_polygon_urban_sector_3_industrial_mview','process_eGo_loads_per_grid_district.sql',' ');
-
 -- intersect sector with mv-griddistrict
 INSERT INTO     model_draft.ego_osm_sector_per_griddistrict_3_industrial (geom)
 	SELECT	loads.geom ::geometry(Polygon,3035)
 	FROM	(SELECT (ST_DUMP(ST_SAFE_INTERSECTION(loads.geom,dis.geom))).geom AS geom
-		FROM	openstreetmap.osm_deu_polygon_urban_sector_3_industrial_mview AS loads,
+		FROM	openstreetmap.osm_deu_polygon_urban_sector_3_industrial_nolargescale_mview AS loads,
 			model_draft.ego_grid_mv_griddistrict AS dis
 		WHERE	loads.geom && dis.geom
 		) AS loads
