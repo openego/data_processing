@@ -1,7 +1,7 @@
 /*
 Quick workaround to transfer renpassG!S results into the corresponding powerflow table.
 
-__copyright__ 	= "Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems"
+__copyright__ 	= "Europa Universitaet Flensburg, Centre for Sustainable Energy Systems"
 __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
 __url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
 __author__ 	= "mrtnsth"
