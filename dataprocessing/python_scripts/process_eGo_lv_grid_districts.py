@@ -1,9 +1,11 @@
-# -*- coding: utf-8 -*-
 """
-Created on Wed Jul 27 13:41:14 2016
+Create LV grid districts
+"""
 
-@author: jonas.guetter
-"""
+__copyright__ 	= "Reiner Lemoine Institut gGmbH"
+__license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
+__url__         = "https://github.com/openego/data_processing/blob/master/LICENSE"
+__author__ = "jong42"
 
 import sqlalchemy as sqla
 from sqlalchemy import func

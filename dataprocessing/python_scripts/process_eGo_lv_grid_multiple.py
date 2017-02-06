@@ -1,9 +1,11 @@
-# -*- coding: utf-8 -*-
 """
-Created on Mon Oct 24 14:07:10 2016
+Create LV grid districts
+"""
 
-@author: jonas.guetter
-"""
+__copyright__ 	= "Reiner Lemoine Institut gGmbH"
+__license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
+__url__         = "https://github.com/openego/data_processing/blob/master/LICENSE"
+__author__ = "jong42"
 
 import networkx as nx
 from sqlalchemy.sql import text

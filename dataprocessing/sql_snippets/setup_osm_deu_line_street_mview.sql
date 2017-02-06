@@ -1,4 +1,11 @@
-﻿-- 02:00 min
+/*
+MView for extracted OSM streets
+
+__copyright__ 	= "Reiner Lemoine Institut gGmbH"
+__license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
+__url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
+__author__ 	= "jong42"
+*/
 
 CREATE MATERIALIZED VIEW openstreetmap.osm_deu_line_street_mview
 

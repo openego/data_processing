@@ -1,10 +1,11 @@
-#!/usr/bin/env python3
-#  -*- coding: utf-8 -*-
 """
-Created on Thu Jul  7 11:43:11 2016
+Create LV substations
+"""
 
-@author: jonas.guetter
-"""
+__copyright__ 	= "Reiner Lemoine Institut gGmbH"
+__license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
+__url__         = "https://github.com/openego/data_processing/blob/master/LICENSE"
+__author__ = "jong42"
 
 import sqlalchemy as sqla
 from sqlalchemy import func

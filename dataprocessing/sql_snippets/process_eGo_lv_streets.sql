@@ -1,4 +1,11 @@
-﻿-- 03:00 h -- 
+/*
+Extract OSM streets
+
+__copyright__ 	= "Reiner Lemoine Institut gGmbH"
+__license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
+__url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
+__author__ 	= "jong42, Ludee"
+*/
 
 DROP TABLE IF EXISTS model_draft.ego_grid_lv_streets;
 
