@@ -323,6 +323,7 @@ SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_osm_sector_per_grid
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.5','input','openstreetmap','osm_deu_polygon_urban','process_eGo_loads_per_grid_district.sql',' ');
 
+
 -- filter Industrial without largescale
 DROP MATERIALIZED VIEW IF EXISTS	openstreetmap.osm_deu_polygon_urban_sector_3_industrial_nolargescale_mview CASCADE;
 CREATE MATERIALIZED VIEW		openstreetmap.osm_deu_polygon_urban_sector_3_industrial_nolargescale_mview AS
@@ -357,6 +358,7 @@ UNION ALL
 SELECT	'nolargescale' AS name,
 	count(nols.*) AS cnt
 FROM	openstreetmap.osm_deu_polygon_urban_sector_3_industrial_nolargescale_mview nols;
+
 
 -- 3. industrial sector
 DROP TABLE IF EXISTS  	model_draft.ego_osm_sector_per_griddistrict_3_industrial CASCADE;
