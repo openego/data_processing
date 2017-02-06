@@ -1,5 +1,18 @@
 ﻿/*
 
+SQL Script which prepare and insert the NEP 2015 renewable power plant data 
+This skript is not used. Please see:
+
+* development_res_ProxToNow_2035.sql
+* development_res_ProxToNow_2020.sql
+
+__copyright__ = "Europa-Universität Flensburg - ZNES"
+__license__ = "GNU Affero General Public License Version 3 (AGPL-3.0)"
+__url__ = "https://github.com/openego/data_processing/blob/master/LICENSE"
+__author__ = "wolfbunke"
+
+
+
 1. Methodes of development of each type of generation
 	solar -> own methode per mun (WIP)
 	wind  -> by potental areas (Martin)
@@ -21,6 +34,7 @@ ToDo: KWK Kleinstanlagen klären
 	
 */
 
+/*
 
 ---
 -- Create view with nuts id and polygones for federal states
@@ -385,8 +399,10 @@ ToDo: What is the diff between both tables beside number of entries
   * orig_geo_vg250.vg250_6_gem
 */
 
+
 -- Drop Table orig_geo_powerplants.renewable_power_plants_germany_to_region CASCADE;
 
+/*
 Create Table orig_geo_powerplants.renewable_power_plants_germany_to_region
 (
 re_id bigint NOT NULL,   	-- id from proc_renewable_power_plants_germany
@@ -532,6 +548,7 @@ UPDATE orig_geo_powerplants.pv_dev_nep_germany_mun
 
 */
 
+/*
 
 
 UPDATE orig_geo_powerplants.pv_dev_nep_germany_mun AA
@@ -694,7 +711,7 @@ new script or use of skript to get =
  Data
 */
 
-
+/*
 --- # # # # # # # # # # # # # # #
 -- 
 -- Check Scenario Data per felderal state
@@ -794,3 +811,5 @@ orig_geo_vg250.vg250_6_gem_clean
 LIMIT 1
 
 
+
+*/
