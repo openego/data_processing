@@ -104,8 +104,8 @@ if __name__ == '__main__':
     la_index_col = 'id'
 
     schema = 'model_draft'
-    table = 'ego_demand_load_area_peak_load'
-    target_table = 'ego_demand_load_area_peak_load'
+    table = 'ego_demand_loadarea'
+    target_table = 'ego_demand_loadarea_peak_load'
     year = 2013
     db_group = 'oeuser'
 
