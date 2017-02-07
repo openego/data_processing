@@ -148,12 +148,15 @@ CREATE TABLE model_draft.ego_supply_res_powerplant_2035
   CONSTRAINT ego_supply_res_powerplant_2035_pkey PRIMARY KEY (id)
 );
 
--- Set Grant and index
+-- Set Grant and index on geom and generation_type = gt
 
 CREATE INDEX ego_supply_res_powerplant_2035_idx
   ON model_draft.ego_supply_res_powerplant_2035
   USING gist
   (geom);
+
+CREATE INDEX ego_supply_res_powerplant_2035_gt_idx 
+	ON model_draft.ego_supply_res_powerplant_2035 (generation_type);
 
 ALTER TABLE model_draft.ego_supply_res_powerplant_2035
   OWNER TO oeuser;
@@ -1227,7 +1230,8 @@ COMMENT ON TABLE  model_draft.ego_supply_res_powerplant_2035 IS
                     "Description": "Latitude",
                     "Unit": "" }, 
                    {"Name": "voltage_level",
-                    "Description": "Voltage level of Germany form 1 (Extra-high voltage) to 7 (Low voltage)",
+                    "Description": "voltage level to which generator is connected (partly calculated based
+                     on installed capacity) Voltage level of Germany form 1 (Extra-high voltage) to 7 (Low voltage)",
                     "Unit": "" }, 
                    {"Name": "network_node",
                     "Description": "Connection point to the electricity grid based on BNetzA data",
@@ -1244,20 +1248,24 @@ COMMENT ON TABLE  model_draft.ego_supply_res_powerplant_2035 IS
                    {"Name": "voltage",
                     "Description": "Calculated voltage level",
                     "Unit": "KV" }, 
-                   {"Name": "subst_id",
-                    "Description": "...",
+		   {"Name": "subst_id",
+                    "Description": "id of associated substation",
                     "Unit": "" }, 
                    {"Name": "otg_id",
-                    "Description": "...",
+                    "Description": "otg_id of associated substation",
                     "Unit": "" }, 
                    {"Name": "un_id",
-                    "Description": "...",
+                    "Description": "unified id for res and conv powerplants",
                     "Unit": "" }],
 "Changes":[
                    {"Name": "Wolf-Dieter Bunke",
                     "Mail": "wolf-dieter.bunke@uni-flensburg.de",
                     "Date":  "21.11.2016",
-                    "Comment": "Creat Tabel and implement development method" }
+                    "Comment": "Creat Tabel and implement development method" },
+                   {"Name": "Wolf-Dieter Bunke",
+                    "Mail": "wolf-dieter.bunke@uni-flensburg.de",
+                    "Date":  "07.02.2017",
+                    "Comment": "Change of DB version, new allocation" }
                   ],
 "ToDo": ["Add subst_id till un_id, and soon"],
 "Licence": ["Not choosen yet"],
