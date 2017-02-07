@@ -1,12 +1,12 @@
 ﻿/* 
-Creation of renpassG!S tables
+Contains the creation of a simple renpass_gis database structure. This 
+structue mirrors renpass_gis CSV files.
 
-Author: Martin S.
+__copyright__ = "ZNES"
+__license__ = "GNU Affero General Public License Version 3 (AGPL-3.0)"
+__url__ = "https://github.com/openego/data_processing/blob/master/LICENSE"
+__author__ = "s3pp"
 */
-
-
-
-
 
 
 

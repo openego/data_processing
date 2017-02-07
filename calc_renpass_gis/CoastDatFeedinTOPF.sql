@@ -1,8 +1,11 @@
 ﻿/* Query to determine feedin for solar & wind generators using normalized timeseries based on coastdat 
 (open_eGo/data_processing/calc_renpass_gis/feedin)
 
-Martin Söthe
-...
+__copyright__ = "ZNES"
+__license__ = "GNU Affero General Public License Version 3 (AGPL-3.0)"
+__url__ = "https://github.com/openego/data_processing/blob/master/LICENSE"
+__author__ = "s3pp"
+
 */
 
 
