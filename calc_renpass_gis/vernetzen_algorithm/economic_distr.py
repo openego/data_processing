@@ -1,4 +1,14 @@
 # -*- coding: utf-8 -*-
+""" Economic windonshore distribution based on VerNetzen
+"""
+
+
+__copyright__ = "ZNES"
+__license__ = "GNU Affero General Public License Version 3 (AGPL-3.0)"
+__url__ = "https://github.com/openego/data_processing/blob/master/LICENSE"
+__author__ = "s3pp"
+
+
 from geoalchemy2 import Geometry
 from geoalchemy2.shape import to_shape
 from sqlalchemy.sql import func

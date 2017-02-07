@@ -1,4 +1,14 @@
 # -*- coding: utf-8 -*-
+"""SQLA ORM
+"""
+
+
+__copyright__ = "ZNES"
+__license__ = "GNU Affero General Public License Version 3 (AGPL-3.0)"
+__url__ = "https://github.com/openego/data_processing/blob/master/LICENSE"
+__author__ = "s3pp"
+
+
 from sqlalchemy import MetaData, create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.automap import automap_base

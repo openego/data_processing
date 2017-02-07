@@ -37,6 +37,13 @@ TODO
     How to handle different timezones?
 """
 
+
+__copyright__ = "ZNES"
+__license__ = "GNU Affero General Public License Version 3 (AGPL-3.0)"
+__url__ = "https://github.com/openego/data_processing/blob/master/LICENSE"
+__author__ = "s3pp"
+
+
 from feedinlib import powerplants as plants
 from oemof.db import coastdat
 import db

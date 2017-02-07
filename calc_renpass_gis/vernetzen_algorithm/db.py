@@ -20,6 +20,13 @@ db =
 
 """
 
+
+__copyright__ = "ZNES"
+__license__ = "GNU Affero General Public License Version 3 (AGPL-3.0)"
+__url__ = "https://github.com/openego/data_processing/blob/master/LICENSE"
+__author__ = "s3pp"
+
+
 from sqlalchemy import MetaData, create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.automap import automap_base
@@ -65,6 +72,7 @@ meta.reflect(bind=oedb, schema='orig_scenario_data',
 # map classes ot Base
 Base = automap_base(metadata=meta)
 
+
 # add classes, that are not included
 class Located(Base):
     __tablename__ = 'coastdat.located'
@@ -108,4 +116,3 @@ Session = sessionmaker(binds={
     GridDistrict: oedb})
 
 session = Session()
-
