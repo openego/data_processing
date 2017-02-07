@@ -1,5 +1,5 @@
 /*
-voronoi with ehv substations
+Executes a voronoi algorithmn based on EHV substations. 
 
 __copyright__ 	= "Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems"
 __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
