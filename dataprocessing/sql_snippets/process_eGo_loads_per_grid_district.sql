@@ -346,7 +346,7 @@ ALTER TABLE	openstreetmap.osm_deu_polygon_urban_sector_3_industrial_nolargescale
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.5','output','openstreetmap','osm_deu_polygon_urban_sector_3_industrial_nolargescale_mview','setup_osm_landuse.sql',' ');
 
--- check
+/* -- check
 SELECT	'industrial' AS name,
 	count(ind.*) AS cnt
 FROM	openstreetmap.osm_deu_polygon_urban_sector_3_industrial_mview ind
@@ -358,7 +358,7 @@ UNION ALL
 SELECT	'nolargescale' AS name,
 	count(nols.*) AS cnt
 FROM	openstreetmap.osm_deu_polygon_urban_sector_3_industrial_nolargescale_mview nols;
-
+ */
 
 -- 3. industrial sector
 DROP TABLE IF EXISTS  	model_draft.ego_osm_sector_per_griddistrict_3_industrial CASCADE;
