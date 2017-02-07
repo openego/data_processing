@@ -57,7 +57,7 @@ def data_processing():
         # 'process_eGo_loads_per_grid_district.sql', 	# loadarea per mv-griddistrict
         # 'ego_demand_loads_per_mv_voronoi.sql', 	    # loadarea per mv-voronoi
         # 'process_eGo_consumption.sql',			   	# consumption per loadarea
-        # 'peak_load_per_load_area.py',				    # 
+        'peak_load_per_load_area.py',				    # peak loads
         # 'ego_paper_result.sql',						# results and statistics
        
         # 'voronoi_weatherpoint.sql',				    # weatherpoint voronoi
