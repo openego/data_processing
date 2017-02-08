@@ -1,3 +1,11 @@
+/*
+Setup for renewables power plants list
+
+__copyright__ 	= "Europa-Universität Flensburg, Centre for Sustainable Energy Systems"
+__license__ 	= ""
+__url__ 	= ""
+__author__ 	= "wolfbunke"
+*/
 
 -- DROP TABLE supply.ego_renewable_power_plants_germany;
 
