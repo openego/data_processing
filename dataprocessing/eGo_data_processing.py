@@ -31,7 +31,7 @@ def data_processing():
     total_time = time.time()
     logger.info('ego data processing started...')
 
-    # list of sql_snippets that process the data in correct order
+    # list of sql- and python-snippets that process the data in correct order
     snippet_dir = os.path.abspath(
         os.path.join(os.path.dirname(__file__),
                              'sql_snippets'))
@@ -78,7 +78,7 @@ def data_processing():
     # get database connection
     conn = io.oedb_session(section='oedb')
 
-    # iterate over list of sql snippets and execute them
+    # iterate over list of sql- and python-snippets and execute them
     for snippet in snippets:
         # timing and logging
         snippet_time = time.time()
