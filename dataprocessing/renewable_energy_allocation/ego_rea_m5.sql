@@ -29,11 +29,11 @@ CREATE MATERIALIZED VIEW 		model_draft.ego_supply_rea_m5_a_mview AS
 		geom,
 		flag
 	FROM 	model_draft.ego_supply_rea AS dea
-	WHERE 	(dea.voltage_level = '6' 
-			OR dea.voltage_level = '7'
+	WHERE 	(dea.voltage_level = 6 
+			OR dea.voltage_level = 7
 			OR dea.voltage_level IS NULL)
 		AND 	dea.generation_type = 'solar'
-		OR (dea.voltage_level = '7' AND dea.generation_type = 'wind');
+		OR (dea.voltage_level = 7 AND dea.generation_type = 'wind');
 		
 -- create index GIST (geom)
 CREATE INDEX ego_supply_rea_m5_a_mview_geom_idx
@@ -49,11 +49,11 @@ SELECT ego_scenario_log('v0.2.3','output','model_draft','ego_supply_rea_m5_a_mvi
 -- flag M5
 UPDATE 	model_draft.ego_supply_rea AS dea
 	SET	flag = 'M5_rest'
-	WHERE 	(dea.voltage_level = '6' 
-			OR dea.voltage_level = '7'
+	WHERE 	(dea.voltage_level = 6 
+			OR dea.voltage_level = 7
 			OR dea.voltage_level IS NULL)
 		AND 	dea.generation_type = 'solar'
-		OR (dea.voltage_level = '7' AND dea.generation_type = 'wind')
+		OR (dea.voltage_level = 7 AND dea.generation_type = 'wind')
 		AND dea.subst_id IS NOT NULL;
 
 

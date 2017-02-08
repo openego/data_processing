@@ -29,7 +29,7 @@ CREATE MATERIALIZED VIEW 		model_draft.ego_supply_rea_m2_a_mview AS
 		geom,
 		flag
 	FROM 	model_draft.ego_supply_rea AS dea
-	WHERE 	(dea.voltage_level = '4' AND 
+	WHERE 	(dea.voltage_level = 4 AND 
 		dea.generation_type = 'wind');
 
 -- create index GIST (geom)
@@ -46,7 +46,7 @@ SELECT ego_scenario_log('v0.2.3','output','model_draft','ego_supply_rea_m2_a_mvi
 -- flag M2
 UPDATE 	model_draft.ego_supply_rea AS dea
 	SET	flag = 'M2_rest'
-	WHERE	dea.voltage_level = '4' AND 
+	WHERE	dea.voltage_level = 4 AND 
 		dea.generation_type = 'wind';
 
 
@@ -71,7 +71,7 @@ INSERT INTO model_draft.ego_supply_rea_m2_windfarm (area_ha,geom)
 				ST_BUFFER(dea.geom, 1000)
 			)))).geom ::geometry(Polygon,3035) AS geom_farm
 		FROM 	model_draft.ego_supply_rea AS dea
-		WHERE 	(dea.voltage_level = '4') AND
+		WHERE 	(dea.voltage_level = 4) AND
 			(dea.generation_type = 'wind')
 		) AS farm;
 
@@ -102,7 +102,7 @@ UPDATE 	model_draft.ego_supply_rea_m2_windfarm AS t1
 			SUM(dea.electrical_capacity) AS electrical_capacity_sum
 		FROM	model_draft.ego_supply_rea AS dea,
 			model_draft.ego_supply_rea_m2_windfarm AS farm
-		WHERE  	(dea.voltage_level = '4' AND
+		WHERE  	(dea.voltage_level = 4 AND
 			dea.generation_type = 'wind') AND
 			(farm.geom && dea.geom AND
 			ST_CONTAINS(farm.geom,dea.geom))
@@ -121,7 +121,7 @@ UPDATE 	model_draft.ego_supply_rea AS t1
 			farm.farm_id AS farm_id
 		FROM	model_draft.ego_supply_rea AS dea,
 			model_draft.ego_supply_rea_m2_windfarm AS farm
-		WHERE  	(dea.voltage_level = '4' AND
+		WHERE  	(dea.voltage_level = 4 AND
 			dea.generation_type = 'wind') AND
 			(farm.geom && dea.geom AND
 			ST_CONTAINS(farm.geom,dea.geom))

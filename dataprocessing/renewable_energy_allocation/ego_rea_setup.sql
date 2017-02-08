@@ -20,7 +20,7 @@ CREATE TABLE 		model_draft.ego_supply_rea (
 	electrical_capacity numeric,
 	generation_type text,
 	generation_subtype character varying,
-	voltage_level character varying,
+	voltage_level smallint,
 	postcode character varying,
 	source character varying,
 	subst_id bigint,

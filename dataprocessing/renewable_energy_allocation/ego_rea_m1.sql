@@ -30,8 +30,8 @@ CREATE MATERIALIZED VIEW 		model_draft.ego_supply_rea_m1_1_a_mview AS
 		flag
 	FROM 	model_draft.ego_supply_rea AS dea
 	WHERE 	(dea.generation_type = 'biomass' OR dea.generation_type = 'gas') AND
-		(dea.voltage_level = '4' OR dea.voltage_level = '5' OR
-		dea.voltage_level = '6' OR dea.voltage_level = '7'
+		(dea.voltage_level = 4 OR dea.voltage_level = 5 OR
+		dea.voltage_level = 6 OR dea.voltage_level = 7
 		OR dea.voltage_level IS NULL );
 
 -- create index GIST (geom)
@@ -49,8 +49,8 @@ SELECT ego_scenario_log('v0.2.3','temp','model_draft','ego_supply_rea_m1_1_a_mvi
 UPDATE 	model_draft.ego_supply_rea AS dea
 	SET	flag = 'M1-1_rest'
 	WHERE	(dea.generation_type = 'biomass' OR dea.generation_type = 'gas') AND
-		(dea.voltage_level = '4' OR dea.voltage_level = '5' OR
-		dea.voltage_level = '6' OR dea.voltage_level = '7'
+		(dea.voltage_level = 4 OR dea.voltage_level = 5 OR
+		dea.voltage_level = 6 OR dea.voltage_level = 7
 		OR dea.voltage_level IS NULL );
 
 
@@ -224,7 +224,7 @@ CREATE MATERIALIZED VIEW 		model_draft.ego_supply_rea_m1_2_a_mview AS
 		geom,
 		flag
 	FROM 	model_draft.ego_supply_rea AS dea
-	WHERE 	(dea.voltage_level = '4' OR dea.voltage_level = '5') AND
+	WHERE 	(dea.voltage_level = 4 OR dea.voltage_level = 5) AND
 		(dea.generation_subtype = 'solar_roof_mounted');
 
 -- create index GIST (geom)
@@ -241,7 +241,7 @@ SELECT ego_scenario_log('v0.2.3','temp','model_draft','ego_supply_rea_m1_2_a_mvi
 -- flag M1-2
 UPDATE 	model_draft.ego_supply_rea AS dea
 	SET	flag = 'M1-2_rest'
-	WHERE	(dea.voltage_level = '4' OR dea.voltage_level = '5') AND
+	WHERE	(dea.voltage_level = 4 OR dea.voltage_level = 5) AND
 		(dea.generation_subtype = 'solar_roof_mounted');
 
 

@@ -31,7 +31,7 @@ CREATE MATERIALIZED VIEW 		model_draft.ego_supply_rea_m4_a_mview AS
 		geom,
 		flag
 	FROM 	model_draft.ego_supply_rea AS dea
-	WHERE 	(dea.voltage_level = '4' OR dea.voltage_level = '5')
+	WHERE 	(dea.voltage_level = 4 OR dea.voltage_level = 5)
 		AND 	(dea.generation_subtype = 'solar_ground_mounted' 
 			OR (dea.generation_type = 'solar' AND dea.generation_subtype IS NULL))
 		OR (dea.voltage_level IS NULL AND dea.generation_type = 'wind')
@@ -54,7 +54,7 @@ SELECT ego_scenario_log('v0.2.3','output','model_draft','ego_supply_rea_m4_a_mvi
 -- flag M4
 UPDATE 	model_draft.ego_supply_rea AS dea
 	SET	flag = 'M4_rest'
-	WHERE	(dea.voltage_level = '4' OR dea.voltage_level = '5')
+	WHERE	(dea.voltage_level = 4 OR dea.voltage_level = 5)
 		AND 	(dea.generation_subtype = 'solar_ground_mounted' 
 			OR (dea.generation_type = 'solar' AND dea.generation_subtype IS NULL))
 		OR (dea.voltage_level IS NULL AND dea.generation_type = 'wind')
