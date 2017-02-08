@@ -1,4 +1,14 @@
-﻿------------
+/*
+Setup for scenario capacities NEP 2015
+__copyright__ 	= "Europa-Universität Flensburg, Centre for Sustainable Energy Systems"
+__license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
+__url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
+__author__ 	= "wolfbunke"
+*/
+
+
+
+------------
 --- ego_nep_2015_scenario_capacities
 ------------
 
