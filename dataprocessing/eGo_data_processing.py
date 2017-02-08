@@ -9,6 +9,7 @@ __license__ = "GNU Affero General Public License Version 3 (AGPL-3.0)"
 __url__ = "https://github.com/openego/data_processing/blob/master/LICENSE"
 __author__ = "gplssm, Ludee"
 
+import pandas as pd
 import logging
 import time
 import os
