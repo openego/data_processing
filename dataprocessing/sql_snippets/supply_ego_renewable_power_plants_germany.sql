@@ -2,8 +2,8 @@
 Setup for renewables power plants list
 
 __copyright__ 	= "Europa-Universität Flensburg, Centre for Sustainable Energy Systems"
-__license__ 	= ""
-__url__ 	= ""
+__license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
+__url__ 	    = "https://github.com/openego/data_processing/blob/master/LICENSE"
 __author__ 	= "wolfbunke"
 */
 
@@ -183,12 +183,12 @@ COMMENT ON TABLE supply.ego_renewable_power_plants_germany
     "Date":"16.03.2016", 
     "Comment":"Created table" }],
 
-"ToDo": ["ckeck licence"],
+"Notes": ["ckeck licence"],
 
 "Licence": [{"Name": "unspecified Licence",
-                          "URL": " "}],
+             "URL": " "}],
 
-"Instructions for proper use": ["Always state licence"]}';
+"Instructions for proper use": ["..."]}';
 */
 
 
