@@ -104,7 +104,7 @@ UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
 			model_draft.ego_supply_rea AS dea
 		WHERE  	gd.geom && dea.geom AND
 			ST_CONTAINS(gd.geom,dea.geom) AND
-			dea.voltage_level = '03 (HS)'
+			dea.voltage_level = '3'
 		GROUP BY gd.subst_id
 		)AS t2
 	WHERE  	t1.subst_id = t2.subst_id;
