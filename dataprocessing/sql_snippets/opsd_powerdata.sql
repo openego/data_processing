@@ -2,9 +2,9 @@
 Setup for OPSD power plants list
 
 __copyright__ 	= "Europa-Universität Flensburg, Centre for Sustainable Energy Systems"
-__license__ 	= ""
-__url__ 	= ""
-__author__ 	= "wolfbunke"
+__license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
+__url__ 	    = "https://github.com/openego/data_processing/blob/master/LICENSE"
+__author__ 	    = "wolfbunke"
 */
 
 
@@ -169,10 +169,19 @@ COMMENT ON TABLE  supply.opsd_power_plants_germany IS
                     "Date":  "19.02.2016",
                     "Comment": "Add comments and structure" }
                   ],
-"ToDo": ["Update list with new data version and data structure of opsd"],
-"Licence": [""],
+"Notes": ["Primary data from BNetzA, BNetzA_PV, TransnetBW, TenneT, Amprion, 50Hertz, Netztransparenz.de,
+ Postleitzahlen Deutschland, Energinet.dk, Energistyrelsen, GeoNames, French Ministery of the Environment, 
+ Energy and the Sea, OpenDataSoft, Urzad Regulacji Energetyki (URE)"],
+"Licence": [{
+            "Name":		"Open Power System Data",
+	          "URL":		"http://open-power-system-data.org/",
+	          "Copyright": 	"ZNES EUF"}],
 "Instructions for proper use": ["..."]
 }';
 */
+
 -- Json String test
 -- SELECT obj_description('supply.opsd_power_plants_germany'::regclass)::json;
+
+
+
