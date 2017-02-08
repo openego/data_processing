@@ -1,3 +1,13 @@
+/*
+Setup for OPSD power plants list
+
+__copyright__ 	= "Europa-Universität Flensburg, Centre for Sustainable Energy Systems"
+__license__ 	= ""
+__url__ 	= ""
+__author__ 	= "wolfbunke"
+*/
+
+
 -- OPSD powerplants based on beta version 
 
 -- Table: supply.opsd_power_plants_germany
