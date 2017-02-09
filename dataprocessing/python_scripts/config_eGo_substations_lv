@@ -6,11 +6,11 @@
 #__author__ = "jong42"
 
 [assumptions]
-trafo_range = 127
-trafo_maxrange = 576
+trafo_range = 180
+trafo_maxrange = 540
 
 [regions]
-load_areas = EgoDeuLoadArea
+load_areas = EgoDeuLoadAreaNew
 
 [auxilliary_tables]
 ontgrids = EgoDeuOntGrids
