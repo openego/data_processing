@@ -150,6 +150,7 @@ if __name__ == '__main__':
         orm_peak_load.__table__.create(conn)
     except:
         session.query(orm_peak_load).delete()
+        session.commit()
 
     # Use above function `add_sectoral_peak_load` via apply
     # elec_demand = load_areas.fillna(0).apply(
