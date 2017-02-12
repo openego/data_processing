@@ -326,7 +326,7 @@ def getStart():  # fixed start and end at events
                             sgIndex = parsing.index(ap) + 1
                             parsing_nodes.append(ap.position)
 
-                            sub = checkNext(ae.target, currInd, sg, sublist, sg2, sublist2, s)
+                            sub = checkNext(activeStates,ae.target, currInd, sg, sublist, sg2, sublist2, s)
                             if sub is not None:
                                 newSub = sub
                             break
@@ -352,7 +352,7 @@ def getStart():  # fixed start and end at events
                             # allStartEv.insert(currInd + 1, t)  # dynamic list tht has all parsing elements
                             # currInd += 1
 
-                            sub = checkNext(ae.target, currInd, sg, sublist, sg2, sublist2, s)
+                            sub = checkNext(activeStates,ae.target, currInd, sg, sublist, sg2, sublist2, s)
 
                             if sub is not None:
                                 newSub = sub
@@ -404,38 +404,163 @@ def getAnnot(t):
                     break
     return answer
 
-def checkNextParallel2(activeStates, curr_gw, currInd, sg, sublist, sg2, sublist2, s):
+def findEnd(activeStates):
+    activetypes = []
+    over = False
+    for st in activeStates:
+        #activetypes.append(type(st))
+        if type(st) is Gateway:
+            over = True
+            break
+    return over
+
+def checkNextParallel3(activeStates, curr_gw, currInd, sg, sublist, sg2, sublist2, s):
     #getting parallelly active states
-    for ae2 in alledges:
-        if ae2.source == curr_gw.position.name:
-            currobj = findType(ae2.target)
-            #deepobj = copy.deepcopy(currobj)
-            if currobj not in activeStates:
-                activeStates.append(currobj)
+    curr_gw.name = 'Gateway ' + curr_gw.position.name
 
-    # displaying states
-    printActiveStates(activeStates)
+    #remove any parents if in list
 
-    #taking steps
-    for state in activeStates:
-       takeStep(activeStates, state, currInd, sg, sublist, sg2, sublist2, s)
+    if set(curr_gw.parents).issubset(parsing_nodes):
+        for allAS in activeStates:
+            if allAS.position.name in curr_gw.parents:
+                activeStates.remove(allAS)
 
-    weiter = False
-    for state in activeStates:
-        if(type(state) is not Gateway):
-            takeStep(activeStates, state, currInd, sg, sublist, sg2, sublist2, s)
+    if curr_gw.position.name not in parsing_nodes:
+        parsing_nodes.append(curr_gw.position.name)
+        activeStates.append(curr_gw)
+        printActiveStates(activeStates)
 
-    for state in activeStates:
-        if (type(state) is Gateway):
-            weiter = True
+    # It is a fork
+        if len(curr_gw.parents) == 1:
+            #remove gateway and replace by it's successors
+            activeStates.remove(curr_gw)
+            for eachChild in curr_gw.children:
+                currobj = findType(eachChild)
+                if currobj not in activeStates:
+                    parsing_nodes.append(currobj.position.name)
+                    activeStates.append(currobj)
+
+            # displaying states
+            printActiveStates(activeStates)
+
+            ######### taking steps until the end
+
+            # over = findEnd(activeStates)
+            # while over is False:
+            #     over = findEnd(activeStates)
+            #     if over is True:
+            #         for state in activeStates:
+            #             if type(state) is Gateway:
+            #                 checkNextParallel3(activeStates, state, currInd, sg, sublist, sg2, sublist2, s)
+            #                 break
+            #     else:
+            for state in activeStates:
+                activeStates = takeStep2(activeStates, state, currInd, sg, sublist, sg2, sublist2, s)
+
+            while len(activeStates) > 1:
+                for state in activeStates:
+                    activeStates = takeStep2(activeStates, state, currInd, sg, sublist, sg2, sublist2, s)
+
         else:
+            #it is a join (and fork)
             weiter = False
+            for eachParent in curr_gw.parents:
+                if eachParent in parsing_nodes:
+                    weiter = True
+                else:
+                    weiter = False
+                    break
 
+            #if it is active
+            if weiter is True:
 
-    if weiter is True:
-        checkNext(state.position.name, currInd, sg, sublist, sg2, sublist2, s)
-        #checkNextParallel2(state, currInd, sg, sublist, sg2, sublist2, s)
+                #it is a fork as well
+                if len(curr_gw.children) > 1:
+
+                    for eachChild in curr_gw.children:
+                        activeStates = takeStep2(activeStates, findType(eachChild), currInd, sg, sublist, sg2, sublist2, s)
+                #it is a join
+                else:
+                    activeStates.remove(curr_gw)
+                    checkNext(activeStates, curr_gw.position.name, currInd, sg, sublist, sg2, sublist2, s)
+    else:
         return
+
+def takeStep2(activeStates, state,currInd, sg, sublist, sg2, sublist2, s):
+    it = 0
+    for ae2 in alledges:
+        if ae2.source == state.position.name:
+            for iter in activeStates:
+                if(iter.position.name==state.position.name):
+                    nextObj = findType(ae2.target)
+                    if nextObj is None or type(nextObj) is Gateway:
+                        if type(nextObj) is Gateway:
+                            Gateway.getParents(nextObj, alledges)
+                            Gateway.getChildren(nextObj, alledges)
+                            (signal, activeStates) = check_if_active2(activeStates, nextObj, currInd, sg, sublist, sg2, sublist2, s)
+                            if signal is 'wait':
+                                continue
+                            else:
+                               checkNext(activeStates,nextObj.position.name, currInd, sg, sublist, sg2, sublist2, s)
+                        else:
+                             activeStates[it] = copy.deepcopy(nextObj)
+                             if nextObj.position.name not in parsing_nodes:
+                                parsing_nodes.append(nextObj.position.name)
+                                printActiveStates(activeStates)
+                    else:
+                        # replace prev step by current task
+                        activeStates[it] = copy.deepcopy(nextObj)
+                        parsing_nodes.append(nextObj.position.name)
+                        printActiveStates(activeStates)
+                        break
+                else:
+                    it = it + 1
+    return  activeStates
+
+# def checkNextParallel2(activeStates, curr_gw, currInd, sg, sublist, sg2, sublist2, s):
+#     #getting parallelly active states
+#     for ae2 in alledges:
+#         if ae2.source == curr_gw.position.name:
+#             currobj = findType(ae2.target)
+#             if currobj not in activeStates:
+#                 parsing_nodes.append(curr_gw.position.name)
+#                 activeStates.append(currobj)
+#
+#     # displaying states
+#     printActiveStates(activeStates)
+#
+#     #taking steps
+#     for state in activeStates:
+#        takeStep(activeStates, state, currInd, sg, sublist, sg2, sublist2, s)
+#
+#     weiter = False
+#     for state in activeStates:
+#         if(type(state) is not Gateway):
+#             takeStep(activeStates, state, currInd, sg, sublist, sg2, sublist2, s)
+#
+#     for state in activeStates:
+#         if (type(state) is Gateway):
+#             state.name = 'Gateway' + state.position.name
+#             weiter = True
+#         else:
+#             weiter = False
+#
+#
+#     if weiter is True:
+#         checkNext(activeStates,state.position.name, currInd, sg, sublist, sg2, sublist2, s)
+#         #for state in activeStates:
+#          #   children = get_outgoing(state)
+#           #  print('Gateway ',state.name,' has ',children, ' children')
+#         #checkNext(activeStates,state.position.name, currInd, sg, sublist, sg2, sublist2, s)
+#         #checkNextParallel2(state, currInd, sg, sublist, sg2, sublist2, s)
+#         return
+#
+# def get_outgoing (node):
+#     num = 0
+#     for ae3 in alledges:
+#         if ae3.source == node.position.name:
+#             num+=1
+#     return num
 
 def printActiveStates(activeStates):
     line = '{'
@@ -451,116 +576,165 @@ def printActiveStates(activeStates):
         parsing.append(line)
 
 
-def takeStep(activeStates, state,currInd, sg, sublist, sg2, sublist2, s):
+# def takeStep(activeStates, state,currInd, sg, sublist, sg2, sublist2, s):
+#
+#     it = 0
+#
+#     for ae2 in alledges:
+#         if ae2.source == state.position.name:
+#
+#             for iter in activeStates:
+#                 #replace prev step by current task
+#                 if(iter.position.name==state.position.name):
+#                     activeStates[it] = copy.deepcopy(findType((ae2.target)))
+#
+#                     if type(findType(ae2.target)) is Gateway:
+#                         activeStates[it].name = state.name
+#                         signal = check_if_active(activeStates, findType(ae2.target), currInd, sg, sublist, sg2, sublist2, s)
+#
+#                         if signal == 'go':
+#
+#                             return
+#
+#                         break
+#                     printActiveStates(activeStates)
+#                     break
+#                 else:
+#                     it = it + 1
+#     return
+#
+# def is_gateway():
+#     result = False
+#     for state in activeStates:
+#         if 'Gateway' in state.name:
+#             result = state
+#             break
+#     return  result
 
-    it = 0
-
-    for ae2 in alledges:
-        if ae2.source == state.position.name:
-
-            for iter in activeStates:
-                #replace prev step by current task
-                if(iter.position.name==state.position.name):
-                    activeStates[it] = copy.deepcopy(findType((ae2.target)))
-
-                    if type(findType(ae2.target)) is Gateway:
-                        activeStates[it].name = state.name
-                        signal = check_if_active(activeStates, findType(ae2.target), currInd, sg, sublist, sg2, sublist2, s)
-
-                        if signal == 'go':
-                            return
-
-                        break
-                    printActiveStates(activeStates)
-                    break
-                else:
-                    it = it + 1
-    return
-
-def is_gateway():
-    result = False
-    for state in activeStates:
-        if 'Gateway' in state.name:
-            result = state
-            break
-    return  result
-
-def check_if_active(activeStates,gateway, currInd, sg, sublist, sg2, sublist2, s):
-    allinputs = []
+def check_if_active2(activeStates,gateway, currInd, sg, sublist, sg2, sublist2, s):
+    signal = 'wait'
     allactive = []
-
-    for ae3 in alledges:
-        if ae3.target == gateway.position.name:
-            allinputs.append(findType(ae3.source).name)
+    allinputs = []
 
     for allAS in activeStates:
-        allactive.append(allAS.name)
+        allactive.append(allAS.position.name)
 
+    for allAI in gateway.parents:
+        allinputs.append(allAI)
+
+    # replace multiple inputs by next gateway
     if set(allinputs).issubset(set(allactive)):
-    #if allinputs in allactive:
-        activeStates = [x for x in activeStates if x.name not in allinputs]
-        #for x in activeStates:
-         #   activeStates.remove(x)
-        gateway.name = 'Gateway '+gateway.position.name
-        activeStates.append(gateway)
-        printActiveStates(activeStates)
-
-        # here
-        multi_gateway = len(activeStates)
+        signal = 'go'
+        activeStates = [x for x in activeStates if x.position.name not in allinputs]
+        checkNextParallel3(activeStates, gateway, currInd, sg, sublist, sg2, sublist2, s)
+    else:
         signal = 'wait'
-        if multi_gateway > 1:
-            for state in activeStates:
-                if state is Gateway:
-                    checkNextParallel2(activeStates, gateway, currInd, sg, sublist, sg2, sublist2, s)
-                else:
-                    takeStep(activeStates, state, currInd, sg, sublist, sg2, sublist2, s)
+        nonActiveStates = [x for x in allactive if x not in parsing_nodes]
 
-        else:
-            signal = 'go'
-        return signal
-
-def checkNextParallel(curr_gw, currInd, sg, sublist, sg2, sublist2, s):
-    for ae2 in alledges:
-        if ae2.source == curr_gw.position.name:
-            newObj = findType(ae2.target)
-
-            if type(newObj) is Task or type(newObj) is DataObj:
-
-                checkOtherStarts(newObj.position.name, currInd, sg, sublist, sg2, sublist2, s, COSrerun)
-                while not s.is_empty():
-                    newElement = s.pop()
-                    parsing.append(newElement)
-                    assign(sg, sg2, sublist, sublist2, None, None, 'chnext')
-                    parsing_nodes.append(newElement.position.name)
-
-                if newObj.name not in parsing_nodes:
-                    # print(newObj.name)
-                    parsing_nodes.append(newObj.position.name)
-                    parsing.append(newObj)
-                    assign(sg, sg2, sublist, sublist2, None, None, 'chnext')
-                checkNextParallel(newObj, currInd, sg, sublist, sg2, sublist2, s)
+        for x in nonActiveStates:
+            activeStates = takeStep2(activeStates, findType(x), currInd, sg, sublist, sg2, sublist2, s)
+            (signal, activeStates) = check_if_active2(activeStates, gateway, currInd, sg, sublist, sg2, sublist2, s)
+    return (signal, activeStates)
 
 
-            else:
-                if type(newObj) is Gateway:
-                    newObj.name = 'end of Parallel Execution'
-                    parsing.append(newObj)
-                    assign(sg, sg2, sublist, sublist2, None, None, 'chnext')
-                    parsing_nodes.append(newObj.position.name)
+# def check_if_active(activeStates,gateway, currInd, sg, sublist, sg2, sublist2, s):
+#     allinputs = []
+#     allactive = []
+#
+#     for ae3 in alledges:
+#         if ae3.target == gateway.position.name:
+#             allinputs.append(findType(ae3.source).name)
+#
+#     for allAS in activeStates:
+#         allactive.append(allAS.name)
+#
+#     #replace multiple inputs by next gateway
+#     if set(allinputs).issubset(set(allactive)):
+#         activeStates = [x for x in activeStates if x.name not in allinputs]
+#
+#         gateway.name = 'Gateway '+gateway.position.name
+#         activeStates.append(gateway)
+#         printActiveStates(activeStates)
+#
+#         #check for multiple gateways
+#         multi_gateway = len(activeStates)
+#         signal = 'wait'
+#         if multi_gateway > 1:
+#             weiter = check_all_g(activeStates)
+#
+#             if weiter is True:
+#                 for state in activeStates:
+#                      children = get_outgoing(state)
+#                      print('Gateway ',state.name,' has ',children, ' children')
+#                      if children <= 1:
+#                          checkNext(activeStates,state.position.name, currInd, sg, sublist, sg2, sublist2, s)
+#                      else:
+#                          checkNextParallel2(state, currInd, sg, sublist, sg2, sublist2, s)
+#
+#             else:
+#                 for state in activeStates:
+#                     if type(state) is not Gateway:
+#                         takeStep(activeStates, state, currInd, sg, sublist, sg2, sublist2, s)
+#
+#         else:
+#             signal = 'go'
+#         return signal
+# def check_all_g(ctiveStates):
+#     weiter = False
+#     for state in activeStates:
+#         if type(state) is Gateway:
+#             weiter = True
+#         else:
+#             weiter = False
+#     return weiter
+#
+# def checkNextParallel(curr_gw, currInd, sg, sublist, sg2, sublist2, s):
+#     for ae2 in alledges:
+#         if ae2.source == curr_gw.position.name:
+#             newObj = findType(ae2.target)
+#
+#             if type(newObj) is Task or type(newObj) is DataObj:
+#
+#                 checkOtherStarts(newObj.position.name, currInd, sg, sublist, sg2, sublist2, s, COSrerun)
+#                 while not s.is_empty():
+#                     newElement = s.pop()
+#                     parsing.append(newElement)
+#                     assign(sg, sg2, sublist, sublist2, None, None, 'chnext')
+#                     parsing_nodes.append(newElement.position.name)
+#
+#                 if newObj.name not in parsing_nodes:
+#                     # print(newObj.name)
+#                     parsing_nodes.append(newObj.position.name)
+#                     parsing.append(newObj)
+#                     assign(sg, sg2, sublist, sublist2, None, None, 'chnext')
+#                 checkNextParallel(newObj, currInd, sg, sublist, sg2, sublist2, s)
+#
+#
+#             else:
+#                 if type(newObj) is Gateway:
+#                     newObj.name = 'end of Parallel Execution'
+#                     parsing.append(newObj)
+#                     assign(sg, sg2, sublist, sublist2, None, None, 'chnext')
+#                     parsing_nodes.append(newObj.position.name)
 
 
-def checkNext(next, currInd, sg, sublist, sg2, sublist2, s):
+def checkNext(activeStates,next, currInd, sg, sublist, sg2, sublist2, s):
     sub = None
     for ae in alledges:
         if ae.source == next:
             newObj = findType(ae.target)
             if type(newObj) is Gateway:
+                if len(newObj.parents) == 0:
+                    Gateway.getParents(newObj, alledges)
+                if len(newObj.children) == 0:
+                    Gateway.getChildren(newObj, alledges)
                 #newObj.name = 'start of Parallel Execution'
                 #parsing.append(newObj)
                 #assign(sg, sg2, sublist, sublist2, None, None, 'chnext')
 
                 #checkNextParallel(newObj, currInd, sg, sublist, sg2, sublist2, s)
-                checkNextParallel2(activeStates, newObj, currInd, sg, sublist, sg2, sublist2, s)
+                #checkNextParallel2(activeStates, newObj, currInd, sg, sublist, sg2, sublist2, s)
+                checkNextParallel3(activeStates, newObj, currInd, sg, sublist, sg2, sublist2, s)
 
                 break
 
@@ -568,7 +742,7 @@ def checkNext(next, currInd, sg, sublist, sg2, sublist2, s):
                 parsing.append(newObj)
                 assign(sg, sg2, sublist, sublist2, None, None, 'chnext')
                 parsing_nodes.append(newObj.position.name)
-                checkNext(newObj.position.name, currInd, sg, sublist, sg2, sublist2, s)
+                checkNext(activeStates,newObj.position.name, currInd, sg, sublist, sg2, sublist2, s)
 
             if type(newObj) is DataObj and newObj.position.name not in parsing_nodes:
                 checkOtherStarts(ae.target, currInd, sg, sublist, sg2, sublist2, s, COSrerun)
@@ -582,7 +756,7 @@ def checkNext(next, currInd, sg, sublist, sg2, sublist2, s):
                 assign(sg, sg2, sublist, sublist2, None, None, 'chnext')
 
                 parsing_nodes.append(newObj.position.name)
-                checkNext(newObj.position.name, currInd, sg, sublist, sg2, sublist2, s)
+                checkNext(activeStates,newObj.position.name, currInd, sg, sublist, sg2, sublist2, s)
 
             if type(newObj) is Task and newObj.position.name not in parsing_nodes:
 
@@ -605,7 +779,7 @@ def checkNext(next, currInd, sg, sublist, sg2, sublist2, s):
                     # connectToPostgres(allAnnots.name)
                     assign(sg, sg2, sublist, sublist2, None, None, 'chnext')
 
-                checkNext(newObj.position.name, currInd, sg, sublist, sg2, sublist2, s)
+                checkNext(activeStates,newObj.position.name, currInd, sg, sublist, sg2, sublist2, s)
 
             if type(newObj) is Node and newObj.position not in parsing_nodes:
                 checkOtherStarts(ae.target, currInd, sg, sublist, sg2, sublist2, s, COSrerun)
@@ -628,7 +802,7 @@ def checkNext(next, currInd, sg, sublist, sg2, sublist2, s):
                 # print(allAnnots.name)
                 # connectToPostgres(allAnnots.name)
 
-                checkNext(newObj.position, currInd, sg, sublist, sg2, sublist2, s)
+                checkNext(activeStates,newObj.position, currInd, sg, sublist, sg2, sublist2, s)
                 parsing.insert(sgIndex, sublist2)
     return sub
 
