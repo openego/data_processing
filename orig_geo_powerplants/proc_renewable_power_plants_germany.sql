@@ -65,7 +65,7 @@ WHERE electrical_capacity between 100 and 299.99 and voltage_level is NULL  ;
 
 UPDATE orig_geo_powerplants.proc_renewable_power_plants_germany
 SET voltage_level='7'
-WHERE electrical_capacity >100 and voltage_level is NULL  ;
+WHERE electrical_capacity <100 and voltage_level is NULL  ;
 
 /*Assign RE-plants in ehv-level to nearest substation*/
 
