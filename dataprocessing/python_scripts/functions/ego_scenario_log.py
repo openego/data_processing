@@ -1,17 +1,17 @@
 """
-Bla
+Write entry into scenario log table
 """
 
-__copyright__ 	= "Reiner Lemoine Institut gGmbH"
-__license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
-__url__ 		= "https://github.com/openego/data_processing/blob/master/LICENSE"
-__author__ 	= "nesnoj, Ludee" 
+__copyright__   = "Reiner Lemoine Institut gGmbH"
+__license__     = "GNU Affero General Public License Version 3 (AGPL-3.0)"
+__url__         = "https://github.com/openego/data_processing/blob/master/LICENSE"
+__author__ 	    = "nesnoj, Ludee"
 
 
 from datetime import datetime
 from sqlalchemy.orm import sessionmaker
-from dataprocessing.tools import io, metadata
 from egoio.db_tables.model_draft import EgoScenarioLog as orm_scenario_log
+
 
 def write_ego_scenario_log(conn, version, io, schema, table,
                            script, entries=None, comment=None, metadata=None):
