@@ -22,7 +22,7 @@ import time
 
 
 def demand_per_mv_grid_district():
-    year = 2013
+    year = 2011
     schema = 'model_draft'
     target_table = 'ego_demand_hvmv_demand'
     db_group = 'oeuser'
@@ -38,19 +38,7 @@ def demand_per_mv_grid_district():
     # pip3 install workalendar
 
     cal = Germany()
-    holidays = dict(cal.holidays(2010))
-
-    # Alternatively, define holidays manually
-    # holidays = {
-    #     datetime.date(2010, 5, 24): 'Whit Monday',
-    #     datetime.date(2010, 4, 5): 'Easter Monday',
-    #     datetime.date(2010, 5, 13): 'Ascension Thursday',
-    #     datetime.date(2010, 1, 1): 'New year',
-    #     datetime.date(2010, 10, 3): 'Day of German Unity',
-    #     datetime.date(2010, 12, 25): 'Christmas Day',
-    #     datetime.date(2010, 5, 1): 'Labour Day',
-    #     datetime.date(2010, 4, 2): 'Good Friday',
-    #     datetime.date(2010, 12, 26): 'Second Christmas Day'}
+    holidays = dict(cal.holidays(2011))
 
     # retrieve sectoral demand from oedb
 
