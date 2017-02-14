@@ -2,10 +2,10 @@
 demand per district
 """
 
-__copyright__ 	= "Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems, Reiner Lemoine Institut gGmbH"
+__copyright__ 	= "Reiner Lemoine Institut gGmbH"
 __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
 __url__ 		= "https://github.com/openego/data_processing/blob/master/LICENSE"
-__author__ 		= "IlkaCu, gplssm"
+__author__ 		= "gplssm"
 
 from demandlib import bdew as bdew, particular_profiles as profiles
 from egoio.db_tables.calc_ego_loads import EgoDeuConsumption as orm_loads,\
