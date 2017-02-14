@@ -1,10 +1,10 @@
-"""This script creates initial powerflow schemata in database
+"""This script creates initial MV powerflow schemata in database
 """
 
 __copyright__ = "Reiner Lemoine Institut gGmbH"
 __license__ = "GNU Affero General Public License Version 3 (AGPL-3.0)"
 __url__ = "https://github.com/openego/data_processing/blob/master/LICENSE"
-__author__ = "gplssm"
+__author__ = "gplssm, nesnoj"
 
 
 from oemof import db
@@ -82,7 +82,7 @@ def create_powerflow_schema(engine, schema, tables):
 
 
 if __name__ == '__main__':
-    """Create or delete powerflow schema"""
+    """Create MV powerflow tables"""
 
     engine = db.engine(section='oedb')
 
