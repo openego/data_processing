@@ -232,6 +232,7 @@ sgIndex = 0
 sg = False
 COSrerun = 0
 tempStack = Stack()
+otherstarts = []
 
 
 def runSqlFile(filename, conn):  # Function to execute sql scripts
@@ -419,7 +420,6 @@ def checkNextParallel3(activeStates, curr_gw, currInd, sg, sublist, sg2, sublist
     curr_gw.name = 'Gateway ' + curr_gw.position.name
 
     #remove any parents if in list
-
     if set(curr_gw.parents).issubset(parsing_nodes):
         for allAS in activeStates:
             if allAS.position.name in curr_gw.parents:
@@ -437,11 +437,33 @@ def checkNextParallel3(activeStates, curr_gw, currInd, sg, sublist, sg2, sublist
             for eachChild in curr_gw.children:
                 currobj = findType(eachChild)
                 if currobj not in activeStates:
-                    parsing_nodes.append(currobj.position.name)
-                    activeStates.append(currobj)
+                     checkOtherStarts(eachChild, currInd, sg, sublist, sg2, sublist2, s, 0)
+                     if s.stacklen() > 0:
+                         while not s.is_empty():
+                             eleToAdd = s.pop()
+                             otherstarts.append(eleToAdd)
+                             parsing_nodes.append(eleToAdd.position.name)
+
+                     else:
+                        activeStates.append(currobj)
+                        parsing_nodes.append(currobj.position.name)
+
+                        #     printActiveStates(activeStates)
+                    #     activeStates = [x for x in activeStates if x not in otherstarts]
+
+
+                    #do not change
+                    #parsing_nodes.append(currobj.position.name)
+                    #activeStates.append(currobj)
 
             # displaying states
-            printActiveStates(activeStates)
+            if len(otherstarts) > 0:
+                activeStates.extend(otherstarts)
+                printActiveStates(activeStates)
+                otherstarts.clear()
+                activeStates = [x for x in activeStates if x not in otherstarts]
+            else:
+                printActiveStates(activeStates)
 
             ######### taking steps until the end
 
@@ -509,9 +531,37 @@ def takeStep2(activeStates, state,currInd, sg, sublist, sg2, sublist2, s):
                                 printActiveStates(activeStates)
                     else:
                         # replace prev step by current task
-                        activeStates[it] = copy.deepcopy(nextObj)
-                        parsing_nodes.append(nextObj.position.name)
-                        printActiveStates(activeStates)
+                        del activeStates[it]
+
+                        checkOtherStarts(nextObj.position.name, currInd, sg, sublist, sg2, sublist2, s, 0)
+                        if s.stacklen() > 0:
+                            while not s.is_empty():
+                                eleToAdd = s.pop()
+                                otherstarts.append(eleToAdd)
+                                parsing_nodes.append(eleToAdd.position.name)
+
+
+                        if len(otherstarts) > 0:
+
+                            activeStates[1:it] = otherstarts
+                            printActiveStates(activeStates)
+                            activeStates = [x for x in activeStates if x not in otherstarts]
+                            otherstarts.clear()
+
+                            activeStates.insert(it, copy.deepcopy(nextObj))
+                            printActiveStates(activeStates)
+                        else:
+                            #to avoid problems with multiple data obj
+                            if nextObj.position.name not in parsing_nodes:
+                                parsing_nodes.append(nextObj.position.name)
+                                activeStates.insert(it, copy.deepcopy(nextObj))
+                                printActiveStates(activeStates)
+
+
+
+                        #activeStates[it] = copy.deepcopy(nextObj)
+                        #parsing_nodes.append(nextObj.position.name)
+                        #printActiveStates(activeStates)
                         break
                 else:
                     it = it + 1
@@ -825,14 +875,14 @@ def checkOtherStarts(target, ind, sg, sublist, sg2, sublist2, s, COSrerun):
 
                 if newType is Gateway:  # and 'end' in newElement.position.name:
                     # print('Gateway before',newElement.position.name);
-                    endGateways.append(newElement.position.name)
+                    #endGateways.append(newElement.position.name)
+                    continue
 
                 if newType is Task and newElement.position.name not in parsing_nodes:
                     COSrerun = 1
                     ind = checkOtherStarts(newElement.position.name, ind, sg, sublist, sg2, sublist2, s, COSrerun)
                     while not tempStack.is_empty():
                         eleToAppend = tempStack.pop()
-                        # print('-',eleToAppend.name)
                         parsing.append(eleToAppend)
                         assign(sg, sg2, sublist, sublist2, None, None, 'chnext')
                     parsing.append(newElement)
