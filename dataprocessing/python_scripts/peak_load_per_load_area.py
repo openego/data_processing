@@ -36,7 +36,7 @@ def add_sectoral_peak_load(load_areas, **kwargs):
 
     # define data year
     # TODO: in the future get this from somewhere else
-    year = 2013
+    year = 2011
 
     # call demandlib
     # TODO: change to use new demandlib
@@ -106,11 +106,11 @@ if __name__ == '__main__':
     schema = 'model_draft'
     table = 'ego_demand_loadarea'
     target_table = 'ego_demand_loadarea_peak_load'
-    year = 2013
+    year = 2011
     db_group = 'oeuser'
 
     cal = Germany()
-    holidays = dict(cal.holidays(2010))
+    holidays = dict(cal.holidays(2011))
 
     # get database connection object
     conn = io.oedb_session(section='oedb')
