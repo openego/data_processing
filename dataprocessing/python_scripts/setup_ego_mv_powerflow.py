@@ -64,18 +64,18 @@ def create_powerflow_schema(engine, schema, tables):
                 ', '.join(tables[table]) +  ') WITH(OIDS = FALSE);'
         try:
             conn.execute(sql_create_table)
+
+            tools.grant_db_access(conn, schema, table, group)
+
+            write_ego_scenario_log(conn=conn,
+                                   version='v0.2.6',
+                                   io='output',
+                                   schema=schema,
+                                   table=table,
+                                   script='setup_ego_mv_powerflow.py',
+                                   comment='create table')
         except:
             print('Table {} already existed and is not created newly...'.format(table))
-
-        tools.grant_db_access(conn, schema, table, group)
-
-        write_ego_scenario_log(conn=conn,
-                               version='v0.2.6',
-                               io='output',
-                               schema=schema,
-                               table=table,
-                               script='setup_ego_mv_powerflow.py',
-                               comment='create table')
 
 
     # Bus.metadata.drop_all(engine)
