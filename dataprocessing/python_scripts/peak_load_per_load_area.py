@@ -265,8 +265,6 @@ if __name__ == '__main__':
 
     metadata.submit_comment(conn, json_str, schema, target_table)
 
-    conn.close()
-
     write_ego_scenario_log(conn=conn,
                            version='v0.2.6',
                            io='output',
@@ -274,3 +272,5 @@ if __name__ == '__main__':
                            table=target_table,
                            script='peak_load_per_load_area.py',
                            entries=len(load_areas))
+
+    conn.close()
