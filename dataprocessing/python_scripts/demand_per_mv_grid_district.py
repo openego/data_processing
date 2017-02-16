@@ -2,29 +2,32 @@
 demand per district
 """
 
-__copyright__ 	= "Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems, Reiner Lemoine Institut gGmbH"
+__copyright__ 	= "Reiner Lemoine Institut gGmbH"
 __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
 __url__ 		= "https://github.com/openego/data_processing/blob/master/LICENSE"
-__author__ 		= "IlkaCu, gplssm"
+__author__ 		= "gplssm, nesnoj"
+
+
+import pandas as pd
+import time
 
 from demandlib import bdew as bdew, particular_profiles as profiles
-from egoio.db_tables.calc_ego_loads import EgoDeuConsumption as orm_loads,\
-    EgoDemandPerTransitionPoint as orm_demand
+from egoio.db_tables.model_draft import EgoDemandLoadarea as orm_loads,\
+    EgoDemandHvmvDemand as orm_demand
 from egoio.tools import db
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import func
 from workalendar.europe import Germany
-import pandas as pd
 from datetime import time as settime
 from math import sqrt
 from dataprocessing.tools import io, metadata
-import time
+from dataprocessing.python_scripts.functions.ego_scenario_log import write_ego_scenario_log
 
 
 def demand_per_mv_grid_district():
-    year = 2013
-    schema = 'model_draft'
-    target_table = 'ego_demand_hvmv_demand'
+    year = 2011
+    schema = orm_demand.__table_args__['schema']
+    target_table = orm_demand.__tablename__
     db_group = 'oeuser'
 
     columns_names = {'h0': 'residential',
@@ -38,19 +41,7 @@ def demand_per_mv_grid_district():
     # pip3 install workalendar
 
     cal = Germany()
-    holidays = dict(cal.holidays(2010))
-
-    # Alternatively, define holidays manually
-    # holidays = {
-    #     datetime.date(2010, 5, 24): 'Whit Monday',
-    #     datetime.date(2010, 4, 5): 'Easter Monday',
-    #     datetime.date(2010, 5, 13): 'Ascension Thursday',
-    #     datetime.date(2010, 1, 1): 'New year',
-    #     datetime.date(2010, 10, 3): 'Day of German Unity',
-    #     datetime.date(2010, 12, 25): 'Christmas Day',
-    #     datetime.date(2010, 5, 1): 'Labour Day',
-    #     datetime.date(2010, 4, 2): 'Good Friday',
-    #     datetime.date(2010, 12, 26): 'Second Christmas Day'}
+    holidays = dict(cal.holidays(2011))
 
     # retrieve sectoral demand from oedb
 
@@ -73,12 +64,27 @@ def demand_per_mv_grid_district():
         query_demand.statement, session.bind, index_col='otg_id').fillna(0)
     annual_demand_df = annual_demand_df.loc[~pd.isnull(annual_demand_df.index)]
 
+    write_ego_scenario_log(conn=conn,
+                           version='v0.2.6',
+                           io='input',
+                           schema='model_draft',
+                           table=orm_loads.__tablename__,
+                           script='demand_per_mv_grid_district.py',
+                           entries=len(annual_demand_df))
 
     large_scale_industrial = pd.read_sql_table(
         'ego_demand_hv_largescaleconsumer',
         conn,
         schema,
         index_col='id')
+
+    write_ego_scenario_log(conn=conn,
+                           version='v0.2.6',
+                           io='input',
+                           schema='model_draft',
+                           table='ego_demand_hv_largescaleconsumer',
+                           script='demand_per_mv_grid_district.py',
+                           entries=len(large_scale_industrial))
 
 
     # add extra industrial demand ontop of MV industrial demand
@@ -94,8 +100,12 @@ def demand_per_mv_grid_district():
     # rename columns according to demandlib definitions
     annual_demand_df.rename(columns=inv_columns_names, inplace=True)
 
-    # Delete current content from table
-    session.query(orm_demand).delete()
+    # empty table or create
+    try:
+        orm_demand.__table__.create(conn)
+    except:
+        session.query(orm_demand).delete()
+        session.commit()
 
     # iterate over substation retrieving sectoral demand at each of it
     for it, row in annual_demand_df.iterrows():
@@ -175,8 +185,15 @@ def demand_per_mv_grid_district():
 
     metadata.submit_comment(conn, json_str, schema, target_table)
 
+    write_ego_scenario_log(conn=conn,
+                           version='v0.2.6',
+                           io='output',
+                           schema=schema,
+                           table=target_table,
+                           script='demand_per_mv_grid_district.py',
+                           entries=len(annual_demand_df))
+
+    conn.close()
+
 if __name__ == '__main__':
     demand_per_mv_grid_district()
-
-    # orm_demand.__table__.create(conn)
-

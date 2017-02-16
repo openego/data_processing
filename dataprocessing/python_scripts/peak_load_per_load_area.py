@@ -15,9 +15,9 @@ from sqlalchemy.orm import sessionmaker
 
 from demandlib import bdew as bdew, particular_profiles as profiles
 from dataprocessing.tools import io, metadata
-from egoio.db_tables.calc_ego_loads import CalcEgoPeakLoad as orm_peak_load
+from egoio.db_tables.model_draft import EgoDemandLoadareaPeakLoad as orm_peak_load
 from oemof.db import tools
-
+from dataprocessing.python_scripts.functions.ego_scenario_log import write_ego_scenario_log
 
 def get_load_areas_table(schema, table, index_col, conn, columns=None):
     r"""Retrieve load areas intermediate results table from oedb
@@ -36,7 +36,7 @@ def add_sectoral_peak_load(load_areas, **kwargs):
 
     # define data year
     # TODO: in the future get this from somewhere else
-    year = 2013
+    year = 2011
 
     # call demandlib
     # TODO: change to use new demandlib
@@ -106,11 +106,11 @@ if __name__ == '__main__':
     schema = 'model_draft'
     table = 'ego_demand_loadarea'
     target_table = 'ego_demand_loadarea_peak_load'
-    year = 2013
+    year = 2011
     db_group = 'oeuser'
 
     cal = Germany()
-    holidays = dict(cal.holidays(2010))
+    holidays = dict(cal.holidays(2011))
 
     # get database connection object
     conn = io.oedb_session(section='oedb')
@@ -126,6 +126,14 @@ if __name__ == '__main__':
 
     load_areas = get_load_areas_table(schema, table, la_index_col, conn,
                                       columns=columns)
+
+    write_ego_scenario_log(conn=conn,
+                           version='v0.2.6',
+                           io='input',
+                           schema='model_draft',
+                           table=table,
+                           script='peak_load_per_load_area.py',
+                           entries=len(load_areas))
 
     names_dc = {'sector_consumption_residential': 'h0',
                 'sector_consumption_retail': 'g0',
@@ -150,6 +158,7 @@ if __name__ == '__main__':
         orm_peak_load.__table__.create(conn)
     except:
         session.query(orm_peak_load).delete()
+        session.commit()
 
     # Use above function `add_sectoral_peak_load` via apply
     # elec_demand = load_areas.fillna(0).apply(
@@ -255,5 +264,13 @@ if __name__ == '__main__':
     )
 
     metadata.submit_comment(conn, json_str, schema, target_table)
+
+    write_ego_scenario_log(conn=conn,
+                           version='v0.2.6',
+                           io='output',
+                           schema='model_draft',
+                           table=target_table,
+                           script='peak_load_per_load_area.py',
+                           entries=len(load_areas))
 
     conn.close()
