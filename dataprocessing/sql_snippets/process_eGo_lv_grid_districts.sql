@@ -1,4 +1,4 @@
-/*
+﻿/*
 generate ONT
 Runtime 08:30 min
 
@@ -51,7 +51,7 @@ DO
 $$
 DECLARE gd integer;
 BEGIN
-	FOR gd_id IN 1..3610
+	FOR gd_id IN 1..3608
 	LOOP
 		EXECUTE
 
@@ -125,7 +125,7 @@ DELETE FROM model_draft."ego_grid_mvlv_substation" WHERE is_dummy = TRUE;
 
 -- Cutting
 
-CREATE TABLE IF NOT EXISTS model_draft."ego_grid_lv_cut"
+CREATE TABLE IF NOT EXISTS model_draft."ego_grid_lv_griddistrict"
 (
   id serial NOT NULL,
   geom geometry(Polygon,3035),
@@ -133,11 +133,12 @@ CREATE TABLE IF NOT EXISTS model_draft."ego_grid_lv_cut"
   ont_count integer,
   ont_id integer,
   merge_id integer,
-  CONSTRAINT ego_grid_lv_cut_pkey PRIMARY KEY (id)
+  CONSTRAINT ego_grid_lv_griddistrict_pkey2 PRIMARY KEY (id)
 );
+
  
-TRUNCATE TABLE 	model_draft."ego_grid_lv_cut";
-INSERT INTO		model_draft."ego_grid_lv_cut" (geom,id)
+TRUNCATE TABLE 	model_draft."ego_grid_lv_griddistrict";
+INSERT INTO		model_draft.ego_grid_lv_griddistrict (geom,load_area_id)
 	SELECT	(ST_DUMP(ST_INTERSECTION(mun.geom,voi.geom))).geom ::geometry(Polygon,3035) AS geom, mun.id AS load_area_id
 	FROM	model_draft."ego_demand_loadarea" AS mun,
 		model_draft."ego_grid_lv_griddistrictsvoronoi" AS voi
@@ -145,30 +146,31 @@ INSERT INTO		model_draft."ego_grid_lv_cut" (geom,id)
 		AND mun.subst_id = voi.subst_id
 		-- make sure the boundaries really intersect and not just touch each other
 		AND (ST_GEOMETRYTYPE(ST_INTERSECTION(mun.geom,voi.geom)) = 'ST_Polygon' 
-			OR ST_GEOMETRYTYPE(ST_INTERSECTION(mun.geom,voi.geom)) = 'ST_MultiPolygon' );
+			OR ST_GEOMETRYTYPE(ST_INTERSECTION(mun.geom,voi.geom)) = 'ST_MultiPolygon' )
+		AND ST_isvalid(voi.geom) AND ST_isvalid(mun.geom);
 
 
 -- Lösche sehr kleine Gebiete; Diese sind meistens Bugs in den Grenzverläufen
-DELETE FROM model_draft."ego_grid_lv_cut" WHERE ST_AREA(geom) < 0.001;
+DELETE FROM model_draft."ego_grid_lv_griddistrict" WHERE ST_AREA(geom) < 0.001;
 	
 -- Count substations per grid district
 
 
 
-UPDATE 	model_draft."ego_grid_lv_cut" AS t1
+UPDATE 	model_draft."ego_grid_lv_griddistrict" AS t1
 SET ont_count = 0;
 
-UPDATE 	model_draft."ego_grid_lv_cut" AS t1
+UPDATE 	model_draft."ego_grid_lv_griddistrict" AS t1
 SET  	ont_count = t2.count
 FROM (SELECT COUNT (onts.geom) AS count,dist.id AS id
-	FROM model_draft."ego_grid_mvlv_substation" AS onts, model_draft."ego_grid_lv_cut" AS dist
+	FROM model_draft."ego_grid_mvlv_substation" AS onts, model_draft."ego_grid_lv_griddistrict" AS dist
 	WHERE ST_CONTAINS (dist.geom,onts.geom)
 	GROUP BY dist.id
       ) AS t2
 WHERE t1.id = t2.id;
 
 
-UPDATE 	model_draft."ego_grid_lv_cut" AS t1
+UPDATE 	model_draft."ego_grid_lv_griddistrict" AS t1
 SET  	ont_id = t2.id
 FROM model_draft."ego_grid_mvlv_substation" AS t2
 WHERE ST_CONTAINS(t1.geom,t2.geom);
@@ -176,7 +178,7 @@ WHERE ST_CONTAINS(t1.geom,t2.geom);
 -- Add merge info
 
 
-UPDATE 	model_draft."ego_grid_lv_cut" AS t1
+UPDATE 	model_draft."ego_grid_lv_griddistrict" AS t1
 SET merge_id = t2.merge_id
 FROM (
 	WITH mins AS (
@@ -184,9 +186,9 @@ FROM (
 		FROM
 			model_draft."ego_grid_mvlv_substation" AS onts 
 			INNER JOIN 
-			model_draft."ego_grid_lv_cut" AS regions ON onts.load_area_id = regions.load_area_id
+			model_draft."ego_grid_lv_griddistrict" AS regions ON onts.load_area_id = regions.load_area_id
 			INNER JOIN 
-			model_draft."ego_grid_lv_cut" AS regions2 ON ST_INTERSECTS(regions.geom,regions2.geom)
+			model_draft."ego_grid_lv_griddistrict" AS regions2 ON ST_INTERSECTS(regions.geom,regions2.geom)
 		WHERE ST_CONTAINS (regions2.geom,onts.geom)
 		GROUP BY regions_id
 
@@ -196,14 +198,14 @@ FROM (
 	FROM
 		model_draft."ego_grid_mvlv_substation" AS onts 
 		INNER JOIN 
-		model_draft."ego_grid_lv_cut" AS regions ON onts.load_area_id = regions.load_area_id
+		model_draft."ego_grid_lv_griddistrict" AS regions ON onts.load_area_id = regions.load_area_id
 		INNER JOIN
 		mins ON mins.regions_id = regions.id
 	WHERE  ST_DISTANCE(ST_CENTROID(regions.geom),onts.geom) = mins.distance
       ) AS t2
 WHERE t1.id = t2.district_id;
 
-UPDATE 	model_draft."ego_grid_lv_cut" AS t1
+UPDATE 	model_draft."ego_grid_lv_griddistrict" AS t1
 SET ont_id = merge_id
 WHERE ont_count = 0;
 
@@ -223,7 +225,7 @@ TRUNCATE TABLE 	model_draft."ego_grid_lv_griddistrictwithoutpop";
 INSERT INTO		model_draft."ego_grid_lv_griddistrictwithoutpop" (geom,load_area_id)
 
 SELECT (ST_DUMP(ST_UNION(cut.geom))).geom::geometry(Polygon,3035), onts.load_area_id
-FROM model_draft."ego_grid_lv_cut" AS cut
+FROM model_draft."ego_grid_lv_griddistrict" AS cut
 	INNER JOIN model_draft."ego_grid_mvlv_substation" AS onts
 ON cut.ont_id = onts.id
 WHERE ont_id >= 0
@@ -242,14 +244,14 @@ UPDATE model_draft."ego_grid_lv_griddistrictwithoutpop" AS districts
 SET geom = ST_UNION(adjacent.geom, districts.geom)
 FROM  ( SELECT ST_UNION(cut.geom) AS geom, districts.id AS district_id
 	FROM model_draft."ego_grid_lv_griddistrictwithoutpop" AS districts,
-		model_draft."ego_grid_lv_cut" AS cut
+		model_draft."ego_grid_lv_griddistrict" AS cut
 	WHERE ST_TOUCHES(cut.geom,districts.geom)
 	 AND NOT ST_GEOMETRYTYPE (ST_INTERSECTION(cut.geom,districts.geom)) = 'ST_Point'
 	 AND cut.id IN (
-		SELECT id FROM model_draft."ego_grid_lv_cut" AS cut
+		SELECT id FROM model_draft."ego_grid_lv_griddistrict" AS cut
 		WHERE cut.id NOT IN (
 			SELECT cut.id 
-			FROM model_draft."ego_grid_lv_cut" AS cut,
+			FROM model_draft."ego_grid_lv_griddistrict" AS cut,
 				model_draft."ego_grid_lv_griddistrictwithoutpop" AS districts
 			WHERE ST_WITHIN(cut.geom,districts.geom)
 			GROUP BY cut.id
@@ -520,7 +522,7 @@ WHERE pop_density > 33;
 ----- Delete auxilliary tables
 
 DROP TABLE IF EXISTS model_draft."ego_grid_lv_griddistrictsvoronoi";
-DROP TABLE IF EXISTS model_draft."ego_grid_lv_cut";
+DROP TABLE IF EXISTS model_draft."ego_grid_lv_griddistrict";
 DROP TABLE IF EXISTS model_draft."ego_grid_lv_griddistrictwithoutpop";
 DROP TABLE IF EXISTS model_draft."ego_grid_lv_griddistrictsectors";
 
