@@ -27,10 +27,10 @@ INSERT INTO model_draft.ego_grid_lv_ontgrids (geom, load_area_id)
 	-- Normalfall: mehrere Zellen pro Grid
 	CASE WHEN ST_AREA (geom) > (3.1415926535 * 1152) THEN
 		ST_SETSRID(ST_CREATEFISHNET(
-			ROUND((ST_ymax(box2d(geom)) -  ST_ymin(box2d(geom))) /319)::integer,
-			ROUND((ST_xmax(box2d(geom)) -  ST_xmin(box2d(geom))) /319)::integer,
-			319,
-			319,
+			ROUND((ST_ymax(box2d(geom)) -  ST_ymin(box2d(geom))) /360)::integer,
+			ROUND((ST_xmax(box2d(geom)) -  ST_xmin(box2d(geom))) /360)::integer,
+			360,
+			360,
 			ST_xmin (box2d(geom)),
 			ST_ymin (box2d(geom))
 		),3035)::geometry(POLYGON,3035)  
@@ -46,8 +46,9 @@ INSERT INTO model_draft.ego_grid_lv_ontgrids (geom, load_area_id)
 		),3035)::geometry(POLYGON,3035) 
 	END AS geom, area.id AS load_area_id
 	FROM 	model_draft.ego_demand_loadarea AS area 
-		INNER JOIN model_draft.ego_demand_load_area_peak_load AS peak_load 
-		ON peak_load.id = area.id;
+		--INNER JOIN model_draft.ego_demand_load_area_peak_load AS peak_load 
+		--ON peak_load.id = area.id
+		;
 
 -- grant (oeuser)
 ALTER TABLE	model_draft.ego_grid_lv_ontgrids OWNER TO oeuser;
@@ -112,7 +113,7 @@ TRUNCATE TABLE model_draft.ego_grid_lv_loadarearest;
 INSERT INTO model_draft.ego_grid_lv_loadarearest (geom, load_area_id)
 	SELECT 	(ST_DUMP(ST_DIFFERENCE(load_area.geom, area_with_onts.geom))).geom::geometry(Polygon,3035) AS geom, 
 		load_area.id AS load_area_id
-	FROM 	(SELECT ST_BUFFER(ST_UNION(onts.geom),576) AS geom,l_area.id AS id
+	FROM 	(SELECT ST_BUFFER(ST_UNION(onts.geom),540) AS geom,l_area.id AS id
 		FROM 	model_draft.ego_grid_mvlv_substation AS onts, 
 			model_draft.ego_demand_loadarea AS l_area
 		WHERE 	ST_CONTAINS (l_area.geom,onts.geom) 
@@ -145,7 +146,7 @@ UPDATE 	model_draft.ego_grid_mvlv_substation AS t1
 		SELECT	ont.id AS id,
 			gd.subst_id AS subst_id
 		FROM	model_draft.ego_grid_mvlv_substation AS ont,
-			calc_ego_grid_district."model_draft.ego_grid_mv_griddistrict" AS gd
+			model_draft.ego_grid_mv_griddistrict AS gd
 		WHERE  	gd.geom && ont.geom AND
 			ST_CONTAINS(gd.geom,ont.geom)
 		) AS t2
