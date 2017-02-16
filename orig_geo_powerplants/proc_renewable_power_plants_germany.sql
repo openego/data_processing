@@ -38,19 +38,6 @@ UPDATE orig_geo_powerplants.proc_renewable_power_plants_germany
 SET voltage_level='7'
 WHERE electrical_capacity <100;
 
-/*Assign RE-plants in ehv-level to nearest substation*/
-
-DROP TABLE IF EXISTS AA;
-CREATE TEMP Table AA AS
-SELECT proc_renewable_power_plants_germany.*
-FROM orig_geo_powerplants.proc_renewable_power_plants_germany
-WHERE proc_renewable_power_plants_germany.voltage_level='1';
-
-UPDATE orig_geo_powerplants.proc_renewable_power_plants_germany
-SET voltage=substr(osm_deu_substations_ehv.voltage,1,3)
-FROM orig_osm.osm_deu_substations_ehv,orig_ego.ego_deu_voronoi_ehv, AA
-WHERE ST_Intersects (ego_deu_voronoi_ehv.geom,AA.geom) AND osm_deu_substations_ehv.subst_id=ego_deu_voronoi_ehv.subst_id AND AA.id=proc_renewable_power_plants_germany.id;
-
 
 /*Change generation_type = 'hydro' to 'run_of_river' for compatibility reasons*/
 
