@@ -406,7 +406,7 @@ SET peak_load_1 =  (SELECT a.peak_load AS peak_load
 
 		FROM model_draft."ego_grid_lv_griddistrictsectors" AS sectors,
 				model_draft."ego_demand_loadarea" AS l_area,
-				model_draft."ego_demand_load_area_peak_load" AS peak
+				model_draft."ego_demand_loadarea_peak_load" AS peak
 
 		WHERE sectors.sector = 'residential'
 			AND l_area.id = sectors.load_area_id
@@ -421,7 +421,7 @@ SET peak_load_1 =  (SELECT a.peak_load AS peak_load
 
 		FROM model_draft."ego_grid_lv_griddistrictsectors" AS sectors,
 				model_draft."ego_demand_loadarea" AS l_area,
-				model_draft."ego_demand_load_area_peak_load" AS peak
+				model_draft."ego_demand_loadarea_peak_load" AS peak
 
 		WHERE sectors.sector = 'agricultural'
 			AND l_area.id = sectors.load_area_id
@@ -435,7 +435,7 @@ SET peak_load_1 =  (SELECT a.peak_load AS peak_load
 
 		FROM model_draft."ego_grid_lv_griddistrictsectors" AS sectors,
 				model_draft."ego_demand_loadarea" AS l_area,
-				model_draft."ego_demand_load_area_peak_load" AS peak
+				model_draft."ego_demand_loadarea_peak_load" AS peak
 
 		WHERE sectors.sector = 'industrial'
 			AND l_area.id = sectors.load_area_id
@@ -448,7 +448,7 @@ SET peak_load_1 =  (SELECT a.peak_load AS peak_load
 		SELECT (ST_AREA(sectors.geom) / ((l_area.sector_area_retail)* 10000)) * (peak.retail* 1000000) AS peak_load, sectors.id 
 		FROM model_draft."ego_grid_lv_griddistrictsectors" AS sectors,
 				model_draft."ego_demand_loadarea" AS l_area,
-				model_draft."ego_demand_load_area_peak_load" AS peak
+				model_draft."ego_demand_loadarea_peak_load" AS peak
 
 		WHERE sectors.sector = 'retail'
 			AND l_area.id = sectors.load_area_id
