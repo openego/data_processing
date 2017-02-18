@@ -43,12 +43,12 @@ scripts = [
     # 'ego_dp_rea_lattice_per_area_50m.sql', 	    # prepare 50m lattice
 	
     'ego_dp_rea_setup.sql',					    # setup table for allocation
-    'ego_dp_rea_m1.sql',
-    'ego_dp_rea_m2.sql',
-    'ego_dp_rea_m3.sql',
-    'ego_dp_rea_m4.sql',
-    'ego_dp_rea_m5.sql',
-    'ego_dp_rea_results.sql'
+    'ego_dp_rea_m1.sql',	# M1 biomass and solar to farmyard
+    'ego_dp_rea_m2.sql',	# M2 windfarms
+    'ego_dp_rea_m3.sql',	# M3 wind turbines to wpa
+    'ego_dp_rea_m4.sql',	# M4 other and rest
+    'ego_dp_rea_m5.sql',	# M5 LV to LA
+    'ego_dp_rea_results.sql'    # results and statistics
     ]
 
 # get database connection
