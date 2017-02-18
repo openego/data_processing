@@ -59,7 +59,7 @@ def data_processing():
         # 'ego_demand_loads_per_mv_voronoi.sql', 	    # loadarea per mv-voronoi
         # 'process_eGo_consumption.sql',			   	# consumption per loadarea
         # 'peak_load_per_load_area.py',				    # peak loads
-         'ego_paper_result.sql',						# results and statistics
+        # 'ego_paper_result.sql',						# results and statistics
        
         # 'voronoi_weatherpoint.sql',				    # weatherpoint voronoi
         # 'calc_ego_hv_powerflow.sql',				    # setup for hv powerflow
