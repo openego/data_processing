@@ -384,16 +384,6 @@ SELECT	SUM(mvgd.consumption)
 UNION ALL
 SELECT	SUM(la.sector_consumption_sum)
 	FROM	model_draft.ego_demand_loadarea AS la;
-	
-UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
-	SET  	consumption_per_area = t2.consumption_per_area
-	FROM	(SELECT	gd.subst_id,
-			SUM(la.sector_consumption_sum)::integer AS consumption
-		FROM	model_draft.ego_grid_mv_griddistrict AS mvgd
-		WHERE	gd.subst_id = la.subst_id
-		GROUP BY gd.subst_id
-		)AS t2
-	WHERE  	t1.subst_id = t2.subst_id;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_grid_mv_griddistrict','ego_paper_result.sql',' ');
@@ -503,7 +493,7 @@ SELECT	'LA/VOI' AS name,
 	ST_Perimeter(ST_Collect(la.geom))/1000000 AS perimeter_in_tkm 
 FROM	model_draft.ego_demand_loadarea_voi AS la;
 
-
+/* 
 -- Teil 2
 SELECT	'Raw LA' AS name,
 	'>500 EW/km2' AS PD,
@@ -570,7 +560,7 @@ FROM	(SELECT	la.id,
 		la.geom
 	FROM	model_draft.ego_demand_loadarea_voi AS la JOIN political_boundary.bkg_vg250_6_gem_mview AS gem ON (la.ags_0 = gem.ags_0)
 	) AS  lapd
-WHERE	lapd.pd_km2 < '500';
+WHERE	lapd.pd_km2 < '500'; */
 
 /* name; pd; perimeter_in_tkm
 "LA/GD";">500 EW/km2";62,4983117960233
