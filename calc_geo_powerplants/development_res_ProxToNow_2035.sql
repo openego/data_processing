@@ -2,7 +2,7 @@
 
 SQL Script which implements methods of development and allocation renewable energy units in germany by future scenarios.
 
-__copyright__ = "Europa-Universität Flensburg - ZNES"
+__copyright__ = "Europa-Universität Flensburg, Centre for Sustainable Energy Systems"
 __license__ = "GNU Affero General Public License Version 3 (AGPL-3.0)"
 __url__ = "https://github.com/openego/data_processing/blob/master/LICENSE"
 __author__ = "wolfbunke"
@@ -36,14 +36,12 @@ __author__ = "wolfbunke"
     ProxToNow:
      P_inst(unit)/P_sum(federal state) * P_scn(Federal state)
 
-
-
 --- ------------------------------------------------------------------------------------------------------------
 
 ToDo: KWK Kleinstanlagen von Mario einbinden
       DEA Verteilung für Szenariodaten durchführen
       Script 2050 anpassen
-      Name der neuen DB Struktur anpassen
+      Index ausführen
 
 New DB structure tables:
 * political_boundary.bkg_vg250_2_lan
@@ -68,7 +66,7 @@ DROP TABLE model_draft.ego_supply_res_powerplant_2035 CASCADE;
 DROP TABLE model_draft.ego_supply_pv_dev_2035_germany_mun CASCADE;
 DROP TABLE model_draft.ego_supply_res_powerplant_germany_to_region CASCADE;
 DROP SEQUENCE model_draft.ego_supply_pv_dev_2035_germany_mun_id_seq CASCADE;
-DROP SEQUENCE orig_geo_powerplants.wo_dev_nep_germany_mun_id_seq CASCADE;
+DROP SEQUENCE model_draft.ego_supply_wo_dev_2035_germany_mun_id_seq CASCADE;
 */
 --- Data and Scenario Test
 SELECT
@@ -162,6 +160,8 @@ ALTER TABLE model_draft.ego_supply_res_powerplant_2035
   OWNER TO oeuser;
   
 GRANT ALL ON TABLE model_draft.ego_supply_res_powerplant_2035 TO oeuser;
+
+VACUUM FULL ANALYZE model_draft.ego_supply_res_powerplant_2035;
 
 
 --- # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
@@ -709,7 +709,6 @@ WHERE
 generation_type = 'solar';
 
 -- set nuts
--- Hier weiter --
 UPDATE model_draft.ego_supply_res_powerplant_2035 as upt
 set nuts = regions.nuts
 from 
@@ -718,7 +717,7 @@ WHERE ST_Intersects(ST_Transform(regions.geom, 4326), upt.geom)
 AND generation_type = 'solar';
 -- time log local =  15:17:54047 hours
 -- time log server = 10:32:36017 hours 
-
+-- time log server = 09:34:32429 hours 
 
 --- ------------------------------------------------------------------------------------------------------------
 -- Add new PV units 
@@ -755,7 +754,7 @@ generation_type, voltage_level, source, comment,geom)
 	  ) as sub2
 ;
 -- log time local: 06:39 minutes
- 
+-- log time local: 06:54 minutes
 --- ------------------------------------------------------------------------------------------------------------
 --  Offshore Wind 
 --
@@ -785,7 +784,6 @@ FROM
 WHERE
 generation_type = 'wind'
 AND generation_subtype = 'wind_offshore';
-
 
 -- Insert NEP 2015 wind offshore plants as big single offshore wind farm
 --
@@ -935,14 +933,14 @@ FROM
 -- Same methode as PV
 --
 
--- DROP SEQUENCE orig_geo_powerplants.wo_dev_nep_germany_mun_id_seq;
-CREATE SEQUENCE orig_geo_powerplants.wo_dev_nep_germany_mun_id_seq START 1;
+-- DROP SEQUENCE model_draft.ego_supply_wo_dev_2035_germany_mun_id_seq;
+CREATE SEQUENCE model_draft.ego_supply_wo_dev_2035_germany_mun_id_seq START 1;
 
--- DROP TABLE orig_geo_powerplants.wo_dev_nep_germany_mun CASCADE;
+-- DROP TABLE model_draft.ego_supply_wo_dev_2035_germany_mun CASCADE;
 
-Create Table orig_geo_powerplants.wo_dev_nep_germany_mun
+Create Table model_draft.ego_supply_wo_dev_2035_germany_mun
 (
-id bigint NOT NULL DEFAULT nextval('orig_geo_powerplants.wo_dev_nep_germany_mun_id_seq'::regclass), -- own id PK 
+id bigint NOT NULL DEFAULT nextval('model_draft.ego_supply_wo_dev_2035_germany_mun_id_seq'::regclass), -- own id PK 
 wo_units integer,      		-- number of onshore units per mun and voltage level 
 wo_cap_2014 integer,        	-- sum per region of 2014 in kW 
 wo_add_cap_2035 integer,        -- sum per region of additional Capacity in 2035 kW 
@@ -950,10 +948,11 @@ voltage_level smallint,        	-- voltage_level from 1-7
 rs_0 character varying(12),	-- German Regionalschlüssel
 wo_avg_cap integer, 		-- average capacity per region and voltage level
 wo_new_units numeric(9,2), 	-- New number of region per voltage level 
-CONSTRAINT wo_dev_nep_germany_mun_pkey PRIMARY KEY (id)
+CONSTRAINT ego_supply_wo_dev_2035_germany_mun_pkey PRIMARY KEY (id)
 );
 --
-Insert into orig_geo_powerplants.wo_dev_nep_germany_mun (wo_units,wo_cap_2014,voltage_level,rs_0,wo_avg_cap)
+-- Hier weiter --
+Insert into model_draft.ego_supply_wo_dev_2035_germany_mun (wo_units,wo_cap_2014,voltage_level,rs_0,wo_avg_cap)
 SELECT
   count(A.*) as wo_units,
   sum(A.electrical_capacity) as wo_cap_2014,
@@ -970,9 +969,10 @@ AND A.generation_subtype = 'wind_onshore'
 Group by A.voltage_level, B.id, B.rs_0;
 --
 -- Time log server =  03:46:10806 hours
--- SELECT * FROM orig_geo_powerplants.wo_dev_nep_germany_mun LIMIT 10;
+--                    04:02:14454 hours 
+-- SELECT * FROM model_draft.ego_supply_wo_dev_2035_germany_mun LIMIT 10;
 
-UPDATE orig_geo_powerplants.wo_dev_nep_germany_mun AA
+UPDATE model_draft.ego_supply_wo_dev_2035_germany_mun AA
 set     wo_add_cap_2035 = ( (AA.wo_cap_2014::numeric / wo_sq_2014.fs_cap_2014::numeric)*wo_scn_2035.fs_cap_2035 
                              -AA.wo_cap_2014)::integer
                               
@@ -995,7 +995,7 @@ SELECT
    substring(A.rs_0 from 1 for 2) as rs,        -- Regionalschlüssel first 2 numbers = federal state
    sum(A.wo_cap_2014) as fs_cap_2014            -- in kW
 FROM
-  orig_geo_powerplants.wo_dev_nep_germany_mun A
+  model_draft.ego_supply_wo_dev_2035_germany_mun A
 Group by  substring(A.rs_0 from 1 for 2) 
 ) as wo_sq_2014
 Where wo_scn_2035.rs = wo_sq_2014.rs
@@ -1006,9 +1006,9 @@ AND substring(AA.rs_0 from 1 for 2) =  wo_scn_2035.rs
 --- ------------------------------------------------------------------------------------------------------------
 -- Count new additional Units -> new_units
 -- Hot Fix data cleaning
-DELETE FROM orig_geo_powerplants.wo_dev_nep_germany_mun WHERE wo_add_cap_2035 <=0;
+DELETE FROM model_draft.ego_supply_wo_dev_2035_germany_mun WHERE wo_add_cap_2035 <=0;
 --
-UPDATE orig_geo_powerplants.wo_dev_nep_germany_mun AA
+UPDATE model_draft.ego_supply_wo_dev_2035_germany_mun AA
      set wo_new_units =  round(wo_add_cap_2035/wo_avg_cap); 
 --
 -- SELECT * FROM   orig_scenario_data.nep_2015_scenario_capacities WHERE generation_type = 'wind_onshore' Limit 20;
@@ -1039,13 +1039,13 @@ group by scn.nuts, substring(AA.rs_0 from 1
  for 2), substring(AA.nuts from 1 for 3),
          scn.capacity,scn.generation_type, scn.state
 ) as scn,
- orig_geo_powerplants.wo_dev_nep_germany_mun A
+ model_draft.ego_supply_wo_dev_2035_germany_mun A
 WHERE scn.rs = substring(rs_0 from 1 for 2)
 Group by substring(rs_0 from 1 for 2),scn.capacity_2035, scn.state
 Order by scn.state
 ;
 --
--- SELECT sum(wo_cap_2014) FROM  orig_geo_powerplants.wo_dev_nep_germany_mun;
+-- SELECT sum(wo_cap_2014) FROM  model_draft.ego_supply_wo_dev_2035_germany_mun;
 --
 --- ------------------------------------------------------------------------------------------------------------
 -- Take status Quo and Add new onshore plants 
@@ -1119,7 +1119,7 @@ Insert into model_draft.ego_supply_res_powerplant_2035 (id,scenario_year,electri
 	       else  unnest(array_fill(A.wo_avg_cap, Array[(A.wo_new_units)::int])) END as electrical_capacity ,    -- in kW 
 	 ST_Transform(ST_PointOnSurface(B.geom), 4326) as geom     
 	FROM 
-	  orig_geo_powerplants.wo_dev_nep_germany_mun A,
+	  model_draft.ego_supply_wo_dev_2035_germany_mun A,
 	  orig_geo_vg250.vg250_6_gem_clean B
 	Where A.rs_0 = B.rs_0
 	) as sub ,
@@ -1139,7 +1139,7 @@ Insert into model_draft.ego_supply_res_powerplant_2035 (id,scenario_year,electri
 -- Easy approach use Marios Tabel
 -- 
 -- Change Python script in order to fill tabel
- 
+-- hier weiter
 INSERT INTO model_draft.ego_supply_res_powerplant_2035
 SELECT
   B.max_id +row_number() over (ORDER BY A.id) as id,  -- create new ID 
@@ -1170,8 +1170,6 @@ A.generation_type = 'chp'
 ;
 -- Time log server = 792 msec 
 
---  ++++   HIER WEITER **** 
-
 
 --- ------------------------------------------------------------------------------------------------------------
 -- Clean up Part
@@ -1180,27 +1178,31 @@ A.generation_type = 'chp'
 /*
  DROP SEQUENCE orig_geo_powerplants.on_dev_nep_germany_mun_id_seq;
  DROP SEQUENCE model_draft.ego_supply_pv_dev_2035_germany_mun_id_seq;
- DROP SEQUENCE orig_geo_powerplants.wo_dev_nep_germany_mun_id_seq;
+ DROP SEQUENCE model_draft.ego_supply_wo_dev_2035_germany_mun_id_seq;
  DROP TABLE model_draft.ego_supply_res_powerplant_germany_to_region CASCADE;
- DROP TABLE orig_geo_powerplants.wo_dev_nep_germany_mun CASCADE;
+ DROP TABLE model_draft.ego_supply_wo_dev_2035_germany_mun CASCADE;
 */
  
 --- ------------------------------------------------------------------------------------------------------------
 -- 
 --  META Documentation
 --
-
 COMMENT ON TABLE  model_draft.ego_supply_res_powerplant_2035 IS
 '{
-"Name": "Renewable power plants in Germany by NEP 2035 Scenario data",
+"Name": "eGo renewable power plants in Germany developed by NEP 2035 scenario data",
 "Source": [{
                   "Name": "Open_eGo",
-                  "URL":  "https://github.com/openego/data_processing" }],
+                  "URL":  "https://github.com/openego/data_processing" },
+             {    "Name": "NEP 2015, erster Entwurf p. 45",
+                  "URL":  "https://www.netzentwicklungsplan.de/sites/default/files/paragraphs-files/NEP_2025_1_Entwurf_Teil1.pdf" },
+              {   "Name": "(Fl)ensburg (En)ergy (S)cenarios - NEP Scenarios for 2014/2025/2035",
+                  "URL":  "https://osf.io/rz7fq/" }
+                  ],
 "Reference date": "2035",
 "Date of collection": "21-11-2016",
-"Original file": "https://github.com/openego/data_processing/... .sql",
+"Original file": "https://github.com/openego/data_processing/blob/refactor/oedb-restructuring_v0.2/calc_geo_powerplants/development_res_ProxToNow_2035.sql",
 "Spatial resolution": ["Germany"],
-"Description": ["The data set in"],
+"Description": ["This data set includes a 2.8 M units of renewable power plants with a high geographical resolution. The development of renewable units is done by a proportional to the amount of renewable units per German federal state by scenario data from the “Netzentwicklungsplan Strom, Version 2015, erster Entwurf” page 45, table “Installierte Leistungen je Bundesland im Szenario B1 2035/B2 2035”. The Script for this “proxToNow” Method and the allocation of units by spatial aspects can be found under: https://github.com/openego/data_processing/blob/refactor/oedb-restructuring_v0.2/calc_geo_powerplants/development_res_ProxToNow_2035.sql"],
 "Column": [
                    {"Name": "id",
                     "Description": "Primary ID",
@@ -1230,8 +1232,7 @@ COMMENT ON TABLE  model_draft.ego_supply_res_powerplant_2035 IS
                     "Description": "Latitude",
                     "Unit": "" }, 
                    {"Name": "voltage_level",
-                    "Description": "voltage level to which generator is connected (partly calculated based
-                     on installed capacity) Voltage level of Germany form 1 (Extra-high voltage) to 7 (Low voltage)",
+                    "Description": "voltage level to which generator is connected (partly calculated based on installed capacity) Voltage level of Germany form 1 (Extra-high voltage) to 7 (Low voltage)",
                     "Unit": "" }, 
                    {"Name": "network_node",
                     "Description": "Connection point to the electricity grid based on BNetzA data",
@@ -1267,12 +1268,16 @@ COMMENT ON TABLE  model_draft.ego_supply_res_powerplant_2035 IS
                     "Date":  "07.02.2017",
                     "Comment": "Change of DB version, new allocation" }
                   ],
-"ToDo": ["Add subst_id till un_id, and soon"],
-"Licence": ["Not choosen yet"],
-"Instructions for proper use": [".."]
+"Notes": ["..."],
+"Licence":      [{
+                    "Name":       "Open Database License (ODbL) v1.0",
+		    "URL":        "http://opendatacommons.org/licenses/odbl/1.0/",
+	            "Copyright":  "Europa-Universität Flensburg, Centre for Sustainable Energy Systems"}],
+"Instructions for proper use": ["..."]       
 }';
 
 --- 
 SELECT obj_description('model_draft.ego_supply_res_powerplant_2035'::regclass)::json;
-
+---
+VACUUM FULL ANALYZE model_draft.ego_supply_res_powerplant_2035;
 -- END

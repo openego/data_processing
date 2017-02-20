@@ -171,6 +171,9 @@ if __name__ == '__main__':
     ilp = profiles.IndustrialLoadProfile(e_slp.date_time_index,
                                          holidays=holidays)
 
+    # counter
+    ctr = 0
+
     # iterate over substation retrieving sectoral demand at each of it
     for it, row in load_areas.iterrows():
         row = row.fillna(0)
@@ -215,8 +218,15 @@ if __name__ == '__main__':
         #                      index=True,
         #                      if_exists='fail')
 
-        # push data to database
-        session.commit()
+        ctr += 1
+        # commit data to database every 1000 datasets: This is done since pushing every
+        # single dataset slows down entire script, single commiting in the end sometimes
+        # leads to conn. timeout.
+        if (ctr % 1000) == 0:
+            session.commit()
+
+    # commit remaining datasets that were not committed in loop above
+    session.commit()
 
     # grant access to db_group
     tools.grant_db_access(conn, schema, target_table, db_group)
