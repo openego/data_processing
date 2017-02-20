@@ -42,6 +42,7 @@ def data_processing():
     snippets = [
         # 'ego_scenario_log_setup.sql',					# setup scenario log table
         # 'ego_boundaries_vg250_setup.sql',				# setup borders
+        # 'analyse_osm_landuse.sql',                    # setup OSM landuse
         
         # 'get_substations.sql',                 		# setup hvmv substations
         # 'get_substations_ehv.sql',             		# setup ehv substations
@@ -72,7 +73,7 @@ def data_processing():
         # 'demandseries_TOPF.sql',					    # 
         # 'LOPF_data.sql',							    # 
         
-        # 'process_eGo_mvlv_substation.sql',					    #
+        # 'process_eGo_mvlv_substation.sql',			#
         # 'process_eGo_lv_grid_districts.sql'		    # 
         ]
 

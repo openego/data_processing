@@ -1,35 +1,34 @@
 ﻿/*
-OSM test for landuse
-*/ 
+analyse OSM landuse data
+
+__copyright__ 	= "Reiner Lemoine Institut gGmbH"
+__license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
+__url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
+__author__ 	= "Ludee"
+*/
+
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','input','openstreetmap','osm_deu_polygon','analyse_osm_landuse.sql',' ');
 
 -- 2016-10-01 openstreetmap
-DROP MATERIALIZED VIEW IF EXISTS	openstreetmap.osm_deu_landuse_mview CASCADE;
-CREATE MATERIALIZED VIEW 		openstreetmap.osm_deu_landuse_mview AS
+DROP MATERIALIZED VIEW IF EXISTS	openstreetmap.osm_deu_polygon_landuse_mview CASCADE;
+CREATE MATERIALIZED VIEW 		openstreetmap.osm_deu_polygon_landuse_mview AS
 	SELECT	osm.gid, osm.tags, osm.geom
 	FROM	openstreetmap.osm_deu_polygon AS osm
 	WHERE	tags ? 'landuse'
 	ORDER BY osm.osm_id;
 
--- "Create Index GIST (geom)"   (OK!) -> 6.000ms =0
-CREATE INDEX  	osm_deu_landuse_mview_geom_idx
-	ON	openstreetmap.osm_deu_landuse_mview
-	USING	GIST (geom);
+-- index (id)
+CREATE INDEX  	osm_deu_polygon_landuse_mview_geom_idx
+	ON	openstreetmap.osm_deu_polygon_landuse_mview USING GIST (geom);
 
--- "Grant oeuser"   (OK!) -> 100ms =0
-GRANT ALL ON TABLE	openstreetmap.osm_deu_landuse_mview TO oeuser WITH GRANT OPTION;
-ALTER TABLE		openstreetmap.osm_deu_landuse_mview OWNER TO oeuser;
+-- grant (oeuser)
+ALTER TABLE	openstreetmap.osm_deu_polygon_landuse_mview OWNER TO oeuser;
 
--- Scenario eGo data processing
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,user_name,timestamp)
-	SELECT	'0.2' AS version,
-		'openstreetmap' AS schema_name,
-		'osm_deu_landuse_mview' AS table_name,
-		'analyse_osm_landuse.sql' AS script_name,
-		COUNT(geom)AS entries,
-		'OK' AS status,
-		session_user AS user_name,
-		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
-	FROM	openstreetmap.osm_deu_landuse_mview;
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','input','openstreetmap','osm_deu_polygon_landuse_mview','analyse_osm_landuse.sql',' ');
+
 
 /* 
 -- 2016-01-13 orig_osm
