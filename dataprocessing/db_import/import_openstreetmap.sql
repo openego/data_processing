@@ -1,7 +1,12 @@
 ﻿/*
 Script to process OpenStreetMap tables after import with osm2pgsql
 Basic operations: move to schema; update pkey and index
-*/ 
+
+__copyright__ 	= "Reiner Lemoine Institut gGmbH"
+__license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
+__url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
+__author__ 	= "Ludee"
+*/
 
 /*
 -- Tests for the loops
