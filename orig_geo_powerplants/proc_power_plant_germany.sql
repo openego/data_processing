@@ -230,7 +230,7 @@ WHERE capacity >=120.0 /*Voltage_level =1 when capacity greater than 120 MW*/;
 
 UPDATE supply.ego_conv_powerplant
 SET voltage_level=3
-WHERE capacity BETWEEN 17.5 AND 119.99 /*Voltage_level =2 when capacity between 17.5 and 119.99 MW*/;
+WHERE capacity BETWEEN 17.5 AND 119.99 /*Voltage_level =2 when capacity between 17.5 and 119.99 MW*/
 ;
 UPDATE supply.ego_conv_powerplant
 SET voltage_level=4
@@ -238,7 +238,7 @@ WHERE capacity BETWEEN 4.5 AND 17.49
 ;
 UPDATE supply.ego_conv_powerplant
 SET voltage_level=5
-WHERE capacity BETWEEN 0.3 AND 4.49 /* Voltage_level =3 when capacity between 0.3 and 4.5 kV*/;
+WHERE capacity BETWEEN 0.3 AND 4.49 /* Voltage_level =3 when capacity between 0.3 and 4.5 kV*/
 ;
 
 UPDATE supply.ego_conv_powerplant
@@ -248,7 +248,7 @@ WHERE capacity BETWEEN 0.1 AND 0.29
 
 UPDATE supply.ego_conv_powerplant
 SET voltage_level=7
-WHERE capacity BETWEEN 0 AND 0.099 /*voltage_level =1 when capacity lower than 0.1*/
+WHERE capacity < 0.1 /*voltage_level =7 when capacity lower than 0.1*/
 ;
 
 
