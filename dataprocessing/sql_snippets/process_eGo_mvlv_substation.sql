@@ -68,6 +68,10 @@ CREATE TABLE IF NOT EXISTS model_draft.ego_grid_mvlv_substation (
   
 TRUNCATE TABLE model_draft.ego_grid_mvlv_substation;
 
+-- index GIST (geom)
+CREATE INDEX ego_grid_mvlv_substation_geom_idx
+	ON model_draft.ego_grid_mvlv_substation USING GIST (geom);
+
 -- Bestimme diejenigen Mittelpunkte der Grid-Polygone, die innerhalb der Lastgebiete liegen:
 INSERT INTO model_draft.ego_grid_mvlv_substation (geom, load_area_id)
 	SELECT DISTINCT ST_CENTROID (grids.geom)::geometry(POINT,3035) AS geom, area.id AS load_area_id

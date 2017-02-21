@@ -133,11 +133,15 @@ CREATE TABLE IF NOT EXISTS model_draft."ego_grid_lv_griddistrict"
   ont_count integer,
   ont_id integer,
   merge_id integer,
-  CONSTRAINT ego_grid_lv_griddistrict_pkey2 PRIMARY KEY (id)
+  CONSTRAINT ego_grid_lv_griddistrict_pkey PRIMARY KEY (id)
 );
 
- 
 TRUNCATE TABLE 	model_draft."ego_grid_lv_griddistrict";
+
+-- index GIST (geom)
+CREATE INDEX ego_grid_lv_griddistrict_geom_idx
+	ON model_draft."ego_grid_lv_griddistrict" USING GIST (geom);
+
 INSERT INTO		model_draft.ego_grid_lv_griddistrict (geom,load_area_id)
 	SELECT	(ST_DUMP(ST_INTERSECTION(mun.geom,voi.geom))).geom ::geometry(Polygon,3035) AS geom, mun.id AS load_area_id
 	FROM	model_draft."ego_demand_loadarea" AS mun,
