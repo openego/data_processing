@@ -383,7 +383,6 @@ DELETE FROM model_draft.ego_demand_hv_largescaleconsumer
 				WHERE t.rnum > 1);
 
 ALTER TABLE model_draft.ego_demand_hv_largescaleconsumer
-	ADD COLUMN id serial,
 	ADD COLUMN subst_id integer, 
 	ADD COLUMN otg_id integer,  
 	ADD COLUMN un_id integer,
@@ -391,7 +390,7 @@ ALTER TABLE model_draft.ego_demand_hv_largescaleconsumer
 	ADD COLUMN peak_load numeric,
 	ADD COLUMN geom geometry(MultiPolygon,3035),
 	ADD COLUMN geom_centre geometry(Point,3035),
-	ADD PRIMARY KEY (id);
+	ADD PRIMARY KEY (polygon_id);
 
 ALTER TABLE model_draft.ego_demand_hv_largescaleconsumer ALTER COLUMN polygon_id SET DEFAULT NULL;
 
