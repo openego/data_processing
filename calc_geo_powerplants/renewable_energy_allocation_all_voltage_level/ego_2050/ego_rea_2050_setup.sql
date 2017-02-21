@@ -1,4 +1,4 @@
-/*
+﻿/*
 Skript to allocate decentralized renewable power plants (dea)
 Methods base on technology and voltage level
 Uses different lattice from setup_ego_wpa_per_grid_district.sql
@@ -16,36 +16,36 @@ Table names:
 ------------
 
 model_draft.ego_grid_mv_griddistrict  # no changes
-model_draft.ego_supply_rea -> model_draft.ego_supply_rea_2050
-supply.ego_res_powerplant
-
+model_draft.ego_supply_rea    -> model_draft.ego_supply_rea_2050
+supply.ego_res_powerplant     -> model_draft.ego_supply_res_powerplant_2050
 
 
 Index names:
 ------------
-ego_supply_rea_geom_idx       -> 
-ego_supply_rea_geom_line_idx  -> 
-ego_supply_rea_geom_new_idx   ->
-
-ego_supply_rea_out_mview_geom_new_idx
+ego_supply_rea_geom_idx       -> ego_supply_rea_2050_geom_idx 
+ego_supply_rea_geom_line_idx  -> ego_supply_rea_2050_geom_line_idx
+ego_supply_rea_geom_new_idx   -> ego_supply_rea_2050_geom_new_idx
+ego_supply_rea_out_mview_geom_new_idx -> ego_supply_rea_2050_out_mview_geom_new_idx
 
 
 Pkeys: 
 ------
-ego_supply_rea_pkey 	      -> ego_supply_rea_2050_pkey 
-
+ego_supply_rea_pkey -> ego_supply_rea_2050_pkey 
 
 
 
 Views:
 ------
-model_draft.ego_supply_rea_out_mview -> 
+model_draft.ego_supply_rea_out_mview ->  model_draft.ego_supply_rea_2050_out_mview 
+
 
 
 Changes to original script:
 --------------------------
 
-
+replace: rea_ -> rea_2050
+set comments
+delete column postcode 
 
 ToDos:
 ------
@@ -56,7 +56,7 @@ change file name res_20YY
 
 */
 
--- number of grid_district -> 3606
+-- number of grid_district -> 3608
 	SELECT	COUNT(*)
 	FROM	 model_draft.ego_grid_mv_griddistrict;
 
@@ -83,9 +83,9 @@ CONSTRAINT ego_supply_rea_2050_pkey PRIMARY KEY (id));
 SELECT ego_scenario_log('v0.2.3','input','supply','ego_res_powerplant','ego_rea_2050_setup.sql',' ');
 
 -- insert DEA, with no geom excluded
-INSERT INTO model_draft.ego_supply_rea_2050 (id, electrical_capacity, generation_type, generation_subtype, voltage_level, postcode, source, geom)
-	SELECT	id, electrical_capacity, generation_type, generation_subtype, voltage_level, postcode, source, ST_TRANSFORM(geom,3035)
-	FROM	supply.ego_res_powerplant
+INSERT INTO model_draft.ego_supply_rea_2050 (id, electrical_capacity, generation_type, generation_subtype, voltage_level, source, geom)
+	SELECT	id, electrical_capacity, generation_type, generation_subtype, voltage_level, source, ST_TRANSFORM(geom,3035)
+	FROM	model_draft.ego_supply_res_powerplant_2050
 	WHERE	geom IS NOT NULL;
 
 -- index GIST (geom)
@@ -118,7 +118,7 @@ UPDATE 	model_draft.ego_supply_rea_2050 AS t1
 			ST_CONTAINS(gd.geom,dea.geom)
 		) AS t2
 	WHERE  	t1.id = t2.id;
-
+-- Hier weiter --
 -- flag reset
 UPDATE 	model_draft.ego_supply_rea_2050 AS dea
 	SET	flag = NULL,
@@ -297,7 +297,7 @@ SELECT ego_scenario_log('v0.2.3','output','model_draft','ego_osm_agriculture_per
 
 -- Check for sources
 	SELECT	dea.source
-	FROM 	supply.ego_res_powerplant AS dea
+	FROM 	model_draft.ego_supply_res_powerplant_2050 AS dea
 	GROUP BY dea.source
 
 -- Flag BNetzA
