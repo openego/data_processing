@@ -18,7 +18,7 @@ WHERE res.id NOT IN (
 			Select
 			A.id
 			From
-			supply.ego_renewable_power_plants_germany A,
+			supply.ego_res_powerplant A,
 			model_draft.ego_grid_mv_griddistrict C
 			Where 
 			ST_Intersects(ST_Transform(A.geom, 3035), C.geom)
@@ -27,9 +27,11 @@ WHERE res.id NOT IN (
  -- result: number of units in supply.ego_renewable_power_plants_germany  = 
 
  
-
- 
-
+SELECT
+count(*)
+FROM 
+supply.ego_res_powerplant 
+WHERE subst_id IS NULL;
 --- 
 
 -- supply.ego_res_powerplant
