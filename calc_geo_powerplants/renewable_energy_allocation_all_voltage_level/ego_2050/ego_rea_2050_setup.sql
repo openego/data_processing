@@ -196,7 +196,8 @@ ALTER TABLE	model_draft.ego_supply_rea_2050_out_nn
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.3','temp','model_draft','ego_supply_rea_2050_out_nn','ego_rea_2050_setup.sql',' ');
-	
+
+-- Hier weiter --	
 -- new subst_id and geom_new with line
 UPDATE 	model_draft.ego_supply_rea_2050 AS t1
 	SET  	subst_id = t2.subst_id,
@@ -211,7 +212,6 @@ UPDATE 	model_draft.ego_supply_rea_2050 AS t1
 		WHERE  	flag = 'out'
 		)AS t2
 	WHERE  	t1.id = t2.dea_id;
--- Hier weiter --
 	
 -- re outside mv-griddistrict
 DROP MATERIALIZED VIEW IF EXISTS 	model_draft.ego_supply_rea_2050_out_mview CASCADE;
