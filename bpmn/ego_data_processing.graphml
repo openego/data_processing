@@ -4648,16 +4648,16 @@ grid.ego_ehv_substation<y:LabelModel>
               <y:Geometry height="55.0" width="35.0" x="735.75" y="3672.5"/>
               <y:Fill color="#FFFFFFE6" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
-              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="143.6875" modelName="custom" textColor="#000000" visible="true" width="362.107421875" x="-163.5537109375" y="-147.6875">social.zensus_population_per_ha
-model_draft.ego_osm_sector_per_griddistrict_1_residential
-model_draft.ego_osm_sector_per_griddistrict_2_retail
-model_draft.ego_osm_sector_per_griddistrict_3_industrial
-model_draft.ego_osm_sector_per_griddistrict_4_agricultural
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="143.6875" modelName="custom" textColor="#000000" visible="true" width="372.162109375" x="-168.5810546875" y="-147.6875">#social.zensus_population_per_ha
+#model_draft.ego_osm_sector_per_griddistrict_1_residential
+#model_draft.ego_osm_sector_per_griddistrict_2_retail
+#model_draft.ego_osm_sector_per_griddistrict_3_industrial
+#model_draft.ego_osm_sector_per_griddistrict_4_agricultural
 
-model_draft.ego_grid_substation_dummy
+model_draft.ego_grid_hvmv_substation_dummy
 model_draft.ego_grid_mvlv_substation
 model_draft.ego_demand_loadarea
-model_draft.ego_demand_load_area_peak_load
+#model_draft.ego_demand_load_area_peak_load
 <y:LabelModel>
                   <y:SmartNodeLabelModel distance="4.0"/>
                 </y:LabelModel>
