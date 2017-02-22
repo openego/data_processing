@@ -270,7 +270,7 @@ WHERE districts.id = adjacent.district_id;
 -- Add relation between LV grid districts and MVLV substations
 -- step 1: add new col with MVLV subst id
 ALTER TABLE model_draft.ego_grid_lv_griddistrict
-ADD COLUMN mvlv_subst_id integer;
+ADD COLUMN mvlv_subst_id integer DEFAULT NULL;
 -- step 2: write MVLV subst id to LV grid district table
 UPDATE 	model_draft.ego_grid_lv_griddistrict AS t1
 SET  	mvlv_subst_id = t2.sub_id
