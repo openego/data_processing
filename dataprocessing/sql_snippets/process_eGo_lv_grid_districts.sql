@@ -267,6 +267,25 @@ FROM  ( SELECT ST_UNION(cut.geom) AS geom, districts.id AS district_id
 WHERE districts.id = adjacent.district_id;
 
 
+-- Add relation between LV grid districts and MVLV substations
+-- step 1: add new col with MVLV subst id
+ALTER TABLE model_draft.ego_grid_lv_griddistrict
+ADD COLUMN mvlv_subst_id integer;
+-- step 2: write MVLV subst id to LV grid district table
+UPDATE 	model_draft.ego_grid_lv_griddistrict AS t1
+SET  	mvlv_subst_id = t2.sub_id
+FROM	(SELECT	gd.id AS gd_id,
+	sub.id ::integer AS sub_id
+
+	FROM	model_draft.ego_grid_lv_griddistrict AS gd,
+		model_draft.ego_grid_mvlv_substation AS sub
+	WHERE  	gd.load_area_id = sub.load_area_id AND
+		gd.geom && sub.geom AND
+		ST_CONTAINS(gd.geom,sub.geom)
+	GROUP BY gd.id, sub.id
+	) AS t2
+WHERE  	t1.id = t2.gd_id;
+
 
 ---- Add population
 --CREATE TABLE IF NOT EXISTS model_draft."ego_grid_lv_grid_district"
