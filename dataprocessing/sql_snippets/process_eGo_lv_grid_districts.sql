@@ -10,13 +10,13 @@ __author__ 	= "jong42, Ludee"
 
 
 -- Add Dummy points to substations (18 Points)
-ALTER TABLE model_draft."ego_grid_substation_dummy" 
+ALTER TABLE model_draft.ego_grid_hvmv_substation_dummy
 DROP COLUMN IF EXISTS is_dummy;
 
-ALTER TABLE model_draft."ego_grid_substation_dummy" 
+ALTER TABLE model_draft.ego_grid_hvmv_substation_dummy
 ADD COLUMN is_dummy boolean;
 
-UPDATE model_draft."ego_grid_substation_dummy" 
+UPDATE model_draft.ego_grid_hvmv_substation_dummy
 SET is_dummy = TRUE;
 
 ALTER TABLE model_draft."ego_grid_mvlv_substation"
@@ -30,7 +30,7 @@ SELECT
 	dummy.subst_id+800000,
 	ST_TRANSFORM(dummy.geom,3035),
 	dummy.is_dummy
-FROM 	model_draft."ego_grid_substation_dummy" AS dummy;
+FROM model_draft.ego_grid_hvmv_substation_dummy AS dummy;
 
 ---------------------
 
