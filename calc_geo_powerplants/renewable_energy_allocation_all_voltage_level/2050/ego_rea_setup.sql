@@ -33,12 +33,12 @@ CREATE TABLE 		model_draft.ego_supply_rea (
 CONSTRAINT ego_supply_rea_pkey PRIMARY KEY (id));
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.3','input','supply','ego_supply_res_powerplant_2035','ego_rea_setup.sql',' ');
+SELECT ego_scenario_log('v0.2.3','input','supply','ego_supply_res_powerplant_2050','ego_rea_setup.sql',' ');
 
 -- insert DEA, with no geom excluded
 INSERT INTO model_draft.ego_supply_rea (id, electrical_capacity, generation_type, generation_subtype, voltage_level, postcode, source, geom)
 	SELECT	id, electrical_capacity, generation_type, generation_subtype, voltage_level, postcode, source, ST_TRANSFORM(geom,3035)
-	FROM	model_draft.ego_supply_res_powerplant_2035
+	FROM	model_draft.ego_supply_res_powerplant_2050
 	WHERE	geom IS NOT NULL;
 
 -- index GIST (geom)
@@ -250,7 +250,7 @@ SELECT ego_scenario_log('v0.2.3','output','model_draft','ego_osm_agriculture_per
 
 -- Check for sources
 	SELECT	dea.source
-	FROM 	model_draft.ego_supply_res_powerplant_2035 AS dea
+	FROM 	model_draft.ego_supply_res_powerplant_2050 AS dea
 	GROUP BY dea.source
 
 -- Flag BNetzA
