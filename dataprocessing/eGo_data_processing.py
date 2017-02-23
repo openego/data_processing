@@ -48,26 +48,26 @@ def data_processing():
         # 'get_substations_ehv.sql',             		# setup ehv substations
         # 'otg_id_to_substations.sql',           		# assign osmTGmod-id
         # 'ego_grid_hvmv_substation.sql',				# hvmv substation voronoi
-        # 'Voronoi_ehv.sql',						    # ehc substation voronoi
+        # 'Voronoi_ehv.sql',						    # Create voronoi cells based on EHV substations
         
         # 'process_eGo_grid_district.sql',          	# mv griddistrict
         # 'setup_osm_landuse.sql', 						# osm landuse sector
-        # 'process_eGo_osm_loads_industry.sql', 		# osm industry
+        # 'process_eGo_osm_loads_industry.sql', 		# Identify industrial large scale consumer
         # 'process_eGo_osm_loads.sql',            		# osm loads
         # 'setup_zensus_population_per_ha.sql',   		# setup zensus
         # 'process_eGo_loads_melted.sql',        		# melt osm and zensus cluster
         # 'process_eGo_loads_per_grid_district.sql', 	# loadarea per mv-griddistrict
         # 'ego_demand_loads_per_mv_voronoi.sql', 	    # loadarea per mv-voronoi
-        # 'process_eGo_consumption.sql',			   	# consumption per loadarea
+        # 'process_eGo_consumption.sql',			   	# Allocate load to load areas
         # 'peak_load_per_load_area.py',				    # peak loads
         # 'ego_mv_griddistrict_results',                # results for mv-griddistrict
         # 'ego_paper_result.sql',						# results and statistics
        
-        # 'voronoi_weatherpoint.sql',				    # weatherpoint voronoi
-        # 'calc_ego_hv_powerflow.sql',				    # setup for hv powerflow
+        # 'voronoi_weatherpoint.sql',				    # Create voronoi cells based on weather points
+        # 'calc_ego_hv_powerflow.sql',				    # Set schema/tables for EHV/HV powerflow calculations up
         # 'osmtgmod_to_pypsa.sql',					    # osmTGmod2pyPSA
-        # 'assignment_generator_bus.sql',               # generators
-        # 'assignment_load_bus.sql',                    # loads
+        # 'assignment_generator_bus.sql',               # Assign generators to corresponding substation
+        # 'assignment_load_bus.sql',                    # Assign loads to their corresponding substation
         # 'renpass_gis_ResultsTOPF.sql',			    # 
         # 'demand_per_mv_grid_district.py',			    # 
         # 'demandseries_TOPF.sql',					    # 
