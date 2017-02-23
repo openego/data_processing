@@ -44,10 +44,10 @@ def data_processing():
         # 'ego_boundaries_vg250_setup.sql',				# setup borders
         # 'analyse_osm_landuse.sql',                    # setup OSM landuse
         
-        # 'get_substations.sql',                 		# setup hvmv substations
-        # 'get_substations_ehv.sql',             		# setup ehv substations
-        # 'otg_id_to_substations.sql',           		# assign osmTGmod-id
-        # 'ego_grid_hvmv_substation.sql',				# hvmv substation voronoi
+        # 'get_substations.sql',                 		# Abstract substations of the high voltage level from osm data
+        # 'get_substations_ehv.sql',             		# Abstract substations of the extra high voltage level from osm data
+        # 'otg_id_to_substations.sql',           		# Assign osmTGmod-id to substations
+        # 'ego_grid_hvmv_substation.sql',				# Create voronoi cells based on HV/MV substations
         # 'Voronoi_ehv.sql',						    # Create voronoi cells based on EHV substations
         
         # 'process_eGo_grid_district.sql',          	# mv griddistrict
@@ -65,13 +65,13 @@ def data_processing():
        
         # 'voronoi_weatherpoint.sql',				    # Create voronoi cells based on weather points
         # 'calc_ego_hv_powerflow.sql',				    # Set schema/tables for EHV/HV powerflow calculations up
-        # 'osmtgmod_to_pypsa.sql',					    # osmTGmod2pyPSA
+        # 'osmtgmod_to_pypsa.sql',					    # Include data from osmTGmod into EHV/HV powerflow schema
         # 'assignment_generator_bus.sql',               # Assign generators to corresponding substation
         # 'assignment_load_bus.sql',                    # Assign loads to their corresponding substation
-        # 'renpass_gis_ResultsTOPF.sql',			    # 
+        # 'renpass_gis_ResultsTOPF.sql',			    # Transfer renpassG!S results into the corresponding powerflow table
         # 'demand_per_mv_grid_district.py',			    # 
-        # 'demandseries_TOPF.sql',					    # 
-        # 'LOPF_data.sql',							    # 
+        # 'demandseries_TOPF.sql',					    # Insert demand series into corresponding powerflow table
+        # 'LOPF_data.sql',							    # Set marginal costs for generators and storages
         
         # 'process_eGo_mvlv_substation.sql',			#
         # 'process_eGo_lv_grid_districts.sql'		    # 
