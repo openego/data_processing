@@ -9,8 +9,8 @@ __author__ 	= "Ludee"
 */
 
 -- table for lattice 500m
-DROP TABLE IF EXISTS  	model_draft.ego_lattice_500m CASCADE;
-CREATE TABLE         	model_draft.ego_lattice_500m (
+DROP TABLE IF EXISTS  	model_draft.ego_lattice_500m_2050 CASCADE;
+CREATE TABLE         	model_draft.ego_lattice_500m_2050 (
 		id SERIAL NOT NULL,
 		subst_id integer,
 		area_type text,
@@ -22,7 +22,7 @@ CONSTRAINT 	ego_lattice_500m_pkey PRIMARY KEY (id));
 SELECT ego_scenario_log('v0.2.3','input','political_boundary','bkg_vg250_1_sta_union_mview','ego_lattice_500m.sql',' ');
 
 -- lattice on bbox of Germany with 500m
-INSERT INTO     model_draft.ego_lattice_500m (geom_box)
+INSERT INTO     model_draft.ego_lattice_500m_2050 (geom_box)
 	SELECT 	ST_SETSRID(ST_CreateFishnet(
 			ROUND((ST_ymax(box2d(box.geom)) - ST_ymin(box2d(box.geom))) /500)::integer,
 			ROUND((ST_xmax(box2d(box.geom)) - ST_xmin(box2d(box.geom))) /500)::integer,
@@ -35,21 +35,21 @@ INSERT INTO     model_draft.ego_lattice_500m (geom_box)
 
 -- index gist (geom_box)
 CREATE INDEX 	ego_lattice_500m_geom_box_idx
-	ON 	model_draft.ego_lattice_500m USING gist (geom_box);
+	ON 	model_draft.ego_lattice_500m_2050 USING gist (geom_box);
 
 -- centroid
-UPDATE 	model_draft.ego_lattice_500m
+UPDATE 	model_draft.ego_lattice_500m_2050
 	SET	geom = ST_CENTROID(geom_box);
 
 -- index gist (geom)
 CREATE INDEX 	ego_lattice_500m_geom_idx
-	ON 	model_draft.ego_lattice_500m USING gist (geom);	
+	ON 	model_draft.ego_lattice_500m_2050 USING gist (geom);	
 
 -- grant (oeuser)
-ALTER TABLE	model_draft.ego_lattice_500m OWNER TO oeuser;
+ALTER TABLE	model_draft.ego_lattice_500m_2050 OWNER TO oeuser;
 
 -- metadata
-COMMENT ON TABLE model_draft.ego_lattice_500m IS '{
+COMMENT ON TABLE model_draft.ego_lattice_500m_2050 IS '{
 	"title": "eGoDP - lattice on bbox of Germany with 500m",
 	"description": "lattice (regular point grid)",
 	"language": [ "eng" ],
@@ -85,7 +85,7 @@ COMMENT ON TABLE model_draft.ego_lattice_500m IS '{
 		"meta_version": "1.0"}] }';
 
 -- select description
-SELECT obj_description('model_draft.ego_lattice_500m' ::regclass) ::json;
+SELECT obj_description('model_draft.ego_lattice_500m_2050' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.3','output','model_draft','ego_lattice_500m','ego_lattice_500m.sql',' ');
+SELECT ego_scenario_log('v0.2.3','output','model_draft','ego_lattice_500m_2050','ego_lattice_500m.sql',' ');
