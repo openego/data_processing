@@ -32,12 +32,12 @@ SELECT ego_scenario_log('v0.2.5','input','supply','ego_conv_powerplant','assignm
 
 INSERT INTO model_draft.ego_supply_generator (re_id, geom) 
 	SELECT 	id, geom
-	FROM 	supply.ego_res_powerplant
+	FROM 	model_draft.ego_supply_res_powerplant
 	WHERE geom IS NOT NULL;
 
 INSERT INTO model_draft.ego_supply_generator (conv_id, geom) 
 	SELECT 	gid, geom
-	FROM 	supply.ego_conv_powerplant
+	FROM 	model_draft.ego_supply_conv_powerplant
 	WHERE eeg NOT LIKE 'yes'; -- Duplicates that already occur in the eeg-list are ignored 
 
 -- index GIST (geom)
