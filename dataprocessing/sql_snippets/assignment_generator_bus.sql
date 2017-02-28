@@ -104,33 +104,33 @@ SELECT ego_scenario_log('v0.2.5','input','model_draft','ego_grid_mv_griddistrict
 SELECT ego_scenario_log('v0.2.5','input','model_draft','ego_grid_ehv_substation_voronoi','assignment_generator_bus.sql',' ');
 SELECT ego_scenario_log('v0.2.5','input','model_draft','ego_grid_hvmv_substation','assignment_generator_bus.sql',' ');
 
-/* ALTER TABLE supply.ego_conv_powerplant
+/* ALTER TABLE model_draft.ego_supply_conv_powerplant
 	ADD COLUMN subst_id bigint,
 	ADD COLUMN otg_id bigint,
 	ADD COLUMN un_id bigint; */ 
 
 -- Identify corresponding bus with the help of grid districts
-UPDATE supply.ego_conv_powerplant a
+UPDATE model_draft.ego_supply_conv_powerplant a
 	SET 	subst_id = b.subst_id
 	FROM	model_draft.ego_grid_mv_griddistrict b
 	WHERE 	ST_Intersects (a.geom, ST_TRANSFORM(b.geom,4326)) 
 		AND voltage_level >= 3; 
 
 -- Identify corresponding bus with the help of ehv-Voronoi
-UPDATE supply.ego_conv_powerplant a
+UPDATE model_draft.ego_supply_conv_powerplant a
 	SET 	subst_id = b.subst_id
 	FROM 	model_draft.ego_grid_ehv_substation_voronoi b
 	WHERE 	ST_Intersects (a.geom, b.geom) = TRUE
 		AND voltage_level <= 2;
 
 -- Insert otg_id of bus
-UPDATE supply.ego_conv_powerplant a
+UPDATE model_draft.ego_supply_conv_powerplant a
 	SET 	otg_id = b.otg_id 
 	FROM 	model_draft.ego_grid_hvmv_substation b
 	WHERE 	a.subst_id = b.subst_id;
 
 -- Update un_id from generators_total  
-UPDATE supply.ego_conv_powerplant a
+UPDATE model_draft.ego_supply_conv_powerplant a
 	SET 	un_id = b.un_id 
 	FROM 	model_draft.ego_supply_generator b
 	WHERE 	a.gid = b.conv_id; 
@@ -171,7 +171,7 @@ INSERT INTO model_draft.ego_supply_pf_generator_single (generator_id)
 	FROM 	model_draft.ego_supply_generator
 	WHERE 	conv_id NOT IN 
 		(SELECT a.gid 
-		FROM supply.ego_conv_powerplant a
+		FROM model_draft.ego_supply_conv_powerplant a
 		WHERE a.fuel= 'pumped_storage' )
 		OR re_id IS NOT NULL; -- pumped storage units are ignored here and will be listed in storage table 
 
@@ -274,7 +274,7 @@ SELECT ego_scenario_log('v0.2.5','input','model_draft','ego_grid_mv_griddistrict
 SELECT ego_scenario_log('v0.2.5','input','model_draft','ego_grid_ehv_substation_voronoi','assignment_generator_bus.sql',' ');
 SELECT ego_scenario_log('v0.2.5','input','model_draft','ego_grid_hvmv_substation','assignment_generator_bus.sql',' ');
 
-/* ALTER TABLE supply.ego_res_powerplant
+/* ALTER TABLE model_draft.ego_supply_res_powerplant
  	ADD COLUMN subst_id bigint,
  	ADD COLUMN otg_id bigint,
  	ADD COLUMN un_id bigint; */
@@ -282,27 +282,27 @@ SELECT ego_scenario_log('v0.2.5','input','model_draft','ego_grid_hvmv_substation
 -- ACHTUNG: Hier wird in supply geschrieben. Das ist methodisch unsauber!
 
 -- Identify corresponding bus with the help of grid districts
-UPDATE supply.ego_res_powerplant a
+UPDATE model_draft.ego_supply_res_powerplant a
 	SET 	subst_id = b.subst_id
 	FROM	model_draft.ego_grid_mv_griddistrict b
 	WHERE 	ST_Intersects (a.geom, ST_TRANSFORM(b.geom,4326)) 
 		AND voltage_level >= 3;  
 
 -- Identify corresponding bus with the help of ehv-Voronoi
-UPDATE supply.ego_res_powerplant a
+UPDATE model_draft.ego_supply_res_powerplant a
 	SET 	subst_id = b.subst_id
 	FROM 	model_draft.ego_grid_ehv_substation_voronoi b
 	WHERE 	ST_Intersects (a.geom, b.geom) = TRUE 
 		AND voltage_level <= 2; 
 
 -- Insert otg_id of bus
-UPDATE supply.ego_res_powerplant a
+UPDATE model_draft.ego_supply_res_powerplant a
 	SET 	otg_id =b.otg_id 
 	FROM 	model_draft.ego_grid_hvmv_substation b
 	WHERE 	a.subst_id = b.subst_id; 
 
 -- Update un_id from generators_total 
-UPDATE supply.ego_res_powerplant a
+UPDATE model_draft.ego_supply_res_powerplant a
 	SET 	un_id = b.un_id 
 	FROM 	model_draft.ego_supply_generator b
 	WHERE 	a.id = b.re_id; 
@@ -324,9 +324,9 @@ UPDATE model_draft.ego_supply_pf_generator_single a
 		source = result.source
 		FROM 	(SELECT c.source_id as source, d.fuel as fuel
 			FROM 	model_draft.ego_grid_pf_hv_source c, 
-				supply.ego_conv_powerplant d 
+				model_draft.ego_supply_conv_powerplant d 
 			WHERE	d.fuel = c.name) AS result,		
-			supply.ego_conv_powerplant b
+			model_draft.ego_supply_conv_powerplant b
 		WHERE 	a.generator_id = b.un_id 
 			AND b.capacity >= 50 
 			AND result.fuel = b.fuel;
@@ -338,9 +338,9 @@ UPDATE model_draft.ego_supply_pf_generator_single a
 		source = result.source
 		FROM 	(SELECT c.source_id as source, d.fuel as fuel 
 			FROM 	model_draft.ego_grid_pf_hv_source c, 
-			       	supply.ego_conv_powerplant d
+			       	model_draft.ego_supply_conv_powerplant d
 			WHERE	d.fuel = c.name) AS result,		
-			supply.ego_conv_powerplant b
+			model_draft.ego_supply_conv_powerplant b
 WHERE a.generator_id = b.un_id and b.capacity < 50 AND result.fuel = b.fuel;
 
 -- For renewables 
@@ -349,7 +349,7 @@ UPDATE model_draft.ego_supply_pf_generator_single a
 		p_nom = b.electrical_capacity/1000, -- unit for capacity in RE-register is kW
 		dispatch = 'variable',
 		control = 'PQ' -- For RE generators control is set to PQ
-		FROM 	supply.ego_res_powerplant b
+		FROM 	model_draft.ego_supply_res_powerplant b
 		WHERE 	a.generator_id = b.un_id;
 
 
@@ -358,9 +358,9 @@ UPDATE model_draft.ego_supply_pf_generator_single a
 		FROM 	(SELECT c.source_id as source, 
 				d.un_id as un_id
 			FROM 	model_draft.ego_grid_pf_hv_source c, 
-			       	supply.ego_res_powerplant d
+			       	model_draft.ego_supply_res_powerplant d
 			WHERE	d.generation_type = c.name) AS result,
-			supply.ego_res_powerplant b
+			model_draft.ego_supply_res_powerplant b
 		WHERE a.generator_id = b.un_id AND a.generator_id = result.un_id; 
 
 -- Control is changed to PV for biomass powerplants > 50 MW
