@@ -60,7 +60,7 @@ def data_processing():
         # 'ego_demand_loads_per_mv_voronoi.sql', 	    # loadarea per mv-voronoi
         # 'process_eGo_consumption.sql',			   	# Allocate load to load areas
         # 'peak_load_per_load_area.py',				    # peak loads
-        # 'ego_mv_griddistrict_results',                # results for mv-griddistrict
+        # 'ego_mv_griddistrict_results.sql',            # results for mv-griddistrict
         # 'ego_paper_result.sql',						# results and statistics
        
         # 'voronoi_weatherpoint.sql',				    # Create voronoi cells based on weather points
