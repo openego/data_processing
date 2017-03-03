@@ -22,10 +22,6 @@ CREATE TABLE 		model_draft.ego_supply_generator (
 -- grant (oeuser)
 ALTER TABLE model_draft.ego_supply_generator OWNER TO oeuser;
 
--- Das wird nicht benötigt
--- DELETE FROM model_draft.ego_supply_generator; 
--- DROP INDEX IF EXISTS model_draft.ego_supply_generator_idx;
-
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.5','input','supply','ego_res_powerplant','assignment_generator_bus.sql',' ');
 SELECT ego_scenario_log('v0.2.5','input','supply','ego_conv_powerplant','assignment_generator_bus.sql',' ');
@@ -104,10 +100,6 @@ SELECT ego_scenario_log('v0.2.5','input','model_draft','ego_grid_mv_griddistrict
 SELECT ego_scenario_log('v0.2.5','input','model_draft','ego_grid_ehv_substation_voronoi','assignment_generator_bus.sql',' ');
 SELECT ego_scenario_log('v0.2.5','input','model_draft','ego_grid_hvmv_substation','assignment_generator_bus.sql',' ');
 
-/* ALTER TABLE model_draft.ego_supply_conv_powerplant
-	ADD COLUMN subst_id bigint,
-	ADD COLUMN otg_id bigint,
-	ADD COLUMN un_id bigint; */ 
 
 -- Identify corresponding bus with the help of grid districts
 UPDATE model_draft.ego_supply_conv_powerplant a
@@ -274,12 +266,6 @@ SELECT ego_scenario_log('v0.2.5','input','model_draft','ego_grid_mv_griddistrict
 SELECT ego_scenario_log('v0.2.5','input','model_draft','ego_grid_ehv_substation_voronoi','assignment_generator_bus.sql',' ');
 SELECT ego_scenario_log('v0.2.5','input','model_draft','ego_grid_hvmv_substation','assignment_generator_bus.sql',' ');
 
-/* ALTER TABLE model_draft.ego_supply_res_powerplant
- 	ADD COLUMN subst_id bigint,
- 	ADD COLUMN otg_id bigint,
- 	ADD COLUMN un_id bigint; */
-
--- ACHTUNG: Hier wird in supply geschrieben. Das ist methodisch unsauber!
 
 -- Identify corresponding bus with the help of grid districts
 UPDATE model_draft.ego_supply_res_powerplant a
