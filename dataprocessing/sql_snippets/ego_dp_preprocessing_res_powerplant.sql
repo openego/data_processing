@@ -98,31 +98,52 @@ WHERE postcode = '00000' OR postcode = 'keine' or postcode = 'O04WF' AND generat
 
 
 
--- Adjust voltage level of all RE power plants according to allocation table
+-- Adjust voltage level of all RE power plants except wind_onshore according to allocation table
 UPDATE model_draft.ego_supply_res_powerplant
 SET voltage_level='1'
-WHERE electrical_capacity >=120000;
+WHERE electrical_capacity >=120000 AND generation_subtype!='wind_onshore';
 
 UPDATE model_draft.ego_supply_res_powerplant
 SET voltage_level='3'
-WHERE electrical_capacity between 17500 and 119999.99;
+WHERE electrical_capacity between 17500 and 119999.99 AND generation_subtype!='wind_onshore';
 
 UPDATE model_draft.ego_supply_res_powerplant
 SET voltage_level='4'
-WHERE electrical_capacity between 4500 and 17499.99;
+WHERE electrical_capacity between 4500 and 17499.99 AND generation_subtype!='wind_onshore';
 
 UPDATE model_draft.ego_supply_res_powerplant
 SET voltage_level='5'
-WHERE electrical_capacity between 300 and 4499.99;
+WHERE electrical_capacity between 300 and 4499.99 AND generation_subtype!='wind_onshore';
 
 UPDATE model_draft.ego_supply_res_powerplant
 SET voltage_level='6'
-WHERE electrical_capacity between 100 and 299.99;
+WHERE electrical_capacity between 100 and 299.99 AND generation_subtype!='wind_onshore';
 
 UPDATE model_draft.ego_supply_res_powerplant
 SET voltage_level='7'
-WHERE electrical_capacity <100;
+WHERE electrical_capacity <100 AND generation_subtype!='wind_onshore';
 
+-- Update onshore_wind with voltage_level higher than suggested by allocation table
+
+UPDATE model_draft.ego_supply_res_powerplant
+SET voltage_level='1'
+WHERE electrical_capacity >=120000 AND generation_subtype='wind_onshore';
+
+UPDATE model_draft.ego_supply_res_powerplant
+SET voltage_level='3'
+WHERE electrical_capacity between 17500 and 119999.99 AND generation_subtype='wind_onshore' AND voltage_level>3;
+
+UPDATE model_draft.ego_supply_res_powerplant
+SET voltage_level='4'
+WHERE electrical_capacity between 4500 and 17499.99 AND generation_subtype='wind_onshore' AND voltage_level>4; 
+
+UPDATE model_draft.ego_supply_res_powerplant
+SET voltage_level='5'
+WHERE electrical_capacity between 300 and 4499.99 AND generation_subtype='wind_onshore' AND voltage_level>5;
+
+UPDATE model_draft.ego_supply_res_powerplant
+SET voltage_level='6'
+WHERE electrical_capacity between 100 and 299.99 AND generation_subtype='wind_onshore' AND voltage_level>6;
 
 --Set voltage_level of offshore_wind to 1
 
