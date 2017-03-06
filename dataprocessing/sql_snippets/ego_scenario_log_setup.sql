@@ -10,7 +10,7 @@ __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
 __url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
 __author__ 	= "Ludee"
 */
-
+/* 
 -- scenario list
 DROP TABLE IF EXISTS	model_draft.ego_scenario CASCADE;
 CREATE TABLE 		model_draft.ego_scenario (
@@ -37,7 +37,7 @@ INSERT INTO	model_draft.ego_scenario (version,version_name,release,comment,times
 	('v0.2.3', ' ', 'FALSE', ' ', now() ),
 	('v0.2.4', ' ', 'FALSE', ' ', now() ),
 	('v0.2.5', ' ', 'FALSE', ' ', now() ),
-	('v0.2.6', ' ', 'FALSE', ' ', now() ) ;
+	('v0.2.6', ' ', 'FALSE', ' ', now() ) ; 
 
 -- logged versions
 SELECT	version
@@ -155,7 +155,7 @@ ALTER TABLE grid.ego_hvmv_substation
 	REFERENCES model_draft.ego_scenario(version) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION;
 
 -- grant (oeuser)
--- ALTER TABLE	grid.ego_hvmv_substation OWNER TO oeuser;
+ALTER TABLE	grid.ego_hvmv_substation OWNER TO oeuser;
 
 -- metadata
 COMMENT ON TABLE grid.ego_hvmv_substation IS '{
@@ -229,7 +229,7 @@ ALTER TABLE grid.ego_mv_griddistrict
 	REFERENCES model_draft.ego_scenario(version) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION;
 
 -- grant (oeuser)
--- ALTER TABLE	grid.ego_mv_griddistrict OWNER TO oeuser;
+ALTER TABLE	grid.ego_mv_griddistrict OWNER TO oeuser;
 
 -- metadata
 COMMENT ON TABLE grid.ego_mv_griddistrict IS '{
@@ -323,7 +323,7 @@ ALTER TABLE demand.ego_loadarea
 	REFERENCES model_draft.ego_scenario(version) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION;
 
 -- grant (oeuser)
--- ALTER TABLE	demand.ego_loadarea OWNER TO oeuser;
+ALTER TABLE	demand.ego_loadarea OWNER TO oeuser;
 
 -- metadata
 COMMENT ON TABLE demand.ego_loadarea IS '{
@@ -397,3 +397,4 @@ SELECT obj_description('demand.ego_loadarea' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.5','result','demand','ego_loadarea','ego_scenario_log_setup.sql','load area');
+ */

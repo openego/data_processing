@@ -381,6 +381,13 @@ DELETE FROM model_draft.ego_demand_hv_largescaleconsumer
 					ROW_NUMBER() OVER (partition BY powerplant_id ORDER BY (-area_ha)) AS rnum
 					FROM model_draft.ego_demand_hv_largescaleconsumer) t
 				WHERE t.rnum > 1);
+				
+DELETE FROM model_draft.ego_demand_hv_largescaleconsumer
+WHERE powerplant_id IN (SELECT powerplant_id
+              FROM (SELECT powerplant_id,
+                             ROW_NUMBER() OVER (partition BY polygon_id, area_ha ORDER BY voltage_level) AS rnum
+                     FROM model_draft.ego_demand_hv_largescaleconsumer) t
+              WHERE t.rnum > 1);
 
 ALTER TABLE model_draft.ego_demand_hv_largescaleconsumer
 	ADD COLUMN subst_id integer, 

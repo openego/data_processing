@@ -40,25 +40,22 @@ def data_processing():
                      'python_scripts'))
 
     snippets = [
-	    
-	  	##PREPROCESSING  
-	## 'ego_dp_preprocessing_conv_powerplant.sql',		# Preprocess conventional power plants list for further use
-    	## 'ego_dp_preprocessing_res_powerplant.sql',		# Preprocess renewable power plants list for further use
-   
-		## STRUCTURE
-         #'ego_scenario_log_setup.sql',				# Setup scenario log table
-         #'ego_boundaries_vg250_setup.sql',			# Setup vg250 borders
-         #'analyse_osm_landuse.sql',                    	# Filter OSM landuse
+		## STRUCTURE & SETUP (WARNING)
+        ## 'ego_scenario_log_setup.sql',					# Setup scenario log table
+		## 'ego_dp_preprocessing_conv_powerplant.sql',		# Setup conventional power plant list
+    	## 'ego_dp_preprocessing_res_powerplant.sql',		# Setup renewable power plant list
+        ## 'ego_boundaries_vg250_setup.sql',				# Setup vg250 borders
+        ## 'analyse_osm_landuse.sql',                    	# Filter OSM landuse
         
 		## SUBSTATION
-         #'get_substations.sql',                 		# Abstract HVMV Substations of the high voltage level from OSM
-         #'get_substations_ehv.sql',             		# Abstract EHV Substations of the extra high voltage level from OSM
-         #'otg_id_to_substations.sql',           		# Assign osmTGmod-id to HVMV and EHV substations
-         #'ego_grid_hvmv_substation.sql',			# HVMV Voronoi cells based on HVMV substations
-         #'Voronoi_ehv.sql',					# EHV Voronoi cells based on EHV substations
+        # 'get_substations.sql',                 			# Abstract HVMV Substations of the high voltage level from OSM
+        # 'get_substations_ehv.sql',             			# Abstract EHV Substations of the extra high voltage level from OSM
+        # 'otg_id_to_substations.sql',           			# Assign osmTGmod-id to HVMV and EHV substations
+        # 'ego_grid_hvmv_substation.sql',					# HVMV Voronoi cells based on HVMV substations
+        # 'Voronoi_ehv.sql',								# EHV Voronoi cells based on EHV substations
         
 		## GRIDDISTRICT
-         #'process_eGo_grid_district.sql',          		# MV Griddistricts from municipalities and Voronoi cells
+        # 'process_eGo_grid_district.sql',          		# MV Griddistricts from municipalities and Voronoi cells
 		
 		## LOADAREA
          #'setup_osm_landuse.sql', 				# OSM landuse sector
