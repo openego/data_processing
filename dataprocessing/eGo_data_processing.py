@@ -46,6 +46,7 @@ def data_processing():
     	## 'ego_dp_preprocessing_res_powerplant.sql',		# Setup renewable power plant list
         ## 'ego_boundaries_vg250_setup.sql',				# Setup vg250 borders
         ## 'analyse_osm_landuse.sql',                    	# Filter OSM landuse
+		## 'eGo_dp_structure_census.sql',                   # Filter Census2011 with population
         
 		## SUBSTATION
         # 'get_substations.sql',                 			# Abstract HVMV Substations of the high voltage level from OSM
