@@ -943,7 +943,7 @@ SELECT ego_scenario_log('v0.2.5','temp','model_draft','ego_grid_mv_griddistrict_
 
 -- create grid district
 DROP TABLE IF EXISTS	model_draft.ego_grid_mv_griddistrict CASCADE;
-CREATE TABLE 		model_draft.ego_grid_mv_griddistrict 
+CREATE TABLE 		model_draft.ego_grid_mv_griddistrict (
 	subst_id	integer,
 	subst_sum	integer,
 	type1 		integer,
