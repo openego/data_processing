@@ -1,4 +1,4 @@
-﻿/*
+/*
 Setup scenario log table
 Creates a table to get inserts from other processed tables
 Used inputs are flaged "input" in column io
@@ -371,11 +371,11 @@ COMMENT ON TABLE demand.ego_loadarea IS '{
 				{"name": "sector_area_industrial", 	"description": "aggregated industrial area", "unit": "ha" },
 				{"name": "sector_area_agricultural", 	"description": "aggregated agricultural area", "unit": "ha" },
 				{"name": "sector_area_sum", 		"description": "aggregated sector area", "unit": "ha" },
-				{"name": "sector_share_residential", 	"description": "percentage of residential area per load area", "unit": "%" },
-				{"name": "sector_share_retail", 	"description": "percentage of retail area per load area", "unit": "%" },
-				{"name": "sector_share_industrial", 	"description": "percentage of industrial area per load area", "unit": "%" },
-				{"name": "sector_share_agricultural", 	"description": "percentage of agricultural area per load area", "unit": "%" },
-				{"name": "sector_share_sum", 		"description": "percentage of sector area per load area", "unit": "%" },
+				{"name": "sector_share_residential", 	"description": "percentage of residential area per load area", "unit":"" },
+				{"name": "sector_share_retail", 	"description": "percentage of retail area per load area", "unit": ""},
+				{"name": "sector_share_industrial", 	"description": "percentage of industrial area per load area", "unit": ""},
+				{"name": "sector_share_agricultural", 	"description": "percentage of agricultural area per load area", "unit": "" },
+				{"name": "sector_share_sum", 		"description": "percentage of sector area per load area", "unit": "" },
 				{"name": "sector_count_residential", 	"description": "number of residential areas per load area", "unit": "" },
 				{"name": "sector_count_retail", 	"description": "number of retail areas per load area", "unit": "" },
 				{"name": "sector_count_industrial", 	"description": "number of industrial areas per load area", "unit": "" },

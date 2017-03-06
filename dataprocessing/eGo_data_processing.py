@@ -46,32 +46,32 @@ def data_processing():
     	## 'ego_dp_preprocessing_res_powerplant.sql',		# Preprocess renewable power plants list for further use
    
 		## STRUCTURE
-        # 'ego_scenario_log_setup.sql',				# Setup scenario log table
-        # 'ego_boundaries_vg250_setup.sql',			# Setup vg250 borders
-        # 'analyse_osm_landuse.sql',                    	# Filter OSM landuse
+         #'ego_scenario_log_setup.sql',				# Setup scenario log table
+         #'ego_boundaries_vg250_setup.sql',			# Setup vg250 borders
+         #'analyse_osm_landuse.sql',                    	# Filter OSM landuse
         
 		## SUBSTATION
-        # 'get_substations.sql',                 		# Abstract HVMV Substations of the high voltage level from OSM
-        # 'get_substations_ehv.sql',             		# Abstract EHV Substations of the extra high voltage level from OSM
-        # 'otg_id_to_substations.sql',           		# Assign osmTGmod-id to HVMV and EHV substations
-        # 'ego_grid_hvmv_substation.sql',			# HVMV Voronoi cells based on HVMV substations
-        # 'Voronoi_ehv.sql',					# EHV Voronoi cells based on EHV substations
+         #'get_substations.sql',                 		# Abstract HVMV Substations of the high voltage level from OSM
+         #'get_substations_ehv.sql',             		# Abstract EHV Substations of the extra high voltage level from OSM
+         #'otg_id_to_substations.sql',           		# Assign osmTGmod-id to HVMV and EHV substations
+         #'ego_grid_hvmv_substation.sql',			# HVMV Voronoi cells based on HVMV substations
+         #'Voronoi_ehv.sql',					# EHV Voronoi cells based on EHV substations
         
 		## GRIDDISTRICT
-        # 'process_eGo_grid_district.sql',          		# MV Griddistricts from municipalities and Voronoi cells
+         #'process_eGo_grid_district.sql',          		# MV Griddistricts from municipalities and Voronoi cells
 		
 		## LOADAREA
-        # 'setup_osm_landuse.sql', 				# OSM landuse sector
-        # 'process_eGo_osm_loads_industry.sql', 		# Industry consumer
-        # 'process_eGo_osm_loads.sql',            		# Loads from OSM landuse
-        # 'setup_zensus_population_per_ha.sql',   		# Loads from Census
-        # 'process_eGo_loads_melted.sql',        		# Melt OSM landuse and Zensus loads
-        # 'process_eGo_loads_per_grid_district.sql', 		# Cut Loadarea with MV Griddistrict
-        # 'ego_demand_loads_per_mv_voronoi.sql', 	    	# Cut Loadarea with MV Voronoi cells
-        # 'process_eGo_consumption.sql',			# Allocate consumption to Loadareas
-        # 'peak_load_per_load_area.py',				# Peak loads per Loadarea
-        # 'ego_mv_griddistrict_results.sql',            	# Results for MV Griddistrict
-        # 'ego_paper_result.sql',				# Results and statistics for eGoDP
+         #'setup_osm_landuse.sql', 				# OSM landuse sector
+         'process_eGo_osm_loads_industry.sql', 		# Industry consumer
+         'process_eGo_osm_loads.sql',            		# Loads from OSM landuse
+         'setup_zensus_population_per_ha.sql',   		# Loads from Census
+         'process_eGo_loads_melted.sql',        		# Melt OSM landuse and Zensus loads
+         'process_eGo_loads_per_grid_district.sql', 		# Cut Loadarea with MV Griddistrict
+         'ego_demand_loads_per_mv_voronoi.sql', 	    	# Cut Loadarea with MV Voronoi cells
+         'process_eGo_consumption.sql',			# Allocate consumption to Loadareas
+         'peak_load_per_load_area.py',				# Peak loads per Loadarea
+         'ego_mv_griddistrict_results.sql',            	# Results for MV Griddistrict
+         'ego_paper_result.sql',				# Results and statistics for eGoDP
        
 		## POWERFLOW
         # 'voronoi_weatherpoint.sql',				# Create voronoi cells based on weather points
