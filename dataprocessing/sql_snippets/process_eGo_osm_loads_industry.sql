@@ -396,8 +396,7 @@ ALTER TABLE model_draft.ego_demand_hv_largescaleconsumer
 	ADD COLUMN consumption numeric, 
 	ADD COLUMN peak_load numeric,
 	ADD COLUMN geom geometry(MultiPolygon,3035),
-	ADD COLUMN geom_centre geometry(Point,3035),
-	ADD PRIMARY KEY (polygon_id);
+	ADD COLUMN geom_centre geometry(Point,3035);
 
 ALTER TABLE model_draft.ego_demand_hv_largescaleconsumer ALTER COLUMN polygon_id SET DEFAULT NULL;
 
@@ -441,20 +440,24 @@ UPDATE model_draft.ego_demand_hv_largescaleconsumer
 
 -- Delete duplicates of polygon_id with the same voltage_level 
 DELETE FROM model_draft.ego_demand_hv_largescaleconsumer
-	WHERE 	id IN 	(SELECT id
-			FROM 	(SELECT id,
-				ROW_NUMBER() OVER (partition BY polygon_id, voltage_level ORDER BY (id)) AS rnum
+	WHERE 	polygon_id IN 	(SELECT polygon_id
+			FROM 	(SELECT polygon_id,
+				ROW_NUMBER() OVER (partition BY polygon_id, voltage_level ORDER BY (polygon_id)) AS rnum
 				FROM model_draft.ego_demand_hv_largescaleconsumer) t
 			WHERE t.rnum > 1);
 
 -- Delete duplicates of polygon_id ordered by voltage_level 
 DELETE FROM model_draft.ego_demand_hv_largescaleconsumer
-	WHERE 	id IN 	(SELECT id
-			FROM 	(SELECT id,
+	WHERE 	polygon_id IN 	(SELECT polygon_id
+			FROM 	(SELECT polygon_id,
 				ROW_NUMBER() OVER (partition BY polygon_id ORDER BY (voltage_level)) AS rnum
 				FROM model_draft.ego_demand_hv_largescaleconsumer) t
 			WHERE t.rnum > 1);
+-- Add Primary key			
+ALTER TABLE model_draft.ego_demand_hv_largescaleconsumer
+	ADD PRIMARY KEY (polygon_id);
 
+	
 -- index GIST (geom)
 CREATE INDEX  	large_scale_consumer_geom_idx
 	ON    	model_draft.ego_demand_hv_largescaleconsumer USING GIST (geom);
