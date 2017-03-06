@@ -7,7 +7,7 @@ In addition p_max_pu is set for all generators with variable dispatch based on p
 __copyright__ 	= "Europa-Universität Flensburg, Centre for Sustainable Energy Systems"
 __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
 __url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
-__author__ 	= "mrtnsth"
+__author__ 	= "wbunke"
 */
 
 
@@ -25,8 +25,24 @@ when 6 THEN (20.0586 + 3.9) -- biomass / biomass
 when 7 THEN (30.3012 + 2.0) -- eeg_gas / gas
 when 8 THEN (10.9541 + 4.0) -- coal / hard_coal
 ELSE 0                      -- run_of_river/reservoir/pumped_storage/solar/wind/geothermal/other_non_renewable
-END);
+END)
+where scn_name = 'Status Quo';
 
+UPDATE model_draft.ego_grid_pf_hv_generator
+SET marginal_cost =        -- operating costs + fuel costs + CO2 crt cost
+(
+CASE source                 -- source / renpass_gis NEP 2014
+when 1 THEN (39.9344 + 2.0) -- gas / gas
+when 2 THEN (13.2412 + 4.4)  -- lignite / lignite
+when 3 THEN (16.9297 + 23.0) -- waste / waste
+when 4 THEN (67.3643 + 1.5) -- oil / oil
+when 5 THEN (4.9781 + 0.5)  -- uranium / uranium
+when 6 THEN (27.5112 + 3.9) -- biomass / biomass
+when 7 THEN (39.9344 + 2.0) -- eeg_gas / gas
+when 8 THEN (20.7914 + 4.0) -- coal / hard_coal
+ELSE 0                      -- run_of_river/reservoir/pumped_storage/solar/wind/geothermal/other_non_renewable
+END)
+where scn_name = 'NEP 2035';
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_grid_pf_hv_generator','LOPF_data.sql',' ');
