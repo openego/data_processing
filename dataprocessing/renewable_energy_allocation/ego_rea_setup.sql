@@ -11,8 +11,9 @@ __author__ 	= "Ludee"
 
 -- number of grid_district -> 3606
 	SELECT	COUNT(*)
-	FROM	 model_draft.ego_grid_mv_griddistrict;
+	FROM	model_draft.ego_grid_mv_griddistrict;
 
+/* Has been integrated with other table!
 -- table for allocated dea
 DROP TABLE IF EXISTS 	model_draft.ego_supply_rea CASCADE;
 CREATE TABLE 		model_draft.ego_supply_rea (
@@ -25,17 +26,14 @@ CREATE TABLE 		model_draft.ego_supply_rea (
 	source character varying,
 	subst_id bigint,
 	la_id integer,
-	sort integer,
-	flag character varying,
+	rea_sort integer,
+	rea_flag character varying,
 	geom geometry(Point,3035),
-	geom_line geometry(LineString,3035),
-	geom_new geometry(Point,3035),
+	rea_geom_line geometry(LineString,3035),
+	rea_geom_new geometry(Point,3035),
 CONSTRAINT ego_supply_rea_pkey PRIMARY KEY (id));
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.3','input','supply','ego_res_powerplant','ego_rea_setup.sql',' ');
-
--- insert DEA, with no geom excluded
+ -- insert DEA, with no geom excluded
 INSERT INTO model_draft.ego_supply_rea (id, electrical_capacity, generation_type, generation_subtype, voltage_level, postcode, source, geom)
 	SELECT	id, electrical_capacity, generation_type, generation_subtype, voltage_level, postcode, source, ST_TRANSFORM(geom,3035)
 	FROM	supply.ego_res_powerplant
@@ -45,56 +43,72 @@ INSERT INTO model_draft.ego_supply_rea (id, electrical_capacity, generation_type
 CREATE INDEX	ego_supply_rea_geom_idx
 	ON	model_draft.ego_supply_rea USING GIST (geom);
 
--- index GIST (geom_line)
-CREATE INDEX ego_supply_rea_geom_line_idx
-	ON model_draft.ego_supply_rea USING gist (geom_line);
+-- index GIST (rea_geom_line)
+CREATE INDEX ego_supply_rea_rea_geom_line_idx
+	ON model_draft.ego_supply_rea USING gist (rea_geom_line);
 
--- index GIST (geom_new)
-CREATE INDEX ego_supply_rea_geom_new_idx
-	ON model_draft.ego_supply_rea USING gist (geom_new);
+-- index GIST (rea_geom_new)
+CREATE INDEX ego_supply_rea_rea_geom_new_idx
+	ON model_draft.ego_supply_rea USING gist (rea_geom_new);
 
 -- grant (oeuser)
 ALTER TABLE model_draft.ego_supply_rea OWNER TO oeuser;
+*/
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.3','input','model_draft','ego_supply_res_powerplant','ego_rea_setup.sql',' ');
+
+ALTER TABLE model_draft.ego_supply_res_powerplant
+	DROP COLUMN IF EXISTS	la_id,
+  	ADD COLUMN 		la_id integer,
+	DROP COLUMN IF EXISTS	rea_rea_sort,
+  	ADD COLUMN 		rea_rea_sort integer,
+	DROP COLUMN IF EXISTS	rea_rea_flag,
+  	ADD COLUMN 		rea_rea_flag character varying,
+	DROP COLUMN IF EXISTS	rea_rea_geom_line,
+  	ADD COLUMN 		rea_rea_geom_line geometry(LineString,3035),
+	DROP COLUMN IF EXISTS	rea_rea_geom_new,
+  	ADD COLUMN 		rea_rea_geom_new geometry(Point,3035);
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.3','input','model_draft','ego_grid_mv_griddistrict','ego_rea_setup.sql',' ');
 
 -- update subst_id from mv-griddistrict
-UPDATE 	model_draft.ego_supply_rea AS t1
+UPDATE 	model_draft.ego_supply_res_powerplant AS t1
 	SET  	subst_id = t2.subst_id
 	FROM    (
 		SELECT	dea.id AS id,
 			gd.subst_id AS subst_id
-		FROM	model_draft.ego_supply_rea AS dea,
+		FROM	model_draft.ego_supply_res_powerplant AS dea,
 			model_draft.ego_grid_mv_griddistrict AS gd
 		WHERE  	gd.geom && dea.geom AND
 			ST_CONTAINS(gd.geom,dea.geom)
 		) AS t2
 	WHERE  	t1.id = t2.id;
 
--- flag reset
-UPDATE 	model_draft.ego_supply_rea AS dea
-	SET	flag = NULL,
-		geom_new = NULL,
-		geom_line = NULL;
+-- rea_flag reset
+UPDATE 	model_draft.ego_supply_res_powerplant AS dea
+	SET	rea_flag = NULL,
+		rea_geom_new = NULL,
+		rea_geom_line = NULL;
 
 -- re outside mv-griddistrict
-UPDATE 	model_draft.ego_supply_rea AS dea
-	SET	flag = 'out',
-		geom_new = NULL,
-		geom_line = NULL
+UPDATE 	model_draft.ego_supply_res_powerplant AS dea
+	SET	rea_flag = 'out',
+		rea_geom_new = NULL,
+		rea_geom_line = NULL
 	WHERE	dea.subst_id IS NULL;
 
 -- re outside mv-griddistrict -> offshore wind
-UPDATE 	model_draft.ego_supply_rea AS dea
-	SET	flag = 'offshore',
-		geom_new = NULL,
-		geom_line = NULL
+UPDATE 	model_draft.ego_supply_res_powerplant AS dea
+	SET	rea_flag = 'offshore',
+		rea_geom_new = NULL,
+		rea_geom_line = NULL
 	WHERE	dea.subst_id IS NULL AND
 		dea.generation_type = 'wind';
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.3','output','model_draft','ego_supply_rea','ego_rea_setup.sql',' ');
+SELECT ego_scenario_log('v0.2.3','output','model_draft','ego_supply_res_powerplant','ego_rea_setup.sql',' ');
 
 
 /*
@@ -104,34 +118,34 @@ Offshore wind power plants are not moved.
 */ 
 
 -- re outside mv-griddistrict
-DROP MATERIALIZED VIEW IF EXISTS 	model_draft.ego_supply_rea_out_mview CASCADE;
-CREATE MATERIALIZED VIEW 		model_draft.ego_supply_rea_out_mview AS
+DROP MATERIALIZED VIEW IF EXISTS 	model_draft.ego_supply_res_powerplant_out_mview CASCADE;
+CREATE MATERIALIZED VIEW 		model_draft.ego_supply_res_powerplant_out_mview AS
 	SELECT	dea.*
-	FROM 	model_draft.ego_supply_rea AS dea
-	WHERE	flag = 'out' OR flag = 'offshore';
+	FROM 	model_draft.ego_supply_res_powerplant AS dea
+	WHERE	rea_flag = 'out' OR rea_flag = 'offshore';
 
 -- index GIST (geom)
-CREATE INDEX ego_supply_rea_out_mview_geom_idx
-	ON model_draft.ego_supply_rea_out_mview USING gist (geom);
+CREATE INDEX ego_supply_res_powerplant_out_mview_geom_idx
+	ON model_draft.ego_supply_res_powerplant_out_mview USING gist (geom);
 
--- index GIST (geom_line)
-CREATE INDEX ego_supply_rea_out_mview_geom_line_idx
-	ON model_draft.ego_supply_rea_out_mview USING gist (geom_line);
+-- index GIST (rea_geom_line)
+CREATE INDEX ego_supply_res_powerplant_out_mview_rea_geom_line_idx
+	ON model_draft.ego_supply_res_powerplant_out_mview USING gist (rea_geom_line);
 
--- index GIST (geom_new)
-CREATE INDEX ego_supply_rea_out_mview_geom_new_idx
-	ON model_draft.ego_supply_rea_out_mview USING gist (geom_new);	
+-- index GIST (rea_geom_new)
+CREATE INDEX ego_supply_res_powerplant_out_mview_rea_geom_new_idx
+	ON model_draft.ego_supply_res_powerplant_out_mview USING gist (rea_geom_new);	
 
 -- grant (oeuser)
-ALTER TABLE model_draft.ego_supply_rea_out_mview OWNER TO oeuser;
+ALTER TABLE model_draft.ego_supply_res_powerplant_out_mview OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.3','input','model_draft','ego_grid_hvmv_substation','ego_rea_setup.sql',' ');
 
 
 -- new geom, DEA to next substation
-DROP TABLE IF EXISTS	model_draft.ego_supply_rea_out_nn CASCADE;
-CREATE TABLE 		model_draft.ego_supply_rea_out_nn AS 
+DROP TABLE IF EXISTS	model_draft.ego_supply_res_powerplant_out_nn CASCADE;
+CREATE TABLE 		model_draft.ego_supply_res_powerplant_out_nn AS 
 	SELECT DISTINCT ON (dea.id)
 		dea.id AS dea_id,
 		dea.generation_type,
@@ -139,60 +153,60 @@ CREATE TABLE 		model_draft.ego_supply_rea_out_nn AS
 		sub.geom ::geometry(Point,3035) AS geom_sub,
 		ST_Distance(dea.geom,sub.geom) AS distance,
 		dea.geom ::geometry(Point,3035) AS geom
-	FROM 	model_draft.ego_supply_rea_out_mview AS dea,
+	FROM 	model_draft.ego_supply_res_powerplant_out_mview AS dea,
 		model_draft.ego_grid_hvmv_substation AS sub
 	WHERE 	ST_DWithin(dea.geom,sub.geom, 100000) -- In a 100 km radius
 	ORDER BY 	dea.id, ST_Distance(dea.geom,sub.geom);
 
-ALTER TABLE	model_draft.ego_supply_rea_out_nn
+ALTER TABLE	model_draft.ego_supply_res_powerplant_out_nn
 	ADD PRIMARY KEY (dea_id),
 	OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.3','temp','model_draft','ego_supply_rea_out_nn','ego_rea_setup.sql',' ');
+SELECT ego_scenario_log('v0.2.3','temp','model_draft','ego_supply_res_powerplant_out_nn','ego_rea_setup.sql',' ');
 	
--- new subst_id and geom_new with line
-UPDATE 	model_draft.ego_supply_rea AS t1
+-- new subst_id and rea_geom_new with line
+UPDATE 	model_draft.ego_supply_res_powerplant AS t1
 	SET  	subst_id = t2.subst_id,
-		geom_new = t2.geom_new,
-		geom_line = t2.geom_line
+		rea_geom_new = t2.rea_geom_new,
+		rea_geom_line = t2.rea_geom_line
 	FROM	(SELECT	nn.dea_id AS dea_id,
 			nn.subst_id AS subst_id,
-			nn.geom_sub AS geom_new,
-			ST_MAKELINE(nn.geom,nn.geom_sub) ::geometry(LineString,3035) AS geom_line
-		FROM	model_draft.ego_supply_rea_out_nn AS nn,
-			model_draft.ego_supply_rea AS dea
-		WHERE  	flag = 'out'
+			nn.geom_sub AS rea_geom_new,
+			ST_MAKELINE(nn.geom,nn.geom_sub) ::geometry(LineString,3035) AS rea_geom_line
+		FROM	model_draft.ego_supply_res_powerplant_out_nn AS nn,
+			model_draft.ego_supply_res_powerplant AS dea
+		WHERE  	rea_flag = 'out'
 		)AS t2
 	WHERE  	t1.id = t2.dea_id;
 	
 -- re outside mv-griddistrict
-DROP MATERIALIZED VIEW IF EXISTS 	model_draft.ego_supply_rea_out_mview CASCADE;
-CREATE MATERIALIZED VIEW 		model_draft.ego_supply_rea_out_mview AS
+DROP MATERIALIZED VIEW IF EXISTS 	model_draft.ego_supply_res_powerplant_out_mview CASCADE;
+CREATE MATERIALIZED VIEW 		model_draft.ego_supply_res_powerplant_out_mview AS
 	SELECT	dea.*
-	FROM 	model_draft.ego_supply_rea AS dea
-	WHERE	flag = 'out' OR flag = 'offshore';
+	FROM 	model_draft.ego_supply_res_powerplant AS dea
+	WHERE	rea_flag = 'out' OR rea_flag = 'offshore';
 
 -- index GIST (geom)
-CREATE INDEX ego_supply_rea_out_mview_geom_idx
-	ON model_draft.ego_supply_rea_out_mview USING gist (geom);
+CREATE INDEX ego_supply_res_powerplant_out_mview_geom_idx
+	ON model_draft.ego_supply_res_powerplant_out_mview USING gist (geom);
 
--- index GIST (geom_line)
-CREATE INDEX ego_supply_rea_out_mview_geom_line_idx
-	ON model_draft.ego_supply_rea_out_mview USING gist (geom_line);
+-- index GIST (rea_geom_line)
+CREATE INDEX ego_supply_res_powerplant_out_mview_rea_geom_line_idx
+	ON model_draft.ego_supply_res_powerplant_out_mview USING gist (rea_geom_line);
 
--- index GIST (geom_new)
-CREATE INDEX ego_supply_rea_out_mview_geom_new_idx
-	ON model_draft.ego_supply_rea_out_mview USING gist (geom_new);	
+-- index GIST (rea_geom_new)
+CREATE INDEX ego_supply_res_powerplant_out_mview_rea_geom_new_idx
+	ON model_draft.ego_supply_res_powerplant_out_mview USING gist (rea_geom_new);	
 
 -- grant (oeuser)
-ALTER TABLE model_draft.ego_supply_rea_out_mview OWNER TO oeuser;
+ALTER TABLE model_draft.ego_supply_res_powerplant_out_mview OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.3','temp','model_draft','ego_supply_rea_out_mview','ego_rea_setup.sql',' ');
+SELECT ego_scenario_log('v0.2.3','temp','model_draft','ego_supply_res_powerplant_out_mview','ego_rea_setup.sql',' ');
 
 -- drop
-DROP TABLE IF EXISTS	model_draft.ego_supply_rea_out_nn CASCADE;
+DROP TABLE IF EXISTS	model_draft.ego_supply_res_powerplant_out_nn CASCADE;
 
 
 /* 
@@ -241,7 +255,7 @@ ALTER TABLE model_draft.ego_osm_agriculture_per_mvgd OWNER TO oeuser;
 SELECT ego_scenario_log('v0.2.3','output','model_draft','ego_osm_agriculture_per_mvgd','ego_rea_setup.sql',' ');
 
 
--- DROP MATERIALIZED VIEW IF EXISTS 	model_draft.ego_supply_rea_out_mview CASCADE;
+-- DROP MATERIALIZED VIEW IF EXISTS 	model_draft.ego_supply_res_powerplant_out_mview CASCADE;
 
 
 
@@ -254,24 +268,24 @@ SELECT ego_scenario_log('v0.2.3','output','model_draft','ego_osm_agriculture_per
 	GROUP BY dea.source
 
 -- Flag BNetzA
-UPDATE 	model_draft.ego_supply_rea AS dea
-	SET	flag = 'bnetza',
-		geom_new = NULL,
-		geom_line = NULL
+UPDATE 	model_draft.ego_supply_res_powerplant AS dea
+	SET	rea_flag = 'bnetza',
+		rea_geom_new = NULL,
+		rea_geom_line = NULL
 	WHERE	dea.source = 'BNetzA' OR dea.source = 'BNetzA PV';
 
 -- MView BNetzA
-DROP MATERIALIZED VIEW IF EXISTS 	model_draft.ego_supply_rea_bnetza_mview CASCADE;
-CREATE MATERIALIZED VIEW 		model_draft.ego_supply_rea_bnetza_mview AS
+DROP MATERIALIZED VIEW IF EXISTS 	model_draft.ego_supply_res_powerplant_bnetza_mview CASCADE;
+CREATE MATERIALIZED VIEW 		model_draft.ego_supply_res_powerplant_bnetza_mview AS
 	SELECT	dea.*
-	FROM 	model_draft.ego_supply_rea AS dea
-	WHERE	flag = 'bnetza';
+	FROM 	model_draft.ego_supply_res_powerplant AS dea
+	WHERE	rea_flag = 'bnetza';
 
-CREATE INDEX ego_supply_rea_bnetza_mview_geom_idx
-	ON model_draft.ego_supply_rea_bnetza_mview USING gist (geom);
+CREATE INDEX ego_supply_res_powerplant_bnetza_mview_geom_idx
+	ON model_draft.ego_supply_res_powerplant_bnetza_mview USING gist (geom);
 
 -- Drops
-DROP MATERIALIZED VIEW IF EXISTS 	model_draft.ego_supply_rea_bnetza_mview CASCADE;
+DROP MATERIALIZED VIEW IF EXISTS 	model_draft.ego_supply_res_powerplant_bnetza_mview CASCADE;
 */ 
 
 
