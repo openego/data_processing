@@ -13,9 +13,9 @@ __author__ 	= "IlkaCu"
 
 -- Include data from .load_pq_set for scenario 'NEP 2035' equivalent to Status Quo 
 
-DELETE FROM calc_ego_hv_powerflow.load_pq_set WHERE scn_name = 'NEP 2035'; 
+DELETE FROM model_draft.ego_grid_pf_hv_load_pq_set WHERE scn_name = 'NEP 2035'; 
 
-INSERT INTO calc_ego_hv_powerflow.load_pq_set
+INSERT INTO model_draft.ego_grid_pf_hv_load_pq_set
 SELECT 'NEP 2035', a.load_id, a.temp_id, a.p_set, a.q_set
-FROM calc_ego_hv_powerflow.load_pq_set a
+FROM model_draft.ego_grid_pf_hv_load_pq_set a
 WHERE scn_name= 'Status Quo'; 
