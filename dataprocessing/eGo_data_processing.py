@@ -75,6 +75,8 @@ def data_processing():
          #'voronoi_weatherpoint.sql',				# Create voronoi cells based on weather points
          #'calc_ego_hv_powerflow.sql',				# Set schema/tables for EHV/HV powerflow calculations up
          'osmtgmod_to_pypsa.sql',				# Include data from osmTGmod into EHV/HV powerflow schema
+	 #'ego_dp_powerflow_electrical_neighbour.sql',		# Create border crossing lines and buses in neighbouring countries
+
         # 'assignment_generator_bus.sql',               	# Assign generators to corresponding substation
         # 'assignment_load_bus.sql',                    	# Assign loads to their corresponding substation
         # 'renpass_gis_ResultsTOPF.sql',			# Transfer renpassG!S results into the corresponding powerflow table
