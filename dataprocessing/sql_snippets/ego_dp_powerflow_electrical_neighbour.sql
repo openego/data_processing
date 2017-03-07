@@ -34,7 +34,7 @@ CREATE TABLE model_draft.ego_grid_hv_electrical_neighbours_bus
   v_mag_pu_min double precision DEFAULT 0, -- Unit: per unit...
   v_mag_pu_max double precision, -- Unit: per unit...
   geom geometry(Point,4326),
-  CONSTRAINT bus_data_pkey PRIMARY KEY (bus_id, scn_name)
+  CONSTRAINT neighbour_bus_pkey PRIMARY KEY (bus_id, scn_name)
 );
 
 
@@ -226,7 +226,7 @@ DELETE FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE cntr_id IS N
 
 -- Create and fill table model_draft.ego_grid_hv_electrical_neighbours_line
 
-DROP TABLE model_draft.ego_grid_hv_electrical_neighbours_line ;
+DROP TABLE IF EXISTS model_draft.ego_grid_hv_electrical_neighbours_line ;
 
 CREATE TABLE model_draft.ego_grid_hv_electrical_neighbours_line
 (
@@ -251,12 +251,12 @@ CREATE TABLE model_draft.ego_grid_hv_electrical_neighbours_line
   terrain_factor double precision DEFAULT 1, -- Unit: per unit...
   geom geometry(MultiLineString,4326),
   topo geometry(LineString,4326),
-  CONSTRAINT line_data_pkey PRIMARY KEY (line_id, scn_name)
+  CONSTRAINT neighbour_line_pkey PRIMARY KEY (line_id, scn_name)
 );
 
 
 ALTER TABLE model_draft.ego_grid_hv_electrical_neighbours_line
-  OWNER TO postgres;
+  OWNER TO oeuser;
 
 
 INSERT INTO model_draft.ego_grid_hv_electrical_neighbours_line (line_id, bus1, v_nom, cntr_id)
@@ -422,7 +422,7 @@ CREATE TABLE model_draft.ego_grid_hv_electrical_neighbours_transformer
   capital_cost double precision DEFAULT 0, -- Unit: currency/MVA...
   geom geometry(MultiLineString,4326),
   topo geometry(LineString,4326),
-  CONSTRAINT transformer_data_pkey PRIMARY KEY (trafo_id, scn_name)
+  CONSTRAINT neighbour_transformer_pkey PRIMARY KEY (trafo_id, scn_name)
 );
 
 
