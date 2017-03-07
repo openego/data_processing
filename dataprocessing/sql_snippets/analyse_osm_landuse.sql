@@ -14,7 +14,9 @@ SELECT ego_scenario_log('v0.2.5','input','openstreetmap','osm_deu_polygon','anal
 -- 2016-10-01 openstreetmap
 DROP MATERIALIZED VIEW IF EXISTS	openstreetmap.osm_deu_polygon_landuse_mview CASCADE;
 CREATE MATERIALIZED VIEW 		openstreetmap.osm_deu_polygon_landuse_mview AS
-	SELECT	osm.gid, osm.tags, osm.geom
+	SELECT	osm.gid, 
+		osm.tags, 
+		osm.geom
 	FROM	openstreetmap.osm_deu_polygon AS osm
 	WHERE	tags ? 'landuse'
 	ORDER BY osm.osm_id;
@@ -27,7 +29,9 @@ CREATE INDEX  	osm_deu_polygon_landuse_mview_geom_idx
 ALTER TABLE	openstreetmap.osm_deu_polygon_landuse_mview OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','input','openstreetmap','osm_deu_polygon_landuse_mview','analyse_osm_landuse.sql',' ');
+SELECT ego_scenario_log('v0.2.5','output','openstreetmap','osm_deu_polygon_landuse_mview','analyse_osm_landuse.sql',' ');
+
+
 
 /* 
 -- 2016-01-13 orig_osm
