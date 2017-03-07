@@ -13,7 +13,7 @@ __author__ 	= "Ludee"
 	SELECT	COUNT(*)
 	FROM	model_draft.ego_grid_mv_griddistrict;
 
-/* Has been integrated with other table!
+/* Has been integrated in other table!
 -- table for allocated dea
 DROP TABLE IF EXISTS 	model_draft.ego_supply_rea CASCADE;
 CREATE TABLE 		model_draft.ego_supply_rea (
@@ -112,7 +112,7 @@ SELECT ego_scenario_log('v0.2.3','output','model_draft','ego_supply_res_powerpla
 
 
 /*
-Some re are outside Germany because of unknown inaccuracies.
+Some RES are outside Germany because of unknown inaccuracies.
 They are moved to the next substation before the allocation methods.
 Offshore wind power plants are not moved.
 */ 
@@ -140,8 +140,11 @@ CREATE INDEX ego_supply_res_powerplant_out_mview_rea_geom_new_idx
 ALTER TABLE model_draft.ego_supply_res_powerplant_out_mview OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.3','input','model_draft','ego_grid_hvmv_substation','ego_rea_setup.sql',' ');
+SELECT ego_scenario_log('v0.2.3','temp','model_draft','ego_supply_res_powerplant_out_mview','ego_rea_setup.sql','First check if RES are outside Germany');
 
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.3','input','model_draft','ego_grid_hvmv_substation','ego_rea_setup.sql',' ');
 
 -- new geom, DEA to next substation
 DROP TABLE IF EXISTS	model_draft.ego_supply_res_powerplant_out_nn CASCADE;
@@ -203,10 +206,11 @@ CREATE INDEX ego_supply_res_powerplant_out_mview_rea_geom_new_idx
 ALTER TABLE model_draft.ego_supply_res_powerplant_out_mview OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.3','temp','model_draft','ego_supply_res_powerplant_out_mview','ego_rea_setup.sql',' ');
+SELECT ego_scenario_log('v0.2.3','temp','model_draft','ego_supply_res_powerplant_out_mview','ego_rea_setup.sql','Second check if RES outside Germany');
 
 -- drop
 DROP TABLE IF EXISTS	model_draft.ego_supply_res_powerplant_out_nn CASCADE;
+-- DROP MATERIALIZED VIEW IF EXISTS 	model_draft.ego_supply_res_powerplant_out_mview CASCADE;
 
 
 /* 
@@ -214,30 +218,61 @@ Prepare a special OSM layer with farmyards per grid districts.
 In Germany a lot of farmyard builings are used for renewable energy production with solar and biomass.
 */
 
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.3','input','model_draft','ego_osm_sector_per_griddistrict_4_agricultural','ego_rea_setup.sql',' ');
+
+ALTER TABLE model_draft.ego_osm_sector_per_griddistrict_4_agricultural
+	DROP COLUMN IF EXISTS	subst_id,
+  	ADD COLUMN 		subst_id integer,
+	DROP COLUMN IF EXISTS	area_ha,
+  	ADD COLUMN 		area_ha double precision;
+
+-- update subst_id from grid_district
+UPDATE model_draft.ego_osm_sector_per_griddistrict_4_agricultural AS t1
+	SET  	subst_id = t2.subst_id
+	FROM    (
+		SELECT	osm.id AS id,
+			dis.subst_id AS subst_id
+		FROM	model_draft.ego_osm_sector_per_griddistrict_4_agricultural AS osm,
+			model_draft.ego_grid_mv_griddistrict AS dis
+		WHERE  	dis.geom && ST_CENTROID(osm.geom) AND
+			ST_CONTAINS(dis.geom,ST_CENTROID(osm.geom))
+		) AS t2
+	WHERE  	t1.id = t2.id;
+
+-- update area
+UPDATE model_draft.ego_osm_sector_per_griddistrict_4_agricultural
+	SET  	area_ha = ST_AREA(geom)/10000;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.3','output','model_draft','ego_osm_sector_per_griddistrict_4_agricultural','ego_rea_setup.sql',' ');
+
+
+/* 
 -- OSM agricultural per grid district
-DROP TABLE IF EXISTS 	model_draft.ego_osm_agriculture_per_mvgd CASCADE;
-CREATE TABLE 		model_draft.ego_osm_agriculture_per_mvgd (
+DROP TABLE IF EXISTS 	model_draft.ego_osm_sector_per_griddistrict_4_agricultural CASCADE;
+CREATE TABLE 		model_draft.ego_osm_sector_per_griddistrict_4_agricultural (
 	id serial NOT NULL,
 	subst_id integer,
 	area_ha numeric,
 	geom geometry(Polygon,3035),
-	CONSTRAINT ego_osm_agriculture_per_mvgd_pkey PRIMARY KEY (id));
+	CONSTRAINT ego_osm_sector_per_griddistrict_4_agricultural_pkey PRIMARY KEY (id));
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.3','input','model_draft','ego_osm_sector_per_griddistrict_4_agricultural','ego_rea_setup.sql',' ');
 
 -- insert data (osm agricultural)
-INSERT INTO	model_draft.ego_osm_agriculture_per_mvgd (area_ha,geom)
+INSERT INTO	model_draft.ego_osm_sector_per_griddistrict_4_agricultural (area_ha,geom)
 	SELECT	ST_AREA(osm.geom)/10000, osm.geom
 	FROM	model_draft.ego_osm_sector_per_griddistrict_4_agricultural AS osm;
 	
 -- update subst_id from grid_district
-UPDATE 	model_draft.ego_osm_agriculture_per_mvgd AS t1
+UPDATE 	model_draft.ego_osm_sector_per_griddistrict_4_agricultural AS t1
 	SET  	subst_id = t2.subst_id
 	FROM    (
 		SELECT	osm.id AS id,
 			dis.subst_id AS subst_id
-		FROM	model_draft.ego_osm_agriculture_per_mvgd AS osm,
+		FROM	model_draft.ego_osm_sector_per_griddistrict_4_agricultural AS osm,
 			model_draft.ego_grid_mv_griddistrict AS dis
 		WHERE  	dis.geom && ST_CENTROID(osm.geom) AND
 			ST_CONTAINS(dis.geom,ST_CENTROID(osm.geom))
@@ -245,17 +280,18 @@ UPDATE 	model_draft.ego_osm_agriculture_per_mvgd AS t1
 	WHERE  	t1.id = t2.id;
 
 -- index GIST (geom)
-CREATE INDEX ego_osm_agriculture_per_mvgd_geom_idx
-	ON model_draft.ego_osm_agriculture_per_mvgd USING gist (geom);
+CREATE INDEX ego_osm_sector_per_griddistrict_4_agricultural_geom_idx
+	ON model_draft.ego_osm_sector_per_griddistrict_4_agricultural USING gist (geom);
 
 -- grant (oeuser)
-ALTER TABLE model_draft.ego_osm_agriculture_per_mvgd OWNER TO oeuser;  
+ALTER TABLE model_draft.ego_osm_sector_per_griddistrict_4_agricultural OWNER TO oeuser;  
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.3','output','model_draft','ego_osm_agriculture_per_mvgd','ego_rea_setup.sql',' ');
+SELECT ego_scenario_log('v0.2.3','output','model_draft','ego_osm_sector_per_griddistrict_4_agricultural','ego_rea_setup.sql',' ');
+ */
 
 
--- DROP MATERIALIZED VIEW IF EXISTS 	model_draft.ego_supply_res_powerplant_out_mview CASCADE;
+
 
 
 

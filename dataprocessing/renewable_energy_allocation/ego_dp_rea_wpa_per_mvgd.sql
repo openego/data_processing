@@ -25,7 +25,7 @@ INSERT INTO     model_draft.ego_supply_wpa (geom)
 	SELECT	(ST_DUMP(ST_MULTI(ST_UNION(
 			ST_BUFFER(ST_BUFFER(ST_TRANSFORM(wpa.geom,3035),-0,01),0,01)
 		)))).geom AS geom
-	FROM	supply.soethe_wind_potential_area AS wpa; -- calc_ego_re.geo_pot_area
+	FROM	supply.soethe_wind_potential_area AS wpa;
 
 -- index gist (geom)
 CREATE INDEX 	ego_supply_wpa_geom_idx
@@ -59,10 +59,10 @@ SELECT f_drop_view('{ego_supply_wpa_error_geom_view}', 'calc_ego_re'); */
 -- wpa per mv-griddistrict
 DROP TABLE IF EXISTS  	model_draft.ego_supply_wpa_per_mvgd CASCADE;
 CREATE TABLE         	model_draft.ego_supply_wpa_per_mvgd (
-		id SERIAL NOT NULL,
-		subst_id integer,
-		area_ha decimal,
-		geom geometry(Polygon,3035),
+		id 		SERIAL NOT NULL,
+		subst_id 	integer,
+		area_ha 	decimal,
+		geom 		geometry(Polygon,3035),
 CONSTRAINT 	ego_supply_wpa_per_mvgd_pkey PRIMARY KEY (id));
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
@@ -81,16 +81,16 @@ INSERT INTO     model_draft.ego_supply_wpa_per_mvgd (area_ha, geom)
 
 -- substation id
 UPDATE 	model_draft.ego_supply_wpa_per_mvgd AS t1
-SET  	subst_id = t2.subst_id
-FROM    (
-	SELECT	pot.id AS id,
-		gd.subst_id AS subst_id
-	FROM	model_draft.ego_supply_wpa_per_mvgd AS pot,
-		model_draft.ego_grid_mv_griddistrict AS gd
-	WHERE  	gd.geom && pot.geom AND
-		ST_CONTAINS(gd.geom,ST_PointOnSurface(pot.geom))
-	) AS t2
-WHERE  	t1.id = t2.id;
+	SET  	subst_id = t2.subst_id
+	FROM    (
+		SELECT	pot.id AS id,
+			gd.subst_id AS subst_id
+		FROM	model_draft.ego_supply_wpa_per_mvgd AS pot,
+			model_draft.ego_grid_mv_griddistrict AS gd
+		WHERE  	gd.geom && pot.geom AND
+			ST_CONTAINS(gd.geom,ST_PointOnSurface(pot.geom))
+		) AS t2
+	WHERE  	t1.id = t2.id;
 
 -- index gist (geom)
 CREATE INDEX 	ego_supply_wpa_per_mvgd_geom_idx
@@ -119,11 +119,11 @@ COMMENT ON TABLE model_draft.ego_supply_wpa_per_mvgd IS '{
 		"instruction": "tba"} ],
 	"contributors": [
 		{"name": "Ludwig Hülk",	"email": "ludwig.huelk@rl-institut.de",
-		"date": "01.10.2016", "comment": "create table"},
+		"date": "01.10.2016", "comment": "Create table"},
 		{"name": "Ludwig Hülk", "email": "ludwig.huelk@rl-institut.de",
-		"date": "25.12.2016", "comment": "create metadata"},
+		"date": "25.12.2016", "comment": "Add metadata"},
 		{"name": "Ludwig Hülk", "email": "ludwig.huelk@rl-institut.de",
-		"date": "25.12.2016", "comment": "update to v0.2"} ],
+		"date": "25.12.2016", "comment": "Update to v0.2"} ],
 	"resources": [{
 		"schema": {
 			"fields": [
@@ -140,4 +140,4 @@ SELECT obj_description('model_draft.ego_supply_wpa_per_mvgd' ::regclass) ::json;
 SELECT ego_scenario_log('v0.2.3','output','model_draft','ego_supply_wpa_per_mvgd','ego_rea_wpa_per_mvgd.sql',' ');
 
 
--- DROP TABLE IF EXISTS  	model_draft.ego_supply_wpa CASCADE;
+DROP TABLE IF EXISTS  	model_draft.ego_supply_wpa CASCADE;
