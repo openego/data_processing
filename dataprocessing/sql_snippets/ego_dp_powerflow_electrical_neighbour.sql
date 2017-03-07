@@ -6,15 +6,15 @@ __url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
 __author__ 	= "IlkaCu" 
 */
 
-DROP SEQUENCE IF EXISTS model_draft.ego_grid_hv_electrical_neighbours_bus_id CASCADE;
+--DROP SEQUENCE IF EXISTS model_draft.ego_grid_hv_electrical_neighbours_bus_id CASCADE;
 CREATE SEQUENCE model_draft.ego_grid_hv_electrical_neighbours_bus_id;
 SELECT setval('model_draft.ego_grid_hv_electrical_neighbours_bus_id', (max(bus_id)+1)) FROM model_draft.ego_grid_pf_hv_bus;
 
-DROP SEQUENCE model_draft.ego_grid_hv_electrical_neighbours_line_id CASCADE;
+--DROP SEQUENCE model_draft.ego_grid_hv_electrical_neighbours_line_id CASCADE;
 CREATE SEQUENCE model_draft.ego_grid_hv_electrical_neighbours_line_id;
 SELECT setval('model_draft.ego_grid_hv_electrical_neighbours_line_id', (max(line_id)+1)) FROM model_draft.ego_grid_pf_hv_line;
 
-DROP SEQUENCE model_draft.ego_grid_hv_electrical_neighbours_transformer_id CASCADE;
+--DROP SEQUENCE model_draft.ego_grid_hv_electrical_neighbours_transformer_id CASCADE;
 CREATE SEQUENCE model_draft.ego_grid_hv_electrical_neighbours_transformer_id;
 SELECT setval('model_draft.ego_grid_hv_electrical_neighbours_transformer_id', (max(trafo_id)+1)) FROM model_draft.ego_grid_pf_hv_transformer;
 
@@ -34,7 +34,7 @@ CREATE TABLE model_draft.ego_grid_hv_electrical_neighbours_bus
   v_mag_pu_min double precision DEFAULT 0, -- Unit: per unit...
   v_mag_pu_max double precision, -- Unit: per unit...
   geom geometry(Point,4326),
-  CONSTRAINT bus_data_pkey PRIMARY KEY (bus_id, scn_name)
+  CONSTRAINT neighbour_bus_pkey PRIMARY KEY (bus_id, scn_name)
 );
 
 
@@ -226,7 +226,7 @@ DELETE FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE cntr_id IS N
 
 -- Create and fill table model_draft.ego_grid_hv_electrical_neighbours_line
 
-DROP TABLE model_draft.ego_grid_hv_electrical_neighbours_line ;
+DROP TABLE IF EXISTS model_draft.ego_grid_hv_electrical_neighbours_line ;
 
 CREATE TABLE model_draft.ego_grid_hv_electrical_neighbours_line
 (
@@ -251,12 +251,12 @@ CREATE TABLE model_draft.ego_grid_hv_electrical_neighbours_line
   terrain_factor double precision DEFAULT 1, -- Unit: per unit...
   geom geometry(MultiLineString,4326),
   topo geometry(LineString,4326),
-  CONSTRAINT line_data_pkey PRIMARY KEY (line_id, scn_name)
+  CONSTRAINT neighbour_line_pkey PRIMARY KEY (line_id, scn_name)
 );
 
 
 ALTER TABLE model_draft.ego_grid_hv_electrical_neighbours_line
-  OWNER TO postgres;
+  OWNER TO oeuser;
 
 
 INSERT INTO model_draft.ego_grid_hv_electrical_neighbours_line (line_id, bus1, v_nom, cntr_id)
@@ -422,7 +422,7 @@ CREATE TABLE model_draft.ego_grid_hv_electrical_neighbours_transformer
   capital_cost double precision DEFAULT 0, -- Unit: currency/MVA...
   geom geometry(MultiLineString,4326),
   topo geometry(LineString,4326),
-  CONSTRAINT transformer_data_pkey PRIMARY KEY (trafo_id, scn_name)
+  CONSTRAINT neighbour_transformer_pkey PRIMARY KEY (trafo_id, scn_name)
 );
 
 
@@ -553,3 +553,14 @@ SET x = (CASE s_nom 	WHEN 1200 THEN 4.84
 			END);
 
 DELETE FROM model_draft.ego_grid_hv_electrical_neighbours_transformer WHERE x IS NULL;
+
+
+-- Include border crossing lines, transformer and buses for neighbouring states (electrical neighbours) for Status Quo
+INSERT INTO model_draft.ego_grid_pf_hv_line (scn_name, line_id, bus0, bus1, x, r, s_nom, topo, geom, length, frequency, cables)
+SELECT 'Status Quo', line_id, bus0, bus1, x, r, s_nom, topo, geom, length, frequency, cables FROM model_draft.ego_grid_hv_electrical_neighbours_line;
+
+INSERT INTO model_draft.ego_grid_pf_hv_bus (scn_name, bus_id, v_nom, geom)
+SELECT 'Status Quo',bus_id, v_nom, geom FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE id < 28;
+
+INSERT INTO model_draft.ego_grid_pf_hv_transformer (scn_name, trafo_id, bus0, bus1, x, s_nom, geom)
+SELECT 'Status Quo', trafo_id, bus0, bus1, x, s_nom, geom FROM model_draft.ego_grid_hv_electrical_neighbours_transformer
