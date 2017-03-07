@@ -290,32 +290,32 @@ UPDATE model_draft.ego_supply_res_powerplant a
 	
 -- Update otg_id of offshore windturbines manually (THIS NEEDS TO BE AUTOMATIZED AS otg_id IS VOLATILE!!!)
 
---UPDATE model_draft.ego_supply_res_powerplant
---	SET otg_id = 26297
---	WHERE eeg_id LIKE '%%DYSKE%%' 
---	  OR eeg_id LIKE '%%BUTENDIEK%%' 
---	  OR eeg_id LIKE '%%NORDSEEOST%%'
---	  OR eeg_id LIKE '%%NordseeOst%%'
---	  OR eeg_id LIKE '%%MEERWINDSUEDOST%%'
---	  OR eeg_id LIKE '%%AMRWE%%';
+UPDATE model_draft.ego_supply_res_powerplant
+	SET otg_id = 26435
+	WHERE eeg_id LIKE '%%DYSKE%%' 
+	  OR eeg_id LIKE '%%BUTENDIEK%%' 
+	  OR eeg_id LIKE '%%NORDSEEOST%%'
+	  OR eeg_id LIKE '%%NordseeOst%%'
+	  OR eeg_id LIKE '%%MEERWINDSUEDOST%%'
+	  OR eeg_id LIKE '%%AMRWE%%';
 
---UPDATE model_draft.ego_supply_res_powerplant
---	SET otg_id = 26920
---	WHERE eeg_id LIKE '%%BAOEE%%';
+UPDATE model_draft.ego_supply_res_powerplant
+	SET otg_id = 27153
+	WHERE eeg_id LIKE '%%BAOEE%%';
 
 
---UPDATE model_draft.ego_supply_res_powerplant
---	SET otg_id = 26359
---	WHERE eeg_id LIKE '%%RIFFE%%' 
---	  OR eeg_id LIKE '%%BRGEE%%' 
---	  OR eeg_id LIKE '%%BOWZE%%' 
---	  OR eeg_id LIKE '%%GLTEE%%'
---	  OR eeg_id LIKE '%%ALPHAVENTUE%%'
---	  OR eeg_id LIKE '%%GOWZE%%';
+UPDATE model_draft.ego_supply_res_powerplant
+	SET otg_id = 26504
+	WHERE eeg_id LIKE '%%RIFFE%%' 
+	  OR eeg_id LIKE '%%BRGEE%%' 
+	  OR eeg_id LIKE '%%BOWZE%%' 
+	  OR eeg_id LIKE '%%GLTEE%%'
+	  OR eeg_id LIKE '%%ALPHAVENTUE%%'
+	  OR eeg_id LIKE '%%GOWZE%%';
 
---UPDATE model_draft.ego_supply_res_powerplant
---	SET otg_id = 24372
---	WHERE eeg_id LIKE '%%BALTIC%%';
+UPDATE model_draft.ego_supply_res_powerplant
+	SET otg_id = 24401
+	WHERE eeg_id LIKE '%%BALTIC%%';
 
 -- Update un_id from generators_total 
 UPDATE model_draft.ego_supply_res_powerplant a
