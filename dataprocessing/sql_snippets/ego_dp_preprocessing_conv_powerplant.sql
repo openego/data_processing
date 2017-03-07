@@ -7,6 +7,7 @@ __url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
 __author__ 	= "IlkaCu, wolfbunke" 
 */
 
+
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.5','input','supply','ego_conventional_powerplant','ego_dp_preprocessing_conv_powerplant.sql','');
 
