@@ -60,21 +60,21 @@ def data_processing():
 		
 		## LOADAREA
          #'setup_osm_landuse.sql', 				# OSM landuse sector
-         'process_eGo_osm_loads_industry.sql', 		# Industry consumer
-         'process_eGo_osm_loads.sql',            		# Loads from OSM landuse
-         'setup_zensus_population_per_ha.sql',   		# Loads from Census
-         'process_eGo_loads_melted.sql',        		# Melt OSM landuse and Zensus loads
-         'process_eGo_loads_per_grid_district.sql', 		# Cut Loadarea with MV Griddistrict
-         'ego_demand_loads_per_mv_voronoi.sql', 	    	# Cut Loadarea with MV Voronoi cells
-         'process_eGo_consumption.sql',			# Allocate consumption to Loadareas
-         'peak_load_per_load_area.py',				# Peak loads per Loadarea
-         'ego_mv_griddistrict_results.sql',            	# Results for MV Griddistrict
-         'ego_paper_result.sql',				# Results and statistics for eGoDP
+         # 'process_eGo_osm_loads_industry.sql', 		# Industry consumer
+         # 'process_eGo_osm_loads.sql',            		# Loads from OSM landuse
+         #'setup_zensus_population_per_ha.sql',   		# Loads from Census
+         #'process_eGo_loads_melted.sql',        		# Melt OSM landuse and Zensus loads
+         #'process_eGo_loads_per_grid_district.sql', 		# Cut Loadarea with MV Griddistrict
+         #'ego_demand_loads_per_mv_voronoi.sql', 	    	# Cut Loadarea with MV Voronoi cells
+         #'process_eGo_consumption.sql',			# Allocate consumption to Loadareas
+         ###'peak_load_per_load_area.py',				# Peak loads per Loadarea (duration 10h, it can be executed later in the process)
+         #'ego_mv_griddistrict_results.sql',            	# Results for MV Griddistrict
+         #'ego_paper_result.sql',				# Results and statistics for eGoDP
        
 		## POWERFLOW
-        # 'voronoi_weatherpoint.sql',				# Create voronoi cells based on weather points
-        # 'calc_ego_hv_powerflow.sql',				# Set schema/tables for EHV/HV powerflow calculations up
-        # 'osmtgmod_to_pypsa.sql',				# Include data from osmTGmod into EHV/HV powerflow schema
+         #'voronoi_weatherpoint.sql',				# Create voronoi cells based on weather points
+         #'calc_ego_hv_powerflow.sql',				# Set schema/tables for EHV/HV powerflow calculations up
+         'osmtgmod_to_pypsa.sql',				# Include data from osmTGmod into EHV/HV powerflow schema
         # 'assignment_generator_bus.sql',               	# Assign generators to corresponding substation
         # 'assignment_load_bus.sql',                    	# Assign loads to their corresponding substation
         # 'renpass_gis_ResultsTOPF.sql',			# Transfer renpassG!S results into the corresponding powerflow table

@@ -426,26 +426,6 @@ CREATE TABLE model_draft.ego_grid_hv_electrical_neighbours_transformer
 );
 
 
-
--- Index: electrical_neighbours.fki_trafo_data_bus0_fk
-
--- DROP INDEX electrical_neighbours.fki_trafo_data_bus0_fk;
-
-CREATE INDEX fki_trafo_data_bus0_fk
-  ON model_draft.ego_grid_hv_electrical_neighbours_transformer
-  USING btree
-  (bus0);
-
--- Index: electrical_neighbours.fki_trafo_data_bus1_fk
-
--- DROP INDEX electrical_neighbours.fki_trafo_data_bus1_fk;
-
-CREATE INDEX fki_trafo_data_bus1_fk
-  ON model_draft.ego_grid_hv_electrical_neighbours_transformer
-  USING btree
-  (bus1);
-
-
 INSERT INTO model_draft.ego_grid_hv_electrical_neighbours_transformer (trafo_id, bus0, bus1, cntr_id)
 
 VALUES (nextval('model_draft.ego_grid_hv_electrical_neighbours_transformer_id'),

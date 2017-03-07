@@ -200,34 +200,34 @@ CREATE MATERIALIZED VIEW		political_boundary.bkg_vg250_statistics_mview AS
 SELECT	'1' ::integer AS id,
 	'1_sta' ::text AS table,
 	'vg' ::text AS descript_nameion,
-	SUM(vg.area_km2) ::integer AS area_sum_km2
+	SUM(vg.area_ha) ::integer AS area_sum_ha
 FROM	political_boundary.bkg_vg250_1_sta_mview AS vg
 UNION ALL
 SELECT	'3' ::integer AS id,
 	'1_sta' ::text AS table,
 	'deu' ::text AS descript_nameion,
-	SUM(vg.area_km2) ::integer AS area_sum_km2
+	SUM(vg.area_ha) ::integer AS area_sum_ha
 FROM	political_boundary.bkg_vg250_1_sta_mview AS vg
 WHERE	bez='Bundesrepublik'
 UNION ALL
 SELECT	'4' ::integer AS id,
 	'1_sta' ::text AS table,
 	'NOT deu' ::text AS descript_nameion,
-	SUM(vg.area_km2) ::integer AS area_sum_km2
+	SUM(vg.area_ha) ::integer AS area_sum_ha
 FROM	political_boundary.bkg_vg250_1_sta_mview AS vg
 WHERE	bez='--'
 UNION ALL
 SELECT	'5' ::integer AS id,
 	'1_sta' ::text AS table,
 	'land' ::text AS descript_nameion,
-	SUM(vg.area_km2) ::integer AS area_sum_km2
+	SUM(vg.area_ha) ::integer AS area_sum_ha
 FROM	political_boundary.bkg_vg250_1_sta_mview AS vg
 WHERE	gf='3' OR gf='4'
 UNION ALL
 SELECT	'6' ::integer AS id,
 	'1_sta' ::text AS table,
 	'water' ::text AS descript_nameion,
-	SUM(vg.area_km2) ::integer AS area_sum_km2
+	SUM(vg.area_ha) ::integer AS area_sum_ha
 FROM	political_boundary.bkg_vg250_1_sta_mview AS vg
 WHERE	gf='1' OR gf='2';
 
@@ -280,7 +280,7 @@ SELECT	'> 500 ha' AS name,
 WHERE	area_ha > '500'; */
 
 /* 
--- Schnittl‰ngen (Umrisse)
+-- Schnittl√§ngen (Umrisse)
 SELECT	'Raw LA' AS name,
 	count(la.geom) AS number,
 	ST_Perimeter(ST_Collect(la.geom))/1000000 AS perimeter_in_tkm 
