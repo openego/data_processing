@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS model_draft.ego_supply_conv_powerplant CASCADE; 
+
 CREATE TABLE model_draft.ego_supply_conv_powerplant AS
 	TABLE supply.ego_conventional_powerplant; 
 
@@ -11,6 +13,8 @@ CREATE INDEX model_draft.ego_supply_conv_powerplant_idx
   ON model_draft.ego_supply_conv_powerplant
   USING gist
   (geom);
+  
+ ALTER TABLE model_draft.ego_supply_conv_powerplant OWNER TO oeuser; 
 
 -- Delete entries without information on installed capacity or where capacity <= 0
 DELETE  FROM model_draft.ego_supply_conv_powerplant
