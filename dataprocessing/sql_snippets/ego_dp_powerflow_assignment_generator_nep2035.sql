@@ -119,7 +119,7 @@ UPDATE model_draft.ego_supply_res_powerplant_2035 a
 -- Identify net connection points for offshore wind parks by comparing id with Status Quo scenario 
 
 UPDATE model_draft.ego_supply_res_powerplant_2035 a
-	SET otg_id = 26297 
+	SET otg_id = 26435
 	WHERE a.id IN 
 (SELECT id FROM model_draft.ego_supply_res_powerplant
 	  WHERE eeg_id LIKE '%%DYSKE%%' 
@@ -131,21 +131,21 @@ UPDATE model_draft.ego_supply_res_powerplant_2035 a
 
 
 UPDATE model_draft.ego_supply_res_powerplant_2035 a
-	SET otg_id = 26920 
+	SET otg_id = 27153 
 	WHERE a.id IN 
 (SELECT id FROM model_draft.ego_supply_res_powerplant
 	  WHERE eeg_id LIKE '%%BAOEE%%');
 
 
 UPDATE model_draft.ego_supply_res_powerplant_2035 a
-	SET otg_id = 24372 
+	SET otg_id = 24401 
 	WHERE a.id IN 
 (SELECT id FROM model_draft.ego_supply_res_powerplant
 	  WHERE eeg_id LIKE '%%BALTIC%%');
 
 
 UPDATE model_draft.ego_supply_res_powerplant_2035 a
-	SET otg_id = 26359 
+	SET otg_id = 26504
 	WHERE a.id IN 
 (SELECT id FROM model_draft.ego_supply_res_powerplant
 	  WHERE eeg_id LIKE '%%RIFFE%%' 
