@@ -36,8 +36,43 @@ INSERT INTO	model_draft.ego_scenario (version,version_name,release,comment,times
 	('v0.2.2', ' ', 'FALSE', ' ', now() ),
 	('v0.2.3', ' ', 'FALSE', ' ', now() ),
 	('v0.2.4', ' ', 'FALSE', ' ', now() ),
-	('v0.2.5', ' ', 'FALSE', ' ', now() ),
-	('v0.2.6', ' ', 'FALSE', ' ', now() ) ; 
+	('v0.2.5', 'mockrun', 'FALSE', ' ', '2017-03-03' ),
+	('v0.2.6', ' ', 'FALSE', ' ', '2017-03-10' ) ; 
+
+-- metadata
+COMMENT ON TABLE model_draft.ego_scenario IS '{
+	"title": "eGo Scenario List",
+	"description": "Version info",
+	"language": [ "eng", "ger" ],
+	"reference_date": " ",
+	"sources": [
+		{"name": "eGo dataprocessing","description": "","url": "https://github.com/openego/data_processing"} ],
+	"spatial": [
+		{"extend": "",
+		"resolution": ""} ],
+	"license": [
+		{"id": "ODbL-1.0",
+		"name": "Open Data Commons Open Database License 1.0",
+		"version": "1.0",
+		"url": "https://opendatacommons.org/licenses/odbl/1.0/",
+		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!"} ],
+	"contributors": [
+		{"name": "Ludwig Hülk", "email": "ludwig.huelk@rl-institut.de",
+		"date": "01.10.2016", "comment": "Create table" },
+		{"name": "Ludwig Hülk", "email": "ludwig.huelk@rl-institut.de",
+		"date": "16.11.2016", "comment": "Add metadata" } ],
+	"resources": [{
+		"schema": {
+			"fields": [
+				{"name": "version", "description": "scenario version", "unit": "" },
+				{"name": "version_name", "description": "version name", "unit": "" },
+				{"name": "release", "description": "external release", "unit": "" },
+				{"name": "comment", "description": "additional information", "unit": "" },
+				{"name": "timestamp", "description": "Timestamp (Berlin)", "unit": "" } ]},
+		"meta_version": "1.0"}] }';
+
+-- select description
+SELECT obj_description('model_draft.ego_scenario' ::regclass) ::json;
 
 -- logged versions
 SELECT	version
@@ -122,7 +157,7 @@ SELECT obj_description('model_draft.ego_scenario_log' ::regclass) ::json;
 SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_scenario_log','ego_scenario_log_setup.sql','Reset scenario log');
 
 
--- result table
+-- result tables for eGo
 
 -- hvmv substation
 DROP TABLE IF EXISTS	grid.ego_hvmv_substation CASCADE;
