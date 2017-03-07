@@ -55,7 +55,7 @@ FROM
 	-- conds
 	WHERE obj_label LIKE '%%DE%%' -- only Germany
 	AND obj_label not LIKE '%%powerline%%' -- without any powerlines
-	AND scenario_id = 6
+	AND scenario_id = 32
 	 -- take only one flow (input), storage output flow seems to be the right one (?)
 	AND ((obj_label LIKE '%%storage%%' AND type = 'from_bus') or (obj_label not LIKE '%%storage%%' AND type = 'to_bus'))
 ) AS SQ
@@ -77,7 +77,6 @@ SELECT
 WHERE A.source = B.source
 GROUP BY A.aggr_id;
 
-/*
 -- NEP 2035
 -- aggregate nominal capacity on aggr_id FROM powerflow generators, keeping the source
 DROP materialized view if EXISTS calc_renpass_gis.pf_pp_by_source_aggr_id;
@@ -124,7 +123,7 @@ FROM
 	-- conds
 	WHERE obj_label LIKE '%%DE%%' -- only Germany
 	AND obj_label not LIKE '%%powerline%%' -- without any powerlines
-	AND scenario_id = 7
+	AND scenario_id = 33
 	 -- take only one flow (input), storage output flow seems to be the right one (?)
 	AND ((obj_label LIKE '%%storage%%' AND type = 'from_bus') or (obj_label not LIKE '%%storage%%' AND type = 'to_bus'))
 ) AS SQ
@@ -193,11 +192,10 @@ INSERT into model_draft.ego_grid_pf_hv_generator
 	AND A.nominal_value IS not NULL
 	AND A.nominal_value[1] > 0.001
 	AND A.source not LIKE '%%powerline%%'
-	AND A.scenario_id = 6;
+	AND A.scenario_id = 32;
 
 
 -- NEP 2035
-/*
 INSERT into model_draft.ego_grid_pf_hv_generator
 
 	SELECT
@@ -238,8 +236,7 @@ INSERT into model_draft.ego_grid_pf_hv_generator
 	AND A.nominal_value IS not NULL
 	AND A.nominal_value[1] > 0.001
 	AND A.source not LIKE '%%powerline%%'
-	AND A.scenario_id = 7;
-*/
+	AND A.scenario_id = 33;
 
 -- INSERT params of Source in model_draft.ego_grid_pf_hv_generator (countries besides Germany)
 -- Status Quo
@@ -277,10 +274,9 @@ INSERT into model_draft.ego_grid_pf_hv_generator
 		ON (substring(A.source, 1, 2) = B.country)
 	WHERE substring(A.source, 1, 2) != 'DE'
 	AND A.nominal_value[1] > 0.001
-	AND A.scenario_id = 6;
+	AND A.scenario_id = 32;
 
 -- NEP 2035
-/*
 INSERT into model_draft.ego_grid_pf_hv_generator
 
 	SELECT
@@ -315,7 +311,7 @@ INSERT into model_draft.ego_grid_pf_hv_generator
 		ON (substring(A.source, 1, 2) = B.country)
 	WHERE substring(A.source, 1, 2) != 'DE'
 	AND A.nominal_value[1] > 0.001
-	AND A.scenario_id = 7;
+	AND A.scenario_id = 33;
 
 */
 -- Copy timeseries data
@@ -359,7 +355,7 @@ CREATE MATERIALIZED VIEW calc_renpass_gis.translate_to_pf AS
 		calc_renpass_gis.renpass_gis_results C
 	WHERE
 	(C.obj_label LIKE '%%' || SQ.country || '%%' || SQ.renpass_gis_source || '%%')
-	AND C.scenario_id = 6
+	AND C.scenario_id = 32
 	AND C.type = 'to_bus';
 
 -- Make an array, INSERT into generator_pq_set
@@ -382,7 +378,6 @@ INSERT into model_draft.ego_grid_pf_hv_generator_pq_set (scn_name, generator_id,
 	GROUP BY generator_id;
 
 -- NEP 2035
-/*
 Drop MATERIALIZED VIEW IF EXISTS calc_renpass_gis.translate_to_pf;
 
 CREATE MATERIALIZED VIEW calc_renpass_gis.translate_to_pf AS
@@ -413,7 +408,7 @@ CREATE MATERIALIZED VIEW calc_renpass_gis.translate_to_pf AS
 		calc_renpass_gis.renpass_gis_results C
 	WHERE
 	(C.obj_label LIKE '%%' || SQ.country || '%%' || SQ.renpass_gis_source || '%%')
-	AND C.scenario_id = 7
+	AND C.scenario_id = 33
 	AND C.type = 'to_bus';
 
 -- Make an array, INSERT into generator_pq_set
@@ -435,7 +430,6 @@ INSERT into model_draft.ego_grid_pf_hv_generator_pq_set (scn_name, generator_id,
 		) SQ
 	GROUP BY generator_id;
 
-*/
 -- SELECT * FROM model_draft.ego_grid_pf_hv_load WHERE bus > 280000;
 DELETE FROM model_draft.ego_grid_pf_hv_load WHERE bus > 280000;
 
@@ -460,7 +454,6 @@ INSERT into model_draft.ego_grid_pf_hv_load (scn_name, load_id, bus, sign)
 	WHERE v_nom = max_v_nom;
 
 -- NEP 2035
-/*
 INSERT into model_draft.ego_grid_pf_hv_load (scn_name, load_id, bus, sign)
 
 	SELECT
@@ -479,7 +472,6 @@ INSERT into model_draft.ego_grid_pf_hv_load (scn_name, load_id, bus, sign)
 		) SQ
 	WHERE v_nom = max_v_nom;
 
-*/
 -- SELECT * FROM model_draft.ego_grid_pf_hv_load_pq_set WHERE load_id in (SELECT load_id FROM model_draft.ego_grid_pf_hv_load WHERE bus > 280000)
 DELETE FROM model_draft.ego_grid_pf_hv_load_pq_set;
 
@@ -501,7 +493,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_load_pq_set (scn_name, load_id, temp_id, 
 			ON (B.country = substring(A.obj_label, 1, 2))
 		WHERE A.obj_label LIKE '%%load%%'
 		AND A.type = 'from_bus'
-		AND A.scenario_id = 6
+		AND A.scenario_id = 32
 		) SQ
 		JOIN model_draft.ego_grid_pf_hv_load C on (C.bus = SQ.bus_id)
 	WHERE SQ.v_nom = SQ.max_v_nom
@@ -509,7 +501,6 @@ INSERT INTO model_draft.ego_grid_pf_hv_load_pq_set (scn_name, load_id, temp_id, 
 	GROUP BY C.load_id;
 
 -- NEP 2035
-/*
 INSERT INTO model_draft.ego_grid_pf_hv_load_pq_set (scn_name, load_id, temp_id, p_set)
 
 	SELECT
@@ -526,7 +517,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_load_pq_set (scn_name, load_id, temp_id, 
 			ON (B.country = substring(A.obj_label, 1, 2))
 		WHERE A.obj_label LIKE '%%load%%'
 		AND A.type = 'from_bus'
-		AND A.scenario_id = 7
+		AND A.scenario_id = 33
 		) SQ
 		JOIN model_draft.ego_grid_pf_hv_load C on (C.bus = SQ.bus_id)
 	WHERE SQ.v_nom = SQ.max_v_nom
