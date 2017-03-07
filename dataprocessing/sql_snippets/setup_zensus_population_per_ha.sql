@@ -57,13 +57,13 @@ COMMENT ON MATERIALIZED VIEW social.destatis_zensus_population_per_ha_mview IS '
 		{"Name": "geom_point", "Description": "Geometry centroid", "Unit": "" },
 		{"Name": "geom", "Description": "Geometry", "Unit": "" } ],
 	"Changes":[
-		{"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
+		{"Name": "Ludwig HÃ¼lk", "Mail": "ludwig.huelk@rl-institut.de",
 		"Date":  "03.02.2016","Comment": "Added Table"},
-		{"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
+		{"Name": "Ludwig HÃ¼lk", "Mail": "ludwig.huelk@rl-institut.de",
 		"Date":  "25.10.2016","Comment": "Moved table and add metadata"} ],
 	"ToDo": [""],
-	"Licence": ["Datenlizenz Deutschland – Namensnennung – Version 2.0"],
-	"Instructions for proper use": ["Empfohlene Zitierweise des Quellennachweises: Datenquelle: Statistisches Bundesamt, Wiesbaden, Genesis-Online, <optional> Abrufdatum; Datenlizenz by-2-0. Quellenvermerk bei eigener Berechnung / Darstellung: Datenquelle: Statistisches Bundesamt, Wiesbaden, Genesis-Online, <optional> Abrufdatum; Datenlizenz by-2-0; eigene Berechnung/eigene Darstellung. In elektronischen Werken ist im Quellenverweis dem Begriff (Datenlizenz by-2-0) der Link www.govdata.de/dl-de/by-2-0 als Verknüpfung zu hinterlegen."]
+	"Licence": ["Datenlizenz Deutschland Â– Namensnennung Â– Version 2.0"],
+	"Instructions for proper use": ["Empfohlene Zitierweise des Quellennachweises: Datenquelle: Statistisches Bundesamt, Wiesbaden, Genesis-Online, <optional> Abrufdatum; Datenlizenz by-2-0. Quellenvermerk bei eigener Berechnung / Darstellung: Datenquelle: Statistisches Bundesamt, Wiesbaden, Genesis-Online, <optional> Abrufdatum; Datenlizenz by-2-0; eigene Berechnung/eigene Darstellung. In elektronischen Werken ist im Quellenverweis dem Begriff (Datenlizenz by-2-0) der Link www.govdata.de/dl-de/by-2-0 als VerknÃ¼pfung zu hinterlegen."]
 	}' ;
 	
 -- select description
@@ -142,9 +142,9 @@ COMMENT ON TABLE model_draft.ego_demand_la_zensus IS '{
         {"Name": "area_ha", "Description": "Area", "Unit": "ha" },
 	{"Name": "geom", "Description": "Geometry", "Unit": " " } ],
     "Changes":	[
-        {"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
+        {"Name": "Ludwig HÃ¼lk", "Mail": "ludwig.huelk@rl-institut.de",
 	"Date":  "02.09.2015", "Comment": "Created mview" },
-	{"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
+	{"Name": "Ludwig HÃ¼lk", "Mail": "ludwig.huelk@rl-institut.de",
 	"Date":  "17.12.2016", "Comment": "Added metadata" } ],
     "Notes": [""],
     "Licence": [{
@@ -233,9 +233,9 @@ COMMENT ON TABLE model_draft.ego_demand_la_zensus_cluster IS '{
         {"Name": "area_ha", "Description": "Area", "Unit": "ha" },
 	{"Name": "geom", "Description": "Geometry", "Unit": " " } ],
     "Changes":	[
-        {"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
+        {"Name": "Ludwig HÃ¼lk", "Mail": "ludwig.huelk@rl-institut.de",
 	"Date":  "02.09.2015", "Comment": "Created mview" },
-	{"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
+	{"Name": "Ludwig HÃ¼lk", "Mail": "ludwig.huelk@rl-institut.de",
 	"Date":  "17.12.2016", "Comment": "Added metadata" } ],
     "Notes": [""],
     "Licence": [{
