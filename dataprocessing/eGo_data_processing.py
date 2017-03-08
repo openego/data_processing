@@ -67,7 +67,7 @@ def data_processing():
          #'process_eGo_loads_per_grid_district.sql', 		# Cut Loadarea with MV Griddistrict
          #'ego_demand_loads_per_mv_voronoi.sql', 	    	# Cut Loadarea with MV Voronoi cells
          #'process_eGo_consumption.sql',			# Allocate consumption to Loadareas
-         ###'peak_load_per_load_area.py',				# Peak loads per Loadarea (duration 10h, it can be executed later in the process)
+         'peak_load_per_load_area.py',				# Peak loads per Loadarea (duration 10h, it can be executed later in the process)
          #'ego_mv_griddistrict_results.sql',            	# Results for MV Griddistrict
          #'ego_paper_result.sql',				# Results and statistics for eGoDP
        
@@ -75,10 +75,10 @@ def data_processing():
          #'voronoi_weatherpoint.sql',				# Create voronoi cells based on weather points
          #'calc_ego_hv_powerflow.sql',				# Set schema/tables for EHV/HV powerflow calculations up
          #'osmtgmod_to_pypsa.sql',				# Include data from osmTGmod into EHV/HV powerflow schema
-	    'ego_dp_powerflow_electrical_neighbour.sql',		# Create border crossing lines and buses in neighbouring countries
+	    #'ego_dp_powerflow_electrical_neighbour.sql',		# Create border crossing lines and buses in neighbouring countries
 
-        # 'assignment_generator_bus.sql',               	# Assign generators to corresponding substation
-        # 'assignment_load_bus.sql',                    	# Assign loads to their corresponding substation
+         ##'assignment_generator_bus.sql',               	# Assign generators to corresponding substation
+         #'assignment_load_bus.sql',                    	# Assign loads to their corresponding substation
         # 'renpass_gis_ResultsTOPF.sql',			# Transfer renpassG!S results into the corresponding powerflow table
         # 'demand_per_mv_grid_district.py',			# 
         # 'demandseries_TOPF.sql',				# Insert demand series into corresponding powerflow table
