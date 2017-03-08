@@ -76,7 +76,7 @@ def demand_per_mv_grid_district():
         'ego_demand_hv_largescaleconsumer',
         conn,
         schema,
-        index_col='id')
+        index_col='polygon_id')
 
     write_ego_scenario_log(conn=conn,
                            version='v0.2.6',

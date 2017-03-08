@@ -28,7 +28,7 @@ INSERT INTO model_draft.ego_demand_loads (ssc_id, geom)
 	FROM model_draft.ego_demand_per_load_area; 
 
 INSERT INTO model_draft.ego_demand_loads (lsc_id, geom) 
-	SELECT id, geom
+	SELECT polygon_id, geom
 	FROM model_draft.ego_demand_hv_largescaleconsumer; 
 
 CREATE INDEX loads_total_idx
@@ -118,7 +118,7 @@ UPDATE model_draft.ego_demand_per_load_area a
 UPDATE model_draft.ego_demand_hv_largescaleconsumer a
 	SET un_id = b.un_id 
 	FROM model_draft.ego_demand_loads b
-	WHERE a.id = b.lsc_id; 
+	WHERE a.polygon_id = b.lsc_id; 
 
 -------------
 -- Insert load data into powerflow schema, that contains all loads seperately 
