@@ -264,6 +264,15 @@ UPDATE model_draft.ego_supply_pf_generator_single a
 			  AS 	result, model_draft.ego_supply_res_powerplant_2035 b
 WHERE scn_name = 'NEP 2035' AND a.generator_id = b.un_id AND a.generator_id = result.un_id; 
 
+-- Set source=1 (gas) for all chp plants --> A MORE ACCURATE APPROACH SHOULD BE IMPLEMENTED HERE
+UPDATE model_draft.ego_supply_pf_generator_single
+SET source = 1 
+WHERE scn_name='NEP 2035' AND generator_id IN
+	(SELECT un_id FROM model_draft.ego_supply_generator_nep2035 WHERE re_id IN 
+		(SELECT id FROM model_draft.ego_supply_res_powerplant_2035
+		WHERE generation_type='chp'));
+
+
 -- Control is changed to PV for biomass powerplants > 50 MW
 
 UPDATE model_draft.ego_supply_pf_generator_single 
