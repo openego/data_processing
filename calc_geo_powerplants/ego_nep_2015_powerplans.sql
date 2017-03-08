@@ -54,7 +54,7 @@ CREATE TABLE model_draft.nep_supply_conv_powerplant_nep2015
 -- Set metadata
 --
 
-COMMENT ON TABLE  supply.nep_powerplant IS
+COMMENT ON TABLE  model_draft.nep_supply_conv_powerplant_nep2015 IS
 '{
 "Name": "NEP 2015 List of Powerplants in Germany",
 "Source": [{
