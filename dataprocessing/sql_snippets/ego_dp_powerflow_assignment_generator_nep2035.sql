@@ -23,8 +23,8 @@ CREATE TABLE model_draft.ego_supply_generator_nep2035
   CONSTRAINT generators_total_nep2035_pkey PRIMARY KEY (un_id)
 );
 
---ALTER TABLE model_draft.ego_supply_generator_nep2035
---	OWNER TO oeuser;
+ALTER TABLE model_draft.ego_supply_generator_nep2035
+	OWNER TO oeuser;
 	
 
 DROP INDEX IF EXISTS model_draft.ego_supply_generator_nep2035_idx;
