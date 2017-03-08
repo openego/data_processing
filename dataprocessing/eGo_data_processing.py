@@ -75,14 +75,18 @@ def data_processing():
          #'voronoi_weatherpoint.sql',				# Create voronoi cells based on weather points
          #'calc_ego_hv_powerflow.sql',				# Set schema/tables for EHV/HV powerflow calculations up
          #'osmtgmod_to_pypsa.sql',				# Include data from osmTGmod into EHV/HV powerflow schema
-	    #'ego_dp_powerflow_electrical_neighbour.sql',		# Create border crossing lines and buses in neighbouring countries
+	    #'ego_dp_powerflow_electrical_neighbour.sql',	# Create border crossing lines and buses in neighbouring countries
 
          ##'assignment_generator_bus.sql',               	# Assign generators to corresponding substation
          #'assignment_load_bus.sql',                    	# Assign loads to their corresponding substation
+	#'ego_dp_powerflow_grid_NEP2035.sql#,			# Copy grid to scenario NEP 2035
+	#'ego_dp_powerflow_assignment_generator_nep2035.sql',	# Assign generators from NEP 2035 to corresponding substation
+	#'ego_dp_powerflow_assignment_load_nep2035.sql',	# Copy loads from SQ scenario
         # 'renpass_gis_ResultsTOPF.sql',			# Transfer renpassG!S results into the corresponding powerflow table
         # 'demand_per_mv_grid_district.py',			# 
         # 'demandseries_TOPF.sql',				# Insert demand series into corresponding powerflow table
         # 'LOPF_data.sql',					# Set marginal costs for generators and storages
+	# 'ego_dp_powerflow_load_timeseries_NEP2035.sql' 	# Copy demand timeseries to NEP 2035 scenario
         
 		## LOWVOLTAGE
         # 'process_eGo_mvlv_substation.sql',			# MVLV Substation inside Loadarea
