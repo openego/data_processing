@@ -62,7 +62,4 @@ ALTER TABLE model_draft.ego_lattice_50m_la_mview OWNER TO oeuser;
 SELECT copy_comment_mview('model_draft.ego_lattice_50m','model_draft.ego_lattice_50m_la_mview');
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.3','temp','model_draft','ego_lattice_50m_la_mview','ego_rea_lattice_per_area_50m.sql',' ');
-
-
--- DROP MATERIALIZED VIEW IF EXISTS  	model_draft.ego_lattice_50m_la_mview CASCADE;
+SELECT ego_scenario_log('v0.2.3','output','model_draft','ego_lattice_50m_la_mview','ego_rea_lattice_per_area_50m.sql',' ');

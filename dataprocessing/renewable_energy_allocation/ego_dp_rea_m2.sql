@@ -15,7 +15,7 @@ The rest could not be allocated, consider in M4.
 */
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.3','input','model_draft','ego_supply_rea','ego_rea_m2.sql',' ');
+SELECT ego_scenario_log('v0.2.3','input','model_draft','ego_supply_res_powerplant','ego_rea_m2.sql',' ');
 
 -- MView M2
 DROP MATERIALIZED VIEW IF EXISTS 	model_draft.ego_supply_rea_m2_a_mview CASCADE;
@@ -27,8 +27,8 @@ CREATE MATERIALIZED VIEW 		model_draft.ego_supply_rea_m2_a_mview AS
 		voltage_level,
 		subst_id,
 		geom,
-		flag
-	FROM 	model_draft.ego_supply_rea AS dea
+		rea_flag
+	FROM 	model_draft.ego_supply_res_powerplant AS dea
 	WHERE 	(dea.voltage_level = 4 AND 
 		dea.generation_type = 'wind');
 
@@ -40,12 +40,12 @@ CREATE INDEX ego_supply_rea_m2_a_mview_geom_idx
 ALTER TABLE model_draft.ego_supply_rea_m2_a_mview OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.3','output','model_draft','ego_supply_rea_m2_a_mview','ego_rea_m2.sql',' ');
+SELECT ego_scenario_log('v0.2.3','temp','model_draft','ego_supply_rea_m2_a_mview','ego_rea_m2.sql',' ');
 
 
--- flag M2
-UPDATE 	model_draft.ego_supply_rea AS dea
-	SET	flag = 'M2_rest'
+-- rea_flag M2
+UPDATE 	model_draft.ego_supply_res_powerplant AS dea
+	SET	rea_flag = 'M2_rest'
 	WHERE	dea.voltage_level = 4 AND 
 		dea.generation_type = 'wind';
 
@@ -58,8 +58,8 @@ CREATE TABLE 		model_draft.ego_supply_rea_m2_windfarm (
 	area_ha decimal,
 	dea_cnt integer,
 	electrical_capacity_sum numeric,
-	geom_new geometry(Polygon,3035),
-	geom_line geometry(LineString,3035),
+	rea_geom_new geometry(Polygon,3035),
+	rea_geom_line geometry(LineString,3035),
 	geom geometry(Polygon,3035),
 	CONSTRAINT ego_supply_rea_m2_windfarm_pkey PRIMARY KEY (farm_id));
 
@@ -70,7 +70,7 @@ INSERT INTO model_draft.ego_supply_rea_m2_windfarm (area_ha,geom)
 	FROM	(SELECT	(ST_DUMP(ST_MULTI(ST_UNION(
 				ST_BUFFER(dea.geom, 1000)
 			)))).geom ::geometry(Polygon,3035) AS geom_farm
-		FROM 	model_draft.ego_supply_rea AS dea
+		FROM 	model_draft.ego_supply_res_powerplant AS dea
 		WHERE 	(dea.voltage_level = 4) AND
 			(dea.generation_type = 'wind')
 		) AS farm;
@@ -100,7 +100,7 @@ UPDATE 	model_draft.ego_supply_rea_m2_windfarm AS t1
 		SELECT	farm.farm_id AS farm_id,
 			COUNT(dea.geom) AS dea_cnt,
 			SUM(dea.electrical_capacity) AS electrical_capacity_sum
-		FROM	model_draft.ego_supply_rea AS dea,
+		FROM	model_draft.ego_supply_res_powerplant AS dea,
 			model_draft.ego_supply_rea_m2_windfarm AS farm
 		WHERE  	(dea.voltage_level = 4 AND
 			dea.generation_type = 'wind') AND
@@ -114,12 +114,12 @@ UPDATE 	model_draft.ego_supply_rea_m2_windfarm AS t1
 SELECT ego_scenario_log('v0.2.3','temp','model_draft','ego_supply_rea_m2_windfarm','ego_rea_m2.sql',' ');
 
 -- update DEA in wind farms
-UPDATE 	model_draft.ego_supply_rea AS t1
-	SET  	sort = t2.farm_id   -- temporary store farm_id in sort!
+UPDATE 	model_draft.ego_supply_res_powerplant AS t1
+	SET  	rea_sort = t2.farm_id   -- temporary store farm_id in rea_sort!
 	FROM    (
 		SELECT	dea.id AS id,
 			farm.farm_id AS farm_id
-		FROM	model_draft.ego_supply_rea AS dea,
+		FROM	model_draft.ego_supply_res_powerplant AS dea,
 			model_draft.ego_supply_rea_m2_windfarm AS farm
 		WHERE  	(dea.voltage_level = 4 AND
 			dea.generation_type = 'wind') AND
@@ -132,17 +132,17 @@ UPDATE 	model_draft.ego_supply_rea AS t1
 -- temporary tables for the loop
 DROP TABLE IF EXISTS 	model_draft.ego_supply_rea_m2_farm_temp CASCADE;
 CREATE TABLE 		model_draft.ego_supply_rea_m2_farm_temp (
-	sorted bigint NOT NULL,
+	rea_sorted bigint NOT NULL,
 	farm_id bigint NOT NULL,
 	subst_id integer,
 	area_ha numeric,
 	dea_cnt integer,
 	electrical_capacity_sum numeric,
-	geom_new geometry(Point,3035),
-	geom_line geometry(LineString,3035),
+	rea_geom_new geometry(Point,3035),
+	rea_geom_line geometry(LineString,3035),
 	geom geometry(Polygon,3035),
-	flag character varying,
-	CONSTRAINT ego_supply_rea_m2_farm_temp_pkey PRIMARY KEY (sorted));
+	rea_flag character varying,
+	CONSTRAINT ego_supply_rea_m2_farm_temp_pkey PRIMARY KEY (rea_sorted));
 
 CREATE INDEX ego_supply_rea_m2_farm_temp_geom_idx
 	ON model_draft.ego_supply_rea_m2_farm_temp USING gist (geom);
@@ -152,12 +152,12 @@ SELECT ego_scenario_log('v0.2.3','temp','model_draft','ego_supply_rea_m2_farm_te
 
 DROP TABLE IF EXISTS 	model_draft.ego_supply_rea_m2_wpa_temp CASCADE;
 CREATE TABLE 		model_draft.ego_supply_rea_m2_wpa_temp (
-	sorted bigint NOT NULL,
+	rea_sorted bigint NOT NULL,
 	id integer,
 	subst_id integer,
 	area_ha numeric,
 	geom geometry(Polygon,3035),
-	CONSTRAINT ego_supply_rea_m2_wpa_temp_pkey PRIMARY KEY (sorted));
+	CONSTRAINT ego_supply_rea_m2_wpa_temp_pkey PRIMARY KEY (rea_sorted));
 
 CREATE INDEX ego_supply_rea_m2_wpa_temp_geom_idx
 	ON model_draft.ego_supply_rea_m2_wpa_temp USING gist (geom);
@@ -167,12 +167,12 @@ SELECT ego_scenario_log('v0.2.3','temp','model_draft','ego_supply_rea_m2_wpa_tem
 
 DROP TABLE IF EXISTS 	model_draft.ego_supply_rea_m2_jnt_temp CASCADE;
 CREATE TABLE 		model_draft.ego_supply_rea_m2_jnt_temp (
-	sorted bigint NOT NULL,
+	rea_sorted bigint NOT NULL,
 	farm_id bigint,
 	subst_id integer,
-	geom_line geometry(LineString,3035),
+	rea_geom_line geometry(LineString,3035),
 	geom geometry(Point,3035),
-	CONSTRAINT ego_supply_rea_m2_jnt_temp_pkey PRIMARY KEY (sorted));
+	CONSTRAINT ego_supply_rea_m2_jnt_temp_pkey PRIMARY KEY (rea_sorted));
 
 CREATE INDEX ego_supply_rea_m2_jnt_temp_geom_idx
 	ON model_draft.ego_supply_rea_m2_jnt_temp USING gist (geom);
@@ -193,36 +193,36 @@ BEGIN
 	LOOP
         EXECUTE '
 		INSERT INTO model_draft.ego_supply_rea_m2_farm_temp
-			SELECT	row_number() over (ORDER BY farm.dea_cnt DESC)as sorted,
+			SELECT	row_number() over (ORDER BY farm.dea_cnt DESC)as rea_sorted,
 				farm.*
 			FROM 	model_draft.ego_supply_rea_m2_windfarm AS farm
 			WHERE 	farm.subst_id =' || gd || ';
 
 		INSERT INTO model_draft.ego_supply_rea_m2_wpa_temp
-			SELECT 	row_number() over (ORDER BY wpa.area_ha DESC)as sorted,
+			SELECT 	row_number() over (ORDER BY wpa.area_ha DESC)as rea_sorted,
 				wpa.*
 			FROM 	model_draft.ego_supply_wpa_per_mvgd AS wpa
 			WHERE 	wpa.subst_id =' || gd || ';
 
 		INSERT INTO model_draft.ego_supply_rea_m2_jnt_temp
-			SELECT	farm.sorted,
+			SELECT	farm.rea_sorted,
 				farm.farm_id,
 				farm.subst_id,
-				ST_MAKELINE(ST_CENTROID(farm.geom),ST_PointOnSurface(wpa.geom)) ::geometry(LineString,3035) AS geom_line,
+				ST_MAKELINE(ST_CENTROID(farm.geom),ST_PointOnSurface(wpa.geom)) ::geometry(LineString,3035) AS rea_geom_line,
 				ST_PointOnSurface(wpa.geom) ::geometry(Point,3035) AS geom	-- NEW LOCATION!
 			FROM	model_draft.ego_supply_rea_m2_farm_temp AS farm
-			INNER JOIN model_draft.ego_supply_rea_m2_wpa_temp AS wpa ON (farm.sorted = wpa.sorted);
+			INNER JOIN model_draft.ego_supply_rea_m2_wpa_temp AS wpa ON (farm.rea_sorted = wpa.rea_sorted);
 
-		UPDATE 	model_draft.ego_supply_rea AS t1
-			SET  	geom_new = t2.geom_new,
-				geom_line = t2.geom_line,
-				flag = ''M2''
+		UPDATE 	model_draft.ego_supply_res_powerplant AS t1
+			SET  	rea_geom_new = t2.rea_geom_new,
+				rea_geom_line = t2.rea_geom_line,
+				rea_flag = ''M2''
 			FROM	(SELECT	m.farm_id AS farm_id,
-					m.geom_line,
-					m.geom AS geom_new
+					m.rea_geom_line,
+					m.geom AS rea_geom_new
 				FROM	model_draft.ego_supply_rea_m2_jnt_temp AS m
 				)AS t2
-			WHERE  	t1.sort = t2.farm_id;
+			WHERE  	t1.rea_sort = t2.farm_id;
 
 		TRUNCATE TABLE model_draft.ego_supply_rea_m2_farm_temp, model_draft.ego_supply_rea_m2_wpa_temp, model_draft.ego_supply_rea_m2_jnt_temp;
 		';
@@ -234,26 +234,26 @@ $$;
 DROP MATERIALIZED VIEW IF EXISTS 	model_draft.ego_supply_rea_m2_mview CASCADE;
 CREATE MATERIALIZED VIEW 		model_draft.ego_supply_rea_m2_mview AS
 	SELECT 	dea.*
-	FROM	model_draft.ego_supply_rea AS dea
-	WHERE	flag = 'M2';
+	FROM	model_draft.ego_supply_res_powerplant AS dea
+	WHERE	rea_flag = 'M2';
 
 -- create index GIST (geom)
 CREATE INDEX ego_supply_rea_m2_mview_geom_idx
 	ON model_draft.ego_supply_rea_m2_mview USING gist (geom);
 
--- create index GIST (geom_line)
-CREATE INDEX ego_supply_rea_m2_mview_geom_line_idx
-	ON model_draft.ego_supply_rea_m2_mview USING gist (geom_line);
+-- create index GIST (rea_geom_line)
+CREATE INDEX ego_supply_rea_m2_mview_rea_geom_line_idx
+	ON model_draft.ego_supply_rea_m2_mview USING gist (rea_geom_line);
 
--- create index GIST (geom_new)
-CREATE INDEX ego_supply_rea_m2_mview_geom_new_idx
-	ON model_draft.ego_supply_rea_m2_mview USING gist (geom_new);	
+-- create index GIST (rea_geom_new)
+CREATE INDEX ego_supply_rea_m2_mview_rea_geom_new_idx
+	ON model_draft.ego_supply_rea_m2_mview USING gist (rea_geom_new);	
 
 -- grant (oeuser)
 ALTER TABLE model_draft.ego_supply_rea_m2_mview OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.3','temp','model_draft','ego_supply_rea_m2_mview','ego_rea_m2.sql',' ');
+SELECT ego_scenario_log('v0.2.3','output','model_draft','ego_supply_rea_m2_mview','ego_rea_m2.sql',' ');
 
 
 -- M2 rest
@@ -266,9 +266,9 @@ CREATE MATERIALIZED VIEW 		model_draft.ego_supply_rea_m2_rest_mview AS
 		voltage_level,
 		subst_id,
 		geom,
-		flag
-	FROM	model_draft.ego_supply_rea AS dea
-	WHERE	flag = 'M2_rest';
+		rea_flag
+	FROM	model_draft.ego_supply_res_powerplant AS dea
+	WHERE	rea_flag = 'M2_rest';
 
 -- create index GIST (geom)
 CREATE INDEX ego_supply_rea_m2_rest_mview_geom_idx
@@ -285,4 +285,6 @@ SELECT ego_scenario_log('v0.2.3','output','model_draft','ego_supply_rea_m2_rest_
 DROP TABLE IF EXISTS 	model_draft.ego_supply_rea_m2_farm_temp CASCADE;
 DROP TABLE IF EXISTS 	model_draft.ego_supply_rea_m2_wpa_temp CASCADE;
 DROP TABLE IF EXISTS 	model_draft.ego_supply_rea_m2_jnt_temp CASCADE;
+
+DROP MATERIALIZED VIEW IF EXISTS 	model_draft.ego_supply_rea_m2_a_mview CASCADE;
 -- DROP TABLE IF EXISTS 	model_draft.ego_supply_rea_m2_windfarm CASCADE;

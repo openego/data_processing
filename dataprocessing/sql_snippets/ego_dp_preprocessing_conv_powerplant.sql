@@ -7,8 +7,12 @@ __url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
 __author__ 	= "IlkaCu, wolfbunke" 
 */
 
-DROP TABLE IF EXISTS model_draft.ego_supply_conv_powerplant CASCADE; 
 
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','input','supply','ego_conventional_powerplant','ego_dp_preprocessing_conv_powerplant.sql','');
+
+-- copy powerplant list
+DROP TABLE IF EXISTS model_draft.ego_supply_conv_powerplant CASCADE; 
 CREATE TABLE model_draft.ego_supply_conv_powerplant AS
 	TABLE supply.ego_conventional_powerplant; 
 
@@ -19,29 +23,30 @@ ALTER TABLE model_draft.ego_supply_conv_powerplant
   	ADD COLUMN un_id bigint;
 
 CREATE INDEX model_draft.ego_supply_conv_powerplant_idx
-  ON model_draft.ego_supply_conv_powerplant
-  USING gist
-  (geom);
+	ON model_draft.ego_supply_conv_powerplant
+	USING gist
+	(geom);
   
- ALTER TABLE model_draft.ego_supply_conv_powerplant OWNER TO oeuser; 
+ALTER TABLE model_draft.ego_supply_conv_powerplant OWNER TO oeuser; 
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','temp','model_draft','ego_supply_conv_powerplant','ego_dp_preprocessing_conv_powerplant.sql','');
+
 
 -- Delete entries without information on installed capacity or where capacity <= 0
 DELETE  FROM model_draft.ego_supply_conv_powerplant
 	WHERE capacity IS NULL OR capacity <= 0; 
 
 -- Change fuel='multiple_non_renewable' to 'other_non_renewable' for compatibility reasons
-
 UPDATE model_draft.ego_supply_conv_powerplant
 	SET fuel = 'other_non_renewable'
-WHERE fuel = 'multiple_non_renewable';
+	WHERE fuel = 'multiple_non_renewable';
 
 
 -- Correct an invalid geom in the register
-
 ALTER TABLE model_draft.ego_supply_conv_powerplant
 SET lat = 48.0261021
-WHERE gid = 493
-;
+WHERE gid = 493;
 
 UPDATE  model_draft.ego_supply_conv_powerplant
 set geom = ST_SetSRID(ST_MakePoint(lon,lat),4326)
@@ -49,7 +54,6 @@ WHERE gid = 493;
 
 
 -- Update Voltage Level of Power Plants according to allocation table
-
 UPDATE model_draft.ego_supply_conv_powerplant
 SET voltage_level=1
 WHERE capacity >=120.0 /*Voltage_level =1 when capacity greater than 120 MW*/;
@@ -57,29 +61,26 @@ WHERE capacity >=120.0 /*Voltage_level =1 when capacity greater than 120 MW*/;
 
 UPDATE model_draft.ego_supply_conv_powerplant
 SET voltage_level=3
-WHERE capacity BETWEEN 17.5 AND 119.99 /*Voltage_level =2 when capacity between 17.5 and 119.99 MW*/
-;
+WHERE capacity BETWEEN 17.5 AND 119.99 /*Voltage_level =2 when capacity between 17.5 and 119.99 MW*/;
+
 UPDATE model_draft.ego_supply_conv_powerplant
 SET voltage_level=4
-WHERE capacity BETWEEN 4.5 AND 17.49
-;
+WHERE capacity BETWEEN 4.5 AND 17.49;
+
 UPDATE model_draft.ego_supply_conv_powerplant
 SET voltage_level=5
-WHERE capacity BETWEEN 0.3 AND 4.49 /* Voltage_level =3 when capacity between 0.3 and 4.5 kV*/
-;
+WHERE capacity BETWEEN 0.3 AND 4.49 /* Voltage_level =3 when capacity between 0.3 and 4.5 kV*/;
 
 UPDATE model_draft.ego_supply_conv_powerplant
 SET voltage_level=6
-WHERE capacity BETWEEN 0.1 AND 0.29
-;
+WHERE capacity BETWEEN 0.1 AND 0.29;
 
 UPDATE model_draft.ego_supply_conv_powerplant
 SET voltage_level=7
-WHERE capacity < 0.1 /*voltage_level =7 when capacity lower than 0.1*/
+WHERE capacity < 0.1 /*voltage_level =7 when capacity lower than 0.1*/;
 
 
--- Add metadata
-
+-- metadata
 COMMENT ON TABLE  model_draft.ego_supply_conv_powerplant IS
 '{
 "Name": "eGo conventional powerplant list",
@@ -221,4 +222,9 @@ COMMENT ON TABLE  model_draft.ego_supply_conv_powerplant IS
 "Licence": ["..."],
 "Instructions for proper use": ["..."]
 }';
-;
+
+-- select description
+SELECT obj_description('model_draft.ego_supply_conv_powerplant' ::regclass) ::json;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_supply_conv_powerplant','ego_dp_preprocessing_conv_powerplant.sql','');

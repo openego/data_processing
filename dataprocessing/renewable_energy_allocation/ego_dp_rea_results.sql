@@ -14,7 +14,7 @@ Results
 */ 
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.3','input','supply','ego_res_powerplant','ego_rea_results.sql',' ');
+SELECT ego_scenario_log('v0.2.3','input','model_draft','ego_supply_res_powerplant','ego_dp_rea_results.sql',' ');
 
 -- dea capacity and count per generation types and voltage level
 DROP TABLE IF EXISTS 	model_draft.ego_supply_rea_per_gentype_and_voltlevel CASCADE;
@@ -25,7 +25,7 @@ CREATE TABLE 		model_draft.ego_supply_rea_per_gentype_and_voltlevel AS
 		ee.voltage_level,
 		SUM(ee.electrical_capacity) AS capacity,
 		COUNT(ee.geom) AS count
-	FROM 	supply.ego_res_powerplant AS ee
+	FROM 	model_draft.ego_supply_res_powerplant AS ee
 	GROUP BY	ee.voltage_level, ee.generation_type, ee.generation_subtype
 	ORDER BY 	ee.voltage_level, ee.generation_type, ee.generation_subtype;
 
@@ -34,7 +34,7 @@ ALTER TABLE	model_draft.ego_supply_rea_per_gentype_and_voltlevel
 	OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.3','output','model_draft','ego_supply_rea_per_gentype_and_voltlevel','ego_rea_results.sql',' ');
+SELECT ego_scenario_log('v0.2.3','output','model_draft','ego_supply_rea_per_gentype_and_voltlevel','ego_dp_rea_results.sql',' ');
 
 	
 /* 
@@ -64,7 +64,10 @@ CREATE INDEX ego_supply_rea_per_mvgd_geom_idx
 -- grant (oeuser)
 ALTER TABLE model_draft.ego_supply_rea_per_mvgd OWNER TO oeuser;  
  */
- 
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.3','input','model_draft','ego_grid_mv_griddistrict','ego_dp_rea_results.sql',' ');
+
 UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
 	SET  	dea_cnt = t2.dea_cnt,
 		dea_capacity = t2.dea_capacity
@@ -72,7 +75,7 @@ UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
 			COUNT(dea.geom)::integer AS dea_cnt,
 			SUM(electrical_capacity) AS dea_capacity
 		FROM	model_draft.ego_grid_mv_griddistrict AS gd,
-			model_draft.ego_supply_rea AS dea
+			model_draft.ego_supply_res_powerplant AS dea
 		WHERE  	gd.geom && dea.geom AND
 			ST_CONTAINS(gd.geom,dea.geom)
 		GROUP BY gd.subst_id
@@ -86,7 +89,7 @@ UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
 			COUNT(dea.geom)::integer AS lv_dea_cnt,
 			SUM(electrical_capacity) AS lv_dea_capacity
 		FROM	model_draft.ego_grid_mv_griddistrict AS gd,
-			model_draft.ego_supply_rea AS dea
+			model_draft.ego_supply_res_powerplant AS dea
 		WHERE  	gd.geom && dea.geom AND
 			ST_CONTAINS(gd.geom,dea.geom) AND
 			dea.voltage_level = 7
@@ -101,7 +104,7 @@ UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
 			COUNT(dea.geom)::integer AS mv_dea_cnt,
 			SUM(electrical_capacity) AS mv_dea_capacity
 		FROM	model_draft.ego_grid_mv_griddistrict AS gd,
-			model_draft.ego_supply_rea AS dea
+			model_draft.ego_supply_res_powerplant AS dea
 		WHERE  	gd.geom && dea.geom AND
 			ST_CONTAINS(gd.geom,dea.geom) AND
 			dea.voltage_level = 3
@@ -110,13 +113,10 @@ UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
 	WHERE  	t1.subst_id = t2.subst_id;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.3','output','model_draft','ego_grid_mv_griddistrict','ego_rea_results.sql',' ');
+SELECT ego_scenario_log('v0.2.3','output','model_draft','ego_grid_mv_griddistrict','ego_dp_rea_results.sql',' ');
 
 
-	
-/* 
-DEA capacity and count per load area
-*/ 
+-- DEA capacity and count per load area
 DROP TABLE IF EXISTS 	model_draft.ego_supply_rea_per_loadarea CASCADE;
 CREATE TABLE 		model_draft.ego_supply_rea_per_loadarea AS
 	SELECT	la.id,
@@ -136,7 +136,7 @@ FROM	(SELECT	la.id AS id,
 		COUNT(dea.geom)::integer AS lv_dea_cnt,
 		SUM(electrical_capacity) AS lv_dea_capacity
 	FROM	model_draft.ego_demand_loadarea AS la,
-		model_draft.ego_supply_rea AS dea
+		model_draft.ego_supply_res_powerplant AS dea
 	WHERE  	la.geom && dea.geom AND
 		ST_CONTAINS(la.geom,dea.geom) AND
 		dea.voltage_level = 7
@@ -152,72 +152,70 @@ FROM	model_draft.ego_supply_rea_per_loadarea AS la,
 */
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.3','output','model_draft','ego_supply_rea_per_loadarea','ego_rea_results.sql',' ');
+SELECT ego_scenario_log('v0.2.3','output','model_draft','ego_supply_rea_per_loadarea','ego_dp_rea_results.sql',' ');
 
 
-/* 
-DEA capacity and count per load area
-*/ 
+-- DEA capacity and count per load area
 DROP TABLE IF EXISTS 	model_draft.ego_supply_rea_per_method CASCADE;
 CREATE TABLE 		model_draft.ego_supply_rea_per_method AS
 	SELECT	'all' AS name,
 		SUM(dea.electrical_capacity) AS capacity,
 		COUNT(dea.id) AS count
-	FROM	model_draft.ego_supply_rea AS dea
+	FROM	model_draft.ego_supply_res_powerplant AS dea
 UNION ALL
 	SELECT	'new' AS name,
 		SUM(dea.electrical_capacity) AS capacity,
 		COUNT(dea.id) AS count
-	FROM	model_draft.ego_supply_rea AS dea
-	WHERE	dea.geom_new IS NOT NULL
+	FROM	model_draft.ego_supply_res_powerplant AS dea
+	WHERE	dea.rea_geom_new IS NOT NULL
 UNION ALL
 	SELECT	'M1' AS name,
 		SUM(dea.electrical_capacity) AS capacity,
 		COUNT(dea.id) AS count
-	FROM	model_draft.ego_supply_rea AS dea
-	WHERE	dea.flag = 'M1' OR dea.flag = 'M1-1' OR dea.flag = 'M1-2'
+	FROM	model_draft.ego_supply_res_powerplant AS dea
+	WHERE	dea.rea_flag = 'M1' OR dea.rea_flag = 'M1-1' OR dea.rea_flag = 'M1-2'
 UNION ALL
 	SELECT	'M1-1' AS name,
 		SUM(dea.electrical_capacity) AS capacity,
 		COUNT(dea.id) AS count
-	FROM	model_draft.ego_supply_rea AS dea
-	WHERE	dea.flag = 'M1-1'
+	FROM	model_draft.ego_supply_res_powerplant AS dea
+	WHERE	dea.rea_flag = 'M1-1'
 UNION ALL
 	SELECT	'M1-2' AS name,
 		SUM(dea.electrical_capacity) AS capacity,
 		COUNT(dea.id) AS count
-	FROM	model_draft.ego_supply_rea AS dea
-	WHERE	dea.flag = 'M1-2'
+	FROM	model_draft.ego_supply_res_powerplant AS dea
+	WHERE	dea.rea_flag = 'M1-2'
 UNION ALL
 	SELECT	'M2' AS name,
 		SUM(dea.electrical_capacity) AS capacity,
 		COUNT(dea.id) AS count
-	FROM	model_draft.ego_supply_rea AS dea
-	WHERE	dea.flag = 'M2'
+	FROM	model_draft.ego_supply_res_powerplant AS dea
+	WHERE	dea.rea_flag = 'M2'
 UNION ALL
 	SELECT	'M3' AS name,
 		SUM(dea.electrical_capacity) AS capacity,
 		COUNT(dea.id) AS count
-	FROM	model_draft.ego_supply_rea AS dea
-	WHERE	dea.flag = 'M3'
+	FROM	model_draft.ego_supply_res_powerplant AS dea
+	WHERE	dea.rea_flag = 'M3'
 UNION ALL
 	SELECT	'M4' AS name,
 		SUM(dea.electrical_capacity) AS capacity,
 		COUNT(dea.id) AS count
-	FROM	model_draft.ego_supply_rea AS dea
-	WHERE	dea.flag = 'M4'
+	FROM	model_draft.ego_supply_res_powerplant AS dea
+	WHERE	dea.rea_flag = 'M4'
 UNION ALL
 	SELECT	'M5' AS name,
 		SUM(dea.electrical_capacity) AS capacity,
 		COUNT(dea.id) AS count
-	FROM	model_draft.ego_supply_rea AS dea
-	WHERE	dea.flag = 'M5'
+	FROM	model_draft.ego_supply_res_powerplant AS dea
+	WHERE	dea.rea_flag = 'M5'
 UNION ALL
 	SELECT	'rest' AS name,
 		SUM(dea.electrical_capacity) AS capacity,
 		COUNT(dea.id) AS count
-	FROM	model_draft.ego_supply_rea AS dea
-	WHERE	dea.flag LIKE '\%%_rest';	
+	FROM	model_draft.ego_supply_res_powerplant AS dea
+	WHERE	dea.rea_flag LIKE '\%%_rest';	
 	
 
 ALTER TABLE	model_draft.ego_supply_rea_per_method
@@ -225,4 +223,4 @@ ALTER TABLE	model_draft.ego_supply_rea_per_method
 	OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.3','output','model_draft','ego_supply_rea_per_method','ego_rea_results.sql',' ');
+SELECT ego_scenario_log('v0.2.3','output','model_draft','ego_supply_rea_per_method','ego_dp_rea_results.sql',' ');

@@ -8,8 +8,12 @@ __url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
 __author__ 	= "IlkaCu, wolfbunke" 
 */
 
-DROP TABLE IF EXISTS model_draft.ego_supply_res_powerplant CASCADE; 
 
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','input','supply','ego_renewable_powerplant','ego_dp_preprocessing_res_powerplant.sql','');
+
+-- copy powerplant list
+DROP TABLE IF EXISTS model_draft.ego_supply_res_powerplant CASCADE; 
 CREATE TABLE model_draft.ego_supply_res_powerplant AS
 	TABLE supply.ego_renewable_powerplant; 
 
@@ -25,11 +29,13 @@ CREATE INDEX model_draft.ego_supply_res_powerplant_idx
 
 ALTER TABLE model_draft.ego_supply_res_powerplant OWNER TO oeuser; 
 
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','temp','supply','ego_supply_res_powerplant','ego_dp_preprocessing_res_powerplant.sql','');
+
 
 -- Delete entries without information on installed capacity or where electrical_capacity <= 0
 DELETE  FROM model_draft.ego_supply_res_powerplant
 	WHERE electrical_capacity IS NULL OR electrical_capacity <= 0; 
-
 
 -- Delete entries where generation_type and subtype are inconsistent
 DELETE  FROM model_draft.ego_supply_res_powerplant
@@ -39,51 +45,46 @@ DELETE  FROM model_draft.ego_supply_res_powerplant
 	OR generation_type = 'wind' AND generation_subtype ='solar_roof_mounted';
 
 -- Update missing subtype of some offshore windturbines
-
 UPDATE model_draft.ego_supply_res_powerplant
-SET generation_subtype = 'wind_offshore'
-WHERE city = 'Ausschließliche Wirtschaftszone';
-
+	SET generation_subtype = 'wind_offshore'
+	WHERE city = 'Ausschließliche Wirtschaftszone';
 
 -- Change generation_type = 'hydro' to 'run_of_river' for compatibility reasons
-
 UPDATE model_draft.ego_supply_res_powerplant
 	SET generation_type = 'run_of_river'
 	WHERE generation_type = 'hydro';
 
-
 -- Update missing subtypes
 UPDATE model_draft.ego_supply_res_powerplant
-SET generation_subtype = 'biomass'
-WHERE generation_type = 'biomass'
-AND generation_subtype IS NULL;
---
+	SET generation_subtype = 'biomass'
+	WHERE generation_type = 'biomass'
+	AND generation_subtype IS NULL;
+
 UPDATE model_draft.ego_supply_res_powerplant
-SET generation_subtype = 'gas'
-WHERE generation_type = 'gas'
-AND generation_subtype IS NULL;
---
+	SET generation_subtype = 'gas'
+	WHERE generation_type = 'gas'
+	AND generation_subtype IS NULL;
+
 UPDATE model_draft.ego_supply_res_powerplant
-SET generation_subtype = 'geothermal'
-WHERE generation_type = 'geothermal'
-AND generation_subtype IS NULL;
---
+	SET generation_subtype = 'geothermal'
+	WHERE generation_type = 'geothermal'
+	AND generation_subtype IS NULL;
+
 UPDATE model_draft.ego_supply_res_powerplant
-SET generation_subtype = 'hydro'
-WHERE generation_type = 'run_of_river'
-AND generation_subtype IS NULL;
---
+	SET generation_subtype = 'hydro'
+	WHERE generation_type = 'run_of_river'
+	AND generation_subtype IS NULL;
+
 UPDATE model_draft.ego_supply_res_powerplant
-SET generation_subtype = 'wind_onshore'
-WHERE generation_type = 'wind'
-AND generation_subtype IS NULL;
+	SET generation_subtype = 'wind_onshore'
+	WHERE generation_type = 'wind'
+	AND generation_subtype IS NULL;
 
 
 -- Update incorrect geom of offshore windturbines
-
 UPDATE model_draft.ego_supply_res_powerplant
-SET geom =
-	(CASE
+	SET geom =
+		(CASE
 		WHEN eeg_id LIKE '%DYSKE%' 
 		THEN (SELECT geom from model_draft.ego_supply_res_powerplant where id = 1560412)
 		WHEN eeg_id LIKE '%BRGEE%' 
@@ -107,67 +108,61 @@ SET geom =
 		WHEN eeg_id LIKE '%BAOEE%' 
 		THEN ST_SetSRID(ST_MakePoint(5.975, 54.358333),4326)
 		END)
-WHERE postcode = '00000' OR postcode = 'keine' or postcode = 'O04WF' AND generation_subtype = 'wind_offshore';
-
-
+	WHERE postcode = '00000' OR postcode = 'keine' or postcode = 'O04WF' AND generation_subtype = 'wind_offshore';
 
 
 -- Adjust voltage level of all RE power plants except wind_onshore according to allocation table
 UPDATE model_draft.ego_supply_res_powerplant
-SET voltage_level='1'
-WHERE electrical_capacity >=120000 AND generation_subtype!='wind_onshore';
+	SET voltage_level='1'
+	WHERE electrical_capacity >=120000 AND generation_subtype!='wind_onshore';
 
 UPDATE model_draft.ego_supply_res_powerplant
-SET voltage_level='3'
-WHERE electrical_capacity between 17500 and 119999.99 AND generation_subtype!='wind_onshore';
+	SET voltage_level='3'
+	WHERE electrical_capacity between 17500 and 119999.99 AND generation_subtype!='wind_onshore';
 
 UPDATE model_draft.ego_supply_res_powerplant
-SET voltage_level='4'
-WHERE electrical_capacity between 4500 and 17499.99 AND generation_subtype!='wind_onshore';
+	SET voltage_level='4'
+	WHERE electrical_capacity between 4500 and 17499.99 AND generation_subtype!='wind_onshore';
 
 UPDATE model_draft.ego_supply_res_powerplant
-SET voltage_level='5'
-WHERE electrical_capacity between 300 and 4499.99 AND generation_subtype!='wind_onshore';
+	SET voltage_level='5'
+	WHERE electrical_capacity between 300 and 4499.99 AND generation_subtype!='wind_onshore';
 
 UPDATE model_draft.ego_supply_res_powerplant
-SET voltage_level='6'
-WHERE electrical_capacity between 100 and 299.99 AND generation_subtype!='wind_onshore';
+	SET voltage_level='6'
+	WHERE electrical_capacity between 100 and 299.99 AND generation_subtype!='wind_onshore';
 
 UPDATE model_draft.ego_supply_res_powerplant
-SET voltage_level='7'
-WHERE electrical_capacity <100 AND generation_subtype!='wind_onshore';
+	SET voltage_level='7'
+	WHERE electrical_capacity <100 AND generation_subtype!='wind_onshore';
 
 -- Update onshore_wind with voltage_level higher than suggested by allocation table
+UPDATE model_draft.ego_supply_res_powerplant
+	SET voltage_level='1'
+	WHERE electrical_capacity >=120000 AND generation_subtype='wind_onshore';
 
 UPDATE model_draft.ego_supply_res_powerplant
-SET voltage_level='1'
-WHERE electrical_capacity >=120000 AND generation_subtype='wind_onshore';
+	SET voltage_level='3'
+	WHERE electrical_capacity between 17500 and 119999.99 AND generation_subtype='wind_onshore' AND voltage_level>3;
 
 UPDATE model_draft.ego_supply_res_powerplant
-SET voltage_level='3'
-WHERE electrical_capacity between 17500 and 119999.99 AND generation_subtype='wind_onshore' AND voltage_level>3;
+	SET voltage_level='4'
+	WHERE electrical_capacity between 4500 and 17499.99 AND generation_subtype='wind_onshore' AND voltage_level>4; 
 
 UPDATE model_draft.ego_supply_res_powerplant
-SET voltage_level='4'
-WHERE electrical_capacity between 4500 and 17499.99 AND generation_subtype='wind_onshore' AND voltage_level>4; 
+	SET voltage_level='5'
+	WHERE electrical_capacity between 300 and 4499.99 AND generation_subtype='wind_onshore' AND voltage_level>5;
 
 UPDATE model_draft.ego_supply_res_powerplant
-SET voltage_level='5'
-WHERE electrical_capacity between 300 and 4499.99 AND generation_subtype='wind_onshore' AND voltage_level>5;
-
-UPDATE model_draft.ego_supply_res_powerplant
-SET voltage_level='6'
-WHERE electrical_capacity between 100 and 299.99 AND generation_subtype='wind_onshore' AND voltage_level>6;
+	SET voltage_level='6'
+	WHERE electrical_capacity between 100 and 299.99 AND generation_subtype='wind_onshore' AND voltage_level>6;
 
 --Set voltage_level of offshore_wind to 1
-
 UPDATE model_draft.ego_supply_res_powerplant
 	SET voltage_level=1 
-WHERE generation_subtype = 'wind_offshore'; 
+	WHERE generation_subtype = 'wind_offshore'; 
 
-
-
-
+-- metadata
 COMMENT ON TABLE model_draft.ego_supply_res_powerplant
   IS '{"Name": "Renewable power plants in Germany -Status quo",
 "Source": [{
@@ -294,5 +289,8 @@ COMMENT ON TABLE model_draft.ego_supply_res_powerplant
 ],
 "Instructions for proper use": ["..."]}';
 
+-- select description
+SELECT obj_description('model_draft.ego_supply_res_powerplant' ::regclass) ::json;
 
-
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_supply_res_powerplant','ego_dp_preprocessing_res_powerplant.sql','');

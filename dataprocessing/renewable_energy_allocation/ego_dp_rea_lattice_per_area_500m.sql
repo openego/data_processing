@@ -166,9 +166,3 @@ SELECT copy_comment_mview('model_draft.ego_lattice_500m','model_draft.ego_lattic
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.3','temp','model_draft','ego_lattice_500m_out_mview','ego_rea_lattice_per_area_500m.sql',' ');
-
-
--- DROP MATERIALIZED VIEW IF EXISTS  	model_draft.ego_lattice_500m_wpa_mview CASCADE;
--- DROP MATERIALIZED VIEW IF EXISTS  	model_draft.ego_lattice_500m_la_mview CASCADE;
--- DROP MATERIALIZED VIEW IF EXISTS  	model_draft.ego_lattice_500m_x_mview CASCADE;
--- DROP MATERIALIZED VIEW IF EXISTS  	model_draft.ego_lattice_500m_out_mview CASCADE;
