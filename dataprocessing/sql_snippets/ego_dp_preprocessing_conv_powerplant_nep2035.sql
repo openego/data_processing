@@ -11,7 +11,8 @@ __author__ 	= "IlkaCu"
 DROP TABLE IF EXISTS model_draft.ego_supply_conv_powerplant_2035 CASCADE; 
 
 CREATE TABLE model_draft.ego_supply_conv_powerplant_2035 AS 
-	AS TABLE model_draft.nep_supply_conv_powerplant_nep2015; 
+	SELECT * FROM model_draft.nep_supply_conv_powerplant_nep2015 WHERE geom IS NOT NULL; 
+	
 
 ALTER TABLE model_draft.ego_supply_conv_powerplant_2035
   	ADD COLUMN voltage_level smallint,
