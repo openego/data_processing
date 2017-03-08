@@ -155,9 +155,6 @@ CREATE TABLE 		model_draft.ego_supply_pf_generator_single (
 		REFERENCES model_draft.ego_grid_pf_hv_source (source_id) MATCH SIMPLE
 		ON UPDATE NO ACTION ON DELETE NO ACTION );
 
--- not needed
-DELETE FROM model_draft.ego_supply_pf_generator_single; 
-
 -- 
 INSERT INTO model_draft.ego_supply_pf_generator_single (generator_id)
 	SELECT 	un_id
