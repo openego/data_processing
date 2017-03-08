@@ -213,17 +213,17 @@ INSERT INTO model_draft.ego_grid_hv_electrical_neighbours_bus (bus_id, v_nom, ge
 		27);
 
 
-INSERT INTO electrical_neighbours.bus (bus_id, v_nom, geom, cntr_id, id)
+INSERT INTO model_draft.ego_grid_hv_electrical_neighbours_bus (bus_id, v_nom, geom, cntr_id, id)
 	
 SELECT bus_i, base_kv, geom, cntr_id, bus_i
 FROM grid.otg_ehvhv_bus_data WHERE frequency = 50;
 
 
-DELETE FROM electrical_neighbours.bus WHERE cntr_id = 'DE';
-DELETE FROM electrical_neighbours.bus WHERE cntr_id IS NULL;
+DELETE FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE cntr_id = 'DE';
+DELETE FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE cntr_id IS NULL;
 
 
-INSERT INTO electrical_neighbours.bus (bus_id, v_nom, geom, cntr_id, id)
+INSERT INTO model_draft.ego_grid_hv_electrical_neighbours_bus (bus_id, v_nom, geom, cntr_id, id)
 SELECT bus_i, base_kv, geom, 'SE', bus_i 
 FROM grid.otg_ehvhv_bus_data WHERE (geom = '0101000020E6100000A444C3ABCE9A254079A450D5E2F24A40' AND base_kv = 380);
 
