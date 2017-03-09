@@ -24,6 +24,9 @@ CREATE INDEX ego_supply_conv_powerplant_2035_idx
   ON model_draft.ego_supply_conv_powerplant_2035
   USING gist
   (geom);
+  
+  ALTER TABLE model_draft.ego_supply_conv_powerplant_2035
+  OWNER TO oeuser;
 
 -- Update voltage level according to installed capacity in 2035
 
