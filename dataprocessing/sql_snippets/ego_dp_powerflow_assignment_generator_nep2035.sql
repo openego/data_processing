@@ -15,10 +15,10 @@ DROP TABLE IF EXISTS model_draft.ego_supply_generator_nep2035;
 CREATE TABLE model_draft.ego_supply_generator_nep2035
 (
   un_id serial NOT NULL, 
-  re_id integer, 
-  conv_id integer,
-  aggr_id_pf integer, 
-  aggr_id_ms integer, 
+  re_id bigint, 
+  conv_id bigint,
+  aggr_id_pf bigint, 
+  aggr_id_ms bigint, 
   geom geometry(Point,4326),
   CONSTRAINT generators_total_nep2035_pkey PRIMARY KEY (un_id)
 );
