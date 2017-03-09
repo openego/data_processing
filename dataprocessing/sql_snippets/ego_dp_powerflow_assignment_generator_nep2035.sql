@@ -28,8 +28,8 @@ ALTER TABLE model_draft.ego_supply_generator_nep2035
 
 
 INSERT INTO model_draft.ego_supply_generator_nep2035 (re_id, geom) 
-	SELECT id, geom
-	FROM model_draft.ego_supply_res_powerplant_2035
+	SELECT id, geom_new
+	FROM model_draft.ego_supply_rea_2035
 	WHERE geom IS NOT NULL; 
 
 
@@ -101,22 +101,22 @@ INSERT INTO model_draft.ego_supply_pf_generator_single (scn_name, generator_id)
 
 -- Identify corresponding bus with the help of grid districts
 
-UPDATE model_draft.ego_supply_res_powerplant_2035 a
+UPDATE model_draft.ego_supply_rea_2035 a
 	SET subst_id = b.subst_id
 	FROM	model_draft.ego_grid_mv_griddistrict b
-	WHERE ST_Intersects (a.geom, ST_TRANSFORM(b.geom,4326)) AND voltage_level >= 3;  
+	WHERE ST_Intersects (a.geom_new, ST_TRANSFORM(b.geom,4326)) AND voltage_level >= 3;  
 
 -- Identify corresponding bus with the help of ehv-Voronoi
 
-UPDATE model_draft.ego_supply_res_powerplant_2035 a
+UPDATE model_draft.ego_supply_rea_2035 a
 	SET subst_id = b.subst_id
 	FROM model_draft.ego_grid_ehv_substation_voronoi b
-	WHERE ST_Intersects (a.geom, b.geom) AND voltage_level <= 2; 
+	WHERE ST_Intersects (a.geom_new, b.geom) AND voltage_level <= 2; 
 
 
 -- Identify net connection points for offshore wind parks by comparing id with Status Quo scenario 
 
-UPDATE model_draft.ego_supply_res_powerplant_2035 a
+UPDATE model_draft.ego_supply_rea_2035 a
 	SET otg_id = 26435
 	WHERE a.id IN 
 (SELECT id FROM model_draft.ego_supply_res_powerplant
@@ -128,21 +128,21 @@ UPDATE model_draft.ego_supply_res_powerplant_2035 a
 	  OR eeg_id LIKE '%%AMRWE%%');
 
 
-UPDATE model_draft.ego_supply_res_powerplant_2035 a
+UPDATE model_draft.ego_supply_rea_2035 a
 	SET otg_id = 27153 
 	WHERE a.id IN 
 (SELECT id FROM model_draft.ego_supply_res_powerplant
 	  WHERE eeg_id LIKE '%%BAOEE%%');
 
 
-UPDATE model_draft.ego_supply_res_powerplant_2035 a
+UPDATE model_draft.ego_supply_rea_2035 a
 	SET otg_id = 24401 
 	WHERE a.id IN 
 (SELECT id FROM model_draft.ego_supply_res_powerplant
 	  WHERE eeg_id LIKE '%%BALTIC%%');
 
 
-UPDATE model_draft.ego_supply_res_powerplant_2035 a
+UPDATE model_draft.ego_supply_rea_2035 a
 	SET otg_id = 26504
 	WHERE a.id IN 
 (SELECT id FROM model_draft.ego_supply_res_powerplant
@@ -155,25 +155,25 @@ UPDATE model_draft.ego_supply_res_powerplant_2035 a
 
 -- Connect future offshore wind parks to existing Status Quo buses manually (this manual adjustment is not valid for future versions of the data set)
 
-UPDATE model_draft.ego_supply_res_powerplant_2035 a
+UPDATE model_draft.ego_supply_rea_2035 a
 	SET otg_id = 26359 
  	WHERE id IN (10147069, 10147070, 10147066, 10147072, 10147067); 
 
-UPDATE model_draft.ego_supply_res_powerplant_2035 a
+UPDATE model_draft.ego_supply_rea_2035 a
 	SET otg_id = 26920 
  	WHERE id IN (10147071, 10147068, 10147075); 
 
-UPDATE model_draft.ego_supply_res_powerplant_2035 a
+UPDATE model_draft.ego_supply_rea_2035 a
 	SET otg_id = 26297 
  	WHERE id IN (10147073, 10147074, 10147065, 10147064); 
 
-UPDATE model_draft.ego_supply_res_powerplant_2035 a
+UPDATE model_draft.ego_supply_rea_2035 a
 	SET otg_id = 24372 
  	WHERE id = 10147076;
 
 -- Connect powerplants with voltage_level >=3 outside the grid district area to their nearest hv/mv-substation 
 
---Update model_draft.ego_supply_res_powerplant_2035 as C
+--Update model_draft.ego_supply_rea_2035 as C
 --set otg_id   = sub.otg_id,
 --    subst_id = sub.subst_id  
 --FROM(
@@ -181,7 +181,7 @@ UPDATE model_draft.ego_supply_res_powerplant_2035 a
 --	       B.otg_id,
 --		(SELECT A.id                        
 --		
---		FROM model_draft.ego_supply_res_powerplant_2035 A
+--		FROM model_draft.ego_supply_rea_2035 A
 --                WHERE A.subst_id IS NULL 
 --                AND A.voltage_level >= 3	    
 --		ORDER BY B.point <#> A.geom LIMIT 1)
@@ -193,7 +193,7 @@ UPDATE model_draft.ego_supply_res_powerplant_2035 a
 
 -- Insert otg_id of bus
 
-UPDATE model_draft.ego_supply_res_powerplant_2035 a
+UPDATE model_draft.ego_supply_rea_2035 a
 	SET otg_id =b.otg_id 
 	FROM model_draft.ego_grid_hvmv_substation b
 	WHERE a.subst_id = b.subst_id; 
@@ -201,7 +201,7 @@ UPDATE model_draft.ego_supply_res_powerplant_2035 a
 
 -- Update un_id from generators_total 
 
-UPDATE model_draft.ego_supply_res_powerplant_2035 a
+UPDATE model_draft.ego_supply_rea_2035 a
 	SET un_id = b.un_id 
 	FROM model_draft.ego_supply_generator_nep2035 b
 	WHERE a.id = b.re_id; 
@@ -248,7 +248,7 @@ UPDATE model_draft.ego_supply_pf_generator_single a
 		p_nom = b.electrical_capacity/1000, -- unit for capacity in RE-register is kW
 		dispatch = 'variable',
 		control = 'PQ' -- For RE generators control is set to PQ
-		FROM model_draft.ego_supply_res_powerplant_2035 b
+		FROM model_draft.ego_supply_rea_2035 b
 WHERE scn_name = 'NEP 2035' AND a.generator_id = b.un_id;
 
 
@@ -257,9 +257,9 @@ UPDATE model_draft.ego_supply_pf_generator_single a
 		FROM 
 			(SELECT c.source_id as source, d.un_id as un_id
 			  FROM 	model_draft.ego_grid_pf_hv_source c, 
-			       	model_draft.ego_supply_res_powerplant_2035 d
+			       	model_draft.ego_supply_rea_2035 d
 			  WHERE	d.generation_type = c.name) 
-			  AS 	result, model_draft.ego_supply_res_powerplant_2035 b
+			  AS 	result, model_draft.ego_supply_rea_2035 b
 WHERE scn_name = 'NEP 2035' AND a.generator_id = b.un_id AND a.generator_id = result.un_id; 
 
 -- Set source=1 (gas) for all chp plants --> A MORE ACCURATE APPROACH SHOULD BE IMPLEMENTED HERE
@@ -267,7 +267,7 @@ UPDATE model_draft.ego_supply_pf_generator_single
 SET source = 1 
 WHERE scn_name='NEP 2035' AND generator_id IN
 	(SELECT un_id FROM model_draft.ego_supply_generator_nep2035 WHERE re_id IN 
-		(SELECT id FROM model_draft.ego_supply_res_powerplant_2035
+		(SELECT id FROM model_draft.ego_supply_rea_2035
 		WHERE generation_type='chp'));
 
 
