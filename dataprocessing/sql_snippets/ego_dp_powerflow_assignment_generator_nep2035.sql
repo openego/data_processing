@@ -7,6 +7,13 @@ __url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
 __author__ 	= "IlkaCu" 
 */
 
+-- Add columns to ego_supply_rea_2035 - THIS TABLE IS ONLY USED TEMPORARILY!
+
+ALTER TABLE model_draft.ego_supply_rea_2035
+  	ADD COLUMN subst_id bigint,
+  	ADD COLUMN otg_id bigint,
+	ADD COLUMN un_id bigint;
+
 -- Create a table that contains all generators for 'NEP 2035' (RE and conventional) but no duplicates. 
 
 
