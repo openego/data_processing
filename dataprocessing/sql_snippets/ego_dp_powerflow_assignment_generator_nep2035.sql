@@ -25,9 +25,7 @@ CREATE TABLE model_draft.ego_supply_generator_nep2035
 
 ALTER TABLE model_draft.ego_supply_generator_nep2035
 	OWNER TO oeuser;
-	
 
-DROP INDEX IF EXISTS model_draft.ego_supply_generator_nep2035_idx;
 
 INSERT INTO model_draft.ego_supply_generator_nep2035 (re_id, geom) 
 	SELECT id, geom
