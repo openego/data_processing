@@ -19,6 +19,11 @@ ALTER TABLE model_draft.ego_supply_conv_powerplant_2035
 	ADD COLUMN subst_id bigint,
 	ADD COLUMN otg_id bigint,
 	ADD COLUMN un_id bigint; 
+	
+CREATE INDEX ego_supply_conv_powerplant_2035_idx
+  ON model_draft.ego_supply_conv_powerplant_2035
+  USING gist
+  (geom);
 
 -- Update voltage level according to installed capacity in 2035
 
