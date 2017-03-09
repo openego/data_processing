@@ -25,9 +25,7 @@ CREATE TABLE model_draft.ego_supply_generator_nep2035
 
 ALTER TABLE model_draft.ego_supply_generator_nep2035
 	OWNER TO oeuser;
-	
 
-DROP INDEX IF EXISTS model_draft.ego_supply_generator_nep2035_idx;
 
 INSERT INTO model_draft.ego_supply_generator_nep2035 (re_id, geom) 
 	SELECT id, geom
@@ -175,22 +173,22 @@ UPDATE model_draft.ego_supply_res_powerplant_2035 a
 
 -- Connect powerplants with voltage_level >=3 outside the grid district area to their nearest hv/mv-substation 
 
-Update model_draft.ego_supply_res_powerplant_2035 as C
-set otg_id   = sub.otg_id,
-    subst_id = sub.subst_id  
-FROM(
-	SELECT B.subst_id,
-	       B.otg_id,
-		(SELECT A.id                        
-		
-		FROM model_draft.ego_supply_res_powerplant_2035 A
-                WHERE A.subst_id IS NULL 
-                AND A.voltage_level >= 3	    
-		ORDER BY B.point <#> A.geom LIMIT 1)
-	FROM model_draft.ego_grid_hvmv_substation B
-) as sub
-WHERE C.id = sub.id 
-;
+--Update model_draft.ego_supply_res_powerplant_2035 as C
+--set otg_id   = sub.otg_id,
+--    subst_id = sub.subst_id  
+--FROM(
+--	SELECT B.subst_id,
+--	       B.otg_id,
+--		(SELECT A.id                        
+--		
+--		FROM model_draft.ego_supply_res_powerplant_2035 A
+--                WHERE A.subst_id IS NULL 
+--                AND A.voltage_level >= 3	    
+--		ORDER BY B.point <#> A.geom LIMIT 1)
+--	FROM model_draft.ego_grid_hvmv_substation B
+--) as sub
+--WHERE C.id = sub.id 
+--;
 
 
 -- Insert otg_id of bus

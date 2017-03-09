@@ -7,7 +7,7 @@ In addition p_max_pu is set for all generators with variable dispatch based on p
 __copyright__ 	= "Europa-Universität Flensburg, Centre for Sustainable Energy Systems"
 __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
 __url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
-__author__ 	= "wbunke"
+__author__ 	= "s3pp, lukasol"
 */
 
 
