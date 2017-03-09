@@ -69,6 +69,7 @@ FROM (
 	GROUP BY T2.generator_id
 ) T3 WHERE T3.generator_id = Y.generator_id;
 
+/*
 -- set storage parameters to every node with p_nom_extendable as true
 -- by Lukas
 
@@ -119,6 +120,6 @@ SELECT 'Status Quo',
   1, -- no losses for dispatch
   0 -- no standing losses
 FROM model_draft.ego_grid_hvmv_substation;
-
+*/
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_grid_pf_hv_generator_pq_set','LOPF_data.sql',' ');
