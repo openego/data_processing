@@ -443,7 +443,7 @@ INSERT into model_draft.ego_grid_pf_hv_generator_pq_set (scn_name, generator_id,
 -- DELETE
 DELETE FROM model_draft.ego_grid_pf_hv_load WHERE bus IN (
 SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus
-WHERE id < 27)
+WHERE id < 27);
 
 -- INSERT neigbouring states in load table
 -- Status Quo
