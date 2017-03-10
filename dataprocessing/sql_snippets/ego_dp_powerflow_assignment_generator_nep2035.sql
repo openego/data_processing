@@ -245,7 +245,7 @@ UPDATE model_draft.ego_supply_pf_generator_single a
 			  WHERE	d.fuel = c.name) 
 			AS 	result,		
 				model_draft.ego_supply_conv_powerplant_2035 b
-WHERE scn_name = 'NEP 2035' AND a.generator_id = b.un_id AND b.rated_power_b2035 < 50 AND result.fuel = b.fuel;
+WHERE a.scn_name = 'NEP 2035' AND a.generator_id = b.un_id AND b.rated_power_b2035 < 50 AND result.fuel = b.fuel;
 
 -- For renewables 
 
@@ -255,7 +255,7 @@ UPDATE model_draft.ego_supply_pf_generator_single a
 		dispatch = 'variable',
 		control = 'PQ' -- For RE generators control is set to PQ
 		FROM model_draft.ego_supply_rea_2035 b
-WHERE scn_name = 'NEP 2035' AND a.generator_id = b.un_id;
+WHERE a.scn_name = 'NEP 2035' AND a.generator_id = b.un_id;
 
 
 UPDATE model_draft.ego_supply_pf_generator_single a
@@ -266,7 +266,7 @@ UPDATE model_draft.ego_supply_pf_generator_single a
 			       	model_draft.ego_supply_rea_2035 d
 			  WHERE	d.generation_type = c.name) 
 			  AS 	result, model_draft.ego_supply_rea_2035 b
-WHERE scn_name = 'NEP 2035' AND a.generator_id = b.un_id AND a.generator_id = result.un_id; 
+WHERE a.scn_name = 'NEP 2035' AND a.generator_id = b.un_id AND a.generator_id = result.un_id; 
 
 -- Set source=1 (gas) for all chp plants --> A MORE ACCURATE APPROACH SHOULD BE IMPLEMENTED HERE
 UPDATE model_draft.ego_supply_pf_generator_single
@@ -301,7 +301,7 @@ UPDATE model_draft.ego_supply_pf_generator_single a
 			 FROM model_draft.ego_supply_generator_nep2035 c)
 			AS result,
 		model_draft.renpassgis_economic_weatherpoint_voronoi b 
-WHERE scn_name = 'NEP 2035' AND ST_Intersects (result.geom, b.geom) AND generator_id = result.un_id;
+WHERE a.scn_name = 'NEP 2035' AND ST_Intersects (result.geom, b.geom) AND a.generator_id = result.un_id;
 
 
 
@@ -316,7 +316,7 @@ UPDATE model_draft.ego_supply_pf_generator_single a
 				(SELECT source_id from model_draft.ego_grid_pf_hv_source WHERE name = 'wind' OR name = 'solar') 
 			GROUP BY bus, w_id, source)
 			as result
-	WHERE scn_name = 'NEP 2035' AND a.bus = result.bus AND a.w_id = result.w_id AND a.source = result.source;
+	WHERE a.scn_name = 'NEP 2035' AND a.bus = result.bus AND a.w_id = result.w_id AND a.source = result.source;
 
 -- source != (wind and solar) and p_nom < 50 MW 
 	
@@ -329,7 +329,7 @@ UPDATE model_draft.ego_supply_pf_generator_single a
 				(SELECT source_id from model_draft.ego_grid_pf_hv_source WHERE name = 'wind' OR name = 'solar')
 			GROUP BY b.bus, b.source)
 			as result
-	WHERE scn_name = 'NEP 2035' AND a.bus = result.bus AND a.source = result.source;
+	WHERE a.scn_name = 'NEP 2035' AND a.bus = result.bus AND a.source = result.source;
 
 -- all sources and p_nom >= 50MW
 
