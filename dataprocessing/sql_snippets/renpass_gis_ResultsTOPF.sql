@@ -4,7 +4,7 @@ Quick workaround to transfer renpassG!S results into the corresponding powerflow
 __copyright__ 	= "Europa Universitaet Flensburg, Centre for Sustainable Energy Systems"
 __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
 __url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
-__author__ 	= "mrtnsth"
+__author__ 	= "wbunke"
 
 TODO: storage in storage_pqset #1069
 */
@@ -146,8 +146,8 @@ GROUP BY A.aggr_id;
 
 ------------------ NEIGHBOURING COUNTRIES
 -- 1
--- SELECT * FROM model_draft.ego_grid_pf_hv_generator WHERE bus > 280000 AND scn_name = 'Status Quo';
-DELETE FROM model_draft.ego_grid_pf_hv_generator WHERE bus > 280000 AND scn_name = 'Status Quo';
+DELETE FROM model_draft.ego_grid_pf_hv_generator WHERE generator_id > 200000 AND scn_name = 'Status Quo';
+DELETE FROM model_draft.ego_grid_pf_hv_generator WHERE generator_id > 200000 AND scn_name = 'NEP 2035';
 
 -- INSERT params of LinearTransformers in model_draft.ego_grid_pf_hv_generator (countries besides Germany)
 -- starting generator_id at 200000, bus_id for neighbouring countries > 2800000 atm
@@ -182,17 +182,20 @@ INSERT into model_draft.ego_grid_pf_hv_generator
 		*
 		FROM
 			(SELECT *,
-			max(v_nom) over (partition by country) AS max_v_nom
-			FROM calc_ego_neighbouring_states.bus
+			max(v_nom) over (partition by cntr_id) AS max_v_nom
+			FROM
+			model_draft.ego_grid_hv_electrical_neighbours_bus
+			where id < 27
 			) SQ
 		WHERE SQ.v_nom = SQ.max_v_nom
 		) B
-		ON (substring(A.source, 1, 2) = B.country)
+		ON (substring(A.source, 1, 2) = B.cntr_id)
 	WHERE substring(A.source, 1, 2) != 'DE'
 	AND A.nominal_value IS not NULL
 	AND A.nominal_value[1] > 0.001
 	AND A.source not LIKE '%%powerline%%'
 	AND A.scenario_id = 37;
+
 
 -- NEP 2035
 /*
@@ -226,12 +229,14 @@ INSERT into model_draft.ego_grid_pf_hv_generator
 		*
 		FROM
 			(SELECT *,
-			max(v_nom) over (partition by country) AS max_v_nom
-			FROM calc_ego_neighbouring_states.bus
+			max(v_nom) over (partition by cntr_id) AS max_v_nom
+			FROM
+			model_draft.ego_grid_hv_electrical_neighbours_bus
+			where id < 27
 			) SQ
 		WHERE SQ.v_nom = SQ.max_v_nom
 		) B
-		ON (substring(A.source, 1, 2) = B.country)
+		ON (substring(A.source, 1, 2) = B.cntr_id)
 	WHERE substring(A.source, 1, 2) != 'DE'
 	AND A.nominal_value IS not NULL
 	AND A.nominal_value[1] > 0.001
@@ -267,12 +272,14 @@ INSERT into model_draft.ego_grid_pf_hv_generator
 		*
 		FROM
 			(SELECT *,
-			max(v_nom) over (partition by country) AS max_v_nom
-			FROM calc_ego_neighbouring_states.bus
+			max(v_nom) over (partition by cntr_id) AS max_v_nom
+			FROM
+			model_draft.ego_grid_hv_electrical_neighbours_bus
+			where id < 27
 			) SQ
 		WHERE SQ.v_nom = SQ.max_v_nom
 		) B
-		ON (substring(A.source, 1, 2) = B.country)
+		ON (substring(A.source, 1, 2) = B.cntr_id)
 	WHERE substring(A.source, 1, 2) != 'DE'
 	AND A.nominal_value[1] > 0.001
 	AND A.scenario_id = 37;
@@ -305,24 +312,22 @@ INSERT into model_draft.ego_grid_pf_hv_generator
 		*
 		FROM
 			(SELECT *,
-			max(v_nom) over (partition by country) AS max_v_nom
-			FROM calc_ego_neighbouring_states.bus
+			max(v_nom) over (partition by cntr_id) AS max_v_nom
+			FROM 
+			model_draft.ego_grid_hv_electrical_neighbours_bus
+			where id < 27
 			) SQ
 		WHERE SQ.v_nom = SQ.max_v_nom
 		) B
-		ON (substring(A.source, 1, 2) = B.country)
+		ON (substring(A.source, 1, 2) = B.cntr_id)
 	WHERE substring(A.source, 1, 2) != 'DE'
 	AND A.nominal_value[1] > 0.001
 	AND A.scenario_id = 38;
 */
 
 -- Copy timeseries data
--- SELECT * FROM model_draft.ego_grid_pf_hv_generator_pq_set WHERE generator_id in (SELECT generator_id FROM model_draft.ego_grid_pf_hv_generator WHERE bus > 280000);
-DELETE FROM model_draft.ego_grid_pf_hv_generator_pq_set
-WHERE generator_id in (
-	SELECT generator_id FROM model_draft.ego_grid_pf_hv_generator WHERE bus > 280000
-	);
-
+DELETE FROM model_draft.ego_grid_pf_hv_generator_pq_set WHERE generator_id > 200000 AND scn_name = 'Status Quo';
+DELETE FROM model_draft.ego_grid_pf_hv_generator_pq_set WHERE generator_id > 200000 AND scn_name = 'NEP 2035';
 
 -- CREATE a view containing data for generator_id's > 200000 for each timestep
 -- SELECT * FROM calc_renpass_gis.translate_to_pf limit 1000;
@@ -349,7 +354,7 @@ CREATE MATERIALIZED VIEW calc_renpass_gis.translate_to_pf AS
 			WHEN A.source =  13 THEN  'wind'
 		END AS renpass_gis_source
 			FROM model_draft.ego_grid_pf_hv_generator A join
-			calc_ego_neighbouring_states.bus B
+			model_draft.ego_grid_hv_electrical_neighbours_bus B
 			ON (A.bus = B.bus_id)
 		WHERE A.generator_id > 200000
 		AND A.scn_name = 'Status Quo'
@@ -403,7 +408,7 @@ CREATE MATERIALIZED VIEW calc_renpass_gis.translate_to_pf AS
 			WHEN A.source =  13 THEN  'wind'
 		END AS renpass_gis_source
 			FROM model_draft.ego_grid_pf_hv_generator A join
-			calc_ego_neighbouring_states.bus B
+			model_draft.ego_grid_hv_electrical_neighbours_bus B
 			ON (A.bus = B.bus_id)
 		WHERE A.generator_id > 200000
 		AND A.scn_name = 'NEP 2035'
@@ -435,8 +440,10 @@ INSERT into model_draft.ego_grid_pf_hv_generator_pq_set (scn_name, generator_id,
 */
 
 
--- SELECT * FROM model_draft.ego_grid_pf_hv_load WHERE bus > 280000;
-DELETE FROM model_draft.ego_grid_pf_hv_load WHERE bus > 280000;
+-- DELETE
+DELETE FROM model_draft.ego_grid_pf_hv_load WHERE bus IN (
+SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus
+WHERE id < 27)
 
 -- INSERT neigbouring states in load table
 -- Status Quo
@@ -450,11 +457,12 @@ INSERT into model_draft.ego_grid_pf_hv_load (scn_name, load_id, bus, sign)
 		FROM
 		(
 		SELECT *,
-		max(v_nom) OVER (PARTITION BY country) AS max_v_nom,
+		max(v_nom) OVER (PARTITION BY cntr_id) AS max_v_nom,
 		row_number() OVER () + (SELECT max(load_id)
 					FROM model_draft.ego_grid_pf_hv_load
 					WHERE scn_name = 'Status Quo') AS load_id
-		FROM calc_ego_neighbouring_states.bus
+		from model_draft.ego_grid_hv_electrical_neighbours_bus
+		where id < 27
 		) SQ
 	WHERE v_nom = max_v_nom;
 
@@ -474,13 +482,17 @@ INSERT into model_draft.ego_grid_pf_hv_load (scn_name, load_id, bus, sign)
 		row_number() OVER () + (SELECT max(load_id)
 					FROM model_draft.ego_grid_pf_hv_load
 					WHERE scn_name = 'NEP 2035') AS load_id
-		FROM calc_ego_neighbouring_states.bus
+		from model_draft.ego_grid_hv_electrical_neighbours_bus
+		where id < 27
 		) SQ
 	WHERE v_nom = max_v_nom;
 */
 
 -- SELECT * FROM model_draft.ego_grid_pf_hv_load_pq_set WHERE load_id in (SELECT load_id FROM model_draft.ego_grid_pf_hv_load WHERE bus > 280000)
-DELETE FROM model_draft.ego_grid_pf_hv_load_pq_set;
+DELETE FROM model_draft.ego_grid_pf_hv_load_pq_set WHERE load_id in (
+SELECT load_id FROM model_draft.ego_grid_pf_hv_load A JOIN model_draft.ego_grid_hv_electrical_neighbours_bus B
+ON (A.bus = B.bus_id) WHERE B.id < 27);
+
 
 -- Parse load timeseries FROM renpass_gis to load_pq_set
 -- Status Quo
@@ -494,11 +506,12 @@ INSERT INTO model_draft.ego_grid_pf_hv_load_pq_set (scn_name, load_id, temp_id, 
 	FROM
 		(
 		SELECT *,
-		max(B.v_nom) over (partition by B.country) AS max_v_nom
+		max(B.v_nom) over (partition by B.cntr_id) AS max_v_nom
 			FROM calc_renpass_gis.renpass_gis_results A
-			join calc_ego_neighbouring_states.bus B
-			ON (B.country = substring(A.obj_label, 1, 2))
+			join model_draft.ego_grid_hv_electrical_neighbours_bus B
+			ON (B.cntr_id = substring(A.obj_label, 1, 2))
 		WHERE A.obj_label LIKE '%%load%%'
+		AND B.id < 27
 		AND A.type = 'from_bus'
 		AND A.scenario_id = 37
 		) SQ
@@ -519,11 +532,12 @@ INSERT INTO model_draft.ego_grid_pf_hv_load_pq_set (scn_name, load_id, temp_id, 
 	FROM
 		(
 		SELECT *,
-		max(B.v_nom) over (partition by B.country) AS max_v_nom
+		max(B.v_nom) over (partition by B.cntr_id) AS max_v_nom
 			FROM calc_renpass_gis.renpass_gis_results A
-			join calc_ego_neighbouring_states.bus B
-			ON (B.country = substring(A.obj_label, 1, 2))
+			join model_draft.ego_grid_hv_electrical_neighbours_bus B
+			ON (B.cntr_id = substring(A.obj_label, 1, 2))
 		WHERE A.obj_label LIKE '%%load%%'
+		AND B.id < 27
 		AND A.type = 'from_bus'
 		AND A.scenario_id = 38
 		) SQ
