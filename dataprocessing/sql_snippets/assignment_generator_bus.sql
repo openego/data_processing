@@ -148,8 +148,8 @@ CREATE TABLE 		model_draft.ego_supply_pf_generator_single (
 	marginal_cost 	double precision,
 	capital_cost 	double precision,
 	efficiency 	double precision,
-	w_id 		integer,
-	aggr_id 	integer,
+	w_id 		bigint,
+	aggr_id 	bigint,
 	CONSTRAINT generator_single_data_pkey PRIMARY KEY (scn_name, generator_id),
 	CONSTRAINT generator_data_source_fk FOREIGN KEY (source)
 		REFERENCES model_draft.ego_grid_pf_hv_source (source_id) MATCH SIMPLE
