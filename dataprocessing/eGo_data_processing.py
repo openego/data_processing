@@ -59,17 +59,17 @@ def data_processing():
         # 'ego_dp_mv_griddistrict.sql',          			# MV Griddistricts from municipalities and Voronoi cells
 		
 		## LOADAREA
-         #'setup_osm_landuse.sql', 				# OSM landuse sector
-         # 'process_eGo_osm_loads_industry.sql', 		# Industry consumer
-         # 'process_eGo_osm_loads.sql',            		# Loads from OSM landuse
-         #'setup_zensus_population_per_ha.sql',   		# Loads from Census
-         #'process_eGo_loads_melted.sql',        		# Melt OSM landuse and Zensus loads
-         #'process_eGo_loads_per_grid_district.sql', 		# Cut Loadarea with MV Griddistrict
-         #'ego_demand_loads_per_mv_voronoi.sql', 	    	# Cut Loadarea with MV Voronoi cells
-         #'process_eGo_consumption.sql',			# Allocate consumption to Loadareas
-         'peak_load_per_load_area.py',				# Peak loads per Loadarea (duration 10h, it can be executed later in the process)
-         #'ego_mv_griddistrict_results.sql',            	# Results for MV Griddistrict
-         #'ego_paper_result.sql',				# Results and statistics for eGoDP
+        # 'ego_dp_loadarea_landuse.sql', 					# OSM landuse sector
+        # 'ego_dp_loadarea_industry_consumer.sql', 			# Industry consumer
+        # 'ego_dp_loadarea_loads.sql',            			# Loads from OSM landuse
+        # 'ego_dp_loadarea_census.sql',   					# Loads from Census
+        # 'ego_dp_loadarea_loadmelt.sql',        			# Melt OSM landuse and Zensus loads
+        # 'ego_dp_loadarea_loadcut_griddistrict.sql', 		# Cut Loadarea with MV Griddistrict
+        # 'ego_dp_loadarea_loadcut_voronoi.sql', 	    	# Cut Loadarea with MV Voronoi cells
+        # 'ego_dp_loadarea_consumption.sql',				# Allocate consumption to Loadareas
+        # 'ego_dp_loadarea_peakload.py',					# Peak loads per Loadarea (duration 10h, it can be executed later in the process)
+        # 'ego_dp_loadarea_griddistrict_results.sql',		# Results for MV Griddistrict
+        # 'ego_dp_statistic.sql',							# Results and statistics for eGoDP
        
 		## POWERFLOW
          #'voronoi_weatherpoint.sql',				# Create voronoi cells based on weather points
