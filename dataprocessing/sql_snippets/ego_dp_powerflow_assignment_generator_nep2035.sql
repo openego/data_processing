@@ -34,7 +34,7 @@ ALTER TABLE model_draft.ego_supply_generator_nep2035
 
 
 INSERT INTO model_draft.ego_supply_generator_nep2035 (re_id, geom) 
-	SELECT id, geom_new
+	SELECT id, ST_Tranform(geom_new, 4326)
 	FROM model_draft.ego_supply_rea_2035
 	WHERE geom IS NOT NULL; 
 
@@ -110,14 +110,14 @@ INSERT INTO model_draft.ego_supply_pf_generator_single (scn_name, generator_id)
 UPDATE model_draft.ego_supply_rea_2035 a
 	SET subst_id = b.subst_id
 	FROM	model_draft.ego_grid_mv_griddistrict b
-	WHERE ST_Intersects (a.geom_new, ST_TRANSFORM(b.geom,4326)) AND voltage_level >= 3;  
+	WHERE ST_Intersects (a.geom_new, b.geom) AND voltage_level >= 3;  
 
 -- Identify corresponding bus with the help of ehv-Voronoi
 
 UPDATE model_draft.ego_supply_rea_2035 a
 	SET subst_id = b.subst_id
 	FROM model_draft.ego_grid_ehv_substation_voronoi b
-	WHERE ST_Intersects (a.geom_new, b.geom) AND voltage_level <= 2; 
+	WHERE ST_Intersects (ST_Tranform(a.geom_new, 4326), b.geom) AND voltage_level <= 2; 
 
 
 -- Identify net connection points for offshore wind parks by comparing id with Status Quo scenario 
