@@ -434,6 +434,10 @@ CREATE TABLE model_draft.ego_grid_hv_electrical_neighbours_transformer
 );
 
 
+ALTER TABLE model_draft.ego_grid_hv_electrical_neighbours_transformer
+  OWNER TO oeuser;
+
+
 INSERT INTO model_draft.ego_grid_hv_electrical_neighbours_transformer (trafo_id, bus0, bus1, cntr_id)
 
 VALUES (nextval('model_draft.ego_grid_hv_electrical_neighbours_transformer_id'),
@@ -537,47 +541,47 @@ SET geom  = (SELECT  ST_Multi(topo));
 
 UPDATE model_draft.ego_grid_hv_electrical_neighbours_transformer
 
- SET s1 = (CASE 	WHEN cntr_id = 'AT' AND bus0 = (SELECT bus_id FROM electrical_neighbours.bus WHERE id=1) THEN (SELECT SUM (s_nom) FROM  electrical_neighbours.line WHERE (cntr_id = 'AT' AND v_nom = 110))
-			WHEN cntr_id = 'AT' AND bus0 = (SELECT bus_id FROM electrical_neighbours.bus WHERE id=2) THEN (SELECT SUM (s_nom) FROM  electrical_neighbours.line WHERE (cntr_id = 'AT' AND v_nom = 220))
-			WHEN cntr_id = 'CH' AND bus0 = (SELECT bus_id FROM electrical_neighbours.bus WHERE id=4) THEN (SELECT SUM (s_nom) FROM  electrical_neighbours.line WHERE (cntr_id = 'CH' AND v_nom = 110))
-			WHEN cntr_id = 'CH' AND bus0 = (SELECT bus_id FROM electrical_neighbours.bus WHERE id=5) THEN (SELECT SUM (s_nom) FROM  electrical_neighbours.line WHERE (cntr_id = 'CH' AND v_nom = 220))
-			WHEN cntr_id = 'CZ' AND bus0 = (SELECT bus_id FROM electrical_neighbours.bus WHERE id=7) THEN (SELECT SUM (s_nom) FROM  electrical_neighbours.line WHERE (cntr_id = 'CZ' AND v_nom = 110))
-			WHEN cntr_id = 'CZ' AND bus0 = (SELECT bus_id FROM electrical_neighbours.bus WHERE id=8) THEN (SELECT SUM (s_nom) FROM  electrical_neighbours.line WHERE (cntr_id = 'CZ' AND v_nom = 220))
-			WHEN cntr_id = 'DK' AND bus0 = (SELECT bus_id FROM electrical_neighbours.bus WHERE id=10) THEN (SELECT SUM (s_nom) FROM  electrical_neighbours.line WHERE (cntr_id = 'DK' AND v_nom = 110))
-			WHEN cntr_id = 'DK' AND bus0 = (SELECT bus_id FROM electrical_neighbours.bus WHERE id=11) THEN (SELECT SUM (s_nom) FROM  electrical_neighbours.line WHERE (cntr_id = 'DK' AND v_nom = 220))
-			WHEN cntr_id = 'FR' AND bus0 = (SELECT bus_id FROM electrical_neighbours.bus WHERE id=13) THEN (SELECT SUM (s_nom) FROM  electrical_neighbours.line WHERE (cntr_id = 'FR' AND v_nom = 110))
-			WHEN cntr_id = 'FR' AND bus0 = (SELECT bus_id FROM electrical_neighbours.bus WHERE id=14) THEN (SELECT SUM (s_nom) FROM  electrical_neighbours.line WHERE (cntr_id = 'FR' AND v_nom = 220))
-			WHEN cntr_id = 'LU' AND bus0 = (SELECT bus_id FROM electrical_neighbours.bus WHERE id=16) THEN (SELECT SUM (s_nom) FROM  electrical_neighbours.line WHERE (cntr_id = 'LU' AND v_nom = 110))
-			WHEN cntr_id = 'LU' AND bus0 = (SELECT bus_id FROM electrical_neighbours.bus WHERE id=17) THEN (SELECT SUM (s_nom) FROM  electrical_neighbours.line WHERE (cntr_id = 'LU' AND v_nom = 220))
-			WHEN cntr_id = 'NL' AND bus0 = (SELECT bus_id FROM electrical_neighbours.bus WHERE id=19) THEN (SELECT SUM (s_nom) FROM  electrical_neighbours.line WHERE (cntr_id = 'NL' AND v_nom = 110))
-			WHEN cntr_id = 'NL' AND bus0 = (SELECT bus_id FROM electrical_neighbours.bus WHERE id=20) THEN (SELECT SUM (s_nom) FROM  electrical_neighbours.line WHERE (cntr_id = 'NL' AND v_nom = 220))
-			WHEN cntr_id = 'PL' AND bus0 = (SELECT bus_id FROM electrical_neighbours.bus WHERE id=22) THEN (SELECT SUM (s_nom) FROM  electrical_neighbours.line WHERE (cntr_id = 'PL' AND v_nom = 110))
-			WHEN cntr_id = 'PL' AND bus0 = (SELECT bus_id FROM electrical_neighbours.bus WHERE id=23) THEN (SELECT SUM (s_nom) FROM  electrical_neighbours.line WHERE (cntr_id = 'PL' AND v_nom = 220))
-			WHEN cntr_id = 'SE' AND bus0 = (SELECT bus_id FROM electrical_neighbours.bus WHERE id=25) THEN (SELECT SUM (s_nom) FROM  electrical_neighbours.line WHERE (cntr_id = 'SE' AND v_nom = 110))
-			WHEN cntr_id = 'SE' AND bus0 = (SELECT bus_id FROM electrical_neighbours.bus WHERE id=26) THEN (SELECT SUM (s_nom) FROM  electrical_neighbours.line WHERE (cntr_id = 'SE' AND v_nom = 220))
+ SET s1 = (CASE 	WHEN cntr_id = 'AT' AND bus0 = (SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE id=1) THEN (SELECT SUM (s_nom) FROM  model_draft.ego_grid_hv_electrical_neighbours_line WHERE (cntr_id = 'AT' AND v_nom = 110))
+			WHEN cntr_id = 'AT' AND bus0 = (SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE id=2) THEN (SELECT SUM (s_nom) FROM  model_draft.ego_grid_hv_electrical_neighbours_line WHERE (cntr_id = 'AT' AND v_nom = 220))
+			WHEN cntr_id = 'CH' AND bus0 = (SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE id=4) THEN (SELECT SUM (s_nom) FROM  model_draft.ego_grid_hv_electrical_neighbours_line WHERE (cntr_id = 'CH' AND v_nom = 110))
+			WHEN cntr_id = 'CH' AND bus0 = (SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE id=5) THEN (SELECT SUM (s_nom) FROM  model_draft.ego_grid_hv_electrical_neighbours_line WHERE (cntr_id = 'CH' AND v_nom = 220))
+			WHEN cntr_id = 'CZ' AND bus0 = (SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE id=7) THEN (SELECT SUM (s_nom) FROM  model_draft.ego_grid_hv_electrical_neighbours_line WHERE (cntr_id = 'CZ' AND v_nom = 110))
+			WHEN cntr_id = 'CZ' AND bus0 = (SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE id=8) THEN (SELECT SUM (s_nom) FROM  model_draft.ego_grid_hv_electrical_neighbours_line WHERE (cntr_id = 'CZ' AND v_nom = 220))
+			WHEN cntr_id = 'DK' AND bus0 = (SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE id=10) THEN (SELECT SUM (s_nom) FROM  model_draft.ego_grid_hv_electrical_neighbours_line WHERE (cntr_id = 'DK' AND v_nom = 110))
+			WHEN cntr_id = 'DK' AND bus0 = (SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE id=11) THEN (SELECT SUM (s_nom) FROM  model_draft.ego_grid_hv_electrical_neighbours_line WHERE (cntr_id = 'DK' AND v_nom = 220))
+			WHEN cntr_id = 'FR' AND bus0 = (SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE id=13) THEN (SELECT SUM (s_nom) FROM  model_draft.ego_grid_hv_electrical_neighbours_line WHERE (cntr_id = 'FR' AND v_nom = 110))
+			WHEN cntr_id = 'FR' AND bus0 = (SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE id=14) THEN (SELECT SUM (s_nom) FROM  model_draft.ego_grid_hv_electrical_neighbours_line WHERE (cntr_id = 'FR' AND v_nom = 220))
+			WHEN cntr_id = 'LU' AND bus0 = (SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE id=16) THEN (SELECT SUM (s_nom) FROM  model_draft.ego_grid_hv_electrical_neighbours_line WHERE (cntr_id = 'LU' AND v_nom = 110))
+			WHEN cntr_id = 'LU' AND bus0 = (SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE id=17) THEN (SELECT SUM (s_nom) FROM  model_draft.ego_grid_hv_electrical_neighbours_line WHERE (cntr_id = 'LU' AND v_nom = 220))
+			WHEN cntr_id = 'NL' AND bus0 = (SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE id=19) THEN (SELECT SUM (s_nom) FROM  model_draft.ego_grid_hv_electrical_neighbours_line WHERE (cntr_id = 'NL' AND v_nom = 110))
+			WHEN cntr_id = 'NL' AND bus0 = (SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE id=20) THEN (SELECT SUM (s_nom) FROM  model_draft.ego_grid_hv_electrical_neighbours_line WHERE (cntr_id = 'NL' AND v_nom = 220))
+			WHEN cntr_id = 'PL' AND bus0 = (SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE id=22) THEN (SELECT SUM (s_nom) FROM  model_draft.ego_grid_hv_electrical_neighbours_line WHERE (cntr_id = 'PL' AND v_nom = 110))
+			WHEN cntr_id = 'PL' AND bus0 = (SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE id=23) THEN (SELECT SUM (s_nom) FROM  model_draft.ego_grid_hv_electrical_neighbours_line WHERE (cntr_id = 'PL' AND v_nom = 220))
+			WHEN cntr_id = 'SE' AND bus0 = (SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE id=25) THEN (SELECT SUM (s_nom) FROM  model_draft.ego_grid_hv_electrical_neighbours_line WHERE (cntr_id = 'SE' AND v_nom = 110))
+			WHEN cntr_id = 'SE' AND bus0 = (SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE id=26) THEN (SELECT SUM (s_nom) FROM  model_draft.ego_grid_hv_electrical_neighbours_line WHERE (cntr_id = 'SE' AND v_nom = 220))
 			END);
 
 
 UPDATE model_draft.ego_grid_hv_electrical_neighbours_transformer
 
- SET s2 = (CASE 	WHEN cntr_id = 'AT' AND bus1 = (SELECT bus_id FROM electrical_neighbours.bus WHERE id=2) THEN (SELECT SUM (s_nom) FROM  electrical_neighbours.line WHERE (cntr_id = 'AT' AND v_nom = 220))
-			WHEN cntr_id = 'AT' AND bus1 = (SELECT bus_id FROM electrical_neighbours.bus WHERE id=3) THEN (SELECT SUM (s_nom) FROM  electrical_neighbours.line WHERE (cntr_id = 'AT' AND v_nom = 380))
-			WHEN cntr_id = 'CH' AND bus1 = (SELECT bus_id FROM electrical_neighbours.bus WHERE id=5) THEN (SELECT SUM (s_nom) FROM  electrical_neighbours.line WHERE (cntr_id = 'CH' AND v_nom = 220))
-			WHEN cntr_id = 'CH' AND bus1 = (SELECT bus_id FROM electrical_neighbours.bus WHERE id=6) THEN (SELECT SUM (s_nom) FROM  electrical_neighbours.line WHERE (cntr_id = 'CH' AND v_nom = 380))
-			WHEN cntr_id = 'CZ' AND bus1 = (SELECT bus_id FROM electrical_neighbours.bus WHERE id=8) THEN (SELECT SUM (s_nom) FROM  electrical_neighbours.line WHERE (cntr_id = 'CZ' AND v_nom = 220))
-			WHEN cntr_id = 'CZ' AND bus1 = (SELECT bus_id FROM electrical_neighbours.bus WHERE id=9) THEN (SELECT SUM (s_nom) FROM  electrical_neighbours.line WHERE (cntr_id = 'CZ' AND v_nom = 380))
-			WHEN cntr_id = 'DK' AND bus1 = (SELECT bus_id FROM electrical_neighbours.bus WHERE id=11) THEN (SELECT SUM (s_nom) FROM  electrical_neighbours.line WHERE (cntr_id = 'DK' AND v_nom = 220))
-			WHEN cntr_id = 'DK' AND bus1 = (SELECT bus_id FROM electrical_neighbours.bus WHERE id=12) THEN (SELECT SUM (s_nom) FROM  electrical_neighbours.line WHERE (cntr_id = 'DK' AND v_nom = 380))
-			WHEN cntr_id = 'FR' AND bus1 = (SELECT bus_id FROM electrical_neighbours.bus WHERE id=14) THEN (SELECT SUM (s_nom) FROM  electrical_neighbours.line WHERE (cntr_id = 'FR' AND v_nom = 220))
-			WHEN cntr_id = 'FR' AND bus1 = (SELECT bus_id FROM electrical_neighbours.bus WHERE id=15) THEN (SELECT SUM (s_nom) FROM  electrical_neighbours.line WHERE (cntr_id = 'FR' AND v_nom = 380))
-			WHEN cntr_id = 'LU' AND bus1 = (SELECT bus_id FROM electrical_neighbours.bus WHERE id=17) THEN (SELECT SUM (s_nom) FROM  electrical_neighbours.line WHERE (cntr_id = 'LU' AND v_nom = 220))
-			WHEN cntr_id = 'LU' AND bus1 = (SELECT bus_id FROM electrical_neighbours.bus WHERE id=18) THEN (SELECT SUM (s_nom) FROM  electrical_neighbours.line WHERE (cntr_id = 'LU' AND v_nom = 380))
-			WHEN cntr_id = 'NL' AND bus1 = (SELECT bus_id FROM electrical_neighbours.bus WHERE id=20) THEN (SELECT SUM (s_nom) FROM  electrical_neighbours.line WHERE (cntr_id = 'NL' AND v_nom = 220))
-			WHEN cntr_id = 'NL' AND bus1 = (SELECT bus_id FROM electrical_neighbours.bus WHERE id=21) THEN (SELECT SUM (s_nom) FROM  electrical_neighbours.line WHERE (cntr_id = 'NL' AND v_nom = 380))
-			WHEN cntr_id = 'PL' AND bus1 = (SELECT bus_id FROM electrical_neighbours.bus WHERE id=23) THEN (SELECT SUM (s_nom) FROM  electrical_neighbours.line WHERE (cntr_id = 'PL' AND v_nom = 220))
-			WHEN cntr_id = 'PL' AND bus1 = (SELECT bus_id FROM electrical_neighbours.bus WHERE id=24) THEN (SELECT SUM (s_nom) FROM  electrical_neighbours.line WHERE (cntr_id = 'PL' AND v_nom = 380))
-			WHEN cntr_id = 'SE' AND bus1 = (SELECT bus_id FROM electrical_neighbours.bus WHERE id=26) THEN (SELECT SUM (s_nom) FROM  electrical_neighbours.line WHERE (cntr_id = 'SE' AND v_nom = 220))
-			WHEN cntr_id = 'SE' AND bus1 = (SELECT bus_id FROM electrical_neighbours.bus WHERE id=27) THEN (SELECT SUM (s_nom) FROM  electrical_neighbours.line WHERE (cntr_id = 'SE' AND v_nom = 380))
+ SET s2 = (CASE 	WHEN cntr_id = 'AT' AND bus1 = (SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE id=2) THEN (SELECT SUM (s_nom) FROM  model_draft.ego_grid_hv_electrical_neighbours_line WHERE (cntr_id = 'AT' AND v_nom = 220))
+			WHEN cntr_id = 'AT' AND bus1 = (SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE id=3) THEN (SELECT SUM (s_nom) FROM  model_draft.ego_grid_hv_electrical_neighbours_line WHERE (cntr_id = 'AT' AND v_nom = 380))
+			WHEN cntr_id = 'CH' AND bus1 = (SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE id=5) THEN (SELECT SUM (s_nom) FROM  model_draft.ego_grid_hv_electrical_neighbours_line WHERE (cntr_id = 'CH' AND v_nom = 220))
+			WHEN cntr_id = 'CH' AND bus1 = (SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE id=6) THEN (SELECT SUM (s_nom) FROM  model_draft.ego_grid_hv_electrical_neighbours_line WHERE (cntr_id = 'CH' AND v_nom = 380))
+			WHEN cntr_id = 'CZ' AND bus1 = (SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE id=8) THEN (SELECT SUM (s_nom) FROM  model_draft.ego_grid_hv_electrical_neighbours_line WHERE (cntr_id = 'CZ' AND v_nom = 220))
+			WHEN cntr_id = 'CZ' AND bus1 = (SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_buss WHERE id=9) THEN (SELECT SUM (s_nom) FROM  model_draft.ego_grid_hv_electrical_neighbours_line WHERE (cntr_id = 'CZ' AND v_nom = 380))
+			WHEN cntr_id = 'DK' AND bus1 = (SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE id=11) THEN (SELECT SUM (s_nom) FROM  model_draft.ego_grid_hv_electrical_neighbours_line WHERE (cntr_id = 'DK' AND v_nom = 220))
+			WHEN cntr_id = 'DK' AND bus1 = (SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE id=12) THEN (SELECT SUM (s_nom) FROM  model_draft.ego_grid_hv_electrical_neighbours_line WHERE (cntr_id = 'DK' AND v_nom = 380))
+			WHEN cntr_id = 'FR' AND bus1 = (SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE id=14) THEN (SELECT SUM (s_nom) FROM  model_draft.ego_grid_hv_electrical_neighbours_line WHERE (cntr_id = 'FR' AND v_nom = 220))
+			WHEN cntr_id = 'FR' AND bus1 = (SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE id=15) THEN (SELECT SUM (s_nom) FROM  model_draft.ego_grid_hv_electrical_neighbours_line WHERE (cntr_id = 'FR' AND v_nom = 380))
+			WHEN cntr_id = 'LU' AND bus1 = (SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE id=17) THEN (SELECT SUM (s_nom) FROM  model_draft.ego_grid_hv_electrical_neighbours_line WHERE (cntr_id = 'LU' AND v_nom = 220))
+			WHEN cntr_id = 'LU' AND bus1 = (SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE id=18) THEN (SELECT SUM (s_nom) FROM  model_draft.ego_grid_hv_electrical_neighbours_line WHERE (cntr_id = 'LU' AND v_nom = 380))
+			WHEN cntr_id = 'NL' AND bus1 = (SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE id=20) THEN (SELECT SUM (s_nom) FROM  model_draft.ego_grid_hv_electrical_neighbours_line WHERE (cntr_id = 'NL' AND v_nom = 220))
+			WHEN cntr_id = 'NL' AND bus1 = (SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE id=21) THEN (SELECT SUM (s_nom) FROM  model_draft.ego_grid_hv_electrical_neighbours_line WHERE (cntr_id = 'NL' AND v_nom = 380))
+			WHEN cntr_id = 'PL' AND bus1 = (SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE id=23) THEN (SELECT SUM (s_nom) FROM  model_draft.ego_grid_hv_electrical_neighbours_line WHERE (cntr_id = 'PL' AND v_nom = 220))
+			WHEN cntr_id = 'PL' AND bus1 = (SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE id=24) THEN (SELECT SUM (s_nom) FROM  model_draft.ego_grid_hv_electrical_neighbours_line WHERE (cntr_id = 'PL' AND v_nom = 380))
+			WHEN cntr_id = 'SE' AND bus1 = (SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE id=26) THEN (SELECT SUM (s_nom) FROM  model_draft.ego_grid_hv_electrical_neighbours_line WHERE (cntr_id = 'SE' AND v_nom = 220))
+			WHEN cntr_id = 'SE' AND bus1 = (SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE id=27) THEN (SELECT SUM (s_nom) FROM  model_draft.ego_grid_hv_electrical_neighbours_line WHERE (cntr_id = 'SE' AND v_nom = 380))
 			END);
 
 

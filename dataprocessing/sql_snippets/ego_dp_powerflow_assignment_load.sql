@@ -98,8 +98,10 @@ CREATE TABLE model_draft.ego_demand_pf_load_single
       ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
-ALTER TABLE model_draft.ego_grid_pf_hv_load
+ALTER TABLE model_draft.ego_demand_pf_load_single
   OWNER TO oeuser;
+
+
 
 -----------
 -- Add un_id to load tables
