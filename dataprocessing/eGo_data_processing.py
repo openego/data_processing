@@ -56,7 +56,7 @@ def data_processing():
         # 'ego_dp_substation_ehv_voronoi.sql',				# EHV Voronoi cells based on EHV substations
         
 		## GRIDDISTRICT
-        # 'process_eGo_grid_district.sql',          		# MV Griddistricts from municipalities and Voronoi cells
+        # 'ego_dp_mv_griddistrict.sql',          			# MV Griddistricts from municipalities and Voronoi cells
 		
 		## LOADAREA
          #'setup_osm_landuse.sql', 				# OSM landuse sector
