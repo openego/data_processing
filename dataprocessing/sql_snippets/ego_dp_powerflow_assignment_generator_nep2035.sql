@@ -117,7 +117,7 @@ UPDATE model_draft.ego_supply_rea_2035 a
 UPDATE model_draft.ego_supply_rea_2035 a
 	SET subst_id = b.subst_id
 	FROM model_draft.ego_grid_ehv_substation_voronoi b
-	WHERE ST_Intersects (ST_Tranform(a.geom_new, 4326), b.geom) AND voltage_level <= 2; 
+	WHERE ST_Intersects (ST_Transform(a.geom_new, 4326), b.geom) AND voltage_level <= 2; 
 
 
 -- Identify net connection points for offshore wind parks by comparing id with Status Quo scenario 
