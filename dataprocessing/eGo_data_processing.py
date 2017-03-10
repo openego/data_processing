@@ -89,8 +89,8 @@ def data_processing():
 		# 'ego_dp_powerflow_load_timeseries_NEP2035.sql' 		# Copy demand timeseries to NEP 2035 scenario
         
 		## LOWVOLTAGE
-        # 'process_eGo_mvlv_substation.sql',			# MVLV Substation inside Loadarea
-        # 'process_eGo_lv_grid_districts.sql'		    	# LV Griddistrict inside Loadarea
+        # 'ego_dp_lv_substation.sql',						# MVLV Substation inside Loadarea
+        # 'ego_dp_lv_griddistrict.sql'		    			# LV Griddistrict inside Loadarea
         ]
 
     # get database connection
