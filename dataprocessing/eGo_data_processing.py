@@ -42,11 +42,11 @@ def data_processing():
     snippets = [
 		## STRUCTURE & SETUP (WARNING)
         ## 'ego_dp_structure_scenariolog.sql',				# Setup scenario log table
-		## 'ego_dp_preprocessing_conv_powerplant.sql',		# Setup conventional power plant list
-    	## 'ego_dp_preprocessing_res_powerplant.sql',		# Setup renewable power plant list
         ## 'ego_dp_structure_boundaries_vg250.sql',			# Setup vg250 borders
         ## 'ego_dp_structure_osm_landuse.sql',              # Filter OSM landuse
 		## 'eGo_dp_structure_census.sql',                   # Filter Census2011 with population
+		## 'ego_dp_preprocessing_conv_powerplant.sql',		# Setup conventional power plant list
+    	## 'ego_dp_preprocessing_res_powerplant.sql',		# Setup renewable power plant list
         
 		## SUBSTATION
         # 'ego_dp_substation_hvmv.sql',                 	# Abstract HVMV Substations of the high voltage level from OSM
@@ -79,7 +79,7 @@ def data_processing():
 
         ##'ego_dp_powerflow_assignment_generator.sql',  		# Assign generators to corresponding substation
         # 'ego_dp_powerflow_assignment_load.sql',        		# Assign loads to their corresponding substation
-		# 'ego_dp_powerflow_grid_NEP2035.sql#,					# Copy grid to scenario NEP 2035
+		# 'ego_dp_powerflow_grid_NEP2035.sql',					# Copy grid to scenario NEP 2035
 		# 'ego_dp_powerflow_assignment_generator_nep2035.sql',	# Assign generators from NEP 2035 to corresponding substation
 		# 'ego_dp_powerflow_assignment_load_nep2035.sql',		# Copy loads from SQ scenario
         # 'ego_dp_powerflow_timeseries_generator.sql',			# Transfer renpassG!S results into the corresponding powerflow table
