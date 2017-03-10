@@ -434,6 +434,10 @@ CREATE TABLE model_draft.ego_grid_hv_electrical_neighbours_transformer
 );
 
 
+ALTER TABLE model_draft.ego_grid_hv_electrical_neighbours_transformer
+  OWNER TO oeuser;
+
+
 INSERT INTO model_draft.ego_grid_hv_electrical_neighbours_transformer (trafo_id, bus0, bus1, cntr_id)
 
 VALUES (nextval('model_draft.ego_grid_hv_electrical_neighbours_transformer_id'),
