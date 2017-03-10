@@ -49,11 +49,11 @@ def data_processing():
 		## 'eGo_dp_structure_census.sql',                   # Filter Census2011 with population
         
 		## SUBSTATION
-        # 'get_substations.sql',                 			# Abstract HVMV Substations of the high voltage level from OSM
-        # 'get_substations_ehv.sql',             			# Abstract EHV Substations of the extra high voltage level from OSM
-        # 'otg_id_to_substations.sql',           			# Assign osmTGmod-id to HVMV and EHV substations
-        # 'ego_grid_hvmv_substation.sql',					# HVMV Voronoi cells based on HVMV substations
-        # 'Voronoi_ehv.sql',								# EHV Voronoi cells based on EHV substations
+        # 'ego_dp_substation_hvmv.sql',                 	# Abstract HVMV Substations of the high voltage level from OSM
+        # 'ego_dp_substation_ehv.sql',             			# Abstract EHV Substations of the extra high voltage level from OSM
+        # 'ego_dp_substation_otg.sql',           			# Assign osmTGmod-id to HVMV and EHV substations
+        # 'ego_dp_substation_hvmv_voronoi.sql',				# HVMV Voronoi cells based on HVMV substations
+        # 'ego_dp_substation_ehv_voronoi.sql',				# EHV Voronoi cells based on EHV substations
         
 		## GRIDDISTRICT
         # 'process_eGo_grid_district.sql',          		# MV Griddistricts from municipalities and Voronoi cells
