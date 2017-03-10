@@ -34,7 +34,7 @@ ALTER TABLE model_draft.ego_supply_generator_nep2035
 
 
 INSERT INTO model_draft.ego_supply_generator_nep2035 (re_id, geom) 
-	SELECT id, ST_Tranform(geom_new, 4326)
+	SELECT id, ST_Transform(geom_new, 4326)
 	FROM model_draft.ego_supply_rea_2035
 	WHERE geom IS NOT NULL; 
 
