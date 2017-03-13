@@ -1,4 +1,4 @@
-﻿/*
+/*
 LOPF data -
 Setting marginal_cost ( operating cost + fuel cost + CO2 crt cost ) 
 in model_draft.ego_grid_pf_hv_generator according to renpass_gis, NEP 2014 scenario.

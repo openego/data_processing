@@ -532,7 +532,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_generator (
 	FROM 	model_draft.ego_supply_pf_generator_single a
 	WHERE 	a.p_nom >= 50 AND a.aggr_id IS NOT NULL;
 
-
+/*
 -- Add slack generators at buses that are located outside of Germany
 
 -- create sequence for slack generators
@@ -562,6 +562,6 @@ INSERT INTO model_draft.ego_grid_pf_hv_generator
 		AND result_id = GREATEST(result_id) 
 		AND bus_i IN (SELECT bus_id FROM model_draft.ego_grid_pf_hv_bus) 
 		AND base_kv > 110;
-
+*/
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_grid_pf_hv_generator','assignment_generator_bus.sql',' ');

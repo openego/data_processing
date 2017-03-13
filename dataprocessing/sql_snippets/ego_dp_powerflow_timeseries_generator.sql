@@ -361,7 +361,7 @@ CREATE MATERIALIZED VIEW calc_renpass_gis.translate_to_pf AS
 		) SQ,
 		calc_renpass_gis.renpass_gis_results C
 	WHERE
-	(C.obj_label LIKE '%%' || SQ.country || '%%' || SQ.renpass_gis_source || '%%')
+	(C.obj_label LIKE '%%' || SQ.cntr_id || '%%' || SQ.renpass_gis_source || '%%')
 	AND C.scenario_id = 37
 	AND C.type = 'to_bus';
 
@@ -415,7 +415,7 @@ CREATE MATERIALIZED VIEW calc_renpass_gis.translate_to_pf AS
 		) SQ,
 		calc_renpass_gis.renpass_gis_results C
 	WHERE
-	(C.obj_label LIKE '%%' || SQ.country || '%%' || SQ.renpass_gis_source || '%%')
+	(C.obj_label LIKE '%%' || SQ.cntr_id || '%%' || SQ.renpass_gis_source || '%%')
 	AND C.scenario_id = 38
 	AND C.type = 'to_bus';
 
@@ -478,7 +478,7 @@ INSERT into model_draft.ego_grid_pf_hv_load (scn_name, load_id, bus, sign)
 		FROM
 		(
 		SELECT *,
-		max(v_nom) OVER (PARTITION BY country) AS max_v_nom,
+		max(v_nom) OVER (PARTITION BY cntr_id) AS max_v_nom,
 		row_number() OVER () + (SELECT max(load_id)
 					FROM model_draft.ego_grid_pf_hv_load
 					WHERE scn_name = 'NEP 2035') AS load_id
