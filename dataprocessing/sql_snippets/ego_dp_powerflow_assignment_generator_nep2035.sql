@@ -118,6 +118,14 @@ UPDATE model_draft.ego_supply_rea_2035 a
 	SET subst_id = b.subst_id
 	FROM model_draft.ego_grid_ehv_substation_voronoi b
 	WHERE ST_Intersects (ST_Transform(a.geom_new, 4326), b.geom) AND voltage_level <= 2; 
+	
+
+-- Insert otg_id of bus
+
+UPDATE model_draft.ego_supply_rea_2035 a
+	SET otg_id =b.otg_id 
+	FROM model_draft.ego_grid_hvmv_substation b
+	WHERE a.subst_id = b.subst_id; 
 
 
 -- Identify net connection points for offshore wind parks by comparing id with Status Quo scenario 
@@ -195,14 +203,6 @@ UPDATE model_draft.ego_supply_rea_2035 a
 --) as sub
 --WHERE C.id = sub.id 
 --;
-
-
--- Insert otg_id of bus
-
-UPDATE model_draft.ego_supply_rea_2035 a
-	SET otg_id =b.otg_id 
-	FROM model_draft.ego_grid_hvmv_substation b
-	WHERE a.subst_id = b.subst_id; 
 
 
 -- Update un_id from generators_total 
