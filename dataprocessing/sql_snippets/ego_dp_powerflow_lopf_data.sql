@@ -48,6 +48,9 @@ where scn_name = 'NEP 2035';
 SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_grid_pf_hv_generator','LOPF_data.sql',' ');
 
 -- set p_max_pu
+
+-- DELETE FROM model_draft.ego_grid_pf_hv_generator WHERE p_nom=0; 
+
 -- TODO: outermost subquery needed?
 UPDATE model_draft.ego_grid_pf_hv_generator_pq_set Y
 SET p_max_pu = T3.p_max_pu
