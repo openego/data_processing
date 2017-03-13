@@ -617,6 +617,12 @@ SET x = (CASE s_nom 	WHEN 1200 THEN 4.84
 			WHEN 7200 THEN 2.80777136
 			WHEN 2600 THEN 2.23384392
 			END);
+			
+UPDATE model_draft.ego_grid_hv_electrical_neighbours_transformer 
+SET tap_ratio = 1;
+
+UPDATE model_draft.ego_grid_hv_electrical_neighbours_transformer
+SET phase_shift = 0;
 
 DELETE FROM model_draft.ego_grid_hv_electrical_neighbours_transformer WHERE x IS NULL;
 
@@ -630,5 +636,5 @@ SELECT 'Status Quo', line_id, bus0, bus1, x, r, s_nom, topo, geom, length, frequ
 INSERT INTO model_draft.ego_grid_pf_hv_bus (scn_name, bus_id, v_nom, geom)
 SELECT 'Status Quo',bus_id, v_nom, geom FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE id < 28;
 
-INSERT INTO model_draft.ego_grid_pf_hv_transformer (scn_name, trafo_id, bus0, bus1, x, s_nom, geom)
-SELECT 'Status Quo', trafo_id, bus0, bus1, x, s_nom, geom FROM model_draft.ego_grid_hv_electrical_neighbours_transformer
+INSERT INTO model_draft.ego_grid_pf_hv_transformer (scn_name, trafo_id, bus0, bus1, x, s_nom, geom, tap_ratio, phase_shift)
+SELECT 'Status Quo', trafo_id, bus0, bus1, x, s_nom, geom, tap_ratio, phase_shift FROM model_draft.ego_grid_hv_electrical_neighbours_transformer
