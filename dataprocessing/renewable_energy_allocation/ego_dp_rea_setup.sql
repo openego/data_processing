@@ -44,11 +44,11 @@ CREATE INDEX	ego_supply_rea_geom_idx
 	ON	model_draft.ego_supply_rea USING GIST (geom);
 
 -- index GIST (rea_geom_line)
-CREATE INDEX ego_supply_rea_rea_geom_line_idx
+CREATE INDEX ego_supply_rea_geom_line_idx
 	ON model_draft.ego_supply_rea USING gist (rea_geom_line);
 
 -- index GIST (rea_geom_new)
-CREATE INDEX ego_supply_rea_rea_geom_new_idx
+CREATE INDEX ego_supply_rea_geom_new_idx
 	ON model_draft.ego_supply_rea USING gist (rea_geom_new);
 
 -- grant (oeuser)
@@ -61,14 +61,14 @@ SELECT ego_scenario_log('v0.2.3','input','model_draft','ego_supply_res_powerplan
 ALTER TABLE model_draft.ego_supply_res_powerplant
 	DROP COLUMN IF EXISTS	la_id,
   	ADD COLUMN 		la_id integer,
-	DROP COLUMN IF EXISTS	rea_rea_sort,
-  	ADD COLUMN 		rea_rea_sort integer,
-	DROP COLUMN IF EXISTS	rea_rea_flag,
-  	ADD COLUMN 		rea_rea_flag character varying,
-	DROP COLUMN IF EXISTS	rea_rea_geom_line,
-  	ADD COLUMN 		rea_rea_geom_line geometry(LineString,3035),
-	DROP COLUMN IF EXISTS	rea_rea_geom_new,
-  	ADD COLUMN 		rea_rea_geom_new geometry(Point,3035);
+	DROP COLUMN IF EXISTS	rea_sort,
+  	ADD COLUMN 		rea_sort integer,
+	DROP COLUMN IF EXISTS	rea_flag,
+  	ADD COLUMN 		rea_flag character varying,
+	DROP COLUMN IF EXISTS	rea_geom_line,
+  	ADD COLUMN 		rea_geom_line geometry(LineString,3035),
+	DROP COLUMN IF EXISTS	rea_geom_new,
+  	ADD COLUMN 		rea_geom_new geometry(Point,3035);
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.3','input','model_draft','ego_grid_mv_griddistrict','ego_rea_setup.sql',' ');

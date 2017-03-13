@@ -26,7 +26,7 @@ CREATE MATERIALIZED VIEW 		model_draft.ego_supply_rea_m1_1_a_mview AS
 		generation_subtype,
 		voltage_level,
 		subst_id,
-		geom,
+		ST_TRANSFORM(geom,3035) AS geom,
 		rea_flag
 	FROM 	model_draft.ego_supply_res_powerplant AS dea
 	WHERE 	(dea.generation_type = 'biomass' OR dea.generation_type = 'gas') AND
@@ -122,7 +122,10 @@ BEGIN
 
 		INSERT INTO model_draft.ego_supply_rea_m1_1_osm_temp
 			SELECT 	row_number() over (ORDER BY osm.area_ha DESC)as rea_sorted,
-					osm.*
+					osm.id,
+					osm.subst_id,
+					osm.area_ha,
+					osm.geom
 			FROM 	model_draft.ego_osm_sector_per_griddistrict_4_agricultural AS osm
 			WHERE 	osm.subst_id =' || gd || ';
 
@@ -221,7 +224,7 @@ CREATE MATERIALIZED VIEW 		model_draft.ego_supply_rea_m1_2_a_mview AS
 		generation_subtype,
 		voltage_level,
 		subst_id,
-		geom,
+		ST_TRANSFORM(geom,3035) AS geom,
 		rea_flag
 	FROM 	model_draft.ego_supply_res_powerplant AS dea
 	WHERE 	(dea.voltage_level = 4 OR dea.voltage_level = 5) AND
@@ -316,7 +319,10 @@ BEGIN
 
 		INSERT INTO model_draft.ego_supply_rea_m1_2_osm_temp
 			SELECT 	row_number() over (ORDER BY osm.area_ha DESC)as rea_sorted,
-			osm.*
+				osm.id,
+				osm.subst_id,
+				osm.area_ha,
+				osm.geom
 			FROM 	model_draft.ego_osm_sector_per_griddistrict_4_agricultural AS osm
 			WHERE 	subst_id =' || gd || ';
 

@@ -26,7 +26,7 @@ CREATE MATERIALIZED VIEW 		model_draft.ego_supply_rea_m2_a_mview AS
 		generation_subtype,
 		voltage_level,
 		subst_id,
-		geom,
+		ST_TRANSFORM(geom,3035) AS geom,
 		rea_flag
 	FROM 	model_draft.ego_supply_res_powerplant AS dea
 	WHERE 	(dea.voltage_level = 4 AND 
@@ -68,7 +68,7 @@ INSERT INTO model_draft.ego_supply_rea_m2_windfarm (area_ha,geom)
 	SELECT	ST_AREA(farm.geom_farm),
 		farm.geom_farm
 	FROM	(SELECT	(ST_DUMP(ST_MULTI(ST_UNION(
-				ST_BUFFER(dea.geom, 1000)
+				ST_BUFFER(ST_TRANSFORM(dea.geom,3035), 1000)
 			)))).geom ::geometry(Polygon,3035) AS geom_farm
 		FROM 	model_draft.ego_supply_res_powerplant AS dea
 		WHERE 	(dea.voltage_level = 4) AND

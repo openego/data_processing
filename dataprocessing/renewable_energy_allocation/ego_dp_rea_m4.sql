@@ -28,7 +28,7 @@ CREATE MATERIALIZED VIEW 		model_draft.ego_supply_rea_m4_a_mview AS
 		generation_subtype,
 		voltage_level,
 		subst_id,
-		geom,
+		ST_TRANSFORM(geom,3035) AS geom,
 		rea_flag
 	FROM 	model_draft.ego_supply_res_powerplant AS dea
 	WHERE 	(dea.voltage_level = 4 OR dea.voltage_level = 5)
