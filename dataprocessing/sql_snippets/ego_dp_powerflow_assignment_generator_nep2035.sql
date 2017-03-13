@@ -162,19 +162,19 @@ UPDATE model_draft.ego_supply_rea_2035 a
 -- Connect future offshore wind parks to existing Status Quo buses manually (this manual adjustment is not valid for future versions of the data set)
 
 UPDATE model_draft.ego_supply_rea_2035 a
-	SET otg_id = 26359 
+	SET otg_id = 26504 
  	WHERE id IN (10147069, 10147070, 10147066, 10147072, 10147067); 
 
 UPDATE model_draft.ego_supply_rea_2035 a
-	SET otg_id = 26920 
+	SET otg_id = 27153 
  	WHERE id IN (10147071, 10147068, 10147075); 
 
 UPDATE model_draft.ego_supply_rea_2035 a
-	SET otg_id = 26297 
+	SET otg_id = 26435
  	WHERE id IN (10147073, 10147074, 10147065, 10147064); 
 
 UPDATE model_draft.ego_supply_rea_2035 a
-	SET otg_id = 24372 
+	SET otg_id = 24401 
  	WHERE id = 10147076;
 
 -- Connect powerplants with voltage_level >=3 outside the grid district area to their nearest hv/mv-substation 

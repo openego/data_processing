@@ -488,37 +488,8 @@ INSERT into model_draft.ego_grid_pf_hv_load (scn_name, load_id, bus, sign)
 	WHERE v_nom = max_v_nom;
 */
 
--- SELECT * FROM model_draft.ego_grid_pf_hv_load_pq_set WHERE load_id in (SELECT load_id FROM model_draft.ego_grid_pf_hv_load WHERE bus > 280000)
-DELETE FROM model_draft.ego_grid_pf_hv_load_pq_set WHERE load_id in (
-SELECT load_id FROM model_draft.ego_grid_pf_hv_load A JOIN model_draft.ego_grid_hv_electrical_neighbours_bus B
-ON (A.bus = B.bus_id) WHERE B.id < 27);
 
-
--- Parse load timeseries FROM renpass_gis to load_pq_set
--- Status Quo
-INSERT INTO model_draft.ego_grid_pf_hv_load_pq_set (scn_name, load_id, temp_id, p_set)
-
-	SELECT
-	'Status Quo' AS scn_name,
-	C.load_id AS load_id,
-	1 AS temp_id,
-	array_agg(SQ.val ORDER BY SQ.datetime) AS p_set
-	FROM
-		(
-		SELECT *,
-		max(B.v_nom) over (partition by B.cntr_id) AS max_v_nom
-			FROM calc_renpass_gis.renpass_gis_results A
-			join model_draft.ego_grid_hv_electrical_neighbours_bus B
-			ON (B.cntr_id = substring(A.obj_label, 1, 2))
-		WHERE A.obj_label LIKE '%%load%%'
-		AND B.id < 27
-		AND A.type = 'from_bus'
-		AND A.scenario_id = 37
-		) SQ
-		JOIN model_draft.ego_grid_pf_hv_load C on (C.bus = SQ.bus_id)
-	WHERE SQ.v_nom = SQ.max_v_nom
-	AND C.scn_name = 'Status Quo'
-	GROUP BY C.load_id;
+-- Demand timeseries
 
 -- NEP 2035
 /*
