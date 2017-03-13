@@ -163,19 +163,19 @@ UPDATE model_draft.ego_supply_rea_2035 a
 
 UPDATE model_draft.ego_supply_rea_2035 a
 	SET otg_id = 26504 
- 	WHERE id IN (10147069, 10147070, 10147066, 10147072, 10147067); 
+ 	WHERE id IN (10147133, 10147134, 10147130, 10147136, 10147131); 
 
 UPDATE model_draft.ego_supply_rea_2035 a
 	SET otg_id = 27153 
- 	WHERE id IN (10147071, 10147068, 10147075); 
+ 	WHERE id IN (10147135, 10147132, 10147139); 
 
 UPDATE model_draft.ego_supply_rea_2035 a
 	SET otg_id = 26435
- 	WHERE id IN (10147073, 10147074, 10147065, 10147064); 
+ 	WHERE id IN (10147137, 10147138, 10147129, 10147128); 
 
 UPDATE model_draft.ego_supply_rea_2035 a
 	SET otg_id = 24401 
- 	WHERE id = 10147076;
+ 	WHERE id = 10147140;
 
 -- Connect powerplants with voltage_level >=3 outside the grid district area to their nearest hv/mv-substation 
 
