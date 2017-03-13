@@ -8,7 +8,7 @@ __author__ 	= "wbunke"
 
 TODO: storage in storage_pqset #1069
 */
-
+/*
 -- Status Quo
 -- aggregate nominal capacity on aggr_id FROM powerflow generators, keeping the source
 DROP materialized view if EXISTS calc_renpass_gis.pf_pp_by_source_aggr_id;
@@ -76,9 +76,9 @@ SELECT
 		calc_renpass_gis.pp_feedin_by_pf_source B
 WHERE A.source = B.source
 GROUP BY A.aggr_id;
-
+*/
 -- NEP 2035
-/*
+
 -- aggregate nominal capacity on aggr_id FROM powerflow generators, keeping the source
 DROP materialized view if EXISTS calc_renpass_gis.pf_pp_by_source_aggr_id;
 CREATE materialized view calc_renpass_gis.pf_pp_by_source_aggr_id
@@ -142,8 +142,8 @@ SELECT
 		calc_renpass_gis.pp_feedin_by_pf_source B
 WHERE A.source = B.source
 GROUP BY A.aggr_id;
-*/
 
+/*
 ------------------ NEIGHBOURING COUNTRIES
 -- 1
 DELETE FROM model_draft.ego_grid_pf_hv_generator WHERE generator_id > 200000 AND scn_name = 'Status Quo';
@@ -196,9 +196,9 @@ INSERT into model_draft.ego_grid_pf_hv_generator
 	AND A.source not LIKE '%%powerline%%'
 	AND A.scenario_id = 37;
 
-
+*/
 -- NEP 2035
-/*
+
 INSERT into model_draft.ego_grid_pf_hv_generator
 
 	SELECT
@@ -242,7 +242,7 @@ INSERT into model_draft.ego_grid_pf_hv_generator
 	AND A.nominal_value[1] > 0.001
 	AND A.source not LIKE '%%powerline%%'
 	AND A.scenario_id = 38;
-*/
+/*
 
 -- INSERT params of Source in model_draft.ego_grid_pf_hv_generator (countries besides Germany)
 -- Status Quo
@@ -283,9 +283,9 @@ INSERT into model_draft.ego_grid_pf_hv_generator
 	WHERE substring(A.source, 1, 2) != 'DE'
 	AND A.nominal_value[1] > 0.001
 	AND A.scenario_id = 37;
-
+*/
 -- NEP 2035
-/*
+
 INSERT into model_draft.ego_grid_pf_hv_generator
 
 	SELECT
@@ -323,12 +323,12 @@ INSERT into model_draft.ego_grid_pf_hv_generator
 	WHERE substring(A.source, 1, 2) != 'DE'
 	AND A.nominal_value[1] > 0.001
 	AND A.scenario_id = 38;
-*/
+
 
 -- Copy timeseries data
-DELETE FROM model_draft.ego_grid_pf_hv_generator_pq_set WHERE generator_id > 200000 AND scn_name = 'Status Quo';
+--DELETE FROM model_draft.ego_grid_pf_hv_generator_pq_set WHERE generator_id > 200000 AND scn_name = 'Status Quo';
 DELETE FROM model_draft.ego_grid_pf_hv_generator_pq_set WHERE generator_id > 200000 AND scn_name = 'NEP 2035';
-
+/*
 -- CREATE a view containing data for generator_id's > 200000 for each timestep
 -- SELECT * FROM calc_renpass_gis.translate_to_pf limit 1000;
 -- Status Quo
@@ -361,7 +361,7 @@ CREATE MATERIALIZED VIEW calc_renpass_gis.translate_to_pf AS
 		) SQ,
 		calc_renpass_gis.renpass_gis_results C
 	WHERE
-	(C.obj_label LIKE '%%' || SQ.cntr_id || '%%' || SQ.renpass_gis_source || '%%')
+	(C.obj_label LIKE '%%' || SQ.country || '%%' || SQ.renpass_gis_source || '%%')
 	AND C.scenario_id = 37
 	AND C.type = 'to_bus';
 
@@ -383,9 +383,9 @@ INSERT into model_draft.ego_grid_pf_hv_generator_pq_set (scn_name, generator_id,
 			USING (generator_id)
 		) SQ
 	GROUP BY generator_id;
-
+*/
 -- NEP 2035
-/*
+
 Drop MATERIALIZED VIEW IF EXISTS calc_renpass_gis.translate_to_pf;
 
 CREATE MATERIALIZED VIEW calc_renpass_gis.translate_to_pf AS
@@ -415,7 +415,7 @@ CREATE MATERIALIZED VIEW calc_renpass_gis.translate_to_pf AS
 		) SQ,
 		calc_renpass_gis.renpass_gis_results C
 	WHERE
-	(C.obj_label LIKE '%%' || SQ.cntr_id || '%%' || SQ.renpass_gis_source || '%%')
+	(C.obj_label LIKE '%%' || SQ.country || '%%' || SQ.renpass_gis_source || '%%')
 	AND C.scenario_id = 38
 	AND C.type = 'to_bus';
 
@@ -437,14 +437,14 @@ INSERT into model_draft.ego_grid_pf_hv_generator_pq_set (scn_name, generator_id,
 			USING (generator_id)
 		) SQ
 	GROUP BY generator_id;
-*/
+
 
 
 -- DELETE
 DELETE FROM model_draft.ego_grid_pf_hv_load WHERE bus IN (
 SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus
 WHERE id < 27);
-
+/*
 -- INSERT neigbouring states in load table
 -- Status Quo
 INSERT into model_draft.ego_grid_pf_hv_load (scn_name, load_id, bus, sign)
@@ -465,9 +465,9 @@ INSERT into model_draft.ego_grid_pf_hv_load (scn_name, load_id, bus, sign)
 		where id < 27
 		) SQ
 	WHERE v_nom = max_v_nom;
-
+*/
 -- NEP 2035
-/*
+
 INSERT into model_draft.ego_grid_pf_hv_load (scn_name, load_id, bus, sign)
 
 	SELECT
@@ -478,7 +478,7 @@ INSERT into model_draft.ego_grid_pf_hv_load (scn_name, load_id, bus, sign)
 		FROM
 		(
 		SELECT *,
-		max(v_nom) OVER (PARTITION BY cntr_id) AS max_v_nom,
+		max(v_nom) OVER (PARTITION BY country) AS max_v_nom,
 		row_number() OVER () + (SELECT max(load_id)
 					FROM model_draft.ego_grid_pf_hv_load
 					WHERE scn_name = 'NEP 2035') AS load_id
@@ -486,13 +486,13 @@ INSERT into model_draft.ego_grid_pf_hv_load (scn_name, load_id, bus, sign)
 		where id < 27
 		) SQ
 	WHERE v_nom = max_v_nom;
-*/
+
 
 
 -- Demand timeseries
 
 -- NEP 2035
-/*
+
 INSERT INTO model_draft.ego_grid_pf_hv_load_pq_set (scn_name, load_id, temp_id, p_set)
 
 	SELECT
@@ -516,7 +516,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_load_pq_set (scn_name, load_id, temp_id, 
 	WHERE SQ.v_nom = SQ.max_v_nom
 	AND C.scn_name = 'NEP 2035'
 	GROUP BY C.load_id;
-*/
+
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_grid_pf_hv_generator_pq_set','renpass_gis_ResultsTOPF.sql',' ');
