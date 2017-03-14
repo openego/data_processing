@@ -9,9 +9,9 @@ __author__ 	= "IlkaCu"
 
 -- Add columns to ego_supply_rea_2035 - THIS TABLE IS ONLY USED TEMPORARILY!
 
-ALTER TABLE model_draft.ego_supply_rea_2035
-  	ADD COLUMN otg_id bigint,
-	ADD COLUMN un_id bigint;
+--ALTER TABLE model_draft.ego_supply_rea_2035
+--  	ADD COLUMN otg_id bigint,
+--	ADD COLUMN un_id bigint;
 
 -- Create a table that contains all generators for 'NEP 2035' (RE and conventional) but no duplicates. 
 
@@ -118,6 +118,14 @@ UPDATE model_draft.ego_supply_rea_2035 a
 	SET subst_id = b.subst_id
 	FROM model_draft.ego_grid_ehv_substation_voronoi b
 	WHERE ST_Intersects (ST_Transform(a.geom_new, 4326), b.geom) AND voltage_level <= 2; 
+	
+
+-- Insert otg_id of bus
+
+UPDATE model_draft.ego_supply_rea_2035 a
+	SET otg_id =b.otg_id 
+	FROM model_draft.ego_grid_hvmv_substation b
+	WHERE a.subst_id = b.subst_id; 
 
 
 -- Identify net connection points for offshore wind parks by comparing id with Status Quo scenario 
@@ -163,19 +171,19 @@ UPDATE model_draft.ego_supply_rea_2035 a
 
 UPDATE model_draft.ego_supply_rea_2035 a
 	SET otg_id = 26504 
- 	WHERE id IN (10147069, 10147070, 10147066, 10147072, 10147067); 
+ 	WHERE id IN (10147133, 10147134, 10147130, 10147136, 10147131); 
 
 UPDATE model_draft.ego_supply_rea_2035 a
 	SET otg_id = 27153 
- 	WHERE id IN (10147071, 10147068, 10147075); 
+ 	WHERE id IN (10147135, 10147132, 10147139); 
 
 UPDATE model_draft.ego_supply_rea_2035 a
 	SET otg_id = 26435
- 	WHERE id IN (10147073, 10147074, 10147065, 10147064); 
+ 	WHERE id IN (10147137, 10147138, 10147129, 10147128); 
 
 UPDATE model_draft.ego_supply_rea_2035 a
 	SET otg_id = 24401 
- 	WHERE id = 10147076;
+ 	WHERE id = 10147140;
 
 -- Connect powerplants with voltage_level >=3 outside the grid district area to their nearest hv/mv-substation 
 
@@ -195,14 +203,6 @@ UPDATE model_draft.ego_supply_rea_2035 a
 --) as sub
 --WHERE C.id = sub.id 
 --;
-
-
--- Insert otg_id of bus
-
-UPDATE model_draft.ego_supply_rea_2035 a
-	SET otg_id =b.otg_id 
-	FROM model_draft.ego_grid_hvmv_substation b
-	WHERE a.subst_id = b.subst_id; 
 
 
 -- Update un_id from generators_total 
