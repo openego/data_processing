@@ -79,6 +79,9 @@ INSERT INTO model_draft.ego_supply_rea_m2_windfarm (area_ha,geom)
 CREATE INDEX ego_supply_rea_m2_windfarm_geom_idx
 	ON model_draft.ego_supply_rea_m2_windfarm USING gist (geom);
 
+-- grant (oeuser)
+ALTER TABLE model_draft.ego_supply_rea_m2_windfarm OWNER TO oeuser;
+
 -- update subst_id from grid_district
 UPDATE 	model_draft.ego_supply_rea_m2_windfarm AS t1
 	SET  	subst_id = t2.subst_id

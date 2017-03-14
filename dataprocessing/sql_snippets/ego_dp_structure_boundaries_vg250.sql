@@ -451,6 +451,9 @@ UPDATE 	social.destatis_zensus_population_per_bkg_vg250_6_gem AS t1
 		)AS t2
 	WHERE  	t1.gem_id = t2.id;
 
+-- grant (oeuser)
+ALTER TABLE	social.destatis_zensus_population_per_bkg_vg250_6_gem OWNER TO oeuser;
+
 -- NULL to 0
 UPDATE 	social.destatis_zensus_population_per_bkg_vg250_6_gem AS ce
 	SET	census_sum = '0'

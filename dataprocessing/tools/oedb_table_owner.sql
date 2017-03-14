@@ -6,7 +6,7 @@ JOIN pg_catalog.pg_class c on (t.table_name = c.relname)
 JOIN pg_catalog.pg_user u on (c.relowner = u.usesysid)
 WHERE 	t.table_schema <> 'model_draft'
 	AND usename <> 'postgres'
-ORDER BY t.table_schema,u.usename;
+ORDER BY u.usename, t.table_schema;
 
 SELECT t.*
 FROM information_schema.tables t;
