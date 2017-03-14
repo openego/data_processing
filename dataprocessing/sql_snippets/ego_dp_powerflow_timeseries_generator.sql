@@ -492,6 +492,7 @@ INSERT into model_draft.ego_grid_pf_hv_load (scn_name, load_id, bus, sign)
 -- Demand timeseries
 
 -- NEP 2035
+/* Handled in  ego_dp_powerflow_load_timeseries_NEP2035.sql
 
 INSERT INTO model_draft.ego_grid_pf_hv_load_pq_set (scn_name, load_id, temp_id, p_set)
 
@@ -516,7 +517,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_load_pq_set (scn_name, load_id, temp_id, 
 	WHERE SQ.v_nom = SQ.max_v_nom
 	AND C.scn_name = 'NEP 2035'
 	GROUP BY C.load_id;
-
+*/
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_grid_pf_hv_generator_pq_set','renpass_gis_ResultsTOPF.sql',' ');
