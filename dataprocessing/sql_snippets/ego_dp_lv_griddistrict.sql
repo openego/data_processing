@@ -125,7 +125,7 @@ DELETE FROM model_draft."ego_grid_mvlv_substation" WHERE is_dummy = TRUE;
 
 -- Cutting
 
-CREATE TABLE IF NOT EXISTS model_draft."ego_grid_lv_griddistrict"
+CREATE TABLE IF NOT EXISTS model_draft.ego_grid_lv_griddistrict
 (
   id serial NOT NULL,
   geom geometry(Polygon,3035),
@@ -136,13 +136,13 @@ CREATE TABLE IF NOT EXISTS model_draft."ego_grid_lv_griddistrict"
   CONSTRAINT ego_grid_lv_griddistrict_pkey PRIMARY KEY (id)
 );
 
-TRUNCATE TABLE 	model_draft."ego_grid_lv_griddistrict";
+TRUNCATE TABLE 	model_draft.ego_grid_lv_griddistrict;
 
 -- index GIST (geom)
 CREATE INDEX ego_grid_lv_griddistrict_geom_idx
-	ON model_draft."ego_grid_lv_griddistrict" USING GIST (geom);
+	ON model_draft.ego_grid_lv_griddistrict USING GIST (geom);
 
-INSERT INTO		model_draft.ego_grid_lv_griddistrict (geom,load_area_id)
+INSERT INTO	model_draft.ego_grid_lv_griddistrict (geom,load_area_id)
 	SELECT	(ST_DUMP(ST_INTERSECTION(mun.geom,voi.geom))).geom ::geometry(Polygon,3035) AS geom, mun.id AS load_area_id
 	FROM	model_draft."ego_demand_loadarea" AS mun,
 		model_draft."ego_grid_lv_griddistrictsvoronoi" AS voi
@@ -155,26 +155,24 @@ INSERT INTO		model_draft.ego_grid_lv_griddistrict (geom,load_area_id)
 
 
 -- Lösche sehr kleine Gebiete; Diese sind meistens Bugs in den Grenzverläufen
-DELETE FROM model_draft."ego_grid_lv_griddistrict" WHERE ST_AREA(geom) < 0.001;
-	
+DELETE FROM model_draft.ego_grid_lv_griddistrict WHERE ST_AREA(geom) < 0.001;
+
+
 -- Count substations per grid district
+UPDATE 	model_draft.ego_grid_lv_griddistrict AS t1
+	SET ont_count = 0;
+
+UPDATE 	model_draft.ego_grid_lv_griddistrict AS t1
+	SET  	ont_count = t2.count
+	FROM (SELECT COUNT (onts.geom) AS count,dist.id AS id
+		FROM model_draft."ego_grid_mvlv_substation" AS onts, model_draft.ego_grid_lv_griddistrict AS dist
+		WHERE ST_CONTAINS (dist.geom,onts.geom)
+		GROUP BY dist.id
+	      ) AS t2
+	WHERE t1.id = t2.id;
 
 
-
-UPDATE 	model_draft."ego_grid_lv_griddistrict" AS t1
-SET ont_count = 0;
-
-UPDATE 	model_draft."ego_grid_lv_griddistrict" AS t1
-SET  	ont_count = t2.count
-FROM (SELECT COUNT (onts.geom) AS count,dist.id AS id
-	FROM model_draft."ego_grid_mvlv_substation" AS onts, model_draft."ego_grid_lv_griddistrict" AS dist
-	WHERE ST_CONTAINS (dist.geom,onts.geom)
-	GROUP BY dist.id
-      ) AS t2
-WHERE t1.id = t2.id;
-
-
-UPDATE 	model_draft."ego_grid_lv_griddistrict" AS t1
+UPDATE 	model_draft.ego_grid_lv_griddistrict AS t1
 SET  	ont_id = t2.id
 FROM model_draft."ego_grid_mvlv_substation" AS t2
 WHERE ST_CONTAINS(t1.geom,t2.geom);
@@ -182,7 +180,7 @@ WHERE ST_CONTAINS(t1.geom,t2.geom);
 -- Add merge info
 
 
-UPDATE 	model_draft."ego_grid_lv_griddistrict" AS t1
+UPDATE 	model_draft.ego_grid_lv_griddistrict AS t1
 SET merge_id = t2.merge_id
 FROM (
 	WITH mins AS (
@@ -190,9 +188,9 @@ FROM (
 		FROM
 			model_draft."ego_grid_mvlv_substation" AS onts 
 			INNER JOIN 
-			model_draft."ego_grid_lv_griddistrict" AS regions ON onts.load_area_id = regions.load_area_id
+			model_draft.ego_grid_lv_griddistrict AS regions ON onts.load_area_id = regions.load_area_id
 			INNER JOIN 
-			model_draft."ego_grid_lv_griddistrict" AS regions2 ON ST_INTERSECTS(regions.geom,regions2.geom)
+			model_draft.ego_grid_lv_griddistrict AS regions2 ON ST_INTERSECTS(regions.geom,regions2.geom)
 		WHERE ST_CONTAINS (regions2.geom,onts.geom)
 		GROUP BY regions_id
 
@@ -202,14 +200,14 @@ FROM (
 	FROM
 		model_draft."ego_grid_mvlv_substation" AS onts 
 		INNER JOIN 
-		model_draft."ego_grid_lv_griddistrict" AS regions ON onts.load_area_id = regions.load_area_id
+		model_draft.ego_grid_lv_griddistrict AS regions ON onts.load_area_id = regions.load_area_id
 		INNER JOIN
 		mins ON mins.regions_id = regions.id
 	WHERE  ST_DISTANCE(ST_CENTROID(regions.geom),onts.geom) = mins.distance
       ) AS t2
 WHERE t1.id = t2.district_id;
 
-UPDATE 	model_draft."ego_grid_lv_griddistrict" AS t1
+UPDATE 	model_draft.ego_grid_lv_griddistrict AS t1
 SET ont_id = merge_id
 WHERE ont_count = 0;
 
@@ -229,7 +227,7 @@ TRUNCATE TABLE 	model_draft."ego_grid_lv_griddistrictwithoutpop";
 INSERT INTO		model_draft."ego_grid_lv_griddistrictwithoutpop" (geom,load_area_id)
 
 SELECT (ST_DUMP(ST_UNION(cut.geom))).geom::geometry(Polygon,3035), onts.load_area_id
-FROM model_draft."ego_grid_lv_griddistrict" AS cut
+FROM model_draft.ego_grid_lv_griddistrict AS cut
 	INNER JOIN model_draft."ego_grid_mvlv_substation" AS onts
 ON cut.ont_id = onts.id
 WHERE ont_id >= 0
@@ -248,14 +246,14 @@ UPDATE model_draft."ego_grid_lv_griddistrictwithoutpop" AS districts
 SET geom = ST_UNION(adjacent.geom, districts.geom)
 FROM  ( SELECT ST_UNION(cut.geom) AS geom, districts.id AS district_id
 	FROM model_draft."ego_grid_lv_griddistrictwithoutpop" AS districts,
-		model_draft."ego_grid_lv_griddistrict" AS cut
+		model_draft.ego_grid_lv_griddistrict AS cut
 	WHERE ST_TOUCHES(cut.geom,districts.geom)
 	 AND NOT ST_GEOMETRYTYPE (ST_INTERSECTION(cut.geom,districts.geom)) = 'ST_Point'
 	 AND cut.id IN (
-		SELECT id FROM model_draft."ego_grid_lv_griddistrict" AS cut
+		SELECT id FROM model_draft.ego_grid_lv_griddistrict AS cut
 		WHERE cut.id NOT IN (
 			SELECT cut.id 
-			FROM model_draft."ego_grid_lv_griddistrict" AS cut,
+			FROM model_draft.ego_grid_lv_griddistrict AS cut,
 				model_draft."ego_grid_lv_griddistrictwithoutpop" AS districts
 			WHERE ST_WITHIN(cut.geom,districts.geom)
 			GROUP BY cut.id
@@ -543,14 +541,13 @@ WHERE  	t1.id = t2.gd_id;
 	
 
 ----- Delete auxilliary tables
-
 DROP TABLE IF EXISTS model_draft."ego_grid_lv_griddistrictsvoronoi";
 --DROP TABLE IF EXISTS model_draft."ego_grid_lv_grid_district";
 DROP TABLE IF EXISTS model_draft."ego_grid_lv_griddistrictwithoutpop";
 --DROP TABLE IF EXISTS model_draft."ego_grid_lv_griddistrictsectors";
 
 -- Set comment on table
-COMMENT ON TABLE model_draft."ego_grid_lv_griddistrict" IS
+COMMENT ON TABLE model_draft.ego_grid_lv_griddistrict IS
 '{
 "Name": "eGo data processing - ego_grid_lv_griddistrict",
 "Source": [{
@@ -615,14 +612,5 @@ COMMENT ON TABLE model_draft."ego_grid_lv_griddistrict" IS
 -- Select description
 SELECT obj_description('model_draft.ego_grid_lv_griddistrict'::regclass)::json;
 
--- Add entry to scenario logtable
-INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_name,script_name,entries,status,user_name,timestamp)
-SELECT	'0.2' AS version,
-	'model_draft' AS schema_name,
-	'ego_grid_lv_griddistrict' AS table_name,
-	'process_eGo_lv_grid_districts.sql' AS script_name,
-	COUNT(*)AS entries,
-	'OK' AS status,
-	session_user AS user_name,
-	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
-FROM	model_draft.table;
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_grid_lv_griddistrict','ego_dp_lv_griddistrict.sql',' ');
