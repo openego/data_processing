@@ -156,15 +156,19 @@ def makeDataObj(activities, pos, num, ns):
     for aIterator in activities:
         if "com.yworks.bpmn.Artifact.withShadow" in aIterator.attrib.values():
             obj = aIterator.find('tn:NodeLabel', ns)
-            if obj.text is not None:
+
+            if obj is not None and obj.text is not None:
+
                 name = obj.text.replace('\n', ' ').replace('\r', '')
-            obj2 = aIterator.find('tn:StyleProperties', ns).findall('tn:Property', ns);
+
+            obj2 = aIterator.find('tn:StyleProperties', ns).findall('tn:Property', ns)
+
             for anns in obj2:
-                if "ARTIFACT_TYPE_ANNOTATION" in anns.attrib.values():
-                    tmpArray2.append(Annotation(name, pos, ns))
-                if obj is not None and "ARTIFACT_TYPE_DATA_OBJECT" in anns.attrib.values():
-                    if len(name.strip()) > 0:
-                        tmpArray1.append(DataObj(name, pos, ns))
+                    if "ARTIFACT_TYPE_ANNOTATION" in anns.attrib.values():
+                        tmpArray2.append(Annotation(name, pos, ns))
+                    if obj is not None and "ARTIFACT_TYPE_DATA_OBJECT" in anns.attrib.values():
+                        if len(name.strip()) > 0:
+                            tmpArray1.append(DataObj(name, pos, ns))
     if num == 1:
         return tmpArray1
     else:
@@ -291,7 +295,7 @@ def getStart():  # fixed start and end at events
 
     for ase in allStartEv:
 
-        if type(ase) is Event and ase.type == 'EVENT_CHARACTERISTIC_START':
+        if type(ase) is Event and ase.type == 'EVENT_CHARACTERISTIC_START' and ase.position.name not in parsing_nodes:
 
             starts.append(ase.position.name)
             parsing.append(ase)
@@ -370,7 +374,7 @@ def getStart():  # fixed start and end at events
 
                     if sg == True:
                         parsing.insert(sgIndex, sublist)
-                        assign(sg, sg2, sublist, sublist2, newSub, ase, 'chnext')
+                        #assign(sg, sg2, sublist, sublist2, newSub, ase, 'chnext')
 
         if type(ase) is Event and (
                 ase.type == 'EVENT_CHARACTERISTIC_INTERMEDIATE_CATCHING' or ase.type == 'EVENT_CHARACTERISTIC_END'):
@@ -464,7 +468,7 @@ def checkNextParallel3( curr_gw, currInd, sg, sublist, sg2, sublist2, s, permCou
                     if len(temp_starts) == 0:
                         #activeStates.append(currobj)
                         activeStates.insert(new_pos, currobj)
-                        currInd += 1
+                      #  currInd += 1
                         parsing_nodes.append(currobj.position.name)
                     else:
                         otherstarts.extend(temp_starts)
@@ -491,6 +495,9 @@ def checkNextParallel3( curr_gw, currInd, sg, sublist, sg2, sublist2, s, permCou
                 for state in activeStates:
                     if isinstance(parsing[-1],str) and 'Gateway' in parsing[-1]:
                         return activeStates
+                    if isDeadEnd(state):
+                        activeStates.remove(state)
+                        continue
                     takeStep2( state, currInd, sg, sublist, sg2, sublist2, s, permCount, permCount2)
 
 
@@ -558,7 +565,6 @@ def takeStep2( state,currInd, sg, sublist, sg2, sublist2, s, permCount, permCoun
                         temp_starts = checkTopStart(nextObj.position.name, currInd, sg, sublist, sg2, sublist2, s, 0, temp_starts)
 
                         if len(temp_starts) == 0:
-                            #if nextObj.position.name not in parsing_nodes:
                                 parsing_nodes.append(nextObj.position.name)
 
                                 Node.getParents(nextObj, alledges)
@@ -567,11 +573,9 @@ def takeStep2( state,currInd, sg, sublist, sg2, sublist2, s, permCount, permCoun
 
 
                                 activeStates.insert(it, copy.deepcopy(nextObj))
-                               # currInd += 1
                                 printActiveStates(activeStates,sg, sg2, sublist, sublist2, None, None, 'chnext', permCount, permCount2)
                         else:
                             otherstarts.extend(temp_starts)
-
 
                             for t in temp_starts:
                                 Node.getParents(t, alledges)
@@ -865,6 +869,14 @@ def check_if_active2(prev, element, currInd, sg, sublist, sg2, sublist2, s, perm
 #                     assign(sg, sg2, sublist, sublist2, None, None, 'chnext')
 #                     parsing_nodes.append(newObj.position.name)
 
+def isDeadEnd(state):
+    isLast = True
+    for ae in alledges:
+        if state.position.name in ae.source:
+            isLast = False
+            break
+    return isLast
+
 def getFactorial(n):
     if n == 0:
         return 1
@@ -918,7 +930,7 @@ def checkNext(next, currInd, sg, sublist, sg2, sublist2, s):
                 break
 
             if type(newObj) is DataObj and newObj.position.name not in parsing_nodes:
-                checkOtherStarts(ae.target, currInd, sg, sublist, sg2, sublist2, s, COSrerun)
+                currInd = checkOtherStarts(ae.target, currInd, sg, sublist, sg2, sublist2, s, COSrerun)
 
                 while not s.is_empty():
                     other_start = s.pop()
@@ -934,7 +946,7 @@ def checkNext(next, currInd, sg, sublist, sg2, sublist2, s):
 
             if type(newObj) is Task and newObj.position.name not in parsing_nodes:
 
-                checkOtherStarts(ae.target, currInd, sg, sublist, sg2, sublist, s, COSrerun)
+                currInd = checkOtherStarts(ae.target, currInd, sg, sublist, sg2, sublist, s, COSrerun)
                 while not s.is_empty():
                     if newObj.name not in parsing_nodes:
                         poppedEle = s.pop()
@@ -959,7 +971,7 @@ def checkNext(next, currInd, sg, sublist, sg2, sublist2, s):
                 break
 
             if type(newObj) is Node and newObj.position not in parsing_nodes:
-                checkOtherStarts(ae.target, currInd, sg, sublist, sg2, sublist2, s, COSrerun)
+                currInd = checkOtherStarts(ae.target, currInd, sg, sublist, sg2, sublist2, s, COSrerun)
                 while not s.is_empty():
                     parsing.append(s.pop())
                     assign(sg, sg2, sublist, sublist2, None, None, 'chnext')
@@ -980,8 +992,9 @@ def checkNext(next, currInd, sg, sublist, sg2, sublist2, s):
                 # print(allAnnots.name)
                 # connectToPostgres(allAnnots.name)
                 #assign(sg, sg2, sublist, sublist2, None, None, 'chnext')
-                checkNext(newObj.position, currInd, sg, sublist, sg2, sublist2, s)
+
                 parsing.insert(sgIndex, sublist2)
+                checkNext(newObj.position, currInd, sg, sublist, sg2, sublist2, s)
                 break
 
             if type(newObj) is Event and newObj.position.name not in parsing_nodes:
@@ -1021,14 +1034,12 @@ def checkTopStart(target, ind, sg, sublist, sg2, sublist2, s, COSrerun,otherstar
                         while not tempStack.is_empty():
                             eleToAppend = tempStack.pop()
                             otherstarts.append(eleToAppend)
-                            assign(sg, sg2, sublist, sublist2, None, None, 'chnext')
 
 
                 elif newType is Node and newElement.position not in parsing_nodes:
                     otherstarts = checkTopStart(newElement.position, ind, sg, sublist, sg2, sublist2, s, COSrerun, otherstarts)
                     otherstarts.append(newElement)
 
-                    assign(sg, sg2, sublist, sublist2, None, None, 'chnext')
     return otherstarts
 
 def checkOtherStarts(target, ind, sg, sublist, sg2, sublist2, s, COSrerun):
@@ -1059,9 +1070,9 @@ def checkOtherStarts(target, ind, sg, sublist, sg2, sublist2, s, COSrerun):
                         eleToAppend = tempStack.pop()
                         # parsing.append(eleToAppend)
                         s.push(eleToAppend)
-                        assign(sg, sg2, sublist, sublist2, None, None, 'chnext')
+                      #  assign(sg, sg2, sublist, sublist2, None, None, 'chnext')
 
-                    assign(sg, sg2, sublist, sublist2, None, None, 'chnext')
+
                     parsing_nodes.append(newElement.position.name)
 
                 elif newType is Node and newElement.position not in parsing_nodes:
@@ -1072,7 +1083,7 @@ def checkOtherStarts(target, ind, sg, sublist, sg2, sublist2, s, COSrerun):
                         parsing.append(s.pop())
                         assign(sg, sg2, sublist, sublist2, None, None, 'chnext')
 
-                    assign(sg, sg2, sublist, sublist2, None, None, 'chnext')
+               #     assign(sg, sg2, sublist, sublist2, None, None, 'chnext')
                     parsing_nodes.append(newElement.position)
 
     return ind
