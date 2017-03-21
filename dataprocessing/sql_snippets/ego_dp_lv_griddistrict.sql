@@ -9,44 +9,25 @@ __author__ 	= "jong42, Ludee"
 */
 
 
--- Add Dummy points to substations (18 Points)
-ALTER TABLE model_draft.ego_grid_hvmv_substation_dummy
-DROP COLUMN IF EXISTS is_dummy;
+-- PART 1: VORONOI
+-- voronoi algorithm
+DROP TABLE IF EXISTS	model_draft.ego_grid_mvlv_substation_voronoi CASCADE;
+CREATE TABLE 		model_draft.ego_grid_mvlv_substation_voronoi (
+	id 		serial NOT NULL,
+	subst_id 	integer,
+	geom 		geometry(Polygon,3035),
+	CONSTRAINT ego_grid_mvlv_substation_voronoi_pkey PRIMARY KEY (id) );
 
-ALTER TABLE model_draft.ego_grid_hvmv_substation_dummy
-ADD COLUMN is_dummy boolean;
+-- grant (oeuser)
+ALTER TABLE	model_draft.ego_grid_mvlv_substation_voronoi OWNER TO oeuser;
 
-UPDATE model_draft.ego_grid_hvmv_substation_dummy
-SET is_dummy = TRUE;
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','input','model_draft','ego_grid_mvlv_substation','ego_dp_lv_griddistrict.sql',' ');
 
-ALTER TABLE model_draft."ego_grid_mvlv_substation"
-DROP COLUMN IF EXISTS is_dummy;
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','input','model_draft','ego_grid_hvmv_substation_dummy','ego_dp_lv_griddistrict.sql',' ');
 
-ALTER TABLE model_draft."ego_grid_mvlv_substation"
-ADD COLUMN is_dummy boolean;
-
-INSERT INTO model_draft."ego_grid_mvlv_substation" (id,geom, is_dummy)
-SELECT	
-	dummy.subst_id+800000,
-	ST_TRANSFORM(dummy.geom,3035),
-	dummy.is_dummy
-FROM model_draft.ego_grid_hvmv_substation_dummy AS dummy;
-
----------------------
-
-
--- Execute voronoi algorithm
-CREATE TABLE IF NOT EXISTS model_draft."ego_grid_lv_griddistrictsvoronoi"
-(
-  id serial NOT NULL,
-  geom geometry(Polygon,3035),
-  subst_id integer,
-  CONSTRAINT ego_grid_lv_griddistrictsvoronoi_pkey PRIMARY KEY (id)
-);
-
-TRUNCATE TABLE model_draft."ego_grid_lv_griddistrictsvoronoi";
-
--- Begin loop over MS grid districts
+-- loop over mv-griddistricts
 DO
 $$
 DECLARE gd integer;
@@ -54,14 +35,14 @@ BEGIN
 	FOR gd_id IN 1..3608
 	LOOP
 		EXECUTE
-
 'WITH 
     -- Sample set of points to work with
-    Sample AS (SELECT   ST_SetSRID(ST_Union(pts.geom), 0) AS geom
-		FROM	model_draft.ego_grid_mvlv_substation AS pts
-		WHERE pts.subst_id = ' || gd_id || ' OR is_dummy = TRUE
+    Sample AS (SELECT   ST_SetSRID(ST_Union(ST_Collect(a.geom,b.geom)), 0) AS geom
+		FROM	model_draft.ego_grid_mvlv_substation AS a,
+			model_draft.ego_grid_hvmv_substation_dummy AS b
+		WHERE 	a.subst_id = ' || gd_id || '
 		),  -- INPUT 1/2
-    -- Build edges and circumscribe points to generate a centroid
+    -- Build edges and circumscribe points to generate centroids
     Edges AS (
     SELECT id,
         UNNEST(ARRAY[''e1'',''e2'',''e3'']) EdgeName,
@@ -85,7 +66,7 @@ BEGIN
             )b
         ) c
     )
-INSERT INTO model_draft.ego_grid_lv_griddistrictsvoronoi (geom, subst_id)	   -- INPUT 2/2
+INSERT INTO model_draft.ego_grid_mvlv_substation_voronoi (geom, subst_id)	   -- INPUT 2/2
 SELECT ST_SetSRID((ST_Dump(ST_Polygonize(ST_Node(ST_LineMerge(ST_Union(v, (SELECT ST_ExteriorRing(ST_ConvexHull(ST_Union(ST_Union(ST_Buffer(edge,20),ct)))) FROM Edges))))))).geom, 3035) geom, ' || gd_id || ' AS subst_id	  
 FROM (
     SELECT  -- Create voronoi edges and reduce to a multilinestring
@@ -107,74 +88,189 @@ FROM (
         LEFT OUTER JOIN -- Self Join based on edges
         Edges y ON x.id <> y.id AND ST_Equals(x.edge,y.edge)
     ) z';
-
 END LOOP;
-
 END;
 $$;
 
+-- index GIST (geom)
+CREATE INDEX	ego_grid_mvlv_substation_voronoi_cut_geom_idx
+	ON	model_draft.ego_grid_mvlv_substation_voronoi USING GIST (geom);
 
-	
--- Delete Dummy points from substations 
-DELETE FROM model_draft."ego_grid_mvlv_substation" WHERE is_dummy = TRUE;
-
----------- ---------- ----------
--- CUT
----------- ---------- ----------
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_grid_mvlv_substation_voronoi','ego_dp_lv_griddistrict.sql',' ');
 
 
+
+-- PART 1: CUTTING
 -- Cutting
+DROP TABLE IF EXISTS	model_draft.ego_grid_mvlv_substation_voronoi_cut;
+CREATE TABLE 		model_draft.ego_grid_mvlv_substation_voronoi_cut (
+	id 		serial NOT NULL,
+	lvgd_id 	integer,
+	lvgd_count 	integer,
+	la_id 		integer,
+	merge_id 	integer,
+	geom 		geometry(Polygon,3035),
+	geom_sub 	geometry(Point,3035),
+	CONSTRAINT ego_grid_lv_griddistrict_pkey PRIMARY KEY (id) );
 
-CREATE TABLE IF NOT EXISTS model_draft.ego_grid_lv_griddistrict
-(
-  id serial NOT NULL,
-  geom geometry(Polygon,3035),
-  load_area_id integer,
-  ont_count integer,
-  ont_id integer,
-  merge_id integer,
-  CONSTRAINT ego_grid_lv_griddistrict_pkey PRIMARY KEY (id)
-);
+ALTER TABLE model_draft.ego_grid_mvlv_substation_voronoi_cut OWNER TO oeuser;
 
-TRUNCATE TABLE 	model_draft.ego_grid_lv_griddistrict;
+INSERT INTO 	model_draft.ego_grid_mvlv_substation_voronoi_cut (la_id,geom)
+	SELECT	a.la_id,
+		(ST_DUMP(ST_INTERSECTION(a.geom,b.geom))).geom ::geometry(Polygon,3035) AS geom
+	FROM	model_draft.ego_demand_loadarea AS a,
+		model_draft.ego_grid_mvlv_substation_voronoi AS b
+	WHERE	a.geom && b.geom;
 
 -- index GIST (geom)
-CREATE INDEX ego_grid_lv_griddistrict_geom_idx
-	ON model_draft.ego_grid_lv_griddistrict USING GIST (geom);
+CREATE INDEX	ego_grid_mvlv_substation_voronoi_cut_geom_idx
+	ON	model_draft.ego_grid_mvlv_substation_voronoi_cut USING GIST (geom);
 
-INSERT INTO	model_draft.ego_grid_lv_griddistrict (geom,load_area_id)
-	SELECT	(ST_DUMP(ST_INTERSECTION(mun.geom,voi.geom))).geom ::geometry(Polygon,3035) AS geom, mun.id AS load_area_id
-	FROM	model_draft."ego_demand_loadarea" AS mun,
-		model_draft."ego_grid_lv_griddistrictsvoronoi" AS voi
-	WHERE	mun.geom && voi.geom 
-		AND mun.subst_id = voi.subst_id
+-- index GIST (geom_sub)
+CREATE INDEX	ego_grid_mvlv_substation_voronoi_cut_geom_sub_idx
+	ON	model_draft.ego_grid_mvlv_substation_voronoi_cut USING GIST (geom_sub);
+
+/* -- count mvlv_substation (only count)
+UPDATE 	model_draft.ego_grid_mvlv_substation_voronoi_cut AS t1
+	SET  	lvgd_count = t2.lvgd_count
+	FROM	(SELECT	a.id AS id,
+			COUNT(b.geom)::integer AS lvgd_count
+		FROM	model_draft.ego_grid_mvlv_substation_voronoi_cut AS a,
+			model_draft.ego_grid_mvlv_substation AS b
+		WHERE  	a.geom && b.geom AND
+			ST_CONTAINS(a.geom,b.geom)
+		GROUP BY a.id
+		)AS t2
+	WHERE  	t1.id = t2.id; */
+
+-- count mvlv_substation
+UPDATE 	model_draft.ego_grid_mvlv_substation_voronoi_cut AS t1
+	SET  	lvgd_id = t2.lvgd_id,
+		lvgd_count = t2.lvgd_count,
+		geom_sub = t2.geom_sub
+	FROM	(SELECT	a.id AS id,
+			b.lvgd_id,
+			b.geom AS geom_sub,
+			COUNT(b.geom)::integer AS lvgd_count
+		FROM	model_draft.ego_grid_mvlv_substation_voronoi_cut AS a,
+			model_draft.ego_grid_mvlv_substation AS b
+		WHERE  	a.geom && b.geom AND
+			ST_CONTAINS(a.geom,b.geom)
+		GROUP BY a.id,b.lvgd_id,b.geom
+		)AS t2
+	WHERE  	t1.id = t2.id;
+
+
+
+-- Parts with substation
+DROP MATERIALIZED VIEW IF EXISTS	model_draft.ego_grid_mvlv_substation_voronoi_cut_1subst_mview CASCADE;
+CREATE MATERIALIZED VIEW		model_draft.ego_grid_mvlv_substation_voronoi_cut_1subst_mview AS
+	SELECT	voi.*
+	FROM	model_draft.ego_grid_mvlv_substation_voronoi_cut AS voi
+	WHERE	subst_sum = 1;
+
+-- index (id)
+CREATE UNIQUE INDEX  	ego_grid_mvlv_substation_voronoi_cut_1subst_mview_id_idx
+	ON	model_draft.ego_grid_mvlv_substation_voronoi_cut_1subst_mview (id);
+
+-- index GIST (geom)
+CREATE INDEX  	ego_grid_mvlv_substation_voronoi_cut_1subst_mview_geom_idx
+	ON	model_draft.ego_grid_mvlv_substation_voronoi_cut_1subst_mview
+	USING	GIST (geom);
+
+-- grant (oeuser)
+ALTER TABLE	model_draft.ego_grid_mvlv_substation_voronoi_cut_1subst_mview OWNER TO oeuser;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','temp','model_draft','ego_grid_mvlv_substation_voronoi_cut_1subst_mview','process_eGo_grid_district.sql',' ');
+
+
+-- Parts without substation
+DROP MATERIALIZED VIEW IF EXISTS	model_draft.ego_grid_mvlv_substation_voronoi_cut_0subst_mview CASCADE;
+CREATE MATERIALIZED VIEW		model_draft.ego_grid_mvlv_substation_voronoi_cut_0subst_mview AS
+SELECT	voi.id,
+	voi.subst_id,
+	voi.mun_id,
+	voi.voi_id,
+	voi.ags_0,
+	voi.subst_type,
+	voi.geom
+FROM	model_draft.ego_grid_mvlv_substation_voronoi_cut AS voi
+WHERE	subst_sum IS NULL;
+
+-- index (id)
+CREATE UNIQUE INDEX  	ego_deu_substations_voronoi_cut_0subst_mview_id_idx
+		ON	model_draft.ego_grid_mvlv_substation_voronoi_cut_0subst_mview (id);
+
+-- index GIST (geom)
+CREATE INDEX  	ego_deu_substations_voronoi_cut_0subst_mview_geom_idx
+	ON	model_draft.ego_grid_mvlv_substation_voronoi_cut_0subst_mview
+	USING	GIST (geom);
+
+-- grant (oeuser)
+ALTER TABLE	model_draft.ego_grid_mvlv_substation_voronoi_cut_0subst_mview OWNER TO oeuser;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','temp','model_draft','ego_grid_mvlv_substation_voronoi_cut_0subst_mview','process_eGo_grid_district.sql',' ');
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+/* INSERT INTO	model_draft.ego_grid_mvlv_substation_voronoi_cut (la_id,geom)
+	SELECT	a.id AS la_id,
+		(ST_DUMP(ST_INTERSECTION(a.geom,b.geom))).geom ::geometry(Polygon,3035) AS geom
+	FROM	model_draft.ego_demand_loadarea AS a,
+		model_draft.ego_grid_mvlv_substation_voronoi AS b
+	WHERE	a.geom && b.geom 
+		AND a.subst_id = b.subst_id
 		-- make sure the boundaries really intersect and not just touch each other
-		AND (ST_GEOMETRYTYPE(ST_INTERSECTION(mun.geom,voi.geom)) = 'ST_Polygon' 
-			OR ST_GEOMETRYTYPE(ST_INTERSECTION(mun.geom,voi.geom)) = 'ST_MultiPolygon' )
-		AND ST_isvalid(voi.geom) AND ST_isvalid(mun.geom);
-
+		AND (ST_GEOMETRYTYPE(ST_INTERSECTION(a.geom,b.geom)) = 'ST_Polygon' 
+			OR ST_GEOMETRYTYPE(ST_INTERSECTION(a.geom,b.geom)) = 'ST_MultiPolygon' )
+		AND ST_isvalid(b.geom) AND ST_isvalid(a.geom);
 
 -- Lösche sehr kleine Gebiete; Diese sind meistens Bugs in den Grenzverläufen
-DELETE FROM model_draft.ego_grid_lv_griddistrict WHERE ST_AREA(geom) < 0.001;
+DELETE FROM model_draft.ego_grid_mvlv_substation_voronoi_cut WHERE ST_AREA(geom) < 0.001;
 
 
--- Count substations per grid district
-UPDATE 	model_draft.ego_grid_lv_griddistrict AS t1
-	SET ont_count = 0;
+-- Count LV substations per LV grid district
+UPDATE 	model_draft.ego_grid_mvlv_substation_voronoi_cut AS t1
+	SET lvgd_count = 0; */
 
-UPDATE 	model_draft.ego_grid_lv_griddistrict AS t1
-	SET  	ont_count = t2.count
+/* UPDATE 	model_draft.ego_grid_mvlv_substation_voronoi_cut AS t1
+	SET  	lvgd_count = t2.count
 	FROM (SELECT COUNT (onts.geom) AS count,dist.id AS id
-		FROM model_draft."ego_grid_mvlv_substation" AS onts, model_draft.ego_grid_lv_griddistrict AS dist
+		FROM model_draft.ego_grid_mvlv_substation AS onts, model_draft.ego_grid_mvlv_substation_voronoi_cut AS dist
 		WHERE ST_CONTAINS (dist.geom,onts.geom)
 		GROUP BY dist.id
 	      ) AS t2
-	WHERE t1.id = t2.id;
+	WHERE t1.id = t2.id; */
+/* 
 
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','temp','model_draft','ego_grid_hvmv_substation_voronoi_cut','process_eGo_grid_district.sql',' ');
 
+	
+	
+	
 UPDATE 	model_draft.ego_grid_lv_griddistrict AS t1
 SET  	ont_id = t2.id
-FROM model_draft."ego_grid_mvlv_substation" AS t2
+FROM model_draft.ego_grid_mvlv_substation AS t2
 WHERE ST_CONTAINS(t1.geom,t2.geom);
 
 -- Add merge info
@@ -186,7 +282,7 @@ FROM (
 	WITH mins AS (
 		SELECT regions.id AS regions_id, MIN(ST_DISTANCE(ST_CENTROID(regions.geom),onts.geom)) AS distance
 		FROM
-			model_draft."ego_grid_mvlv_substation" AS onts 
+			model_draft.ego_grid_mvlv_substation AS onts 
 			INNER JOIN 
 			model_draft.ego_grid_lv_griddistrict AS regions ON onts.load_area_id = regions.load_area_id
 			INNER JOIN 
@@ -198,7 +294,7 @@ FROM (
 
 	SELECT regions.id AS district_id, onts.id AS merge_id
 	FROM
-		model_draft."ego_grid_mvlv_substation" AS onts 
+		model_draft.ego_grid_mvlv_substation AS onts 
 		INNER JOIN 
 		model_draft.ego_grid_lv_griddistrict AS regions ON onts.load_area_id = regions.load_area_id
 		INNER JOIN
@@ -209,7 +305,7 @@ WHERE t1.id = t2.district_id;
 
 UPDATE 	model_draft.ego_grid_lv_griddistrict AS t1
 SET ont_id = merge_id
-WHERE ont_count = 0;
+WHERE lvgd_count = 0;
 
 ----- bis hierhin 3h 13 min
 
@@ -228,7 +324,7 @@ INSERT INTO		model_draft."ego_grid_lv_griddistrictwithoutpop" (geom,load_area_id
 
 SELECT (ST_DUMP(ST_UNION(cut.geom))).geom::geometry(Polygon,3035), onts.load_area_id
 FROM model_draft.ego_grid_lv_griddistrict AS cut
-	INNER JOIN model_draft."ego_grid_mvlv_substation" AS onts
+	INNER JOIN model_draft.ego_grid_mvlv_substation AS onts
 ON cut.ont_id = onts.id
 WHERE ont_id >= 0
 GROUP BY cut.ont_id, onts.load_area_id;
@@ -236,7 +332,7 @@ GROUP BY cut.ont_id, onts.load_area_id;
 -------------------------------
 -- Lösche Bezirke ohne Transformator
 DELETE FROM model_draft."ego_grid_lv_griddistrictwithoutpop" AS districts
-USING model_draft."ego_grid_mvlv_substation" AS onts
+USING model_draft.ego_grid_mvlv_substation AS onts
 WHERE ST_INTERSECTS (onts.geom,districts.geom) = FALSE
 	AND onts.id = districts.id;
 
@@ -283,7 +379,7 @@ FROM	(SELECT	gd.id AS gd_id,
 	GROUP BY gd.id, sub.id
 	) AS t2
 WHERE  	t1.id = t2.gd_id;
-
+ */
 
 ---- Add population
 --CREATE TABLE IF NOT EXISTS model_draft."ego_grid_lv_grid_district"
@@ -426,7 +522,7 @@ WHERE  	t1.id = t2.gd_id;
 --	FROM(SELECT (ST_AREA(sectors.geom) / ((l_area.sector_area_residential)* 10000)) * (peak.residential* 1000000)   AS peak_load, sectors.id
 --
 --		FROM model_draft."ego_grid_lv_griddistrictsectors" AS sectors,
---				model_draft."ego_demand_loadarea" AS l_area,
+--				model_draft.ego_demand_loadarea AS l_area,
 --				model_draft."ego_demand_loadarea_peak_load" AS peak
 --
 --		WHERE sectors.sector = 'residential'
@@ -441,7 +537,7 @@ WHERE  	t1.id = t2.gd_id;
 --		SELECT (ST_AREA(sectors.geom) / ((l_area.sector_area_agricultural)* 10000)) * (peak.agricultural* 1000000) AS peak_load, sectors.id
 --
 --		FROM model_draft."ego_grid_lv_griddistrictsectors" AS sectors,
---				model_draft."ego_demand_loadarea" AS l_area,
+--				model_draft.ego_demand_loadarea AS l_area,
 --				model_draft."ego_demand_loadarea_peak_load" AS peak
 --
 --		WHERE sectors.sector = 'agricultural'
@@ -455,7 +551,7 @@ WHERE  	t1.id = t2.gd_id;
 --		SELECT (ST_AREA(sectors.geom) / ((l_area.sector_area_industrial)* 10000)) * (peak.industrial* 1000000) AS peak_load, sectors.id
 --
 --		FROM model_draft."ego_grid_lv_griddistrictsectors" AS sectors,
---				model_draft."ego_demand_loadarea" AS l_area,
+--				model_draft.ego_demand_loadarea AS l_area,
 --				model_draft."ego_demand_loadarea_peak_load" AS peak
 --
 --		WHERE sectors.sector = 'industrial'
@@ -468,7 +564,7 @@ WHERE  	t1.id = t2.gd_id;
 --
 --		SELECT (ST_AREA(sectors.geom) / ((l_area.sector_area_retail)* 10000)) * (peak.retail* 1000000) AS peak_load, sectors.id
 --		FROM model_draft."ego_grid_lv_griddistrictsectors" AS sectors,
---				model_draft."ego_demand_loadarea" AS l_area,
+--				model_draft.ego_demand_loadarea AS l_area,
 --				model_draft."ego_demand_loadarea_peak_load" AS peak
 --
 --		WHERE sectors.sector = 'retail'
@@ -541,9 +637,9 @@ WHERE  	t1.id = t2.gd_id;
 	
 
 ----- Delete auxilliary tables
-DROP TABLE IF EXISTS model_draft."ego_grid_lv_griddistrictsvoronoi";
+--DROP TABLE IF EXISTS model_draft.ego_grid_mvlv_substation_voronoi;
 --DROP TABLE IF EXISTS model_draft."ego_grid_lv_grid_district";
-DROP TABLE IF EXISTS model_draft."ego_grid_lv_griddistrictwithoutpop";
+--DROP TABLE IF EXISTS model_draft."ego_grid_lv_griddistrictwithoutpop";
 --DROP TABLE IF EXISTS model_draft."ego_grid_lv_griddistrictsectors";
 
 -- Set comment on table

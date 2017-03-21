@@ -317,6 +317,31 @@ SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_grid_hvmv_substatio
 -- CUT
 ---------- ---------- ----------
 
+DROP TABLE IF EXISTS	model_draft.ego_grid_hvmv_substation_voronoi_cut;
+CREATE TABLE 		model_draft.ego_grid_hvmv_substation_voronoi_cut (
+	id 		serial,
+	subst_id 	integer,
+	mun_id 		integer,
+	voi_id 		integer,
+	ags_0 		character varying(12),
+	subst_type 	integer,
+	subst_sum 	integer,
+	geom 		geometry(Polygon,3035),
+	geom_sub 	geometry(Point,3035),
+	CONSTRAINT ego_grid_hvmv_substation_voronoi_cut_pkey PRIMARY KEY (id) );
+
+INSERT INTO 	model_draft.ego_grid_hvmv_substation_voronoi_cut (subst_id,mun_id,voi_id,ags_0,subst_type,geom)
+	SELECT	b.subst_id,
+		a.id AS mun_id,
+		b.id AS voi_id,
+		a.ags_0 AS ags_0,
+		a.subst_type,
+		(ST_DUMP(ST_INTERSECTION(a.geom,b.geom))).geom ::geometry(Polygon,3035) AS geom
+	FROM	model_draft.ego_political_boundary_hvmv_subst_per_gem_2_mview AS a,
+		model_draft.ego_grid_hvmv_substation_voronoi_mview AS b
+	WHERE	a.geom && b.geom;
+
+/* 
 -- Sequence
 DROP SEQUENCE IF EXISTS 	model_draft.ego_grid_hvmv_substation_voronoi_cut_id CASCADE;
 CREATE SEQUENCE 		model_draft.ego_grid_hvmv_substation_voronoi_cut_id;
@@ -344,6 +369,15 @@ ALTER TABLE	model_draft.ego_grid_hvmv_substation_voronoi_cut
 	ADD COLUMN geom_sub geometry(Point,3035),
 	ADD PRIMARY KEY (id);
 
+ */
+-- index GIST (geom)
+CREATE INDEX	ego_grid_hvmv_substation_voronoi_cut_geom_idx
+	ON	model_draft.ego_grid_hvmv_substation_voronoi_cut USING GIST (geom);
+
+-- index GIST (geom_sub)
+CREATE INDEX	ego_grid_hvmv_substation_voronoi_cut_geom_sub_idx
+	ON	model_draft.ego_grid_hvmv_substation_voronoi_cut USING GIST (geom_sub);
+
 -- Count Substations in Voronoi Cuts
 UPDATE 	model_draft.ego_grid_hvmv_substation_voronoi_cut AS t1
 	SET  	subst_sum = t2.subst_sum,
@@ -360,16 +394,6 @@ UPDATE 	model_draft.ego_grid_hvmv_substation_voronoi_cut AS t1
 		GROUP BY mun.id,sub.subst_id,sub.geom
 		)AS t2
 	WHERE  	t1.id = t2.id;
-
--- index GIST (geom)
-CREATE INDEX	ego_deu_substations_voronoi_cut_geom_idx
-	ON	model_draft.ego_grid_hvmv_substation_voronoi_cut
-	USING	GIST (geom);
-
--- index GIST (geom_sub)
-CREATE INDEX	ego_deu_substations_voronoi_cut_geom_subst_idx
-	ON	model_draft.ego_grid_hvmv_substation_voronoi_cut
-	USING	GIST (geom_sub);
 	
 -- grant (oeuser)
 ALTER TABLE	model_draft.ego_grid_hvmv_substation_voronoi_cut OWNER TO oeuser;
@@ -378,7 +402,6 @@ ALTER TABLE	model_draft.ego_grid_hvmv_substation_voronoi_cut OWNER TO oeuser;
 SELECT ego_scenario_log('v0.2.5','temp','model_draft','ego_grid_hvmv_substation_voronoi_cut','process_eGo_grid_district.sql',' ');
 
 ---------- ---------- ----------
-
 -- -- Validate (geom)   (OK!) -> 22.000ms =0
 -- DROP VIEW IF EXISTS	model_draft.ego_grid_hvmv_substation_voronoi_cut_error_geom_view CASCADE;
 -- CREATE VIEW		model_draft.ego_grid_hvmv_substation_voronoi_cut_error_geom_view AS
@@ -400,8 +423,8 @@ SELECT ego_scenario_log('v0.2.5','temp','model_draft','ego_grid_hvmv_substation_
 
 -- -- Drop empty view   (OK!) -> 100ms =1 (no error!)
 -- SELECT f_drop_view('{ego_deu_substations_voronoi_cut_error_geom_view}', 'calc_grid_district');
-
 ---------- ---------- ----------
+
 
 -- Parts with substation
 DROP MATERIALIZED VIEW IF EXISTS	model_draft.ego_grid_hvmv_substation_voronoi_cut_1subst_mview CASCADE;
@@ -425,7 +448,6 @@ ALTER TABLE	model_draft.ego_grid_hvmv_substation_voronoi_cut_1subst_mview OWNER 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.5','temp','model_draft','ego_grid_hvmv_substation_voronoi_cut_1subst_mview','process_eGo_grid_district.sql',' ');
 
----------- ---------- ----------
 
 -- Parts without substation
 DROP MATERIALIZED VIEW IF EXISTS	model_draft.ego_grid_hvmv_substation_voronoi_cut_0subst_mview CASCADE;
@@ -441,13 +463,12 @@ FROM	model_draft.ego_grid_hvmv_substation_voronoi_cut AS voi
 WHERE	subst_sum IS NULL;
 
 -- index (id)
-CREATE UNIQUE INDEX  	ego_deu_substations_voronoi_cut_0subst_mview_id_idx
+CREATE UNIQUE INDEX  	ego_grid_hvmv_substation_voronoi_cut_0subst_mview_id_idx
 		ON	model_draft.ego_grid_hvmv_substation_voronoi_cut_0subst_mview (id);
 
 -- index GIST (geom)
-CREATE INDEX  	ego_deu_substations_voronoi_cut_0subst_mview_geom_idx
-	ON	model_draft.ego_grid_hvmv_substation_voronoi_cut_0subst_mview
-	USING	GIST (geom);
+CREATE INDEX  	ego_grid_hvmv_substation_voronoi_cut_0subst_mview_geom_idx
+	ON	model_draft.ego_grid_hvmv_substation_voronoi_cut_0subst_mview USING GIST (geom);
 
 -- grant (oeuser)
 ALTER TABLE	model_draft.ego_grid_hvmv_substation_voronoi_cut_0subst_mview OWNER TO oeuser;

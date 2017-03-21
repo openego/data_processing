@@ -133,10 +133,10 @@ SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_grid_hvmv_substatio
 -- voronoi polygons with eucldean distance
 DROP TABLE IF EXISTS model_draft.ego_grid_hvmv_substation_voronoi CASCADE; -- name 1/2
 	WITH	-- sample set of points to work with
-		Sample AS (SELECT   ST_SetSRID(ST_Union(ST_Collect(pts.geom,dum.geom)), 0) AS geom
-		FROM	model_draft.ego_grid_hvmv_substation AS pts,
-			model_draft.ego_grid_hvmv_substation_dummy AS dum),  -- input points
-		-- Build edges and circumscribe points to generate a centroid
+		Sample AS (SELECT   ST_SetSRID(ST_Union(ST_Collect(a.geom,b.geom)), 0) AS geom
+		FROM	model_draft.ego_grid_hvmv_substation AS a,
+			model_draft.ego_grid_hvmv_substation_dummy AS b),  -- input points
+		-- Build edges and circumscribe points to generate centroids
 		Edges AS (
 		SELECT	id,
 			UNNEST(ARRAY['e1','e2','e3']) EdgeName,
