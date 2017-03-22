@@ -8,7 +8,7 @@ __url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
 __author__ 	= "jong42, Ludee"
 */
 
-
+/* 
 -- voronoi algorithm
 DROP TABLE IF EXISTS	model_draft.ego_grid_mvlv_substation_voronoi CASCADE;
 CREATE TABLE 		model_draft.ego_grid_mvlv_substation_voronoi (
@@ -202,7 +202,7 @@ SELECT obj_description('model_draft.ego_grid_mvlv_substation_voronoi' ::regclass
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_grid_mvlv_substation_voronoi','ego_dp_lv_griddistrict.sql',' ');
 
-
+ */
 
 
 
@@ -246,3 +246,6 @@ INSERT INTO	model_draft.ego_grid_mvlv_substation_voronoi_clean
 	SELECT	*
 	FROM	model_draft.ego_grid_mvlv_substation_voronoi
 	WHERE	cnt = 1;
+
+	
+

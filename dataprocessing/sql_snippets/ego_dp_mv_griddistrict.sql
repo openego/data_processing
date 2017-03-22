@@ -1359,6 +1359,7 @@ CREATE TABLE         	model_draft.ego_grid_mv_griddistrict_dump_nn_line (
 -- grant (oeuser)
 ALTER TABLE	model_draft.ego_grid_mv_griddistrict_dump_nn_line OWNER TO oeuser;
 
+
 -- insert line
 INSERT INTO	model_draft.ego_grid_mv_griddistrict_dump_nn_line (a_id,subst_id,geom)
 	SELECT	a.a_id,

@@ -42,7 +42,7 @@ INSERT INTO model_draft.ego_lattice_360m_lv (geom, la_id)
 			ST_ymin (box2d(geom))
 		),3035)::geometry(POLYGON,3035) 
 	END AS geom, area.id AS la_id
-	FROM 	model_draft.ego_demand_loadarea AS area ;
+	FROM 	model_draft.ego_demand_loadarea AS area;
 
 -- index GIST (geom)
 CREATE INDEX ego_lattice_360m_lv_geom_idx
