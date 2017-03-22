@@ -61,7 +61,7 @@ COMMENT ON TABLE  model_draft.ego_demand_per_gva IS
                     "Date":  "05.10.2016",
                     "Comment": "..." }, 
 	  	   {"Name": "Ilka Cussmann",
-                    "Mail": "ilka.cussmann@hs-flensburg.de",
+                    "Mail": "",
                     "Date":  "25.10.2016",
                     "Comment": "Completed json-String" }
                   ],
@@ -137,7 +137,7 @@ COMMENT ON TABLE  model_draft.ego_demand_per_district IS
                     "Date":  "05.10.2016",
                     "Comment": "..." }, 
                    {"Name": "Ilka Cussmann",
-                    "Mail": "ilka.cussmann@hs-flensburg.de",
+                    "Mail": "",
                     "Date":  "25.10.2016",
                     "Comment": "Completed meta-dokumentation" }
                   ],
@@ -341,7 +341,7 @@ COMMENT ON TABLE  model_draft.ego_landuse_industry IS
                     "Date":  "04.10.2016",
                     "Comment": "..." }, 
                    {"Name": "Ilka Cussmann",
-                    "Mail": "ilka.cussmann@hs-flensburg.de",
+                    "Mail": "",
                     "Date":  "25.10.2016",
                     "Comment": "Completed json-string" }
                   ],
@@ -540,7 +540,7 @@ COMMENT ON TABLE  model_draft.ego_demand_hv_largescaleconsumer IS
                     "Date":  "04.10.2016",
                     "Comment": "..." }, 
                    {"Name": "Ilka Cussmann",
-                    "Mail": "ilka.cussmann@hs-flensburg.de",
+                    "Mail": "",
                     "Date":  "25.10.2016",
                     "Comment": "completed json-string" }
                   ],

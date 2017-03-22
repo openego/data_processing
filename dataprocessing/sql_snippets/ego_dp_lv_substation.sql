@@ -58,9 +58,9 @@ SELECT ego_scenario_log('v0.2.5','temp','model_draft','ego_lattice_360m_lv','ego
 -- MVLV-substation
 DROP TABLE IF EXISTS	model_draft.ego_grid_mvlv_substation;
 CREATE TABLE 		model_draft.ego_grid_mvlv_substation (
-	id 		serial NOT NULL,
+	subst_id 	serial NOT NULL,
 	la_id 		integer,
-	subst_id 	integer,
+	mvgd_id 	integer,
 	geom 		geometry(Point,3035),
 	CONSTRAINT ego_grid_mvlv_substation_pkey PRIMARY KEY (id) );
 
@@ -109,25 +109,40 @@ DROP TABLE IF EXISTS	model_draft.ego_grid_lv_loadarearest;
 CREATE TABLE 		model_draft.ego_grid_lv_loadarearest (
 	id 		serial NOT NULL,
 	la_id 		integer,
+	geom_point	geometry(Point,3035),
 	geom 		geometry(Polygon,3035),
 	CONSTRAINT ego_grid_lv_loadarearest_pkey PRIMARY KEY (id) );
 
--- insert rest
-INSERT INTO model_draft.ego_grid_lv_loadarearest (la_id, geom)
-	SELECT 	load_area.id AS la_id,
-		(ST_DUMP(ST_DIFFERENCE(load_area.geom, area_with_onts.geom))).geom::geometry(Polygon,3035) AS geom
-	FROM 	(SELECT ST_BUFFER(ST_UNION(onts.geom),540) AS geom,l_area.id AS id
-		FROM 	model_draft.ego_grid_mvlv_substation AS onts, 
-			model_draft.ego_demand_loadarea AS l_area
-		WHERE 	ST_CONTAINS(l_area.geom,onts.geom) 
-			AND (l_area.geom && onts.geom)
-		GROUP BY l_area.id) AS area_with_onts
-		INNER JOIN 	model_draft.ego_demand_loadarea AS load_area
-		ON (load_area.id = area_with_onts.id )
-	WHERE  ST_AREA(ST_DIFFERENCE(load_area.geom, area_with_onts.geom)) > 0 ;
-
 -- grant (oeuser)
 ALTER TABLE	model_draft.ego_grid_lv_loadarearest OWNER TO oeuser;
+
+-- insert rest
+INSERT INTO model_draft.ego_grid_lv_loadarearest (la_id, geom)
+	SELECT 	c.id AS la_id,
+		(ST_DUMP(ST_DIFFERENCE(c.geom, area_with_onts.geom))).geom::geometry(Polygon,3035) AS geom
+	FROM 	(SELECT ST_BUFFER(ST_UNION(a.geom),540) AS geom,b.id AS id
+		FROM 	model_draft.ego_grid_mvlv_substation AS a, 
+			model_draft.ego_demand_loadarea AS b
+		WHERE 	b.geom && a.geom AND
+			ST_CONTAINS(b.geom,a.geom) 
+		GROUP BY b.id
+		) AS area_with_onts
+		INNER JOIN model_draft.ego_demand_loadarea AS c
+			ON (c.id = area_with_onts.id)
+	WHERE  ST_AREA(ST_DIFFERENCE(c.geom, area_with_onts.geom)) > 0 ;
+
+-- index GIST (geom)
+CREATE INDEX ego_grid_lv_loadarearest_geom_idx
+	ON model_draft.ego_grid_lv_loadarearest USING GIST (geom);
+	
+-- index GIST (geom_point)
+CREATE INDEX ego_grid_lv_loadarearest_geom_point_idx
+	ON model_draft.ego_grid_lv_loadarearest USING GIST (geom_point);
+
+-- PointOnSurface for rest
+UPDATE	model_draft.ego_grid_lv_loadarearest
+	SET 	geom_point = ST_PointOnSurface(geom) ::geometry(POINT,3035)
+	FROM	model_draft.ego_grid_lv_loadarearest;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.5','temp','model_draft','ego_grid_lv_loadarearest','ego_dp_lv_substation.sql',' ');
@@ -136,19 +151,18 @@ SELECT ego_scenario_log('v0.2.5','temp','model_draft','ego_grid_lv_loadarearest'
 -- Bestimme die Mittelpunkte der Gebiete, die noch nicht durch ONT abgedeckt sind, und lege diese Mittelpunkte als ONT-Standorte fest
 -- 
 INSERT INTO model_draft.ego_grid_mvlv_substation (la_id, geom)
-	SELECT 	la_id ,
-		ST_CENTROID(geom)::geometry(POINT,3035)
-	FROM 	model_draft.ego_grid_lv_loadarearest ;
+	SELECT 	la_id,
+		geom_point ::geometry(POINT,3035) ;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.5','input','model_draft','ego_grid_mv_griddistrict','ego_dp_lv_substation.sql',' ');
 
 -- subst_id from MV-griddistrict
 UPDATE 	model_draft.ego_grid_mvlv_substation AS t1
-	SET  	subst_id = t2.subst_id
+	SET  	mvgd_id = t2.mvgd_id
 	FROM    (
 		SELECT	a.id AS id,
-			b.subst_id AS subst_id
+			b.mvgd_id AS mvgd_id
 		FROM	model_draft.ego_grid_mvlv_substation AS a,
 			model_draft.ego_grid_mv_griddistrict AS b
 		WHERE  	b.geom && a.geom AND
@@ -175,25 +189,25 @@ COMMENT ON TABLE model_draft.ego_grid_mvlv_substation IS '{
 		"url": "tba",
 		"instruction": "tba"} ],
 	"contributors": [
-		{"name": "jong42", "email": " ",
+		{"name": "jong42", "email": "",
 		"date": "20.10.2016", "comment": "create table"},
-		{"name": "jong42", "email": " ",
+		{"name": "jong42", "email": "",
 		"date": "27.10.2016", "comment": "change table names"},
-		{"name": "Ludee", "email": " ",
+		{"name": "Ludee", "email": "",
 		"date": "21.03.2017", "comment": "validate and restructure tables"},
-		{"name": "Ludee", "email": " ",
+		{"name": "Ludee", "email": "",
 		"date": "22.03.2017", "comment": "update metadata (1.1) and add license"} ],
 	"resources": [{
 		"schema": {
 			"fields": [
-				{"name": "id", "description": "unique identifier", "unit": "" },
+				{"name": "subst_id", "description": "unique identifier", "unit": "" },
 				{"name": "la_id", "description": "loadarea ID", "unit": "" },
-				{"name": "subst_id", "description": "HVMV substation ID", "unit": "" },
+				{"name": "mvgd_id", "description": "HVMV substation ID", "unit": "" },
 				{"name": "geom", "description": "geometry", "unit": "" } ]},
 		"meta_version": "1.1" }] }';
 
 -- select description
-SELECT obj_description('schema.table' ::regclass) ::json;
+SELECT obj_description('model_draft.ego_grid_mvlv_substation' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_grid_mvlv_substation','ego_dp_lv_substation.sql',' ');

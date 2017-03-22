@@ -77,7 +77,7 @@ COMMENT ON TABLE  model_draft.ego_supply_generator IS
                     "Date":  "05.10.2016",
                     "Comment": "..." }, 
                    {"Name": "Ilka Cussmann",
-                    "Mail": "ilka.cussmann@hs-flensburg.de",
+                    "Mail": "",
                     "Date":  "27.10.2016",
                     "Comment": "completed json-string" }
                   ],
@@ -241,7 +241,7 @@ COMMENT ON TABLE  model_draft.ego_supply_pf_generator_single IS
                     "Date":  "05.10.2016",
                     "Comment": "..." }, 
 	           {"Name": "Ilka Cussmann",
-                    "Mail": "ilka.cussmann@hs-flensburg.de",
+                    "Mail": "",
                     "Date":  "27.10.2016",
                     "Comment": "completed json-string" }
                   ],

@@ -124,7 +124,7 @@ COMMENT ON TABLE  model_draft.renpassgis_economic_weatherpoint_voronoi IS
                     "Date":  "04.10.2016",
                     "Comment": "..." }, 
                    {"Name": "Ilka Cussmann",
-                    "Mail": "ilka.cussmann@hs-flensburg.de",
+                    "Mail": "",
                     "Date":  "26.10.2016",
                     "Comment": "completed json-string" }
                   ],

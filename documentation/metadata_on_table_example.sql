@@ -17,19 +17,19 @@ COMMENT ON TABLE schema.table IS '{
 	"language": [ "eng", "ger", "fre" ],
 	"reference_date": "2016-01-24",
 	"sources": [
-		{"name": "Website", "description": "Data website",
-		"url": "www.website.com", "license": "ODbL-1.0"},
-		{"name": "Website", "description": "Data website",
-		"url": "www.website.com", "license": "ODbL-1.0"} ],
+		{"name": "eGo dataprocessing", "description": " ",
+		"url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)"},
+		{"name": " ", "description": " ",
+		"url": " ", "license": " "} ],
 	"spatial": [
 		{"extend": "europe",
 		"resolution": "100m"} ],
 	"license": [
-		{"id": "tba",
-		"name": "tba",
-		"version": "tba",
-		"url": "tba",
-		"instruction": "tba"} ],
+		{"id": "ODbL-1.0",
+		"name": "Open Data Commons Open Database License 1.0",
+		"version": "1.0",
+		"url": "https://opendatacommons.org/licenses/odbl/1.0/",
+		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!"} ],
 	"contributors": [
 		{"name": "Ludee", "email": " ",
 		"date": "16.06.2016", "comment": "created metadata"},

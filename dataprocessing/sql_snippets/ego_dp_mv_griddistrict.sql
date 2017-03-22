@@ -12,7 +12,7 @@ __author__ 	= "Ludee"
 ---------- ---------- ----------
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','input','model_draft','ego_political_boundary_bkg_vg250_6_gem_clean','process_eGo_grid_district.sql',' ');
+SELECT ego_scenario_log('v0.2.5','input','model_draft','ego_political_boundary_bkg_vg250_6_gem_clean','ego_dp_mv_griddistrict.sql',' ');
 
 -- municipalities
 DROP TABLE IF EXISTS	model_draft.ego_political_boundary_hvmv_subst_per_gem CASCADE;
@@ -33,9 +33,9 @@ CREATE INDEX  	ego_political_boundary_hvmv_subst_per_gem_geom_idx
 ALTER TABLE	model_draft.ego_political_boundary_hvmv_subst_per_gem OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','input','model_draft','ego_grid_hvmv_substation','process_eGo_grid_district.sql',' ');
+SELECT ego_scenario_log('v0.2.5','input','model_draft','ego_grid_hvmv_substation','ego_dp_mv_griddistrict.sql',' ');
 
--- usw count
+-- HVMV subst count
 UPDATE 	model_draft.ego_political_boundary_hvmv_subst_per_gem AS t1
 	SET  	subst_sum = t2.subst_sum
 	FROM	(SELECT	mun.id AS id,
@@ -47,6 +47,14 @@ UPDATE 	model_draft.ego_political_boundary_hvmv_subst_per_gem AS t1
 		GROUP BY mun.id
 		)AS t2
 	WHERE  	t1.id = t2.id;
+
+-- metadata
+COMMENT ON TABLE model_draft.ego_political_boundary_hvmv_subst_per_gem IS '{
+	"comment": "eGoDP - Temporary table",
+	"version": "v0.2.5" }' ;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','temp','model_draft','ego_political_boundary_hvmv_subst_per_gem','ego_dp_mv_griddistrict.sql',' ');
 
 -- SELECT	sum(mun.subst_sum) AS sum
 -- FROM	model_draft.ego_political_boundary_hvmv_subst_per_gem AS mun;
@@ -81,10 +89,15 @@ UPDATE 	model_draft.ego_political_boundary_hvmv_subst_per_gem AS t1
 	WHERE  	t1.id = t2.id;
 
 -- grant (oeuser)
-ALTER TABLE		model_draft.ego_political_boundary_hvmv_subst_per_gem_1_mview OWNER TO oeuser;
+ALTER TABLE	model_draft.ego_political_boundary_hvmv_subst_per_gem_1_mview OWNER TO oeuser;
+
+-- metadata
+COMMENT ON MATERIALIZED VIEW model_draft.ego_political_boundary_hvmv_subst_per_gem_1_mview IS '{
+	"comment": "eGoDP - Temporary table",
+	"version": "v0.2.5" }' ;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_political_boundary_hvmv_subst_per_gem_1_mview','process_eGo_grid_district.sql',' ');
+SELECT ego_scenario_log('v0.2.5','temp','model_draft','ego_political_boundary_hvmv_subst_per_gem_1_mview','ego_dp_mv_griddistrict.sql',' ');
 
 
 -- MView II.
@@ -114,8 +127,13 @@ UPDATE 	model_draft.ego_political_boundary_hvmv_subst_per_gem AS t1
 		FROM	model_draft.ego_political_boundary_hvmv_subst_per_gem_2_mview AS mun )AS t2
 	WHERE  	t1.id = t2.id;
 
+-- metadata
+COMMENT ON MATERIALIZED VIEW model_draft.ego_political_boundary_hvmv_subst_per_gem_2_mview IS '{
+	"comment": "eGoDP - Temporary table",
+	"version": "v0.2.5" }' ;
+
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_political_boundary_hvmv_subst_per_gem_2_mview','process_eGo_grid_district.sql',' ');
+SELECT ego_scenario_log('v0.2.5','temp','model_draft','ego_political_boundary_hvmv_subst_per_gem_2_mview','ego_dp_mv_griddistrict.sql',' ');
 
 
 -- Substation Type 2
@@ -137,8 +155,14 @@ CREATE UNIQUE INDEX  	ego_grid_hvmv_substation_mun_2_mview_subst_id_idx
 -- grant (oeuser)
 ALTER TABLE	model_draft.ego_grid_hvmv_substation_mun_2_mview OWNER TO oeuser;
 
+-- metadata
+COMMENT ON MATERIALIZED VIEW model_draft.ego_grid_hvmv_substation_mun_2_mview IS '{
+	"comment": "eGoDP - Temporary table",
+	"version": "v0.2.5" }' ;
 
----------- ---------- ----------
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','temp','model_draft','ego_grid_hvmv_substation_mun_2_mview','ego_dp_mv_griddistrict.sql',' ');
+
 
 -- MView III.
 DROP MATERIALIZED VIEW IF EXISTS	model_draft.ego_political_boundary_hvmv_subst_per_gem_3_mview CASCADE;
@@ -167,8 +191,13 @@ UPDATE 	model_draft.ego_political_boundary_hvmv_subst_per_gem AS t1
 		FROM	model_draft.ego_political_boundary_hvmv_subst_per_gem_3_mview AS mun )AS t2
 	WHERE  	t1.id = t2.id;
 
+-- metadata
+COMMENT ON MATERIALIZED VIEW model_draft.ego_political_boundary_hvmv_subst_per_gem_3_mview IS '{
+	"comment": "eGoDP - Temporary table",
+	"version": "v0.2.5" }' ;
+
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_political_boundary_hvmv_subst_per_gem_3_mview','process_eGo_grid_district.sql',' ');
+SELECT ego_scenario_log('v0.2.5','temp','model_draft','ego_political_boundary_hvmv_subst_per_gem_3_mview','ego_dp_mv_griddistrict.sql',' ');
 
 
 ---------- ---------- ----------
@@ -196,12 +225,11 @@ ALTER TABLE model_draft.ego_grid_mv_griddistrict_type1
 	ADD PRIMARY KEY (subst_id);
 
 -- index GIST (geom_sub)
-CREATE INDEX  	grid_district_type_1_geom_subst_idx
-	ON	model_draft.ego_grid_mv_griddistrict_type1
-	USING	GIST (geom_sub);
+CREATE INDEX  	ego_grid_mv_griddistrict_type1_geom_subst_idx
+	ON	model_draft.ego_grid_mv_griddistrict_type1 USING GIST (geom_sub);
 
 -- index GIST (geom)
-CREATE INDEX  	grid_district_type_1_geom_mun_idx
+CREATE INDEX  	ego_grid_mv_griddistrict_type1_geom_idx
 	ON	model_draft.ego_grid_mv_griddistrict_type1 USING GIST (geom);
 
 -- grant (oeuser)
@@ -221,9 +249,13 @@ UPDATE 	model_draft.ego_grid_mv_griddistrict_type1 AS t1
 		WHERE	subst_type = '1')AS t2
 	WHERE  	t1.ags_0 = t2.ags_0;
 
+-- metadata
+COMMENT ON TABLE model_draft.ego_grid_mv_griddistrict_type1 IS '{
+	"comment": "eGoDP - Temporary table",
+	"version": "v0.2.5" }' ;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','temp','model_draft','ego_grid_mv_griddistrict_type1','process_eGo_grid_district.sql',' ');
+SELECT ego_scenario_log('v0.2.5','temp','model_draft','ego_grid_mv_griddistrict_type1','ego_dp_mv_griddistrict.sql',' ');
 
 	
 ---------- ---------- ---------- ---------- ---------- ----------
@@ -231,39 +263,36 @@ SELECT ego_scenario_log('v0.2.5','temp','model_draft','ego_grid_mv_griddistrict_
 ---------- ---------- ---------- ---------- ---------- ----------
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','input','model_draft','ego_grid_hvmv_substation_voronoi','process_eGo_grid_district.sql',' ');
-
--- Create Table "ego_deu_substations_voronoi" 
+SELECT ego_scenario_log('v0.2.5','input','model_draft','ego_grid_hvmv_substation_voronoi','ego_dp_mv_griddistrict.sql',' ');
 
 -- Substation ID
 UPDATE 	model_draft.ego_grid_hvmv_substation_voronoi AS t1
-SET  	subst_id = t2.subst_id
-FROM	(SELECT	voi.id AS id,
-		sub.subst_id ::integer AS subst_id
-	FROM	model_draft.ego_grid_hvmv_substation_voronoi AS voi,
-		model_draft.ego_grid_hvmv_substation AS sub
-	WHERE  	voi.geom && sub.geom AND
-		ST_CONTAINS(voi.geom,sub.geom)
-	GROUP BY voi.id,sub.subst_id
-	)AS t2
-WHERE  	t1.id = t2.id;
+	SET  	subst_id = t2.subst_id
+	FROM	(SELECT	voi.id AS id,
+			sub.subst_id ::integer AS subst_id
+		FROM	model_draft.ego_grid_hvmv_substation_voronoi AS voi,
+			model_draft.ego_grid_hvmv_substation AS sub
+		WHERE  	voi.geom && sub.geom AND
+			ST_CONTAINS(voi.geom,sub.geom)
+		GROUP BY voi.id,sub.subst_id
+		)AS t2
+	WHERE  	t1.id = t2.id;
 
 -- Substation Count
 UPDATE 	model_draft.ego_grid_hvmv_substation_voronoi AS t1
-SET  	subst_sum = t2.subst_sum
-FROM	(SELECT	voi.id AS id,
-		COUNT(sub.geom)::integer AS subst_sum
-	FROM	model_draft.ego_grid_hvmv_substation_voronoi AS voi,
-		model_draft.ego_grid_hvmv_substation AS sub
-	WHERE  	voi.geom && sub.geom AND
-		ST_CONTAINS(voi.geom,sub.geom)
-	GROUP BY voi.id
-	)AS t2
-WHERE  	t1.id = t2.id;
+	SET  	subst_sum = t2.subst_sum
+	FROM	(SELECT	voi.id AS id,
+			COUNT(sub.geom)::integer AS subst_sum
+		FROM	model_draft.ego_grid_hvmv_substation_voronoi AS voi,
+			model_draft.ego_grid_hvmv_substation AS sub
+		WHERE  	voi.geom && sub.geom AND
+			ST_CONTAINS(voi.geom,sub.geom)
+		GROUP BY voi.id
+		)AS t2
+	WHERE  	t1.id = t2.id;
 
----------- ---------- ----------
 
--- Voronoi Gridcells (voi)
+-- Voronoi cells
 DROP MATERIALIZED VIEW IF EXISTS	model_draft.ego_grid_hvmv_substation_voronoi_mview CASCADE;
 CREATE MATERIALIZED VIEW		model_draft.ego_grid_hvmv_substation_voronoi_mview AS
 	SELECT	voi.id ::integer,
@@ -274,19 +303,23 @@ CREATE MATERIALIZED VIEW		model_draft.ego_grid_hvmv_substation_voronoi_mview AS
 	WHERE	subst_sum = '1';
 
 -- index (id)
-CREATE UNIQUE INDEX  	ego_deu_substations_voronoi_mview_id_idx
+CREATE UNIQUE INDEX  	ego_grid_hvmv_substation_voronoi_mview_id_idx
 		ON	model_draft.ego_grid_hvmv_substation_voronoi_mview (id);
 
 -- index GIST (geom)
-CREATE INDEX  	ego_deu_substations_voronoi_mview_geom_idx
-	ON	model_draft.ego_grid_hvmv_substation_voronoi_mview
-	USING	GIST (geom);
+CREATE INDEX  	ego_grid_hvmv_substation_voronoi_mview_geom_idx
+	ON	model_draft.ego_grid_hvmv_substation_voronoi_mview USING GIST (geom);
 
 -- grant (oeuser)
 ALTER TABLE	model_draft.ego_grid_hvmv_substation_voronoi_mview OWNER TO oeuser;
 
+-- metadata
+COMMENT ON MATERIALIZED VIEW model_draft.ego_grid_hvmv_substation_voronoi_mview IS '{
+	"comment": "eGoDP - Temporary table",
+	"version": "v0.2.5" }' ;
+
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_grid_hvmv_substation_voronoi_mview','process_eGo_grid_district.sql',' ');
+SELECT ego_scenario_log('v0.2.5','temp','model_draft','ego_grid_hvmv_substation_voronoi_mview','ego_dp_mv_griddistrict.sql',' ');
 
 
 -- 
@@ -341,35 +374,6 @@ INSERT INTO 	model_draft.ego_grid_hvmv_substation_voronoi_cut (subst_id,mun_id,v
 		model_draft.ego_grid_hvmv_substation_voronoi_mview AS b
 	WHERE	a.geom && b.geom;
 
-/* 
--- Sequence
-DROP SEQUENCE IF EXISTS 	model_draft.ego_grid_hvmv_substation_voronoi_cut_id CASCADE;
-CREATE SEQUENCE 		model_draft.ego_grid_hvmv_substation_voronoi_cut_id;
-
--- grant (oeuser)
-ALTER SEQUENCE		model_draft.ego_grid_hvmv_substation_voronoi_cut_id OWNER TO oeuser;
-
--- Cutting GEM II.
-DROP TABLE IF EXISTS	model_draft.ego_grid_hvmv_substation_voronoi_cut CASCADE;
-CREATE TABLE		model_draft.ego_grid_hvmv_substation_voronoi_cut AS
-	SELECT	nextval('model_draft.ego_grid_hvmv_substation_voronoi_cut_id') AS id,
-		voi.subst_id,
-		mun.id AS mun_id,
-		voi.id AS voi_id,
-		mun.ags_0 AS ags_0,
-		mun.subst_type,
-		(ST_DUMP(ST_INTERSECTION(mun.geom,voi.geom))).geom ::geometry(Polygon,3035) AS geom
-	FROM	model_draft.ego_political_boundary_hvmv_subst_per_gem_2_mview AS mun,
-		model_draft.ego_grid_hvmv_substation_voronoi_mview AS voi
-	WHERE	mun.geom && voi.geom;
-	
--- PK
-ALTER TABLE	model_draft.ego_grid_hvmv_substation_voronoi_cut
-	ADD COLUMN subst_sum integer,
-	ADD COLUMN geom_sub geometry(Point,3035),
-	ADD PRIMARY KEY (id);
-
- */
 -- index GIST (geom)
 CREATE INDEX	ego_grid_hvmv_substation_voronoi_cut_geom_idx
 	ON	model_draft.ego_grid_hvmv_substation_voronoi_cut USING GIST (geom);
@@ -398,8 +402,13 @@ UPDATE 	model_draft.ego_grid_hvmv_substation_voronoi_cut AS t1
 -- grant (oeuser)
 ALTER TABLE	model_draft.ego_grid_hvmv_substation_voronoi_cut OWNER TO oeuser;
 
+-- metadata
+COMMENT ON TABLE model_draft.ego_grid_hvmv_substation_voronoi_cut IS '{
+	"comment": "eGoDP - Temporary table",
+	"version": "v0.2.5" }' ;
+
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','temp','model_draft','ego_grid_hvmv_substation_voronoi_cut','process_eGo_grid_district.sql',' ');
+SELECT ego_scenario_log('v0.2.5','temp','model_draft','ego_grid_hvmv_substation_voronoi_cut','ego_dp_mv_griddistrict.sql',' ');
 
 ---------- ---------- ----------
 -- -- Validate (geom)   (OK!) -> 22.000ms =0
@@ -438,29 +447,33 @@ CREATE UNIQUE INDEX  	ego_deu_substations_voronoi_cut_1subst_mview_id_idx
 	ON	model_draft.ego_grid_hvmv_substation_voronoi_cut_1subst_mview (id);
 
 -- index GIST (geom)
-CREATE INDEX  	ego_deu_substations_voronoi_cut_1subst_mview_geom_idx
-	ON	model_draft.ego_grid_hvmv_substation_voronoi_cut_1subst_mview
-	USING	GIST (geom);
+CREATE INDEX  	ego_grid_hvmv_substation_voronoi_cut_1subst_mview_geom_idx
+	ON	model_draft.ego_grid_hvmv_substation_voronoi_cut_1subst_mview USING GIST (geom);
 
 -- grant (oeuser)
 ALTER TABLE	model_draft.ego_grid_hvmv_substation_voronoi_cut_1subst_mview OWNER TO oeuser;
 
+-- metadata
+COMMENT ON MATERIALIZED VIEW model_draft.ego_grid_hvmv_substation_voronoi_cut_1subst_mview IS '{
+	"comment": "eGoDP - Temporary table",
+	"version": "v0.2.5" }' ;
+
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','temp','model_draft','ego_grid_hvmv_substation_voronoi_cut_1subst_mview','process_eGo_grid_district.sql',' ');
+SELECT ego_scenario_log('v0.2.5','temp','model_draft','ego_grid_hvmv_substation_voronoi_cut_1subst_mview','ego_dp_mv_griddistrict.sql',' ');
 
 
 -- Parts without substation
 DROP MATERIALIZED VIEW IF EXISTS	model_draft.ego_grid_hvmv_substation_voronoi_cut_0subst_mview CASCADE;
 CREATE MATERIALIZED VIEW		model_draft.ego_grid_hvmv_substation_voronoi_cut_0subst_mview AS
-SELECT	voi.id,
-	voi.subst_id,
-	voi.mun_id,
-	voi.voi_id,
-	voi.ags_0,
-	voi.subst_type,
-	voi.geom
-FROM	model_draft.ego_grid_hvmv_substation_voronoi_cut AS voi
-WHERE	subst_sum IS NULL;
+	SELECT	voi.id,
+		voi.subst_id,
+		voi.mun_id,
+		voi.voi_id,
+		voi.ags_0,
+		voi.subst_type,
+		voi.geom
+	FROM	model_draft.ego_grid_hvmv_substation_voronoi_cut AS voi
+	WHERE	subst_sum IS NULL;
 
 -- index (id)
 CREATE UNIQUE INDEX  	ego_grid_hvmv_substation_voronoi_cut_0subst_mview_id_idx
@@ -473,8 +486,13 @@ CREATE INDEX  	ego_grid_hvmv_substation_voronoi_cut_0subst_mview_geom_idx
 -- grant (oeuser)
 ALTER TABLE	model_draft.ego_grid_hvmv_substation_voronoi_cut_0subst_mview OWNER TO oeuser;
 
+-- metadata
+COMMENT ON MATERIALIZED VIEW model_draft.ego_grid_hvmv_substation_voronoi_cut_0subst_mview IS '{
+	"comment": "eGoDP - Temporary table",
+	"version": "v0.2.5" }' ;
+
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','temp','model_draft','ego_grid_hvmv_substation_voronoi_cut_0subst_mview','process_eGo_grid_district.sql',' ');
+SELECT ego_scenario_log('v0.2.5','temp','model_draft','ego_grid_hvmv_substation_voronoi_cut_0subst_mview','ego_dp_mv_griddistrict.sql',' ');
 
 ---------- ---------- ----------
 
@@ -499,41 +517,44 @@ SELECT ego_scenario_log('v0.2.5','temp','model_draft','ego_grid_hvmv_substation_
 -- Next Neighbor
 DROP MATERIALIZED VIEW IF EXISTS	model_draft.ego_grid_hvmv_substation_voronoi_cut_0subst_nn_mview CASCADE;
 CREATE MATERIALIZED VIEW 		model_draft.ego_grid_hvmv_substation_voronoi_cut_0subst_nn_mview AS
-SELECT DISTINCT ON (voi.id)
-	voi.id AS voi_id,
-	voi.ags_0 AS voi_ags_0,
-	voi.geom AS geom_voi,
-	sub.subst_id AS subst_id,
-	sub.ags_0 AS ags_0,
-	sub.geom AS geom_sub
-FROM 	model_draft.ego_grid_hvmv_substation_voronoi_cut_0subst_mview AS voi,
-	model_draft.ego_grid_hvmv_substation_voronoi_cut_1subst_mview AS sub
-WHERE 	ST_DWithin(ST_ExteriorRing(voi.geom),ST_ExteriorRing(sub.geom), 50000) -- In a 50 km radius
-	AND voi.ags_0 = sub.ags_0  -- only inside same mun
-ORDER BY 	voi.id, 
-		ST_Distance(ST_ExteriorRing(voi.geom),ST_ExteriorRing(sub.geom));
+	SELECT DISTINCT ON (voi.id)
+		voi.id AS voi_id,
+		voi.ags_0 AS voi_ags_0,
+		voi.geom AS geom_voi,
+		sub.subst_id AS subst_id,
+		sub.ags_0 AS ags_0,
+		sub.geom AS geom_sub
+	FROM 	model_draft.ego_grid_hvmv_substation_voronoi_cut_0subst_mview AS voi,
+		model_draft.ego_grid_hvmv_substation_voronoi_cut_1subst_mview AS sub
+	WHERE 	ST_DWithin(ST_ExteriorRing(voi.geom),ST_ExteriorRing(sub.geom), 50000) -- In a 50 km radius
+		AND voi.ags_0 = sub.ags_0  -- only inside same mun
+	ORDER BY 	voi.id, 
+			ST_Distance(ST_ExteriorRing(voi.geom),ST_ExteriorRing(sub.geom));
 		
 -- ST_Length(ST_CollectionExtract(ST_Intersection(a_geom, b_geom), 2)) -- Lenght of the shared border?
 
 -- index (id)
-CREATE UNIQUE INDEX  	ego_deu_substations_voronoi_cut_0subst_nn_mview_voi_id_idx
+CREATE UNIQUE INDEX  	ego_grid_hvmv_substation_voronoi_cut_0subst_nn_mview_voi_id_idx
 		ON	model_draft.ego_grid_hvmv_substation_voronoi_cut_0subst_nn_mview (voi_id);
 
 -- index GIST (geom_voi)
-CREATE INDEX  	ego_deu_substations_voronoi_cut_0subst_nn_mview_geom_voi_idx
-	ON	model_draft.ego_grid_hvmv_substation_voronoi_cut_0subst_nn_mview
-	USING	GIST (geom_voi);
+CREATE INDEX  	ego_grid_hvmv_substation_voronoi_cut_0subst_nn_mview_voi_idx
+	ON	model_draft.ego_grid_hvmv_substation_voronoi_cut_0subst_nn_mview USING GIST (geom_voi);
 
 -- index GIST (geom_sub)
-CREATE INDEX  	ego_deu_substations_voronoi_cut_0subst_nn_mview_geom_subst_idx
-	ON	model_draft.ego_grid_hvmv_substation_voronoi_cut_0subst_nn_mview
-	USING	GIST (geom_sub);
+CREATE INDEX  	ego_grid_hvmv_substation_voronoi_cut_0subst_nn_mview_geom_sub_idx
+	ON	model_draft.ego_grid_hvmv_substation_voronoi_cut_0subst_nn_mview USING GIST (geom_sub);
 
 -- grant (oeuser)
 ALTER TABLE	model_draft.ego_grid_hvmv_substation_voronoi_cut_0subst_nn_mview OWNER TO oeuser;
 
+-- metadata
+COMMENT ON MATERIALIZED VIEW model_draft.ego_grid_hvmv_substation_voronoi_cut_0subst_nn_mview IS '{
+	"comment": "eGoDP - Temporary table",
+	"version": "v0.2.5" }' ;
+
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','temp','model_draft','ego_grid_hvmv_substation_voronoi_cut_0subst_nn_mview','process_eGo_grid_district.sql',' ');
+SELECT ego_scenario_log('v0.2.5','temp','model_draft','ego_grid_hvmv_substation_voronoi_cut_0subst_nn_mview','ego_dp_mv_griddistrict.sql',' ');
 
 ---------- ---------- ----------
 
@@ -559,24 +580,27 @@ CREATE MATERIALIZED VIEW 		model_draft.ego_grid_hvmv_substation_voronoi_cut_0sub
 	WHERE	sub.subst_id = nn.subst_id;
 
 -- index (id)
-CREATE UNIQUE INDEX  	ego_deu_substations_voronoi_cut_0subst_nn_line_mview_id_idx
+CREATE UNIQUE INDEX  	ego_grid_hvmv_substation_voronoi_cut_0subst_nn_line_mview_id_idx
 		ON	model_draft.ego_grid_hvmv_substation_voronoi_cut_0subst_nn_line_mview (id);
 
 -- index GIST (geom_centre)
-CREATE INDEX	ego_deu_substations_voronoi_cut_0subst_nn_line_mview_geom_centre_idx
-	ON	model_draft.ego_grid_hvmv_substation_voronoi_cut_0subst_nn_line_mview
-	USING	GIST (geom_centre);
+CREATE INDEX	ego_grid_hvmv_substation_voronoi_cut_0subst_nn_line_mview_geom_centre_idx
+	ON	model_draft.ego_grid_hvmv_substation_voronoi_cut_0subst_nn_line_mview USING GIST (geom_centre);
 
 -- index GIST (geom)
-CREATE INDEX	ego_deu_substations_voronoi_cut_0subst_nn_line_mview_geom_idx
-	ON	model_draft.ego_grid_hvmv_substation_voronoi_cut_0subst_nn_line_mview
-	USING	GIST (geom);
+CREATE INDEX	ego_grid_hvmv_substation_voronoi_cut_0subst_nn_line_mview_geom_idx
+	ON	model_draft.ego_grid_hvmv_substation_voronoi_cut_0subst_nn_line_mview USING GIST (geom);
 
 -- grant (oeuser)
 ALTER TABLE	model_draft.ego_grid_hvmv_substation_voronoi_cut_0subst_nn_line_mview OWNER TO oeuser;
 
+-- metadata
+COMMENT ON MATERIALIZED VIEW model_draft.ego_grid_hvmv_substation_voronoi_cut_0subst_nn_line_mview IS '{
+	"comment": "eGoDP - Temporary table",
+	"version": "v0.2.5" }' ;
+
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','temp','model_draft','ego_grid_hvmv_substation_voronoi_cut_0subst_nn_line_mview','process_eGo_grid_district.sql',' ');
+SELECT ego_scenario_log('v0.2.5','temp','model_draft','ego_grid_hvmv_substation_voronoi_cut_0subst_nn_line_mview','ego_dp_mv_griddistrict.sql',' ');
 
 ---------- ---------- ----------
 
@@ -589,19 +613,23 @@ CREATE MATERIALIZED VIEW		model_draft.ego_grid_hvmv_substation_voronoi_cut_0subs
 	GROUP BY nn.subst_id;
 
 -- index (id)
-CREATE UNIQUE INDEX  	ego_deu_substations_voronoi_cut_0subst_nn_union_mview_id_idx
+CREATE UNIQUE INDEX  	ego_grid_hvmv_substation_voronoi_cut_0subst_nn_union_mview_id_idx
 		ON	model_draft.ego_grid_hvmv_substation_voronoi_cut_0subst_nn_union_mview (subst_id);
 
 -- index GIST (geom)
-CREATE INDEX	ego_deu_substations_voronoi_cut_0subst_nn_union_mview_geom_idx
-	ON	model_draft.ego_grid_hvmv_substation_voronoi_cut_0subst_nn_union_mview
-	USING	GIST (geom);
+CREATE INDEX	ego_grid_hvmv_substation_voronoi_cut_0subst_nn_union_mview_geom_idx
+	ON	model_draft.ego_grid_hvmv_substation_voronoi_cut_0subst_nn_union_mview USING GIST (geom);
 
 -- grant (oeuser)
 ALTER TABLE	model_draft.ego_grid_hvmv_substation_voronoi_cut_0subst_nn_union_mview OWNER TO oeuser;
 
+-- metadata
+COMMENT ON MATERIALIZED VIEW model_draft.ego_grid_hvmv_substation_voronoi_cut_0subst_nn_union_mview IS '{
+	"comment": "eGoDP - Temporary table",
+	"version": "v0.2.5" }' ;
+
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','temp','model_draft','ego_grid_hvmv_substation_voronoi_cut_0subst_nn_union_mview','process_eGo_grid_district.sql',' ');
+SELECT ego_scenario_log('v0.2.5','temp','model_draft','ego_grid_hvmv_substation_voronoi_cut_0subst_nn_union_mview','ego_dp_mv_griddistrict.sql',' ');
 
 ---------- ---------- ----------
 
@@ -611,7 +639,7 @@ CREATE TABLE		model_draft.ego_grid_hvmv_substation_voronoi_cut_nn_collect (
 	id serial,
 	subst_id integer,
 	geom geometry(MultiPolygon,3035),
-CONSTRAINT ego_deu_substations_voronoi_cut_nn_collect_pkey PRIMARY KEY (id));
+	CONSTRAINT ego_deu_substations_voronoi_cut_nn_collect_pkey PRIMARY KEY (id));
 
 -- Insert parts with substations
 INSERT INTO     model_draft.ego_grid_hvmv_substation_voronoi_cut_nn_collect (subst_id,geom)
@@ -626,15 +654,19 @@ INSERT INTO     model_draft.ego_grid_hvmv_substation_voronoi_cut_nn_collect (sub
 	FROM	model_draft.ego_grid_hvmv_substation_voronoi_cut_0subst_nn_union_mview AS voi;
 
 -- index GIST (geom)
-CREATE INDEX	ego_deu_substations_voronoi_cut_nn_collect_geom_idx
-	ON	model_draft.ego_grid_hvmv_substation_voronoi_cut_nn_collect
-	USING	GIST (geom);
+CREATE INDEX	ego_grid_hvmv_substation_voronoi_cut_nn_collect_geom_idx
+	ON	model_draft.ego_grid_hvmv_substation_voronoi_cut_nn_collect USING GIST (geom);
 
 -- grant (oeuser)
 ALTER TABLE	model_draft.ego_grid_hvmv_substation_voronoi_cut_nn_collect OWNER TO oeuser;
 
+-- metadata
+COMMENT ON TABLE model_draft.ego_grid_hvmv_substation_voronoi_cut_nn_collect IS '{
+	"comment": "eGoDP - Temporary table",
+	"version": "v0.2.5" }' ;
+
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','temp','model_draft','ego_grid_hvmv_substation_voronoi_cut_nn_collect','process_eGo_grid_district.sql',' ');
+SELECT ego_scenario_log('v0.2.5','temp','model_draft','ego_grid_hvmv_substation_voronoi_cut_nn_collect','ego_dp_mv_griddistrict.sql',' ');
 
 ---------- ---------- ----------
 
@@ -647,19 +679,23 @@ CREATE MATERIALIZED VIEW		model_draft.ego_grid_hvmv_substation_voronoi_cut_nn_mv
 	GROUP BY nn.subst_id;
 
 -- index (id)
-CREATE UNIQUE INDEX  	ego_deu_substations_voronoi_cut_nn_mview_id_idx
+CREATE UNIQUE INDEX  	ego_grid_hvmv_substation_voronoi_cut_nn_mview_id_idx
 		ON	model_draft.ego_grid_hvmv_substation_voronoi_cut_nn_mview (subst_id);
 
 -- index GIST (geom)
-CREATE INDEX	ego_deu_substations_voronoi_cut_nn_mview_geom_idx
-	ON	model_draft.ego_grid_hvmv_substation_voronoi_cut_nn_mview
-	USING	GIST (geom);
+CREATE INDEX	ego_grid_hvmv_substation_voronoi_cut_nn_mview_geom_idx
+	ON	model_draft.ego_grid_hvmv_substation_voronoi_cut_nn_mview USING GIST (geom);
 
 -- grant (oeuser)
 ALTER TABLE	model_draft.ego_grid_hvmv_substation_voronoi_cut_nn_mview OWNER TO oeuser;
 
+-- metadata
+COMMENT ON MATERIALIZED VIEW model_draft.ego_grid_hvmv_substation_voronoi_cut_nn_mview IS '{
+	"comment": "eGoDP - Temporary table",
+	"version": "v0.2.5" }' ;
+
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','temp','model_draft','ego_grid_hvmv_substation_voronoi_cut_nn_mview','process_eGo_grid_district.sql',' ');
+SELECT ego_scenario_log('v0.2.5','temp','model_draft','ego_grid_hvmv_substation_voronoi_cut_nn_mview','ego_dp_mv_griddistrict.sql',' ');
 
 ---------- ---------- ----------
 
@@ -680,31 +716,34 @@ ALTER TABLE model_draft.ego_grid_mv_griddistrict_type2
 	ADD PRIMARY KEY (subst_id);
 
 -- index GIST (geom_sub)
-CREATE INDEX  	grid_district_type_2_geom_subst_idx
-	ON	model_draft.ego_grid_mv_griddistrict_type2
-	USING	GIST (geom_sub);
+CREATE INDEX  	ego_grid_mv_griddistrict_type2_geom_sub_idx
+	ON	model_draft.ego_grid_mv_griddistrict_type2 USING GIST (geom_sub);
 
 -- index GIST (geom)
-CREATE INDEX  	grid_district_type_2_geom_mun_idx
-	ON	model_draft.ego_grid_mv_griddistrict_type2
-	USING	GIST (geom);
+CREATE INDEX  	ego_grid_mv_griddistrict_type2_geom_idx
+	ON	model_draft.ego_grid_mv_griddistrict_type2 USING GIST (geom);
 
 -- subst_id = id
 -- update sub geom gem2   (OK!) -> 1.000ms =1.886
 UPDATE 	model_draft.ego_grid_mv_griddistrict_type2 AS t1
-SET  	subst_type = t2.subst_type,
-	geom = t2.geom
-FROM	(SELECT	nn.subst_id AS subst_id,
-		'2' ::integer AS subst_type,
-		nn.geom ::geometry(MultiPolygon,3035) AS geom
-	FROM	model_draft.ego_grid_hvmv_substation_voronoi_cut_nn_mview AS nn )AS t2
-WHERE  	t1.subst_id = t2.subst_id;
+	SET  	subst_type = t2.subst_type,
+		geom = t2.geom
+	FROM	(SELECT	nn.subst_id AS subst_id,
+			'2' ::integer AS subst_type,
+			nn.geom ::geometry(MultiPolygon,3035) AS geom
+		FROM	model_draft.ego_grid_hvmv_substation_voronoi_cut_nn_mview AS nn )AS t2
+	WHERE  	t1.subst_id = t2.subst_id;
 	
 -- grant (oeuser)
 ALTER TABLE	model_draft.ego_grid_mv_griddistrict_type2 OWNER TO oeuser;
 
+-- metadata
+COMMENT ON MATERIALIZED VIEW model_draft.ego_grid_mv_griddistrict_type2 IS '{
+	"comment": "eGoDP - Temporary table",
+	"version": "v0.2.5" }' ;
+
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','temp','model_draft','ego_grid_mv_griddistrict_type2','process_eGo_grid_district.sql',' ');
+SELECT ego_scenario_log('v0.2.5','temp','model_draft','ego_grid_mv_griddistrict_type2','ego_dp_mv_griddistrict.sql',' ');
 
 
 -- -- Validate (geom)   (OK!) -> 22.000ms =0
@@ -740,39 +779,42 @@ SELECT ego_scenario_log('v0.2.5','temp','model_draft','ego_grid_mv_griddistrict_
 -- Next Neighbor
 DROP TABLE IF EXISTS	model_draft.ego_political_boundary_hvmv_subst_per_gem_3_nn CASCADE;
 CREATE TABLE 		model_draft.ego_political_boundary_hvmv_subst_per_gem_3_nn AS
-SELECT DISTINCT ON (mun.id)
-	mun.id AS mun_id,
-	mun.ags_0 AS mun_ags_0,
-	sub.ags_0 AS subst_ags_0,
-	sub.subst_id, 
-	mun.subst_type,
-	sub.geom ::geometry(Point,3035) AS geom_sub,
-	ST_Distance(ST_ExteriorRing(mun.geom),sub.geom) AS distance,
-	ST_MULTI(mun.geom) ::geometry(MultiPolygon,3035) AS geom
-FROM 	model_draft.ego_political_boundary_hvmv_subst_per_gem_3_mview AS mun,
-	model_draft.ego_grid_hvmv_substation AS sub
-WHERE 	ST_DWithin(ST_ExteriorRing(mun.geom),sub.geom, 50000) -- In a 50 km radius
-ORDER BY 	mun.id, ST_Distance(ST_ExteriorRing(mun.geom),sub.geom);
+	SELECT DISTINCT ON (mun.id)
+		mun.id AS mun_id,
+		mun.ags_0 AS mun_ags_0,
+		sub.ags_0 AS subst_ags_0,
+		sub.subst_id, 
+		mun.subst_type,
+		sub.geom ::geometry(Point,3035) AS geom_sub,
+		ST_Distance(ST_ExteriorRing(mun.geom),sub.geom) AS distance,
+		ST_MULTI(mun.geom) ::geometry(MultiPolygon,3035) AS geom
+	FROM 	model_draft.ego_political_boundary_hvmv_subst_per_gem_3_mview AS mun,
+		model_draft.ego_grid_hvmv_substation AS sub
+	WHERE 	ST_DWithin(ST_ExteriorRing(mun.geom),sub.geom, 50000) -- In a 50 km radius
+	ORDER BY 	mun.id, ST_Distance(ST_ExteriorRing(mun.geom),sub.geom);
 
 -- PK
 ALTER TABLE	model_draft.ego_political_boundary_hvmv_subst_per_gem_3_nn
 	ADD PRIMARY KEY (mun_id);
 
 -- index GIST (geom)
-CREATE INDEX		ego_political_boundary_hvmv_subst_per_gem_3_nn_geom_idx
-	ON	model_draft.ego_political_boundary_hvmv_subst_per_gem_3_nn
-	USING	GIST (geom);
+CREATE INDEX	ego_political_boundary_hvmv_subst_per_gem_3_nn_geom_idx
+	ON	model_draft.ego_political_boundary_hvmv_subst_per_gem_3_nn USING GIST (geom);
 
 -- index GIST (geom_sub)
-CREATE INDEX		ego_political_boundary_hvmv_subst_per_gem_3_nn_geom_subst_idx
-	ON	model_draft.ego_political_boundary_hvmv_subst_per_gem_3_nn
-	USING	GIST (geom_sub);
+CREATE INDEX	ego_political_boundary_hvmv_subst_per_gem_3_nn_geom_subst_idx
+	ON	model_draft.ego_political_boundary_hvmv_subst_per_gem_3_nn USING GIST (geom_sub);
 
 -- grant (oeuser)
 ALTER TABLE	model_draft.ego_political_boundary_hvmv_subst_per_gem_3_nn OWNER TO oeuser;
 
+-- metadata
+COMMENT ON MATERIALIZED VIEW model_draft.ego_political_boundary_hvmv_subst_per_gem_3_nn IS '{
+	"comment": "eGoDP - Temporary table",
+	"version": "v0.2.5" }' ;
+
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','temp','model_draft','ego_political_boundary_hvmv_subst_per_gem_3_nn','process_eGo_grid_district.sql',' ');
+SELECT ego_scenario_log('v0.2.5','temp','model_draft','ego_political_boundary_hvmv_subst_per_gem_3_nn','ego_dp_mv_griddistrict.sql',' ');
 
 
 ---------- ---------- ----------
@@ -804,19 +846,22 @@ CREATE UNIQUE INDEX  	ego_political_boundary_hvmv_subst_per_gem_3_nn_line_id_idx
 
 -- index GIST (geom_centre)
 CREATE INDEX	ego_political_boundary_hvmv_subst_per_gem_3_nn_line_geom_centre_idx
-	ON	model_draft.ego_political_boundary_hvmv_subst_per_gem_3_nn_line
-	USING	GIST (geom_centre);
+	ON	model_draft.ego_political_boundary_hvmv_subst_per_gem_3_nn_line USING GIST (geom_centre);
 
 -- index GIST (geom)
 CREATE INDEX	ego_political_boundary_hvmv_subst_per_gem_3_nn_line_geom_idx
-	ON	model_draft.ego_political_boundary_hvmv_subst_per_gem_3_nn_line
-	USING	GIST (geom);
+	ON	model_draft.ego_political_boundary_hvmv_subst_per_gem_3_nn_line USING GIST (geom);
 
 -- grant (oeuser)
 ALTER TABLE	model_draft.ego_political_boundary_hvmv_subst_per_gem_3_nn_line OWNER TO oeuser;
 
+-- metadata
+COMMENT ON MATERIALIZED VIEW model_draft.ego_political_boundary_hvmv_subst_per_gem_3_nn_line IS '{
+	"comment": "eGoDP - Temporary table",
+	"version": "v0.2.5" }' ;
+
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','temp','model_draft','ego_political_boundary_hvmv_subst_per_gem_3_nn_line','process_eGo_grid_district.sql',' ');
+SELECT ego_scenario_log('v0.2.5','temp','model_draft','ego_political_boundary_hvmv_subst_per_gem_3_nn_line','ego_dp_mv_griddistrict.sql',' ');
 
 
 -- UNION
@@ -839,14 +884,18 @@ CREATE UNIQUE INDEX  	ego_political_boundary_hvmv_subst_per_gem_3_nn_union_subst
 
 -- index GIST (geom)
 CREATE INDEX	ego_political_boundary_hvmv_subst_per_gem_3_nn_union_geom_idx
-	ON	model_draft.ego_political_boundary_hvmv_subst_per_gem_3_nn_union
-	USING	GIST (geom);
+	ON	model_draft.ego_political_boundary_hvmv_subst_per_gem_3_nn_union USING GIST (geom);
 
 -- grant (oeuser)
 ALTER TABLE	model_draft.ego_political_boundary_hvmv_subst_per_gem_3_nn_union OWNER TO oeuser;
 
+-- metadata
+COMMENT ON MATERIALIZED VIEW model_draft.ego_political_boundary_hvmv_subst_per_gem_3_nn_union IS '{
+	"comment": "eGoDP - Temporary table",
+	"version": "v0.2.5" }' ;
+
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','temp','model_draft','ego_political_boundary_hvmv_subst_per_gem_3_nn_union','process_eGo_grid_district.sql',' ');
+SELECT ego_scenario_log('v0.2.5','temp','model_draft','ego_political_boundary_hvmv_subst_per_gem_3_nn_union','ego_dp_mv_griddistrict.sql',' ');
 
 
 -- Substations Template
@@ -866,14 +915,12 @@ ALTER TABLE model_draft.ego_grid_mv_griddistrict_type3
 	ADD PRIMARY KEY (subst_id);
 
 -- Create Index GIST (geom_sub)
-CREATE INDEX  	grid_district_type_3_geom_subst_idx
-	ON	model_draft.ego_grid_mv_griddistrict_type3
-	USING	GIST (geom_sub);
+CREATE INDEX  	ego_grid_mv_griddistrict_type3_geom_sub_idx
+	ON	model_draft.ego_grid_mv_griddistrict_type3 USING GIST (geom_sub);
 
 -- index GIST (geom)
-CREATE INDEX  	grid_district_type_3_geom_mun_idx
-	ON	model_draft.ego_grid_mv_griddistrict_type3
-	USING	GIST (geom);
+CREATE INDEX  	ego_grid_mv_griddistrict_type3_geom_idx
+	ON	model_draft.ego_grid_mv_griddistrict_type3 USING GIST (geom);
 
 -- update sub geom mun3
 UPDATE 	model_draft.ego_grid_mv_griddistrict_type3 AS t1
@@ -888,8 +935,13 @@ UPDATE 	model_draft.ego_grid_mv_griddistrict_type3 AS t1
 -- grant (oeuser)
 ALTER TABLE	model_draft.ego_grid_mv_griddistrict_type3 OWNER TO oeuser;
 
+-- metadata
+COMMENT ON TABLE model_draft.ego_grid_mv_griddistrict_type3 IS '{
+	"comment": "eGoDP - Temporary table",
+	"version": "v0.2.5" }' ;
+
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','temp','model_draft','ego_grid_mv_griddistrict_type3','process_eGo_grid_district.sql',' ');
+SELECT ego_scenario_log('v0.2.5','temp','model_draft','ego_grid_mv_griddistrict_type3','ego_dp_mv_griddistrict.sql',' ');
 
 
 ---------- ---------- ----------
@@ -931,36 +983,27 @@ INSERT INTO     model_draft.ego_grid_mv_griddistrict_collect
 	ORDER BY subst_id;
 
 -- Create Index GIST (geom_sub)
-CREATE INDEX  	grid_district_collect_geom_subst_idx
-	ON	model_draft.ego_grid_mv_griddistrict_collect
-	USING	GIST (geom_sub);
+CREATE INDEX  	ego_grid_mv_griddistrict_collect_geom_sub_idx
+	ON	model_draft.ego_grid_mv_griddistrict_collect USING GIST (geom_sub);
 
 -- index GIST (geom)
-CREATE INDEX  	grid_district_collect_geom_mun_idx
-	ON	model_draft.ego_grid_mv_griddistrict_collect
-	USING	GIST (geom);
+CREATE INDEX  	ego_grid_mv_griddistrict_collect_geom_idx
+	ON	model_draft.ego_grid_mv_griddistrict_collect USING GIST (geom);
 
 -- grant (oeuser)
 ALTER TABLE	model_draft.ego_grid_mv_griddistrict_collect OWNER TO oeuser;
 
+-- metadata
+COMMENT ON TABLE model_draft.ego_grid_mv_griddistrict_collect IS '{
+	"comment": "eGoDP - Temporary table",
+	"version": "v0.2.5" }' ;
+
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','temp','model_draft','ego_grid_mv_griddistrict_collect','process_eGo_grid_district.sql',' ');
+SELECT ego_scenario_log('v0.2.5','temp','model_draft','ego_grid_mv_griddistrict_collect','ego_dp_mv_griddistrict.sql',' ');
+
+-- NEW PART HERE! 
 
 
--- UNION I + II + II
-
--- -- union mun   (OK!) 19.000ms =3.707
--- DROP TABLE IF EXISTS	model_draft.ego_grid_mv_griddistrict CASCADE;
--- CREATE TABLE 		model_draft.ego_grid_mv_griddistrict AS
--- 	SELECT	un.subst_id ::integer AS subst_id,
--- 		ST_AREA(un.geom)/10000 AS area_ha,
--- 		un.geom AS geom
--- 	FROM	(SELECT DISTINCT ON (dis.subst_id)
--- 			dis.subst_id AS subst_id,
--- 			ST_UNION(ST_SNAP(dis.geom,dis.geom,0.5))  AS geom
--- 		FROM	model_draft.ego_grid_mv_griddistrict_collect AS dis
--- 		GROUP BY dis.subst_id) AS un;
--- --::geometry(MultiPolygon,3035)
 
 -- create grid district
 DROP TABLE IF EXISTS	model_draft.ego_grid_mv_griddistrict CASCADE;
@@ -1006,7 +1049,7 @@ INSERT INTO	model_draft.ego_grid_mv_griddistrict (subst_id,geom)
 		GROUP BY 	dis.subst_id;
 
 -- index GIST (geom)
-CREATE INDEX	grid_district_geom_idx
+CREATE INDEX	ego_grid_mv_griddistrict_geom_idx
 	ON	model_draft.ego_grid_mv_griddistrict USING GIST (geom);
 
 -- grant (oeuser)
@@ -1014,43 +1057,81 @@ ALTER TABLE	model_draft.ego_grid_mv_griddistrict OWNER TO oeuser;
 
 -- Count Substations in Grid Districts
 UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
-SET  	subst_sum = t2.subst_sum,
-	area_ha = t2.area_ha,
-	geom_type = t2.geom_type
-FROM	(SELECT	dis.subst_id AS subst_id,
-		ST_AREA(dis.geom)/10000 AS area_ha,
-		COUNT(sub.geom)::integer AS subst_sum,
-		GeometryType(dis.geom) ::text AS geom_type
-	FROM	model_draft.ego_grid_mv_griddistrict AS dis,
-		model_draft.ego_grid_hvmv_substation AS sub
-	WHERE  	dis.geom && sub.geom AND
-		ST_CONTAINS(dis.geom,sub.geom)
-	GROUP BY dis.subst_id
-	)AS t2
-WHERE  	t1.subst_id = t2.subst_id;
+	SET  	subst_sum = t2.subst_sum,
+		area_ha = t2.area_ha,
+		geom_type = t2.geom_type
+	FROM	(SELECT	dis.subst_id AS subst_id,
+			ST_AREA(dis.geom)/10000 AS area_ha,
+			COUNT(sub.geom)::integer AS subst_sum,
+			GeometryType(dis.geom) ::text AS geom_type
+		FROM	model_draft.ego_grid_mv_griddistrict AS dis,
+			model_draft.ego_grid_hvmv_substation AS sub
+		WHERE  	dis.geom && sub.geom AND
+			ST_CONTAINS(dis.geom,sub.geom)
+		GROUP BY dis.subst_id
+		)AS t2
+	WHERE  	t1.subst_id = t2.subst_id;
 
--- Clean Polygons and Snap to Grid
+/* -- Clean Polygons and Snap to Grid
 UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
-SET  	geom = t2.geom
-FROM	(SELECT	dis.subst_id,
-		ST_SnapToGrid(ST_MULTI(ST_BUFFER(ST_BUFFER(dis.geom,0.1),-0.1)),1) ::geometry(MultiPolygon,3035) AS geom
-	FROM	model_draft.ego_grid_mv_griddistrict AS dis
-	)AS t2
-WHERE  	t1.subst_id = t2.subst_id;
+	SET  	geom = t2.geom
+	FROM	(SELECT	dis.subst_id,
+			ST_SnapToGrid(ST_MULTI(ST_BUFFER(ST_BUFFER(dis.geom,0.1),-0.1)),1) ::geometry(MultiPolygon,3035) AS geom
+		FROM	model_draft.ego_grid_mv_griddistrict AS dis
+		)AS t2
+	WHERE  	t1.subst_id = t2.subst_id; */
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_grid_mv_griddistrict','process_eGo_grid_district.sql',' ');
+SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_grid_mv_griddistrict','ego_dp_mv_griddistrict.sql',' ');
+
+-- metadata
+COMMENT ON TABLE model_draft.ego_grid_mv_griddistrict IS '{
+	"title": "eGo dataprocessing - MV Grid district",
+	"description": "Catchment area of HVMV substation (Transition point)",
+	"language": [ "eng", "ger" ],
+	"reference_date": " ",
+	"sources": [
+		{"name": "eGo dataprocessing", "description": " ",
+		"url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)"},
+		{"name": "OpenStreetMap", "description": "© OpenStreetMap contributors",
+		"url": "http://www.openstreetmap.org/", "license": "Open Database License (ODbL) v1.0"}
+		{"name": "BKG - Verwaltungsgebiete 1:250.000 (vg250)", "description": "© GeoBasis-DE / BKG 2016 (Daten verändert)",
+		"url": "http://www.geodatenzentrum.de/", "license": "Geodatenzugangsgesetz (GeoZG)"} ],
+	"spatial": [
+		{"extend": "Gemany",
+		"resolution": ""} ],
+	"license": [
+		{"id": "ODbL-1.0",
+		"name": "Open Data Commons Open Database License 1.0",
+		"version": "1.0",
+		"url": "https://opendatacommons.org/licenses/odbl/1.0/",
+		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!"} ],
+	"contributors": [
+		{"name": "Ludee", "email": "",
+		"date": "02.09.2016", "comment": "Create table"},
+		{"name": "Ludee", "email": "",
+		"date": "15.01.2017", "comment": "Update metadata"},
+		{"name": "Ludee", "email": "",
+		"date": "21.03.2017", "comment": "Update metadata to 1.1"} ],
+	"resources": [{
+		"schema": {
+			"fields": [
+				{"name": "version", "description": "version id", "unit": "" },
+				{"name": "subst_id", "description": "unique identifier", "unit": "" },
+				{"name": "subst_sum", "description": "number of substation per MV griddistrict", "unit": "" },
+				{"name": "area_ha", "description": "area in hectar", "unit": "ha" },
+				{"name": "geom_type", "description": "polygon type (polygon, multipolygon)", "unit": "" },
+				{"name": "geom", "description": "geometry", "unit": "" } ]},
+		"meta_version": "1.1"}] }';
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','result','grid','ego_mv_griddistrict','ego_dp_mv_griddistrict.sql','versioning');
 
 -- versioning
 INSERT INTO grid.ego_mv_griddistrict (version, subst_id, subst_sum, area_ha, geom_type, geom)
 	SELECT	'v0.2.5',
 		subst_id, subst_sum, area_ha, geom_type, geom
 	FROM	model_draft.ego_grid_mv_griddistrict;
-
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','result','grid','ego_mv_griddistrict','process_eGo_grid_district.sql','versioning');
-
-
 
 /* -- Create Test Area
 DROP TABLE IF EXISTS	model_draft.ego_grid_mv_griddistrict_ta CASCADE;
@@ -1084,88 +1165,311 @@ CREATE INDEX	grid_district_ta_geom_idx
 GRANT ALL ON TABLE	model_draft.ego_grid_mv_griddistrict_ta TO oeuser WITH GRANT OPTION;
 ALTER TABLE		model_draft.ego_grid_mv_griddistrict_ta OWNER TO oeuser; */
 
+
+
+-- NEW PART
 ---------- ---------- ----------
 
+-- Grid Districts with Multipolygons
+DROP TABLE IF EXISTS	model_draft.ego_grid_mv_griddistrict_union CASCADE;
+CREATE TABLE         	model_draft.ego_grid_mv_griddistrict_union (
+	subst_id	integer,
+	geom		geometry(MultiPolygon,3035),
+	CONSTRAINT ego_grid_mv_griddistrict_union_pkey PRIMARY KEY (subst_id) );
 
--- Grid Districts with Multipolygons (Bugs!)
-DROP SEQUENCE IF EXISTS model_draft.ego_grid_mv_griddistrict_dump_id_seq;
-CREATE SEQUENCE 	model_draft.ego_grid_mv_griddistrict_dump_id_seq;
-
--- grant (oeuser)
-ALTER SEQUENCE		model_draft.ego_grid_mv_griddistrict_dump_id_seq OWNER TO oeuser;
-
-DROP TABLE IF EXISTS	model_draft.ego_grid_mv_griddistrict_dump CASCADE;
-CREATE TABLE         	model_draft.ego_grid_mv_griddistrict_dump AS
-	SELECT	nextval('model_draft.ego_grid_mv_griddistrict_dump_id_seq') AS id,
-		subst_id,
-		(ST_DUMP(dis.geom)).geom AS geom
-	FROM	model_draft.ego_grid_mv_griddistrict AS dis;
-
-ALTER TABLE model_draft.ego_grid_mv_griddistrict_dump
-	ADD COLUMN subst_cnt integer,
-	ADD PRIMARY KEY (id);
+-- insert mvgd
+INSERT INTO	model_draft.ego_grid_mv_griddistrict_union (subst_id,geom)
+	SELECT DISTINCT ON 	(subst_id)
+				subst_id AS subst_id,
+				ST_MULTI(ST_UNION(geom)) ::geometry(MultiPolygon,3035) AS geom
+			FROM	model_draft.ego_grid_mv_griddistrict_collect
+		GROUP BY 	subst_id;
 
 -- index GIST (geom)
-CREATE INDEX  	grid_district_dump_geom_idx
-	ON	model_draft.ego_grid_mv_griddistrict_dump
-	USING	GIST (geom);
+CREATE INDEX  	ego_grid_mv_griddistrict_union_geom_idx
+	ON	model_draft.ego_grid_mv_griddistrict_union USING GIST (geom);
 
--- usw count
+-- grant (oeuser)
+ALTER TABLE	model_draft.ego_grid_mv_griddistrict_union OWNER TO oeuser;
+
+-- metadata
+COMMENT ON TABLE model_draft.ego_grid_mv_griddistrict_union IS '{
+	"comment": "eGoDP - Temporary table",
+	"version": "v0.2.5" }' ;
+
+-- Clean Polygons and Snap to Grid
+UPDATE 	model_draft.ego_grid_mv_griddistrict_union AS t1
+	SET  	geom = t2.geom
+	FROM	(SELECT	dis.subst_id,
+			ST_SnapToGrid(ST_MULTI(ST_BUFFER(ST_BUFFER(dis.geom,0.1),-0.1)),1) ::geometry(MultiPolygon,3035) AS geom
+		FROM	model_draft.ego_grid_mv_griddistrict_union AS dis
+		)AS t2
+	WHERE  	t1.subst_id = t2.subst_id;
+
+-- dump
+DROP TABLE IF EXISTS	model_draft.ego_grid_mv_griddistrict_dump CASCADE;
+CREATE TABLE         	model_draft.ego_grid_mv_griddistrict_dump (
+	id		serial,
+	subst_id	integer,
+	subst_cnt	integer,
+	geom_point	geometry(Point,3035),
+	geom		geometry(Polygon,3035),
+	CONSTRAINT ego_grid_mv_griddistrict_dump_pkey PRIMARY KEY (id) );
+
+-- insert dump
+INSERT INTO	model_draft.ego_grid_mv_griddistrict_dump (subst_id,geom)
+	SELECT	subst_id,
+		(ST_DUMP(geom)).geom AS geom
+	FROM	model_draft.ego_grid_mv_griddistrict_union;
+
+-- index GIST (geom)
+CREATE INDEX  	ego_grid_mv_griddistrict_dump_geom_idx
+	ON	model_draft.ego_grid_mv_griddistrict_dump USING GIST (geom);
+
+-- index GIST (geom_point)
+CREATE INDEX  	ego_grid_mv_griddistrict_dump_geom_point_idx
+	ON	model_draft.ego_grid_mv_griddistrict_dump USING GIST (geom_point);	
+
+-- hvmv substation count
 UPDATE 	model_draft.ego_grid_mv_griddistrict_dump AS t1
-SET  	subst_cnt = t2.subst_cnt
-FROM	(SELECT	mun.id AS id,
-		COUNT(sub.geom)::integer AS subst_cnt
-	FROM	model_draft.ego_grid_mv_griddistrict_dump AS mun,
-		model_draft.ego_grid_hvmv_substation AS sub
-	WHERE  	mun.geom && sub.geom AND
-		ST_CONTAINS(mun.geom,sub.geom)
-	GROUP BY mun.id
-	)AS t2
-WHERE  	t1.id = t2.id;
+	SET  	subst_cnt = t2.subst_cnt
+	FROM	(SELECT	a.id AS id,
+			COUNT(b.geom)::integer AS subst_cnt
+		FROM	model_draft.ego_grid_mv_griddistrict_dump AS a,
+			model_draft.ego_grid_hvmv_substation AS b
+		WHERE  	a.geom && b.geom AND
+			ST_CONTAINS(a.geom,b.geom)
+		GROUP BY a.id
+		)AS t2
+	WHERE  	t1.id = t2.id;
+
+-- geom_point
+UPDATE 	model_draft.ego_grid_mv_griddistrict_dump AS t1
+	SET  	geom_point = t2.geom_point
+	FROM	(SELECT	id,
+			ST_PointOnSurface(geom) AS geom_point
+		FROM	model_draft.ego_grid_mv_griddistrict_dump
+		WHERE  	subst_cnt IS NULL
+		)AS t2
+	WHERE  	t1.id = t2.id;
 
 -- grant (oeuser)
 ALTER TABLE	model_draft.ego_grid_mv_griddistrict_dump OWNER TO oeuser;
 
+-- metadata
+COMMENT ON TABLE model_draft.ego_grid_mv_griddistrict_dump IS '{
+	"comment": "eGoDP - Temporary table",
+	"version": "v0.2.5" }' ;
+
+
+-- dump centre fragments (a)
+DROP TABLE IF EXISTS	model_draft.ego_grid_mv_griddistrict_dump_0sub CASCADE;
+CREATE TABLE         	model_draft.ego_grid_mv_griddistrict_dump_0sub (
+	id		serial,
+	subst_id	integer,
+	subst_cnt	integer,
+	geom_point	geometry(Point,3035),
+	geom		geometry(Polygon,3035),
+	CONSTRAINT ego_grid_mv_griddistrict_dump_0sub_pkey PRIMARY KEY (id) );
+
+-- grant (oeuser)
+ALTER TABLE	model_draft.ego_grid_mv_griddistrict_dump_0sub OWNER TO oeuser;
+
+-- insert dump
+INSERT INTO	model_draft.ego_grid_mv_griddistrict_dump_0sub (subst_id,subst_cnt,geom_point,geom)
+	SELECT	subst_id,
+		subst_cnt,
+		geom_point,
+		geom
+	FROM	model_draft.ego_grid_mv_griddistrict_dump
+	WHERE	subst_cnt IS NULL;
+
+-- index GIST (geom)
+CREATE INDEX  	ego_grid_mv_griddistrict_dump_0sub_geom_idx
+	ON	model_draft.ego_grid_mv_griddistrict_dump_0sub USING GIST (geom);
+
+
+-- dump with substation without fragments (b)
+DROP TABLE IF EXISTS	model_draft.ego_grid_mv_griddistrict_dump_1sub CASCADE;
+CREATE TABLE         	model_draft.ego_grid_mv_griddistrict_dump_1sub (
+	id		serial,
+	subst_id	integer,
+	subst_cnt	integer,
+	geom		geometry(Polygon,3035),
+	CONSTRAINT ego_grid_mv_griddistrict_dump_1sub_pkey PRIMARY KEY (id) );
+
+-- grant (oeuser)
+ALTER TABLE	model_draft.ego_grid_mv_griddistrict_dump_1sub OWNER TO oeuser;
+
+-- insert dump
+INSERT INTO	model_draft.ego_grid_mv_griddistrict_dump_1sub (subst_id,subst_cnt,geom)
+	SELECT	subst_id,
+		subst_cnt,
+		geom
+	FROM	model_draft.ego_grid_mv_griddistrict_dump
+	WHERE	subst_cnt = 1;
+
+-- index GIST (geom)
+CREATE INDEX  	ego_grid_mv_griddistrict_dump_1sub_geom_idx
+	ON	model_draft.ego_grid_mv_griddistrict_dump_1sub USING GIST (geom);
+
+
+-- Next Neighbor
+DROP TABLE IF EXISTS	model_draft.ego_grid_mv_griddistrict_dump_nn CASCADE;
+CREATE TABLE 		model_draft.ego_grid_mv_griddistrict_dump_nn AS
+	SELECT DISTINCT ON (a.id)
+		a.id 		AS a_id,
+		a.geom_point	AS a_geom_point,
+		a.geom		AS a_geom,
+		b.id 		AS b_id,
+		b.subst_id 	AS subst_id,
+		b.subst_cnt	AS b_subst_cnt,
+		b.geom		AS b_geom,
+		ST_Distance(a.geom_point,ST_ExteriorRing(b.geom)) AS distance
+	FROM 	model_draft.ego_grid_mv_griddistrict_dump_0sub AS a,
+		model_draft.ego_grid_mv_griddistrict_dump_1sub AS b
+	WHERE 	ST_DWithin(a.geom_point,ST_ExteriorRing(b.geom), 50000) -- In a 50 km radius
+	ORDER BY a.id, ST_Distance(a.geom_point,ST_ExteriorRing(b.geom));
+
+-- PK
+ALTER TABLE	model_draft.ego_grid_mv_griddistrict_dump_nn
+	ADD PRIMARY KEY (a_id);
+
+-- grant (oeuser)
+ALTER TABLE	model_draft.ego_grid_mv_griddistrict_dump_nn OWNER TO oeuser;
+
+-- metadata
+COMMENT ON TABLE model_draft.ego_grid_mv_griddistrict_dump_nn IS '{
+	"comment": "eGoDP - Temporary table",
+	"version": "v0.2.5" }' ;
+
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_grid_mv_griddistrict_dump','process_eGo_grid_district.sql',' ');
+SELECT ego_scenario_log('v0.2.5','temp','model_draft','ego_grid_mv_griddistrict_dump_nn','ego_dp_mv_griddistrict.sql',' ');
 
 
--- -- Dump Rings   (OK!) -> 22.000ms =0
--- SELECT	dis.subst_id,
--- 	ST_NumInteriorRings(dis.geom) ::integer AS count_ring
--- FROM	model_draft.ego_grid_mv_griddistrict AS dis
--- WHERE	ST_NumInteriorRings(dis.geom) <> 0;
--- 
--- -- Dump Rings   (OK!) -> 22.000ms =0
--- DROP SEQUENCE IF EXISTS model_draft.ego_grid_mv_griddistrict_rings_id CASCADE;
--- CREATE SEQUENCE model_draft.ego_grid_mv_griddistrict_rings_id;
--- DROP MATERIALIZED VIEW IF EXISTS	model_draft.ego_grid_mv_griddistrict_rings CASCADE;
--- CREATE MATERIALIZED VIEW 		model_draft.ego_grid_mv_griddistrict_rings AS
--- 	SELECT	nextval('model_draft.ego_grid_mv_griddistrict_rings_id') AS id,
--- 		dis.subst_id,
--- 		ST_NumInteriorRings(dis.geom) AS count_ring,
--- 		(ST_DumpRings(dis.geom)).geom AS geom
--- 	FROM	model_draft.ego_grid_mv_griddistrict AS dis
--- 	WHERE	ST_NumInteriorRings(dis.geom) <> 0;
--- 
--- -- Dump Rings   (OK!) -> 22.000ms =0
--- DROP MATERIALIZED VIEW IF EXISTS	model_draft.ego_grid_mv_griddistrict_rings_dump CASCADE;
--- CREATE MATERIALIZED VIEW 		model_draft.ego_grid_mv_griddistrict_rings_dump AS
--- 	SELECT	dump.id AS id,
--- 		dump.subst_id,
--- 		dump.count_ring,
--- 		ST_AREA(dump.geom) AS area_ha,
--- 		dump.geom AS geom
--- 	FROM	model_draft.ego_grid_mv_griddistrict_rings AS dump
--- 	WHERE	ST_AREA(dump.geom) > 1000000;
+-- connect nn points
+DROP TABLE IF EXISTS	model_draft.ego_grid_mv_griddistrict_dump_nn_line CASCADE;
+CREATE TABLE         	model_draft.ego_grid_mv_griddistrict_dump_nn_line (
+	id		serial,
+	a_id		integer,
+	subst_id	integer,
+	geom		geometry(LineString,3035),
+	CONSTRAINT ego_grid_mv_griddistrict_dump_nn_line_pkey PRIMARY KEY (id) );
+
+-- grant (oeuser)
+ALTER TABLE	model_draft.ego_grid_mv_griddistrict_dump_nn_line OWNER TO oeuser;
+
+-- insert line
+INSERT INTO	model_draft.ego_grid_mv_griddistrict_dump_nn_line (a_id,subst_id,geom)
+	SELECT	a.a_id,
+		a.subst_id,
+		ST_ShortestLine(
+			a_geom_point ::geometry(Point,3035),
+			ST_ExteriorRing(b.geom) ::geometry(LineString,3035)
+		) ::geometry(LineString,3035) AS geom
+	FROM	model_draft.ego_grid_mv_griddistrict_dump_nn AS a,
+		model_draft.ego_grid_mv_griddistrict_dump_1sub AS b
+	WHERE	b.subst_id = a.subst_id;
+
+-- index GIST (geom)
+CREATE INDEX  	ego_grid_mv_griddistrict_dump_nn_line_geom_idx
+	ON	model_draft.ego_grid_mv_griddistrict_dump_nn_line USING GIST (geom);
+
+-- grant (oeuser)
+ALTER TABLE	model_draft.ego_grid_mv_griddistrict_dump_nn_line OWNER TO oeuser;
+
+-- metadata
+COMMENT ON TABLE model_draft.ego_grid_mv_griddistrict_dump_nn_line IS '{
+	"comment": "eGoDP - Temporary table",
+	"version": "v0.2.5" }' ;
+
+
+-- collect
+DROP TABLE IF EXISTS	model_draft.ego_grid_mv_griddistrict_dump_nn_collect CASCADE;
+CREATE TABLE         	model_draft.ego_grid_mv_griddistrict_dump_nn_collect (
+	id		serial,
+	subst_id	integer,
+	geom		geometry(Polygon,3035),
+	CONSTRAINT ego_grid_mv_griddistrict_dump_nn_collect_pkey PRIMARY KEY (id) );
+
+-- grant (oeuser)
+ALTER TABLE	model_draft.ego_grid_mv_griddistrict_dump_nn_collect OWNER TO oeuser;
+
+-- insert a
+INSERT INTO	model_draft.ego_grid_mv_griddistrict_dump_nn_collect (subst_id,geom)
+	SELECT	subst_id,
+		a_geom
+	FROM	model_draft.ego_grid_mv_griddistrict_dump_nn
+	ORDER BY subst_id;
+
+-- insert b
+INSERT INTO	model_draft.ego_grid_mv_griddistrict_dump_nn_collect (subst_id,geom)
+	SELECT	subst_id,
+		b_geom
+	FROM	model_draft.ego_grid_mv_griddistrict_dump_nn
+	ORDER BY subst_id;
+
+-- index GIST (geom)
+CREATE INDEX	ego_grid_mv_griddistrict_dump_nn_collect_geom_idx
+	ON	model_draft.ego_grid_mv_griddistrict_dump_nn_collect USING GIST (geom);
+
+-- clean
+UPDATE 	model_draft.ego_grid_mv_griddistrict_dump_nn_collect AS t1
+	SET  	geom = t2.geom
+	FROM	(SELECT	id,
+			ST_BUFFER(ST_BUFFER(geom,1,'join=mitre'),-1,'join=mitre') ::geometry(Polygon,3035) AS geom
+		FROM	model_draft.ego_grid_mv_griddistrict_dump_nn_collect
+		WHERE 	subst_id = subst_id
+		)AS t2
+	WHERE  	t1.id = t2.id;
+
+
+-- union
+DROP TABLE IF EXISTS	model_draft.ego_grid_mv_griddistrict_dump_nn_collect_union CASCADE;
+CREATE TABLE         	model_draft.ego_grid_mv_griddistrict_dump_nn_collect_union (
+	subst_id	integer,
+	geom		geometry(MultiPolygon,3035),
+	CONSTRAINT ego_grid_mv_griddistrict_dump_nn_collect_union_pkey PRIMARY KEY (subst_id) );
+
+-- grant (oeuser)
+ALTER TABLE	model_draft.ego_grid_mv_griddistrict_dump_nn_collect_union OWNER TO oeuser;
+
+-- insert union
+INSERT INTO	model_draft.ego_grid_mv_griddistrict_dump_nn_collect_union (subst_id,geom)
+	SELECT	un.subst_id 	::integer AS subst_id,
+		un.geom 	::geometry(MultiPolygon,3035) AS geom
+	FROM	(SELECT DISTINCT ON (subst_id)
+			subst_id,
+			ST_MULTI(ST_UNION(geom)) AS geom
+		FROM	model_draft.ego_grid_mv_griddistrict_dump_nn_collect
+		GROUP BY subst_id) AS un;
+
+-- index GIST (geom)
+CREATE INDEX	ego_grid_mv_griddistrict_dump_nn_collect_union_geom_idx
+	ON	model_draft.ego_grid_mv_griddistrict_dump_nn_collect_union USING GIST (geom);
+
+-- metadata
+COMMENT ON TABLE model_draft.ego_grid_mv_griddistrict_dump_nn_collect_union IS '{
+	"comment": "eGoDP - Temporary table",
+	"version": "v0.2.5" }' ;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','temp','model_draft','ego_grid_mv_griddistrict_dump_nn_collect_union','ego_dp_mv_griddistrict.sql',' ');
+
+-- Clean Polygons and Snap to Grid
+UPDATE 	model_draft.ego_grid_mv_griddistrict_dump_nn_collect_union AS t1
+	SET  	geom = t2.geom
+	FROM	(SELECT	subst_id,
+			ST_MULTI(ST_BUFFER(ST_BUFFER(geom,2,'join=mitre'),-2,'join=mitre')) ::geometry(MultiPolygon,3035) AS geom
+		FROM	model_draft.ego_grid_mv_griddistrict_dump_nn_collect_union
+		)AS t2
+	WHERE  	t1.subst_id = t2.subst_id;
 
 
 
----------- ---------- ----------
-
--- -- Validate (geom)   (OK!) -> 22.000ms =0
--- DROP VIEW IF EXISTS	model_draft.ego_grid_mv_griddistrict_error_geom_view CASCADE;
--- CREATE VIEW		model_draft.ego_grid_mv_griddistrict_error_geom_view AS
+-- -- Validate (geom)
+-- DROP VIEW IF EXISTS	model_draft.ego_grid_mv_griddistrict_union_error_geom_view CASCADE;
+-- CREATE VIEW		model_draft.ego_grid_mv_griddistrict_union_error_geom_view AS
 -- 	SELECT	test.id,
 -- 		test.error,
 -- 		reason(ST_IsValidDetail(test.geom)) AS error_reason,
@@ -1174,59 +1478,151 @@ SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_grid_mv_griddistric
 -- 		SELECT	source.subst_id AS id,				-- PK
 -- 			ST_IsValid(source.geom) AS error,
 -- 			source.geom AS geom
--- 		FROM	model_draft.ego_grid_mv_griddistrict AS source	-- Table
+-- 		FROM	model_draft.ego_grid_mv_griddistrict_dump_nn_collect_union AS source	-- Table
 -- 		) AS test
 -- 	WHERE	test.error = FALSE;
 -- 
 -- -- grant (oeuser)
--- GRANT ALL ON TABLE	model_draft.ego_grid_mv_griddistrict_error_geom_view TO oeuser WITH GRANT OPTION;
--- ALTER TABLE		model_draft.ego_grid_mv_griddistrict_error_geom_view OWNER TO oeuser;
+-- GRANT ALL ON TABLE	model_draft.ego_grid_mv_griddistrict_union_error_geom_view TO oeuser WITH GRANT OPTION;
+-- ALTER TABLE		model_draft.ego_grid_mv_griddistrict_union_error_geom_view OWNER TO oeuser;
 -- 
 -- -- Drop empty view   (OK!) -> 100ms =1
--- SELECT f_drop_view('{grid_district_error_geom_view}', 'calc_grid_district');
-
--- ---------- ---------- ----------
--- -- DUMP
--- ---------- ---------- ----------
--- 
--- -- Sequence   (OK!) 100ms =0
--- DROP SEQUENCE IF EXISTS 	model_draft.ego_grid_mv_griddistrict_dump_id CASCADE;
--- CREATE SEQUENCE 		model_draft.ego_grid_mv_griddistrict_dump_id;
--- 
--- -- Dump   (OK!) 19.000ms =4.091
--- DROP TABLE IF EXISTS	model_draft.ego_grid_mv_griddistrict_dump CASCADE;
--- CREATE TABLE 		model_draft.ego_grid_mv_griddistrict_dump AS
--- 	SELECT	nextval('model_draft.ego_political_boundary_hvmv_subst_per_gem_3_nn_line_id') AS id,
--- 		dump.subst_id ::integer AS subst_id,
--- 		ST_AREA(dump.geom)/1000 AS area_ha,
--- 		dump.geom ::geometry(Polygon,3035) AS geom
--- 	FROM	(SELECT dis.subst_id AS subst_id,
--- 			(ST_DUMP(dis.geom)).geom ::geometry(Polygon,3035) AS geom
--- 		FROM	model_draft.ego_grid_mv_griddistrict AS dis) AS dump;
--- 
--- -- PK
--- ALTER TABLE	model_draft.ego_grid_mv_griddistrict_dump
--- 	ADD COLUMN subst_sum integer,
--- 	ADD PRIMARY KEY (id);
--- 
--- -- Count Substations in Grid Districts   (OK!) -> 1.000ms =2.267
--- UPDATE 	model_draft.ego_grid_mv_griddistrict_dump AS t1
--- SET  	subst_sum = t2.subst_sum
--- FROM	(SELECT	dis.id AS id,
--- 		COUNT(sub.geom)::integer AS subst_sum
--- 	FROM	model_draft.ego_grid_mv_griddistrict_dump AS dis,
--- 		model_draft.ego_grid_hvmv_substation AS sub
--- 	WHERE  	dis.geom && sub.geom AND
--- 		ST_CONTAINS(dis.geom,sub.geom)
--- 	GROUP BY dis.id
--- 	)AS t2
--- WHERE  	t1.id = t2.id;
--- 
--- -- index GIST (geom)
--- CREATE INDEX	grid_district_dump_geom_idx
--- 	ON	model_draft.ego_grid_mv_griddistrict_dump
--- 	USING	GIST (geom);
-
--- 
+-- SELECT f_drop_view('{ego_grid_mv_griddistrict_union_error_geom_view}', 'model_draft');
 
 
+
+
+-- new mvgd
+
+
+-- create grid district
+DROP TABLE IF EXISTS	model_draft.ego_grid_mv_griddistrict_new CASCADE;
+CREATE TABLE 		model_draft.ego_grid_mv_griddistrict_new (
+	subst_id	integer,
+	subst_sum	integer,
+	type1 		integer,
+	type1_cnt 	integer,
+	type2 		integer,
+	type2_cnt	integer,
+	type3		integer,
+	type3_cnt	integer,
+	"group"		char(1),
+	gem		integer,
+	gem_clean	integer,
+	zensus_sum 		integer,
+	zensus_count 		integer,
+	zensus_density 		numeric,
+	population_density 	numeric,
+	la_count	integer,
+	area_ha		decimal,	
+	la_area		decimal(10,1),
+	free_area	decimal(10,1),
+	area_share	decimal(4,1),
+	consumption	numeric,
+	consumption_per_area	numeric,
+	dea_cnt		integer,
+	dea_capacity	numeric,
+	lv_dea_cnt	integer,
+	lv_dea_capacity	decimal,
+	mv_dea_cnt	integer,
+	mv_dea_capacity	decimal,
+	geom_type	text,
+	geom		geometry(MultiPolygon,3035),
+	CONSTRAINT ego_grid_mv_griddistrict_new_pkey PRIMARY KEY (subst_id));
+
+-- insert mvgd
+INSERT INTO	model_draft.ego_grid_mv_griddistrict_new (subst_id,geom)
+	SELECT 	subst_id,
+		ST_MULTI(geom)
+	FROM	model_draft.ego_grid_mv_griddistrict_dump_1sub
+	ORDER BY subst_id;
+
+-- index GIST (geom)
+CREATE INDEX	ego_grid_mv_griddistrict_new_geom_idx
+	ON	model_draft.ego_grid_mv_griddistrict_new USING GIST (geom);
+
+-- grant (oeuser)
+ALTER TABLE	model_draft.ego_grid_mv_griddistrict_new OWNER TO oeuser;
+
+-- Count Substations in Grid Districts
+UPDATE 	model_draft.ego_grid_mv_griddistrict_new AS t1
+	SET  	geom = t2.geom
+	FROM	(SELECT	subst_id,
+			geom
+		FROM	model_draft.ego_grid_mv_griddistrict_dump_nn_collect_union
+		)AS t2
+	WHERE  	t1.subst_id = t2.subst_id;
+
+-- Count Substations in Grid Districts
+UPDATE 	model_draft.ego_grid_mv_griddistrict_new AS t1
+	SET  	subst_sum = t2.subst_sum,
+		area_ha = t2.area_ha,
+		geom_type = t2.geom_type
+	FROM	(SELECT	dis.subst_id AS subst_id,
+			ST_AREA(dis.geom)/10000 AS area_ha,
+			COUNT(sub.geom)::integer AS subst_sum,
+			GeometryType(dis.geom) ::text AS geom_type
+		FROM	model_draft.ego_grid_mv_griddistrict_new AS dis,
+			model_draft.ego_grid_hvmv_substation AS sub
+		WHERE  	dis.geom && sub.geom AND
+			ST_CONTAINS(dis.geom,sub.geom)
+		GROUP BY dis.subst_id
+		)AS t2
+	WHERE  	t1.subst_id = t2.subst_id;
+
+/* 
+-- Validate (geom)
+DROP VIEW IF EXISTS	model_draft.ego_grid_mv_griddistrict_new_error_geom_view CASCADE;
+CREATE VIEW		model_draft.ego_grid_mv_griddistrict_new_error_geom_view AS
+	SELECT	test.id,
+		test.error,
+		reason(ST_IsValidDetail(test.geom)) AS error_reason,
+		ST_SetSRID(location(ST_IsValidDetail(test.geom)),3035) ::geometry(Point,3035) AS error_location
+	FROM	(
+		SELECT	source.subst_id AS id,				-- PK
+			ST_IsValid(source.geom) AS error,
+			source.geom AS geom
+		FROM	model_draft.ego_grid_mv_griddistrict_new AS source	-- Table
+		) AS test
+	WHERE	test.error = FALSE;
+
+-- grant (oeuser)
+GRANT ALL ON TABLE	model_draft.ego_grid_mv_griddistrict_new_error_geom_view TO oeuser WITH GRANT OPTION;
+ALTER TABLE		model_draft.ego_grid_mv_griddistrict_new_error_geom_view OWNER TO oeuser;
+
+-- Drop empty view   (OK!) -> 100ms =1
+SELECT f_drop_view('{ego_grid_mv_griddistrict_new_error_geom_view}', 'model_draft'); 
+*/
+
+-- dump
+DROP TABLE IF EXISTS	model_draft.ego_grid_mv_griddistrict_new_dump CASCADE;
+CREATE TABLE         	model_draft.ego_grid_mv_griddistrict_new_dump (
+	id		serial,
+	subst_id	integer,
+	subst_cnt	integer,
+	geom_point	geometry(Point,3035),
+	geom		geometry(Polygon,3035),
+	CONSTRAINT ego_grid_mv_griddistrict_new_dump_pkey PRIMARY KEY (id) );
+
+-- insert dump
+INSERT INTO	model_draft.ego_grid_mv_griddistrict_new_dump (subst_id,geom)
+	SELECT	subst_id,
+		(ST_DUMP(geom)).geom AS geom
+	FROM	model_draft.ego_grid_mv_griddistrict_new;
+
+-- index GIST (geom)
+CREATE INDEX  	ego_grid_mv_griddistrict_new_dump_geom_idx
+	ON	model_draft.ego_grid_mv_griddistrict_new_dump USING GIST (geom);
+
+-- hvmv substation count
+UPDATE 	model_draft.ego_grid_mv_griddistrict_new_dump AS t1
+	SET  	subst_cnt = t2.subst_cnt
+	FROM	(SELECT	a.id AS id,
+			COUNT(b.geom)::integer AS subst_cnt
+		FROM	model_draft.ego_grid_mv_griddistrict_new_dump AS a,
+			model_draft.ego_grid_hvmv_substation AS b
+		WHERE  	a.geom && b.geom AND
+			ST_CONTAINS(a.geom,b.geom)
+		GROUP BY a.id
+		)AS t2
+	WHERE  	t1.id = t2.id;

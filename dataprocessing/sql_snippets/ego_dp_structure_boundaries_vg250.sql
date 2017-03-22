@@ -41,7 +41,43 @@ ALTER TABLE	political_boundary.bkg_vg250_1_sta_mview OWNER TO oeuser;
 
 -- metadata
 COMMENT ON MATERIALIZED VIEW political_boundary.bkg_vg250_1_sta_mview IS '{
-    "Name": "BKG - Verwaltungsgebiete 1:250.000 - country mview",
+	"title": "BKG - Verwaltungsgebiete 1:250.000 - country mview",
+	"description": "Country mview with tiny buffer",
+	"language": [ "eng", "ger" ],
+	"reference_date": "2016-01-01",
+	"sources": [
+		{"name": "Dienstleistungszentrum des Bundes für Geoinformation und Geodäsie - Open Data", "description": ""Dieser Datenbestand steht über Geodatendienste gemäß Geodatenzugangsgesetz (GeoZG) (http://www.geodatenzentrum.de/auftrag/pdf/geodatenzugangsgesetz.pdf) für die kommerzielle und nicht kommerzielle Nutzung geldleistungsfrei zum Download und zur Online-Nutzung zur Verfügung. Die Nutzung der Geodaten und Geodatendienste wird durch die Verordnung zur Festlegung der Nutzungsbestimmungen für die Bereitstellung von Geodaten des Bundes (GeoNutzV) (http://www.geodatenzentrum.de/auftrag/pdf/geonutz.pdf) geregelt. Insbesondere hat jeder Nutzer den Quellenvermerk zu allen Geodaten, Metadaten und Geodatendiensten erkennbar und in optischem Zusammenhang zu platzieren. Veränderungen, Bearbeitungen, neue Gestaltungen oder sonstige Abwandlungen sind mit einem Veränderungshinweis im Quellenvermerk zu versehen. Quellenvermerk und Veränderungshinweis sind wie folgt zu gestalten. Bei der Darstellung auf einer Webseite ist der Quellenvermerk mit der URL http://www.bkg.bund.de zu verlinken. © GeoBasis-DE / BKG <Jahr des letzten Datenbezugs> © GeoBasis-DE / BKG <Jahr des letzten Datenbezugs> (Daten verändert) Beispiel: © GeoBasis-DE / BKG 2013"",
+		"url": "http://www.geodatenzentrum.de/geodaten/gdz_rahmen.gdz_div?gdz_spr=deu&gdz_akt_zeile=5&gdz_anz_zeile=1&gdz_unt_zeile=14&gdz_user_id=0", "license": "Geodatenzugangsgesetz (GeoZG)"},
+		{"name": "BKG - Verwaltungsgebiete 1:250.000 (vg250)", "description": "© GeoBasis-DE / BKG 2016 (Daten verändert)",
+		"url": "http://www.geodatenzentrum.de/", "license": "Geodatenzugangsgesetz (GeoZG)"} ],
+	"spatial": [
+		{"extend": "Germany",
+		"resolution": ""} ],
+	"license": [
+		{"id": "ODbL-1.0",
+		"name": "Open Data Commons Open Database License 1.0",
+		"version": "1.0",
+		"url": "https://opendatacommons.org/licenses/odbl/1.0/",
+		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!"} ],
+	"contributors": [
+		{"Name": "Ludee", "Mail": "",
+		"Date":  "02.09.2015", "Comment": "Create MView (with tiny buffer because of intersection in official data)" },
+		{"Name": "Ludee", "Mail": "",
+		"Date":  "16.11.2016", "Comment": "Add metadata" },
+		{"name": "Ludee", "email": "",
+		"date": "21.03.2017", "comment": "Update metadata to 1.1"} ],
+	"resources": [{
+		"schema": {
+			"fields": [
+				{"name": "reference_date", "description": "Reference date", "unit": "" },
+				{"name": "id", "description": "Unique identifier", "unit": "" },
+				{"name": "bez", "description": "Bezeichnung der Verwaltungseinheit", "unit": "" },
+				{"name": "gf", "description": "Geofaktor", "unit": "" },
+				{"name": "area_ha", "description": "Area", "unit": "ha" },
+				{"name": "geom", "description": "Geometry", "unit": "" } ]},
+		"meta_version": "1.1" }] }';
+
+/*     "Name": "BKG - Verwaltungsgebiete 1:250.000 - country mview",
     "Source":   [{
 	"Name": "Dienstleistungszentrum des Bundes für Geoinformation und Geodäsie - Open Data",
 	"URL": "http://www.geodatenzentrum.de/geodaten/gdz_rahmen.gdz_div?gdz_spr=deu&gdz_akt_zeile=5&gdz_anz_zeile=1&gdz_unt_zeile=14&gdz_user_id=0"}],
@@ -60,16 +96,16 @@ COMMENT ON MATERIALIZED VIEW political_boundary.bkg_vg250_1_sta_mview IS '{
 	{"Name": "area_ha", "Description": "Area in ha", "Unit": "ha" },
 	{"Name": "geom", "Description": "Geometry", "Unit": " " } ],
     "Changes":	[
-        {"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
+        {"Name": "Ludee", "Mail": "",
 	"Date":  "02.09.2015", "Comment": "Created mview" },
-	{"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
+	{"Name": "Ludee", "Mail": "",
 	"Date":  "16.11.2016", "Comment": "Added metadata" } ],
     "Notes": ["With tiny buffer because of intersection (in official data)"],
     "Licence": [{
 	"Name": "Geodatenzugangsgesetz (GeoZG) © GeoBasis-DE / BKG 2016 (Daten verändert)", 
 	"URL": "http://www.geodatenzentrum.de/auftrag/pdf/geodatenzugangsgesetz.pdf" }],
     "Instructions for proper use": ["Dieser Datenbestand steht über Geodatendienste gemäß Geodatenzugangsgesetz (GeoZG) (http://www.geodatenzentrum.de/auftrag/pdf/geodatenzugangsgesetz.pdf) für die kommerzielle und nicht kommerzielle Nutzung geldleistungsfrei zum Download und zur Online-Nutzung zur Verfügung. Die Nutzung der Geodaten und Geodatendienste wird durch die Verordnung zur Festlegung der Nutzungsbestimmungen für die Bereitstellung von Geodaten des Bundes (GeoNutzV) (http://www.geodatenzentrum.de/auftrag/pdf/geonutz.pdf) geregelt. Insbesondere hat jeder Nutzer den Quellenvermerk zu allen Geodaten, Metadaten und Geodatendiensten erkennbar und in optischem Zusammenhang zu platzieren. Veränderungen, Bearbeitungen, neue Gestaltungen oder sonstige Abwandlungen sind mit einem Veränderungshinweis im Quellenvermerk zu versehen. Quellenvermerk und Veränderungshinweis sind wie folgt zu gestalten. Bei der Darstellung auf einer Webseite ist der Quellenvermerk mit der URL http://www.bkg.bund.de zu verlinken. © GeoBasis-DE / BKG <Jahr des letzten Datenbezugs> © GeoBasis-DE / BKG <Jahr des letzten Datenbezugs> (Daten verändert) Beispiel: © GeoBasis-DE / BKG 2013"]
-    }' ;
+    }' ; */
 
 -- select description
 SELECT obj_description('political_boundary.bkg_vg250_1_sta_mview' ::regclass) ::json;
@@ -125,9 +161,9 @@ COMMENT ON MATERIALIZED VIEW political_boundary.bkg_vg250_1_sta_error_geom_mview
 	{"Name": "error_reason", "Description": "Error reason", "Unit": " " },
 	{"Name": "geom", "Description": "Geometry", "Unit": " " } ],
     "Changes":	[
-        {"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
+        {"Name": "Ludee", "Mail": "",
 	"Date":  "02.09.2015", "Comment": "Created mview" },
-	{"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
+	{"Name": "Ludee", "Mail": "",
 	"Date":  "16.11.2016", "Comment": "Added metadata" } ],
     "Notes": [""],
     "Licence": [{
@@ -187,9 +223,9 @@ COMMENT ON MATERIALIZED VIEW political_boundary.bkg_vg250_1_sta_union_mview IS '
 	{"Name": "area_ha", "Description": "Area in ha", "Unit": "ha" },
 	{"Name": "geom", "Description": "Geometry", "Unit": " " } ],
     "Changes":	[
-        {"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
+        {"Name": "Ludee", "Mail": "",
 	"Date":  "02.09.2015", "Comment": "Created mview" },
-	{"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
+	{"Name": "Ludee", "Mail": "",
 	"Date":  "16.11.2016", "Comment": "Added metadata" } ],
     "Notes": [""],
     "Licence": [{
@@ -248,9 +284,9 @@ COMMENT ON MATERIALIZED VIEW political_boundary.bkg_vg250_1_sta_bbox_mview IS '{
 	{"Name": "area_ha", "Description": "Area in ha", "Unit": "ha" },
 	{"Name": "geom", "Description": "Geometry", "Unit": " " } ],
     "Changes":	[
-        {"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
+        {"Name": "Ludee", "Mail": "",
 	"Date":  "02.09.2015", "Comment": "Created mview" },
-	{"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
+	{"Name": "Ludee", "Mail": "",
 	"Date":  "16.11.2016", "Comment": "Added metadata" } ],
     "Notes": [""],
     "Licence": [{
@@ -318,9 +354,9 @@ COMMENT ON MATERIALIZED VIEW political_boundary.bkg_vg250_2_lan_mview IS '{
 	{"Name": "area_ha", "Description": "Area in ha", "Unit": "ha" },
 	{"Name": "geom", "Description": "Geometry", "Unit": " " } ],
     "Changes":	[
-        {"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
+        {"Name": "Ludee", "Mail": "",
 	"Date":  "02.09.2015", "Comment": "Created mview" },
-	{"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
+	{"Name": "Ludee", "Mail": "",
 	"Date":  "16.11.2016", "Comment": "Added metadata" } ],
     "Notes": [""],
     "Licence": [{
@@ -392,9 +428,9 @@ COMMENT ON MATERIALIZED VIEW political_boundary.bkg_vg250_4_krs_mview IS '{
 	{"Name": "area_ha", "Description": "Area in ha", "Unit": "ha" },
 	{"Name": "geom", "Description": "Geometry", "Unit": " " } ],
     "Changes":	[
-        {"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
+        {"Name": "Ludee", "Mail": "",
 	"Date":  "02.09.2015", "Comment": "Created mview" },
-	{"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
+	{"Name": "Ludee", "Mail": "",
 	"Date":  "16.11.2016", "Comment": "Added metadata" } ],
     "Notes": [""],
     "Licence": [{
@@ -526,9 +562,9 @@ COMMENT ON MATERIALIZED VIEW political_boundary.bkg_vg250_6_gem_mview IS '{
 	{"Name": "area_ha", "Description": "Area in ha", "Unit": "ha" },
 	{"Name": "geom", "Description": "Geometry", "Unit": " " } ],
     "Changes":	[
-        {"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
+        {"Name": "Ludee", "Mail": "",
 	"Date":  "02.09.2015", "Comment": "Created mview" },
-	{"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
+	{"Name": "Ludee", "Mail": "",
 	"Date":  "16.11.2016", "Comment": "Added metadata" } ],
     "Notes": [""],
     "Licence": [{
@@ -591,9 +627,9 @@ COMMENT ON MATERIALIZED VIEW political_boundary.bkg_vg250_6_gem_error_geom_mview
 	{"Name": "error_reason", "Description": "Error reason", "Unit": " " },
 	{"Name": "geom", "Description": "Geometry", "Unit": " " } ],
     "Changes":	[
-        {"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
+        {"Name": "Ludee", "Mail": "",
 	"Date":  "02.09.2015", "Comment": "Created mview" },
-	{"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
+	{"Name": "Ludee", "Mail": "",
 	"Date":  "16.11.2016", "Comment": "Added metadata" } ],
     "Notes": [""],
     "Licence": [{
@@ -671,9 +707,9 @@ COMMENT ON MATERIALIZED VIEW political_boundary.bkg_vg250_6_gem_dump_mview IS '{
 	{"Name": "area_ha", "Description": "Area in ha", "Unit": "ha" },
 	{"Name": "geom", "Description": "Geometry", "Unit": " " } ],
     "Changes":	[
-        {"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
+        {"Name": "Ludee", "Mail": "",
 	"Date":  "02.09.2015", "Comment": "Created mview" },
-	{"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
+	{"Name": "Ludee", "Mail": "",
 	"Date":  "16.11.2016", "Comment": "Added metadata" } ],
     "Notes": [""],
     "Licence": [{
@@ -788,9 +824,9 @@ COMMENT ON MATERIALIZED VIEW model_draft.ego_political_boundary_bkg_vg250_6_gem_
 	{"Name": "hole", "Description": "True if hole", "Unit": " " },
 	{"Name": "geom", "Description": "Geometry", "Unit": " " } ],
     "Changes":	[
-        {"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
+        {"Name": "Ludee", "Mail": "",
 	"Date":  "02.09.2015", "Comment": "Created mview" },
-	{"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
+	{"Name": "Ludee", "Mail": "",
 	"Date":  "16.11.2016", "Comment": "Added metadata" } ],
     "Notes": [""],
     "Licence": [{
@@ -851,9 +887,9 @@ COMMENT ON TABLE model_draft.ego_political_boundary_bkg_vg250_6_gem_clean IS '{
 	{"Name": "hole", "Description": "True if hole", "Unit": " " },
 	{"Name": "geom", "Description": "Geometry", "Unit": " " } ],
     "Changes":	[
-        {"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
+        {"Name": "Ludee", "Mail": "",
 	"Date":  "02.09.2015", "Comment": "Created mview" },
-	{"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
+	{"Name": "Ludee", "Mail": "",
 	"Date":  "16.11.2016", "Comment": "Added metadata" } ],
     "Notes": [""],
     "Licence": [{
@@ -903,6 +939,11 @@ WHERE	gf='1' OR gf='2';
 
 -- grant (oeuser)
 ALTER VIEW	political_boundary.bkg_vg250_statistics_view OWNER TO oeuser;
+
+-- metadata
+COMMENT ON MATERIALIZED VIEW political_boundary.bkg_vg250_statistics_view IS '{
+	"comment": "eGoDP - Temporary table",
+	"version": "v0.2.5" }' ;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.5','output','political_boundary','bkg_vg250_statistics_view','ego_political_boundary_bkg_setup.sql',' ');

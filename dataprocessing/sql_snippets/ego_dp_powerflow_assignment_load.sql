@@ -68,7 +68,7 @@ COMMENT ON TABLE  model_draft.ego_demand_loads IS
                     "Comment": "..." }, 
 
                    {"Name": "IlkaCussmann",
-                    "Mail": "ilka.cussmann@hs-flensburg.de",
+                    "Mail": "",
                     "Date":  "26.10.2016",
                     "Comment": "completed json string" }
                   ],
@@ -173,7 +173,7 @@ COMMENT ON TABLE  model_draft.ego_demand_pf_load_single IS
                     "Date":  "04.10.2016",
                     "Comment": "..." }, 
                    {"Name": "Ilka Cussmann",
-                    "Mail": "ilka.cussmann@hs-flensburg.de",
+                    "Mail": "",
                     "Date":  "26.10.2016",
                     "Comment": "completed json-string" }
                   ],

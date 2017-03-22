@@ -232,7 +232,7 @@ COMMENT ON TABLE  model_draft.ego_demand_loadarea IS
                     "Unit": "" }],
 "Changes":[
                    {"Name": "Ilka Cussmann",
-                    "Mail": "ilka.cussmann@hs-flensburg.de",
+                    "Mail": "",
                     "Date":  "25.10.2016",
                     "Comment": "completed json-String" }
                   ],

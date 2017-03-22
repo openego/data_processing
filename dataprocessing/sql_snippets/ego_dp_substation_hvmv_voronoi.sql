@@ -110,11 +110,11 @@ COMMENT ON TABLE model_draft.ego_grid_hvmv_substation_dummy IS '{
         {"Name": "subst_name", "Description": "name is DUMMY", "Unit": " " },
 	{"Name": "geom", "Description": "Geometry", "Unit": " " } ],
     "Changes":	[
-        {"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
+        {"Name": "Ludee", "Mail": "",
 	"Date":  "02.09.2015", "Comment": "Created mview" },
-	{"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
+	{"Name": "Ludee", "Mail": "",
 	"Date":  "17.11.2016", "Comment": "Added Dummy from WKT" },
-	{"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
+	{"Name": "Ludee", "Mail": "",
 	"Date":  "17.11.2016", "Comment": "Added metadata" } ],
     "Notes": [""],
     "Licence": [{
@@ -215,9 +215,9 @@ COMMENT ON TABLE model_draft.ego_grid_hvmv_substation_voronoi IS '{
         {"Name": "subst_sum", "Description": "Number of substation per polygon (=1)", "Unit": " " },
 	{"Name": "geom", "Description": "Geometry", "Unit": " " } ],
     "Changes":	[
-        {"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
+        {"Name": "Ludee", "Mail": "",
 	"Date":  "02.09.2015", "Comment": "Created mview" },
-	{"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
+	{"Name": "Ludee", "Mail": "",
 	"Date":  "16.11.2016", "Comment": "Added metadata" } ],
     "Notes": [""],
     "Licence": [{

@@ -96,9 +96,9 @@ COMMENT ON TABLE model_draft.ego_demand_la_osm IS '{
         {"Name": "area_ha", "Description": "Area", "Unit": "ha" },
 	{"Name": "geom", "Description": "Geometry", "Unit": " " } ],
     "Changes":	[
-        {"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
+        {"Name": "Ludee", "Mail": "",
 	"Date":  "02.09.2015", "Comment": "Created mview" },
-	{"Name": "Ludwig Hülk", "Mail": "ludwig.huelk@rl-institut.de",
+	{"Name": "Ludee", "Mail": "",
 	"Date":  "17.12.2016", "Comment": "Added metadata" } ],
     "Notes": [""],
     "Licence": [{

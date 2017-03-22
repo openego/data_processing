@@ -135,7 +135,7 @@ COMMENT ON TABLE  model_draft.ego_grid_ehv_substation_voronoi IS
                     "Comment": "..." }, 
 
                    {"Name": "Ilka Cussmann",
-                    "Mail": "ilka.cussmann@hs-flensburg.de",
+                    "Mail": "",
                     "Date":  "26.10.2016",
                     "Comment": "completed json-string" }
                   ],

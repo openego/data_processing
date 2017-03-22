@@ -28,9 +28,13 @@ CREATE INDEX  	osm_deu_polygon_landuse_mview_geom_idx
 -- grant (oeuser)
 ALTER TABLE	openstreetmap.osm_deu_polygon_landuse_mview OWNER TO oeuser;
 
+-- metadata
+COMMENT ON MATERIALIZED VIEW openstreetmap.osm_deu_polygon_landuse_mview IS '{
+	"comment": "eGoDP - Temporary table",
+	"version": "v0.2.5" }' ;
+
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.5','output','openstreetmap','osm_deu_polygon_landuse_mview','analyse_osm_landuse.sql',' ');
-
 
 
 /* 

@@ -98,7 +98,7 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_scenario_settings IS
                     "Comment": "..." }, 
 
                    {"Name": "Ilka Cussmann",
-                    "Mail": "ilka.cussmann@hs-flensburg.de",
+                    "Mail": "",
                     "Date":  "26.10.2016",
                     "Comment": "completed json-string" }
                   ],
@@ -155,7 +155,7 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_source IS
                     "Comment": "..." },
 
                    {"Name": "Ilka Cussmann",
-                    "Mail": "ilka.cussmann@hs-flensburg.de",
+                    "Mail": "",
                     "Date":  "26.10.2016",
                     "Comment": "completed json-string" } 
                   ],
@@ -223,7 +223,7 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_bus IS
                     "Date":  "04.10.2016",
                     "Comment": "..." }, 
                    {"Name": "Ilka Cussmann",
-                    "Mail": "ilka.cussmann@hs-flensburg.de",
+                    "Mail": "",
                     "Date":  "26.10.2016",
                     "Comment": "completed json-String" }
                   ],
@@ -329,7 +329,7 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_generator IS
                     "Date":  "04.10.2016",
                     "Comment": "..." }, 
                    {"Name": "Ilka Cussmann",
-                    "Mail": "ilka.cussmann@hs-flensburg.de",
+                    "Mail": "",
                     "Date":  "26.10.2016",
                     "Comment": "completed json-string" }
                   ],
@@ -445,7 +445,7 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_line IS
                     "Date":  "04.10.2016",
                     "Comment": "..." }, 
                    {"Name": "Ilka Cussmann",
-                    "Mail": "ilka.cussmann@hs-flensburg.de",
+                    "Mail": "",
                     "Date":  "26.10.2016",
                     "Comment": "completed json-string" }
                   ],
@@ -505,7 +505,7 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_load IS
                     "Date":  "04.10.2016",
                     "Comment": "..." }, 
                    {"Name": "Ilka Cussmann",
-                    "Mail": "ilka.cussmann@hs-flensburg.de",
+                    "Mail": "",
                     "Date":  "26.10.2016",
                     "Comment": "completed json-string" }
                   ],
@@ -635,7 +635,7 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_storage IS
                     "Date":  "04.10.2016",
                     "Comment": "..." }, 
                    {"Name": "Ilka Cussmann",
-                    "Mail": "ilka.cussmann@hs-flensburg.de",
+                    "Mail": "",
                     "Date":  "26.10.2016",
                     "Comment": "Completed json-string" }
                   ],
@@ -695,7 +695,7 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_temp_resolution IS
                     "Date":  "04.10.2016",
                     "Comment": "..." },
                    {"Name": "Ilka Cussmann",
-                    "Mail": "ilka.cussmann@hs-flensburg.de",
+                    "Mail": "",
                     "Date":  "26.10.2016",
                     "Comment": "completed json-string" }
                   ],
@@ -804,7 +804,7 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_transformer IS
                     "Comment": "..." }, 
 
                    {"Name": "Ilka Cussmann",
-                    "Mail": "ilka.cussmann@hs-flensburg.de",
+                    "Mail": "",
                     "Date":  "26.10.2016",
                     "Comment": "completed json-string" }
                   ],
@@ -865,7 +865,7 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_bus_v_mag_set IS
                     "Date":  "04.10.2016",
                     "Comment": "..." },
                    {"Name": "Ilka Cussmann",
-                    "Mail": "ilka.cussmann@hs-flensburg.de",
+                    "Mail": "",
                     "Date":  "26.10.2016",
                     "Comment": "completed json-string" }
                   ],
@@ -935,7 +935,7 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_generator_pq_set IS
                     "Date":  "04.10.2016",
                     "Comment": "..." }, 
                    {"Name": "Ilka Cussmann",
-                    "Mail": "ilka.cussmann@hs-flensburg.de",
+                    "Mail": "",
                     "Date":  "26.10.2016",
                     "Comment": "completed json-string" }
                   ],
@@ -997,7 +997,7 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_load_pq_set IS
                     "Date":  "04.10.2016",
                     "Comment": "..." }, 
 		    {"Name": "Ilka Cussmann",
-                    "Mail": "ilka.cussmann@hs-flensburg.de",
+                    "Mail": "",
                     "Date":  "26.10.2016",
                     "Comment": "completed json-string" }
                   ],
@@ -1075,7 +1075,7 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_storage_pq_set IS
                     "Date":  "04.10.2016",
                     "Comment": "..." }, 
                     {"Name": "Ilka Cussmann",
-                    "Mail": "ilka.cussmann@hs-flensburg.de",
+                    "Mail": "",
                     "Date":  "26.10.2016",
                     "Comment": "completed json-string" }
                   ],

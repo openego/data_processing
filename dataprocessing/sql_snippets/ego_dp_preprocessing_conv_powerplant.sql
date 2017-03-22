@@ -214,7 +214,7 @@ COMMENT ON TABLE  model_draft.ego_supply_conv_powerplant IS
                     "Date":  "05.10.2016",
                     "Comment": "..." },
                    {"Name": "Ilka Cussmann",
-                    "Mail": "ilka.cussmann@hs-flensburg.de",
+                    "Mail": "",
                     "Date":  "27.10.2016",
                     "Comment": "added information to metadata" } 
                   ],

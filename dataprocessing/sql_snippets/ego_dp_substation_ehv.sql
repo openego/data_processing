@@ -266,8 +266,8 @@ COMMENT ON TABLE  model_draft.ego_grid_ehv_substation IS
                     "Description": "states the id of respective bus in osmtgmod",
                     "Unit": "" }],
 "Changes":[
-                   {"Name": "Lukas Wienholt",
-                    "Mail": "lukas.wienholt@next-energy.de",
+                   {"Name": "lukasol",
+                    "Mail": "",
                     "Date":  "20.10.2016",
                     "Comment": "..." }
                   ],
