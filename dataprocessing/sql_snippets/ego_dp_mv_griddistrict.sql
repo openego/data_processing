@@ -1001,171 +1001,6 @@ COMMENT ON TABLE model_draft.ego_grid_mv_griddistrict_collect IS '{
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.5','temp','model_draft','ego_grid_mv_griddistrict_collect','ego_dp_mv_griddistrict.sql',' ');
 
--- NEW PART HERE! 
-
-
-
--- create grid district
-DROP TABLE IF EXISTS	model_draft.ego_grid_mv_griddistrict CASCADE;
-CREATE TABLE 		model_draft.ego_grid_mv_griddistrict (
-	subst_id	integer,
-	subst_sum	integer,
-	type1 		integer,
-	type1_cnt 	integer,
-	type2 		integer,
-	type2_cnt	integer,
-	type3		integer,
-	type3_cnt	integer,
-	"group"		char(1),
-	gem		integer,
-	gem_clean	integer,
-	zensus_sum 		integer,
-	zensus_count 		integer,
-	zensus_density 		numeric,
-	population_density 	numeric,
-	la_count	integer,
-	area_ha		decimal,	
-	la_area		decimal(10,1),
-	free_area	decimal(10,1),
-	area_share	decimal(4,1),
-	consumption	numeric,
-	consumption_per_area	numeric,
-	dea_cnt		integer,
-	dea_capacity	numeric,
-	lv_dea_cnt	integer,
-	lv_dea_capacity	decimal,
-	mv_dea_cnt	integer,
-	mv_dea_capacity	decimal,
-	geom_type	text,
-	geom		geometry(MultiPolygon,3035),
-	CONSTRAINT ego_grid_mv_griddistrict_pkey PRIMARY KEY (subst_id));
-
--- insert mvgd
-INSERT INTO	model_draft.ego_grid_mv_griddistrict (subst_id,geom)
-	SELECT DISTINCT ON 	(dis.subst_id)
-				dis.subst_id AS subst_id,
-				ST_MULTI(ST_UNION(dis.geom)) ::geometry(MultiPolygon,3035) AS geom
-			FROM	model_draft.ego_grid_mv_griddistrict_collect AS dis
-		GROUP BY 	dis.subst_id;
-
--- index GIST (geom)
-CREATE INDEX	ego_grid_mv_griddistrict_geom_idx
-	ON	model_draft.ego_grid_mv_griddistrict USING GIST (geom);
-
--- grant (oeuser)
-ALTER TABLE	model_draft.ego_grid_mv_griddistrict OWNER TO oeuser;
-
--- Count Substations in Grid Districts
-UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
-	SET  	subst_sum = t2.subst_sum,
-		area_ha = t2.area_ha,
-		geom_type = t2.geom_type
-	FROM	(SELECT	dis.subst_id AS subst_id,
-			ST_AREA(dis.geom)/10000 AS area_ha,
-			COUNT(sub.geom)::integer AS subst_sum,
-			GeometryType(dis.geom) ::text AS geom_type
-		FROM	model_draft.ego_grid_mv_griddistrict AS dis,
-			model_draft.ego_grid_hvmv_substation AS sub
-		WHERE  	dis.geom && sub.geom AND
-			ST_CONTAINS(dis.geom,sub.geom)
-		GROUP BY dis.subst_id
-		)AS t2
-	WHERE  	t1.subst_id = t2.subst_id;
-
-/* -- Clean Polygons and Snap to Grid
-UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
-	SET  	geom = t2.geom
-	FROM	(SELECT	dis.subst_id,
-			ST_SnapToGrid(ST_MULTI(ST_BUFFER(ST_BUFFER(dis.geom,0.1),-0.1)),1) ::geometry(MultiPolygon,3035) AS geom
-		FROM	model_draft.ego_grid_mv_griddistrict AS dis
-		)AS t2
-	WHERE  	t1.subst_id = t2.subst_id; */
-
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_grid_mv_griddistrict','ego_dp_mv_griddistrict.sql',' ');
-
--- metadata
-COMMENT ON TABLE model_draft.ego_grid_mv_griddistrict IS '{
-	"title": "eGo dataprocessing - MV Grid district",
-	"description": "Catchment area of HVMV substation (Transition point)",
-	"language": [ "eng", "ger" ],
-	"reference_date": " ",
-	"sources": [
-		{"name": "eGo dataprocessing", "description": " ",
-		"url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)"},
-		{"name": "OpenStreetMap", "description": "© OpenStreetMap contributors",
-		"url": "http://www.openstreetmap.org/", "license": "Open Database License (ODbL) v1.0"}
-		{"name": "BKG - Verwaltungsgebiete 1:250.000 (vg250)", "description": "© GeoBasis-DE / BKG 2016 (Daten verändert)",
-		"url": "http://www.geodatenzentrum.de/", "license": "Geodatenzugangsgesetz (GeoZG)"} ],
-	"spatial": [
-		{"extend": "Gemany",
-		"resolution": ""} ],
-	"license": [
-		{"id": "ODbL-1.0",
-		"name": "Open Data Commons Open Database License 1.0",
-		"version": "1.0",
-		"url": "https://opendatacommons.org/licenses/odbl/1.0/",
-		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!"} ],
-	"contributors": [
-		{"name": "Ludee", "email": "",
-		"date": "02.09.2016", "comment": "Create table"},
-		{"name": "Ludee", "email": "",
-		"date": "15.01.2017", "comment": "Update metadata"},
-		{"name": "Ludee", "email": "",
-		"date": "21.03.2017", "comment": "Update metadata to 1.1"} ],
-	"resources": [{
-		"schema": {
-			"fields": [
-				{"name": "version", "description": "version id", "unit": "" },
-				{"name": "subst_id", "description": "unique identifier", "unit": "" },
-				{"name": "subst_sum", "description": "number of substation per MV griddistrict", "unit": "" },
-				{"name": "area_ha", "description": "area in hectar", "unit": "ha" },
-				{"name": "geom_type", "description": "polygon type (polygon, multipolygon)", "unit": "" },
-				{"name": "geom", "description": "geometry", "unit": "" } ]},
-		"meta_version": "1.1"}] }';
-
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','result','grid','ego_mv_griddistrict','ego_dp_mv_griddistrict.sql','versioning');
-
--- versioning
-INSERT INTO grid.ego_mv_griddistrict (version, subst_id, subst_sum, area_ha, geom_type, geom)
-	SELECT	'v0.2.5',
-		subst_id, subst_sum, area_ha, geom_type, geom
-	FROM	model_draft.ego_grid_mv_griddistrict;
-
-/* -- Create Test Area
-DROP TABLE IF EXISTS	model_draft.ego_grid_mv_griddistrict_ta CASCADE;
-CREATE TABLE 		model_draft.ego_grid_mv_griddistrict_ta AS
-	SELECT	dis.*
-	FROM	model_draft.ego_grid_mv_griddistrict AS dis
-	WHERE	subst_id = '372' OR
-		subst_id = '387' OR
-		subst_id = '373' OR
-		subst_id = '407' OR
-		subst_id = '403' OR
-		subst_id = '482' OR
-		subst_id = '416' OR
-		subst_id = '425' OR
-		subst_id = '491' OR
-		subst_id = '368' OR
-		subst_id = '360' OR
-		subst_id = '571' OR
-		subst_id = '593';
-
--- PK
-ALTER TABLE	model_draft.ego_grid_mv_griddistrict_ta
-	ADD PRIMARY KEY (subst_id);
-
--- index GIST (geom)
-CREATE INDEX	grid_district_ta_geom_idx
-	ON	model_draft.ego_grid_mv_griddistrict_ta
-	USING	GIST (geom);
-
--- grant (oeuser)
-GRANT ALL ON TABLE	model_draft.ego_grid_mv_griddistrict_ta TO oeuser WITH GRANT OPTION;
-ALTER TABLE		model_draft.ego_grid_mv_griddistrict_ta OWNER TO oeuser; */
-
-
 
 -- NEW PART
 ---------- ---------- ----------
@@ -1466,8 +1301,6 @@ UPDATE 	model_draft.ego_grid_mv_griddistrict_dump_nn_collect_union AS t1
 		)AS t2
 	WHERE  	t1.subst_id = t2.subst_id;
 
-
-
 -- -- Validate (geom)
 -- DROP VIEW IF EXISTS	model_draft.ego_grid_mv_griddistrict_union_error_geom_view CASCADE;
 -- CREATE VIEW		model_draft.ego_grid_mv_griddistrict_union_error_geom_view AS
@@ -1491,14 +1324,9 @@ UPDATE 	model_draft.ego_grid_mv_griddistrict_dump_nn_collect_union AS t1
 -- SELECT f_drop_view('{ego_grid_mv_griddistrict_union_error_geom_view}', 'model_draft');
 
 
-
-
--- new mvgd
-
-
 -- create grid district
-DROP TABLE IF EXISTS	model_draft.ego_grid_mv_griddistrict_new CASCADE;
-CREATE TABLE 		model_draft.ego_grid_mv_griddistrict_new (
+DROP TABLE IF EXISTS	model_draft.ego_grid_mv_griddistrict CASCADE;
+CREATE TABLE 		model_draft.ego_grid_mv_griddistrict (
 	subst_id	integer,
 	subst_sum	integer,
 	type1 		integer,
@@ -1529,24 +1357,24 @@ CREATE TABLE 		model_draft.ego_grid_mv_griddistrict_new (
 	mv_dea_capacity	decimal,
 	geom_type	text,
 	geom		geometry(MultiPolygon,3035),
-	CONSTRAINT ego_grid_mv_griddistrict_new_pkey PRIMARY KEY (subst_id));
+	CONSTRAINT ego_grid_mv_griddistrict_pkey PRIMARY KEY (subst_id));
 
 -- insert mvgd
-INSERT INTO	model_draft.ego_grid_mv_griddistrict_new (subst_id,geom)
+INSERT INTO	model_draft.ego_grid_mv_griddistrict (subst_id,geom)
 	SELECT 	subst_id,
 		ST_MULTI(geom)
 	FROM	model_draft.ego_grid_mv_griddistrict_dump_1sub
 	ORDER BY subst_id;
 
 -- index GIST (geom)
-CREATE INDEX	ego_grid_mv_griddistrict_new_geom_idx
-	ON	model_draft.ego_grid_mv_griddistrict_new USING GIST (geom);
+CREATE INDEX	ego_grid_mv_griddistrict_geom_idx
+	ON	model_draft.ego_grid_mv_griddistrict USING GIST (geom);
 
 -- grant (oeuser)
-ALTER TABLE	model_draft.ego_grid_mv_griddistrict_new OWNER TO oeuser;
+ALTER TABLE	model_draft.ego_grid_mv_griddistrict OWNER TO oeuser;
 
 -- Count Substations in Grid Districts
-UPDATE 	model_draft.ego_grid_mv_griddistrict_new AS t1
+UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
 	SET  	geom = t2.geom
 	FROM	(SELECT	subst_id,
 			geom
@@ -1555,7 +1383,7 @@ UPDATE 	model_draft.ego_grid_mv_griddistrict_new AS t1
 	WHERE  	t1.subst_id = t2.subst_id;
 
 -- Count Substations in Grid Districts
-UPDATE 	model_draft.ego_grid_mv_griddistrict_new AS t1
+UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
 	SET  	subst_sum = t2.subst_sum,
 		area_ha = t2.area_ha,
 		geom_type = t2.geom_type
@@ -1563,7 +1391,7 @@ UPDATE 	model_draft.ego_grid_mv_griddistrict_new AS t1
 			ST_AREA(dis.geom)/10000 AS area_ha,
 			COUNT(sub.geom)::integer AS subst_sum,
 			GeometryType(dis.geom) ::text AS geom_type
-		FROM	model_draft.ego_grid_mv_griddistrict_new AS dis,
+		FROM	model_draft.ego_grid_mv_griddistrict AS dis,
 			model_draft.ego_grid_hvmv_substation AS sub
 		WHERE  	dis.geom && sub.geom AND
 			ST_CONTAINS(dis.geom,sub.geom)
@@ -1571,10 +1399,142 @@ UPDATE 	model_draft.ego_grid_mv_griddistrict_new AS t1
 		)AS t2
 	WHERE  	t1.subst_id = t2.subst_id;
 
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_grid_mv_griddistrict','ego_dp_mv_griddistrict.sql',' ');
+
+-- metadata
+COMMENT ON TABLE model_draft.ego_grid_mv_griddistrict IS '{
+	"title": "eGo dataprocessing - MV Grid district",
+	"description": "Catchment area of HVMV substation (Transition point)",
+	"language": [ "eng", "ger" ],
+	"reference_date": " ",
+	"sources": [
+		{"name": "eGo dataprocessing", "description": " ",
+		"url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)"},
+		{"name": "OpenStreetMap", "description": "© OpenStreetMap contributors",
+		"url": "http://www.openstreetmap.org/", "license": "Open Database License (ODbL) v1.0"}
+		{"name": "BKG - Verwaltungsgebiete 1:250.000 (vg250)", "description": "© GeoBasis-DE / BKG 2016 (Daten verändert)",
+		"url": "http://www.geodatenzentrum.de/", "license": "Geodatenzugangsgesetz (GeoZG)"} ],
+	"spatial": [
+		{"extend": "Gemany",
+		"resolution": ""} ],
+	"license": [
+		{"id": "ODbL-1.0",
+		"name": "Open Data Commons Open Database License 1.0",
+		"version": "1.0",
+		"url": "https://opendatacommons.org/licenses/odbl/1.0/",
+		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!"} ],
+	"contributors": [
+		{"name": "Ludee", "email": "",
+		"date": "02.09.2016", "comment": "Create table"},
+		{"name": "Ludee", "email": "",
+		"date": "15.01.2017", "comment": "Update metadata"},
+		{"name": "Ludee", "email": "",
+		"date": "21.03.2017", "comment": "Update metadata to 1.1"} ],
+	"resources": [{
+		"schema": {
+			"fields": [
+				{"name": "version", "description": "version id", "unit": "" },
+				{"name": "subst_id", "description": "unique identifier", "unit": "" },
+				{"name": "subst_sum", "description": "number of substation per MV griddistrict", "unit": "" },
+				{"name": "area_ha", "description": "area in hectar", "unit": "ha" },
+				{"name": "geom_type", "description": "polygon type (polygon, multipolygon)", "unit": "" },
+				{"name": "geom", "description": "geometry", "unit": "" } ]},
+		"meta_version": "1.1"}] }';
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','result','grid','ego_mv_griddistrict','ego_dp_mv_griddistrict.sql','versioning');
+
+-- versioning
+INSERT INTO grid.ego_mv_griddistrict (version, subst_id, subst_sum, area_ha, geom_type, geom)
+	SELECT	'v0.2.5',
+		subst_id, subst_sum, area_ha, geom_type, geom
+	FROM	model_draft.ego_grid_mv_griddistrict;
+
+
+-- OLD after restructuring
+
+/* 
+-- create grid district
+DROP TABLE IF EXISTS	model_draft.ego_grid_mv_griddistrict CASCADE;
+CREATE TABLE 		model_draft.ego_grid_mv_griddistrict (
+	subst_id	integer,
+	subst_sum	integer,
+	type1 		integer,
+	type1_cnt 	integer,
+	type2 		integer,
+	type2_cnt	integer,
+	type3		integer,
+	type3_cnt	integer,
+	"group"		char(1),
+	gem		integer,
+	gem_clean	integer,
+	zensus_sum 		integer,
+	zensus_count 		integer,
+	zensus_density 		numeric,
+	population_density 	numeric,
+	la_count	integer,
+	area_ha		decimal,	
+	la_area		decimal(10,1),
+	free_area	decimal(10,1),
+	area_share	decimal(4,1),
+	consumption	numeric,
+	consumption_per_area	numeric,
+	dea_cnt		integer,
+	dea_capacity	numeric,
+	lv_dea_cnt	integer,
+	lv_dea_capacity	decimal,
+	mv_dea_cnt	integer,
+	mv_dea_capacity	decimal,
+	geom_type	text,
+	geom		geometry(MultiPolygon,3035),
+	CONSTRAINT ego_grid_mv_griddistrict_pkey PRIMARY KEY (subst_id));
+
+-- insert mvgd
+INSERT INTO	model_draft.ego_grid_mv_griddistrict (subst_id,geom)
+	SELECT DISTINCT ON 	(dis.subst_id)
+				dis.subst_id AS subst_id,
+				ST_MULTI(ST_UNION(dis.geom)) ::geometry(MultiPolygon,3035) AS geom
+			FROM	model_draft.ego_grid_mv_griddistrict_collect AS dis
+		GROUP BY 	dis.subst_id;
+
+-- index GIST (geom)
+CREATE INDEX	ego_grid_mv_griddistrict_geom_idx
+	ON	model_draft.ego_grid_mv_griddistrict USING GIST (geom);
+
+-- grant (oeuser)
+ALTER TABLE	model_draft.ego_grid_mv_griddistrict OWNER TO oeuser;
+
+-- Count Substations in Grid Districts
+UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
+	SET  	subst_sum = t2.subst_sum,
+		area_ha = t2.area_ha,
+		geom_type = t2.geom_type
+	FROM	(SELECT	dis.subst_id AS subst_id,
+			ST_AREA(dis.geom)/10000 AS area_ha,
+			COUNT(sub.geom)::integer AS subst_sum,
+			GeometryType(dis.geom) ::text AS geom_type
+		FROM	model_draft.ego_grid_mv_griddistrict AS dis,
+			model_draft.ego_grid_hvmv_substation AS sub
+		WHERE  	dis.geom && sub.geom AND
+			ST_CONTAINS(dis.geom,sub.geom)
+		GROUP BY dis.subst_id
+		)AS t2
+	WHERE  	t1.subst_id = t2.subst_id;
+ */
+/* -- Clean Polygons and Snap to Grid
+UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
+	SET  	geom = t2.geom
+	FROM	(SELECT	dis.subst_id,
+			ST_SnapToGrid(ST_MULTI(ST_BUFFER(ST_BUFFER(dis.geom,0.1),-0.1)),1) ::geometry(MultiPolygon,3035) AS geom
+		FROM	model_draft.ego_grid_mv_griddistrict AS dis
+		)AS t2
+	WHERE  	t1.subst_id = t2.subst_id; */
+
 /* 
 -- Validate (geom)
-DROP VIEW IF EXISTS	model_draft.ego_grid_mv_griddistrict_new_error_geom_view CASCADE;
-CREATE VIEW		model_draft.ego_grid_mv_griddistrict_new_error_geom_view AS
+DROP VIEW IF EXISTS	model_draft.ego_grid_mv_griddistrict_error_geom_view CASCADE;
+CREATE VIEW		model_draft.ego_grid_mv_griddistrict_error_geom_view AS
 	SELECT	test.id,
 		test.error,
 		reason(ST_IsValidDetail(test.geom)) AS error_reason,
@@ -1583,19 +1543,19 @@ CREATE VIEW		model_draft.ego_grid_mv_griddistrict_new_error_geom_view AS
 		SELECT	source.subst_id AS id,				-- PK
 			ST_IsValid(source.geom) AS error,
 			source.geom AS geom
-		FROM	model_draft.ego_grid_mv_griddistrict_new AS source	-- Table
+		FROM	model_draft.ego_grid_mv_griddistrict AS source	-- Table
 		) AS test
 	WHERE	test.error = FALSE;
 
 -- grant (oeuser)
-GRANT ALL ON TABLE	model_draft.ego_grid_mv_griddistrict_new_error_geom_view TO oeuser WITH GRANT OPTION;
-ALTER TABLE		model_draft.ego_grid_mv_griddistrict_new_error_geom_view OWNER TO oeuser;
+GRANT ALL ON TABLE	model_draft.ego_grid_mv_griddistrict_error_geom_view TO oeuser WITH GRANT OPTION;
+ALTER TABLE		model_draft.ego_grid_mv_griddistrict_error_geom_view OWNER TO oeuser;
 
 -- Drop empty view   (OK!) -> 100ms =1
-SELECT f_drop_view('{ego_grid_mv_griddistrict_new_error_geom_view}', 'model_draft'); 
+SELECT f_drop_view('{ego_grid_mv_griddistrict_error_geom_view}', 'model_draft'); 
 */
 
--- dump
+/* -- dump
 DROP TABLE IF EXISTS	model_draft.ego_grid_mv_griddistrict_new_dump CASCADE;
 CREATE TABLE         	model_draft.ego_grid_mv_griddistrict_new_dump (
 	id		serial,
@@ -1626,4 +1586,4 @@ UPDATE 	model_draft.ego_grid_mv_griddistrict_new_dump AS t1
 			ST_CONTAINS(a.geom,b.geom)
 		GROUP BY a.id
 		)AS t2
-	WHERE  	t1.id = t2.id;
+	WHERE  	t1.id = t2.id; */
