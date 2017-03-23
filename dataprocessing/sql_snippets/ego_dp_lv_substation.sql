@@ -17,7 +17,7 @@ CREATE TABLE 		model_draft.ego_lattice_360m_lv (
 	CONSTRAINT ego_lattice_360m_lv_pkey PRIMARY KEY (id) );
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','input','model_draft','ego_demand_loadarea','ego_dp_lv_substation.sql',' ');
+SELECT ego_scenario_log('v0.2.6','input','model_draft','ego_demand_loadarea','ego_dp_lv_substation.sql',' ');
 
 -- lattice on the bbox of loadareas
 INSERT INTO model_draft.ego_lattice_360m_lv (geom, la_id)
@@ -52,7 +52,7 @@ CREATE INDEX ego_lattice_360m_lv_geom_idx
 ALTER TABLE	model_draft.ego_lattice_360m_lv OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','temp','model_draft','ego_lattice_360m_lv','ego_dp_lv_substation.sql',' ');
+SELECT ego_scenario_log('v0.2.6','temp','model_draft','ego_lattice_360m_lv','ego_dp_lv_substation.sql',' ');
 
 
 -- MVLV-substation
@@ -100,7 +100,7 @@ INSERT INTO model_draft.ego_grid_mvlv_substation (geom, la_id)
 ALTER TABLE	model_draft.ego_grid_mvlv_substation OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','temp','model_draft','ego_grid_mvlv_substation','ego_dp_lv_substation.sql',' ');
+SELECT ego_scenario_log('v0.2.6','temp','model_draft','ego_grid_mvlv_substation','ego_dp_lv_substation.sql',' ');
 
 
 -- Lege Buffer um ONT-Standorte und ermittle die Teile der Lastgebiete, die sich nicht innerhalb dieser Buffer befinden
@@ -145,7 +145,7 @@ UPDATE	model_draft.ego_grid_lv_loadarearest
 	FROM	model_draft.ego_grid_lv_loadarearest;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','temp','model_draft','ego_grid_lv_loadarearest','ego_dp_lv_substation.sql',' ');
+SELECT ego_scenario_log('v0.2.6','temp','model_draft','ego_grid_lv_loadarearest','ego_dp_lv_substation.sql',' ');
 
 
 -- Bestimme die Mittelpunkte der Gebiete, die noch nicht durch ONT abgedeckt sind, und lege diese Mittelpunkte als ONT-Standorte fest
@@ -155,7 +155,7 @@ INSERT INTO model_draft.ego_grid_mvlv_substation (la_id, geom)
 		geom_point ::geometry(POINT,3035) ;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','input','model_draft','ego_grid_mv_griddistrict','ego_dp_lv_substation.sql',' ');
+SELECT ego_scenario_log('v0.2.6','input','model_draft','ego_grid_mv_griddistrict','ego_dp_lv_substation.sql',' ');
 
 -- subst_id from MV-griddistrict
 UPDATE 	model_draft.ego_grid_mvlv_substation AS t1
@@ -210,7 +210,7 @@ COMMENT ON TABLE model_draft.ego_grid_mvlv_substation IS '{
 SELECT obj_description('model_draft.ego_grid_mvlv_substation' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_grid_mvlv_substation','ego_dp_lv_substation.sql',' ');
+SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_grid_mvlv_substation','ego_dp_lv_substation.sql',' ');
 
 
 -- drop

@@ -39,7 +39,7 @@ __author__ 	= "Ludee"
 -- ToDo: change "urban" to electrified
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','input','openstreetmap','osm_deu_polygon','setup_osm_landuse.sql',' ');
+SELECT ego_scenario_log('v0.2.6','input','openstreetmap','osm_deu_polygon','setup_osm_landuse.sql',' ');
 
 -- filter urban
 DROP TABLE IF EXISTS	openstreetmap.osm_deu_polygon_urban CASCADE;
@@ -101,7 +101,7 @@ ALTER TABLE	openstreetmap.osm_deu_polygon_urban OWNER TO oeuser;
 -- OSM Urban Landuse Inside vg250
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','input','political_boundary','bkg_vg250_1_sta_union_mview','setup_osm_landuse.sql',' ');
+SELECT ego_scenario_log('v0.2.6','input','political_boundary','bkg_vg250_1_sta_union_mview','setup_osm_landuse.sql',' ');
 
 -- Calculate 'inside' vg250
 UPDATE 	openstreetmap.osm_deu_polygon_urban AS t1
@@ -286,7 +286,7 @@ INSERT INTO	openstreetmap.osm_deu_polygon_urban
 	ORDER BY 	clean.gid;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','output','openstreetmap','osm_deu_polygon_urban','setup_osm_landuse.sql',' ');
+SELECT ego_scenario_log('v0.2.6','output','openstreetmap','osm_deu_polygon_urban','setup_osm_landuse.sql',' ');
 
 	
 ---------- ---------- ----------
@@ -366,7 +366,7 @@ CREATE INDEX  	osm_deu_polygon_urban_sector_1_residential_mview_geom_idx
 ALTER TABLE	openstreetmap.osm_deu_polygon_urban_sector_1_residential_mview OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','output','openstreetmap','osm_deu_polygon_urban_sector_1_residential_mview','setup_osm_landuse.sql',' ');
+SELECT ego_scenario_log('v0.2.6','output','openstreetmap','osm_deu_polygon_urban_sector_1_residential_mview','setup_osm_landuse.sql',' ');
 
 
 -- Sector 2. Retail
@@ -398,7 +398,7 @@ CREATE INDEX  	osm_deu_polygon_urban_sector_2_retail_mview_geom_idx
 ALTER TABLE	openstreetmap.osm_deu_polygon_urban_sector_2_retail_mview OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','output','openstreetmap','osm_deu_polygon_urban_sector_2_retail_mview','setup_osm_landuse.sql',' ');
+SELECT ego_scenario_log('v0.2.6','output','openstreetmap','osm_deu_polygon_urban_sector_2_retail_mview','setup_osm_landuse.sql',' ');
 
 
 -- Sector 3. Industrial
@@ -434,7 +434,7 @@ CREATE INDEX  	osm_deu_polygon_urban_sector_3_industrial_mview_geom_idx
 ALTER TABLE	openstreetmap.osm_deu_polygon_urban_sector_3_industrial_mview OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','output','openstreetmap','osm_deu_polygon_urban_sector_3_industrial_mview','setup_osm_landuse.sql',' ');
+SELECT ego_scenario_log('v0.2.6','output','openstreetmap','osm_deu_polygon_urban_sector_3_industrial_mview','setup_osm_landuse.sql',' ');
 
 
 -- sector 4. Agricultural
@@ -465,7 +465,7 @@ CREATE INDEX  	osm_deu_polygon_urban_sector_4_agricultural_mview_geom_idx
 ALTER TABLE	openstreetmap.osm_deu_polygon_urban_sector_4_agricultural_mview OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','output','openstreetmap','osm_deu_polygon_urban_sector_4_agricultural_mview','setup_osm_landuse.sql',' ');
+SELECT ego_scenario_log('v0.2.6','output','openstreetmap','osm_deu_polygon_urban_sector_4_agricultural_mview','setup_osm_landuse.sql',' ');
 
 
 -- -- "Validate (geom)"   (OK!) -> 22.000ms =0

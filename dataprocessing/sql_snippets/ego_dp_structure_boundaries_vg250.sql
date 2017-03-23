@@ -13,7 +13,7 @@ __author__ 	= "Ludee"
 -- 1. Nationalstaat (sta) - country (cntry)
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','input','political_boundary','bkg_vg250_1_sta','ego_political_boundary_bkg_setup.sql',' ');
+SELECT ego_scenario_log('v0.2.6','input','political_boundary','bkg_vg250_1_sta','ego_political_boundary_bkg_setup.sql',' ');
 
 -- 1. country - mview with tiny buffer because of intersection (in official data)
 DROP MATERIALIZED VIEW IF EXISTS	political_boundary.bkg_vg250_1_sta_mview CASCADE;
@@ -111,7 +111,7 @@ COMMENT ON MATERIALIZED VIEW political_boundary.bkg_vg250_1_sta_mview IS '{
 SELECT obj_description('political_boundary.bkg_vg250_1_sta_mview' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','output','political_boundary','bkg_vg250_1_sta_mview','ego_political_boundary_bkg_setup.sql',' ');
+SELECT ego_scenario_log('v0.2.6','output','political_boundary','bkg_vg250_1_sta_mview','ego_political_boundary_bkg_setup.sql',' ');
 
 
 -- 1. country - error geom
@@ -176,7 +176,7 @@ COMMENT ON MATERIALIZED VIEW political_boundary.bkg_vg250_1_sta_error_geom_mview
 SELECT obj_description('political_boundary.bkg_vg250_1_sta_error_geom_mview' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','output','political_boundary','bkg_vg250_1_sta_error_geom_mview','ego_political_boundary_bkg_setup.sql',' ');
+SELECT ego_scenario_log('v0.2.6','output','political_boundary','bkg_vg250_1_sta_error_geom_mview','ego_political_boundary_bkg_setup.sql',' ');
 
 
 -- 1. country - union
@@ -238,7 +238,7 @@ COMMENT ON MATERIALIZED VIEW political_boundary.bkg_vg250_1_sta_union_mview IS '
 SELECT obj_description('political_boundary.bkg_vg250_1_sta_union_mview' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','output','political_boundary','bkg_vg250_1_sta_union_mview','ego_political_boundary_bkg_setup.sql',' ');
+SELECT ego_scenario_log('v0.2.6','output','political_boundary','bkg_vg250_1_sta_union_mview','ego_political_boundary_bkg_setup.sql',' ');
 
 
 -- 1. state borders - bounding box
@@ -299,13 +299,13 @@ COMMENT ON MATERIALIZED VIEW political_boundary.bkg_vg250_1_sta_bbox_mview IS '{
 SELECT obj_description('political_boundary.bkg_vg250_1_sta_bbox_mview' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','output','political_boundary','bkg_vg250_1_sta_bbox_mview','ego_political_boundary_bkg_setup.sql',' ');
+SELECT ego_scenario_log('v0.2.6','output','political_boundary','bkg_vg250_1_sta_bbox_mview','ego_political_boundary_bkg_setup.sql',' ');
 
 	
 -- 2. Bundesland (lan) - federal state (fst)
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','input','political_boundary','bkg_vg250_2_lan','ego_political_boundary_bkg_setup.sql',' ');
+SELECT ego_scenario_log('v0.2.6','input','political_boundary','bkg_vg250_2_lan','ego_political_boundary_bkg_setup.sql',' ');
 
 -- 2. federal state - mview with tiny buffer because of intersection (in official data)
 DROP MATERIALIZED VIEW IF EXISTS	political_boundary.bkg_vg250_2_lan_mview CASCADE;
@@ -369,13 +369,13 @@ COMMENT ON MATERIALIZED VIEW political_boundary.bkg_vg250_2_lan_mview IS '{
 SELECT obj_description('political_boundary.bkg_vg250_2_lan_mview' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','output','political_boundary','bkg_vg250_2_lan_mview','ego_political_boundary_bkg_setup.sql',' ');
+SELECT ego_scenario_log('v0.2.6','output','political_boundary','bkg_vg250_2_lan_mview','ego_political_boundary_bkg_setup.sql',' ');
 
 
 -- 4. Landkreis (krs) - district (dist)
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','input','political_boundary','bkg_vg250_4_krs','ego_political_boundary_bkg_setup.sql',' ');
+SELECT ego_scenario_log('v0.2.6','input','political_boundary','bkg_vg250_4_krs','ego_political_boundary_bkg_setup.sql',' ');
 
 -- 4. district - mview 
 DROP MATERIALIZED VIEW IF EXISTS	political_boundary.bkg_vg250_4_krs_mview CASCADE;
@@ -443,7 +443,7 @@ COMMENT ON MATERIALIZED VIEW political_boundary.bkg_vg250_4_krs_mview IS '{
 SELECT obj_description('political_boundary.bkg_vg250_4_krs_mview' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','output','political_boundary','bkg_vg250_4_krs_mview','ego_political_boundary_bkg_setup.sql',' ');
+SELECT ego_scenario_log('v0.2.6','output','political_boundary','bkg_vg250_4_krs_mview','ego_political_boundary_bkg_setup.sql',' ');
 
 
 -- 6. Gemeinde (gem) - municipality (mun)
@@ -468,7 +468,7 @@ INSERT INTO social.destatis_zensus_population_per_bkg_vg250_6_gem (reference_dat
 	ORDER BY vg.id;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','input','social','destatis_zensus_population_per_ha_mview','ego_political_boundary_bkg_setup.sql',' ');
+SELECT ego_scenario_log('v0.2.6','input','social','destatis_zensus_population_per_ha_mview','ego_political_boundary_bkg_setup.sql',' ');
 
 -- zensus 2011 population
 UPDATE 	social.destatis_zensus_population_per_bkg_vg250_6_gem AS t1
@@ -503,7 +503,7 @@ UPDATE 	social.destatis_zensus_population_per_bkg_vg250_6_gem AS ce
  */
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','input','political_boundary','bkg_vg250_6_gem','ego_political_boundary_bkg_setup.sql',' ');
+SELECT ego_scenario_log('v0.2.6','input','political_boundary','bkg_vg250_6_gem','ego_political_boundary_bkg_setup.sql',' ');
 
 -- 6. municipality - mview
 DROP MATERIALIZED VIEW IF EXISTS	political_boundary.bkg_vg250_6_gem_mview CASCADE;
@@ -577,7 +577,7 @@ COMMENT ON MATERIALIZED VIEW political_boundary.bkg_vg250_6_gem_mview IS '{
 SELECT obj_description('political_boundary.bkg_vg250_6_gem_mview' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','output','political_boundary','bkg_vg250_6_gem_mview','ego_political_boundary_bkg_setup.sql',' ');
+SELECT ego_scenario_log('v0.2.6','output','political_boundary','bkg_vg250_6_gem_mview','ego_political_boundary_bkg_setup.sql',' ');
 
 
 -- 6. municipality - error geom
@@ -642,7 +642,7 @@ COMMENT ON MATERIALIZED VIEW political_boundary.bkg_vg250_6_gem_error_geom_mview
 SELECT obj_description('political_boundary.bkg_vg250_6_gem_error_geom_mview' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','output','political_boundary','bkg_vg250_6_gem_error_geom_mview','ego_political_boundary_bkg_setup.sql',' ');
+SELECT ego_scenario_log('v0.2.6','output','political_boundary','bkg_vg250_6_gem_error_geom_mview','ego_political_boundary_bkg_setup.sql',' ');
 
 
 -- 6. municipality - dump
@@ -722,7 +722,7 @@ COMMENT ON MATERIALIZED VIEW political_boundary.bkg_vg250_6_gem_dump_mview IS '{
 SELECT obj_description('political_boundary.bkg_vg250_6_gem_dump_mview' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','output','political_boundary','bkg_vg250_6_gem_dump_mview','ego_political_boundary_bkg_setup.sql',' ');
+SELECT ego_scenario_log('v0.2.6','output','political_boundary','bkg_vg250_6_gem_dump_mview','ego_political_boundary_bkg_setup.sql',' ');
 
 
 -- ego
@@ -839,7 +839,7 @@ COMMENT ON MATERIALIZED VIEW model_draft.ego_political_boundary_bkg_vg250_6_gem_
 SELECT obj_description('model_draft.ego_political_boundary_bkg_vg250_6_gem_hole_mview' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_political_boundary_bkg_vg250_6_gem_hole_mview','ego_political_boundary_bkg_setup.sql',' ');
+SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_political_boundary_bkg_vg250_6_gem_hole_mview','ego_political_boundary_bkg_setup.sql',' ');
 
 
 -- update holes
@@ -902,7 +902,7 @@ COMMENT ON TABLE model_draft.ego_political_boundary_bkg_vg250_6_gem_clean IS '{
 SELECT obj_description('model_draft.ego_political_boundary_bkg_vg250_6_gem_clean' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_political_boundary_bkg_vg250_6_gem_clean','ego_political_boundary_bkg_setup.sql',' ');
+SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_political_boundary_bkg_vg250_6_gem_clean','ego_political_boundary_bkg_setup.sql',' ');
 
 
 -- validation
@@ -943,7 +943,7 @@ ALTER VIEW	political_boundary.bkg_vg250_statistics_view OWNER TO oeuser;
 -- metadata
 COMMENT ON MATERIALIZED VIEW political_boundary.bkg_vg250_statistics_view IS '{
 	"comment": "eGoDP - Temporary table",
-	"version": "v0.2.5" }' ;
+	"version": "v0.2.6" }' ;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','output','political_boundary','bkg_vg250_statistics_view','ego_political_boundary_bkg_setup.sql',' ');
+SELECT ego_scenario_log('v0.2.6','output','political_boundary','bkg_vg250_statistics_view','ego_political_boundary_bkg_setup.sql',' ');

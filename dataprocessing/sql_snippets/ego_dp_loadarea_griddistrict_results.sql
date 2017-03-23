@@ -13,7 +13,7 @@ __author__ 	= "Ludee"
 
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','input','model_draft','ego_grid_mv_griddistrict','ego_mv_griddistrict_results.sql',' ');
+SELECT ego_scenario_log('v0.2.6','input','model_draft','ego_grid_mv_griddistrict','ego_mv_griddistrict_results.sql',' ');
 
 -- area
 UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
@@ -28,7 +28,7 @@ WHERE  	t1.subst_id = t2.subst_id;
 -- municipality and method types
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','input','political_boundary','bkg_vg250_6_gem','ego_mv_griddistrict_results.sql',' ');
+SELECT ego_scenario_log('v0.2.6','input','political_boundary','bkg_vg250_6_gem','ego_mv_griddistrict_results.sql',' ');
 
 -- Gemeinden
 UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
@@ -44,7 +44,7 @@ FROM	(SELECT	gd.subst_id,
 WHERE  	t1.subst_id = t2.subst_id;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','input','model_draft','ego_political_boundary_bkg_vg250_6_gem_clean','ego_mv_griddistrict_results.sql',' ');
+SELECT ego_scenario_log('v0.2.6','input','model_draft','ego_political_boundary_bkg_vg250_6_gem_clean','ego_mv_griddistrict_results.sql',' ');
 
 -- Gemeinde Parts
 UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
@@ -60,7 +60,7 @@ FROM	(SELECT	gd.subst_id,
 WHERE  	t1.subst_id = t2.subst_id;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','input','model_draft','ego_grid_mv_griddistrict_type1','ego_mv_griddistrict_results.sql',' ');
+SELECT ego_scenario_log('v0.2.6','input','model_draft','ego_grid_mv_griddistrict_type1','ego_mv_griddistrict_results.sql',' ');
 
 -- Type1
 UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
@@ -76,7 +76,7 @@ FROM	(SELECT	gd.subst_id,
 WHERE  	t1.subst_id = t2.subst_id;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','input','model_draft','ego_political_boundary_hvmv_subst_per_gem_1_mview','ego_mv_griddistrict_results.sql',' ');
+SELECT ego_scenario_log('v0.2.6','input','model_draft','ego_political_boundary_hvmv_subst_per_gem_1_mview','ego_mv_griddistrict_results.sql',' ');
 
 UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
 SET  	type1_cnt = t2.type_cnt
@@ -91,7 +91,7 @@ FROM	(SELECT	gd.subst_id,
 WHERE  	t1.subst_id = t2.subst_id;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','input','model_draft','ego_grid_mv_griddistrict_type2','ego_mv_griddistrict_results.sql',' ');
+SELECT ego_scenario_log('v0.2.6','input','model_draft','ego_grid_mv_griddistrict_type2','ego_mv_griddistrict_results.sql',' ');
 
 -- Type2
 UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
@@ -107,7 +107,7 @@ FROM	(SELECT	gd.subst_id,
 WHERE  	t1.subst_id = t2.subst_id;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','input','model_draft','ego_grid_hvmv_substation_voronoi_cut','ego_mv_griddistrict_results.sql',' ');
+SELECT ego_scenario_log('v0.2.6','input','model_draft','ego_grid_hvmv_substation_voronoi_cut','ego_mv_griddistrict_results.sql',' ');
 
 UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
 SET  	type2_cnt = t2.type_cnt
@@ -122,7 +122,7 @@ FROM	(SELECT	gd.subst_id,
 WHERE  	t1.subst_id = t2.subst_id;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','input','model_draft','ego_grid_mv_griddistrict_type3','ego_mv_griddistrict_results.sql',' ');
+SELECT ego_scenario_log('v0.2.6','input','model_draft','ego_grid_mv_griddistrict_type3','ego_mv_griddistrict_results.sql',' ');
 
 -- Type3
 UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
@@ -138,7 +138,7 @@ FROM	(SELECT	gd.subst_id,
 WHERE  	t1.subst_id = t2.subst_id;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','input','model_draft','ego_political_boundary_hvmv_subst_per_gem_3_mview','ego_mv_griddistrict_results.sql',' ');
+SELECT ego_scenario_log('v0.2.6','input','model_draft','ego_political_boundary_hvmv_subst_per_gem_3_mview','ego_mv_griddistrict_results.sql',' ');
 
 UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
 SET  	type3_cnt = t2.type_cnt
@@ -165,7 +165,7 @@ SET  	"group" = (SELECT
 
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','input','social','destatis_zensus_population_per_ha_mview','ego_mv_griddistrict_results.sql',' ');
+SELECT ego_scenario_log('v0.2.6','input','social','destatis_zensus_population_per_ha_mview','ego_mv_griddistrict_results.sql',' ');
 
 -- population results
 UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
@@ -190,7 +190,7 @@ WHERE  	t1.subst_id = t2.subst_id;
 -- loadarea results
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','input','model_draft','ego_demand_loadarea','ego_mv_griddistrict_results.sql',' ');
+SELECT ego_scenario_log('v0.2.6','input','model_draft','ego_demand_loadarea','ego_mv_griddistrict_results.sql',' ');
 
 -- LA Count
 UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
@@ -277,7 +277,7 @@ UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
 	WHERE  	t1.subst_id = t2.subst_id; */
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_grid_mv_griddistrict','ego_mv_griddistrict_results.sql',' ');
+SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_grid_mv_griddistrict','ego_mv_griddistrict_results.sql',' ');
 
 
 

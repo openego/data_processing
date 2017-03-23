@@ -45,10 +45,10 @@ INSERT INTO 	model_draft.ego_demand_per_load_area (id,subst_id,
 	 */
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','input','model_draft','ego_demand_per_district','process_eGo_consumption.sql',' ');
+SELECT ego_scenario_log('v0.2.6','input','model_draft','ego_demand_per_district','process_eGo_consumption.sql',' ');
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','input','model_draft','ego_demand_loadarea','process_eGo_consumption.sql',' ');
+SELECT ego_scenario_log('v0.2.6','input','model_draft','ego_demand_loadarea','process_eGo_consumption.sql',' ');
 
 -- landuse area per district 
 ALTER TABLE model_draft.ego_demand_per_district
@@ -140,7 +140,7 @@ UPDATE model_draft.ego_demand_loadarea a
 
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','input','demand','ego_demand_federalstate','process_eGo_consumption.sql',' ');
+SELECT ego_scenario_log('v0.2.6','input','demand','ego_demand_federalstate','process_eGo_consumption.sql',' ');
 	
 -- sector consumption of residential per loadarea
 UPDATE model_draft.ego_demand_loadarea a
@@ -245,16 +245,16 @@ COMMENT ON TABLE  model_draft.ego_demand_loadarea IS
 SELECT obj_description('model_draft.ego_demand_loadarea' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_demand_loadarea','process_eGo_consumption.sql',' ');
+SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_demand_loadarea','process_eGo_consumption.sql',' ');
 
 -- versioning
 INSERT INTO demand.ego_loadarea (version, id, subst_id, area_ha, nuts, rs_0, ags_0, otg_id, un_id, zensus_sum, zensus_count, zensus_density, ioer_sum, ioer_count, ioer_density, sector_area_residential, sector_area_retail, sector_area_industrial, sector_area_agricultural, sector_area_sum, sector_share_residential, sector_share_retail, sector_share_industrial, sector_share_agricultural, sector_share_sum, sector_count_residential, sector_count_retail, sector_count_industrial, sector_count_agricultural, sector_count_sum, sector_consumption_residential, sector_consumption_retail, sector_consumption_industrial, sector_consumption_agricultural, sector_consumption_sum, geom_centroid, geom_surfacepoint, geom_centre, geom)
-	SELECT	'v0.2.5',
+	SELECT	'v0.2.6',
 		id, subst_id, area_ha, nuts, rs_0, ags_0, otg_id, un_id, zensus_sum, zensus_count, zensus_density, ioer_sum, ioer_count, ioer_density, sector_area_residential, sector_area_retail, sector_area_industrial, sector_area_agricultural, sector_area_sum, sector_share_residential, sector_share_retail, sector_share_industrial, sector_share_agricultural, sector_share_sum, sector_count_residential, sector_count_retail, sector_count_industrial, sector_count_agricultural, sector_count_sum, sector_consumption_residential, sector_consumption_retail, sector_consumption_industrial, sector_consumption_agricultural, sector_consumption_sum, geom_centroid, geom_surfacepoint, geom_centre, geom
 	FROM	model_draft.ego_demand_loadarea;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','result','demand','ego_loadarea','process_eGo_consumption.sql','versioning');
+SELECT ego_scenario_log('v0.2.6','result','demand','ego_loadarea','process_eGo_consumption.sql','versioning');
 
 
 -- backup view
@@ -266,4 +266,4 @@ CREATE OR REPLACE VIEW model_draft.ego_demand_per_load_area AS
 ALTER TABLE	model_draft.ego_demand_per_load_area OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','temp','model_draft','ego_demand_per_load_area','process_eGo_consumption.sql','BACKUP use ego_demand_loadarea');
+SELECT ego_scenario_log('v0.2.6','temp','model_draft','ego_demand_per_load_area','process_eGo_consumption.sql','BACKUP use ego_demand_loadarea');

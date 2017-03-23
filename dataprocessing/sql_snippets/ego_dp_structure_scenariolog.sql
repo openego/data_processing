@@ -28,14 +28,14 @@ SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_scenario','ego_scen
 
 -- scenario list
 INSERT INTO	model_draft.ego_scenario (version,version_name,release,comment,timestamp) VALUES
-	('0', 'setup', 'FALSE', ' ', ' ' ),
-	('v0.1', 'cleanrun', 'FALSE', 'data in calc schemata', ' '  ),
-	('v0.2', 'restructure', 'FALSE', 'data in model_draft schema', ' '  ),
-	('v0.2.1', ' ', 'FALSE', ' ', ' '  ),
-	('v0.2.2', ' ', 'FALSE', ' ', ' '  ),
-	('v0.2.3', ' ', 'FALSE', ' ', ' '  ),
-	('v0.2.4', ' ', 'FALSE', ' ', ' '  ),
-	('v0.2.5', 'mockrun', 'FALSE', 'finished but revealed major bugs', '2017-03-03' ),
+	('0', 'setup', 'FALSE', ' ', 'now()' ),
+	('v0.1', 'cleanrun', 'FALSE', 'data in calc schemata', 'now()'  ),
+	('v0.2', 'restructure', 'FALSE', 'data in model_draft schema', 'now()' ),
+	('v0.2.1', ' ', 'FALSE', ' ', 'now()' ),
+	('v0.2.2', ' ', 'FALSE', ' ', 'now()' ),
+	('v0.2.3', ' ', 'FALSE', ' ', 'now()' ),
+	('v0.2.4', ' ', 'FALSE', ' ', 'now()' ),
+	('v0.2.6', 'mockrun', 'FALSE', 'finished but revealed major bugs', '2017-03-03' ),
 	('v0.2.6', 'premiere', 'TRUE', 'First complete relase', '2017-03-23' ) ; 
 
 -- metadata

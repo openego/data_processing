@@ -49,4 +49,4 @@ INSERT INTO model_draft.ego_grid_pf_hv_load_pq_set (scn_name, load_id, temp_id, 
 	GROUP BY C.load_id;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_grid_pf_hv_load_pq_set','demandseries_TOPF.sql',' ');
+SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_grid_pf_hv_load_pq_set','demandseries_TOPF.sql',' ');

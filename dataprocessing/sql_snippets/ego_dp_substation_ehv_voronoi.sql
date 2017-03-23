@@ -12,7 +12,7 @@ __author__ 	= "IlkaCu, Ludee"
 ----------------------------------------------------------
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','input','model_draft','ego_grid_ehv_substation','Voronoi_ehv.sql',' ');
+SELECT ego_scenario_log('v0.2.6','input','model_draft','ego_grid_ehv_substation','Voronoi_ehv.sql',' ');
 
 -- Add Dummy points 
 INSERT INTO model_draft.ego_grid_ehv_substation (subst_name, point, subst_id, otg_id, lon, lat, polygon, osm_id, osm_www, status)
@@ -145,4 +145,4 @@ COMMENT ON TABLE  model_draft.ego_grid_ehv_substation_voronoi IS
 }';
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_grid_ehv_substation_voronoi','Voronoi_ehv.sql',' ');
+SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_grid_ehv_substation_voronoi','Voronoi_ehv.sql',' ');

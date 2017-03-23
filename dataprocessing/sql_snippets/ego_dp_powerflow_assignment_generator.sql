@@ -23,8 +23,8 @@ CREATE TABLE 		model_draft.ego_supply_generator (
 ALTER TABLE model_draft.ego_supply_generator OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','input','supply','ego_res_powerplant','assignment_generator_bus.sql',' ');
-SELECT ego_scenario_log('v0.2.5','input','supply','ego_conv_powerplant','assignment_generator_bus.sql',' ');
+SELECT ego_scenario_log('v0.2.6','input','supply','ego_res_powerplant','assignment_generator_bus.sql',' ');
+SELECT ego_scenario_log('v0.2.6','input','supply','ego_conv_powerplant','assignment_generator_bus.sql',' ');
 
 INSERT INTO model_draft.ego_supply_generator (re_id, geom) 
 	SELECT 	id, geom
@@ -90,15 +90,15 @@ COMMENT ON TABLE  model_draft.ego_supply_generator IS
 SELECT obj_description('model_draft.ego_supply_generator' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_supply_generator','assignment_generator_bus.sql',' ');
+SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_supply_generator','assignment_generator_bus.sql',' ');
 
 
 -- Update table on conventional power plants and add information on unified id of generators and information of relevant bus
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','input','model_draft','ego_grid_mv_griddistrict','assignment_generator_bus.sql',' ');
-SELECT ego_scenario_log('v0.2.5','input','model_draft','ego_grid_ehv_substation_voronoi','assignment_generator_bus.sql',' ');
-SELECT ego_scenario_log('v0.2.5','input','model_draft','ego_grid_hvmv_substation','assignment_generator_bus.sql',' ');
+SELECT ego_scenario_log('v0.2.6','input','model_draft','ego_grid_mv_griddistrict','assignment_generator_bus.sql',' ');
+SELECT ego_scenario_log('v0.2.6','input','model_draft','ego_grid_ehv_substation_voronoi','assignment_generator_bus.sql',' ');
+SELECT ego_scenario_log('v0.2.6','input','model_draft','ego_grid_hvmv_substation','assignment_generator_bus.sql',' ');
 
 
 -- Identify corresponding bus with the help of grid districts
@@ -254,15 +254,15 @@ COMMENT ON TABLE  model_draft.ego_supply_pf_generator_single IS
 SELECT obj_description('model_draft.ego_supply_pf_generator_single' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_supply_pf_generator_single','assignment_generator_bus.sql',' ');
+SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_supply_pf_generator_single','assignment_generator_bus.sql',' ');
 
 
 -- Update table on renewable power plants and add information on unified id of generators and information of relevant bus
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','input','model_draft','ego_grid_mv_griddistrict','assignment_generator_bus.sql',' ');
-SELECT ego_scenario_log('v0.2.5','input','model_draft','ego_grid_ehv_substation_voronoi','assignment_generator_bus.sql',' ');
-SELECT ego_scenario_log('v0.2.5','input','model_draft','ego_grid_hvmv_substation','assignment_generator_bus.sql',' ');
+SELECT ego_scenario_log('v0.2.6','input','model_draft','ego_grid_mv_griddistrict','assignment_generator_bus.sql',' ');
+SELECT ego_scenario_log('v0.2.6','input','model_draft','ego_grid_ehv_substation_voronoi','assignment_generator_bus.sql',' ');
+SELECT ego_scenario_log('v0.2.6','input','model_draft','ego_grid_hvmv_substation','assignment_generator_bus.sql',' ');
 
 
 -- Identify corresponding bus with the help of grid districts
@@ -321,13 +321,13 @@ UPDATE model_draft.ego_supply_res_powerplant a
 	WHERE 	a.id = b.re_id; 
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','output','supply','ego_res_powerplant','assignment_generator_bus.sql',' ');
+SELECT ego_scenario_log('v0.2.6','output','supply','ego_res_powerplant','assignment_generator_bus.sql',' ');
 
 
 -- Insert generator data into powerflow schema, that contains all generators seperately 
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','input','model_draft','ego_grid_pf_hv_source','assignment_generator_bus.sql',' ');
+SELECT ego_scenario_log('v0.2.6','input','model_draft','ego_grid_pf_hv_source','assignment_generator_bus.sql',' ');
 
 -- For conventional generators
 UPDATE model_draft.ego_supply_pf_generator_single a
@@ -385,7 +385,7 @@ UPDATE model_draft.ego_supply_pf_generator_single
 		WHERE p_nom > 50 AND source = result.id;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','input','model_draft','renpassgis_economic_weatherpoint_voronoi','assignment_generator_bus.sql',' ');
+SELECT ego_scenario_log('v0.2.6','input','model_draft','renpassgis_economic_weatherpoint_voronoi','assignment_generator_bus.sql',' ');
 
 -- Identify weather point IDs for each generator
 UPDATE model_draft.ego_supply_pf_generator_single a
@@ -564,4 +564,4 @@ INSERT INTO model_draft.ego_grid_pf_hv_generator
 		AND base_kv > 110;
 */
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_grid_pf_hv_generator','assignment_generator_bus.sql',' ');
+SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_grid_pf_hv_generator','assignment_generator_bus.sql',' ');

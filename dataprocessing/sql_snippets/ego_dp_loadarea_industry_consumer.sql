@@ -8,10 +8,10 @@ __author__ 	= "IlkaCu, Ludee"
 */
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','input','demand','ego_demand_federalstate','process_eGo_osm_loads_industry.sql',' ');
+SELECT ego_scenario_log('v0.2.6','input','demand','ego_demand_federalstate','process_eGo_osm_loads_industry.sql',' ');
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','input','economic','destatis_gva_per_district','process_eGo_osm_loads_industry.sql',' ');
+SELECT ego_scenario_log('v0.2.6','input','economic','destatis_gva_per_district','process_eGo_osm_loads_industry.sql',' ');
 
 -- Calculate specific electricity consumption per million Euro GVA for each federal state
 DROP TABLE IF EXISTS model_draft.ego_demand_per_gva CASCADE;
@@ -71,7 +71,7 @@ COMMENT ON TABLE  model_draft.ego_demand_per_gva IS
 }';
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_demand_per_gva','process_eGo_osm_loads_industry.sql',' ');
+SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_demand_per_gva','process_eGo_osm_loads_industry.sql',' ');
 
 -- electricity consumption per district based on gross value added
 DROP TABLE IF EXISTS 	model_draft.ego_demand_per_district CASCADE;
@@ -227,7 +227,7 @@ CREATE INDEX  	landuse_industry_geom_centre_idx
 -- Calculate NUTS
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','input','political_boundary','bkg_vg250_4_krs_mview','process_eGo_osm_loads_industry.sql',' ');
+SELECT ego_scenario_log('v0.2.6','input','political_boundary','bkg_vg250_4_krs_mview','process_eGo_osm_loads_industry.sql',' ');
 
 UPDATE 	model_draft.ego_landuse_industry a
 	SET 	nuts = b.nuts
@@ -351,13 +351,13 @@ COMMENT ON TABLE  model_draft.ego_landuse_industry IS
 }';
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_landuse_industry','process_eGo_osm_loads_industry.sql',' ');
+SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_landuse_industry','process_eGo_osm_loads_industry.sql',' ');
 
 
 -- Identify large scale consumer
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','input','supply','ego_conv_powerplant','process_eGo_osm_loads_industry.sql',' ');
+SELECT ego_scenario_log('v0.2.6','input','supply','ego_conv_powerplant','process_eGo_osm_loads_industry.sql',' ');
 
 DROP TABLE IF EXISTS model_draft.ego_demand_hv_largescaleconsumer CASCADE;
 CREATE TABLE model_draft.ego_demand_hv_largescaleconsumer AS
@@ -470,10 +470,10 @@ CREATE INDEX  	large_scale_consumer_geom_centre_idx
 -- Identify corresponding bus for large scale consumer (lsc) with the help of ehv-voronoi
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','input','calc_ego_substation','ego_deu_voronoi_ehv','process_eGo_osm_loads_industry.sql',' ');
+SELECT ego_scenario_log('v0.2.6','input','calc_ego_substation','ego_deu_voronoi_ehv','process_eGo_osm_loads_industry.sql',' ');
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','input','model_draft','ego_grid_hvmv_substation','process_eGo_osm_loads_industry.sql',' ');
+SELECT ego_scenario_log('v0.2.6','input','model_draft','ego_grid_hvmv_substation','process_eGo_osm_loads_industry.sql',' ');
 
 UPDATE model_draft.ego_demand_hv_largescaleconsumer a
 	SET subst_id = b.subst_id
@@ -553,7 +553,7 @@ COMMENT ON TABLE  model_draft.ego_demand_hv_largescaleconsumer IS
 SELECT obj_description('model_draft.ego_demand_hv_largescaleconsumer' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_demand_hv_largescaleconsumer','process_eGo_osm_loads_industry.sql',' ');
+SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_demand_hv_largescaleconsumer','process_eGo_osm_loads_industry.sql',' ');
 			  
 
 /*﻿ 

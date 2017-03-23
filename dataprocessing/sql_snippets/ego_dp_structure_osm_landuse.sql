@@ -9,7 +9,7 @@ __author__ 	= "Ludee"
 
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','input','openstreetmap','osm_deu_polygon','analyse_osm_landuse.sql',' ');
+SELECT ego_scenario_log('v0.2.6','input','openstreetmap','osm_deu_polygon','analyse_osm_landuse.sql',' ');
 
 -- 2016-10-01 openstreetmap
 DROP MATERIALIZED VIEW IF EXISTS	openstreetmap.osm_deu_polygon_landuse_mview CASCADE;
@@ -31,10 +31,10 @@ ALTER TABLE	openstreetmap.osm_deu_polygon_landuse_mview OWNER TO oeuser;
 -- metadata
 COMMENT ON MATERIALIZED VIEW openstreetmap.osm_deu_polygon_landuse_mview IS '{
 	"comment": "eGoDP - Temporary table",
-	"version": "v0.2.5" }' ;
+	"version": "v0.2.6" }' ;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','output','openstreetmap','osm_deu_polygon_landuse_mview','analyse_osm_landuse.sql',' ');
+SELECT ego_scenario_log('v0.2.6','output','openstreetmap','osm_deu_polygon_landuse_mview','analyse_osm_landuse.sql',' ');
 
 
 /* 

@@ -194,4 +194,4 @@ WHERE a.bus IS NOT NULL
 GROUP BY a.bus;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_grid_pf_hv_load','assignment_load_bus.sql',' ');
+SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_grid_pf_hv_load','assignment_load_bus.sql',' ');

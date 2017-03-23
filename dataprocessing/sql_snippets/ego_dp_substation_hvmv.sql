@@ -43,16 +43,16 @@ DROP VIEW IF EXISTS model_draft.way_substations_with_110kV CASCADE;
 DROP VIEW IF EXISTS model_draft.way_substations CASCADE;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','input','openstreetmap','osm_deu_ways','get_substations.sql',' ');
+SELECT ego_scenario_log('v0.2.6','input','openstreetmap','osm_deu_ways','get_substations.sql',' ');
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','input','openstreetmap','osm_deu_polygon','get_substations.sql',' ');
+SELECT ego_scenario_log('v0.2.6','input','openstreetmap','osm_deu_polygon','get_substations.sql',' ');
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','input','openstreetmap','osm_deu_nodes','get_substations.sql',' ');
+SELECT ego_scenario_log('v0.2.6','input','openstreetmap','osm_deu_nodes','get_substations.sql',' ');
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','input','openstreetmap','osm_deu_line','get_substations.sql',' ');
+SELECT ego_scenario_log('v0.2.6','input','openstreetmap','osm_deu_line','get_substations.sql',' ');
 
 
 --> WAY: create view of way substations:
@@ -175,7 +175,7 @@ ALTER MATERIALIZED VIEW model_draft.summary OWNER TO oeuser;
 CREATE INDEX summary_gix ON model_draft.summary USING GIST (polygon);
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','input','political_boundary','bkg_vg250_1_sta_union_mview','get_substations.sql',' ');
+SELECT ego_scenario_log('v0.2.6','input','political_boundary','bkg_vg250_1_sta_union_mview','get_substations.sql',' ');
 
 
 -- eliminate substation that are not within VG250
@@ -319,4 +319,4 @@ COMMENT ON TABLE  model_draft.ego_grid_hvmv_substation IS
 SELECT obj_description('model_draft.ego_grid_hvmv_substation'::regclass)::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_grid_hvmv_substation','get_substations.sql',' '); 
+SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_grid_hvmv_substation','get_substations.sql',' '); 
