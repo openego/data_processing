@@ -350,7 +350,7 @@ SELECT ego_scenario_log('v0.2.5','temp','model_draft','ego_grid_hvmv_substation_
 -- CUT
 ---------- ---------- ----------
 
-DROP TABLE IF EXISTS	model_draft.ego_grid_hvmv_substation_voronoi_cut;
+DROP TABLE IF EXISTS	model_draft.ego_grid_hvmv_substation_voronoi_cut CASCADE;
 CREATE TABLE 		model_draft.ego_grid_hvmv_substation_voronoi_cut (
 	id 		serial,
 	subst_id 	integer,
@@ -584,11 +584,11 @@ CREATE UNIQUE INDEX  	ego_grid_hvmv_substation_voronoi_cut_0subst_nn_line_mview_
 		ON	model_draft.ego_grid_hvmv_substation_voronoi_cut_0subst_nn_line_mview (id);
 
 -- index GIST (geom_centre)
-CREATE INDEX	ego_grid_hvmv_substation_voronoi_cut_0subst_nn_line_mview_geom_centre_idx
+CREATE INDEX	ego_grid_hvmv_substation_voronoi_cut_0subst_nn_line_geomcentre_idx
 	ON	model_draft.ego_grid_hvmv_substation_voronoi_cut_0subst_nn_line_mview USING GIST (geom_centre);
 
 -- index GIST (geom)
-CREATE INDEX	ego_grid_hvmv_substation_voronoi_cut_0subst_nn_line_mview_geom_idx
+CREATE INDEX	ego_grid_hvmv_substation_voronoi_cut_0subst_nn_line_geom_idx
 	ON	model_draft.ego_grid_hvmv_substation_voronoi_cut_0subst_nn_line_mview USING GIST (geom);
 
 -- grant (oeuser)
@@ -738,7 +738,7 @@ UPDATE 	model_draft.ego_grid_mv_griddistrict_type2 AS t1
 ALTER TABLE	model_draft.ego_grid_mv_griddistrict_type2 OWNER TO oeuser;
 
 -- metadata
-COMMENT ON MATERIALIZED VIEW model_draft.ego_grid_mv_griddistrict_type2 IS '{
+COMMENT ON TABLE model_draft.ego_grid_mv_griddistrict_type2 IS '{
 	"comment": "eGoDP - Temporary table",
 	"version": "v0.2.5" }' ;
 
@@ -809,7 +809,7 @@ CREATE INDEX	ego_political_boundary_hvmv_subst_per_gem_3_nn_geom_subst_idx
 ALTER TABLE	model_draft.ego_political_boundary_hvmv_subst_per_gem_3_nn OWNER TO oeuser;
 
 -- metadata
-COMMENT ON MATERIALIZED VIEW model_draft.ego_political_boundary_hvmv_subst_per_gem_3_nn IS '{
+COMMENT ON TABLE model_draft.ego_political_boundary_hvmv_subst_per_gem_3_nn IS '{
 	"comment": "eGoDP - Temporary table",
 	"version": "v0.2.5" }' ;
 

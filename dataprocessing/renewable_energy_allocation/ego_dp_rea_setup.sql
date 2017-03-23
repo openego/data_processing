@@ -61,6 +61,8 @@ SELECT ego_scenario_log('v0.2.3','input','model_draft','ego_supply_res_powerplan
 ALTER TABLE model_draft.ego_supply_res_powerplant
 	DROP COLUMN IF EXISTS	la_id,
   	ADD COLUMN 		la_id integer,
+	DROP COLUMN IF EXISTS	mvlv_subst_id,
+  	ADD COLUMN 		mvlv_subst_id integer,
 	DROP COLUMN IF EXISTS	rea_sort,
   	ADD COLUMN 		rea_sort integer,
 	DROP COLUMN IF EXISTS	rea_flag,

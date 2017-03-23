@@ -217,6 +217,19 @@ UPDATE 	model_draft.ego_supply_res_powerplant AS t1
 		) AS t2
 	WHERE  	t1.id = t2.id;
 
+-- update mvlv_subst_id from loadarea
+UPDATE 	model_draft.ego_supply_res_powerplant AS t1
+	SET  	mvlv_subst_id = t2.mvlv_subst_id
+	FROM    (
+		SELECT	a.id AS id,
+			b.mvlv_subst_id_new AS mvlv_subst_id
+		FROM	model_draft.ego_supply_res_powerplant AS a,
+			temp_lv.ego_grid_lv_griddistrict_pre_nn_collect AS b
+		WHERE  	b.geom && a.rea_geom_new AND
+			ST_CONTAINS(b.geom,a.rea_geom_new)
+		) AS t2
+	WHERE  	t1.id = t2.id;
+	
 -- Drop temp
 DROP TABLE IF EXISTS 	model_draft.ego_supply_rea_m5_dea_temp CASCADE;
 DROP TABLE IF EXISTS 	model_draft.ego_supply_rea_m5_grid_la_temp CASCADE;
