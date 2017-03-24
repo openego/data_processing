@@ -1412,7 +1412,7 @@ COMMENT ON TABLE model_draft.ego_grid_mv_griddistrict IS '{
 		{"name": "eGo dataprocessing", "description": " ",
 		"url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)"},
 		{"name": "OpenStreetMap", "description": "© OpenStreetMap contributors",
-		"url": "http://www.openstreetmap.org/", "license": "Open Database License (ODbL) v1.0"}
+		"url": "http://www.openstreetmap.org/", "license": "Open Database License (ODbL) v1.0"},
 		{"name": "BKG - Verwaltungsgebiete 1:250.000 (vg250)", "description": "© GeoBasis-DE / BKG 2016 (Daten verändert)",
 		"url": "http://www.geodatenzentrum.de/", "license": "Geodatenzugangsgesetz (GeoZG)"} ],
 	"spatial": [
@@ -1443,13 +1443,16 @@ COMMENT ON TABLE model_draft.ego_grid_mv_griddistrict IS '{
 		"meta_version": "1.1"}] }';
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','result','grid','ego_mv_griddistrict','ego_dp_mv_griddistrict.sql','versioning');
+SELECT ego_scenario_log('v0.2.6','result','model_draft','ego_grid_mv_griddistrict','ego_dp_mv_griddistrict.sql','versioning');
 
 -- versioning
 INSERT INTO grid.ego_mv_griddistrict (version, subst_id, subst_sum, area_ha, geom_type, geom)
 	SELECT	'v0.2.6',
 		subst_id, subst_sum, area_ha, geom_type, geom
 	FROM	model_draft.ego_grid_mv_griddistrict;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.6','result','grid','ego_mv_griddistrict','ego_dp_mv_griddistrict.sql','versioning');
 
 
 -- OLD after restructuring

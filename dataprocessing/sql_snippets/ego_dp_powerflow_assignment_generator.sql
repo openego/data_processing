@@ -23,8 +23,8 @@ CREATE TABLE 		model_draft.ego_supply_generator (
 ALTER TABLE model_draft.ego_supply_generator OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','input','supply','ego_res_powerplant','assignment_generator_bus.sql',' ');
-SELECT ego_scenario_log('v0.2.6','input','supply','ego_conv_powerplant','assignment_generator_bus.sql',' ');
+SELECT ego_scenario_log('v0.2.6','input','model_draft','ego_supply_res_powerplant','assignment_generator_bus.sql',' ');
+SELECT ego_scenario_log('v0.2.6','input','model_draft','ego_supply_conv_powerplant','assignment_generator_bus.sql',' ');
 
 INSERT INTO model_draft.ego_supply_generator (re_id, geom) 
 	SELECT 	id, geom
@@ -321,7 +321,7 @@ UPDATE model_draft.ego_supply_res_powerplant a
 	WHERE 	a.id = b.re_id; 
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','output','supply','ego_res_powerplant','assignment_generator_bus.sql',' ');
+SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_supply_res_powerplant','assignment_generator_bus.sql',' ');
 
 
 -- Insert generator data into powerflow schema, that contains all generators seperately 

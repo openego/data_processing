@@ -1,4 +1,4 @@
-﻿/*
+/*
 NOT WORKING YET!!!
 
 __copyright__ 	= "Reiner Lemoine Institut gGmbH"

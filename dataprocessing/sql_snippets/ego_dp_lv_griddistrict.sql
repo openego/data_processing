@@ -1,4 +1,4 @@
-﻿/*
+/*
 generate ONT
 Runtime 08:30 min
 
@@ -9,6 +9,414 @@ __author__ 	= "jong42, Ludee"
 */
 
 
+-- Cutting
+DROP TABLE IF EXISTS 	model_draft.ego_grid_lv_griddistrict_cut CASCADE;
+CREATE TABLE		model_draft.ego_grid_lv_griddistrict_cut (
+	id 		serial NOT NULL,
+	la_id 		integer,
+	subst_id 	integer,
+	subst_cnt	integer,
+	geom 		geometry(Polygon,3035),
+	CONSTRAINT ego_grid_lv_griddistrict_cut_pkey PRIMARY KEY (id) );
+
+-- index GIST (geom)
+CREATE INDEX ego_grid_lv_griddistrict_geom_idx
+	ON model_draft.ego_grid_lv_griddistrict_cut USING GIST (geom);
+
+INSERT INTO		model_draft.ego_grid_lv_griddistrict_cut (geom,la_id)
+	SELECT	(ST_DUMP(ST_INTERSECTION(mun.geom,voi.geom))).geom ::geometry(Polygon,3035) AS geom, mun.id AS la_id
+	FROM	model_draft.ego_demand_loadarea AS mun,
+		model_draft.ego_grid_mvlv_substation_voronoi AS voi
+	WHERE	mun.geom && voi.geom 
+		AND mun.subst_id = voi.subst_id
+		-- make sure the boundaries really intersect and not just touch each other
+		AND (ST_GEOMETRYTYPE(ST_INTERSECTION(mun.geom,voi.geom)) = 'ST_Polygon' 
+			OR ST_GEOMETRYTYPE(ST_INTERSECTION(mun.geom,voi.geom)) = 'ST_MultiPolygon' )
+		AND ST_isvalid(voi.geom) AND ST_isvalid(mun.geom);
+
+
+-- with substation
+DROP TABLE IF EXISTS	model_draft.ego_grid_lv_griddistrict_cut_1subst CASCADE;
+CREATE TABLE         	model_draft.ego_grid_lv_griddistrict_cut_1subst (
+	mvlv_subst_id 	integer,
+	la_id 		integer,
+	subst_id 	integer,
+	subst_cnt	integer,
+	geom 		geometry(Polygon,3035),
+	CONSTRAINT ego_grid_lv_griddistrict_cut_1subst_pkey PRIMARY KEY (mvlv_subst_id) );
+
+-- grant (oeuser)
+ALTER TABLE	model_draft.ego_grid_lv_griddistrict_cut_1subst OWNER TO oeuser;
+
+-- insert dump
+INSERT INTO	model_draft.ego_grid_lv_griddistrict_cut_1subst
+	SELECT	*
+	FROM	model_draft.ego_grid_lv_griddistrict_pre
+	WHERE	subst_cnt = 1;
+
+-- index GIST (geom)
+CREATE INDEX  	ego_grid_lv_griddistrict_cut_1subst_geom_idx
+	ON	model_draft.ego_grid_lv_griddistrict_cut_1subst USING GIST (geom);
+
+-- metadata
+COMMENT ON TABLE model_draft.ego_grid_lv_griddistrict_cut_1subst IS '{
+	"comment": "eGoDP - Temporary table",
+	"version": "v0.2.5" }' ;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','temp','model_draft','ego_grid_lv_griddistrict_cut_1subst','ego_dp_lv_griddistrict.sql',' ');
+
+
+
+-- fragments
+DROP TABLE IF EXISTS	model_draft.ego_grid_lv_griddistrict_pre_0subst CASCADE;
+CREATE TABLE         	model_draft.ego_grid_lv_griddistrict_pre_0subst (
+	mvlv_subst_id 	integer,
+	la_id 		integer,
+	subst_id 	integer,
+	subst_cnt	integer,
+	geom 		geometry(Polygon,3035),
+	CONSTRAINT ego_grid_lv_griddistrict_pre_0subst_pkey PRIMARY KEY (mvlv_subst_id) );
+
+-- grant (oeuser)
+ALTER TABLE	model_draft.ego_grid_lv_griddistrict_pre_0subst OWNER TO oeuser;
+
+-- insert dump
+INSERT INTO	model_draft.ego_grid_lv_griddistrict_pre_0subst
+	SELECT	*
+	FROM	model_draft.ego_grid_lv_griddistrict_pre
+	WHERE	subst_cnt IS NULL;
+
+-- index GIST (geom)
+CREATE INDEX  	ego_grid_lv_griddistrict_pre_0subst_geom_idx
+	ON	model_draft.ego_grid_lv_griddistrict_pre_0subst USING GIST (geom);
+
+-- metadata
+COMMENT ON TABLE model_draft.ego_grid_lv_griddistrict_pre_0subst IS '{
+	"comment": "eGoDP - Temporary table",
+	"version": "v0.2.5" }' ;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','temp','model_draft','ego_grid_lv_griddistrict_pre_0subst','ego_dp_lv_griddistrict.sql',' ');
+
+
+
+-- with too many substation!
+DROP TABLE IF EXISTS	model_draft.ego_grid_lv_griddistrict_pre_xsubst CASCADE;
+CREATE TABLE         	model_draft.ego_grid_lv_griddistrict_pre_xsubst (
+	mvlv_subst_id 	integer,
+	la_id 		integer,
+	subst_id 	integer,
+	subst_cnt	integer,
+	geom 		geometry(Polygon,3035),
+	CONSTRAINT ego_grid_lv_griddistrict_pre_xsubst_pkey PRIMARY KEY (mvlv_subst_id) );
+
+-- grant (oeuser)
+ALTER TABLE	model_draft.ego_grid_lv_griddistrict_pre_xsubst OWNER TO oeuser;
+
+-- insert dump
+INSERT INTO	model_draft.ego_grid_lv_griddistrict_pre_xsubst
+	SELECT	*
+	FROM	model_draft.ego_grid_lv_griddistrict_pre
+	WHERE	subst_cnt > 1;
+
+-- index GIST (geom)
+CREATE INDEX  	ego_grid_lv_griddistrict_pre_xsubst_geom_idx
+	ON	model_draft.ego_grid_lv_griddistrict_pre_xsubst USING GIST (geom);
+
+-- metadata
+COMMENT ON TABLE model_draft.ego_grid_lv_griddistrict_pre_xsubst IS '{
+	"comment": "eGoDP - Temporary table",
+	"version": "v0.2.5" }' ;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','temp','model_draft','ego_grid_lv_griddistrict_pre_xsubst','ego_dp_lv_griddistrict.sql',' ');
+
+
+
+-- Next Neighbor
+DROP TABLE IF EXISTS	model_draft.ego_grid_lv_griddistrict_pre_nn CASCADE;
+CREATE TABLE         	model_draft.ego_grid_lv_griddistrict_pre_nn (
+	id	 		serial,
+	a_mvlv_subst_id 	integer,
+	b_mvlv_subst_id 	integer,
+	subst_id		integer,
+	la_id 			integer,
+	a_geom			geometry(Polygon,3035),
+	b_geom			geometry(Polygon,3035),
+	geom_line		geometry(LineString,3035),
+	distance		double precision,
+	CONSTRAINT ego_grid_lv_griddistrict_pre_nn_pkey PRIMARY KEY (id) );
+
+INSERT INTO model_draft.ego_grid_lv_griddistrict_pre_nn (a_mvlv_subst_id,b_mvlv_subst_id,subst_id,la_id,a_geom,b_geom,geom_line,distance)
+	SELECT DISTINCT ON (a.mvlv_subst_id)
+		a.mvlv_subst_id,
+		b.mvlv_subst_id,
+		a.subst_id,
+		a.la_id,
+		a.geom,
+		b.geom,
+		ST_ShortestLine(
+			ST_CENTROID(a.geom) ::geometry(Point,3035),
+			ST_ExteriorRing(b.geom) ::geometry(LineString,3035)
+			) ::geometry(LineString,3035) AS geom_line,
+		ST_Distance(ST_CENTROID(a.geom),ST_ExteriorRing(b.geom))
+	FROM 	model_draft.ego_grid_lv_griddistrict_pre_0subst AS a,		-- fragments
+		model_draft.ego_grid_lv_griddistrict_cut_1subst AS b		-- target
+	WHERE 	ST_DWithin(ST_CENTROID(a.geom),ST_ExteriorRing(b.geom), 1000) 	-- In a 1 km radius
+		AND a.subst_id = b.subst_id
+	ORDER BY a.mvlv_subst_id, ST_Distance(ST_CENTROID(a.geom),ST_ExteriorRing(b.geom));
+
+-- index GIST (geom)
+CREATE INDEX  	ego_grid_lv_griddistrict_pre_nn_ageom_idx
+	ON	model_draft.ego_grid_lv_griddistrict_pre_nn USING GIST (a_geom);
+
+-- index GIST (geom)
+CREATE INDEX  	ego_grid_lv_griddistrict_pre_nn_geom_line_idx
+	ON	model_draft.ego_grid_lv_griddistrict_pre_nn USING GIST (geom_line);
+
+-- index GIST (geom)
+CREATE INDEX  	ego_grid_lv_griddistrict_pre_nn_bgeom_idx
+	ON	model_draft.ego_grid_lv_griddistrict_pre_nn USING GIST (b_geom);
+
+-- grant (oeuser)
+ALTER TABLE	model_draft.ego_grid_lv_griddistrict_pre_nn OWNER TO oeuser;
+
+-- metadata
+COMMENT ON TABLE model_draft.ego_grid_lv_griddistrict_pre_nn IS '{
+	"comment": "eGoDP - Temporary table",
+	"version": "v0.2.5" }' ;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','temp','model_draft','ego_grid_lv_griddistrict_pre_nn','ego_dp_lv_griddistrict.sql',' ');
+
+
+
+-- collect and union
+DROP TABLE IF EXISTS	model_draft.ego_grid_lv_griddistrict_pre_nn_collect CASCADE;
+CREATE TABLE         	model_draft.ego_grid_lv_griddistrict_pre_nn_collect (
+	mvlv_subst_id	integer,
+	mvlv_subst_id_new	integer,
+	subst_id	integer,
+	la_id 		integer,
+	nn		boolean,
+	geom		geometry(MultiPolygon,3035),
+	CONSTRAINT ego_grid_lv_griddistrict_pre_nn_collect_pkey PRIMARY KEY (mvlv_subst_id) );
+
+-- grant (oeuser)
+ALTER TABLE	model_draft.ego_grid_lv_griddistrict_pre_nn_collect OWNER TO oeuser;
+
+-- index GIST (geom)
+CREATE INDEX	ego_grid_lv_griddistrict_pre_nn_collect_geom_idx
+	ON	model_draft.ego_grid_lv_griddistrict_pre_nn_collect USING GIST (geom);
+
+-- insert
+INSERT INTO	model_draft.ego_grid_lv_griddistrict_pre_nn_collect (mvlv_subst_id,subst_id,la_id,nn,geom)
+	SELECT	mvlv_subst_id,
+		subst_id,
+		la_id,
+		FALSE,
+		ST_MULTI(geom)
+	FROM	model_draft.ego_grid_lv_griddistrict_cut_1subst
+	ORDER BY mvlv_subst_id;
+
+-- insert union
+UPDATE 	model_draft.ego_grid_lv_griddistrict_pre_nn_collect AS t1
+	SET  	geom = t2.geom,
+		nn = TRUE
+	FROM	(SELECT	DISTINCT ON (a.b_mvlv_subst_id)
+			a.b_mvlv_subst_id AS mvlv_subst_id,
+			ST_MULTI(ST_UNION(a.a_geom, b.geom)) AS geom
+		FROM	model_draft.ego_grid_lv_griddistrict_pre_nn AS a,
+			model_draft.ego_grid_lv_griddistrict_cut_1subst AS b 
+		WHERE	a.b_mvlv_subst_id = b.mvlv_subst_id
+		) AS t2
+	WHERE  	t1.mvlv_subst_id = t2.mvlv_subst_id;
+
+-- substation id
+UPDATE 	model_draft.ego_grid_lv_griddistrict_pre_nn_collect AS t1
+	SET  	mvlv_subst_id_new = t2.mvlv_subst_id_new
+	FROM    (
+		SELECT	a.mvlv_subst_id AS mvlv_subst_id,
+			b.mvlv_subst_id AS mvlv_subst_id_new
+		FROM	model_draft.ego_grid_lv_griddistrict_pre_nn_collect AS a,
+			model_draft.ego_grid_mvlv_substation_pre AS b
+		WHERE  	a.geom && b.geom AND
+			ST_CONTAINS(a.geom,b.geom)
+		) AS t2
+	WHERE  	t1.mvlv_subst_id = t2.mvlv_subst_id;
+
+-- metadata
+COMMENT ON TABLE model_draft.ego_grid_lv_griddistrict_pre_nn_collect IS '{
+	"comment": "eGoDP - Temporary table",
+	"version": "v0.2.5" }' ;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','temp','model_draft','ego_grid_lv_griddistrict_pre_nn_collect','ego_dp_lv_griddistrict.sql',' ');
+
+		
+		
+		
+		
+		
+		
+
+
+/* 
+-- Lösche sehr kleine Gebiete; Diese sind meistens Bugs in den Grenzverläufen
+DELETE FROM model_draft.ego_grid_lv_griddistrict WHERE ST_AREA(geom) < 0.001;
+	
+-- Count substations per grid district
+UPDATE 	model_draft.ego_grid_lv_griddistrict AS t1
+SET ont_count = 0;
+
+UPDATE 	model_draft.ego_grid_lv_griddistrict AS t1
+SET  	ont_count = t2.count
+FROM (SELECT COUNT (onts.geom) AS count,dist.id AS id
+	FROM model_draft."ego_grid_mvlv_substation" AS onts, model_draft.ego_grid_lv_griddistrict AS dist
+	WHERE ST_CONTAINS (dist.geom,onts.geom)
+	GROUP BY dist.id
+      ) AS t2
+WHERE t1.id = t2.id;
+
+
+UPDATE 	model_draft.ego_grid_lv_griddistrict AS t1
+SET  	ont_id = t2.id
+FROM model_draft."ego_grid_mvlv_substation" AS t2
+WHERE ST_CONTAINS(t1.geom,t2.geom);
+
+-- Add merge info
+
+
+UPDATE 	model_draft.ego_grid_lv_griddistrict AS t1
+SET merge_id = t2.merge_id
+FROM (
+	WITH mins AS (
+		SELECT regions.id AS regions_id, MIN(ST_DISTANCE(ST_CENTROID(regions.geom),onts.geom)) AS distance
+		FROM
+			model_draft."ego_grid_mvlv_substation" AS onts 
+			INNER JOIN 
+			model_draft.ego_grid_lv_griddistrict AS regions ON onts.la_id = regions.la_id
+			INNER JOIN 
+			model_draft.ego_grid_lv_griddistrict AS regions2 ON ST_INTERSECTS(regions.geom,regions2.geom)
+		WHERE ST_CONTAINS (regions2.geom,onts.geom)
+		GROUP BY regions_id
+
+	)
+
+	SELECT regions.id AS district_id, onts.id AS merge_id
+	FROM
+		model_draft."ego_grid_mvlv_substation" AS onts 
+		INNER JOIN 
+		model_draft.ego_grid_lv_griddistrict AS regions ON onts.la_id = regions.la_id
+		INNER JOIN
+		mins ON mins.regions_id = regions.id
+	WHERE  ST_DISTANCE(ST_CENTROID(regions.geom),onts.geom) = mins.distance
+      ) AS t2
+WHERE t1.id = t2.district_id;
+
+UPDATE 	model_draft.ego_grid_lv_griddistrict AS t1
+SET ont_id = merge_id
+WHERE ont_count = 0;
+
+----- bis hierhin 3h 13 min
+
+
+-- Merge areas with same ONT_ID
+DROP TABLE IF EXISTS model_draft."ego_grid_lv_griddistrictwithoutpop" CASCADE;
+CREATE TABLE IF NOT EXISTS model_draft."ego_grid_lv_griddistrictwithoutpop"
+(
+  id serial NOT NULL,
+  geom geometry(Polygon,3035),
+  la_id integer,
+  CONSTRAINT ego_grid_lv_griddistrictwithoutpop_pkey PRIMARY KEY (id)
+);
+
+-- index GIST (geom)
+CREATE INDEX ego_grid_lv_griddistrictwithoutpop_geom_idx
+	ON model_draft."ego_grid_lv_griddistrictwithoutpop" USING GIST (geom);
+
+INSERT INTO		model_draft."ego_grid_lv_griddistrictwithoutpop" (geom,la_id)
+
+SELECT (ST_DUMP(ST_UNION(cut.geom))).geom::geometry(Polygon,3035), onts.la_id
+FROM model_draft.ego_grid_lv_griddistrict AS cut
+	INNER JOIN model_draft."ego_grid_mvlv_substation" AS onts
+ON cut.ont_id = onts.id
+WHERE ont_id >= 0
+GROUP BY cut.ont_id, onts.la_id;
+
+-------------------------------
+-- Lösche Bezirke ohne Transformator
+DELETE FROM model_draft."ego_grid_lv_griddistrictwithoutpop" AS districts
+USING model_draft."ego_grid_mvlv_substation" AS onts
+WHERE ST_INTERSECTS (onts.geom,districts.geom) = FALSE
+	AND onts.id = districts.id;
+
+
+-- Ordne Bezirke ohne Trafo benachbarten Bezirken mit Trafo zu
+UPDATE model_draft."ego_grid_lv_griddistrictwithoutpop" AS districts
+SET geom = ST_UNION(adjacent.geom, districts.geom)
+FROM  ( SELECT ST_UNION(cut.geom) AS geom, districts.id AS district_id
+	FROM model_draft."ego_grid_lv_griddistrictwithoutpop" AS districts,
+		model_draft.ego_grid_lv_griddistrict AS cut
+	WHERE ST_TOUCHES(cut.geom,districts.geom)
+	 AND NOT ST_GEOMETRYTYPE (ST_INTERSECTION(cut.geom,districts.geom)) = 'ST_Point'
+	 AND cut.id IN (
+		SELECT id FROM model_draft.ego_grid_lv_griddistrict AS cut
+		WHERE cut.id NOT IN (
+			SELECT cut.id 
+			FROM model_draft.ego_grid_lv_griddistrict AS cut,
+				model_draft."ego_grid_lv_griddistrictwithoutpop" AS districts
+			WHERE ST_WITHIN(cut.geom,districts.geom)
+			GROUP BY cut.id
+		)
+)
+		
+	GROUP BY districts.id
+	) AS adjacent
+WHERE districts.id = adjacent.district_id;
+
+
+-- Add relation between LV grid districts and MVLV substations
+-- step 1: add new col with MVLV subst id
+ALTER TABLE model_draft.ego_grid_lv_griddistrict
+ADD COLUMN mvlv_subst_id integer DEFAULT NULL;
+-- step 2: write MVLV subst id to LV grid district table
+UPDATE 	model_draft.ego_grid_lv_griddistrict AS t1
+SET  	mvlv_subst_id = t2.sub_id
+FROM	(SELECT	gd.id AS gd_id,
+	sub.id ::integer AS sub_id
+
+	FROM	model_draft.ego_grid_lv_griddistrict AS gd,
+		model_draft.ego_grid_mvlv_substation AS sub
+	WHERE  	gd.la_id = sub.la_id AND
+		gd.geom && sub.geom AND
+		ST_CONTAINS(gd.geom,sub.geom)
+	GROUP BY gd.id, sub.id
+	) AS t2
+WHERE  	t1.id = t2.gd_id;
+
+ */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* 
 -- cut mvlv voronoi with loadarea
 DROP TABLE IF EXISTS	model_draft.ego_grid_mvlv_substation_voronoi_cut;
 CREATE TABLE 		model_draft.ego_grid_mvlv_substation_voronoi_cut (
@@ -47,7 +455,7 @@ CREATE INDEX	ego_grid_mvlv_substation_voronoi_cut_geom_idx
 -- index GIST (geom_sub)
 CREATE INDEX	ego_grid_mvlv_substation_voronoi_cut_geom_sub_idx
 	ON	model_draft.ego_grid_mvlv_substation_voronoi_cut USING GIST (geom_sub);
-
+ */
 /* -- count mvlv_substation (only count)
 UPDATE 	model_draft.ego_grid_mvlv_substation_voronoi_cut AS t1
 	SET  	subst_sum = t2.subst_sum
@@ -60,7 +468,7 @@ UPDATE 	model_draft.ego_grid_mvlv_substation_voronoi_cut AS t1
 		GROUP BY a.id
 		)AS t2
 	WHERE  	t1.id = t2.id; */
-
+/* 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.6','input','model_draft','ego_grid_mvlv_substation','ego_dp_lv_griddistrict.sql',' ');
 
@@ -127,14 +535,14 @@ ALTER TABLE	model_draft.ego_grid_mvlv_substation_voronoi_cut_0subst_mview OWNER 
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.6','temp','model_draft','ego_grid_mvlv_substation_voronoi_cut_0subst_mview','ego_dp_lv_griddistrict.sql',' ');
-
+ */
 
 
 
 ---------- ---------- ----------
 -- Connect the cutted parts to the next substation
 ---------- ---------- ----------
-
+/* 
 -- Next Neighbor
 DROP MATERIALIZED VIEW IF EXISTS	model_draft.ego_grid_mvlv_substation_voronoi_cut_0subst_nn_mview CASCADE;
 CREATE MATERIALIZED VIEW 		model_draft.ego_grid_mvlv_substation_voronoi_cut_0subst_nn_mview AS
@@ -340,7 +748,7 @@ SELECT obj_description('model_draft.ego_grid_lv_griddistrict' ::regclass) ::json
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_grid_lv_griddistrict','ego_dp_lv_substation.sql',' ');
 
-
+ */
 
 
 /* 
@@ -366,7 +774,7 @@ COMMENT ON TABLE model_draft.ego_grid_lv_griddistrict IS
                 "Description": "Geometry",
                 "Unit": "" },
 				
-				{"Name": "load_area_id",
+				{"Name": "la_id",
                 "Description": "ID of the corresponding load area",
                 "Unit": "" },
 				
