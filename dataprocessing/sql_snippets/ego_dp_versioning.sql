@@ -50,7 +50,7 @@ SELECT ego_scenario_log('v0.2.6','result','grid','ego_dp_mvlv_substation','ego_d
 
 
 
--- GRIDDISTRICT
+-- CATCHMENT AREA
 
 -- EHV Griddistrict versioning
 DELETE FROM demand.ego_dp_ehv_griddistrict
