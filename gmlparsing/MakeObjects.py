@@ -478,6 +478,8 @@ def rotate(l, n):
 def checkNextParallel3( curr_gw, currInd, sg, sublist, sg2, sublist2, s, permCount, permCount2):
     global activeStates
     curr_gw.name = 'Gateway ' + curr_gw.position.name
+    if (sg2 == True and type(sublist2[-1]) is str and curr_gw.name in sublist2[-1]) or (type(parsing[-1]) is str and curr_gw.name in parsing[-1]):
+        return  'no'
 
     #remove any parents if in list
     allAct = []
@@ -603,7 +605,8 @@ def takeStep2( state,currInd, sg, sublist, sg2, sublist2, s, permCount, permCoun
                           #      activeStates = copy.copy(restartWith)
                     else:
                         # replace prev step by current task
-                        if 'Gateway' in parsing[-1] and len(activeStates) < parsing[-1].count('-'):
+                        if type(parsing[-1]) is str and 'Gateway' in parsing[-1] and len(activeStates) < parsing[-1].count('-'):
+
                             flag = 1
                             list_inc_gw = list(incomplete_gw)
                             activeStates.insert(list_inc_gw[1], list_inc_gw[0])
@@ -712,7 +715,6 @@ def printActiveStates(activeStates,sg, sg2, sublist, sublist2, newSub, ase, call
         parsing_nodes.append(state.position.name)
     line += '}'
 
-    #pe_count = permCount.__str__()
     pe_count = run_counter.__str__()
     if permCount2 > 0:
         pe_count += "." + permCount2.__str__()
@@ -721,14 +723,18 @@ def printActiveStates(activeStates,sg, sg2, sublist, sublist2, newSub, ase, call
     line = 'Parallel execution option '+ pe_count + ': ' + line
 
     if parsing[-1] is not None:
-        if not isinstance(parsing[-1], str) or (sg2==True and line not in sublist2[-1]) or (line not in parsing[-1]):
+        if sg2==True:
+            if type(sublist2[-1]) is not str or line not in sublist2[-1]:
+                parsing.append(line)
+                assign(sg, sg2, sublist, sublist2, newSub, ase, 'chnext')
+        else:
+            if type(parsing[-1]) is not str or line not in parsing[-1]:
+                parsing.append(line)
+                assign(sg, sg2, sublist, sublist2, newSub, ase, 'chnext')
 
-            parsing.append(line)
-            assign(sg, sg2, sublist, sublist2, newSub, ase, 'chnext')
-
-            #strip brackets, space and last '-'
-            line = line[1:-3]
-            par_path.append(line)
+                #strip brackets, space and last '-'
+               # line = line[1:-3]
+                #par_path.append(line)
 
 # def takeStep(activeStates, state,currInd, sg, sublist, sg2, sublist2, s):
 #
@@ -797,14 +803,16 @@ def check_if_active2(prev, element, currInd, sg, sublist, sg2, sublist2, s, perm
 
                 if len(element.children) == 1:
                      if len(restartWith) > 0:
+
                          #display end
                          element.name = 'Gateway '+element.position.name
-                         activeStates.insert(new_pos,element)
-                         printActiveStates(activeStates, sg, sg2, sublist, sublist2, None, None, 'chnext', permCount,   permCount2)
+                         if sg2==True and element.name not in sublist2[-1] or element.name not in parsing[-1]:
+                             activeStates.insert(new_pos,element)
+                             printActiveStates(activeStates, sg, sg2, sublist, sublist2, None, None, 'chnext', permCount,   permCount2)
 
 
-                         #restart
-                         activeStates = copy.copy(restartWith)
+                             #restart
+                             activeStates = copy.copy(restartWith)
 
 
                      else:
@@ -987,7 +995,7 @@ def checkNext(next, currInd, sg, sublist, sg2, sublist2, s):
 
                 rep_gw.children = list(gw_child_seq[run_counter - 1])
                 permCount += 1
-                checkNextParallel3( rep_gw, -1 , sg, sublist, sg2, sublist2, s, permCount, permCount2)
+                added_result = checkNextParallel3( rep_gw, -1 , sg, sublist, sg2, sublist2, s, permCount, permCount2)
 
 
               #  else:
@@ -995,8 +1003,9 @@ def checkNext(next, currInd, sg, sublist, sg2, sublist2, s):
 
                #     checkNextParallel3( newObj, currInd, sg, sublist, sg2, sublist2, s, permCount, permCount2)
 
-                gw_pos = activeStates[-1].position.name
-                checkNext( gw_pos, currInd, sg, sublist, sg2, sublist2, s)
+                if added_result is 'yes':
+                    gw_pos = activeStates[-1].position.name
+                    checkNext( gw_pos, currInd, sg, sublist, sg2, sublist2, s)
                 break
 
             if type(newObj) is DataObj and newObj.position.name not in parsing_nodes:
