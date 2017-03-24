@@ -35,9 +35,9 @@ script_dir = os.path.abspath(
                          'renewable_energy_allocation'))
 
 scripts = [
-    ## 'ego_dp_lattice_500m.sql', 				# lattice (point grid) 500m
-    ## 'ego_dp_lattice_500m.sql', 				# lattice (point grid) 50m
-    ## 'ego_dp_rea_wpa_per_mvgd.sql', 			# wind potential area
+    'ego_dp_lattice_500m.sql', 				# lattice (point grid) 500m
+    'ego_dp_lattice_500m.sql', 				# lattice (point grid) 50m
+    'ego_dp_rea_wpa_per_mvgd.sql', 			# wind potential area
 	
     'ego_dp_rea_lattice_per_area_500m.sql', 	# prepare 500m lattice
     'ego_dp_rea_lattice_per_area_50m.sql', 	    # prepare 50m lattice

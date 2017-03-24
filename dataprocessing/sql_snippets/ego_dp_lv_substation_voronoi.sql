@@ -207,10 +207,10 @@ CREATE INDEX	ego_grid_mvlv_substation_voronoi_geom_idx
 ALTER TABLE	model_draft.ego_grid_mvlv_substation_voronoi OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','input','model_draft','ego_grid_mvlv_substation','ego_dp_lv_griddistrict.sql',' ');
+SELECT ego_scenario_log('v0.2.6','input','model_draft','ego_grid_mvlv_substation','ego_dp_lv_griddistrict.sql',' ');
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','input','model_draft','ego_grid_hvmv_substation_dummy','ego_dp_lv_griddistrict.sql',' ');
+SELECT ego_scenario_log('v0.2.6','input','model_draft','ego_grid_hvmv_substation_dummy','ego_dp_lv_griddistrict.sql',' ');
 
 -- loop over mv-griddistricts
 DO
@@ -382,7 +382,7 @@ COMMENT ON TABLE model_draft.ego_grid_mvlv_substation_voronoi IS '{
 SELECT obj_description('model_draft.ego_grid_mvlv_substation_voronoi' ::regclass) ::json;
 	
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_grid_mvlv_substation_voronoi','ego_dp_lv_griddistrict.sql',' ');
+SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_grid_mvlv_substation_voronoi','ego_dp_lv_griddistrict.sql',' ');
 
  */
 
