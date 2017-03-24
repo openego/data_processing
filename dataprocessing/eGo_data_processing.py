@@ -42,6 +42,7 @@ def data_processing():
     snippets = [
     ## STRUCTURE & SETUP (WARNING)
     ## 'ego_dp_structure_scenariolog.sql',				# Setup scenario log table
+    'ego_dp_structure_versioning.sql',				# Setup versioning tables
     ## 'ego_dp_structure_boundaries_vg250.sql',			# Setup vg250 borders
     ## 'ego_dp_structure_osm_landuse.sql',         		# Filter OSM landuse
     ## 'eGo_dp_structure_census.sql',          			# Filter Census2011 with population
@@ -83,17 +84,19 @@ def data_processing():
 	# 'ego_dp_powerflow_assignment_generator_nep2035.sql',	# Assign generators from NEP 2035 to corresponding substation
 	# 'ego_dp_powerflow_assignment_load_nep2035.sql',		# Copy loads from SQ scenario
 	# 'ego_dp_powerflow_timeseries_generator.sql',			# Transfer renpassG!S results into the corresponding powerflow table
-	'ego_dp_powerflow_griddistrict_demand.py',			# Demand per MV Griddistrict
-	'ego_dp_powerflow_timeseries_demand.sql',				# Insert demand series into corresponding powerflow table
-	'ego_dp_powerflow_lopf_data.sql',						# Set marginal costs for generators and storages
-	'ego_dp_powerflow_load_timeseries_NEP2035.sql' 		# Copy demand timeseries to NEP 2035 scenario
+	# 'ego_dp_powerflow_griddistrict_demand.py',			# Demand per MV Griddistrict
+	# 'ego_dp_powerflow_timeseries_demand.sql',				# Insert demand series into corresponding powerflow table
+	# 'ego_dp_powerflow_lopf_data.sql',						# Set marginal costs for generators and storages
+	# 'ego_dp_powerflow_load_timeseries_NEP2035.sql' 		# Copy demand timeseries to NEP 2035 scenario
 	
 	## LOWVOLTAGE
 	# 'ego_dp_lv_substation.sql',						# MVLV Substation inside Loadarea
 	# 'ego_dp_lv_substation_voronoi.sql',				# MVLV Substation Voronoi
 	# 'ego_dp_lv_griddistrict.sql'		    			# LV Griddistrict
-	# 'ego_dp_lv_griddistrict_nn.sql'		    		# LV Griddistrict NN
     # 'ego_dp_lv_peakload.sql',						    # LV Peakload (Not working)
+    
+    ## VERSIONING
+    'ego_dp_versioning.sql',						    # Versioning
         ]
 
     # get database connection

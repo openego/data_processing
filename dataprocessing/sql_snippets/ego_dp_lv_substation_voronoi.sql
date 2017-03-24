@@ -112,7 +112,7 @@ DELETE FROM model_draft.ego_grid_mvlv_substation WHERE is_dummy = TRUE;
 
 
 
-
+/* 
 -- execute voronoi (experimental)
 DROP TABLE IF EXISTS 	model_draft.ego_grid_mvlv_substation_voronoi_exp CASCADE;
 CREATE TABLE		model_draft.ego_grid_mvlv_substation_voronoi_exp (
@@ -174,7 +174,7 @@ INTO model_draft.ego_grid_mvlv_substation_voronoi_exp		  -- name 2/2
 	LEFT OUTER JOIN -- Self Join based on edges
 	Edges y ON x.id <> y.id AND ST_Equals(x.edge,y.edge)
 	) z;
-
+ */
 /* -- set table
 ALTER TABLE model_draft.ego_grid_mvlv_substation_voronoi_exp
 	ADD COLUMN id serial,

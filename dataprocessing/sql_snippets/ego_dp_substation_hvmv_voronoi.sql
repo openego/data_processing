@@ -46,15 +46,6 @@ UPDATE 	model_draft.ego_grid_hvmv_substation AS t1
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_grid_hvmv_substation','ego_grid_hvmv_substation.sql',' ');
 
--- versioning
-INSERT INTO grid.ego_hvmv_substation (version, subst_id, subst_name, ags_0, voltage, power_type, substation , osm_id, osm_www, frequency, ref, operator, dbahn, status, otg_id, lat, lon, point, polygon, geom)
-	SELECT	'v0.2.6',
-		subst_id, subst_name, ags_0, voltage, power_type, substation , osm_id, osm_www, frequency, ref, operator, dbahn, status, otg_id, lat, lon, point, polygon, geom
-	FROM	model_draft.ego_grid_hvmv_substation;
-
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','result','grid','ego_hvmv_substation','ego_grid_hvmv_substation.sql','versioning');
-
 
 -- create dummy points for voronoi calculation
 DROP TABLE IF EXISTS 	model_draft.ego_grid_hvmv_substation_dummy CASCADE;
