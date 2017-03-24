@@ -142,8 +142,7 @@ CREATE INDEX ego_grid_lv_loadarea_rest_geom_point_idx
 
 -- PointOnSurface for rest
 UPDATE	model_draft.ego_grid_lv_loadarea_rest
-	SET 	geom_point = ST_PointOnSurface(geom) ::geometry(POINT,3035)
-	FROM	model_draft.ego_grid_lv_loadarea_rest;
+	SET 	geom_point = ST_PointOnSurface(geom) ::geometry(POINT,3035) ;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.6','temp','model_draft','ego_grid_lv_loadarea_rest','ego_dp_lv_substation.sql',' ');
@@ -153,7 +152,8 @@ SELECT ego_scenario_log('v0.2.6','temp','model_draft','ego_grid_lv_loadarea_rest
 -- 
 INSERT INTO model_draft.ego_grid_mvlv_substation (la_id, geom)
 	SELECT 	la_id,
-		geom_point ::geometry(POINT,3035) ;
+		geom_point ::geometry(POINT,3035) 
+	FROM 	model_draft.ego_grid_lv_loadarea_rest;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.6','input','model_draft','ego_grid_mv_griddistrict','ego_dp_lv_substation.sql',' ');
@@ -162,14 +162,14 @@ SELECT ego_scenario_log('v0.2.6','input','model_draft','ego_grid_mv_griddistrict
 UPDATE 	model_draft.ego_grid_mvlv_substation AS t1
 	SET  	subst_id = t2.subst_id
 	FROM    (
-		SELECT	a.id AS id,
+		SELECT	a.mvlv_subst_id AS mvlv_subst_id,
 			b.subst_id AS subst_id
 		FROM	model_draft.ego_grid_mvlv_substation AS a,
 			model_draft.ego_grid_mv_griddistrict AS b
 		WHERE  	b.geom && a.geom AND
 			ST_CONTAINS(b.geom,a.geom)
 		) AS t2
-	WHERE  	t1.id = t2.id;
+	WHERE  	t1.mvlv_subst_id = t2.mvlv_subst_id;
 
 -- metadata
 COMMENT ON TABLE model_draft.ego_grid_mvlv_substation IS '{
