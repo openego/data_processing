@@ -35,6 +35,7 @@ tempStack = Stack()
 otherstarts = []
 par_path = []
 permCount = 0
+initial_rep = 0
 permCount2 = 0
 repetition = 1
 run_counter = 1
@@ -43,6 +44,7 @@ endGateways = []
 activeStates = []
 restartWith = []
 incomplete_gw = ()
+following_gw_child_seq = []
 
 allStartEv = []
 alltasks = []
@@ -104,7 +106,6 @@ def execGraphmlFile(myFileName):
     ns = {'gml': 'http://graphml.graphdrawing.org/xmlns',
           'tn': 'http://www.yworks.com/xml/graphml'}
     makeGraph(None, root, ns)
-    #for rep in range(0,repetition):
     getStart()
     printParsed(parsing, 'main')
     for rep in range(0,repetition-1):
@@ -510,9 +511,7 @@ def checkNextParallel3( curr_gw, currInd, sg, sublist, sg2, sublist2, s, permCou
                     temp_starts = checkTopStart(eachChild, currInd, sg, sublist, sg2, sublist2, s, 0, temp_starts)
 
                     if len(temp_starts) == 0:
-                        #activeStates.append(currobj)
                         activeStates.insert(new_pos, currobj)
-                      #  currInd += 1
                         parsing_nodes.append(currobj.position.name)
                     else:
                         otherstarts.extend(temp_starts)
@@ -521,12 +520,9 @@ def checkNextParallel3( curr_gw, currInd, sg, sublist, sg2, sublist2, s, permCou
                         temp_starts.clear()
 
 
-
             # displaying states
             if len(otherstarts) > 0:
-                #activeStates.extend(otherstarts)
                 activeStates[new_pos:new_pos] = otherstarts
-                #currInd += len(otherstarts)
                 new_pos += len(otherstarts)
                 printActiveStates(activeStates,sg, sg2, sublist, sublist2, None, None, 'chnext', permCount, permCount2)
 
@@ -537,8 +533,6 @@ def checkNextParallel3( curr_gw, currInd, sg, sublist, sg2, sublist2, s, permCou
             ######### taking steps until the end
             while len(activeStates) > 1:
                 for state in activeStates:
-                    if isinstance(parsing[-1],str) and 'Gateway' in parsing[-1]:
-                        return activeStates
                     if isDeadEnd(state):
                         activeStates.remove(state)
                         continue
@@ -562,13 +556,6 @@ def checkNextParallel3( curr_gw, currInd, sg, sublist, sg2, sublist2, s, permCou
                 if len(curr_gw.children) > 1:
                     for eachChild in curr_gw.children:
                         takeStep2( getFullElement(eachChild), currInd, sg, sublist, sg2, sublist2, s, permCount, permCount2)
-                #it is a join
-               # else:
-                    #ap#  activeStates.remove(curr_gw)
-
-
-    # else:
-    #     return
     return activeStates
 
 def takeStep2( state,currInd, sg, sublist, sg2, sublist2, s, permCount, permCount2):
@@ -598,9 +585,9 @@ def takeStep2( state,currInd, sg, sublist, sg2, sublist2, s, permCount, permCoun
 
                             signal = check_if_active2( prev, nextObj, new_pos,
                                                                       sg, sublist, sg2, sublist2, s, permCount, permCount2)
-                            if len(restartWith) == 0:
+                        #    if len(restartWith) == 0:
                                 # display end
-                                return activeStates
+                         #       return activeStates
                          #   else:
                           #      activeStates = copy.copy(restartWith)
                     else:
@@ -613,9 +600,10 @@ def takeStep2( state,currInd, sg, sublist, sg2, sublist2, s, permCount, permCoun
                             if list_inc_gw[1] < it:
                                 it = it + 1
 
-                        del activeStates[it]
+                        #del activeStates[it]
                         temp_starts = []
-                        temp_starts = checkTopStart(nextObj.position.name, currInd, sg, sublist, sg2, sublist2, s, 0, temp_starts)
+                        if type(nextObj) is Task:
+                            temp_starts = checkTopStart(nextObj.position.name, currInd, sg, sublist, sg2, sublist2, s, 0, temp_starts)
 
                         if len(temp_starts) == 0:
                                 parsing_nodes.append(nextObj.position.name)
@@ -624,32 +612,41 @@ def takeStep2( state,currInd, sg, sublist, sg2, sublist2, s, permCount, permCoun
                                 signal = check_if_active2( prev, nextObj, new_pos, sg, sublist,
                                                                             sg2, sublist2, s, permCount, permCount2)
 
-
+                               # del activeStates[it]
                                 activeStates.insert(it, copy.deepcopy(nextObj))
                                 printActiveStates(activeStates,sg, sg2, sublist, sublist2, None, None, 'chnext', permCount, permCount2)
 
 
                         else:
-                            otherstarts.extend(temp_starts)
+                            ready = False
 
-                            for t in temp_starts:
-                                Node.getParents(t, alledges)
-                                signal = check_if_active2( prev, t, new_pos, sg, sublist,
-                                                                          sg2, sublist2, s, permCount, permCount2)
-                                parsing_nodes.append(t.position.name)
-                            temp_starts.clear()
+                            Node.getParents(nextObj, alledges)
+                            for par in nextObj.parents:
+                                if getFullElement(par) in activeStates:
+                                    ready = True
+                                else:
+                                    ready = False
+                                    break
+
+                            if ready == False:
+                                nonactive = [x for x in temp_starts if x.position.name not in nextObj.parents]
+                                for na in nonactive:
+                                    takeStep2(na, currInd, sg, sublist, sg2, sublist2, s,
+                                              permCount, permCount2)
 
 
-                            activeStates[it:it] = otherstarts
-                            printActiveStates(activeStates,sg, sg2, sublist, sublist2, None, None, 'chnext', permCount, permCount2)
+                            for ac in activeStates:
+                                if ac.position.name in nextObj.parents:
+                                    it = it - 1
+                            activeStates = [x for x in activeStates if x.position.name not in nextObj.parents]
 
-                            activeStates = [x for x in activeStates if x not in otherstarts]
-                            otherstarts.clear()
-
-
+                            #del activeStates[it]
                             activeStates.insert(it, copy.deepcopy(nextObj))
-                            printActiveStates(activeStates,sg, sg2, sublist, sublist2, None, None, 'chnext', permCount, permCount2)
-                           # currInd += 1
+                            printActiveStates(activeStates, sg, sg2, sublist, sublist2, None, None, 'chnext',
+                                                      permCount, permCount2)
+
+                            #activeStates.insert(it, copy.deepcopy(nextObj))
+                            #printActiveStates(activeStates,sg, sg2, sublist, sublist2, None, None, 'chnext', permCount, permCount2)
 
                         if flag == 1:
                             # remove gw
@@ -775,6 +772,10 @@ def check_if_active2(prev, element, currInd, sg, sublist, sg2, sublist2, s, perm
     global restartWith
     global activeStates
     global incomplete_gw
+    global following_gw_child_seq
+    global repetition
+    global run_counter
+    global initial_rep
 
     signal = 'wait'
     allactive = []
@@ -794,7 +795,6 @@ def check_if_active2(prev, element, currInd, sg, sublist, sg2, sublist2, s, perm
         if prev in activeStates:
             new_pos = activeStates.index(prev)
         else:
-            #new_pos = len(activeStates)
             new_pos = copy.copy(currInd)
         activeStates = [x for x in activeStates if x.position.name not in allinputs]
 
@@ -802,39 +802,38 @@ def check_if_active2(prev, element, currInd, sg, sublist, sg2, sublist2, s, perm
                 incomplete_gw = (element, new_pos)
 
                 if len(element.children) == 1:
-                     if len(restartWith) > 0:
-
-                         #display end
-                         element.name = 'Gateway '+element.position.name
-                         if sg2==True and element.name not in sublist2[-1] or element.name not in parsing[-1]:
-                             activeStates.insert(new_pos,element)
-                             printActiveStates(activeStates, sg, sg2, sublist, sublist2, None, None, 'chnext', permCount,   permCount2)
-
-
-                             #restart
-                             activeStates = copy.copy(restartWith)
-
-
-                     else:
                         checkNextParallel3( element, new_pos, sg, sublist, sg2, sublist2, s,
                                                       permCount, permCount2)
                 else:
-                    restartWith = copy.copy(activeStates)
-
                     child_counter = 0
-                    for combo2 in itertools.permutations(element.children):
-                         child_counter += 1
-                         each_combo2 = list(combo2)
 
-                         if permCount2 > 0:
-                             element.children = each_combo2
-                         permCount2 += 1
+                    if run_counter == 1:
+                        all_child_combinations = list(itertools.permutations(element.children))
+                        initial_rep = copy.copy(repetition)
+                        repetition += len(all_child_combinations)
 
-                         if child_counter == len(element.children):
-                             restartWith.clear()
+                        for combo in all_child_combinations:
+                            following_gw_child_seq.append(combo)
 
-                         checkNextParallel3( element, new_pos, sg, sublist, sg2, sublist2, s,
-                                                           permCount, permCount2)
+
+                    if run_counter < len(following_gw_child_seq):
+                        element.children = following_gw_child_seq[run_counter]
+                    else:
+                        element.children = following_gw_child_seq[run_counter % len(following_gw_child_seq)]
+
+
+                    #if child_counter == len(element.children):
+#                                restartWith.clear()
+
+                    checkNextParallel3(element, new_pos, sg, sublist, sg2, sublist2, s,
+                                                                                        permCount, permCount2)
+        else:
+            #it is not a gateway
+            t = checkTopStart(element.position.name, currInd, sg, sublist, sg2, sublist2, s, 0, [])
+            if len(t) > 0:
+                return 'wait'
+            else:
+                return 'go'
 
     else:
         signal = 'wait'
@@ -855,13 +854,12 @@ def check_if_active2(prev, element, currInd, sg, sublist, sg2, sublist2, s, perm
 
                 ele_to_insert = getFullElement(x)
                 if type(ele_to_insert) is Gateway:
-                    activeStates.insert(currInd, ele_to_insert)
+                #    activeStates.insert(currInd, ele_to_insert)
+                    signal = check_if_active2(prev, ele_to_insert, currInd,
+                                              sg, sublist, sg2, sublist2, s, permCount, permCount2)
+
                 else:
-
                     takeStep2( ele_to_insert, currInd, sg, sublist, sg2, sublist2, s, permCount, permCount2)
-
-
-
     return signal
 
 
@@ -964,6 +962,7 @@ def checkNext(next, currInd, sg, sublist, sg2, sublist2, s):
     global repetition
     global gw_child_seq
     global run_counter
+    global initial_rep
 
     sub = None
     for ae in alledges:
@@ -986,26 +985,19 @@ def checkNext(next, currInd, sg, sublist, sg2, sublist2, s):
                     for combo in all_combinations:
                         #print('add children globally: ',combo)
                         gw_child_seq.append(combo)
-                #            each_combo = list(combo)
-                 #           if repetition > 0:
-                 #               repetition += 1
-                #                rep_gw.children = each_combo
-                 #               activeStates.clear()
-                 #           permCount += 1
 
-                rep_gw.children = list(gw_child_seq[run_counter - 1])
+
+                if initial_rep == 0 or run_counter <= initial_rep:
+                    rep_gw.children = list(gw_child_seq[run_counter - 1])
+                else:
+                    rep_gw.children = list(gw_child_seq[(run_counter % initial_rep)])
+
                 permCount += 1
                 added_result = checkNextParallel3( rep_gw, -1 , sg, sublist, sg2, sublist2, s, permCount, permCount2)
 
-
-              #  else:
-              #      parsing.append('run 2')
-
-               #     checkNextParallel3( newObj, currInd, sg, sublist, sg2, sublist2, s, permCount, permCount2)
-
-                if added_result is 'yes':
-                    gw_pos = activeStates[-1].position.name
-                    checkNext( gw_pos, currInd, sg, sublist, sg2, sublist2, s)
+                #if added_result is 'yes':
+                gw_pos = activeStates[-1].position.name
+                checkNext( gw_pos, currInd, sg, sublist, sg2, sublist2, s)
                 break
 
             if type(newObj) is DataObj and newObj.position.name not in parsing_nodes:
@@ -1013,7 +1005,6 @@ def checkNext(next, currInd, sg, sublist, sg2, sublist2, s):
 
                 while not s.is_empty():
                     other_start = s.pop()
-                    # print('starts',other_start )
                     parsing.append(other_start)
                     assign(sg, sg2, sublist, sublist2, None, None, 'chnext')
                 parsing.append(newObj)
