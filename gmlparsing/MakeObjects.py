@@ -551,6 +551,8 @@ def takeStep2( state,currInd, sg, sublist, sg2, sublist2, s, permCount, permCoun
                     nextObj = getFullElement(ae2.target)
                     new_pos = it
 
+
+
                     if nextObj is None or type(nextObj) is Gateway:
                         if parsing [-1] is str and nextObj.position.name in parsing[-1]:
                             return activeStates
@@ -581,11 +583,19 @@ def takeStep2( state,currInd, sg, sublist, sg2, sublist2, s, permCount, permCoun
                                 parsing_nodes.append(nextObj.position.name)
 
                                 Node.getParents(nextObj, alledges)
-                                signal = check_if_active2( prev, nextObj, new_pos, sg, sublist,
-                                                                            sg2, sublist2, s, permCount, permCount2)
+
+
+                                allAnnots = getAnnot(nextObj)
+                                if allAnnots is not None:
+                                    connectToPostgres(allAnnots.name)
+                                    activeStates.insert(it+1, allAnnots)
+
+                                signal = check_if_active2(prev, nextObj, new_pos, sg, sublist,
+                                                          sg2, sublist2, s, permCount, permCount2)
 
                                 activeStates.insert(it, copy.deepcopy(nextObj))
                                 printActiveStates(activeStates,sg, sg2, sublist, sublist2, None, None, 'chnext', permCount, permCount2)
+
 
 
                         else:
@@ -750,10 +760,12 @@ def check_if_active2(prev, element, currInd, sg, sublist, sg2, sublist2, s, perm
     allinputs = []
 
     for allAS in activeStates:
-        allactive.append(allAS.position.name)
+        #if type(allAS) is not Annotation:
+            allactive.append(allAS.position.name)
 
     for allAI in element.parents:
-        allinputs.append(allAI)
+        #if type(allAS) is not Annotation:
+            allinputs.append(allAI)
 
     # replace multiple inputs by next gateway
 
@@ -1013,7 +1025,6 @@ def checkNext(next, currInd, sg, sublist, sg2, sublist2, s):
                 parsing_nodes.append(newObj.position)
 
                 allAnnots = getAnnot(newObj)
-
                 if allAnnots is not None:
                      parsing.append(allAnnots)
                      assign(sg, sg2, sublist, sublist2, None, None, 'chnext')
