@@ -42,7 +42,7 @@ def data_processing():
     snippets = [
     ## STRUCTURE & SETUP (WARNING)
     ## 'ego_dp_structure_scenariolog.sql',				# Setup scenario log table
-    # # 'ego_dp_structure_versioning.sql',				# Setup versioning tables
+    # 'ego_dp_structure_versioning.sql',				# Setup versioning tables
     ## 'ego_dp_structure_boundaries_vg250.sql',			# Setup vg250 borders
     ## 'ego_dp_structure_osm_landuse.sql',         		# Filter OSM landuse
     ## 'eGo_dp_structure_census.sql',          			# Filter Census2011 with population
@@ -92,7 +92,7 @@ def data_processing():
 	## LOWVOLTAGE
 	# 'ego_dp_lv_substation.sql',						# MVLV Substation inside Loadarea
 	# 'ego_dp_lv_substation_voronoi.sql',				# MVLV Substation Voronoi
-	# 'ego_dp_lv_griddistrict.sql'		    			# LV Griddistrict
+	'ego_dp_lv_griddistrict.sql'		    			# LV Griddistrict
     # 'ego_dp_lv_peakload.sql',						    # LV Peakload (Not working)
     
     ## VERSIONING

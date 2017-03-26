@@ -110,6 +110,9 @@ $$;
 DELETE FROM model_draft.ego_grid_mvlv_substation WHERE is_dummy = TRUE;
 
 
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.6','temp','model_draft','ego_grid_mvlv_substation_voronoi','ego_dp_lv_substation_voronoi.sql',' ');
+
 
 
 /* 

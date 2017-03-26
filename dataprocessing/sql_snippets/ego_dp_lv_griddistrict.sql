@@ -19,20 +19,41 @@ CREATE TABLE		model_draft.ego_grid_lv_griddistrict_cut (
 	geom 		geometry(Polygon,3035),
 	CONSTRAINT ego_grid_lv_griddistrict_cut_pkey PRIMARY KEY (id) );
 
+-- grant (oeuser)
+ALTER TABLE	model_draft.ego_grid_lv_griddistrict_cut OWNER TO oeuser;
+	
 -- index GIST (geom)
 CREATE INDEX ego_grid_lv_griddistrict_cut_geom_idx
 	ON model_draft.ego_grid_lv_griddistrict_cut USING GIST (geom);
 
-INSERT INTO		model_draft.ego_grid_lv_griddistrict_cut (geom,la_id)
-	SELECT	(ST_DUMP(ST_INTERSECTION(mun.geom,voi.geom))).geom ::geometry(Polygon,3035) AS geom, mun.id AS la_id
-	FROM	model_draft.ego_demand_loadarea AS mun,
-		model_draft.ego_grid_mvlv_substation_voronoi AS voi
-	WHERE	mun.geom && voi.geom 
-		AND mun.subst_id = voi.subst_id
+INSERT INTO	model_draft.ego_grid_lv_griddistrict_cut (geom,la_id,subst_id)
+	SELECT	(ST_DUMP(ST_SAFE_INTERSECTION(a.geom,b.geom))).geom ::geometry(Polygon,3035) AS geom, 
+		a.id AS la_id,
+		a.subst_id AS subst_id,
+	FROM	model_draft.ego_demand_loadarea AS a,
+		model_draft.ego_grid_mvlv_substation_voronoi AS b
+	WHERE	a.geom && b.geom 
+		AND a.subst_id = b.subst_id
 		-- make sure the boundaries really intersect and not just touch each other
-		AND (ST_GEOMETRYTYPE(ST_INTERSECTION(mun.geom,voi.geom)) = 'ST_Polygon' 
-			OR ST_GEOMETRYTYPE(ST_INTERSECTION(mun.geom,voi.geom)) = 'ST_MultiPolygon' )
-		AND ST_isvalid(voi.geom) AND ST_isvalid(mun.geom);
+		AND (ST_GEOMETRYTYPE(ST_SAFE_INTERSECTION(a.geom,b.geom)) = 'ST_Polygon' 
+			OR ST_GEOMETRYTYPE(ST_SAFE_INTERSECTION(a.geom,b.geom)) = 'ST_MultiPolygon' )
+		AND ST_isvalid(b.geom) AND ST_isvalid(a.geom);
+
+-- mvlv substation count
+UPDATE 	model_draft.ego_grid_lv_griddistrict_cut AS t1
+	SET  	subst_cnt = t2.subst_cnt
+	FROM	(SELECT	a.id AS id,
+			COUNT(b.geom)::integer AS subst_cnt
+		FROM	model_draft.ego_grid_lv_griddistrict_cut AS a,
+			model_draft.ego_grid_mvlv_substation AS b
+		WHERE  	a.geom && b.geom AND
+			ST_CONTAINS(a.geom,b.geom)
+		GROUP BY a.id
+		)AS t2
+	WHERE  	t1.id = t2.id;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.6','temp','model_draft','ego_grid_lv_griddistrict_cut','ego_dp_lv_griddistrict.sql',' ');
 
 
 -- with substation

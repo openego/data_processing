@@ -53,7 +53,7 @@ SELECT ego_scenario_log('v0.2.6','result','grid','ego_dp_mvlv_substation','ego_d
 -- CATCHMENT AREA
 
 -- EHV Griddistrict versioning
-DELETE FROM demand.ego_dp_ehv_griddistrict
+DELETE FROM grid.ego_dp_ehv_griddistrict
 	WHERE	version = 'v0.2.6';
 	
 INSERT INTO grid.ego_dp_ehv_griddistrict
@@ -66,7 +66,7 @@ SELECT ego_scenario_log('v0.2.6','result','grid','ego_dp_ehv_griddistrict','ego_
 
 
 -- MV Griddistrict versioning
-DELETE FROM demand.ego_dp_mv_griddistrict
+DELETE FROM grid.ego_dp_mv_griddistrict
 	WHERE	version = 'v0.2.6';
 	
 INSERT INTO grid.ego_dp_mv_griddistrict
@@ -78,32 +78,32 @@ INSERT INTO grid.ego_dp_mv_griddistrict
 SELECT ego_scenario_log('v0.2.6','result','grid','ego_dp_mv_griddistrict','ego_dp_versioning.sql','versioning');
 
 
-/* -- MV Griddistrict versioning
-DELETE FROM demand.ego_dp_lv_griddistrict
+-- LV Griddistrict versioning
+DELETE FROM grid.ego_dp_lv_griddistrict
 	WHERE	version = 'v0.2.6';
 	
 INSERT INTO grid.ego_dp_lv_griddistrict
 	SELECT	'v0.2.6',
 		*
-	FROM	model_draft.ego_grid_lv_griddistrict;
+	FROM	model_draft.ego_grid_lv_griddistrict_cut_nn_collect;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.6','result','grid','ego_dp_lv_griddistrict','ego_dp_versioning.sql','versioning');
- */
+
 
 -- LOADAREA
 
 -- Loadarea versioning
-DELETE FROM demand.ego_loadarea
+DELETE FROM demand.ego_dp_loadarea
 	WHERE	version = 'v0.2.6';
 
-INSERT INTO demand.ego_loadarea
+INSERT INTO demand.ego_dp_loadarea
 	SELECT	'v0.2.6',
 		*
 	FROM	model_draft.ego_demand_loadarea;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','result','demand','ego_loadarea','ego_dp_versioning.sql','versioning');
+SELECT ego_scenario_log('v0.2.6','result','demand','ego_dp_loadarea','ego_dp_versioning.sql','versioning');
 
 
 -- overview
@@ -152,21 +152,3 @@ UNION ALL
 		count(*) AS cnt
 	FROM 	demand.ego_loadarea
 	GROUP BY version;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -16,22 +16,22 @@ __author__ 	= "Ludee"
 DROP TABLE IF EXISTS	grid.ego_dp_ehv_substation CASCADE;
 CREATE TABLE 		grid.ego_dp_ehv_substation (
 	version 	text,
-	subst_id serial NOT NULL,
-	lon double precision NOT NULL,
-	lat double precision NOT NULL,
-	point geometry(Point,4326) NOT NULL,
-	polygon geometry NOT NULL,
+	subst_id integer,
+	lon double precision,
+	lat double precision,
+	point geometry(Point,4326),
+	polygon geometry,
 	voltage text,
 	power_type text,
 	substation text,
-	osm_id text NOT NULL,
-	osm_www text NOT NULL,
+	osm_id text,
+	osm_www text,
 	frequency text,
 	subst_name text,
 	ref text,
 	operator text,
 	dbahn text,
-	status smallint NOT NULL,
+	status smallint,
 	otg_id bigint,
 	CONSTRAINT ego_dp_ehv_substation_pkey PRIMARY KEY (version,subst_id));
 
@@ -42,6 +42,10 @@ ALTER TABLE grid.ego_dp_ehv_substation
 
 -- grant (oeuser)
 ALTER TABLE	grid.ego_dp_ehv_substation OWNER TO oeuser;
+
+-- index GIST (geom)
+CREATE INDEX ego_dp_ehv_substation_point_idx
+	ON grid.ego_dp_ehv_substation USING GIST (point);
 
 -- metadata
 COMMENT ON TABLE grid.ego_dp_ehv_substation IS '{
@@ -108,22 +112,22 @@ SELECT ego_scenario_log('v0.2.6','result','grid','ego_dp_ehv_substation','ego_sc
 DROP TABLE IF EXISTS	grid.ego_dp_hvmv_substation CASCADE;
 CREATE TABLE 		grid.ego_dp_hvmv_substation (
 	version 	text,
-	subst_id serial NOT NULL,
-	lon double precision NOT NULL,
-	lat double precision NOT NULL,
-	point geometry(Point,4326) NOT NULL,
-	polygon geometry NOT NULL,
+	subst_id integer,
+	lon double precision,
+	lat double precision,
+	point geometry(Point,4326),
+	polygon geometry,
 	voltage text,
 	power_type text,
 	substation text,
-	osm_id text NOT NULL,
-	osm_www text NOT NULL,
+	osm_id text,
+	osm_www text,
 	frequency text,
 	subst_name text,
 	ref text,
 	operator text,
 	dbahn text,
-	status smallint NOT NULL,
+	status smallint,
 	otg_id bigint,
 	ags_0 text,
 	geom geometry(Point,3035),
@@ -136,6 +140,10 @@ ALTER TABLE grid.ego_dp_hvmv_substation
 
 -- grant (oeuser)
 ALTER TABLE	grid.ego_dp_hvmv_substation OWNER TO oeuser;
+
+-- index GIST (geom)
+CREATE INDEX ego_dp_hvmv_substation_geom_idx
+	ON grid.ego_dp_hvmv_substation USING GIST (geom);
 
 -- metadata
 COMMENT ON TABLE grid.ego_dp_hvmv_substation IS '{
@@ -203,10 +211,12 @@ SELECT ego_scenario_log('v0.2.6','result','grid','ego_dp_hvmv_substation','ego_s
 DROP TABLE IF EXISTS	grid.ego_dp_mvlv_substation CASCADE;
 CREATE TABLE 		grid.ego_dp_mvlv_substation (
 	version 	text,
-	subst_id	integer,
-	mvgd_id       	integer,
-	geom 		geometry(Point,3035),
-	CONSTRAINT ego_dp_mvlv_substation_pkey PRIMARY KEY (version,subst_id));
+	mvlv_subst_id integer,
+	la_id integer,
+	subst_id integer,
+	geom geometry(Point,3035),
+	is_dummy boolean,
+	CONSTRAINT ego_dp_mvlv_substation_pkey PRIMARY KEY (version,mvlv_subst_id));
 
 --FK
 ALTER TABLE grid.ego_dp_mvlv_substation
@@ -215,6 +225,10 @@ ALTER TABLE grid.ego_dp_mvlv_substation
 
 -- grant (oeuser)
 ALTER TABLE	grid.ego_dp_mvlv_substation OWNER TO oeuser;
+
+-- index GIST (geom)
+CREATE INDEX ego_dp_mvlv_substation_geom_idx
+	ON grid.ego_dp_mvlv_substation USING GIST (geom);
 
 -- metadata
 COMMENT ON TABLE grid.ego_dp_mvlv_substation IS '{
@@ -269,8 +283,8 @@ SELECT ego_scenario_log('v0.2.6','result','grid','ego_dp_mvlv_substation','ego_s
 DROP TABLE IF EXISTS	grid.ego_dp_ehv_griddistrict CASCADE;
 CREATE TABLE 		grid.ego_dp_ehv_griddistrict (
 	version 	text,
-	geom 		geometry(Polygon,3035),
-	subst_id 	integer NOT NULL,
+	geom geometry(Polygon,4326),
+	subst_id integer NOT NULL,
 	CONSTRAINT ego_dp_ehv_griddistrict_pkey PRIMARY KEY (version,subst_id));
 
 --FK
@@ -280,6 +294,10 @@ ALTER TABLE grid.ego_dp_ehv_griddistrict
 
 -- grant (oeuser)
 ALTER TABLE	grid.ego_dp_ehv_griddistrict OWNER TO oeuser;
+
+-- index GIST (geom)
+CREATE INDEX ego_dp_ehv_griddistrict_geom_idx
+	ON grid.ego_dp_ehv_griddistrict USING GIST (geom);
 
 -- metadata
 COMMENT ON TABLE grid.ego_dp_ehv_griddistrict IS '{
@@ -329,7 +347,7 @@ SELECT ego_scenario_log('v0.2.6','result','grid','ego_dp_ehv_griddistrict','ego_
 DROP TABLE IF EXISTS	grid.ego_dp_mv_griddistrict CASCADE;
 CREATE TABLE 		grid.ego_dp_mv_griddistrict (
 	version 	text,
-	subst_id integer NOT NULL,
+	subst_id integer,
 	subst_sum integer,
 	type1 integer,
 	type1_cnt integer,
@@ -368,6 +386,10 @@ ALTER TABLE grid.ego_dp_mv_griddistrict
 
 -- grant (oeuser)
 ALTER TABLE	grid.ego_dp_mv_griddistrict OWNER TO oeuser;
+
+-- index GIST (geom)
+CREATE INDEX ego_dp_mv_griddistrict_geom_idx
+	ON grid.ego_dp_mv_griddistrict USING GIST (geom);
 
 -- metadata
 COMMENT ON TABLE grid.ego_dp_mv_griddistrict IS '{
@@ -422,12 +444,28 @@ SELECT ego_scenario_log('v0.2.6','result','grid','ego_dp_mv_griddistrict','ego_s
 DROP TABLE IF EXISTS	grid.ego_dp_lv_griddistrict CASCADE;
 CREATE TABLE 		grid.ego_dp_lv_griddistrict (
 	version 	text,
-	id 		integer NOT NULL,
+	mvlv_subst_id	integer,
+	mvlv_subst_id_new	integer,
 	subst_id	integer,
-	la_id	 	integer,
-	geom 		geometry(Polygon,3035),
-	CONSTRAINT ego_dp_lv_griddistrict_pkey PRIMARY KEY (version,subst_id));
-
+	la_id 		integer,
+	nn		boolean,
+	geom		geometry(MultiPolygon,3035),
+	CONSTRAINT ego_dp_lv_griddistrict_pkey PRIMARY KEY (version,mvlv_subst_id));
+	
+/* 
+-- LV griddistrict
+DROP TABLE IF EXISTS	grid.ego_dp_lv_griddistrict CASCADE;
+CREATE TABLE 		grid.ego_dp_lv_griddistrict (
+	version 	text,
+	id integer,
+	geom geometry(Polygon,3035),
+	load_area_id integer,
+	ont_count integer,
+	ont_id integer,
+	merge_id integer,
+	mvlv_subst_id integer,
+	CONSTRAINT ego_dp_lv_griddistrict_pkey PRIMARY KEY (version,id));
+ */
 --FK
 ALTER TABLE grid.ego_dp_lv_griddistrict
 	ADD CONSTRAINT ego_dp_lv_griddistrict_fkey FOREIGN KEY (version) 
@@ -435,6 +473,10 @@ ALTER TABLE grid.ego_dp_lv_griddistrict
 
 -- grant (oeuser)
 ALTER TABLE	grid.ego_dp_lv_griddistrict OWNER TO oeuser;
+
+-- index GIST (geom)
+CREATE INDEX ego_dp_lv_griddistrict_geom_idx
+	ON grid.ego_dp_lv_griddistrict USING GIST (geom);
 
 -- metadata
 COMMENT ON TABLE grid.ego_dp_lv_griddistrict IS '{
@@ -489,7 +531,7 @@ SELECT ego_scenario_log('v0.2.6','result','grid','ego_dp_lv_griddistrict','ego_s
 DROP TABLE IF EXISTS	demand.ego_dp_loadarea CASCADE;
 CREATE TABLE 		demand.ego_dp_loadarea (
 	version 	text,
-	id serial NOT NULL,
+	id integer,
 	subst_id integer,
 	area_ha numeric,
 	nuts character varying(5),
@@ -536,6 +578,10 @@ ALTER TABLE demand.ego_dp_loadarea
 
 -- grant (oeuser)
 ALTER TABLE	demand.ego_dp_loadarea OWNER TO oeuser;
+
+-- index GIST (geom)
+CREATE INDEX ego_dp_loadarea_geom_idx
+	ON demand.ego_dp_loadarea USING GIST (geom);
 
 -- metadata
 COMMENT ON TABLE demand.ego_dp_loadarea IS '{
@@ -625,3 +671,6 @@ CREATE TABLE 		model_draft.ego_scenario_overview (
 	version	text,
 	cnt	integer,
 	CONSTRAINT ego_scenario_overview_pkey PRIMARY KEY (id) );
+
+-- grant (oeuser)
+ALTER TABLE	model_draft.ego_scenario_overview OWNER TO oeuser;

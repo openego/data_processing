@@ -59,17 +59,17 @@ ALTER TABLE model_draft.ego_supply_rea OWNER TO oeuser;
 SELECT ego_scenario_log('v0.2.6','input','model_draft','ego_supply_res_powerplant','ego_rea_setup.sql',' ');
 
 ALTER TABLE model_draft.ego_supply_res_powerplant
-	DROP COLUMN IF EXISTS	la_id,
+	DROP COLUMN IF EXISTS	la_id CASCADE,
   	ADD COLUMN 		la_id integer,
-	DROP COLUMN IF EXISTS	mvlv_subst_id,
+	DROP COLUMN IF EXISTS	mvlv_subst_id CASCADE,
   	ADD COLUMN 		mvlv_subst_id integer,
-	DROP COLUMN IF EXISTS	rea_sort,
+	DROP COLUMN IF EXISTS	rea_sort CASCADE,
   	ADD COLUMN 		rea_sort integer,
-	DROP COLUMN IF EXISTS	rea_flag,
+	DROP COLUMN IF EXISTS	rea_flag CASCADE,
   	ADD COLUMN 		rea_flag character varying,
-	DROP COLUMN IF EXISTS	rea_geom_line,
+	DROP COLUMN IF EXISTS	rea_geom_line CASCADE,
   	ADD COLUMN 		rea_geom_line geometry(LineString,3035),
-	DROP COLUMN IF EXISTS	rea_geom_new,
+	DROP COLUMN IF EXISTS	rea_geom_new CASCADE,
   	ADD COLUMN 		rea_geom_new geometry(Point,3035);
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
