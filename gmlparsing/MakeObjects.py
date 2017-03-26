@@ -293,28 +293,11 @@ def runSqlFile(filename, conn):  # Function to execute sql scripts
     file = open(filename, 'r')
     sql = " ".join(file.readlines())
     cur = conn.cursor()
-    # cur.execute("DROP SCHEMA IF EXISTS	orig_geo_opsd CASCADE");
-    # cur.execute("CREATE SCHEMA orig_geo_opsd");
     try:
         cur.execute(sql);
     except psycopg2.Error as e:
         print(str(e))
         pass
-        # sys.exit(1)
-    ##    Create schemas for open_eGo
-    ##    cur.execute("DROP SCHEMA IF EXISTS orig_ego CASCADE");
-    ##    cur.execute("CREATE SCHEMA orig_ego");
-    ##    cur.execute(sql);
-    ##
-    ##    Set default privileges for schema
-    ##    cur.execute("ALTER DEFAULT PRIVILEGES IN SCHEMA orig_ego GRANT ALL ON TABLES TO oeuser");
-    ##    cur.execute("ALTER DEFAULT PRIVILEGES IN SCHEMA orig_ego GRANT ALL ON SEQUENCES TO oeuser");
-    ##    cur.execute("ALTER DEFAULT PRIVILEGES IN SCHEMA orig_ego GRANT ALL ON FUNCTIONS TO oeuser");
-    ##
-    ##    Grant all in schema
-    ##    cur.execute("GRANT ALL ON SCHEMA orig_ego TO oeuser WITH GRANT OPTION");
-    ##    cur.execute("GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA orig_ego TO oeuser");
-
     conn.commit()
     print("Records created successfully")
 
@@ -376,9 +359,8 @@ def getStart():  # fixed start and end at events
                             if allAnnots is not None:
                                 parsing.append(allAnnots)
                                 assign(sg, sg2, sublist, sublist2, newSub, ase, 'start')
-                            # print(allAnnots.name)
-                            # if allAnnots is not None:
-                            #    connectToPostgres(allAnnots.name)
+                                connectToPostgres(allAnnots.name)
+
 
                             sgIndex = parsing.index(ap) + 1
                             parsing_nodes.append(ap.position)
@@ -401,14 +383,10 @@ def getStart():  # fixed start and end at events
                             allAnnots = getAnnot(t)
                             if allAnnots is not None:
                                 parsing.append(allAnnots)
-                            # if allAnnots is not None:
-                            # print(allAnnots.name)
-                            #    connectToPostgres(allAnnots.name)
                                 assign(sg, sg2, sublist, sublist2, newSub, ase, 'start')
+                                connectToPostgres(allAnnots.name)
 
                             parsing_nodes.append(t.position.name)
-                            # allStartEv.insert(currInd + 1, t)  # dynamic list tht has all parsing elements
-                            # currInd += 1
 
                             sub = checkNext(ae.target, currInd, sg, sublist, sg2, sublist2, s)
 
@@ -585,11 +563,6 @@ def takeStep2( state,currInd, sg, sublist, sg2, sublist2, s, permCount, permCoun
 
                             signal = check_if_active2( prev, nextObj, new_pos,
                                                                       sg, sublist, sg2, sublist2, s, permCount, permCount2)
-                        #    if len(restartWith) == 0:
-                                # display end
-                         #       return activeStates
-                         #   else:
-                          #      activeStates = copy.copy(restartWith)
                     else:
                         # replace prev step by current task
                         if type(parsing[-1]) is str and 'Gateway' in parsing[-1] and len(activeStates) < parsing[-1].count('-'):
@@ -600,7 +573,6 @@ def takeStep2( state,currInd, sg, sublist, sg2, sublist2, s, permCount, permCoun
                             if list_inc_gw[1] < it:
                                 it = it + 1
 
-                        #del activeStates[it]
                         temp_starts = []
                         if type(nextObj) is Task:
                             temp_starts = checkTopStart(nextObj.position.name, currInd, sg, sublist, sg2, sublist2, s, 0, temp_starts)
@@ -612,7 +584,6 @@ def takeStep2( state,currInd, sg, sublist, sg2, sublist2, s, permCount, permCoun
                                 signal = check_if_active2( prev, nextObj, new_pos, sg, sublist,
                                                                             sg2, sublist2, s, permCount, permCount2)
 
-                               # del activeStates[it]
                                 activeStates.insert(it, copy.deepcopy(nextObj))
                                 printActiveStates(activeStates,sg, sg2, sublist, sublist2, None, None, 'chnext', permCount, permCount2)
 
@@ -640,13 +611,10 @@ def takeStep2( state,currInd, sg, sublist, sg2, sublist2, s, permCount, permCoun
                                     it = it - 1
                             activeStates = [x for x in activeStates if x.position.name not in nextObj.parents]
 
-                            #del activeStates[it]
                             activeStates.insert(it, copy.deepcopy(nextObj))
                             printActiveStates(activeStates, sg, sg2, sublist, sublist2, None, None, 'chnext',
                                                       permCount, permCount2)
 
-                            #activeStates.insert(it, copy.deepcopy(nextObj))
-                            #printActiveStates(activeStates,sg, sg2, sublist, sublist2, None, None, 'chnext', permCount, permCount2)
 
                         if flag == 1:
                             # remove gw
@@ -810,7 +778,9 @@ def check_if_active2(prev, element, currInd, sg, sublist, sg2, sublist2, s, perm
                     if run_counter == 1:
                         all_child_combinations = list(itertools.permutations(element.children))
                         initial_rep = copy.copy(repetition)
-                        repetition += len(all_child_combinations)
+
+                        #for i in range(0,initial_rep):
+                        repetition = len(all_child_combinations) * initial_rep
 
                         for combo in all_child_combinations:
                             following_gw_child_seq.append(combo)
@@ -820,13 +790,7 @@ def check_if_active2(prev, element, currInd, sg, sublist, sg2, sublist2, s, perm
                         element.children = following_gw_child_seq[run_counter]
                     else:
                         element.children = following_gw_child_seq[run_counter % len(following_gw_child_seq)]
-
-
-                    #if child_counter == len(element.children):
-#                                restartWith.clear()
-
-                    checkNextParallel3(element, new_pos, sg, sublist, sg2, sublist2, s,
-                                                                                        permCount, permCount2)
+                    checkNextParallel3(element, new_pos, sg, sublist, sg2, sublist2, s, permCount, permCount2)
         else:
             #it is not a gateway
             t = checkTopStart(element.position.name, currInd, sg, sublist, sg2, sublist2, s, 0, [])
@@ -854,7 +818,6 @@ def check_if_active2(prev, element, currInd, sg, sublist, sg2, sublist2, s, perm
 
                 ele_to_insert = getFullElement(x)
                 if type(ele_to_insert) is Gateway:
-                #    activeStates.insert(currInd, ele_to_insert)
                     signal = check_if_active2(prev, ele_to_insert, currInd,
                                               sg, sublist, sg2, sublist2, s, permCount, permCount2)
 
@@ -983,7 +946,6 @@ def checkNext(next, currInd, sg, sublist, sg2, sublist2, s):
                     repetition += len(all_combinations) - 1 #-1 for first run
 
                     for combo in all_combinations:
-                        #print('add children globally: ',combo)
                         gw_child_seq.append(combo)
 
 
@@ -995,7 +957,6 @@ def checkNext(next, currInd, sg, sublist, sg2, sublist2, s):
                 permCount += 1
                 added_result = checkNextParallel3( rep_gw, -1 , sg, sublist, sg2, sublist2, s, permCount, permCount2)
 
-                #if added_result is 'yes':
                 gw_pos = activeStates[-1].position.name
                 checkNext( gw_pos, currInd, sg, sublist, sg2, sublist2, s)
                 break
@@ -1032,9 +993,7 @@ def checkNext(next, currInd, sg, sublist, sg2, sublist2, s):
                     allAnnots = getAnnot(newObj)
                     if allAnnots is not None:
                         parsing.append(allAnnots)
-
-                    # print(allAnnots.name)
-                    # connectToPostgres(allAnnots.name)
+                        connectToPostgres(allAnnots.name)
                         assign(sg, sg2, sublist, sublist2, None, None, 'chnext')
 
                 checkNext(newObj.position.name, currInd, sg, sublist, sg2, sublist2, s)
@@ -1053,15 +1012,13 @@ def checkNext(next, currInd, sg, sublist, sg2, sublist2, s):
                 sub = newObj.position
                 parsing_nodes.append(newObj.position)
 
-                #allAnnots = getAnnot(newObj)
-                #assign(sg, sg2, sublist, sublist2, None, None, 'chnext')
+                allAnnots = getAnnot(newObj)
 
-  #              if allAnnots is not None:
- #                    parsing.append(allAnnots)
-#                     connectToPostgres(allAnnots.name)
-                # print(allAnnots.name)
-                # connectToPostgres(allAnnots.name)
-                #assign(sg, sg2, sublist, sublist2, None, None, 'chnext')
+                if allAnnots is not None:
+                     parsing.append(allAnnots)
+                     assign(sg, sg2, sublist, sublist2, None, None, 'chnext')
+                     connectToPostgres(allAnnots.name)
+
 
                 parsing.insert(sgIndex, sublist2)
                 checkNext(newObj.position, currInd, sg, sublist, sg2, sublist2, s)
@@ -1082,7 +1039,6 @@ def checkTopStart(target, ind, sg, sublist, sg2, sublist2, s, COSrerun,otherstar
             newType = type(newElement)
 
             if newElement != '' or newElement is not None:
-                #if newType is DataObj and newElement.position.name not in parsing_nodes:
                 if newType is DataObj:
                     if (COSrerun == 0):
                         otherstarts.append(newElement)
@@ -1261,12 +1217,3 @@ def printParsed(toPrint, dtype):
             if dtype == 'sub':
                 print('\t', end="")
             printParsed(x, 'sub')
-            # else:
-            # print(type(x),': ',x)
-
-    #printAlternatePaths(par_path)
-
-
-
-#getStart()
-#printParsed(parsing, 'main')
