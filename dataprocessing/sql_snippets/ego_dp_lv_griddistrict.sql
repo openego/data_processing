@@ -29,7 +29,7 @@ CREATE INDEX ego_grid_lv_griddistrict_cut_geom_idx
 INSERT INTO	model_draft.ego_grid_lv_griddistrict_cut (geom,la_id,subst_id)
 	SELECT	(ST_DUMP(ST_SAFE_INTERSECTION(a.geom,b.geom))).geom ::geometry(Polygon,3035) AS geom, 
 		a.id AS la_id,
-		a.subst_id AS subst_id,
+		a.subst_id AS subst_id
 	FROM	model_draft.ego_demand_loadarea AS a,
 		model_draft.ego_grid_mvlv_substation_voronoi AS b
 	WHERE	a.geom && b.geom 

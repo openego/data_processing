@@ -147,8 +147,8 @@ UNION ALL
 	FROM 	grid.ego_dp_lv_griddistrict
 	GROUP BY version
 UNION ALL
-	SELECT 	'demand.ego_loadarea' AS name,
+	SELECT 	'demand.ego_dp_loadarea' AS name,
 		version,
 		count(*) AS cnt
-	FROM 	demand.ego_loadarea
+	FROM 	demand.ego_dp_loadarea
 	GROUP BY version;

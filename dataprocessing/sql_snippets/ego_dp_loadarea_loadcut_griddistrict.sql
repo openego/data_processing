@@ -63,13 +63,13 @@ SELECT ego_scenario_log('v0.2.6','input','model_draft','ego_grid_mv_griddistrict
 
 -- insert cutted load melt
 INSERT INTO     model_draft.ego_demand_loadarea (geom)
-	SELECT	loads.geom ::geometry(Polygon,3035)
-	FROM	(SELECT (ST_DUMP(ST_SAFE_INTERSECTION(load.geom,dis.geom))).geom AS geom
-		FROM	model_draft.ego_demand_load_melt AS load,
-			model_draft.ego_grid_mv_griddistrict AS dis
-		WHERE	load.geom && dis.geom
-		) AS loads
-	WHERE	ST_GeometryType(loads.geom) = 'ST_Polygon';
+	SELECT	c.geom ::geometry(Polygon,3035)
+	FROM	(SELECT (ST_DUMP(ST_SAFE_INTERSECTION(a.geom,b.geom))).geom AS geom
+		FROM	model_draft.ego_demand_load_melt AS a,
+			model_draft.ego_grid_mv_griddistrict AS b
+		WHERE	a.geom && b.geom
+		) AS c
+	WHERE	ST_GeometryType(c.geom) = 'ST_Polygon';
 
 -- index GIST (geom)
 CREATE INDEX  	ego_demand_loadarea_geom_idx
