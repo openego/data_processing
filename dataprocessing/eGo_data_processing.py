@@ -96,7 +96,7 @@ def data_processing():
     # 'ego_dp_lv_peakload.sql',						    # LV Peakload (Not working)
     
     ## VERSIONING
-    'ego_dp_versioning.sql',						    # Versioning
+    # 'ego_dp_versioning.sql',						    # Versioning
         ]
 
     # get database connection
