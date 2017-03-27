@@ -49,7 +49,7 @@ SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_grid_pf_hv_generato
 
 -- set p_max_pu
 
--- DELETE FROM model_draft.ego_grid_pf_hv_generator WHERE p_nom=0; 
+DELETE FROM model_draft.ego_grid_pf_hv_generator WHERE p_nom=0; 
 
 -- TODO: outermost subquery needed?
 UPDATE model_draft.ego_grid_pf_hv_generator_pq_set Y
