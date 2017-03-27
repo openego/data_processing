@@ -525,12 +525,12 @@ UPDATE 	model_draft.ego_demand_loadarea AS t1
 UPDATE 	model_draft.ego_demand_loadarea AS t1
 	SET  	subst_id = t2.subst_id
 	FROM    (
-		SELECT	loads.id AS id,
-			dis.subst_id AS subst_id
-		FROM	model_draft.ego_demand_loadarea AS loads,
-			model_draft.ego_grid_mv_griddistrict AS dis
-		WHERE  	dis.geom && loads.geom_centre AND
-			ST_CONTAINS(dis.geom,loads.geom_centre)
+		SELECT	a.id AS id,
+			b.subst_id AS subst_id
+		FROM	model_draft.ego_demand_loadarea AS a,
+			model_draft.ego_grid_mv_griddistrict AS b
+		WHERE  	b.geom && a.geom_centre AND
+			ST_CONTAINS(b.geom,a.geom_centre)
 		) AS t2
 	WHERE  	t1.id = t2.id;
 
