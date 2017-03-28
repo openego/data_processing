@@ -3,7 +3,7 @@ wind potential area per mv-griddistrict
 wpa dump
 wpa per mv-griddistrict
 
-__copyright__ 	= "Reiner Lemoine Institut gGmbH"
+__copyright__ 	= "Reiner Lemoine Institut"
 __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
 __url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
 __author__ 	= "Ludee"
@@ -116,8 +116,8 @@ COMMENT ON TABLE model_draft.ego_supply_wpa_per_mvgd IS '{
 	"language": [ "eng" ],
 	"reference_date": "",
 	"sources": [
-		{"name": "eGo dataprocessing", "description": "v0.2.6",
-		"url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)"},
+		{"name": "eGo dataprocessing", "description": "v0.2.6", "url": "https://github.com/openego/data_processing", 
+		"license": "GNU Affero General Public License Version 3 (AGPL-3.0)", "copyright": " " },
 		{"name": " ", "description": " ",
 		"url": " ", "license": " "} ],
 		{"name": "supply.soethe_wind_potential_area","description": "","url": ""} ],
@@ -144,7 +144,7 @@ COMMENT ON TABLE model_draft.ego_supply_wpa_per_mvgd IS '{
 				{"name": "subst_id", "description": "hvmv-substation", "unit": "" },
 				{"name": "area_ha", "description": "area in ha", "unit": "" },
 				{"name": "geom", "description": "Geometry", "unit": "" }]},
-		"meta_version": "1.0"}] }';
+		"meta_version": "1.2"}] }';
 
 -- select description
 SELECT obj_description('model_draft.ego_supply_wpa_per_mvgd' ::regclass) ::json;
