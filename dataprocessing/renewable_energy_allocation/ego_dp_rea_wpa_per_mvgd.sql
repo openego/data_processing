@@ -61,16 +61,14 @@ SELECT f_drop_view('{ego_supply_wpa_error_geom_view}', 'calc_ego_re'); */
 -- wpa per mv-griddistrict
 DROP TABLE IF EXISTS  	model_draft.ego_supply_wpa_per_mvgd CASCADE;
 CREATE TABLE         	model_draft.ego_supply_wpa_per_mvgd (
-		id 		serial,
-		subst_id 	integer,
-		area_ha 	double precision,
-		geom 		geometry(Polygon,3035),
+	id 		serial,
+	subst_id 	integer,
+	area_ha 	double precision,
+	geom 		geometry(Polygon,3035),
 CONSTRAINT 	ego_supply_wpa_per_mvgd_pkey PRIMARY KEY (id));
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.6','input','model_draft','ego_grid_mv_griddistrict','ego_dp_rea_wpa_per_mvgd.sql',' ');
-
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.6','input','supply','soethe_wind_potential_area','ego_dp_rea_wpa_per_mvgd.sql',' ');
 
 -- insert wpa per mv-griddistrict
