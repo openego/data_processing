@@ -114,11 +114,8 @@ COMMENT ON TABLE model_draft.ego_supply_wpa_per_mvgd IS '{
 	"language": [ "eng" ],
 	"reference_date": "",
 	"sources": [
-		{"name": "eGo dataprocessing", "description": "v0.2.6", "url": "https://github.com/openego/data_processing", 
-		"license": "GNU Affero General Public License Version 3 (AGPL-3.0)", "copyright": " " },
-		{"name": " ", "description": " ",
-		"url": " ", "license": " "} ],
-		{"name": "supply.soethe_wind_potential_area","description": "","url": ""} ],
+		{"name": "eGo dataprocessing", "description": "v0.2.6", "url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)", "copyright": " " },
+		{"name": "VerNetzen - Wind potential Area", "description": " ", "url": "http://oep.iks.cs.ovgu.de/dataedit/view/supply/vernetzen_wind_potential_area", "license": "ODbL-1.0", "copyright": "© VerNetzen"} ],
 	"spatial": [
 		{"extend": "Germany",
 		"resolution": "50m"} ],
@@ -127,20 +124,23 @@ COMMENT ON TABLE model_draft.ego_supply_wpa_per_mvgd IS '{
 		"name": "Open Data Commons Open Database License 1.0",
 		"version": "1.0",
 		"url": "https://opendatacommons.org/licenses/odbl/1.0/",
-		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!"} ],
+		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
+		"copyright": "© Reiner Lemoine Institut" } ],
 	"contributors": [
 		{"name": "Ludwig Hülk",	"email": "ludwig.huelk@rl-institut.de",
 		"date": "01.10.2016", "comment": "Create table"},
 		{"name": "Ludwig Hülk", "email": "ludwig.huelk@rl-institut.de",
 		"date": "25.12.2016", "comment": "Add metadata"},
 		{"name": "Ludwig Hülk", "email": "ludwig.huelk@rl-institut.de",
-		"date": "25.12.2016", "comment": "Update to v0.2"} ],
+		"date": "25.12.2016", "comment": "Update to v0.2"},
+		{"name": "Ludwig Hülk", "email": "ludwig.huelk@rl-institut.de",
+		"date": "28.03.2017", "comment": "Update to v0.2.6"}],
 	"resources": [{
 		"schema": {
 			"fields": [
-				{"name": "id", "description": "unique identifier", "unit": "" },
-				{"name": "subst_id", "description": "hvmv-substation", "unit": "" },
-				{"name": "area_ha", "description": "area in ha", "unit": "" },
+				{"name": "id", "description": "Unique identifier", "unit": "" },
+				{"name": "subst_id", "description": "HVMV substation", "unit": "" },
+				{"name": "area_ha", "description": "Area", "unit": "ha" },
 				{"name": "geom", "description": "Geometry", "unit": "" }]},
 		"meta_version": "1.2"}] }';
 
@@ -151,4 +151,4 @@ SELECT obj_description('model_draft.ego_supply_wpa_per_mvgd' ::regclass) ::json;
 SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_supply_wpa_per_mvgd','ego_dp_rea_wpa_per_mvgd.sql',' ');
 
 
-DROP TABLE IF EXISTS  	model_draft.ego_supply_wpa CASCADE;
+-- DROP TABLE IF EXISTS  	model_draft.ego_supply_wpa CASCADE;

@@ -18,10 +18,8 @@ COMMENT ON TABLE schema.table IS '{
 	"language": [ "eng", "ger", "fre" ],
 	"reference_date": "2016-01-01",
 	"sources": [
-		{"name": "eGo dataprocessing", "description": " ", "url": "https://github.com/openego/data_processing", 
-		"license": "GNU Affero General Public License Version 3 (AGPL-3.0)", "copyright": "© Reiner Lemoine Institut"},
-		{"name": " ", "description": " ", "url": " ", 
-		"license": " ", "copyright": " "} ],
+		{"name": "eGo dataprocessing", "description": " ", "url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)", "copyright": "© Reiner Lemoine Institut"},
+		{"name": " ", "description": " ", "url": " ", "license": " ", "copyright": " "} ],
 	"spatial": [
 		{"extend": "europe",
 		"resolution": "100m"} ],
@@ -30,8 +28,8 @@ COMMENT ON TABLE schema.table IS '{
 		"name": "Open Data Commons Open Database License 1.0",
 		"version": "1.0",
 		"url": "https://opendatacommons.org/licenses/odbl/1.0/",
-		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!"},
-		"copyright": "Reiner Lemoine Institut"],
+		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
+		"copyright": "© Reiner Lemoine Institut" } ],
 	"contributors": [
 		{"name": "Ludee", "email": " ",
 		"date": "16.06.2016", "comment": "created metadata"},
