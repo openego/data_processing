@@ -1,4 +1,4 @@
-/*
+﻿/*
 Skript to allocate decentralized renewable power plants (dea)
 Methods base on technology and voltage level
 Uses different lattice from setup_ego_wpa_per_grid_district.sql
@@ -9,13 +9,13 @@ __url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
 __author__ 	= "Ludee"
 */
 
--- number of grid_district -> 3606
+-- number of grid_district -> 3608
 	SELECT	COUNT(*)
 	FROM	 model_draft.ego_grid_mv_griddistrict;
 
 -- table for allocated dea
-DROP TABLE IF EXISTS 	model_draft.ego_supply_rea CASCADE;
-CREATE TABLE 		model_draft.ego_supply_rea (
+DROP TABLE IF EXISTS 	model_draft.ego_supply_rea_2035 CASCADE;
+CREATE TABLE 		model_draft.ego_supply_rea_2035 (
 	id bigint,
 	electrical_capacity numeric,
 	generation_type text,
