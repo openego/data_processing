@@ -132,7 +132,7 @@ if __name__ == '__main__':
                            io='input',
                            schema='model_draft',
                            table=table,
-                           script='peak_load_per_load_area.py',
+                           script='ego_dp_loadarea_peakload.py',
                            entries=len(load_areas))
 
     names_dc = {'sector_consumption_residential': 'h0',
@@ -280,7 +280,7 @@ if __name__ == '__main__':
                            io='output',
                            schema='model_draft',
                            table=target_table,
-                           script='peak_load_per_load_area.py',
+                           script='ego_dp_loadarea_peakload.py',
                            entries=len(load_areas))
 
     conn.close()

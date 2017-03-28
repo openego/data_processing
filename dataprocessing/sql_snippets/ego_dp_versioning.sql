@@ -48,6 +48,23 @@ INSERT INTO grid.ego_dp_mvlv_substation
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.6','result','grid','ego_dp_mvlv_substation','ego_dp_versioning.sql','versioning');
 
+-- add Dummy points to substations (18 Points)
+ALTER TABLE grid.ego_dp_mvlv_substation
+DROP COLUMN IF EXISTS subst_cnt,
+ADD COLUMN subst_cnt integer;
+
+-- mvlv substation count
+UPDATE 	grid.ego_dp_mvlv_substation AS t1
+	SET  	subst_cnt = t2.subst_cnt
+	FROM	(SELECT	a.mvlv_subst_id AS id,
+			COUNT(b.geom)::integer AS subst_cnt
+		FROM	grid.ego_dp_mvlv_substation AS a,
+			grid.ego_dp_lv_griddistrict AS b
+		WHERE  	a.geom && b.geom AND
+			ST_CONTAINS(b.geom,a.geom)
+		GROUP BY a.mvlv_subst_id
+		)AS t2
+	WHERE  	t1.mvlv_subst_id = t2.id;
 
 
 -- CATCHMENT AREA
