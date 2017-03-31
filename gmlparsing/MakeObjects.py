@@ -490,8 +490,10 @@ def makeGwFamily(curr_ele, pos):
                 Node.getParents(curr_ele, alledges)
             if len(curr_ele.children) == 0:
                 Node.getChildren(curr_ele, alledges)
-
-
+            temp_starts = checkTopStart(curr_ele, 0, sg, sublist, None, sublist2, s, 0, [])
+            #for t in temp_starts:
+             #   if t.position.name not in curr_ele.parents:
+              #      parent_list.append()
 
     for child in curr_ele.children:
 
@@ -509,12 +511,44 @@ def makeGwFamily(curr_ele, pos):
                 if len(full_child.parents) == 0:
                     Node.getParents(full_child, alledges)
 
+                for par in full_child.parents:
+                    if par != curr_ele.position.name and type(getFullElement(par)) is DataObj:
+                        #data object start
+                                full_child.parents.remove(par)
+                                curr_ele.children[curr_ele.children.index(child)] = par
+                                oldchild = copy.copy(child)
+                                child = par
+
+                                entry = ({par}, {full_child.position.name})
+                                if entry not in gwFamily:
+                                    gwFamily.append(entry)
+
+
+                                makeGwFamily(getFullElement(oldchild), 0)
 
             children_list.append(child)
 
             for par in full_child.parents:
-                if par not in parent_list:
-                    parent_list.append(par)
+                if type(getFullElement(par)) is not DataObj and par not in parent_list:
+                        if len(parent_list) > 0 and type(full_child) is not Gateway:
+                            entry = ({par}, {full_child.position.name})
+                            if entry not in gwFamily:
+                                gwFamily.append(entry)
+                        else:
+                            parent_list.append(par)
+
+
+            #for par in parent_list:
+            #        if type(getFullElement(par)) is not Gateway:
+             #           Node.getParents()
+              #          full_child.parents.remove(par)
+               #         curr_ele.children[curr_ele.children.index(child)] = par
+                #        children_list[children_list.index(child)] = par
+#
+ #                       entry = ({par}, {full_child.position.name})
+  #                      if entry not in gwFamily:
+   #                         gwFamily.append(entry)
+
 
 
 
@@ -560,10 +594,7 @@ def makeGwFamily(curr_ele, pos):
                             for chk_par in grandchild.parents:
                                 if chk_par not in parent_list and chk_par!= c:
                                     parent_list.append(chk_par)
-                        #else:
-                         #   endOfgw = fullc
-                          #  return
-                #else:
+
                 for c2 in fullc.children:
                     fullc2 = getFullElement(c2)
                     if type(fullc2) is Gateway:
@@ -583,9 +614,10 @@ def makeGwFamily(curr_ele, pos):
                 children_list.remove(c)
                 cctr += 1
 
-    if len(children_list)==0:
+    if len(children_list)==0 and curr_type is not DataObj:
         #dead end
         children_list.append(curr_ele.children[0])
+        gw_chknext = curr_ele.children[0]
         contflag = False
 
     children_toadd = set(children_list)
@@ -1084,7 +1116,7 @@ def getFactorial(n):
     else:
         return n * getFactorial(n - 1)
 
-def print_t(start):
+def assign_torun(start):
     global gwFamily
     global parallel_opt
 
@@ -1098,13 +1130,17 @@ def print_t(start):
         for i in inp:
             fulli = getFullElement(i)
             if type(fulli) is Gateway:
-                fulli.name = 'Gateway '+i
-            ip_withnames.append(fulli.name)
+                displayname = 'Gateway '+i
+            else:
+                displayname = type(fulli).__name__+': '+fulli.name
+            ip_withnames.append(displayname)
         for o in out:
             fullo = getFullElement(o)
             if type(fullo) is Gateway:
-                fullo.name = 'Gateway ' + o
-            op_withnames.append(fullo.name)
+                displayname = 'Gateway ' + o
+            else:
+                displayname = type(fullo).__name__+': '+fullo.name
+            op_withnames.append(displayname)
 
         ip = set(ip_withnames)
         op = set(op_withnames)
@@ -1155,7 +1191,7 @@ def checkNext(next, currInd, sg, sublist, sg2, sublist2, s):
                 if run_counter == 1:
                     newObj.name = 'Gateway '+ae.target
                     makeGwFamily(newObj, 'first')
-                    allruns = print_t(newObj.name)
+                    allruns = assign_torun(newObj.name)
                     repetition += allruns-1
 
                 parsing.append(parallel_opt[run_counter-1])
