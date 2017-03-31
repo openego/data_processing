@@ -1,9 +1,8 @@
 import xml.etree.ElementTree as ET
 import psycopg2
 import copy
-import sys
 import itertools
-import random
+
 
 from gmlparsing.Stack import Stack
 from gmlparsing.GraphClass import Graph
@@ -54,11 +53,10 @@ allObj = []
 allpnodes = []
 allPool = []
 
-#newlogic####
+
 gwFamily = []
 parallel_opt = []
 gw_chknext = None
-#newlogic####
 
 def clear_for_start():
     global parsing
@@ -360,7 +358,7 @@ def getStart():  # fixed start and end at events
                             if allAnnots is not None:
                                 parsing.append(allAnnots)
                                 assign(sg, sg2, sublist, sublist2, newSub, ase, 'start')
-#                                connectToPostgres(allAnnots.name)
+                                connectToPostgres(allAnnots.name)
 
                             sgIndex = parsing.index(ap) + 1
                             parsing_nodes.append(ap.position)
@@ -384,7 +382,7 @@ def getStart():  # fixed start and end at events
                             if allAnnots is not None:
                                 parsing.append(allAnnots)
                                 assign(sg, sg2, sublist, sublist2, newSub, ase, 'start')
-                             #   connectToPostgres(allAnnots.name)
+                                connectToPostgres(allAnnots.name)
 
                             parsing_nodes.append(t.position.name)
 
@@ -441,22 +439,7 @@ def getAnnot(t):
     return answer
 
 
-# def findEnd(activeStates):
-#     activetypes = []
-#     over = False
-#     for st in activeStates:
-#         #activetypes.append(type(st))
-#         if type(st) is Gateway:
-#             over = True
-#             break
-#     return over
-
-def rotate(l, n):
-    return l[n:] + l[:n]
-
-
-def makeGwFamily(curr_ele, pos):
-    ###new logic###
+def checkNextParallel3(curr_ele, pos):
     global gwFamily
     global  gw_chknext
     children_list = []
@@ -480,20 +463,15 @@ def makeGwFamily(curr_ele, pos):
             grandchild_type = type(grandchild)
             if grandchild_type is not Gateway:
                 endOfgw = curr_ele
-                #gw_chknext = curr_ele
                 return endOfgw
             else:
-                makeGwFamily(grandchild, None)
+                checkNextParallel3(grandchild, None)
     else:
         if curr_type is Task:
             if len(curr_ele.parents) == 0:
                 Node.getParents(curr_ele, alledges)
             if len(curr_ele.children) == 0:
                 Node.getChildren(curr_ele, alledges)
-            temp_starts = checkTopStart(curr_ele, 0, sg, sublist, None, sublist2, s, 0, [])
-            #for t in temp_starts:
-             #   if t.position.name not in curr_ele.parents:
-              #      parent_list.append()
 
     for child in curr_ele.children:
 
@@ -513,7 +491,6 @@ def makeGwFamily(curr_ele, pos):
 
                 for par in full_child.parents:
                     if par != curr_ele.position.name and type(getFullElement(par)) is DataObj:
-                        #data object start
                                 full_child.parents.remove(par)
                                 curr_ele.children[curr_ele.children.index(child)] = par
                                 oldchild = copy.copy(child)
@@ -522,10 +499,7 @@ def makeGwFamily(curr_ele, pos):
                                 entry = ({par}, {full_child.position.name})
                                 if entry not in gwFamily:
                                     gwFamily.append(entry)
-
-
-                                makeGwFamily(getFullElement(oldchild), 0)
-
+                                checkNextParallel3(getFullElement(oldchild), 0)
             children_list.append(child)
 
             for par in full_child.parents:
@@ -534,22 +508,17 @@ def makeGwFamily(curr_ele, pos):
                             entry = ({par}, {full_child.position.name})
                             if entry not in gwFamily:
                                 gwFamily.append(entry)
+
+                                fp = getFullElement(par)
+                                Node.getParents(fp, alledges)
+                                if len(fp.parents) > 0:
+                                    for p1 in fp.parents:
+                                        entry = ({p1}, {par})
+                                        if entry not in gwFamily:
+                                            gwFamily.append(entry)
+
                         else:
                             parent_list.append(par)
-
-
-            #for par in parent_list:
-            #        if type(getFullElement(par)) is not Gateway:
-             #           Node.getParents()
-              #          full_child.parents.remove(par)
-               #         curr_ele.children[curr_ele.children.index(child)] = par
-                #        children_list[children_list.index(child)] = par
-#
- #                       entry = ({par}, {full_child.position.name})
-  #                      if entry not in gwFamily:
-   #                         gwFamily.append(entry)
-
-
 
 
     #check if gatewybefore adding
@@ -608,7 +577,7 @@ def makeGwFamily(curr_ele, pos):
                                     children_list.insert(cctr, c2)
                                 break
                             else:
-                                makeGwFamily(fullc2, None)
+                                checkNextParallel3(fullc2, None)
                     if c2 not in children_list:
                         children_list.insert(cctr, c2)
                 children_list.remove(c)
@@ -628,244 +597,10 @@ def makeGwFamily(curr_ele, pos):
 
     if len(parent_toadd) > 0 and contflag is True:
       for child in curr_ele.children:
-        makeGwFamily(getFullElement(child), None)
+        checkNextParallel3(getFullElement(child), None)
 
     return endOfgw
 
-
-
-def checkNextParallel3(curr_gw, currInd, sg, sublist, sg2, sublist2, s, permCount, permCount2):
-
-
-
-
-    global activeStates
-    curr_gw.name = 'Gateway ' + curr_gw.position.name
-    if (sg2 == True and type(sublist2[-1]) is str and curr_gw.name in sublist2[-1]) or (
-            type(parsing[-1]) is str and curr_gw.name in parsing[-1]):
-        return 'no'
-
-    # remove any parents if in list
-    allAct = []
-    if set(curr_gw.parents).issubset(parsing_nodes):
-        for allAS in activeStates:
-            allAct.append(allAS.position.name)
-        activeStates = [x for x in activeStates if x.position.name not in (allAct and curr_gw.parents)]
-
-        parsing_nodes.append(curr_gw.position.name)
-        if currInd >= 0:
-            activeStates.insert(currInd, curr_gw)
-        else:
-            activeStates.append(curr_gw)
-        printActiveStates(activeStates, sg, sg2, sublist, sublist2, None, None, 'chnext', permCount, permCount2)
-
-        # It is a fork
-        if len(curr_gw.parents) == 1:
-            # remove gateway and replace by it's successors
-            otherstarts = []
-            temp_starts = []
-            new_pos = activeStates.index(curr_gw)
-            activeStates.remove(curr_gw)
-
-            for eachChild in curr_gw.children:
-                currobj = getFullElement(eachChild)
-
-                if currobj not in activeStates:
-                    temp_starts = checkTopStart(eachChild, currInd, sg, sublist, sg2, sublist2, s, 0, temp_starts)
-
-                    if len(temp_starts) == 0:
-                        activeStates.insert(new_pos, currobj)
-                        parsing_nodes.append(currobj.position.name)
-                    else:
-                        otherstarts.extend(temp_starts)
-                        for t in temp_starts:
-                            parsing_nodes.append(t.position.name)
-                        temp_starts.clear()
-
-            # displaying states
-            if len(otherstarts) > 0:
-                activeStates[new_pos:new_pos] = otherstarts
-                new_pos += len(otherstarts)
-                printActiveStates(activeStates, sg, sg2, sublist, sublist2, None, None, 'chnext', permCount, permCount2)
-
-                otherstarts.clear()
-            else:
-                printActiveStates(activeStates, sg, sg2, sublist, sublist2, None, None, 'chnext', permCount, permCount2)
-
-            ######### taking steps until the end
-            while len(activeStates) > 1:
-                for state in activeStates:
-                    if isDeadEnd(state):
-                        activeStates.remove(state)
-                        continue
-                    takeStep2(state, currInd, sg, sublist, sg2, sublist2, s, permCount, permCount2)
-
-
-        else:
-            # it is a join (and fork)
-            weiter = False
-            for eachParent in curr_gw.parents:
-                if eachParent in parsing_nodes:
-                    weiter = True
-                else:
-                    weiter = False
-                    break
-
-            # if it is active
-            if weiter is True:
-
-                # it is a fork as well
-                if len(curr_gw.children) > 1:
-                    for eachChild in curr_gw.children:
-                        takeStep2(getFullElement(eachChild), currInd, sg, sublist, sg2, sublist2, s, permCount,
-                                  permCount2)
-    return activeStates
-
-
-def takeStep2(state, currInd, sg, sublist, sg2, sublist2, s, permCount, permCount2):
-    global activeStates
-    global incomplete_gw
-
-    flag = 0
-    it = 0
-    for ae2 in alledges:
-        if ae2.source == state.position.name:
-            for iter in activeStates:
-                if (iter.position.name == state.position.name):
-
-                    prev = getFullElement(ae2.source)
-                    nextObj = getFullElement(ae2.target)
-                    new_pos = it
-
-                    if nextObj is None or type(nextObj) is Gateway:
-                        if parsing[-1] is str and nextObj.position.name in parsing[-1]:
-                            return activeStates
-                        if type(nextObj) is Gateway:
-                            if len(nextObj.parents) == 0:
-                                Gateway.getParents(nextObj, alledges)
-                            if len(nextObj.children) == 0:
-                                Gateway.getChildren(nextObj, alledges)
-
-                            signal = check_if_active2(prev, nextObj, new_pos,
-                                                      sg, sublist, sg2, sublist2, s, permCount, permCount2)
-                    else:
-                        # replace prev step by current task
-                        if type(parsing[-1]) is str and 'Gateway' in parsing[-1] and len(activeStates) < parsing[
-                            -1].count('-'):
-
-                            flag = 1
-                            list_inc_gw = list(incomplete_gw)
-                            activeStates.insert(list_inc_gw[1], list_inc_gw[0])
-                            if list_inc_gw[1] < it:
-                                it = it + 1
-
-                        temp_starts = []
-                        if type(nextObj) is Task:
-                            temp_starts = checkTopStart(nextObj.position.name, currInd, sg, sublist, sg2, sublist2, s,
-                                                        0, temp_starts)
-
-                        if len(temp_starts) == 0:
-                            parsing_nodes.append(nextObj.position.name)
-
-                            Node.getParents(nextObj, alledges)
-
-                            allAnnots = getAnnot(nextObj)
-                            if allAnnots is not None:
-                                connectToPostgres(allAnnots.name)
-                                activeStates.insert(it + 1, allAnnots)
-
-                            signal = check_if_active2(prev, nextObj, new_pos, sg, sublist,
-                                                      sg2, sublist2, s, permCount, permCount2)
-
-                            activeStates.insert(it, copy.deepcopy(nextObj))
-                            printActiveStates(activeStates, sg, sg2, sublist, sublist2, None, None, 'chnext', permCount,
-                                              permCount2)
-
-
-
-                        else:
-                            ready = False
-
-                            Node.getParents(nextObj, alledges)
-                            for par in nextObj.parents:
-                                if getFullElement(par) in activeStates:
-                                    ready = True
-                                else:
-                                    ready = False
-                                    break
-
-                            if ready == False:
-                                nonactive = [x for x in temp_starts if x.position.name not in nextObj.parents]
-                                for na in nonactive:
-                                    takeStep2(na, currInd, sg, sublist, sg2, sublist2, s,
-                                              permCount, permCount2)
-
-                            for ac in activeStates:
-                                if ac.position.name in nextObj.parents:
-                                    it = it - 1
-                            activeStates = [x for x in activeStates if x.position.name not in nextObj.parents]
-
-                            activeStates.insert(it, copy.deepcopy(nextObj))
-                            printActiveStates(activeStates, sg, sg2, sublist, sublist2, None, None, 'chnext',
-                                              permCount, permCount2)
-
-                        if flag == 1:
-                            # remove gw
-                            list_inc_gw = list(incomplete_gw)
-                            if (list_inc_gw[0]) in activeStates:
-                                activeStates.remove(list_inc_gw[0])
-                            flag = 0
-                        break
-                else:
-                    it = it + 1
-            break
-    return activeStates
-
-
-# def checkNextParallel2(activeStates, curr_gw, currInd, sg, sublist, sg2, sublist2, s):
-#     #getting parallelly active states
-#     for ae2 in alledges:
-#         if ae2.source == curr_gw.position.name:
-#             currobj = getFullElement(ae2.target)
-#             if currobj not in activeStates:
-#                 parsing_nodes.append(curr_gw.position.name)
-#                 activeStates.append(currobj)
-#
-#     # displaying states
-#     printActiveStates(activeStates,sg, sg2, sublist, sublist2, None, None, 'chnext')
-#
-#     #taking steps
-#     for state in activeStates:
-#        takeStep(activeStates, state, currInd, sg, sublist, sg2, sublist2, s)
-#
-#     weiter = False
-#     for state in activeStates:
-#         if(type(state) is not Gateway):
-#             takeStep(activeStates, state, currInd, sg, sublist, sg2, sublist2, s)
-#
-#     for state in activeStates:
-#         if (type(state) is Gateway):
-#             state.name = 'Gateway' + state.position.name
-#             weiter = True
-#         else:
-#             weiter = False
-#
-#
-#     if weiter is True:
-#         checkNext(state.position.name, currInd, sg, sublist, sg2, sublist2, s)
-#         #for state in activeStates:
-#          #   children = get_outgoing(state)
-#           #  print('Gateway ',state.name,' has ',children, ' children')
-#         #checkNext(state.position.name, currInd, sg, sublist, sg2, sublist2, s)
-#         #checkNextParallel2(state, currInd, sg, sublist, sg2, sublist2, s)
-#         return
-#
-# def get_outgoing (node):
-#     num = 0
-#     for ae3 in alledges:
-#         if ae3.source == node.position.name:
-#             num+=1
-#     return num
 
 def printActiveStates(activeStates, sg, sg2, sublist, sublist2, newSub, ase, callFrom, permCount, permCount2):
     line = '{'
@@ -894,227 +629,6 @@ def printActiveStates(activeStates, sg, sg2, sublist, sublist2, newSub, ase, cal
                 # line = line[1:-3]
                 # par_path.append(line)
 
-
-# def takeStep(activeStates, state,currInd, sg, sublist, sg2, sublist2, s):
-#
-#     it = 0
-#
-#     for ae2 in alledges:
-#         if ae2.source == state.position.name:
-#
-#             for iter in activeStates:
-#                 #replace prev step by current task
-#                 if(iter.position.name==state.position.name):
-#                     activeStates[it] = copy.deepcopy(getFullElement((ae2.target)))
-#
-#                     if type(getFullElement(ae2.target)) is Gateway:
-#                         activeStates[it].name = state.name
-#                         signal = check_if_active(activeStates, getFullElement(ae2.target), currInd, sg, sublist, sg2, sublist2, s)
-#
-#                         if signal == 'go':
-#
-#                             return
-#
-#                         break
-#                     printActiveStates(activeStates,sg, sg2, sublist, sublist2, None, None, 'chnext')
-#                     break
-#                 else:
-#                     it = it + 1
-#     return
-#
-# def is_gateway():
-#     result = False
-#     for state in activeStates:
-#         if 'Gateway' in state.name:
-#             result = state
-#             break
-#     return  result
-
-def check_if_active2(prev, element, currInd, sg, sublist, sg2, sublist2, s, permCount, permCount2):
-    global restartWith
-    global activeStates
-    global incomplete_gw
-    global following_gw_child_seq
-    global repetition
-    global run_counter
-    global initial_rep
-
-    signal = 'wait'
-    allactive = []
-    allinputs = []
-
-    for allAS in activeStates:
-        # if type(allAS) is not Annotation:
-        allactive.append(allAS.position.name)
-
-    for allAI in element.parents:
-        # if type(allAS) is not Annotation:
-        allinputs.append(allAI)
-
-    # replace multiple inputs by next gateway
-
-    if set(allinputs).issubset(set(allactive)) or (parsing[-1] is str and element.position.name in parsing[-1]):
-        signal = 'go'
-        permCount2 = 0
-        if prev in activeStates:
-            new_pos = activeStates.index(prev)
-        else:
-            new_pos = copy.copy(currInd)
-        activeStates = [x for x in activeStates if x.position.name not in allinputs]
-
-        if type(element) is Gateway:
-            incomplete_gw = (element, new_pos)
-
-            if len(element.children) == 1:
-                checkNextParallel3(element, new_pos, sg, sublist, sg2, sublist2, s,
-                                   permCount, permCount2)
-            else:
-                child_counter = 0
-
-                if run_counter == 1:
-                    all_child_combinations = list(itertools.permutations(element.children))
-                    initial_rep = copy.copy(repetition)
-
-                    # for i in range(0,initial_rep):
-                    repetition = len(all_child_combinations) * initial_rep
-
-                    for combo in all_child_combinations:
-                        following_gw_child_seq.append(combo)
-
-                if run_counter < len(following_gw_child_seq):
-                    element.children = following_gw_child_seq[run_counter]
-                    len_of_others = len(activeStates)
-                else:
-                    element.children = following_gw_child_seq[run_counter % len(following_gw_child_seq)]
-                checkNextParallel3(element, new_pos, sg, sublist, sg2, sublist2, s, permCount, permCount2)
-        else:
-            # it is not a gateway
-            t = checkTopStart(element.position.name, currInd, sg, sublist, sg2, sublist2, s, 0, [])
-            if len(t) > 0:
-                return 'wait'
-            else:
-                return 'go'
-
-    else:
-        signal = 'wait'
-        if type(element) is Gateway:
-            nonActiveStates = [x for x in allactive if x not in allinputs]
-
-            if len(nonActiveStates) == 0 and len(allactive) < len(allinputs):
-                nonActiveStates = [x for x in allinputs if x not in allactive]
-        else:
-            nonActiveStates = [x for x in allactive if x not in parsing_nodes]
-
-        if len(nonActiveStates) == 0:
-            signal = 'go'
-        else:
-
-            for x in nonActiveStates:
-
-                ele_to_insert = getFullElement(x)
-                if type(ele_to_insert) is Gateway:
-                    signal = check_if_active2(prev, ele_to_insert, currInd,
-                                              sg, sublist, sg2, sublist2, s, permCount, permCount2)
-
-                else:
-                    takeStep2(ele_to_insert, currInd, sg, sublist, sg2, sublist2, s, permCount, permCount2)
-    return signal
-
-
-# def check_if_active(activeStates,gateway, currInd, sg, sublist, sg2, sublist2, s):
-#     allinputs = []
-#     allactive = []
-#
-#     for ae3 in alledges:
-#         if ae3.target == gateway.position.name:
-#             allinputs.append(getFullElement(ae3.source).name)
-#
-#     for allAS in activeStates:
-#         allactive.append(allAS.name)
-#
-#     #replace multiple inputs by next gateway
-#     if set(allinputs).issubset(set(allactive)):
-#         activeStates = [x for x in activeStates if x.name not in allinputs]
-#
-#         gateway.name = 'Gateway '+gateway.position.name
-#         activeStates.append(gateway)
-#         printActiveStates(activeStates,sg, sg2, sublist, sublist2, None, None, 'chnext')
-#
-#         #check for multiple gateways
-#         multi_gateway = len(activeStates)
-#         signal = 'wait'
-#         if multi_gateway > 1:
-#             weiter = check_all_g(activeStates)
-#
-#             if weiter is True:
-#                 for state in activeStates:
-#                      children = get_outgoing(state)
-#                      print('Gateway ',state.name,' has ',children, ' children')
-#                      if children <= 1:
-#                          checkNext(state.position.name, currInd, sg, sublist, sg2, sublist2, s)
-#                      else:
-#                          checkNextParallel2(state, currInd, sg, sublist, sg2, sublist2, s)
-#
-#             else:
-#                 for state in activeStates:
-#                     if type(state) is not Gateway:
-#                         takeStep(activeStates, state, currInd, sg, sublist, sg2, sublist2, s)
-#
-#         else:
-#             signal = 'go'
-#         return signal
-# def check_all_g(ctiveStates):
-#     weiter = False
-#     for state in activeStates:
-#         if type(state) is Gateway:
-#             weiter = True
-#         else:
-#             weiter = False
-#     return weiter
-#
-# def checkNextParallel(curr_gw, currInd, sg, sublist, sg2, sublist2, s):
-#     for ae2 in alledges:
-#         if ae2.source == curr_gw.position.name:
-#             newObj = getFullElement(ae2.target)
-#
-#             if type(newObj) is Task or type(newObj) is DataObj:
-#
-#                 checkOtherStarts(newObj.position.name, currInd, sg, sublist, sg2, sublist2, s, COSrerun)
-#                 while not s.is_empty():
-#                     newElement = s.pop()
-#                     parsing.append(newElement)
-#                     assign(sg, sg2, sublist, sublist2, None, None, 'chnext')
-#                     parsing_nodes.append(newElement.position.name)
-#
-#                 if newObj.name not in parsing_nodes:
-#                     # print(newObj.name)
-#                     parsing_nodes.append(newObj.position.name)
-#                     parsing.append(newObj)
-#                     assign(sg, sg2, sublist, sublist2, None, None, 'chnext')
-#                 checkNextParallel(newObj, currInd, sg, sublist, sg2, sublist2, s)
-#
-#
-#             else:
-#                 if type(newObj) is Gateway:
-#                     newObj.name = 'end of Parallel Execution'
-#                     parsing.append(newObj)
-#                     assign(sg, sg2, sublist, sublist2, None, None, 'chnext')
-#                     parsing_nodes.append(newObj.position.name)
-
-def isDeadEnd(state):
-    isLast = True
-    for ae in alledges:
-        if state.position.name in ae.source:
-            isLast = False
-            break
-    return isLast
-
-
-def getFactorial(n):
-    if n == 0:
-        return 1
-    else:
-        return n * getFactorial(n - 1)
 
 def assign_torun(start):
     global gwFamily
@@ -1164,12 +678,8 @@ def assign_torun(start):
         changed = not (new_parallel_opt == parallel_opt)
         parallel_opt = new_parallel_opt
 
-    # Order results and remove equal parallel_opt (should not occur - but better save than sound)
-    parallel_opt = sorted(list({tuple([tuple(sorted(s)) for s in t]) for t in parallel_opt}))
 
-    print("Number of parallel_opt:", len(parallel_opt))
-    #for t in parallel_opt:
-     #   print(t)
+    parallel_opt = sorted(list({tuple([tuple(sorted(s)) for s in t]) for t in parallel_opt}))
     return  len(parallel_opt)
 
 
@@ -1190,7 +700,7 @@ def checkNext(next, currInd, sg, sublist, sg2, sublist2, s):
             if type(newObj) is Gateway:
                 if run_counter == 1:
                     newObj.name = 'Gateway '+ae.target
-                    makeGwFamily(newObj, 'first')
+                    checkNextParallel3(newObj, 'first')
                     allruns = assign_torun(newObj.name)
                     repetition += allruns-1
 
@@ -1231,7 +741,7 @@ def checkNext(next, currInd, sg, sublist, sg2, sublist2, s):
                     allAnnots = getAnnot(newObj)
                     if allAnnots is not None:
                         parsing.append(allAnnots)
-#                        connectToPostgres(allAnnots.name)
+                        connectToPostgres(allAnnots.name)
                         assign(sg, sg2, sublist, sublist2, None, None, 'chnext')
 
                 checkNext(newObj.position.name, currInd, sg, sublist, sg2, sublist2, s)
@@ -1254,7 +764,7 @@ def checkNext(next, currInd, sg, sublist, sg2, sublist2, s):
                 if allAnnots is not None:
                     parsing.append(allAnnots)
                     assign(sg, sg2, sublist, sublist2, None, None, 'chnext')
-#                    connectToPostgres(allAnnots.name)
+                    connectToPostgres(allAnnots.name)
 
                 parsing.insert(sgIndex, sublist2)
                 checkNext(newObj.position, currInd, sg, sublist, sg2, sublist2, s)
@@ -1396,47 +906,6 @@ def getFullElement(input):
     return answer
 
 
-def printAlternatePaths(par_path):
-    perm = False
-    all_paths = []
-    alt = []
-    for item in par_path:
-        if perm is False:
-            # fork
-            if 'Gateway' in item:
-                perm = True
-                alt.append(item)
-        elif perm is True:
-            # if 'Gateway' not in item:
-            alt.append(item)
-            # join
-            if 'Gateway' in item:
-                perm = False
-
-    pathsToShuffle = []
-    c = []
-    for item in alt:
-        if 'Gateway' not in item:
-            eachItem = item.split('-')
-            pathsToShuffle = itertools.permutations(eachItem)
-
-            num = 0
-            for pts in pathsToShuffle:
-                # becuse first one is already added
-                if num == 0:
-                    num += 1
-                    continue
-                else:
-                    print(pts)
-        else:
-            print(item)
-
-
-            # par_path2 = itertools.permutations(curr_step)
-            # for every_option in par_path2:
-            #     print(every_option)
-
-
 def printParsed(toPrint, dtype):
     for x in toPrint:
         if type(x) is str:
@@ -1453,9 +922,9 @@ def printParsed(toPrint, dtype):
             if dtype == 'sub':
                 print('\t', end="")
         elif type(x) is tuple:
-            if dtype == 'sub':
-                print('\t', end="")
             for x2 in x:
+                if dtype == 'sub':
+                    print('\t', end="")
                 print('Parallel execution option '+run_counter.__str__() +': ' + x2.__str__())
         elif type(x) is Node:
             if dtype == 'sub':
