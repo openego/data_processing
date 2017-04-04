@@ -4,7 +4,7 @@ Quick workaround to transfer renpassG!S results into the corresponding powerflow
 __copyright__ 	= "Europa Universitaet Flensburg, Centre for Sustainable Energy Systems"
 __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
 __url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
-__author__ 	= "wbunke"
+__author__ 	= "wolfbunke"
 
 TODO: storage in storage_pqset #1069
 */

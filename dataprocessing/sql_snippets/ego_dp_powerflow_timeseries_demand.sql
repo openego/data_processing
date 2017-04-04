@@ -4,7 +4,7 @@ Insert demand series into pf-schema
 __copyright__ 	= "Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems"
 __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
 __url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
-__author__ 	= "ulfmueller, wbunke"
+__author__ 	= "ulfmueller, wolfbunke"
 */
 
 -- Assignment of otg_id for demand time series
