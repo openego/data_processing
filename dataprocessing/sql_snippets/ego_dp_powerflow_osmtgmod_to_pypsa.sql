@@ -93,3 +93,19 @@ UPDATE model_draft.ego_grid_pf_hv_line a
 		from model_draft.ego_grid_pf_hv_line b)
 		as result
 WHERE a.line_id = result.line_id;
+
+-- delete buses without connection to AC grid and generation or load assigned
+
+DELETE FROM model_draft.ego_grid_pf_hv_bus WHERE scn_name='Status Quo' 
+AND bus_id NOT IN 
+	(SELECT bus0 FROM model_draft.ego_grid_pf_hv_line WHERE scn_name='Status Quo')
+AND bus_id NOT IN 
+	(SELECT bus1 FROM model_draft.ego_grid_pf_hv_line WHERE scn_name='Status Quo')
+AND bus_id NOT IN 
+	(SELECT bus0 FROM model_draft.ego_grid_pf_hv_transformer WHERE scn_name='Status Quo')
+AND bus_id NOT IN 
+	(SELECT bus1 FROM model_draft.ego_grid_pf_hv_transformer WHERE scn_name='Status Quo')
+AND bus_id NOT IN 
+	(SELECT bus FROM model_draft.ego_grid_pf_hv_load WHERE scn_name='Status Quo')
+AND bus_id NOT IN 
+	(SELECT bus FROM model_draft.ego_grid_pf_hv_generator WHERE scn_name='Status Quo'); 
