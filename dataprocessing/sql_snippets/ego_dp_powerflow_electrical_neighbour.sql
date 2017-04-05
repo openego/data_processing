@@ -628,6 +628,11 @@ DELETE FROM model_draft.ego_grid_hv_electrical_neighbours_transformer WHERE x IS
 
 DELETE FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE v_nom != 380 AND bus_id NOT IN (SELECT bus0 FROM model_draft.ego_grid_hv_electrical_neighbours_line );
 
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_grid_hv_electrical_neighbours_transformer','ego_dp_powerflow_electrical_neighbour.sql',' ');
+SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_grid_hv_electrical_neighbours_bus','ego_dp_powerflow_electrical_neighbour.sql',' ');
+SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_grid_hv_electrical_neighbours_line','ego_dp_powerflow_electrical_neighbour.sql',' ');
+
 
 -- Include border crossing lines, transformer and buses for neighbouring states (electrical neighbours) for Status Quo
 INSERT INTO model_draft.ego_grid_pf_hv_line (scn_name, line_id, bus0, bus1, x, r, s_nom, topo, geom, length, frequency, cables)
