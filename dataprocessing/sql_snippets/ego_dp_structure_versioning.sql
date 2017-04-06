@@ -12,6 +12,7 @@ __author__ 	= "Ludee"
 
 -- substation (EHV, HVMV, MVLV)
 
+/* 
 -- EHV(HV) substation
 DROP TABLE IF EXISTS	grid.ego_dp_ehv_substation CASCADE;
 CREATE TABLE 		grid.ego_dp_ehv_substation (
@@ -46,7 +47,7 @@ ALTER TABLE	grid.ego_dp_ehv_substation OWNER TO oeuser;
 -- index GIST (geom)
 CREATE INDEX ego_dp_ehv_substation_point_idx
 	ON grid.ego_dp_ehv_substation USING GIST (point);
-
+ */
 -- metadata
 COMMENT ON TABLE grid.ego_dp_ehv_substation IS '{
 	"title": "eGo dataprocessing - EHV(HV) Substation",
@@ -103,7 +104,7 @@ SELECT obj_description('grid.ego_dp_ehv_substation' ::regclass) ::json;
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.7','result','grid','ego_dp_ehv_substation','ego_dp_structure_versioning.sql','hvmv substation');
 
-
+/* 
 -- HVMV substation
 DROP TABLE IF EXISTS	grid.ego_dp_hvmv_substation CASCADE;
 CREATE TABLE 		grid.ego_dp_hvmv_substation (
@@ -140,7 +141,7 @@ ALTER TABLE	grid.ego_dp_hvmv_substation OWNER TO oeuser;
 -- index GIST (geom)
 CREATE INDEX ego_dp_hvmv_substation_geom_idx
 	ON grid.ego_dp_hvmv_substation USING GIST (geom);
-
+ */
 -- metadata
 COMMENT ON TABLE grid.ego_dp_hvmv_substation IS '{
 	"title": "eGo dataprocessing - HVMV Substation",
@@ -198,7 +199,7 @@ SELECT obj_description('grid.ego_dp_hvmv_substation' ::regclass) ::json;
 SELECT ego_scenario_log('v0.2.7','result','grid','ego_dp_hvmv_substation','ego_dp_structure_versioning.sql','hvmv substation');
 
 
-
+/* 
 -- MVLV substation
 DROP TABLE IF EXISTS	grid.ego_dp_mvlv_substation CASCADE;
 CREATE TABLE 		grid.ego_dp_mvlv_substation (
@@ -221,7 +222,7 @@ ALTER TABLE	grid.ego_dp_mvlv_substation OWNER TO oeuser;
 -- index GIST (geom)
 CREATE INDEX ego_dp_mvlv_substation_geom_idx
 	ON grid.ego_dp_mvlv_substation USING GIST (geom);
-
+ */
 -- metadata
 COMMENT ON TABLE grid.ego_dp_mvlv_substation IS '{
 	"title": "eGo dataprocessing - HVMV Substation",
@@ -265,7 +266,7 @@ SELECT ego_scenario_log('v0.2.7','result','grid','ego_dp_mvlv_substation','ego_d
 
 
 -- Catchment areas
-
+/* 
 -- EHV Transmission grid area
 DROP TABLE IF EXISTS	grid.ego_dp_ehv_griddistrict CASCADE;
 CREATE TABLE 		grid.ego_dp_ehv_griddistrict (
@@ -285,7 +286,7 @@ ALTER TABLE	grid.ego_dp_ehv_griddistrict OWNER TO oeuser;
 -- index GIST (geom)
 CREATE INDEX ego_dp_ehv_griddistrict_geom_idx
 	ON grid.ego_dp_ehv_griddistrict USING GIST (geom);
-
+ */
 -- metadata
 COMMENT ON TABLE grid.ego_dp_ehv_griddistrict IS '{
 	"title": "eGo dataprocessing - EHV Transmission grid area",
@@ -325,7 +326,7 @@ SELECT obj_description('grid.ego_dp_ehv_griddistrict' ::regclass) ::json;
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.7','result','grid','ego_dp_ehv_griddistrict','ego_dp_structure_versioning.sql','mv grid district');
 
-
+/* 
 -- MV griddistrict
 DROP TABLE IF EXISTS	grid.ego_dp_mv_griddistrict CASCADE;
 CREATE TABLE 		grid.ego_dp_mv_griddistrict (
@@ -373,7 +374,7 @@ ALTER TABLE	grid.ego_dp_mv_griddistrict OWNER TO oeuser;
 -- index GIST (geom)
 CREATE INDEX ego_dp_mv_griddistrict_geom_idx
 	ON grid.ego_dp_mv_griddistrict USING GIST (geom);
-
+ */
 -- metadata
 COMMENT ON TABLE grid.ego_dp_mv_griddistrict IS '{
 	"title": "eGo dataprocessing - MV Grid district",
@@ -418,7 +419,7 @@ SELECT ego_scenario_log('v0.2.7','result','grid','ego_dp_mv_griddistrict','ego_d
 
 
 -- in process
-
+/* 
 -- LV griddistrict
 DROP TABLE IF EXISTS	grid.ego_dp_lv_griddistrict CASCADE;
 CREATE TABLE 		grid.ego_dp_lv_griddistrict (
@@ -430,9 +431,9 @@ CREATE TABLE 		grid.ego_dp_lv_griddistrict (
 	nn		boolean,
 	geom		geometry(MultiPolygon,3035),
 	CONSTRAINT ego_dp_lv_griddistrict_pkey PRIMARY KEY (version,mvlv_subst_id));
-	
+*/
 /* 
--- LV griddistrict
+-- LV griddistrict (older version)
 DROP TABLE IF EXISTS	grid.ego_dp_lv_griddistrict CASCADE;
 CREATE TABLE 		grid.ego_dp_lv_griddistrict (
 	version 	text,
@@ -445,7 +446,7 @@ CREATE TABLE 		grid.ego_dp_lv_griddistrict (
 	mvlv_subst_id integer,
 	CONSTRAINT ego_dp_lv_griddistrict_pkey PRIMARY KEY (version,id));
  */
-
+/* 
 --FK
 ALTER TABLE grid.ego_dp_lv_griddistrict
 	ADD CONSTRAINT ego_dp_lv_griddistrict_fkey FOREIGN KEY (version) 
@@ -457,7 +458,7 @@ ALTER TABLE	grid.ego_dp_lv_griddistrict OWNER TO oeuser;
 -- index GIST (geom)
 CREATE INDEX ego_dp_lv_griddistrict_geom_idx
 	ON grid.ego_dp_lv_griddistrict USING GIST (geom);
-
+ */
 -- metadata
 COMMENT ON TABLE grid.ego_dp_lv_griddistrict IS '{
 	"title": "eGo dataprocessing - LV Distribution grid area",
@@ -502,7 +503,7 @@ SELECT ego_scenario_log('v0.2.7','result','grid','ego_dp_lv_griddistrict','ego_d
 
 
 -- Demand
-
+/* 
 -- load area
 DROP TABLE IF EXISTS	demand.ego_dp_loadarea CASCADE;
 CREATE TABLE 		demand.ego_dp_loadarea (
@@ -558,7 +559,7 @@ ALTER TABLE	demand.ego_dp_loadarea OWNER TO oeuser;
 -- index GIST (geom)
 CREATE INDEX ego_dp_loadarea_geom_idx
 	ON demand.ego_dp_loadarea USING GIST (geom);
-
+ */
 -- metadata
 COMMENT ON TABLE demand.ego_dp_loadarea IS '{
 	"title": "eGo dataprocessing - Loadarea",
@@ -644,3 +645,6 @@ CREATE TABLE 		model_draft.ego_scenario_overview (
 
 -- grant (oeuser)
 ALTER TABLE	model_draft.ego_scenario_overview OWNER TO oeuser;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.7','result','model_draft','ego_scenario_overview','ego_dp_structure_versioning.sql','overview');
