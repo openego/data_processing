@@ -44,10 +44,8 @@ COMMENT ON MATERIALIZED VIEW social.destatis_zensus_population_per_ha_mview IS '
 	"language": [ "eng", "ger", "fre" ],
 	"reference_date": "2016-01-24",
 	"sources": [
-		{"name": "eGo dataprocessing", "description": " ",
-		"url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)"},
-		{"name": "Statistisches Bundesamt (Destatis) - Zensus2011", "description": "© Statistisches Bundesamt, Wiesbaden, Genesis-Online, 2016; Datenlizenz by-2-0",
-		"url": "https://www.destatis.de/DE/Methoden/Zensus_/Zensus.html", "license": "Datenlizenz Deutschland – Namensnennung – Version 2.0"} ],
+		{"name": "eGo dataprocessing", "description": " ", "url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)", "copyright": "© Reiner Lemoine Institut"},
+		{"name": "Statistisches Bundesamt (Destatis) - Zensus2011", "description": " ", "url": "https://www.destatis.de/DE/Methoden/Zensus_/Zensus.html", "license": "Datenlizenz Deutschland – Namensnennung – Version 2.0", "copyright": "Statistisches Bundesamt, Wiesbaden, Genesis-Online, 2016; Datenlizenz by-2-0"} ],
 	"spatial": [
 		{"extend": "Germany",
 		"resolution": "100m"} ],
@@ -56,14 +54,13 @@ COMMENT ON MATERIALIZED VIEW social.destatis_zensus_population_per_ha_mview IS '
 		"name": "Datenlizenz by-2-0",
 		"version": "2.0",
 		"url": "www.govdata.de/dl-de/by-2-0",
-		"instruction": "Empfohlene Zitierweise des Quellennachweises: Datenquelle: Statistisches Bundesamt, Wiesbaden, Genesis-Online, <optional> Abrufdatum; Datenlizenz by-2-0. Quellenvermerk bei eigener Berechnung / Darstellung: Datenquelle: Statistisches Bundesamt, Wiesbaden, Genesis-Online, <optional> Abrufdatum; Datenlizenz by-2-0; eigene Berechnung/eigene Darstellung. In elektronischen Werken ist im Quellenverweis dem Begriff (Datenlizenz by-2-0) der Link www.govdata.de/dl-de/by-2-0 als Verknüpfung zu hinterlegen."} ],
+		"instruction": "Empfohlene Zitierweise des Quellennachweises: Datenquelle: Statistisches Bundesamt, Wiesbaden, Genesis-Online, <optional> Abrufdatum; Datenlizenz by-2-0. Quellenvermerk bei eigener Berechnung / Darstellung: Datenquelle: Statistisches Bundesamt, Wiesbaden, Genesis-Online, <optional> Abrufdatum; Datenlizenz by-2-0; eigene Berechnung/eigene Darstellung. In elektronischen Werken ist im Quellenverweis dem Begriff (Datenlizenz by-2-0) der Link www.govdata.de/dl-de/by-2-0 als Verknüpfung zu hinterlegen.",
+		"copyright": "Statistisches Bundesamt, Wiesbaden, Genesis-Online; Datenlizenz by-2-0; eigene Berechnung"} ],
 	"contributors": [
-		{"Name": "Ludee", "Mail": "",
-		"Date":  "03.02.2016","Comment": "Add table"},
-		{"Name": "Ludee", "Mail": "",
-		"Date":  "25.10.2016","Comment": "Move table and add metadata"},
-		{"name": "Ludee", "email": "",
-		"date": "21.03.2017", "comment": "Update metadata to 1.1"}],
+		{"Name": "Ludee", "Mail": "", "Date":  "03.02.2016","Comment": "Add table"},
+		{"Name": "Ludee", "Mail": "", "Date":  "25.10.2016","Comment": "Move table and add metadata"},
+		{"name": "Ludee", "email": "", "date": "21.03.2017", "comment": "Update metadata to 1.1"},
+		{"name": "Ludee", "email": " ", "date": "2017-03-21", "comment": "Update metadata to 1.2"} ],
 	"resources": [{
 		"schema": {
 			"fields": [
@@ -74,7 +71,7 @@ COMMENT ON MATERIALIZED VIEW social.destatis_zensus_population_per_ha_mview IS '
 				{"Name": "population", "Description": "Number of registred residents", "Unit": "human" },
 				{"Name": "geom_point", "Description": "Geometry centroid", "Unit": "" },
 				{"Name": "geom", "Description": "Geometry", "Unit": "" } ]},
-		"meta_version": "1.1" }] }';
+		"meta_version": "1.2" }] }';
 
 -- select description
 SELECT obj_description('schema.table' ::regclass) ::json;
@@ -115,6 +112,7 @@ UPDATE	model_draft.destatis_zensus_population_per_ha_inside AS t1
 COMMENT ON TABLE model_draft.destatis_zensus_population_per_ha_inside IS '{
 	"comment": "eGoDP - Temporary table",
 	"version": "v0.2.6" }' ;
+
 
 -- zensus points with population inside vg250
 DROP MATERIALIZED VIEW IF EXISTS	model_draft.destatis_zensus_population_per_ha_invg_mview CASCADE;
@@ -196,9 +194,8 @@ SELECT obj_description('model_draft.destatis_zensus_population_per_ha_outvg_mvie
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.6','output','model_draft','destatis_zensus_population_per_ha_outvg_mview','eGo_dp_structure_census.sql',' ');
 
-
+/* 
 -- statistics
-
 SELECT 	'destatis_zensus_population_per_ha (with -1!)' AS name,
 	sum(population), 
 	count(geom) AS census_count
@@ -232,4 +229,4 @@ UNION ALL
 SELECT 	'ego_demand_loadarea' AS name,
 	sum(zensus_sum) AS census_sum,
 	sum(zensus_count) AS census_count
-FROM  	model_draft.ego_demand_loadarea;
+FROM  	model_draft.ego_demand_loadarea; */

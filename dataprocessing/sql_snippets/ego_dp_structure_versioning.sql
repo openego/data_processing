@@ -56,7 +56,7 @@ COMMENT ON TABLE grid.ego_dp_ehv_substation IS '{
 	"sources": [
 		{"name": "eGo dataprocessing", "description": " ", "url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)", "copyright": "© Reiner Lemoine Institut"},
 		{"name": "OpenStreetMap", "description": " ", "url": "http://www.openstreetmap.org/", "license": "Open Database License (ODbL) v1.0", "copyright": "© OpenStreetMap contributors"},
-		{"name": "BKG - Verwaltungsgebiete 1:250.000 (vg250)", "description": " ", "url": "http://www.geodatenzentrum.de/", "license": "Geodatenzugangsgesetz (GeoZG)", "copyright": "© GeoBasis-DE / BKG 2016 (Daten verändert)"} ],
+		{"name": "BKG - Verwaltungsgebiete 1:250.000 (vg250)", "description": " ", "url": "http://www.geodatenzentrum.de/", "license": "Geodatenzugangsgesetz (GeoZG)", "copyright": "© GeoBasis-DE / BKG 2016 (Data changed)"} ],
 	"spatial": [
 		{"extend": "Gemany",
 		"resolution": ""} ],
@@ -65,14 +65,13 @@ COMMENT ON TABLE grid.ego_dp_ehv_substation IS '{
 		"name": "Open Data Commons Open Database License 1.0",
 		"version": "1.0",
 		"url": "https://opendatacommons.org/licenses/odbl/1.0/",
-		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!"} ],
+		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
+		"copyright": "© NEXT ENERGY"} ],
 	"contributors": [
-		{"name": "lukasol", "email": "",
-		"date":  "20.10.2016", "comment": "Create substations" },
-		{"name": "Ludee", "email": "",
-		"date": "15.01.2017", "comment": "Update metadata"},
-		{"name": "Ludee", "email": "",
-		"date": "21.03.2017", "comment": "Update metadata to 1.1"} ],
+		{"name": "lukasol", "email": "", "date":  "20.10.2016", "comment": "Create substations" },
+		{"name": "Ludee", "email": "", "date": "15.01.2017", "comment": "Update metadata"},
+		{"name": "Ludee", "email": "", "date": "21.03.2017", "comment": "Update metadata to 1.1"},
+		{"name": "Ludee", "email": "", "date": "2017-04-06", "comment": "Update metadata to 1.2"}],
 	"resources": [{
 		"schema": {
 			"fields": [
@@ -96,7 +95,7 @@ COMMENT ON TABLE grid.ego_dp_ehv_substation IS '{
 				{"name": "point", "description": "point geometry of substation", "unit": "" },
 				{"name": "polygon", "description": "original geometry of substation", "unit": "" },
 				{"name": "geom", "description": "geometry", "unit": "" } ]},
-		"meta_version": "1.1"}] }';
+		"meta_version": "1.2"}] }';
 
 -- select description
 SELECT obj_description('grid.ego_dp_ehv_substation' ::regclass) ::json;
@@ -149,12 +148,9 @@ COMMENT ON TABLE grid.ego_dp_hvmv_substation IS '{
 	"language": [ "eng", "ger" ],
 	"reference_date": " ",
 	"sources": [
-		{"name": "eGo dataprocessing", "description": " ",
-		"url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)"},
-		{"name": "OpenStreetMap", "description": "© OpenStreetMap contributors",
-		"url": "http://www.openstreetmap.org/", "license": "Open Database License (ODbL) v1.0"},
-		{"name": "BKG - Verwaltungsgebiete 1:250.000 (vg250)", "description": "© GeoBasis-DE / BKG 2016 (Daten verändert)",
-		"url": "http://www.geodatenzentrum.de/", "license": "Geodatenzugangsgesetz (GeoZG)"} ],
+		{"name": "eGo dataprocessing", "description": " ", "url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)", "copyright": "© Reiner Lemoine Institut"},
+		{"name": "OpenStreetMap", "description": " ", "url": "http://www.openstreetmap.org/", "license": "Open Database License (ODbL) v1.0", "copyright": "© OpenStreetMap contributors"},
+		{"name": "BKG - Verwaltungsgebiete 1:250.000 (vg250)", "description": " ", "url": "http://www.geodatenzentrum.de/", "license": "Geodatenzugangsgesetz (GeoZG)", "copyright": "© GeoBasis-DE / BKG 2016 (Data changed)"} ],
 	"spatial": [
 		{"extend": "Gemany",
 		"resolution": ""} ],
@@ -163,14 +159,13 @@ COMMENT ON TABLE grid.ego_dp_hvmv_substation IS '{
 		"name": "Open Data Commons Open Database License 1.0",
 		"version": "1.0",
 		"url": "https://opendatacommons.org/licenses/odbl/1.0/",
-		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!"} ],
+		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
+		"copyright": "© NEXT ENERGY"} ],
 	"contributors": [
-		{"name": "lukasol", "email": "",
-		"date":  "20.10.2016", "comment": "Create substations" },
-		{"name": "Ludee", "email": "",
-		"date": "15.01.2017", "comment": "Update metadata"},
-		{"name": "Ludee", "email": "",
-		"date": "21.03.2017", "comment": "Update metadata to 1.1"} ],
+		{"name": "lukasol", "email": "", "date":  "20.10.2016", "comment": "Create substations" },
+		{"name": "Ludee", "email": "", "date": "15.01.2017", "comment": "Update metadata"},
+		{"name": "Ludee", "email": "", "date": "21.03.2017", "comment": "Update metadata to 1.1"},
+		{"name": "Ludee", "email": "", "date": "2017-04-06", "comment": "Update metadata to 1.2"} ],
 	"resources": [{
 		"schema": {
 			"fields": [
@@ -194,7 +189,7 @@ COMMENT ON TABLE grid.ego_dp_hvmv_substation IS '{
 				{"name": "point", "description": "point geometry of substation", "unit": "" },
 				{"name": "polygon", "description": "original geometry of substation", "unit": "" },
 				{"name": "geom", "description": "geometry", "unit": "" } ]},
-		"meta_version": "1.1"}] }';
+		"meta_version": "1.2"}] }';
 
 -- select description
 SELECT obj_description('grid.ego_dp_hvmv_substation' ::regclass) ::json;
@@ -234,12 +229,9 @@ COMMENT ON TABLE grid.ego_dp_mvlv_substation IS '{
 	"language": [ "eng", "ger" ],
 	"reference_date": " ",
 	"sources": [
-		{"name": "eGo dataprocessing", "description": " ",
-		"url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)"},
-		{"name": "OpenStreetMap", "description": "© OpenStreetMap contributors",
-		"url": "http://www.openstreetmap.org/", "license": "Open Database License (ODbL) v1.0"},
-		{"name": "BKG - Verwaltungsgebiete 1:250.000 (vg250)", "description": "© GeoBasis-DE / BKG 2016 (Daten verändert)",
-		"url": "http://www.geodatenzentrum.de/", "license": "Geodatenzugangsgesetz (GeoZG)"} ],
+		{"name": "eGo dataprocessing", "description": " ", "url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)", "copyright": "© Reiner Lemoine Institut"},
+		{"name": "OpenStreetMap", "description": " ", "url": "http://www.openstreetmap.org/", "license": "Open Database License (ODbL) v1.0", "copyright": "© OpenStreetMap contributors"},
+		{"name": "BKG - Verwaltungsgebiete 1:250.000 (vg250)", "description": " ", "url": "http://www.geodatenzentrum.de/", "license": "Geodatenzugangsgesetz (GeoZG)", "copyright": "© GeoBasis-DE / BKG 2016 (Data changed)"} ],
 	"spatial": [
 		{"extend": "Gemany",
 		"resolution": ""} ],
@@ -248,16 +240,14 @@ COMMENT ON TABLE grid.ego_dp_mvlv_substation IS '{
 		"name": "Open Data Commons Open Database License 1.0",
 		"version": "1.0",
 		"url": "https://opendatacommons.org/licenses/odbl/1.0/",
-		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!"} ],
+		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
+		"copyright": "© Reiner Lemoine Institut"} ],
 	"contributors": [
-		{"name": "jong42", "email": "",
-		"date": "20.10.2016", "comment": "Create table"},
-		{"name": "jong42", "email": "",
-		"date": "27.10.2016", "comment": "Change table names"},
-		{"name": "Ludee", "email": "",
-		"date": "15.01.2017", "comment": "Update metadata"},
-		{"name": "Ludee", "email": "",
-		"date": "21.03.2017", "comment": "Update metadata to 1.1"} ],
+		{"name": "jong42", "email": "", "date": "20.10.2016", "comment": "Create table"},
+		{"name": "jong42", "email": "", "date": "27.10.2016", "comment": "Change table names"},
+		{"name": "Ludee", "email": "", "date": "15.01.2017", "comment": "Update metadata"},
+		{"name": "Ludee", "email": "", "date": "21.03.2017", "comment": "Update metadata to 1.1"},
+		{"name": "Ludee", "email": "", "date": "2017-04-06", "comment": "Update metadata to 1.2"} ],
 	"resources": [{
 		"schema": {
 			"fields": [
@@ -265,7 +255,7 @@ COMMENT ON TABLE grid.ego_dp_mvlv_substation IS '{
 				{"name": "subst_id", "description": "unique identifier", "unit": "" },
 				{"name": "mvgd_id", "description": "corresponding hvmv substation", "unit": "" },
 				{"name": "geom", "description": "geometry", "unit": "" } ]},
-		"meta_version": "1.1"}] }';
+		"meta_version": "1.2"}] }';
 
 -- select description
 SELECT obj_description('grid.ego_dp_mvlv_substation' ::regclass) ::json;
@@ -303,12 +293,9 @@ COMMENT ON TABLE grid.ego_dp_ehv_griddistrict IS '{
 	"language": [ "eng", "ger" ],
 	"reference_date": " ",
 	"sources": [
-		{"name": "eGo dataprocessing", "description": " ",
-		"url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)"},
-		{"name": "OpenStreetMap", "description": "© OpenStreetMap contributors",
-		"url": "http://www.openstreetmap.org/", "license": "Open Database License (ODbL) v1.0"},
-		{"name": "BKG - Verwaltungsgebiete 1:250.000 (vg250)", "description": "© GeoBasis-DE / BKG 2016 (Daten verändert)",
-		"url": "http://www.geodatenzentrum.de/", "license": "Geodatenzugangsgesetz (GeoZG)"} ],
+		{"name": "eGo dataprocessing", "description": " ", "url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)", "copyright": "© Reiner Lemoine Institut"},
+		{"name": "OpenStreetMap", "description": " ", "url": "http://www.openstreetmap.org/", "license": "Open Database License (ODbL) v1.0", "copyright": "© OpenStreetMap contributors"},
+		{"name": "BKG - Verwaltungsgebiete 1:250.000 (vg250)", "description": " ", "url": "http://www.geodatenzentrum.de/", "license": "Geodatenzugangsgesetz (GeoZG)", "copyright": "© GeoBasis-DE / BKG 2016 (Data changed)"} ],
 	"spatial": [
 		{"extend": "Gemany",
 		"resolution": ""} ],
@@ -317,21 +304,20 @@ COMMENT ON TABLE grid.ego_dp_ehv_griddistrict IS '{
 		"name": "Open Data Commons Open Database License 1.0",
 		"version": "1.0",
 		"url": "https://opendatacommons.org/licenses/odbl/1.0/",
-		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!"} ],
+		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
+		"copyright": "© Reiner Lemoine Institut"} ],
 	"contributors": [
-		{"name": "Ludee", "email": "",
-		"date": "02.09.2016", "comment": "Create table"},
-		{"name": "Ludee", "email": "",
-		"date": "15.01.2017", "comment": "Update metadata"},
-		{"name": "Ludee", "email": "",
-		"date": "21.03.2017", "comment": "Update metadata to 1.1"} ],
+		{"name": "Ludee", "email": "", "date": "02.09.2016", "comment": "Create table"},
+		{"name": "Ludee", "email": "", "date": "15.01.2017", "comment": "Update metadata"},
+		{"name": "Ludee", "email": "", "date": "21.03.2017", "comment": "Update metadata to 1.1"},
+		{"name": "Ludee", "email": "", "date": "2017-04-06", "comment": "Update metadata to 1.2"} ],
 	"resources": [{
 		"schema": {
 			"fields": [
 				{"name": "version", "description": "version id", "unit": "" },
 				{"name": "subst_id", "description": "unique identifier", "unit": "" },
 				{"name": "geom", "description": "geometry", "unit": "" } ]},
-		"meta_version": "1.1"}] }';
+		"meta_version": "1.2"}] }';
 
 -- select description
 SELECT obj_description('grid.ego_dp_ehv_griddistrict' ::regclass) ::json;
@@ -395,12 +381,9 @@ COMMENT ON TABLE grid.ego_dp_mv_griddistrict IS '{
 	"language": [ "eng", "ger" ],
 	"reference_date": " ",
 	"sources": [
-		{"name": "eGo dataprocessing", "description": " ",
-		"url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)"},
-		{"name": "OpenStreetMap", "description": "© OpenStreetMap contributors",
-		"url": "http://www.openstreetmap.org/", "license": "Open Database License (ODbL) v1.0"},
-		{"name": "BKG - Verwaltungsgebiete 1:250.000 (vg250)", "description": "© GeoBasis-DE / BKG 2016 (Daten verändert)",
-		"url": "http://www.geodatenzentrum.de/", "license": "Geodatenzugangsgesetz (GeoZG)"} ],
+		{"name": "eGo dataprocessing", "description": " ", "url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)", "copyright": "© Reiner Lemoine Institut"},
+		{"name": "OpenStreetMap", "description": " ", "url": "http://www.openstreetmap.org/", "license": "Open Database License (ODbL) v1.0", "copyright": "© OpenStreetMap contributors"},
+		{"name": "BKG - Verwaltungsgebiete 1:250.000 (vg250)", "description": " ", "url": "http://www.geodatenzentrum.de/", "license": "Geodatenzugangsgesetz (GeoZG)", "copyright": "© GeoBasis-DE / BKG 2016 (Data changed)"} ],
 	"spatial": [
 		{"extend": "Gemany",
 		"resolution": ""} ],
@@ -409,14 +392,13 @@ COMMENT ON TABLE grid.ego_dp_mv_griddistrict IS '{
 		"name": "Open Data Commons Open Database License 1.0",
 		"version": "1.0",
 		"url": "https://opendatacommons.org/licenses/odbl/1.0/",
-		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!"} ],
+		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
+		"copyright": "© Reiner Lemoine Institut"} ],
 	"contributors": [
-		{"name": "Ludee", "email": "",
-		"date": "02.09.2016", "comment": "Create table"},
-		{"name": "Ludee", "email": "",
-		"date": "15.01.2017", "comment": "Update metadata"},
-		{"name": "Ludee", "email": "",
-		"date": "21.03.2017", "comment": "Update metadata to 1.1"} ],
+		{"name": "Ludee", "email": "", "date": "02.09.2016", "comment": "Create table"},
+		{"name": "Ludee", "email": "", "date": "15.01.2017", "comment": "Update metadata"},
+		{"name": "Ludee", "email": "", "date": "21.03.2017", "comment": "Update metadata to 1.1"},
+		{"name": "Ludee", "email": "", "date": "2017-04-06", "comment": "Update metadata to 1.2"} ],
 	"resources": [{
 		"schema": {
 			"fields": [
@@ -426,7 +408,7 @@ COMMENT ON TABLE grid.ego_dp_mv_griddistrict IS '{
 				{"name": "area_ha", "description": "area in hectar", "unit": "ha" },
 				{"name": "geom_type", "description": "polygon type (polygon, multipolygon)", "unit": "" },
 				{"name": "geom", "description": "geometry", "unit": "" } ]},
-		"meta_version": "1.1"}] }';
+		"meta_version": "1.2"}] }';
 
 -- select description
 SELECT obj_description('grid.ego_dp_mv_griddistrict' ::regclass) ::json;
@@ -463,6 +445,7 @@ CREATE TABLE 		grid.ego_dp_lv_griddistrict (
 	mvlv_subst_id integer,
 	CONSTRAINT ego_dp_lv_griddistrict_pkey PRIMARY KEY (version,id));
  */
+
 --FK
 ALTER TABLE grid.ego_dp_lv_griddistrict
 	ADD CONSTRAINT ego_dp_lv_griddistrict_fkey FOREIGN KEY (version) 
@@ -482,12 +465,9 @@ COMMENT ON TABLE grid.ego_dp_lv_griddistrict IS '{
 	"language": [ "eng", "ger" ],
 	"reference_date": " ",
 	"sources": [
-		{"name": "eGo dataprocessing", "description": " ",
-		"url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)"},
-		{"name": "OpenStreetMap", "description": "© OpenStreetMap contributors",
-		"url": "http://www.openstreetmap.org/", "license": "Open Database License (ODbL) v1.0"},
-		{"name": "BKG - Verwaltungsgebiete 1:250.000 (vg250)", "description": "© GeoBasis-DE / BKG 2016 (Daten verändert)",
-		"url": "http://www.geodatenzentrum.de/", "license": "Geodatenzugangsgesetz (GeoZG)"} ],
+		{"name": "eGo dataprocessing", "description": " ", "url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)", "copyright": "© Reiner Lemoine Institut"},
+		{"name": "OpenStreetMap", "description": " ", "url": "http://www.openstreetmap.org/", "license": "Open Database License (ODbL) v1.0", "copyright": "© OpenStreetMap contributors"},
+		{"name": "BKG - Verwaltungsgebiete 1:250.000 (vg250)", "description": " ", "url": "http://www.geodatenzentrum.de/", "license": "Geodatenzugangsgesetz (GeoZG)", "copyright": "© GeoBasis-DE / BKG 2016 (Data changed)"} ],
 	"spatial": [
 		{"extend": "Gemany",
 		"resolution": ""} ],
@@ -496,14 +476,13 @@ COMMENT ON TABLE grid.ego_dp_lv_griddistrict IS '{
 		"name": "Open Data Commons Open Database License 1.0",
 		"version": "1.0",
 		"url": "https://opendatacommons.org/licenses/odbl/1.0/",
-		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!"} ],
+		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
+		"copyright": "© Reiner Lemoine Institut"} ],
 	"contributors": [
-		{"name": "Ludee", "email": "",
-		"date": "02.09.2016", "comment": "Create table"},
-		{"name": "Ludee", "email": "",
-		"date": "15.01.2017", "comment": "Update metadata"},
-		{"name": "Ludee", "email": "",
-		"date": "21.03.2017", "comment": "Update metadata to 1.1"} ],
+		{"name": "Ludee", "email": "", "date": "02.09.2016", "comment": "Create table"},
+		{"name": "Ludee", "email": "", "date": "15.01.2017", "comment": "Update metadata"},
+		{"name": "Ludee", "email": "", "date": "21.03.2017", "comment": "Update metadata to 1.1"},
+		{"name": "Ludee", "email": "", "date": "2017-04-06", "comment": "Update metadata to 1.2"}],
 	"resources": [{
 		"schema": {
 			"fields": [
@@ -513,7 +492,7 @@ COMMENT ON TABLE grid.ego_dp_lv_griddistrict IS '{
 				{"name": "area_ha", "description": "area in hectar", "unit": "ha" },
 				{"name": "geom_type", "description": "polygon type (polygon, multipolygon)", "unit": "" },
 				{"name": "geom", "description": "geometry", "unit": "" } ]},
-		"meta_version": "1.1"}] }';
+		"meta_version": "1.2"}] }';
 
 -- select description
 SELECT obj_description('grid.ego_dp_lv_griddistrict' ::regclass) ::json;
@@ -587,7 +566,7 @@ COMMENT ON TABLE demand.ego_dp_loadarea IS '{
 	"language": [ "eng", "ger" ],
 	"reference_date": " ",
 	"sources": [
-		{"name": "eGo dataprocessing", "description": " ", "url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)", "copyright": " "},
+		{"name": "eGo dataprocessing", "description": " ", "url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)", "copyright": "© Reiner Lemoine Institut"},
 		{"name": "OpenStreetMap", "description": " ", "url": "http://www.openstreetmap.org/", "license": "Open Database License (ODbL) v1.0", "copyright": "© OpenStreetMap contributors"},
 		{"name": "BKG - Verwaltungsgebiete 1:250.000 (vg250)", "description": " ", "url": "http://www.geodatenzentrum.de/", "license": "Geodatenzugangsgesetz (GeoZG)", "copyright": "© GeoBasis-DE / BKG 2016 (data changed)"},
 		{"name": "Statistisches Bundesamt (Destatis) - Zensus2011", "description": " ", "url": "https://www.destatis.de/DE/Methoden/Zensus_/Zensus.html", "license": "Datenlizenz Deutschland – Namensnennung – Version 2.0", "copyright": "© Statistisches Bundesamt, Wiesbaden, Genesis-Online, 2016; Datenlizenz by-2-0"} ],
@@ -606,7 +585,7 @@ COMMENT ON TABLE demand.ego_dp_loadarea IS '{
 		{"name": "Ilka Cussmann", "email": " ", "date": "25.10.2016", "comment": "Create metadata" },
 		{"name": "Ludee", "email": " ", "date": "15.01.2017", "comment": "Update metadata"},
 		{"name": "Ludee", "email": " ", "date": "21.03.2017", "comment": "Update metadata to 1.1"},
-		{"name": "Ludee", "email": " ", "date": "21.03.2017", "comment": "Update metadata to 1.2"} ],
+		{"name": "Ludee", "email": " ", "date": "2017-03-21", "comment": "Update metadata to 1.2"} ],
 	"resources": [{
 		"schema": {
 			"fields": [
