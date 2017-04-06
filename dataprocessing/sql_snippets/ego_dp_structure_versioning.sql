@@ -305,7 +305,7 @@ COMMENT ON TABLE grid.ego_dp_ehv_griddistrict IS '{
 		"version": "1.0",
 		"url": "https://opendatacommons.org/licenses/odbl/1.0/",
 		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
-		"copyright": "© Reiner Lemoine Institut"} ],
+		"copyright": "© ZNES"} ],
 	"contributors": [
 		{"name": "Ludee", "email": "", "date": "02.09.2016", "comment": "Create table"},
 		{"name": "Ludee", "email": "", "date": "15.01.2017", "comment": "Update metadata"},
