@@ -5,7 +5,7 @@
 
 Code licened under "GNU Affero General Public License Version 3 (AGPL-3.0)"
 It is a collaborative work with different copyright owner:
-Cite as "eGo dataprocessing © ZNES © Reiner Lemoine Institut © NEXT ENERGY"
+Cite as "eGo dataprocessing © Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems © Europa-Universität Flensburg, Centre for Sustainable Energy Systems © Reiner Lemoine Institut © NEXT ENERGY"
 
 ## Installation
 
