@@ -35,8 +35,8 @@ INSERT INTO	model_draft.ego_scenario (version,version_name,release,comment,times
 	('v0.2.2', ' ', 'FALSE', ' ', '2017-01-01' ),
 	('v0.2.3', ' ', 'FALSE', ' ', '2017-01-01' ),
 	('v0.2.4', ' ', 'FALSE', ' ', '2017-01-01' ),
-	('v0.2.7', 'mockrun', 'FALSE', 'finished but revealed major bugs', '2017-03-03' ),
-	('v0.2.7', 'premiere', 'FALSE', 'first complete relase', '2017-03-24' ),
+	('v0.2.5', 'mockrun', 'FALSE', 'finished but revealed major bugs', '2017-03-03' ),
+	('v0.2.6', 'premiere', 'FALSE', 'first complete relase', '2017-03-24' ),
 	('v0.2.7', 'homerun', 'TRUE', 'finish in one run', '2017-04-06' ); 
 
 -- metadata

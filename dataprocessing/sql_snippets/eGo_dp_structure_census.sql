@@ -74,7 +74,7 @@ COMMENT ON MATERIALIZED VIEW social.destatis_zensus_population_per_ha_mview IS '
 		"meta_version": "1.2" }] }';
 
 -- select description
-SELECT obj_description('schema.table' ::regclass) ::json;
+SELECT obj_description('social.destatis_zensus_population_per_ha_mview' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.7','output','social','destatis_zensus_population_per_ha_mview','eGo_dp_structure_census.sql',' ');

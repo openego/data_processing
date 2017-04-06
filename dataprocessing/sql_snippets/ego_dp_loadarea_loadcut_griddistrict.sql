@@ -200,7 +200,7 @@ UPDATE 	model_draft.ego_demand_loadarea AS t1
 		)AS t2
 	WHERE  	t1.id = t2.id;
 
-
+/*
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.7','input','economic','ioer_urban_share_industrial_centroid','ego_dp_loadarea_loadcut_griddistrict.sql',' ');
 
@@ -219,7 +219,7 @@ UPDATE 	model_draft.ego_demand_loadarea AS t1
 			ST_CONTAINS(loads.geom,pts.geom)
 		GROUP BY loads.id
 		)AS t2
-	WHERE  	t1.id = t2.id;
+	WHERE  	t1.id = t2.id; */
 
 
 -- 1. residential sector
