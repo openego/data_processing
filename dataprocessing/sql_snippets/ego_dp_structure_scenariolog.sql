@@ -24,17 +24,17 @@ CREATE TABLE 		model_draft.ego_scenario (
 ALTER TABLE	model_draft.ego_scenario OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.7','output','model_draft','ego_scenario','ego_dp_structure_scenariolog.sql','Reset scenario list');
+SELECT ego_scenario_log('v0.2.7','output','model_draft','ego_scenario','ego_dp_structure_scenariolog.sql','Update scenario list');
 
 -- scenario list
 INSERT INTO	model_draft.ego_scenario (version,version_name,release,comment,timestamp) VALUES
-	('0', 'setup', 'FALSE', ' ', 'now()' ),
-	('v0.1', 'cleanrun', 'FALSE', 'data in calc schemata', 'now()'  ),
-	('v0.2', 'restructure', 'FALSE', 'data in model_draft schema', 'now()' ),
-	('v0.2.1', ' ', 'FALSE', ' ', 'now()' ),
-	('v0.2.2', ' ', 'FALSE', ' ', 'now()' ),
-	('v0.2.3', ' ', 'FALSE', ' ', 'now()' ),
-	('v0.2.4', ' ', 'FALSE', ' ', 'now()' ),
+	('0', 'setup', 'FALSE', ' ', '2016-10-01' ),
+	('v0.1', 'cleanrun', 'FALSE', 'data in calc schemata', '2016-11-11'  ),
+	('v0.2', 'restructure', 'FALSE', 'data in model_draft schema', '2016-12-09' ),
+	('v0.2.1', ' ', 'FALSE', ' ', '2017-01-01' ),
+	('v0.2.2', ' ', 'FALSE', ' ', '2017-01-01' ),
+	('v0.2.3', ' ', 'FALSE', ' ', '2017-01-01' ),
+	('v0.2.4', ' ', 'FALSE', ' ', '2017-01-01' ),
 	('v0.2.7', 'mockrun', 'FALSE', 'finished but revealed major bugs', '2017-03-03' ),
 	('v0.2.7', 'premiere', 'FALSE', 'first complete relase', '2017-03-24' ),
 	('v0.2.7', 'homerun', 'TRUE', 'finish in one run', '2017-04-06' ); 
@@ -47,7 +47,7 @@ COMMENT ON TABLE model_draft.ego_scenario IS '{
 	"reference_date": " ",
 	"sources": [
 		{"name": "eGo dataprocessing", "description": " ",
-		"url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)"} ],
+		"url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)", "copyright": "© Reiner Lemoine Institut"} ],
 	"spatial": [
 		{"extend": "",
 		"resolution": ""} ],
@@ -56,14 +56,13 @@ COMMENT ON TABLE model_draft.ego_scenario IS '{
 		"name": "Open Data Commons Open Database License 1.0",
 		"version": "1.0",
 		"url": "https://opendatacommons.org/licenses/odbl/1.0/",
-		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!"} ],
+		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
+		"copyright": "© Reiner Lemoine Institut"} ],
 	"contributors": [
-		{"name": "Ludee", "email": "",
-		"date": "01.10.2016", "comment": "Create table" },
-		{"name": "Ludee", "email": "",
-		"date": "16.11.2016", "comment": "Add metadata" },
-		{"name": "Ludee", "email": " ",
-		"date": "21.03.2017", "comment": "Update metadata to 1.1"}		],
+		{"name": "Ludee", "email": "", "date": "01.10.2016", "comment": "Create table" },
+		{"name": "Ludee", "email": "", "date": "16.11.2016", "comment": "Add metadata" },
+		{"name": "Ludee", "email": " ", "date": "21.03.2017", "comment": "Update metadata to 1.1"},
+		{"name": "Ludee", "email": "", "date": "2017-04-06", "comment": "Update metadata to 1.2"} ],
 	"resources": [{
 		"schema": {
 			"fields": [
@@ -72,7 +71,7 @@ COMMENT ON TABLE model_draft.ego_scenario IS '{
 				{"name": "release", "description": "external release", "unit": "" },
 				{"name": "comment", "description": "additional information and comments", "unit": "" },
 				{"name": "timestamp", "description": "timestamp (Berlin)", "unit": "" } ]},
-		"meta_version": "1.1"}] }' ;
+		"meta_version": "1.2"}] }' ;
 
 -- select description
 SELECT obj_description('model_draft.ego_scenario' ::regclass) ::json;
@@ -83,7 +82,7 @@ FROM 	model_draft.ego_scenario_log
 	GROUP BY version 
 	ORDER BY version; */
 
-
+/* 
 -- scenario log table
 DROP TABLE IF EXISTS	model_draft.ego_scenario_log CASCADE;
 CREATE TABLE 		model_draft.ego_scenario_log (
@@ -107,6 +106,7 @@ ALTER TABLE model_draft.ego_scenario_log
 
 -- grant (oeuser)
 ALTER TABLE	model_draft.ego_scenario_log OWNER TO oeuser; 
+ */
 
 -- metadata
 COMMENT ON TABLE model_draft.ego_scenario_log IS '{
@@ -115,8 +115,7 @@ COMMENT ON TABLE model_draft.ego_scenario_log IS '{
 	"language": [ "eng", "ger" ],
 	"reference_date": " ",
 	"sources": [
-		{"name": "eGo dataprocessing", "description": " ",
-		"url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)"} ],
+		{"name": "eGo dataprocessing", "description": " ", "url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)", "copyright": "© Reiner Lemoine Institut"} ],
 	"spatial": [
 		{"extend": "",
 		"resolution": ""} ],
@@ -125,20 +124,16 @@ COMMENT ON TABLE model_draft.ego_scenario_log IS '{
 		"name": "Open Data Commons Open Database License 1.0",
 		"version": "1.0",
 		"url": "https://opendatacommons.org/licenses/odbl/1.0/",
-		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!"} ],
+		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
+		"copyright": "© Reiner Lemoine Institut"} ],
 	"contributors": [
-		{"name": "Ludee", "email": "",
-		"date": "01.10.2016", "comment": "Create table" },
-		{"name": "Ludee", "email": "",
-		"date": "12.10.2016", "comment": "Add user_name" },
-		{"name": "Ludee", "email": "",
-		"date": "16.11.2016", "comment": "Add io" },
-		{"name": "Ludee", "email": "",
-		"date": "16.11.2016", "comment": "Add metadata" },
-		{"name": "Ludee", "email": "",
-		"date": "15.01.2017", "comment": "Update metadata"},
-		{"name": "Ludee", "email": "",
-		"date": "21.03.2017", "comment": "Update metadata to 1.1"} ],
+		{"name": "Ludee", "email": "", "date": "01.10.2016", "comment": "Create table" },
+		{"name": "Ludee", "email": "", "date": "12.10.2016", "comment": "Add user_name" },
+		{"name": "Ludee", "email": "", "date": "16.11.2016", "comment": "Add io" },
+		{"name": "Ludee", "email": "", "date": "16.11.2016", "comment": "Add metadata" },
+		{"name": "Ludee", "email": "", "date": "15.01.2017", "comment": "Update metadata"},
+		{"name": "Ludee", "email": "", "date": "21.03.2017", "comment": "Update metadata to 1.1"},
+		{"name": "Ludee", "email": "", "date": "2017-04-06", "comment": "Update metadata to 1.2"} ],
 	"resources": [{
 		"schema": {
 			"fields": [
@@ -154,7 +149,7 @@ COMMENT ON TABLE model_draft.ego_scenario_log IS '{
 				{"name": "metadata", "description": "Copy of the input metadta", "unit": "" },
 				{"name": "timestamp", "description": "Timestamp (Berlin)", "unit": "" },
 				{"name": "metadata", "description": "Metadata of table", "unit": "" } ]},
-		"meta_version": "1.1"}] }';
+		"meta_version": "1.2"}] }';
 
 -- select description
 SELECT obj_description('model_draft.ego_scenario_log' ::regclass) ::json;

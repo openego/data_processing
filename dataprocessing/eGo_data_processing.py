@@ -42,24 +42,24 @@ def data_processing():
     snippets = [
     ## STRUCTURE & SETUP (WARNING)
     ## 'ego_dp_structure_scenariolog.sql',				# Setup scenario log table
-    # 'ego_dp_structure_versioning.sql',				# Setup versioning tables
+    ## 'ego_dp_structure_versioning.sql',				# Setup versioning tables
     ## 'ego_dp_structure_boundaries_vg250.sql',			# Setup vg250 borders
     ## 'ego_dp_structure_osm_landuse.sql',         		# Filter OSM landuse
     ## 'eGo_dp_structure_census.sql',          			# Filter Census2011 with population
     ## 'ego_dp_preprocessing_conv_powerplant.sql',		# Setup conventional power plant list
     ## 'ego_dp_preprocessing_res_powerplant.sql',		# Setup renewable power plant list
 
-	# SUBSTATION
+	## SUBSTATION
     # 'ego_dp_substation_hvmv.sql',               		# Abstract HVMV Substations of the high voltage level from OSM
     # 'ego_dp_substation_ehv.sql',             			# Abstract EHV Substations of the extra high voltage level from OSM
     # 'ego_dp_substation_otg.sql',           			# Assign osmTGmod-id to HVMV and EHV substations
     # 'ego_dp_substation_hvmv_voronoi.sql',				# HVMV Voronoi cells based on HVMV substations
     # 'ego_dp_substation_ehv_voronoi.sql',				# EHV Voronoi cells based on EHV substations
 
-	# # GRIDDISTRICT
+	## GRIDDISTRICT
 	# 'ego_dp_mv_griddistrict.sql',          			# MV Griddistricts from municipalities and Voronoi cells
-	# 
-	# # LOADAREA
+
+	## LOADAREA
 	# 'ego_dp_loadarea_landuse.sql', 					# OSM landuse sector
 	# 'ego_dp_loadarea_industry_consumer.sql', 			# Industry consumer
 	# 'ego_dp_loadarea_loads.sql',            			# Loads from OSM landuse
@@ -72,7 +72,7 @@ def data_processing():
 	# 'ego_dp_loadarea_griddistrict_results.sql',		# Results for MV Griddistrict
 	# 'ego_dp_loadarea_statistic.sql',					# Results and statistics for eGoDP
 
-	# POWERFLOW
+	## POWERFLOW
 	# 'ego_dp_powerflow_voronoi_weatherpoint.sql',		# Create voronoi cells based on weather points
 	# 'ego_dp_powerflow_hv_setup.sql',					# Set schema/tables for EHV/HV powerflow calculations up
 	# 'ego_dp_powerflow_osmtgmod_to_pypsa.sql',			# Include data from osmTGmod into EHV/HV powerflow schema

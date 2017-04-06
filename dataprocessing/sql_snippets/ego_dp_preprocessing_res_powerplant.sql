@@ -1,5 +1,4 @@
 /*
-
 Rectifies incorrect or implausible records in power plant list and adjusts it for further use
 
 __copyright__ 	= "Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems"

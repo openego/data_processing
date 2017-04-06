@@ -1,6 +1,7 @@
 /*
 Assignment of generators to the relevant substation in the grid model based on grid districts for generators connected to the HV, MV or LV level. 
 Generators connected to the EHV level are assigned based on voronoi cells. The consideres scenario is 'NEP 2035'.
+
 __copyright__ 	= "Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems"
 __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
 __url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"

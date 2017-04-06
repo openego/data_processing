@@ -71,7 +71,7 @@ COMMENT ON TABLE grid.ego_dp_ehv_substation IS '{
 		{"name": "lukasol", "email": "", "date":  "20.10.2016", "comment": "Create substations" },
 		{"name": "Ludee", "email": "", "date": "15.01.2017", "comment": "Update metadata"},
 		{"name": "Ludee", "email": "", "date": "21.03.2017", "comment": "Update metadata to 1.1"},
-		{"name": "Ludee", "email": "", "date": "2017-04-06", "comment": "Update metadata to 1.2"}],
+		{"name": "Ludee", "email": "", "date": "2017-04-06", "comment": "Update metadata to 1.2"} ],
 	"resources": [{
 		"schema": {
 			"fields": [
