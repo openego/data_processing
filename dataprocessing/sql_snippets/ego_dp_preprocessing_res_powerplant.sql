@@ -23,9 +23,7 @@ ALTER TABLE model_draft.ego_supply_res_powerplant
   	ADD COLUMN un_id bigint;
 
 CREATE INDEX model_draft.ego_supply_res_powerplant_idx
-  ON model_draft.ego_supply_res_powerplant
-  USING gist
-(geom);
+	ON model_draft.ego_supply_res_powerplant USING gist (geom);
 
 ALTER TABLE model_draft.ego_supply_res_powerplant OWNER TO oeuser; 
 
