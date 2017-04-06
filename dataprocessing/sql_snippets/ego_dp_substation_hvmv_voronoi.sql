@@ -85,34 +85,8 @@ ALTER TABLE	model_draft.ego_grid_hvmv_substation_dummy OWNER TO oeuser;
 
 -- metadata
 COMMENT ON TABLE model_draft.ego_grid_hvmv_substation_dummy IS '{
-    "Name": "ego hvmv substation dummy points",
-    "Source":   [{
-	"Name": "open_eGo",
-	"URL": "https://github.com/openego/data_processing"}],
-    "Reference date": "2016",
-    "Date of collection": "02.09.2016",
-    "Original file": [""],
-    "Spatial": [{
-	"Resolution": "",
-	"Extend": "Germany" }],
-    "Description": ["Dummy points used for voronoi polygons"],
-    "Column":[
-        {"Name": "subst_id", "Description": "Substation ID", "Unit": " " },
-        {"Name": "subst_name", "Description": "name is DUMMY", "Unit": " " },
-	{"Name": "geom", "Description": "Geometry", "Unit": " " } ],
-    "Changes":	[
-        {"Name": "Ludee", "Mail": "",
-	"Date":  "02.09.2015", "Comment": "Created mview" },
-	{"Name": "Ludee", "Mail": "",
-	"Date":  "17.11.2016", "Comment": "Added Dummy from WKT" },
-	{"Name": "Ludee", "Mail": "",
-	"Date":  "17.11.2016", "Comment": "Added metadata" } ],
-    "Notes": [""],
-    "Licence": [{
-	"Name": "GNU GENERAL PUBLIC LICENSE Version 3", 
-	"URL": "https://github.com/openego/data_processing/blob/master/LICENSE" }],
-    "Instructions for proper use": [" "]
-    }' ;
+	"comment": "eGoDP - Temporary table",
+	"version": "v0.2.6" }' ;
 
 -- select description
 SELECT obj_description('model_draft.ego_grid_hvmv_substation_dummy' ::regclass) ::json;
@@ -189,33 +163,8 @@ DELETE FROM model_draft.ego_grid_hvmv_substation_voronoi WHERE subst_id IS NULL;
 
 -- metadata
 COMMENT ON TABLE model_draft.ego_grid_hvmv_substation_voronoi IS '{
-    "Name": "ego hvmv substation voronoi",
-    "Source":   [{
-	"Name": "open_eGo",
-	"URL": "https://github.com/openego/data_processing"}],
-    "Reference date": "2016",
-    "Date of collection": "02.09.2016",
-    "Original file": ["ego_grid_hvmv_substation"],
-    "Spatial": [{
-	"Resolution": "",
-	"Extend": "Germany" }],
-    "Description": ["Voronoi polygons for hvmv substation"],
-    "Column":[
-        {"Name": "id", "Description": "Unique identifier", "Unit": " " },
-        {"Name": "subst_id", "Description": "Substation ID", "Unit": " " },
-        {"Name": "subst_sum", "Description": "Number of substation per polygon (=1)", "Unit": " " },
-	{"Name": "geom", "Description": "Geometry", "Unit": " " } ],
-    "Changes":	[
-        {"Name": "Ludee", "Mail": "",
-	"Date":  "02.09.2015", "Comment": "Created mview" },
-	{"Name": "Ludee", "Mail": "",
-	"Date":  "16.11.2016", "Comment": "Added metadata" } ],
-    "Notes": [""],
-    "Licence": [{
-	"Name": "GNU GENERAL PUBLIC LICENSE Version 3", 
-	"URL": "https://github.com/openego/data_processing/blob/master/LICENSE" }],
-    "Instructions for proper use": [" "]
-    }' ;
+	"comment": "eGoDP - Temporary table",
+	"version": "v0.2.6" }' ;
 
 -- select description
 SELECT obj_description('model_draft.ego_grid_hvmv_substation_voronoi' ::regclass) ::json;

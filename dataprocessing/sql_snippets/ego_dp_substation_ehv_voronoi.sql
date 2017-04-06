@@ -110,39 +110,9 @@ ALTER TABLE model_draft.ego_grid_ehv_substation_voronoi
 ALTER TABLE model_draft.ego_grid_ehv_substation_voronoi OWNER TO oeuser;
 
 -- metadata
-COMMENT ON TABLE  model_draft.ego_grid_ehv_substation_voronoi IS
-'{
-"Name": "Voronoi polygons for ehv substations",
-"Source": [{
-                  "Name": "open_eGo data-processing",
-                  "URL":  "https://github.com/openego/data_processing" }],
-"Reference date": "2016",
-"Date of collection": "...",
-"Original file": "voronoi_ehv.sql",
-"Spatial resolution": ["Germany"],
-"Description": ["Voronoi cells calculated on the basis of ehv substations"],
-"Column": [
-                   {"Name": "geom",
-                    "Description": "geometry",
-                    "Unit": "" },
-                   {"Name": "subst_id",
-                    "Description": "unique id of ehv-substations",
-                    "Unit": "" }],
-"Changes":[
-                   {"Name": "Mario Kropshofer",
-                    "Mail": "mario.kropshofer2@stud.fh-flensburg.de",
-                    "Date":  "04.10.2016",
-                    "Comment": "..." }, 
-
-                   {"Name": "Ilka Cussmann",
-                    "Mail": "",
-                    "Date":  "26.10.2016",
-                    "Comment": "completed json-string" }
-                  ],
-"ToDo": ["Add licence"],
-"Licence": ["..."],
-"Instructions for proper use": ["..."]
-}';
+COMMENT ON TABLE  model_draft.ego_grid_ehv_substation_voronoi IS '{
+	"comment": "eGoDP - Temporary table",
+	"version": "v0.2.6" }' ;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_grid_ehv_substation_voronoi','ego_dp_substation_ehv_voronoi.sql',' ');

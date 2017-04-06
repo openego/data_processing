@@ -1443,16 +1443,16 @@ COMMENT ON TABLE model_draft.ego_grid_mv_griddistrict IS '{
 		"meta_version": "1.1"}] }';
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','result','model_draft','ego_grid_mv_griddistrict','ego_dp_mv_griddistrict.sql','versioning');
+SELECT ego_scenario_log('v0.2.6','result','model_draft','ego_grid_mv_griddistrict','ego_dp_mv_griddistrict.sql',' ');
 
--- versioning
+/* -- versioning
 INSERT INTO grid.ego_mv_griddistrict (version, subst_id, subst_sum, area_ha, geom_type, geom)
 	SELECT	'v0.2.6',
 		subst_id, subst_sum, area_ha, geom_type, geom
 	FROM	model_draft.ego_grid_mv_griddistrict;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','result','grid','ego_mv_griddistrict','ego_dp_mv_griddistrict.sql','versioning');
+SELECT ego_scenario_log('v0.2.6','result','grid','ego_mv_griddistrict','ego_dp_mv_griddistrict.sql','versioning'); */
 
 
 -- OLD after restructuring

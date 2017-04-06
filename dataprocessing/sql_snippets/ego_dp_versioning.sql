@@ -48,10 +48,10 @@ INSERT INTO grid.ego_dp_mvlv_substation
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.6','result','grid','ego_dp_mvlv_substation','ego_dp_versioning.sql','versioning');
 
--- add Dummy points to substations (18 Points)
+-- add count
 ALTER TABLE grid.ego_dp_mvlv_substation
-DROP COLUMN IF EXISTS subst_cnt,
-ADD COLUMN subst_cnt integer;
+	DROP COLUMN IF EXISTS subst_cnt,
+	ADD COLUMN subst_cnt integer;
 
 -- mvlv substation count
 UPDATE 	grid.ego_dp_mvlv_substation AS t1
