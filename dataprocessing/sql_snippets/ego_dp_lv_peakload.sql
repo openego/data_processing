@@ -160,9 +160,182 @@ SELECT ego_scenario_log('v0.2.7','output','model_draft','ego_osm_sector_per_lvgd
 
 
 
+-- 2. retail sector
+DROP TABLE IF EXISTS  	model_draft.ego_osm_sector_per_lvgd_2_retail CASCADE;
+CREATE TABLE         	model_draft.ego_osm_sector_per_lvgd_2_retail (
+	id 	SERIAL NOT NULL,
+	geom 	geometry(Polygon,3035),
+	CONSTRAINT ego_osm_sector_per_lvgd_2_retail_pkey PRIMARY KEY (id));
+
+-- index GIST (geom)
+CREATE INDEX  	ego_osm_sector_per_lvgd_2_retail_gidx
+    ON    	model_draft.ego_osm_sector_per_lvgd_2_retail USING GIST (geom);
+
+-- grant (oeuser)
+ALTER TABLE	model_draft.ego_osm_sector_per_lvgd_2_retail OWNER TO oeuser;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.7','input','model_draft','ego_osm_sector_per_griddistrict_2_retail','ego_dp_lv_peakload.sql',' ');
+
+-- intersect sector with mv-griddistrict
+INSERT INTO     model_draft.ego_osm_sector_per_lvgd_2_retail (geom)
+	SELECT	c.geom ::geometry(Polygon,3035)
+	FROM	(SELECT (ST_DUMP(ST_SAFE_INTERSECTION(a.geom,b.geom))).geom AS geom
+		FROM	model_draft.ego_osm_sector_per_griddistrict_2_retail AS a,
+			model_draft.ego_grid_lv_griddistrict AS b
+		WHERE	a.geom && b.geom
+		) AS c
+	WHERE	ST_GeometryType(c.geom) = 'ST_Polygon';
+
+-- sector stats
+UPDATE 	model_draft.ego_grid_lv_griddistrict AS t1
+	SET  	sector_area_residential = t2.sector_area,
+		sector_count_residential = t2.sector_count,
+		sector_share_residential = t2.sector_area / t2.area_ha
+	FROM    (SELECT	b.id AS id,
+			SUM(ST_AREA(a.geom)/10000) AS sector_area,
+			COUNT(a.geom) AS sector_count,
+			b.area_ha AS area_ha
+		FROM	model_draft.ego_osm_sector_per_lvgd_2_retail AS a,
+			model_draft.ego_grid_lv_griddistrict AS b
+		WHERE  	b.geom && a.geom AND  
+			ST_INTERSECTS(b.geom,ST_BUFFER(a.geom,-1))
+		GROUP BY b.id
+		) AS t2
+	WHERE  	t1.id = t2.id;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.7','output','model_draft','ego_osm_sector_per_lvgd_2_retail','ego_dp_lv_peakload.sql',' ');
 
 
 
+-- 3. industrial sector
+DROP TABLE IF EXISTS  	model_draft.ego_osm_sector_per_lvgd_3_industrial CASCADE;
+CREATE TABLE         	model_draft.ego_osm_sector_per_lvgd_3_industrial (
+	id 	SERIAL NOT NULL,
+	geom 	geometry(Polygon,3035),
+	CONSTRAINT ego_osm_sector_per_lvgd_3_industrial_pkey PRIMARY KEY (id));
+
+-- index GIST (geom)
+CREATE INDEX  	ego_osm_sector_per_lvgd_3_industrial_gidx
+    ON    	model_draft.ego_osm_sector_per_lvgd_3_industrial USING GIST (geom);
+
+-- grant (oeuser)
+ALTER TABLE	model_draft.ego_osm_sector_per_lvgd_3_industrial OWNER TO oeuser;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.7','input','model_draft','ego_osm_sector_per_griddistrict_3_industrial','ego_dp_lv_peakload.sql',' ');
+
+-- intersect sector with mv-griddistrict
+INSERT INTO     model_draft.ego_osm_sector_per_lvgd_3_industrial (geom)
+	SELECT	c.geom ::geometry(Polygon,3035)
+	FROM	(SELECT (ST_DUMP(ST_SAFE_INTERSECTION(a.geom,b.geom))).geom AS geom
+		FROM	model_draft.ego_osm_sector_per_griddistrict_3_industrial AS a,
+			model_draft.ego_grid_lv_griddistrict AS b
+		WHERE	a.geom && b.geom
+		) AS c
+	WHERE	ST_GeometryType(c.geom) = 'ST_Polygon';
+
+-- sector stats
+UPDATE 	model_draft.ego_grid_lv_griddistrict AS t1
+	SET  	sector_area_residential = t2.sector_area,
+		sector_count_residential = t2.sector_count,
+		sector_share_residential = t2.sector_area / t2.area_ha
+	FROM    (SELECT	b.id AS id,
+			SUM(ST_AREA(a.geom)/10000) AS sector_area,
+			COUNT(a.geom) AS sector_count,
+			b.area_ha AS area_ha
+		FROM	model_draft.ego_osm_sector_per_lvgd_3_industrial AS a,
+			model_draft.ego_grid_lv_griddistrict AS b
+		WHERE  	b.geom && a.geom AND  
+			ST_INTERSECTS(b.geom,ST_BUFFER(a.geom,-1))
+		GROUP BY b.id
+		) AS t2
+	WHERE  	t1.id = t2.id;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.7','output','model_draft','ego_osm_sector_per_lvgd_3_industrial','ego_dp_lv_peakload.sql',' ');
+
+
+
+-- 4. agricultural sector
+DROP TABLE IF EXISTS  	model_draft.ego_osm_sector_per_lvgd_4_agricultural CASCADE;
+CREATE TABLE         	model_draft.ego_osm_sector_per_lvgd_4_agricultural (
+	id 	SERIAL NOT NULL,
+	geom 	geometry(Polygon,3035),
+	CONSTRAINT ego_osm_sector_per_lvgd_4_agricultural_pkey PRIMARY KEY (id));
+
+-- index GIST (geom)
+CREATE INDEX  	ego_osm_sector_per_lvgd_4_agricultural_gidx
+    ON    	model_draft.ego_osm_sector_per_lvgd_4_agricultural USING GIST (geom);
+
+-- grant (oeuser)
+ALTER TABLE	model_draft.ego_osm_sector_per_lvgd_4_agricultural OWNER TO oeuser;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.7','input','model_draft','ego_osm_sector_per_griddistrict_4_agricultural','ego_dp_lv_peakload.sql',' ');
+
+-- intersect sector with mv-griddistrict
+INSERT INTO     model_draft.ego_osm_sector_per_lvgd_4_agricultural (geom)
+	SELECT	c.geom ::geometry(Polygon,3035)
+	FROM	(SELECT (ST_DUMP(ST_SAFE_INTERSECTION(a.geom,b.geom))).geom AS geom
+		FROM	model_draft.ego_osm_sector_per_griddistrict_4_agricultural AS a,
+			model_draft.ego_grid_lv_griddistrict AS b
+		WHERE	a.geom && b.geom
+		) AS c
+	WHERE	ST_GeometryType(c.geom) = 'ST_Polygon';
+
+-- sector stats
+UPDATE 	model_draft.ego_grid_lv_griddistrict AS t1
+	SET  	sector_area_residential = t2.sector_area,
+		sector_count_residential = t2.sector_count,
+		sector_share_residential = t2.sector_area / t2.area_ha
+	FROM    (SELECT	b.id AS id,
+			SUM(ST_AREA(a.geom)/10000) AS sector_area,
+			COUNT(a.geom) AS sector_count,
+			b.area_ha AS area_ha
+		FROM	model_draft.ego_osm_sector_per_lvgd_4_agricultural AS a,
+			model_draft.ego_grid_lv_griddistrict AS b
+		WHERE  	b.geom && a.geom AND  
+			ST_INTERSECTS(b.geom,ST_BUFFER(a.geom,-1))
+		GROUP BY b.id
+		) AS t2
+	WHERE  	t1.id = t2.id;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.7','output','model_draft','ego_osm_sector_per_lvgd_4_agricultural','ego_dp_lv_peakload.sql',' ');
+
+
+-- sector stats
+UPDATE 	model_draft.ego_grid_lv_griddistrict AS t1
+	SET  	sector_area_sum = t2.sector_area_sum,
+		sector_share_sum = t2.sector_share_sum,
+		sector_count_sum = t2.sector_count_sum
+	FROM    (
+		SELECT	id,
+			coalesce(sector_area_residential,0) + 
+				coalesce(sector_area_retail,0) + 
+				coalesce(sector_area_industrial,0) + 
+				coalesce(sector_area_agricultural,0) AS sector_area_sum,
+			coalesce(sector_share_residential,0) + 
+				coalesce(sector_share_retail,0) + 
+				coalesce(sector_share_industrial,0) + 
+				coalesce(sector_share_agricultural,0) AS sector_share_sum,
+			coalesce(sector_count_residential,0) + 
+				coalesce(sector_count_retail,0) + 
+				coalesce(sector_count_industrial,0) + 
+				coalesce(sector_count_agricultural,0) AS sector_count_sum					
+		FROM	model_draft.ego_grid_lv_griddistrict
+		) AS t2
+	WHERE  	t1.id = t2.id;
+
+
+	
+	
+	
+	
+	
+	
 
 /* INSERT INTO	model_draft.ego_grid_mvlv_substation_voronoi_cut (la_id,geom)
 	SELECT	a.id AS la_id,
