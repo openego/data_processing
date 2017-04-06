@@ -24,7 +24,7 @@ CREATE TABLE 		model_draft.ego_scenario (
 ALTER TABLE	model_draft.ego_scenario OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_scenario','ego_dp_structure_scenariolog.sql','Reset scenario list');
+SELECT ego_scenario_log('v0.2.7','output','model_draft','ego_scenario','ego_dp_structure_scenariolog.sql','Reset scenario list');
 
 -- scenario list
 INSERT INTO	model_draft.ego_scenario (version,version_name,release,comment,timestamp) VALUES
@@ -35,8 +35,8 @@ INSERT INTO	model_draft.ego_scenario (version,version_name,release,comment,times
 	('v0.2.2', ' ', 'FALSE', ' ', 'now()' ),
 	('v0.2.3', ' ', 'FALSE', ' ', 'now()' ),
 	('v0.2.4', ' ', 'FALSE', ' ', 'now()' ),
-	('v0.2.6', 'mockrun', 'FALSE', 'finished but revealed major bugs', '2017-03-03' ),
-	('v0.2.6', 'premiere', 'FALSE', 'first complete relase', '2017-03-24' ),
+	('v0.2.7', 'mockrun', 'FALSE', 'finished but revealed major bugs', '2017-03-03' ),
+	('v0.2.7', 'premiere', 'FALSE', 'first complete relase', '2017-03-24' ),
 	('v0.2.7', 'homerun', 'TRUE', 'finish in one run', '2017-04-06' ); 
 
 -- metadata
@@ -160,4 +160,4 @@ COMMENT ON TABLE model_draft.ego_scenario_log IS '{
 SELECT obj_description('model_draft.ego_scenario_log' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_scenario_log','ego_dp_structure_scenariolog.sql','Reset scenario log');
+SELECT ego_scenario_log('v0.2.7','output','model_draft','ego_scenario_log','ego_dp_structure_scenariolog.sql','Reset scenario log');

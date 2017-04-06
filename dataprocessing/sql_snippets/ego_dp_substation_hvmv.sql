@@ -43,16 +43,16 @@ DROP VIEW IF EXISTS model_draft.way_substations_with_110kV CASCADE;
 DROP VIEW IF EXISTS model_draft.way_substations CASCADE;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','input','openstreetmap','osm_deu_ways','ego_dp_substation_hvmv.sql',' ');
+SELECT ego_scenario_log('v0.2.7','input','openstreetmap','osm_deu_ways','ego_dp_substation_hvmv.sql',' ');
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','input','openstreetmap','osm_deu_polygon','ego_dp_substation_hvmv.sql',' ');
+SELECT ego_scenario_log('v0.2.7','input','openstreetmap','osm_deu_polygon','ego_dp_substation_hvmv.sql',' ');
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','input','openstreetmap','osm_deu_nodes','ego_dp_substation_hvmv.sql',' ');
+SELECT ego_scenario_log('v0.2.7','input','openstreetmap','osm_deu_nodes','ego_dp_substation_hvmv.sql',' ');
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','input','openstreetmap','osm_deu_line','ego_dp_substation_hvmv.sql',' ');
+SELECT ego_scenario_log('v0.2.7','input','openstreetmap','osm_deu_line','ego_dp_substation_hvmv.sql',' ');
 
 
 --> WAY: create view of way substations:
@@ -175,7 +175,7 @@ ALTER MATERIALIZED VIEW model_draft.summary OWNER TO oeuser;
 CREATE INDEX summary_gix ON model_draft.summary USING GIST (polygon);
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','input','political_boundary','bkg_vg250_1_sta_union_mview','ego_dp_substation_hvmv.sql',' ');
+SELECT ego_scenario_log('v0.2.7','input','political_boundary','bkg_vg250_1_sta_union_mview','ego_dp_substation_hvmv.sql',' ');
 
 
 -- eliminate substation that are not within VG250
@@ -319,4 +319,4 @@ COMMENT ON TABLE  model_draft.ego_grid_hvmv_substation IS
 SELECT obj_description('model_draft.ego_grid_hvmv_substation'::regclass)::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_grid_hvmv_substation','ego_dp_substation_hvmv.sql',' '); 
+SELECT ego_scenario_log('v0.2.7','output','model_draft','ego_grid_hvmv_substation','ego_dp_substation_hvmv.sql',' '); 

@@ -50,7 +50,7 @@ CREATE INDEX generators_nep2035_idx
   (geom);
   
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_supply_generator_nep2035','ego_dp_powerflow_assignment_generator_nep2035.sql',' ');
+SELECT ego_scenario_log('v0.2.7','output','model_draft','ego_supply_generator_nep2035','ego_dp_powerflow_assignment_generator_nep2035.sql',' ');
 
 
 -- Update table on conventional power plants and add information on unified id of generators and information of relevant bus
@@ -86,7 +86,7 @@ UPDATE model_draft.ego_supply_conv_powerplant_2035 a
 	WHERE a.gid = b.conv_id; 
 	
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','input','model_draft','ego_supply_conv_powerplant_2035','ego_dp_powerflow_assignment_generator_nep2035.sql',' ');
+SELECT ego_scenario_log('v0.2.7','input','model_draft','ego_supply_conv_powerplant_2035','ego_dp_powerflow_assignment_generator_nep2035.sql',' ');
 
 
 
@@ -219,7 +219,7 @@ UPDATE model_draft.ego_supply_rea_2035 a
 	WHERE a.id = b.re_id; 
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','input','model_draft','ego_supply_rea_2035','ego_dp_powerflow_assignment_generator_nep2035.sql',' ');
+SELECT ego_scenario_log('v0.2.7','input','model_draft','ego_supply_rea_2035','ego_dp_powerflow_assignment_generator_nep2035.sql',' ');
 
 
 -- Insert generator data into powerflow schema, that contains all generators seperately 

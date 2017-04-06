@@ -9,7 +9,7 @@ __author__ 	= "IlkaCu, wolfbunke"
 
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','input','supply','ego_conventional_powerplant','ego_dp_preprocessing_conv_powerplant.sql','');
+SELECT ego_scenario_log('v0.2.7','input','supply','ego_conventional_powerplant','ego_dp_preprocessing_conv_powerplant.sql','');
 
 -- copy powerplant list
 DROP TABLE IF EXISTS model_draft.ego_supply_conv_powerplant CASCADE; 
@@ -30,7 +30,7 @@ CREATE INDEX model_draft.ego_supply_conv_powerplant_idx
 ALTER TABLE model_draft.ego_supply_conv_powerplant OWNER TO oeuser; 
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','temp','model_draft','ego_supply_conv_powerplant','ego_dp_preprocessing_conv_powerplant.sql','');
+SELECT ego_scenario_log('v0.2.7','temp','model_draft','ego_supply_conv_powerplant','ego_dp_preprocessing_conv_powerplant.sql','');
 
 
 -- Delete entries without information on installed capacity or where capacity <= 0
@@ -227,4 +227,4 @@ COMMENT ON TABLE  model_draft.ego_supply_conv_powerplant IS
 SELECT obj_description('model_draft.ego_supply_conv_powerplant' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_supply_conv_powerplant','ego_dp_preprocessing_conv_powerplant.sql','');
+SELECT ego_scenario_log('v0.2.7','output','model_draft','ego_supply_conv_powerplant','ego_dp_preprocessing_conv_powerplant.sql','');

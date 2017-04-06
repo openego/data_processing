@@ -39,7 +39,7 @@ UPDATE 	model_draft.ego_grid_mvlv_substation_voronoi_cut AS t1
 /* 
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','temp','model_draft','ego_grid_hvmv_substation_voronoi_cut','process_eGo_grid_district.sql',' ');
+SELECT ego_scenario_log('v0.2.7','temp','model_draft','ego_grid_hvmv_substation_voronoi_cut','process_eGo_grid_district.sql',' ');
 
 	
 	

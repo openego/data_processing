@@ -101,7 +101,7 @@ COMMENT ON TABLE grid.ego_dp_ehv_substation IS '{
 SELECT obj_description('grid.ego_dp_ehv_substation' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','result','grid','ego_dp_ehv_substation','ego_dp_structure_versioning.sql','hvmv substation');
+SELECT ego_scenario_log('v0.2.7','result','grid','ego_dp_ehv_substation','ego_dp_structure_versioning.sql','hvmv substation');
 
 
 -- HVMV substation
@@ -195,7 +195,7 @@ COMMENT ON TABLE grid.ego_dp_hvmv_substation IS '{
 SELECT obj_description('grid.ego_dp_hvmv_substation' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','result','grid','ego_dp_hvmv_substation','ego_dp_structure_versioning.sql','hvmv substation');
+SELECT ego_scenario_log('v0.2.7','result','grid','ego_dp_hvmv_substation','ego_dp_structure_versioning.sql','hvmv substation');
 
 
 
@@ -261,7 +261,7 @@ COMMENT ON TABLE grid.ego_dp_mvlv_substation IS '{
 SELECT obj_description('grid.ego_dp_mvlv_substation' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','result','grid','ego_dp_mvlv_substation','ego_dp_structure_versioning.sql','hvmv substation');
+SELECT ego_scenario_log('v0.2.7','result','grid','ego_dp_mvlv_substation','ego_dp_structure_versioning.sql','hvmv substation');
 
 
 -- Catchment areas
@@ -323,7 +323,7 @@ COMMENT ON TABLE grid.ego_dp_ehv_griddistrict IS '{
 SELECT obj_description('grid.ego_dp_ehv_griddistrict' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','result','grid','ego_dp_ehv_griddistrict','ego_dp_structure_versioning.sql','mv grid district');
+SELECT ego_scenario_log('v0.2.7','result','grid','ego_dp_ehv_griddistrict','ego_dp_structure_versioning.sql','mv grid district');
 
 
 -- MV griddistrict
@@ -414,7 +414,7 @@ COMMENT ON TABLE grid.ego_dp_mv_griddistrict IS '{
 SELECT obj_description('grid.ego_dp_mv_griddistrict' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','result','grid','ego_dp_mv_griddistrict','ego_dp_structure_versioning.sql','mv grid district');
+SELECT ego_scenario_log('v0.2.7','result','grid','ego_dp_mv_griddistrict','ego_dp_structure_versioning.sql','mv grid district');
 
 
 -- in process
@@ -498,7 +498,7 @@ COMMENT ON TABLE grid.ego_dp_lv_griddistrict IS '{
 SELECT obj_description('grid.ego_dp_lv_griddistrict' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','result','grid','ego_dp_lv_griddistrict','ego_dp_structure_versioning.sql','mv grid district');
+SELECT ego_scenario_log('v0.2.7','result','grid','ego_dp_lv_griddistrict','ego_dp_structure_versioning.sql','mv grid district');
 
 
 -- Demand
@@ -630,7 +630,7 @@ COMMENT ON TABLE demand.ego_dp_loadarea IS '{
 SELECT obj_description('demand.ego_dp_loadarea' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','result','demand','ego_dp_loadarea','ego_dp_structure_versioning.sql','load area');
+SELECT ego_scenario_log('v0.2.7','result','demand','ego_dp_loadarea','ego_dp_structure_versioning.sql','load area');
 
 
 -- OVERVIEW
