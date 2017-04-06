@@ -2,7 +2,7 @@
 census 2011 population per ha 
 Extract points with population (>0) from census in mview
 
-__copyright__ 	= "Reiner Lemoine Institut gGmbH"
+__copyright__ 	= "Reiner Lemoine Institut"
 __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
 __url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
 __author__ 	= "Ludee"
@@ -111,6 +111,10 @@ UPDATE	model_draft.destatis_zensus_population_per_ha_inside AS t1
 		ST_CONTAINS(a.geom,b.geom_point) AND
 		t1.gid = b.gid;
 
+-- metadata
+COMMENT ON TABLE model_draft.destatis_zensus_population_per_ha_inside IS '{
+	"comment": "eGoDP - Temporary table",
+	"version": "v0.2.6" }' ;
 
 -- zensus points with population inside vg250
 DROP MATERIALIZED VIEW IF EXISTS	model_draft.destatis_zensus_population_per_ha_invg_mview CASCADE;
@@ -142,32 +146,8 @@ ALTER TABLE	model_draft.destatis_zensus_population_per_ha_invg_mview OWNER TO oe
 
 -- metadata
 COMMENT ON MATERIALIZED VIEW model_draft.destatis_zensus_population_per_ha_invg_mview IS '{
-	"Name": "German Census 2011 - Population in 100m grid",
-	"Source": [{
-		"Name": "Statistisches Bundesamt (Destatis)",
-		"URL":  "https://www.destatis.de/DE/Methoden/Zensus_/Zensus.html" }],
-	"Reference date": "2011",
-	"Date of collection": "03.02.2016",
-	"Original file": "https://www.zensus2011.de/SharedDocs/Downloads/DE/Pressemitteilung/DemografischeGrunddaten/csv_Bevoelkerung_100m_Gitter.zip",
-	"Spatial resolution": ["Germany"],
-	"Description": ["National census in Germany in 2011"],
-	"Column": [
-		{"Name": "gid",	"Description": "Unique identifier", "Unit": "" },
-		{"Name": "grid_id", "Description": "Grid number of source", "Unit": "" },
-		{"Name": "x_mp", "Description": "Latitude of centroid in (ETRS89 - LAEA; EPSG:3035)", "Unit": "" },
-		{"Name": "y_mp", "Description": "Longitude of centroid in (ETRS89 - LAEA; EPSG:3035)", "Unit": "" },
-		{"Name": "population", "Description": "Number of registred residents", "Unit": "human" },
-		{"Name": "geom_point", "Description": "Geometry centroid", "Unit": "" },
-		{"Name": "geom", "Description": "Geometry", "Unit": "" } ],
-	"Changes":[
-		{"Name": "Ludee", "Mail": "",
-		"Date":  "03.02.2016","Comment": "Added Table"},
-		{"Name": "Ludee", "Mail": "",
-		"Date":  "25.10.2016","Comment": "Moved table and add metadata"} ],
-	"ToDo": [""],
-	"Licence": ["Datenlizenz Deutschland – Namensnennung – Version 2.0"],
-	"Instructions for proper use": ["Empfohlene Zitierweise des Quellennachweises: Datenquelle: Statistisches Bundesamt, Wiesbaden, Genesis-Online, <optional> Abrufdatum; Datenlizenz by-2-0. Quellenvermerk bei eigener Berechnung / Darstellung: Datenquelle: Statistisches Bundesamt, Wiesbaden, Genesis-Online, <optional> Abrufdatum; Datenlizenz by-2-0; eigene Berechnung/eigene Darstellung. In elektronischen Werken ist im Quellenverweis dem Begriff (Datenlizenz by-2-0) der Link www.govdata.de/dl-de/by-2-0 als Verknüpfung zu hinterlegen."]
-	}' ;
+	"comment": "eGoDP - Temporary table",
+	"version": "v0.2.6" }' ;
 
 -- select description
 SELECT obj_description('model_draft.destatis_zensus_population_per_ha_invg_mview' ::regclass) ::json;
@@ -207,32 +187,8 @@ ALTER TABLE	model_draft.destatis_zensus_population_per_ha_outvg_mview OWNER TO o
 
 -- metadata
 COMMENT ON MATERIALIZED VIEW model_draft.destatis_zensus_population_per_ha_outvg_mview IS '{
-	"Name": "German Census 2011 - Population in 100m grid",
-	"Source": [{
-		"Name": "Statistisches Bundesamt (Destatis)",
-		"URL":  "https://www.destatis.de/DE/Methoden/Zensus_/Zensus.html" }],
-	"Reference date": "2011",
-	"Date of collection": "03.02.2016",
-	"Original file": "https://www.zensus2011.de/SharedDocs/Downloads/DE/Pressemitteilung/DemografischeGrunddaten/csv_Bevoelkerung_100m_Gitter.zip",
-	"Spatial resolution": ["Germany"],
-	"Description": ["National census in Germany in 2011"],
-	"Column": [
-		{"Name": "gid",	"Description": "Unique identifier", "Unit": "" },
-		{"Name": "grid_id", "Description": "Grid number of source", "Unit": "" },
-		{"Name": "x_mp", "Description": "Latitude of centroid in (ETRS89 - LAEA; EPSG:3035)", "Unit": "" },
-		{"Name": "y_mp", "Description": "Longitude of centroid in (ETRS89 - LAEA; EPSG:3035)", "Unit": "" },
-		{"Name": "population", "Description": "Number of registred residents", "Unit": "human" },
-		{"Name": "geom_point", "Description": "Geometry centroid", "Unit": "" },
-		{"Name": "geom", "Description": "Geometry", "Unit": "" } ],
-	"Changes":[
-		{"Name": "Ludee", "Mail": "",
-		"Date":  "03.02.2016","Comment": "Added Table"},
-		{"Name": "Ludee", "Mail": "",
-		"Date":  "25.10.2016","Comment": "Moved table and add metadata"} ],
-	"ToDo": [""],
-	"Licence": ["Datenlizenz Deutschland – Namensnennung – Version 2.0"],
-	"Instructions for proper use": ["Empfohlene Zitierweise des Quellennachweises: Datenquelle: Statistisches Bundesamt, Wiesbaden, Genesis-Online, <optional> Abrufdatum; Datenlizenz by-2-0. Quellenvermerk bei eigener Berechnung / Darstellung: Datenquelle: Statistisches Bundesamt, Wiesbaden, Genesis-Online, <optional> Abrufdatum; Datenlizenz by-2-0; eigene Berechnung/eigene Darstellung. In elektronischen Werken ist im Quellenverweis dem Begriff (Datenlizenz by-2-0) der Link www.govdata.de/dl-de/by-2-0 als Verknüpfung zu hinterlegen."]
-	}' ;
+	"comment": "eGoDP - Temporary table",
+	"version": "v0.2.6" }' ;
 
 -- select description
 SELECT obj_description('model_draft.destatis_zensus_population_per_ha_outvg_mview' ::regclass) ::json;

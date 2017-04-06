@@ -4,7 +4,7 @@ Creates a table to get inserts from other processed tables
 
 WARNING: It drops the table and deletes old entries when executed!
 
-__copyright__ 	= "Reiner Lemoine Institut gGmbH"
+__copyright__ 	= "Reiner Lemoine Institut"
 __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
 __url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
 __author__ 	= "Ludee"
@@ -36,7 +36,8 @@ INSERT INTO	model_draft.ego_scenario (version,version_name,release,comment,times
 	('v0.2.3', ' ', 'FALSE', ' ', 'now()' ),
 	('v0.2.4', ' ', 'FALSE', ' ', 'now()' ),
 	('v0.2.6', 'mockrun', 'FALSE', 'finished but revealed major bugs', '2017-03-03' ),
-	('v0.2.6', 'premiere', 'TRUE', 'First complete relase', '2017-03-24' ) ; 
+	('v0.2.6', 'premiere', 'FALSE', 'first complete relase', '2017-03-24' ),
+	('v0.2.7', 'homerun', 'TRUE', 'finish in one run', '2017-04-06' ); 
 
 -- metadata
 COMMENT ON TABLE model_draft.ego_scenario IS '{
