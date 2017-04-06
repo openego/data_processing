@@ -189,9 +189,9 @@ INSERT INTO     model_draft.ego_osm_sector_per_lvgd_2_retail (geom)
 
 -- sector stats
 UPDATE 	model_draft.ego_grid_lv_griddistrict AS t1
-	SET  	sector_area_residential = t2.sector_area,
-		sector_count_residential = t2.sector_count,
-		sector_share_residential = t2.sector_area / t2.area_ha
+	SET  	sector_area_retail = t2.sector_area,
+		sector_count_retail = t2.sector_count,
+		sector_share_retail = t2.sector_area / t2.area_ha
 	FROM    (SELECT	b.id AS id,
 			SUM(ST_AREA(a.geom)/10000) AS sector_area,
 			COUNT(a.geom) AS sector_count,
@@ -206,7 +206,6 @@ UPDATE 	model_draft.ego_grid_lv_griddistrict AS t1
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.7','output','model_draft','ego_osm_sector_per_lvgd_2_retail','ego_dp_lv_peakload.sql',' ');
-
 
 
 -- 3. industrial sector
@@ -238,9 +237,9 @@ INSERT INTO     model_draft.ego_osm_sector_per_lvgd_3_industrial (geom)
 
 -- sector stats
 UPDATE 	model_draft.ego_grid_lv_griddistrict AS t1
-	SET  	sector_area_residential = t2.sector_area,
-		sector_count_residential = t2.sector_count,
-		sector_share_residential = t2.sector_area / t2.area_ha
+	SET  	sector_area_industrial = t2.sector_area,
+		sector_count_industrial = t2.sector_count,
+		sector_share_industrial = t2.sector_area / t2.area_ha
 	FROM    (SELECT	b.id AS id,
 			SUM(ST_AREA(a.geom)/10000) AS sector_area,
 			COUNT(a.geom) AS sector_count,
@@ -287,9 +286,9 @@ INSERT INTO     model_draft.ego_osm_sector_per_lvgd_4_agricultural (geom)
 
 -- sector stats
 UPDATE 	model_draft.ego_grid_lv_griddistrict AS t1
-	SET  	sector_area_residential = t2.sector_area,
-		sector_count_residential = t2.sector_count,
-		sector_share_residential = t2.sector_area / t2.area_ha
+	SET  	sector_area_agricultural = t2.sector_area,
+		sector_count_agricultural = t2.sector_count,
+		sector_share_agricultural = t2.sector_area / t2.area_ha
 	FROM    (SELECT	b.id AS id,
 			SUM(ST_AREA(a.geom)/10000) AS sector_area,
 			COUNT(a.geom) AS sector_count,
