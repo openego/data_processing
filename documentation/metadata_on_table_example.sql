@@ -31,11 +31,11 @@ COMMENT ON TABLE schema.table IS '{
 		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
 		"copyright": "© Reiner Lemoine Institut"} ],
 	"contributors": [
-		{"name": "Ludee", "email": " ", "date": "16.06.2016", "comment": "created metadata"},
-		{"name": "Ludee", "email": " ", "date": "22.11.2016", "comment": "updated metadata"},
-		{"name": "Ludee", "email": " ", "date": "22.11.2016", "comment": "updated header and license"},
-		{"name": "Ludee", "email": " ", "date": "16.03.2017", "comment": "add license to source"},
-		{"name": "Ludee", "email": " ", "date": "28.03.2017", "comment": "add copyright to source and license"} ],
+		{"name": "Ludee", "email": " ", "date": "16.06.2016", "comment": "Create metadata"},
+		{"name": "Ludee", "email": " ", "date": "22.11.2016", "comment": "Update metadata"},
+		{"name": "Ludee", "email": " ", "date": "22.11.2016", "comment": "Update header and license"},
+		{"name": "Ludee", "email": " ", "date": "16.03.2017", "comment": "Add license to source"},
+		{"name": "Ludee", "email": " ", "date": "28.03.2017", "comment": "Add copyright to source and license"} ],
 	"resources": [{
 		"schema": {
 			"fields": [

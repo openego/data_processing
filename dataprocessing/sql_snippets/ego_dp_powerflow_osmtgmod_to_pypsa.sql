@@ -104,4 +104,4 @@ AND bus_id NOT IN
 AND bus_id NOT IN 
 	(SELECT bus0 FROM model_draft.ego_grid_pf_hv_transformer WHERE scn_name='Status Quo')
 AND bus_id NOT IN 
-(SELECT bus1 FROM model_draft.ego_grid_pf_hv_transformer WHERE scn_name='Status Quo'); 
+	(SELECT bus1 FROM model_draft.ego_grid_pf_hv_transformer WHERE scn_name='Status Quo'); 
