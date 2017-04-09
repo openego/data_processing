@@ -520,4 +520,4 @@ INSERT INTO model_draft.ego_grid_pf_hv_load_pq_set (scn_name, load_id, temp_id, 
 */
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.7','output','model_draft','ego_grid_pf_hv_generator_pq_set','ego_dp_powerflow_timeseries_generator.sql',' ');
+SELECT ego_scenario_log('v0.2.8','output','model_draft','ego_grid_pf_hv_generator_pq_set','ego_dp_powerflow_timeseries_generator.sql',' ');

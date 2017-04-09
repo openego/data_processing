@@ -21,4 +21,4 @@ FROM model_draft.ego_grid_pf_hv_load a
 WHERE scn_name= 'Status Quo'; 
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.7','output','model_draft','ego_grid_pf_hv_load','ego_dp_powerflow_assignment_load_nep2035.sql',' ');
+SELECT ego_scenario_log('v0.2.8','output','model_draft','ego_grid_pf_hv_load','ego_dp_powerflow_assignment_load_nep2035.sql',' ');

@@ -53,7 +53,7 @@ UPDATE 	model_draft.ego_grid_lv_griddistrict_cut AS t1
 	WHERE  	t1.id = t2.id;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.7','temp','model_draft','ego_grid_lv_griddistrict_cut','ego_dp_lv_griddistrict.sql',' ');
+SELECT ego_scenario_log('v0.2.8','temp','model_draft','ego_grid_lv_griddistrict_cut','ego_dp_lv_griddistrict.sql',' ');
 
 
 -- with substation
@@ -82,10 +82,10 @@ CREATE INDEX  	ego_grid_lv_griddistrict_cut_1subst_geom_idx
 -- metadata
 COMMENT ON TABLE model_draft.ego_grid_lv_griddistrict_cut_1subst IS '{
 	"comment": "eGoDP - Temporary table",
-	"version": "v0.2.7" }' ;
+	"version": "v0.2.8" }' ;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.7','temp','model_draft','ego_grid_lv_griddistrict_cut_1subst','ego_dp_lv_griddistrict.sql',' ');
+SELECT ego_scenario_log('v0.2.8','temp','model_draft','ego_grid_lv_griddistrict_cut_1subst','ego_dp_lv_griddistrict.sql',' ');
 
 
 
@@ -115,10 +115,10 @@ CREATE INDEX  	ego_grid_lv_griddistrict_cut_0subst_geom_idx
 -- metadata
 COMMENT ON TABLE model_draft.ego_grid_lv_griddistrict_cut_0subst IS '{
 	"comment": "eGoDP - Temporary table",
-	"version": "v0.2.7" }' ;
+	"version": "v0.2.8" }' ;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.7','temp','model_draft','ego_grid_lv_griddistrict_cut_0subst','ego_dp_lv_griddistrict.sql',' ');
+SELECT ego_scenario_log('v0.2.8','temp','model_draft','ego_grid_lv_griddistrict_cut_0subst','ego_dp_lv_griddistrict.sql',' ');
 
 
 
@@ -148,10 +148,10 @@ CREATE INDEX  	ego_grid_lv_griddistrict_cut_xsubst_geom_idx
 -- metadata
 COMMENT ON TABLE model_draft.ego_grid_lv_griddistrict_cut_xsubst IS '{
 	"comment": "eGoDP - Temporary table",
-	"version": "v0.2.7" }' ;
+	"version": "v0.2.8" }' ;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.7','temp','model_draft','ego_grid_lv_griddistrict_cut_xsubst','ego_dp_lv_griddistrict.sql',' ');
+SELECT ego_scenario_log('v0.2.8','temp','model_draft','ego_grid_lv_griddistrict_cut_xsubst','ego_dp_lv_griddistrict.sql',' ');
 
 
 
@@ -206,10 +206,10 @@ ALTER TABLE	model_draft.ego_grid_lv_griddistrict_cut_nn OWNER TO oeuser;
 -- metadata
 COMMENT ON TABLE model_draft.ego_grid_lv_griddistrict_cut_nn IS '{
 	"comment": "eGoDP - Temporary table",
-	"version": "v0.2.7" }' ;
+	"version": "v0.2.8" }' ;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.7','temp','model_draft','ego_grid_lv_griddistrict_cut_nn','ego_dp_lv_griddistrict.sql',' ');
+SELECT ego_scenario_log('v0.2.8','temp','model_draft','ego_grid_lv_griddistrict_cut_nn','ego_dp_lv_griddistrict.sql',' ');
 
 
 
@@ -270,10 +270,10 @@ UPDATE 	model_draft.ego_grid_lv_griddistrict_cut_nn_collect AS t1
 -- metadata
 COMMENT ON TABLE model_draft.ego_grid_lv_griddistrict_cut_nn_collect IS '{
 	"comment": "eGoDP - Temporary table",
-	"version": "v0.2.7" }' ;
+	"version": "v0.2.8" }' ;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.7','temp','model_draft','ego_grid_lv_griddistrict_cut_nn_collect','ego_dp_lv_griddistrict.sql',' ');
+SELECT ego_scenario_log('v0.2.8','temp','model_draft','ego_grid_lv_griddistrict_cut_nn_collect','ego_dp_lv_griddistrict.sql',' ');
 
 		
 		
@@ -453,8 +453,8 @@ CREATE TABLE 		model_draft.ego_grid_mvlv_substation_voronoi_cut (
 ALTER TABLE model_draft.ego_grid_mvlv_substation_voronoi_cut OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.7','input','model_draft','ego_demand_loadarea','ego_dp_lv_griddistrict.sql',' ');
-SELECT ego_scenario_log('v0.2.7','input','model_draft','ego_grid_mvlv_substation_voronoi','ego_dp_lv_griddistrict.sql',' ');
+SELECT ego_scenario_log('v0.2.8','input','model_draft','ego_demand_loadarea','ego_dp_lv_griddistrict.sql',' ');
+SELECT ego_scenario_log('v0.2.8','input','model_draft','ego_grid_mvlv_substation_voronoi','ego_dp_lv_griddistrict.sql',' ');
 
 -- insert cut
 INSERT INTO 	model_draft.ego_grid_mvlv_substation_voronoi_cut (la_id,geom)
@@ -491,7 +491,7 @@ UPDATE 	model_draft.ego_grid_mvlv_substation_voronoi_cut AS t1
 	WHERE  	t1.id = t2.id; */
 /* 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.7','input','model_draft','ego_grid_mvlv_substation','ego_dp_lv_griddistrict.sql',' ');
+SELECT ego_scenario_log('v0.2.8','input','model_draft','ego_grid_mvlv_substation','ego_dp_lv_griddistrict.sql',' ');
 
 -- count mvlv_substation
 UPDATE 	model_draft.ego_grid_mvlv_substation_voronoi_cut AS t1
@@ -511,7 +511,7 @@ UPDATE 	model_draft.ego_grid_mvlv_substation_voronoi_cut AS t1
 	WHERE  	t1.id = t2.id;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.7','temp','model_draft','ego_grid_mvlv_substation_voronoi_cut','ego_dp_lv_griddistrict.sql',' ');
+SELECT ego_scenario_log('v0.2.8','temp','model_draft','ego_grid_mvlv_substation_voronoi_cut','ego_dp_lv_griddistrict.sql',' ');
 
 
 -- Parts with substation
@@ -533,7 +533,7 @@ CREATE INDEX  	ego_grid_mvlv_substation_voronoi_cut_1subst_mview_geom_idx
 ALTER TABLE	model_draft.ego_grid_mvlv_substation_voronoi_cut_1subst_mview OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.7','temp','model_draft','ego_grid_mvlv_substation_voronoi_cut_1subst_mview','ego_dp_lv_griddistrict.sql',' ');
+SELECT ego_scenario_log('v0.2.8','temp','model_draft','ego_grid_mvlv_substation_voronoi_cut_1subst_mview','ego_dp_lv_griddistrict.sql',' ');
 
 
 -- Parts without substation
@@ -555,7 +555,7 @@ CREATE INDEX  	ego_grid_mvlv_substation_voronoi_cut_0subst_mview_geom_idx
 ALTER TABLE	model_draft.ego_grid_mvlv_substation_voronoi_cut_0subst_mview OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.7','temp','model_draft','ego_grid_mvlv_substation_voronoi_cut_0subst_mview','ego_dp_lv_griddistrict.sql',' ');
+SELECT ego_scenario_log('v0.2.8','temp','model_draft','ego_grid_mvlv_substation_voronoi_cut_0subst_mview','ego_dp_lv_griddistrict.sql',' ');
  */
 
 
@@ -599,7 +599,7 @@ CREATE INDEX  	ego_grid_mvlv_substation_voronoi_cut_0subst_nn_mview_geom_sub_idx
 ALTER TABLE	model_draft.ego_grid_mvlv_substation_voronoi_cut_0subst_nn_mview OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.7','temp','model_draft','ego_grid_mvlv_substation_voronoi_cut_0subst_nn_mview','process_eGo_grid_district.sql',' ');
+SELECT ego_scenario_log('v0.2.8','temp','model_draft','ego_grid_mvlv_substation_voronoi_cut_0subst_nn_mview','process_eGo_grid_district.sql',' ');
 
 ---------- ---------- ----------
 
@@ -640,7 +640,7 @@ CREATE INDEX	ego_grid_mvlv_substation_voronoi_cut_0subst_nn_line_mview_geom_idx
 ALTER TABLE	model_draft.ego_grid_mvlv_substation_voronoi_cut_0subst_nn_line_mview OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.7','temp','model_draft','ego_grid_mvlv_substation_voronoi_cut_0subst_nn_line_mview','process_eGo_grid_district.sql',' ');
+SELECT ego_scenario_log('v0.2.8','temp','model_draft','ego_grid_mvlv_substation_voronoi_cut_0subst_nn_line_mview','process_eGo_grid_district.sql',' ');
 
 ---------- ---------- ----------
 
@@ -664,7 +664,7 @@ CREATE INDEX	ego_grid_mvlv_substation_voronoi_cut_0subst_nn_union_mview_geom_idx
 ALTER TABLE	model_draft.ego_grid_mvlv_substation_voronoi_cut_0subst_nn_union_mview OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.7','temp','model_draft','ego_grid_mvlv_substation_voronoi_cut_0subst_nn_union_mview','process_eGo_grid_district.sql',' ');
+SELECT ego_scenario_log('v0.2.8','temp','model_draft','ego_grid_mvlv_substation_voronoi_cut_0subst_nn_union_mview','process_eGo_grid_district.sql',' ');
 
 ---------- ---------- ----------
 
@@ -696,7 +696,7 @@ CREATE INDEX	ego_grid_mvlv_substation_voronoi_cut_nn_collect_geom_idx
 ALTER TABLE	model_draft.ego_grid_mvlv_substation_voronoi_cut_nn_collect OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.7','temp','model_draft','ego_grid_mvlv_substation_voronoi_cut_nn_collect','process_eGo_grid_district.sql',' ');
+SELECT ego_scenario_log('v0.2.8','temp','model_draft','ego_grid_mvlv_substation_voronoi_cut_nn_collect','process_eGo_grid_district.sql',' ');
 
 ---------- ---------- ----------
 
@@ -720,7 +720,7 @@ CREATE INDEX	ego_grid_mvlv_substation_voronoi_cut_nn_mview_geom_idx
 ALTER TABLE	model_draft.ego_grid_mvlv_substation_voronoi_cut_nn_mview OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.7','temp','model_draft','ego_grid_mvlv_substation_voronoi_cut_nn_mview','process_eGo_grid_district.sql',' ');
+SELECT ego_scenario_log('v0.2.8','temp','model_draft','ego_grid_mvlv_substation_voronoi_cut_nn_mview','process_eGo_grid_district.sql',' ');
 
 
 
@@ -767,7 +767,7 @@ COMMENT ON TABLE model_draft.ego_grid_lv_griddistrict IS '{
 SELECT obj_description('model_draft.ego_grid_lv_griddistrict' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.7','output','model_draft','ego_grid_lv_griddistrict','ego_dp_lv_substation.sql',' ');
+SELECT ego_scenario_log('v0.2.8','output','model_draft','ego_grid_lv_griddistrict','ego_dp_lv_substation.sql',' ');
 
  */
 
@@ -840,5 +840,5 @@ COMMENT ON TABLE model_draft.ego_grid_lv_griddistrict IS
 SELECT obj_description('model_draft.ego_grid_lv_griddistrict'::regclass)::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.7','output','model_draft','ego_grid_lv_griddistrict','ego_dp_lv_griddistrict.sql',' ');
+SELECT ego_scenario_log('v0.2.8','output','model_draft','ego_grid_lv_griddistrict','ego_dp_lv_griddistrict.sql',' ');
  */

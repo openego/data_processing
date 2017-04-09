@@ -10,13 +10,13 @@ __author__ 	= "Ludee"
 */
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.7','input','model_draft','ego_grid_hvmv_substation','ego_dp_loadarea_statistic.sql',' ');
+SELECT ego_scenario_log('v0.2.8','input','model_draft','ego_grid_hvmv_substation','ego_dp_loadarea_statistic.sql',' ');
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.7','input','model_draft','ego_grid_mv_griddistrict','ego_dp_loadarea_statistic.sql',' ');
+SELECT ego_scenario_log('v0.2.8','input','model_draft','ego_grid_mv_griddistrict','ego_dp_loadarea_statistic.sql',' ');
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.7','input','model_draft','ego_demand_loadarea','ego_dp_loadarea_statistic.sql',' ');
+SELECT ego_scenario_log('v0.2.8','input','model_draft','ego_demand_loadarea','ego_dp_loadarea_statistic.sql',' ');
 
 
 -- results and statistics for substation, load area, MV grid districts and consumption
@@ -146,7 +146,7 @@ INSERT INTO model_draft.ego_data_processing_results (schema_name,table_name,desc
 ALTER TABLE model_draft.ego_data_processing_results OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.7','output','model_draft','ego_data_processing_results','ego_dp_loadarea_statistic.sql',' ');
+SELECT ego_scenario_log('v0.2.8','output','model_draft','ego_data_processing_results','ego_dp_loadarea_statistic.sql',' ');
 
 
 
@@ -442,7 +442,7 @@ WHERE	gf='1' OR gf='2';
 ALTER TABLE political_boundary.bkg_vg250_statistics_mview OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.7','output','political_boundary','bkg_vg250_statistics_mview','ego_dp_loadarea_statistic.sql',' ');
+SELECT ego_scenario_log('v0.2.8','output','political_boundary','bkg_vg250_statistics_mview','ego_dp_loadarea_statistic.sql',' ');
 
 
 -- drid district
