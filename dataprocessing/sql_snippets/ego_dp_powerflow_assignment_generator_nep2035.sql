@@ -328,7 +328,7 @@ UPDATE model_draft.ego_supply_pf_generator_single a
 			as result
 	WHERE a.scn_name = 'NEP 2035' AND a.bus = result.bus AND a.w_id = result.w_id AND a.source = result.source;
 
--- source != (wind and solar) and p_nom < 50 MW 
+-- source <> (wind and solar) and p_nom < 50 MW 
 	
 UPDATE model_draft.ego_supply_pf_generator_single a
 	SET aggr_id = result.aggr_id
@@ -384,7 +384,7 @@ WHERE scn_name = 'NEP 2035' AND a.p_nom < 50 AND a.aggr_id IS NOT NULL AND sourc
 	(SELECT source_id from model_draft.ego_grid_pf_hv_source WHERE name = 'wind' OR name = 'solar')
 GROUP BY a.aggr_id, a.bus, a.w_id, a.source, a.scn_name;
 
--- source != (wind and solar) and p_nom < 50 MW 
+-- source <> (wind and solar) and p_nom < 50 MW 
 INSERT INTO model_draft.ego_grid_pf_hv_generator (
   scn_name,
   generator_id,

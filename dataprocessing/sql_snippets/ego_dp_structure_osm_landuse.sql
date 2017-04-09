@@ -31,7 +31,7 @@ ALTER TABLE	openstreetmap.osm_deu_polygon_landuse_mview OWNER TO oeuser;
 -- metadata
 COMMENT ON MATERIALIZED VIEW openstreetmap.osm_deu_polygon_landuse_mview IS '{
 	"comment": "eGoDP - Temporary table",
-	"version": "v0.2.6" }' ;
+	"version": "v0.2.7" }' ;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.7','output','openstreetmap','osm_deu_polygon_landuse_mview','ego_dp_structure_osm_landuse.sql',' ');

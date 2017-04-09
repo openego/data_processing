@@ -385,7 +385,7 @@ UNION ALL
 SELECT	SUM(la.sector_consumption_sum)
 	FROM	model_draft.ego_demand_loadarea AS la;
 	
-UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
+/* UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
 	SET  	consumption_per_area = t2.consumption_per_area
 	FROM	(SELECT	gd.subst_id,
 			SUM(la.sector_consumption_sum)::integer AS consumption
@@ -393,7 +393,7 @@ UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
 		WHERE	gd.subst_id = la.subst_id
 		GROUP BY gd.subst_id
 		)AS t2
-	WHERE  	t1.subst_id = t2.subst_id;
+	WHERE  	t1.subst_id = t2.subst_id; */
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_grid_mv_griddistrict','ego_paper_result.sql',' ');

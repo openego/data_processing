@@ -190,7 +190,7 @@ INSERT into model_draft.ego_grid_pf_hv_generator
 		WHERE SQ.v_nom = SQ.max_v_nom
 		) B
 		ON (substring(A.source, 1, 2) = B.cntr_id)
-	WHERE substring(A.source, 1, 2) != 'DE'
+	WHERE substring(A.source, 1, 2) <> 'DE'
 	AND A.nominal_value IS not NULL
 	AND A.nominal_value[1] > 0.001
 	AND A.source not LIKE '%%powerline%%'
@@ -237,7 +237,7 @@ INSERT into model_draft.ego_grid_pf_hv_generator
 		WHERE SQ.v_nom = SQ.max_v_nom
 		) B
 		ON (substring(A.source, 1, 2) = B.cntr_id)
-	WHERE substring(A.source, 1, 2) != 'DE'
+	WHERE substring(A.source, 1, 2) <> 'DE'
 	AND A.nominal_value IS not NULL
 	AND A.nominal_value[1] > 0.001
 	AND A.source not LIKE '%%powerline%%'
@@ -280,7 +280,7 @@ INSERT into model_draft.ego_grid_pf_hv_generator
 		WHERE SQ.v_nom = SQ.max_v_nom
 		) B
 		ON (substring(A.source, 1, 2) = B.cntr_id)
-	WHERE substring(A.source, 1, 2) != 'DE'
+	WHERE substring(A.source, 1, 2) <> 'DE'
 	AND A.nominal_value[1] > 0.001
 	AND A.scenario_id = 37;
 
@@ -320,7 +320,7 @@ INSERT into model_draft.ego_grid_pf_hv_generator
 		WHERE SQ.v_nom = SQ.max_v_nom
 		) B
 		ON (substring(A.source, 1, 2) = B.cntr_id)
-	WHERE substring(A.source, 1, 2) != 'DE'
+	WHERE substring(A.source, 1, 2) <> 'DE'
 	AND A.nominal_value[1] > 0.001
 	AND A.scenario_id = 38;
 

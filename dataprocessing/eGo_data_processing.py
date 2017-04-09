@@ -41,13 +41,13 @@ def data_processing():
 
     snippets = [
     ## STRUCTURE & SETUP (WARNING)
-    'ego_dp_structure_scenariolog.sql',				# Setup scenario log table
-    'ego_dp_structure_versioning.sql',				# Setup versioning tables
-    'ego_dp_structure_boundaries_vg250.sql',			# Setup vg250 borders
-    'ego_dp_structure_osm_landuse.sql',         		# Filter OSM landuse
-    'eGo_dp_structure_census.sql',          			# Filter Census2011 with population
-    'ego_dp_preprocessing_conv_powerplant.sql',		# Setup conventional power plant list
-    'ego_dp_preprocessing_res_powerplant.sql',		# Setup renewable power plant list
+    # 'ego_dp_structure_scenariolog.sql',				# Setup scenario log table
+    # 'ego_dp_structure_versioning.sql',				# Setup versioning tables
+    # 'ego_dp_structure_boundaries_vg250.sql',			# Setup vg250 borders
+    # 'ego_dp_structure_osm_landuse.sql',         		# Filter OSM landuse
+    # 'eGo_dp_structure_census.sql',          			# Filter Census2011 with population
+    # 'ego_dp_preprocessing_conv_powerplant.sql',		# Setup conventional power plant list
+    # 'ego_dp_preprocessing_res_powerplant.sql',		# Setup renewable power plant list
 
 	## SUBSTATION
     # 'ego_dp_substation_hvmv.sql',               		# Abstract HVMV Substations of the high voltage level from OSM
@@ -72,13 +72,13 @@ def data_processing():
 	# 'ego_dp_loadarea_griddistrict_results.sql',		# Results for MV Griddistrict
 	# 'ego_dp_loadarea_statistic.sql',					# Results and statistics for eGoDP
 
-	## POWERFLOW
+	# ## POWERFLOW
 	# 'ego_dp_powerflow_voronoi_weatherpoint.sql',		# Create voronoi cells based on weather points
 	# 'ego_dp_powerflow_hv_setup.sql',					# Set schema/tables for EHV/HV powerflow calculations up
 	# 'ego_dp_powerflow_osmtgmod_to_pypsa.sql',			# Include data from osmTGmod into EHV/HV powerflow schema
 	# 'ego_dp_powerflow_electrical_neighbour.sql',		# Create border crossing lines and buses in neighbouring countries
 
- 	# 'ego_dp_powerflow_assignment_generator.sql',  		# Assign generators to corresponding substation
+ # 	'ego_dp_powerflow_assignment_generator.sql',  		# Assign generators to corresponding substation
 	# 'ego_dp_powerflow_assignment_load.sql',        		# Assign loads to their corresponding substation
 	# 'ego_dp_powerflow_grid_NEP2035.sql',					# Copy grid to scenario NEP 2035
 	# 'ego_dp_powerflow_assignment_generator_nep2035.sql',	# Assign generators from NEP 2035 to corresponding substation
@@ -90,10 +90,10 @@ def data_processing():
 	# 'ego_dp_powerflow_load_timeseries_NEP2035.sql' 		# Copy demand timeseries to NEP 2035 scenario
 	
 	## LOWVOLTAGE
-	# 'ego_dp_lv_substation.sql',						# MVLV Substation inside Loadarea
-	# 'ego_dp_lv_substation_voronoi.sql',				# MVLV Substation Voronoi
-	# 'ego_dp_lv_griddistrict.sql'		    			# LV Griddistrict
-    # 'ego_dp_lv_peakload.sql',						    # LV Peakload (Not working)
+	'ego_dp_lv_substation.sql',						# MVLV Substation inside Loadarea
+	'ego_dp_lv_substation_voronoi.sql',				# MVLV Substation Voronoi
+	'ego_dp_lv_griddistrict.sql'		    			# LV Griddistrict
+    'ego_dp_lv_peakload.sql',						    # LV Peakload (Not working)
     
     ## VERSIONING
     # 'ego_dp_versioning.sql',						    # Versioning

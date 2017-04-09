@@ -22,7 +22,7 @@ ALTER TABLE model_draft.ego_supply_conv_powerplant
   	ADD COLUMN otg_id bigint,
   	ADD COLUMN un_id bigint;
 
-CREATE INDEX model_draft.ego_supply_conv_powerplant_idx
+CREATE INDEX ego_supply_conv_powerplant_idx
 	ON model_draft.ego_supply_conv_powerplant
 	USING gist
 	(geom);
@@ -44,56 +44,54 @@ UPDATE model_draft.ego_supply_conv_powerplant
 
 
 -- Correct an invalid geom in the register
-ALTER TABLE model_draft.ego_supply_conv_powerplant
-SET lat = 48.0261021
-WHERE gid = 493;
+UPDATE model_draft.ego_supply_conv_powerplant
+	SET lat = 48.0261021
+	WHERE gid = 493;
 
 UPDATE  model_draft.ego_supply_conv_powerplant
-set geom = ST_SetSRID(ST_MakePoint(lon,lat),4326)
-WHERE gid = 493;
+	set geom = ST_SetSRID(ST_MakePoint(lon,lat),4326)
+	WHERE gid = 493;
 
 
 -- Update Voltage Level of Power Plants according to allocation table
 UPDATE model_draft.ego_supply_conv_powerplant
-SET voltage_level=1
-WHERE capacity >=120.0 /*Voltage_level =1 when capacity greater than 120 MW*/;
+	SET voltage_level=1
+	WHERE capacity >=120.0 /*Voltage_level =1 when capacity greater than 120 MW*/;
 
 
 UPDATE model_draft.ego_supply_conv_powerplant
-SET voltage_level=3
-WHERE capacity BETWEEN 17.5 AND 119.99 /*Voltage_level =2 when capacity between 17.5 and 119.99 MW*/;
+	SET voltage_level=3
+	WHERE capacity BETWEEN 17.5 AND 119.99 /*Voltage_level =2 when capacity between 17.5 and 119.99 MW*/;
 
 UPDATE model_draft.ego_supply_conv_powerplant
-SET voltage_level=4
-WHERE capacity BETWEEN 4.5 AND 17.49;
+	SET voltage_level=4
+	WHERE capacity BETWEEN 4.5 AND 17.49;
 
 UPDATE model_draft.ego_supply_conv_powerplant
-SET voltage_level=5
-WHERE capacity BETWEEN 0.3 AND 4.49 /* Voltage_level =3 when capacity between 0.3 and 4.5 kV*/;
+	SET voltage_level=5
+	WHERE capacity BETWEEN 0.3 AND 4.49 /* Voltage_level =3 when capacity between 0.3 and 4.5 kV*/;
 
 UPDATE model_draft.ego_supply_conv_powerplant
-SET voltage_level=6
-WHERE capacity BETWEEN 0.1 AND 0.29;
+	SET voltage_level=6
+	WHERE capacity BETWEEN 0.1 AND 0.29;
 
 UPDATE model_draft.ego_supply_conv_powerplant
-SET voltage_level=7
-WHERE capacity < 0.1 /*voltage_level =7 when capacity lower than 0.1*/;
+	SET voltage_level=7
+	WHERE capacity < 0.1 /*voltage_level =7 when capacity lower than 0.1*/;
 
-
+-- metadata
+COMMENT ON TABLE model_draft.ego_supply_conv_powerplant IS '{
+	"comment": "eGoDP - Temporary table",
+	"version": "v0.2.7" }' ;
+	
+/* 
 -- metadata
 COMMENT ON TABLE  model_draft.ego_supply_conv_powerplant IS
 '{
 "Name": "eGo conventional powerplant list",
-"Source": [{
-                  "Name": "open_eGo data_processing",
-                  "URL":  "https://github.com/openego/data_processing" }, 
-	   {
-                  "Name": "BNetzA Kraftwerksliste",
-                  "URL":  "http://www.bundesnetzagentur.de/DE/Sachgebiete/ElektrizitaetundGas/Unternehmen_Institutionen/Versorgungssicherheit/Erzeugungskapazitaeten/Kraftwerksliste/kraftwerksliste-node.html" }, 
-{
-                  "Name": "Umweltbundesamt Datenbank Kraftwerke in Deutschland",
-                  "URL":  "http://www.umweltbundesamt.de/dokument/datenbank-kraftwerke-in-deutschland" }, 
-],
+"Source": [	{ "Name": "open_eGo data_processing", "URL":  "https://github.com/openego/data_processing" }, 
+		{ "Name": "BNetzA Kraftwerksliste", "URL":  "http://www.bundesnetzagentur.de/DE/Sachgebiete/ElektrizitaetundGas/Unternehmen_Institutionen/Versorgungssicherheit/Erzeugungskapazitaeten/Kraftwerksliste/kraftwerksliste-node.html" }, 
+		{ "Name": "Umweltbundesamt Datenbank Kraftwerke in Deutschland", "URL":  "http://www.umweltbundesamt.de/dokument/datenbank-kraftwerke-in-deutschland" } }],
 "Reference date": "2016-02-08",
 "Date of collection": "...",
 "Original file": "proc_power_plant_germany.sql",
@@ -221,7 +219,7 @@ COMMENT ON TABLE  model_draft.ego_supply_conv_powerplant IS
 "ToDo": ["Please complete"],
 "Licence": ["..."],
 "Instructions for proper use": ["..."]
-}';
+}'; */
 
 -- select description
 SELECT obj_description('model_draft.ego_supply_conv_powerplant' ::regclass) ::json;

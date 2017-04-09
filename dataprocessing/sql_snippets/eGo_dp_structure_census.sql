@@ -111,7 +111,7 @@ UPDATE	model_draft.destatis_zensus_population_per_ha_inside AS t1
 -- metadata
 COMMENT ON TABLE model_draft.destatis_zensus_population_per_ha_inside IS '{
 	"comment": "eGoDP - Temporary table",
-	"version": "v0.2.6" }' ;
+	"version": "v0.2.7" }' ;
 
 
 -- zensus points with population inside vg250
@@ -145,7 +145,7 @@ ALTER TABLE	model_draft.destatis_zensus_population_per_ha_invg_mview OWNER TO oe
 -- metadata
 COMMENT ON MATERIALIZED VIEW model_draft.destatis_zensus_population_per_ha_invg_mview IS '{
 	"comment": "eGoDP - Temporary table",
-	"version": "v0.2.6" }' ;
+	"version": "v0.2.7" }' ;
 
 -- select description
 SELECT obj_description('model_draft.destatis_zensus_population_per_ha_invg_mview' ::regclass) ::json;
@@ -186,7 +186,7 @@ ALTER TABLE	model_draft.destatis_zensus_population_per_ha_outvg_mview OWNER TO o
 -- metadata
 COMMENT ON MATERIALIZED VIEW model_draft.destatis_zensus_population_per_ha_outvg_mview IS '{
 	"comment": "eGoDP - Temporary table",
-	"version": "v0.2.6" }' ;
+	"version": "v0.2.7" }' ;
 
 -- select description
 SELECT obj_description('model_draft.destatis_zensus_population_per_ha_outvg_mview' ::regclass) ::json;

@@ -943,7 +943,7 @@ ALTER VIEW	political_boundary.bkg_vg250_statistics_view OWNER TO oeuser;
 -- metadata
 COMMENT ON VIEW political_boundary.bkg_vg250_statistics_view IS '{
 	"comment": "eGoDP - Temporary table",
-	"version": "v0.2.6" }' ;
+	"version": "v0.2.7" }' ;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.7','output','political_boundary','bkg_vg250_statistics_view','ego_dp_structure_boundaries_vg250.sql',' ');

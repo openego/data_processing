@@ -51,7 +51,7 @@ UPDATE 	model_draft.ego_political_boundary_hvmv_subst_per_gem AS t1
 -- metadata
 COMMENT ON TABLE model_draft.ego_political_boundary_hvmv_subst_per_gem IS '{
 	"comment": "eGoDP - Temporary table",
-	"version": "v0.2.6" }' ;
+	"version": "v0.2.7" }' ;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.7','temp','model_draft','ego_political_boundary_hvmv_subst_per_gem','ego_dp_mv_griddistrict.sql',' ');
@@ -94,7 +94,7 @@ ALTER TABLE	model_draft.ego_political_boundary_hvmv_subst_per_gem_1_mview OWNER 
 -- metadata
 COMMENT ON MATERIALIZED VIEW model_draft.ego_political_boundary_hvmv_subst_per_gem_1_mview IS '{
 	"comment": "eGoDP - Temporary table",
-	"version": "v0.2.6" }' ;
+	"version": "v0.2.7" }' ;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.7','temp','model_draft','ego_political_boundary_hvmv_subst_per_gem_1_mview','ego_dp_mv_griddistrict.sql',' ');
@@ -130,7 +130,7 @@ UPDATE 	model_draft.ego_political_boundary_hvmv_subst_per_gem AS t1
 -- metadata
 COMMENT ON MATERIALIZED VIEW model_draft.ego_political_boundary_hvmv_subst_per_gem_2_mview IS '{
 	"comment": "eGoDP - Temporary table",
-	"version": "v0.2.6" }' ;
+	"version": "v0.2.7" }' ;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.7','temp','model_draft','ego_political_boundary_hvmv_subst_per_gem_2_mview','ego_dp_mv_griddistrict.sql',' ');
@@ -158,7 +158,7 @@ ALTER TABLE	model_draft.ego_grid_hvmv_substation_mun_2_mview OWNER TO oeuser;
 -- metadata
 COMMENT ON MATERIALIZED VIEW model_draft.ego_grid_hvmv_substation_mun_2_mview IS '{
 	"comment": "eGoDP - Temporary table",
-	"version": "v0.2.6" }' ;
+	"version": "v0.2.7" }' ;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.7','temp','model_draft','ego_grid_hvmv_substation_mun_2_mview','ego_dp_mv_griddistrict.sql',' ');
@@ -194,7 +194,7 @@ UPDATE 	model_draft.ego_political_boundary_hvmv_subst_per_gem AS t1
 -- metadata
 COMMENT ON MATERIALIZED VIEW model_draft.ego_political_boundary_hvmv_subst_per_gem_3_mview IS '{
 	"comment": "eGoDP - Temporary table",
-	"version": "v0.2.6" }' ;
+	"version": "v0.2.7" }' ;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.7','temp','model_draft','ego_political_boundary_hvmv_subst_per_gem_3_mview','ego_dp_mv_griddistrict.sql',' ');
@@ -252,7 +252,7 @@ UPDATE 	model_draft.ego_grid_mv_griddistrict_type1 AS t1
 -- metadata
 COMMENT ON TABLE model_draft.ego_grid_mv_griddistrict_type1 IS '{
 	"comment": "eGoDP - Temporary table",
-	"version": "v0.2.6" }' ;
+	"version": "v0.2.7" }' ;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.7','temp','model_draft','ego_grid_mv_griddistrict_type1','ego_dp_mv_griddistrict.sql',' ');
@@ -316,7 +316,7 @@ ALTER TABLE	model_draft.ego_grid_hvmv_substation_voronoi_mview OWNER TO oeuser;
 -- metadata
 COMMENT ON MATERIALIZED VIEW model_draft.ego_grid_hvmv_substation_voronoi_mview IS '{
 	"comment": "eGoDP - Temporary table",
-	"version": "v0.2.6" }' ;
+	"version": "v0.2.7" }' ;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.7','temp','model_draft','ego_grid_hvmv_substation_voronoi_mview','ego_dp_mv_griddistrict.sql',' ');
@@ -405,7 +405,7 @@ ALTER TABLE	model_draft.ego_grid_hvmv_substation_voronoi_cut OWNER TO oeuser;
 -- metadata
 COMMENT ON TABLE model_draft.ego_grid_hvmv_substation_voronoi_cut IS '{
 	"comment": "eGoDP - Temporary table",
-	"version": "v0.2.6" }' ;
+	"version": "v0.2.7" }' ;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.7','temp','model_draft','ego_grid_hvmv_substation_voronoi_cut','ego_dp_mv_griddistrict.sql',' ');
@@ -456,7 +456,7 @@ ALTER TABLE	model_draft.ego_grid_hvmv_substation_voronoi_cut_1subst_mview OWNER 
 -- metadata
 COMMENT ON MATERIALIZED VIEW model_draft.ego_grid_hvmv_substation_voronoi_cut_1subst_mview IS '{
 	"comment": "eGoDP - Temporary table",
-	"version": "v0.2.6" }' ;
+	"version": "v0.2.7" }' ;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.7','temp','model_draft','ego_grid_hvmv_substation_voronoi_cut_1subst_mview','ego_dp_mv_griddistrict.sql',' ');
@@ -489,7 +489,7 @@ ALTER TABLE	model_draft.ego_grid_hvmv_substation_voronoi_cut_0subst_mview OWNER 
 -- metadata
 COMMENT ON MATERIALIZED VIEW model_draft.ego_grid_hvmv_substation_voronoi_cut_0subst_mview IS '{
 	"comment": "eGoDP - Temporary table",
-	"version": "v0.2.6" }' ;
+	"version": "v0.2.7" }' ;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.7','temp','model_draft','ego_grid_hvmv_substation_voronoi_cut_0subst_mview','ego_dp_mv_griddistrict.sql',' ');
@@ -551,7 +551,7 @@ ALTER TABLE	model_draft.ego_grid_hvmv_substation_voronoi_cut_0subst_nn_mview OWN
 -- metadata
 COMMENT ON MATERIALIZED VIEW model_draft.ego_grid_hvmv_substation_voronoi_cut_0subst_nn_mview IS '{
 	"comment": "eGoDP - Temporary table",
-	"version": "v0.2.6" }' ;
+	"version": "v0.2.7" }' ;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.7','temp','model_draft','ego_grid_hvmv_substation_voronoi_cut_0subst_nn_mview','ego_dp_mv_griddistrict.sql',' ');
@@ -597,7 +597,7 @@ ALTER TABLE	model_draft.ego_grid_hvmv_substation_voronoi_cut_0subst_nn_line_mvie
 -- metadata
 COMMENT ON MATERIALIZED VIEW model_draft.ego_grid_hvmv_substation_voronoi_cut_0subst_nn_line_mview IS '{
 	"comment": "eGoDP - Temporary table",
-	"version": "v0.2.6" }' ;
+	"version": "v0.2.7" }' ;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.7','temp','model_draft','ego_grid_hvmv_substation_voronoi_cut_0subst_nn_line_mview','ego_dp_mv_griddistrict.sql',' ');
@@ -626,7 +626,7 @@ ALTER TABLE	model_draft.ego_grid_hvmv_substation_voronoi_cut_0subst_nn_union_mvi
 -- metadata
 COMMENT ON MATERIALIZED VIEW model_draft.ego_grid_hvmv_substation_voronoi_cut_0subst_nn_union_mview IS '{
 	"comment": "eGoDP - Temporary table",
-	"version": "v0.2.6" }' ;
+	"version": "v0.2.7" }' ;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.7','temp','model_draft','ego_grid_hvmv_substation_voronoi_cut_0subst_nn_union_mview','ego_dp_mv_griddistrict.sql',' ');
@@ -663,7 +663,7 @@ ALTER TABLE	model_draft.ego_grid_hvmv_substation_voronoi_cut_nn_collect OWNER TO
 -- metadata
 COMMENT ON TABLE model_draft.ego_grid_hvmv_substation_voronoi_cut_nn_collect IS '{
 	"comment": "eGoDP - Temporary table",
-	"version": "v0.2.6" }' ;
+	"version": "v0.2.7" }' ;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.7','temp','model_draft','ego_grid_hvmv_substation_voronoi_cut_nn_collect','ego_dp_mv_griddistrict.sql',' ');
@@ -692,7 +692,7 @@ ALTER TABLE	model_draft.ego_grid_hvmv_substation_voronoi_cut_nn_mview OWNER TO o
 -- metadata
 COMMENT ON MATERIALIZED VIEW model_draft.ego_grid_hvmv_substation_voronoi_cut_nn_mview IS '{
 	"comment": "eGoDP - Temporary table",
-	"version": "v0.2.6" }' ;
+	"version": "v0.2.7" }' ;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.7','temp','model_draft','ego_grid_hvmv_substation_voronoi_cut_nn_mview','ego_dp_mv_griddistrict.sql',' ');
@@ -740,7 +740,7 @@ ALTER TABLE	model_draft.ego_grid_mv_griddistrict_type2 OWNER TO oeuser;
 -- metadata
 COMMENT ON TABLE model_draft.ego_grid_mv_griddistrict_type2 IS '{
 	"comment": "eGoDP - Temporary table",
-	"version": "v0.2.6" }' ;
+	"version": "v0.2.7" }' ;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.7','temp','model_draft','ego_grid_mv_griddistrict_type2','ego_dp_mv_griddistrict.sql',' ');
@@ -811,7 +811,7 @@ ALTER TABLE	model_draft.ego_political_boundary_hvmv_subst_per_gem_3_nn OWNER TO 
 -- metadata
 COMMENT ON TABLE model_draft.ego_political_boundary_hvmv_subst_per_gem_3_nn IS '{
 	"comment": "eGoDP - Temporary table",
-	"version": "v0.2.6" }' ;
+	"version": "v0.2.7" }' ;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.7','temp','model_draft','ego_political_boundary_hvmv_subst_per_gem_3_nn','ego_dp_mv_griddistrict.sql',' ');
@@ -858,7 +858,7 @@ ALTER TABLE	model_draft.ego_political_boundary_hvmv_subst_per_gem_3_nn_line OWNE
 -- metadata
 COMMENT ON MATERIALIZED VIEW model_draft.ego_political_boundary_hvmv_subst_per_gem_3_nn_line IS '{
 	"comment": "eGoDP - Temporary table",
-	"version": "v0.2.6" }' ;
+	"version": "v0.2.7" }' ;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.7','temp','model_draft','ego_political_boundary_hvmv_subst_per_gem_3_nn_line','ego_dp_mv_griddistrict.sql',' ');
@@ -892,7 +892,7 @@ ALTER TABLE	model_draft.ego_political_boundary_hvmv_subst_per_gem_3_nn_union OWN
 -- metadata
 COMMENT ON MATERIALIZED VIEW model_draft.ego_political_boundary_hvmv_subst_per_gem_3_nn_union IS '{
 	"comment": "eGoDP - Temporary table",
-	"version": "v0.2.6" }' ;
+	"version": "v0.2.7" }' ;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.7','temp','model_draft','ego_political_boundary_hvmv_subst_per_gem_3_nn_union','ego_dp_mv_griddistrict.sql',' ');
@@ -938,7 +938,7 @@ ALTER TABLE	model_draft.ego_grid_mv_griddistrict_type3 OWNER TO oeuser;
 -- metadata
 COMMENT ON TABLE model_draft.ego_grid_mv_griddistrict_type3 IS '{
 	"comment": "eGoDP - Temporary table",
-	"version": "v0.2.6" }' ;
+	"version": "v0.2.7" }' ;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.7','temp','model_draft','ego_grid_mv_griddistrict_type3','ego_dp_mv_griddistrict.sql',' ');
@@ -996,7 +996,7 @@ ALTER TABLE	model_draft.ego_grid_mv_griddistrict_collect OWNER TO oeuser;
 -- metadata
 COMMENT ON TABLE model_draft.ego_grid_mv_griddistrict_collect IS '{
 	"comment": "eGoDP - Temporary table",
-	"version": "v0.2.6" }' ;
+	"version": "v0.2.7" }' ;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.7','temp','model_draft','ego_grid_mv_griddistrict_collect','ego_dp_mv_griddistrict.sql',' ');
@@ -1030,7 +1030,7 @@ ALTER TABLE	model_draft.ego_grid_mv_griddistrict_union OWNER TO oeuser;
 -- metadata
 COMMENT ON TABLE model_draft.ego_grid_mv_griddistrict_union IS '{
 	"comment": "eGoDP - Temporary table",
-	"version": "v0.2.6" }' ;
+	"version": "v0.2.7" }' ;
 
 -- Clean Polygons and Snap to Grid
 UPDATE 	model_draft.ego_grid_mv_griddistrict_union AS t1
@@ -1094,7 +1094,7 @@ ALTER TABLE	model_draft.ego_grid_mv_griddistrict_dump OWNER TO oeuser;
 -- metadata
 COMMENT ON TABLE model_draft.ego_grid_mv_griddistrict_dump IS '{
 	"comment": "eGoDP - Temporary table",
-	"version": "v0.2.6" }' ;
+	"version": "v0.2.7" }' ;
 
 
 -- dump centre fragments (a)
@@ -1176,7 +1176,7 @@ ALTER TABLE	model_draft.ego_grid_mv_griddistrict_dump_nn OWNER TO oeuser;
 -- metadata
 COMMENT ON TABLE model_draft.ego_grid_mv_griddistrict_dump_nn IS '{
 	"comment": "eGoDP - Temporary table",
-	"version": "v0.2.6" }' ;
+	"version": "v0.2.7" }' ;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.7','temp','model_draft','ego_grid_mv_griddistrict_dump_nn','ego_dp_mv_griddistrict.sql',' ');
@@ -1217,7 +1217,7 @@ ALTER TABLE	model_draft.ego_grid_mv_griddistrict_dump_nn_line OWNER TO oeuser;
 -- metadata
 COMMENT ON TABLE model_draft.ego_grid_mv_griddistrict_dump_nn_line IS '{
 	"comment": "eGoDP - Temporary table",
-	"version": "v0.2.6" }' ;
+	"version": "v0.2.7" }' ;
 
 
 -- collect
@@ -1287,7 +1287,7 @@ CREATE INDEX	ego_grid_mv_griddistrict_dump_nn_collect_union_geom_idx
 -- metadata
 COMMENT ON TABLE model_draft.ego_grid_mv_griddistrict_dump_nn_collect_union IS '{
 	"comment": "eGoDP - Temporary table",
-	"version": "v0.2.6" }' ;
+	"version": "v0.2.7" }' ;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.7','temp','model_draft','ego_grid_mv_griddistrict_dump_nn_collect_union','ego_dp_mv_griddistrict.sql',' ');

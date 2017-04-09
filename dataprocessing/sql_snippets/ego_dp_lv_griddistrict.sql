@@ -82,7 +82,7 @@ CREATE INDEX  	ego_grid_lv_griddistrict_cut_1subst_geom_idx
 -- metadata
 COMMENT ON TABLE model_draft.ego_grid_lv_griddistrict_cut_1subst IS '{
 	"comment": "eGoDP - Temporary table",
-	"version": "v0.2.6" }' ;
+	"version": "v0.2.7" }' ;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.7','temp','model_draft','ego_grid_lv_griddistrict_cut_1subst','ego_dp_lv_griddistrict.sql',' ');
@@ -115,7 +115,7 @@ CREATE INDEX  	ego_grid_lv_griddistrict_cut_0subst_geom_idx
 -- metadata
 COMMENT ON TABLE model_draft.ego_grid_lv_griddistrict_cut_0subst IS '{
 	"comment": "eGoDP - Temporary table",
-	"version": "v0.2.6" }' ;
+	"version": "v0.2.7" }' ;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.7','temp','model_draft','ego_grid_lv_griddistrict_cut_0subst','ego_dp_lv_griddistrict.sql',' ');
@@ -148,7 +148,7 @@ CREATE INDEX  	ego_grid_lv_griddistrict_cut_xsubst_geom_idx
 -- metadata
 COMMENT ON TABLE model_draft.ego_grid_lv_griddistrict_cut_xsubst IS '{
 	"comment": "eGoDP - Temporary table",
-	"version": "v0.2.6" }' ;
+	"version": "v0.2.7" }' ;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.7','temp','model_draft','ego_grid_lv_griddistrict_cut_xsubst','ego_dp_lv_griddistrict.sql',' ');
@@ -206,7 +206,7 @@ ALTER TABLE	model_draft.ego_grid_lv_griddistrict_cut_nn OWNER TO oeuser;
 -- metadata
 COMMENT ON TABLE model_draft.ego_grid_lv_griddistrict_cut_nn IS '{
 	"comment": "eGoDP - Temporary table",
-	"version": "v0.2.6" }' ;
+	"version": "v0.2.7" }' ;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.7','temp','model_draft','ego_grid_lv_griddistrict_cut_nn','ego_dp_lv_griddistrict.sql',' ');
@@ -270,7 +270,7 @@ UPDATE 	model_draft.ego_grid_lv_griddistrict_cut_nn_collect AS t1
 -- metadata
 COMMENT ON TABLE model_draft.ego_grid_lv_griddistrict_cut_nn_collect IS '{
 	"comment": "eGoDP - Temporary table",
-	"version": "v0.2.6" }' ;
+	"version": "v0.2.7" }' ;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.7','temp','model_draft','ego_grid_lv_griddistrict_cut_nn_collect','ego_dp_lv_griddistrict.sql',' ');

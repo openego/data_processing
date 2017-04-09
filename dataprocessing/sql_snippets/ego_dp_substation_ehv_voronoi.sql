@@ -112,7 +112,7 @@ ALTER TABLE model_draft.ego_grid_ehv_substation_voronoi OWNER TO oeuser;
 -- metadata
 COMMENT ON TABLE  model_draft.ego_grid_ehv_substation_voronoi IS '{
 	"comment": "eGoDP - Temporary table",
-	"version": "v0.2.6" }' ;
+	"version": "v0.2.7" }' ;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.7','output','model_draft','ego_grid_ehv_substation_voronoi','ego_dp_substation_ehv_voronoi.sql',' ');

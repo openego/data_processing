@@ -21,13 +21,14 @@ ALTER TABLE model_draft.ego_supply_res_powerplant
   	ADD COLUMN otg_id bigint,
   	ADD COLUMN un_id bigint;
 
-CREATE INDEX model_draft.ego_supply_res_powerplant_idx
+CREATE INDEX ego_supply_res_powerplant_idx
 	ON model_draft.ego_supply_res_powerplant USING gist (geom);
 
 ALTER TABLE model_draft.ego_supply_res_powerplant OWNER TO oeuser; 
 
+
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.7','temp','supply','ego_supply_res_powerplant','ego_dp_preprocessing_res_powerplant.sql','');
+SELECT ego_scenario_log('v0.2.7','temp','model_draft','ego_supply_res_powerplant','ego_dp_preprocessing_res_powerplant.sql','');
 
 
 -- Delete entries without information on installed capacity or where electrical_capacity <= 0
@@ -76,88 +77,141 @@ UPDATE model_draft.ego_supply_res_powerplant
 	SET generation_subtype = 'wind_onshore'
 	WHERE generation_type = 'wind'
 	AND generation_subtype IS NULL;
-
+	
 
 -- Update incorrect geom of offshore windturbines
 UPDATE model_draft.ego_supply_res_powerplant
-	SET geom =
-		(CASE
-		WHEN eeg_id LIKE '%DYSKE%' 
-		THEN (SELECT geom from model_draft.ego_supply_res_powerplant where id = 1560412)
-		WHEN eeg_id LIKE '%BRGEE%' 
-		THEN (SELECT geom from model_draft.ego_supply_res_powerplant where id = 1560969)
-		WHEN eeg_id LIKE '%MEERWINDSUEDOST%' 
-		THEN (SELECT geom from model_draft.ego_supply_res_powerplant where id = 1560502)
-		WHEN eeg_id LIKE '%GLTEE%' 
-		THEN (SELECT geom from model_draft.ego_supply_res_powerplant where id = 1561081)
-		WHEN eeg_id LIKE '%BUTENDIEK%' 
-		THEN (SELECT geom from model_draft.ego_supply_res_powerplant where id = 1560705)
-		WHEN eeg_id LIKE '%BOWZE%' 
-		THEN (SELECT geom from model_draft.ego_supply_res_powerplant where id = 1561018)
-		WHEN eeg_id LIKE '%NORDSEEOST%' or eeg_id LIKE '%NordseeOst%'
-		THEN (SELECT geom from model_draft.ego_supply_res_powerplant where id = 1560647)
-		WHEN eeg_id LIKE '%BALTIC%' 
-		THEN (SELECT geom from model_draft.ego_supply_res_powerplant where id = 1561137)
-		WHEN eeg_id LIKE '%RIFFE%' 
-		THEN ST_SetSRID(ST_MakePoint(6.48, 53.69),4326)
-		WHEN eeg_id LIKE '%ALPHAVENTUE%' 
-		THEN ST_SetSRID(ST_MakePoint(6.598333, 54.008333),4326)
-		WHEN eeg_id LIKE '%BAOEE%' 
-		THEN ST_SetSRID(ST_MakePoint(5.975, 54.358333),4326)
-		END)
+	SET geom = CASE	WHEN eeg_id LIKE '%DYSKE%' 
+			THEN (SELECT geom from model_draft.ego_supply_res_powerplant where id = 1560412)
+			END
+	WHERE postcode = '00000' OR postcode = 'keine' or postcode = 'O04WF' AND generation_subtype = 'wind_offshore';
+
+UPDATE model_draft.ego_supply_res_powerplant
+	SET geom = CASE	WHEN eeg_id LIKE '%BRGEE%' 
+			THEN (SELECT geom from model_draft.ego_supply_res_powerplant where id = 1560969)
+			END
+	WHERE postcode = '00000' OR postcode = 'keine' or postcode = 'O04WF' AND generation_subtype = 'wind_offshore';
+	
+UPDATE model_draft.ego_supply_res_powerplant
+	SET geom = CASE	WHEN eeg_id LIKE '%MEERWINDSUEDOST%' 
+			THEN (SELECT geom from model_draft.ego_supply_res_powerplant where id = 1560502)
+			END
+	WHERE postcode = '00000' OR postcode = 'keine' or postcode = 'O04WF' AND generation_subtype = 'wind_offshore';
+	
+UPDATE model_draft.ego_supply_res_powerplant
+	SET geom = CASE	WHEN eeg_id LIKE '%GLTEE%' 
+			THEN (SELECT geom from model_draft.ego_supply_res_powerplant where id = 1561081)
+			END
+	WHERE postcode = '00000' OR postcode = 'keine' or postcode = 'O04WF' AND generation_subtype = 'wind_offshore';
+	
+			
+UPDATE model_draft.ego_supply_res_powerplant
+	SET geom = CASE	WHEN eeg_id LIKE '%BUTENDIEK%' 
+			THEN (SELECT geom from model_draft.ego_supply_res_powerplant where id = 1560705)
+			END
+	WHERE postcode = '00000' OR postcode = 'keine' or postcode = 'O04WF' AND generation_subtype = 'wind_offshore';
+	
+UPDATE model_draft.ego_supply_res_powerplant
+	SET geom = CASE	WHEN eeg_id LIKE '%BOWZE%' 
+			THEN (SELECT geom from model_draft.ego_supply_res_powerplant where id = 1561018)
+			END
+	WHERE postcode = '00000' OR postcode = 'keine' or postcode = 'O04WF' AND generation_subtype = 'wind_offshore';
+	
+UPDATE model_draft.ego_supply_res_powerplant
+	SET geom = CASE	WHEN eeg_id LIKE '%NORDSEEOST%' or eeg_id LIKE '%NordseeOst%'
+			THEN (SELECT geom from model_draft.ego_supply_res_powerplant where id = 1560647)
+			END
+	WHERE postcode = '00000' OR postcode = 'keine' or postcode = 'O04WF' AND generation_subtype = 'wind_offshore';
+	
+UPDATE model_draft.ego_supply_res_powerplant
+	SET geom = CASE	WHEN eeg_id LIKE '%BALTIC%' 
+			THEN (SELECT geom from model_draft.ego_supply_res_powerplant where id = 1561137)
+			END
+	WHERE postcode = '00000' OR postcode = 'keine' or postcode = 'O04WF' AND generation_subtype = 'wind_offshore';
+	
+UPDATE model_draft.ego_supply_res_powerplant
+	SET geom = CASE	WHEN eeg_id LIKE '%RIFFE%' 
+			THEN ST_SetSRID(ST_MakePoint(6.48, 53.69),4326)
+			END
+	WHERE postcode = '00000' OR postcode = 'keine' or postcode = 'O04WF' AND generation_subtype = 'wind_offshore';
+	
+UPDATE model_draft.ego_supply_res_powerplant
+	SET geom = CASE	WHEN eeg_id LIKE '%ALPHAVENTUE%' 
+			THEN ST_SetSRID(ST_MakePoint(6.598333, 54.008333),4326)
+			END
+	WHERE postcode = '00000' OR postcode = 'keine' or postcode = 'O04WF' AND generation_subtype = 'wind_offshore';
+	
+UPDATE model_draft.ego_supply_res_powerplant
+	SET geom = CASE	WHEN eeg_id LIKE '%BAOEE%' 
+			THEN ST_SetSRID(ST_MakePoint(5.975, 54.358333),4326)
+			END
 	WHERE postcode = '00000' OR postcode = 'keine' or postcode = 'O04WF' AND generation_subtype = 'wind_offshore';
 
 
 -- Adjust voltage level of all RE power plants except wind_onshore according to allocation table
 UPDATE model_draft.ego_supply_res_powerplant
-	SET voltage_level='1'
-	WHERE electrical_capacity >=120000 AND generation_subtype!='wind_onshore';
+	SET 	voltage_level='1'
+	WHERE 	electrical_capacity >=120000 AND 
+		generation_subtype<>'wind_onshore';
 
 UPDATE model_draft.ego_supply_res_powerplant
-	SET voltage_level='3'
-	WHERE electrical_capacity between 17500 and 119999.99 AND generation_subtype!='wind_onshore';
+	SET 	voltage_level='3'
+	WHERE 	electrical_capacity between 17500 and 119999.99 AND 
+		generation_subtype<>'wind_onshore';
 
 UPDATE model_draft.ego_supply_res_powerplant
-	SET voltage_level='4'
-	WHERE electrical_capacity between 4500 and 17499.99 AND generation_subtype!='wind_onshore';
+	SET 	voltage_level='4'
+	WHERE 	electrical_capacity between 4500 and 17499.99 AND 
+		generation_subtype<>'wind_onshore';
 
 UPDATE model_draft.ego_supply_res_powerplant
-	SET voltage_level='5'
-	WHERE electrical_capacity between 300 and 4499.99 AND generation_subtype!='wind_onshore';
+	SET 	voltage_level='5'
+	WHERE 	electrical_capacity between 300 and 4499.99 AND 
+		generation_subtype<>'wind_onshore';
 
 UPDATE model_draft.ego_supply_res_powerplant
-	SET voltage_level='6'
-	WHERE electrical_capacity between 100 and 299.99 AND generation_subtype!='wind_onshore';
+	SET 	voltage_level='6'
+	WHERE 	electrical_capacity between 100 and 299.99 AND 
+		generation_subtype<>'wind_onshore';
 
 UPDATE model_draft.ego_supply_res_powerplant
-	SET voltage_level='7'
-	WHERE electrical_capacity <100 AND generation_subtype!='wind_onshore';
+	SET 	voltage_level='7'
+	WHERE 	electrical_capacity <100 AND generation_subtype='wind_onshore';
 
 -- Update onshore_wind with voltage_level higher than suggested by allocation table
 UPDATE model_draft.ego_supply_res_powerplant
-	SET voltage_level='1'
-	WHERE electrical_capacity >=120000 AND generation_subtype='wind_onshore';
+	SET 	voltage_level='1'
+	WHERE 	electrical_capacity >=120000 AND 
+		generation_subtype='wind_onshore';
 
 UPDATE model_draft.ego_supply_res_powerplant
-	SET voltage_level='3'
-	WHERE electrical_capacity between 17500 and 119999.99 AND generation_subtype='wind_onshore' AND voltage_level>3;
+	SET 	voltage_level='3'
+	WHERE 	electrical_capacity between 17500 and 119999.99 AND 
+		generation_subtype='wind_onshore' AND 
+		voltage_level > '3';
 
 UPDATE model_draft.ego_supply_res_powerplant
-	SET voltage_level='4'
-	WHERE electrical_capacity between 4500 and 17499.99 AND generation_subtype='wind_onshore' AND voltage_level>4; 
+	SET 	voltage_level='4'
+	WHERE 	electrical_capacity between 4500 and 17499.99 AND 
+		generation_subtype='wind_onshore' AND 
+		voltage_level > '4'; 
 
 UPDATE model_draft.ego_supply_res_powerplant
-	SET voltage_level='5'
-	WHERE electrical_capacity between 300 and 4499.99 AND generation_subtype='wind_onshore' AND voltage_level>5;
+	SET 	voltage_level='5'
+	WHERE 	electrical_capacity between 300 and 4499.99 AND 
+		generation_subtype='wind_onshore' AND 
+		voltage_level > '5';
 
 UPDATE model_draft.ego_supply_res_powerplant
-	SET voltage_level='6'
-	WHERE electrical_capacity between 100 and 299.99 AND generation_subtype='wind_onshore' AND voltage_level>6;
+	SET 	voltage_level='6'
+	WHERE 	electrical_capacity between 100 and 299.99 AND 
+		generation_subtype='wind_onshore' AND 
+		voltage_level > '6';
 
 --Set voltage_level of offshore_wind to 1
 UPDATE model_draft.ego_supply_res_powerplant
-	SET voltage_level=1 
-	WHERE generation_subtype = 'wind_offshore'; 
+	SET 	voltage_level=1 
+	WHERE 	generation_subtype = 'wind_offshore'; 
 
 -- metadata
 COMMENT ON TABLE model_draft.ego_supply_res_powerplant

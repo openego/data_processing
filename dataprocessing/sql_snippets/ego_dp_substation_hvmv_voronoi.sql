@@ -86,7 +86,7 @@ ALTER TABLE	model_draft.ego_grid_hvmv_substation_dummy OWNER TO oeuser;
 -- metadata
 COMMENT ON TABLE model_draft.ego_grid_hvmv_substation_dummy IS '{
 	"comment": "eGoDP - Temporary table",
-	"version": "v0.2.6" }' ;
+	"version": "v0.2.7" }' ;
 
 -- select description
 SELECT obj_description('model_draft.ego_grid_hvmv_substation_dummy' ::regclass) ::json;
@@ -164,7 +164,7 @@ DELETE FROM model_draft.ego_grid_hvmv_substation_voronoi WHERE subst_id IS NULL;
 -- metadata
 COMMENT ON TABLE model_draft.ego_grid_hvmv_substation_voronoi IS '{
 	"comment": "eGoDP - Temporary table",
-	"version": "v0.2.6" }' ;
+	"version": "v0.2.7" }' ;
 
 -- select description
 SELECT obj_description('model_draft.ego_grid_hvmv_substation_voronoi' ::regclass) ::json;

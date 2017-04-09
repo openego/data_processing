@@ -357,7 +357,8 @@ SELECT ego_scenario_log('v0.2.7','output','model_draft','ego_landuse_industry','
 -- Identify large scale consumer
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.7','input','supply','ego_conv_powerplant','ego_dp_loadarea_industry_consumer.sql',' ');
+SELECT ego_scenario_log('v0.2.7','input','model_draft','ego_supply_conv_powerplant','ego_dp_loadarea_industry_consumer.sql',' ');
+SELECT ego_scenario_log('v0.2.7','input','openstreetmap','osm_deu_polygon_urban_sector_3_industrial_mview','ego_dp_loadarea_industry_consumer.sql',' ');
 
 DROP TABLE IF EXISTS model_draft.ego_demand_hv_largescaleconsumer CASCADE;
 CREATE TABLE model_draft.ego_demand_hv_largescaleconsumer AS
