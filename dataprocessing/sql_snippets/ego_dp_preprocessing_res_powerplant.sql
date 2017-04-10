@@ -33,7 +33,8 @@ SELECT ego_scenario_log('v0.2.8','temp','model_draft','ego_supply_res_powerplant
 
 -- Delete entries without information on installed capacity or where electrical_capacity <= 0
 DELETE  FROM model_draft.ego_supply_res_powerplant
-	WHERE electrical_capacity IS NULL OR electrical_capacity <= 0; 
+	WHERE 	electrical_capacity IS NULL OR 
+		electrical_capacity <= 0; 
 
 -- Delete entries where generation_type and subtype are inconsistent
 DELETE  FROM model_draft.ego_supply_res_powerplant
@@ -91,7 +92,7 @@ UPDATE model_draft.ego_supply_res_powerplant
 			THEN (SELECT geom from model_draft.ego_supply_res_powerplant where id = 1560969)
 			END
 	WHERE postcode = '00000' OR postcode = 'keine' or postcode = 'O04WF' AND generation_subtype = 'wind_offshore';
-	
+
 UPDATE model_draft.ego_supply_res_powerplant
 	SET geom = CASE	WHEN eeg_id LIKE '%MEERWINDSUEDOST%' 
 			THEN (SELECT geom from model_draft.ego_supply_res_powerplant where id = 1560502)
@@ -103,44 +104,43 @@ UPDATE model_draft.ego_supply_res_powerplant
 			THEN (SELECT geom from model_draft.ego_supply_res_powerplant where id = 1561081)
 			END
 	WHERE postcode = '00000' OR postcode = 'keine' or postcode = 'O04WF' AND generation_subtype = 'wind_offshore';
-	
-			
+
 UPDATE model_draft.ego_supply_res_powerplant
 	SET geom = CASE	WHEN eeg_id LIKE '%BUTENDIEK%' 
 			THEN (SELECT geom from model_draft.ego_supply_res_powerplant where id = 1560705)
 			END
 	WHERE postcode = '00000' OR postcode = 'keine' or postcode = 'O04WF' AND generation_subtype = 'wind_offshore';
-	
+
 UPDATE model_draft.ego_supply_res_powerplant
 	SET geom = CASE	WHEN eeg_id LIKE '%BOWZE%' 
 			THEN (SELECT geom from model_draft.ego_supply_res_powerplant where id = 1561018)
 			END
 	WHERE postcode = '00000' OR postcode = 'keine' or postcode = 'O04WF' AND generation_subtype = 'wind_offshore';
-	
+
 UPDATE model_draft.ego_supply_res_powerplant
 	SET geom = CASE	WHEN eeg_id LIKE '%NORDSEEOST%' or eeg_id LIKE '%NordseeOst%'
 			THEN (SELECT geom from model_draft.ego_supply_res_powerplant where id = 1560647)
 			END
 	WHERE postcode = '00000' OR postcode = 'keine' or postcode = 'O04WF' AND generation_subtype = 'wind_offshore';
-	
+
 UPDATE model_draft.ego_supply_res_powerplant
 	SET geom = CASE	WHEN eeg_id LIKE '%BALTIC%' 
 			THEN (SELECT geom from model_draft.ego_supply_res_powerplant where id = 1561137)
 			END
 	WHERE postcode = '00000' OR postcode = 'keine' or postcode = 'O04WF' AND generation_subtype = 'wind_offshore';
-	
+
 UPDATE model_draft.ego_supply_res_powerplant
 	SET geom = CASE	WHEN eeg_id LIKE '%RIFFE%' 
 			THEN ST_SetSRID(ST_MakePoint(6.48, 53.69),4326)
 			END
 	WHERE postcode = '00000' OR postcode = 'keine' or postcode = 'O04WF' AND generation_subtype = 'wind_offshore';
-	
+
 UPDATE model_draft.ego_supply_res_powerplant
 	SET geom = CASE	WHEN eeg_id LIKE '%ALPHAVENTUE%' 
 			THEN ST_SetSRID(ST_MakePoint(6.598333, 54.008333),4326)
 			END
 	WHERE postcode = '00000' OR postcode = 'keine' or postcode = 'O04WF' AND generation_subtype = 'wind_offshore';
-	
+
 UPDATE model_draft.ego_supply_res_powerplant
 	SET geom = CASE	WHEN eeg_id LIKE '%BAOEE%' 
 			THEN ST_SetSRID(ST_MakePoint(5.975, 54.358333),4326)
@@ -210,7 +210,7 @@ UPDATE model_draft.ego_supply_res_powerplant
 
 --Set voltage_level of offshore_wind to 1
 UPDATE model_draft.ego_supply_res_powerplant
-	SET 	voltage_level=1 
+	SET 	voltage_level='1' 
 	WHERE 	generation_subtype = 'wind_offshore'; 
 
 -- metadata

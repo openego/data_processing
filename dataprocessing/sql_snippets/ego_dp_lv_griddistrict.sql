@@ -1,6 +1,5 @@
 /*
-generate ONT
-Runtime 08:30 min
+Generate ONT
 
 __copyright__ 	= "Reiner Lemoine Institut"
 __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"

@@ -47,7 +47,7 @@ def data_processing():
     # 'ego_dp_structure_osm_landuse.sql',         		# Filter OSM landuse
     # 'eGo_dp_structure_census.sql',          			# Filter Census2011 with population
     # 'ego_dp_preprocessing_conv_powerplant.sql',		# Setup conventional power plant list
-    # 'ego_dp_preprocessing_res_powerplant.sql',		# Setup renewable power plant list
+    # 'ego_dp_preprocessing_res_powerplant.sql',		# Setup renewable power plant list !!NOT WORKING!!
 
 	## SUBSTATION
     # 'ego_dp_substation_hvmv.sql',               		# Abstract HVMV Substations of the high voltage level from OSM
@@ -90,13 +90,13 @@ def data_processing():
 	# 'ego_dp_powerflow_load_timeseries_NEP2035.sql' 		# Copy demand timeseries to NEP 2035 scenario
 	
 	## LOWVOLTAGE
-	'ego_dp_lv_substation.sql',						# MVLV Substation inside Loadarea
-	'ego_dp_lv_substation_voronoi.sql',				# MVLV Substation Voronoi
-	'ego_dp_lv_griddistrict.sql'		    			# LV Griddistrict
+	# 'ego_dp_lv_substation.sql',						# MVLV Substation inside Loadarea
+	# 'ego_dp_lv_substation_voronoi.sql',				# MVLV Substation Voronoi
+	'ego_dp_lv_griddistrict.sql',    			        # LV Griddistrict
     'ego_dp_lv_peakload.sql',						    # LV Peakload (Not working)
     
     ## VERSIONING
-    # 'ego_dp_versioning.sql',						    # Versioning
+    'ego_dp_versioning.sql',						    # Versioning
     
     ]
 
