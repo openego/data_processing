@@ -44,8 +44,8 @@ COMMENT ON TABLE scenario.ego_slp_parameters IS '{
 	"reference_date": " ",
 	"sources": [
 		{"name": "eGo dataprocessing", "description": " ",
-		"url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)", "copyright": "© Reiner Lemoine Institut"},
-		{"name": "Repräsentative VDEW-Lastprofile", "description": "Autoren: Hermann Meier and Christian Fünfgeld and Thomas Adam and Bernd Schiefdecker",
+		"url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)", "copyright": "Â© Reiner Lemoine Institut"},
+		{"name": "ReprÃ¤sentative VDEW-Lastprofile", "description": "Autoren: Hermann Meier and Christian FÃ¼nfgeld and Thomas Adam and Bernd Schiefdecker",
 		"url": " ", "license": " ", "copyright": " "} ],
 	"spatial": [
 		{"extend": "",
@@ -56,7 +56,7 @@ COMMENT ON TABLE scenario.ego_slp_parameters IS '{
 		"version": "1.0",
 		"url": "https://opendatacommons.org/licenses/odbl/1.0/",
 		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
-		"copyright": "© Reiner Lemoine Institut"} ],
+		"copyright": "Â© Reiner Lemoine Institut"} ],
 	"contributors": [
 		{"name": "gplssm", "email": "", "date": "19.04.2017", "comment": "Create table and insert initial parameters" }],
 	"resources": [{
