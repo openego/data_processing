@@ -23,9 +23,6 @@ CREATE TABLE 		model_draft.ego_scenario (
 -- grant (oeuser)
 ALTER TABLE	model_draft.ego_scenario OWNER TO oeuser;
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.8','output','model_draft','ego_scenario','ego_dp_structure_scenariolog.sql','Update scenario list');
-
 -- scenario list
 INSERT INTO	model_draft.ego_scenario (version,version_name,release,comment,timestamp) VALUES
 	('0', 'setup', 'FALSE', ' ', '2016-10-01' ),
@@ -76,6 +73,10 @@ COMMENT ON TABLE model_draft.ego_scenario IS '{
 
 -- select description
 SELECT obj_description('model_draft.ego_scenario' ::regclass) ::json;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.8','output','model_draft','ego_scenario','ego_dp_structure_scenariolog.sql','Update scenario list');
+
 
 /* -- logged versions
 SELECT	version

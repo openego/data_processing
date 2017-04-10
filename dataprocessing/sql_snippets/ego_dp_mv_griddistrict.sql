@@ -322,8 +322,7 @@ COMMENT ON MATERIALIZED VIEW model_draft.ego_grid_hvmv_substation_voronoi_mview 
 SELECT ego_scenario_log('v0.2.8','temp','model_draft','ego_grid_hvmv_substation_voronoi_mview','ego_dp_mv_griddistrict.sql',' ');
 
 
--- 
--- -- Validate (geom)   (OK!) -> 22.000ms =0
+-- -- Validate (geom)
 -- DROP VIEW IF EXISTS	model_draft.ego_grid_hvmv_substation_voronoi_error_geom_view CASCADE;
 -- CREATE VIEW		model_draft.ego_grid_hvmv_substation_voronoi_error_geom_view AS
 -- 	SELECT	test.id,
@@ -334,7 +333,7 @@ SELECT ego_scenario_log('v0.2.8','temp','model_draft','ego_grid_hvmv_substation_
 -- 		SELECT	source.id AS id,				-- PK
 -- 			ST_IsValid(source.geom) AS error,
 -- 			source.geom AS geom
--- 		FROM	calc_ego_grid_district.ego_deu_substations_voronoi AS source	-- Table
+-- 		FROM	model_draft.ego_grid_hvmv_substation_voronoi_mview AS source	-- Table
 -- 		) AS test
 -- 	WHERE	test.error = FALSE;
 -- 
