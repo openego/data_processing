@@ -55,6 +55,30 @@ UPDATE 	model_draft.ego_grid_lv_griddistrict_cut AS t1
 SELECT ego_scenario_log('v0.2.8','temp','model_draft','ego_grid_lv_griddistrict_cut','ego_dp_lv_griddistrict.sql',' ');
 
 
+/* -- Validate (geom)   (OK!) -> 22.000ms =0
+DROP VIEW IF EXISTS	model_draft.ego_grid_lv_griddistrict_cut_error_geom_view CASCADE;
+CREATE VIEW		model_draft.ego_grid_lv_griddistrict_cut_error_geom_view AS
+	SELECT	test.id,
+		test.error,
+		reason(ST_IsValidDetail(test.geom)) AS error_reason,
+		ST_SetSRID(location(ST_IsValidDetail(test.geom)),3035) ::geometry(Point,3035) AS error_location
+	FROM	(
+		SELECT	source.id AS id,				-- PK
+			ST_IsValid(source.geom) AS error,
+			source.geom AS geom
+		FROM	model_draft.ego_grid_lv_griddistrict_cut AS source	-- Table
+		) AS test
+	WHERE	test.error = FALSE;
+
+-- grant (oeuser)
+GRANT ALL ON TABLE	model_draft.ego_grid_lv_griddistrict_cut_error_geom_view TO oeuser WITH GRANT OPTION;
+ALTER TABLE		model_draft.ego_grid_lv_griddistrict_cut_error_geom_view OWNER TO oeuser;
+
+-- Drop empty view   (OK!) -> 100ms =1
+SELECT f_drop_view('{ego_grid_lv_griddistrict_cut_error_geom_view}', 'model_draft');
+ */
+
+
 -- with substation
 DROP TABLE IF EXISTS	model_draft.ego_grid_lv_griddistrict_cut_1subst CASCADE;
 CREATE TABLE         	model_draft.ego_grid_lv_griddistrict_cut_1subst (
