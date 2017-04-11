@@ -160,19 +160,13 @@ ALTER TABLE model_draft.ego_supply_res_powerplant
 UPDATE model_draft.ego_supply_res_powerplant
  	SET 	voltage_level=
 		(CASE 
-		 	WHEN voltage_level_var='01 (HöS)' 
-		 	THEN 1 
-		 	WHEN voltage_level_var='02 (HöS/HS)'
-		 	THEN 2 
-		 	WHEN voltage_level_var='03 (HS)'
-		 	THEN 3
-		 	WHEN voltage_level_var='04 (HS/MS)'
-		 	THEN 4
-		 	WHEN voltage_level_var='05 (MS)'
-		 	THEN 5
-		 	WHEN voltage_level_var='06 (MS/NS)'
-		 	THEN 6 
-		 	WHEN voltage_level_var='07 (NS)'
+		 	WHEN voltage_level_var='01 (HöS)' THEN 1 
+		 	WHEN voltage_level_var='02 (HöS/HS)' THEN 2 
+		 	WHEN voltage_level_var='03 (HS)' THEN 3
+		 	WHEN voltage_level_var='04 (HS/MS)' THEN 4
+		 	WHEN voltage_level_var='05 (MS)' THEN 5
+		 	WHEN voltage_level_var='06 (MS/NS)' THEN 6 
+		 	WHEN voltage_level_var='07 (NS)' THEN 7
 		 	ELSE NULL
 		 END);
 
