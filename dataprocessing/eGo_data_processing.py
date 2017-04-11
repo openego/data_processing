@@ -47,7 +47,7 @@ def data_processing():
     # 'ego_dp_structure_osm_landuse.sql',         		# Filter OSM landuse
     # 'eGo_dp_structure_census.sql',          			# Filter Census2011 with population
     # 'ego_dp_preprocessing_conv_powerplant.sql',		# Setup conventional power plant list
-    # 'ego_dp_preprocessing_res_powerplant.sql',		# Setup renewable power plant list !!NOT WORKING!!
+    # 'ego_dp_preprocessing_res_powerplant.sql',		# Setup renewable power plant list
 
 	## SUBSTATION
     # 'ego_dp_substation_hvmv.sql',               		# Abstract HVMV Substations of the high voltage level from OSM
@@ -68,35 +68,36 @@ def data_processing():
 	# 'ego_dp_loadarea_loadcut_griddistrict.sql', 		# Cut Loadarea with MV Griddistrict
 	# 'ego_dp_loadarea_loadcut_voronoi.sql', 	    	# Cut Loadarea with MV Voronoi cells
 	# 'ego_dp_loadarea_consumption.sql',				# Allocate consumption to Loadareas
-	# 'ego_dp_loadarea_peakload.py',					# Peak loads per Loadarea (duration 10h, it can be executed later in the process)
+	# 'ego_dp_loadarea_peakload.py',					# Peak loads per Loadarea (duration 10h!)
 	# 'ego_dp_loadarea_griddistrict_results.sql',		# Results for MV Griddistrict
 	# 'ego_dp_loadarea_statistic.sql',					# Results and statistics for eGoDP
 
-	# ## POWERFLOW
+	## POWERFLOW
 	# 'ego_dp_powerflow_voronoi_weatherpoint.sql',		# Create voronoi cells based on weather points
 	# 'ego_dp_powerflow_hv_setup.sql',					# Set schema/tables for EHV/HV powerflow calculations up
 	# 'ego_dp_powerflow_osmtgmod_to_pypsa.sql',			# Include data from osmTGmod into EHV/HV powerflow schema
 	# 'ego_dp_powerflow_electrical_neighbour.sql',		# Create border crossing lines and buses in neighbouring countries
 
- # 	'ego_dp_powerflow_assignment_generator.sql',  		# Assign generators to corresponding substation
-	# 'ego_dp_powerflow_assignment_load.sql',        		# Assign loads to their corresponding substation
-	# 'ego_dp_powerflow_grid_NEP2035.sql',					# Copy grid to scenario NEP 2035
-	# 'ego_dp_powerflow_assignment_generator_nep2035.sql',	# Assign generators from NEP 2035 to corresponding substation
-	# 'ego_dp_powerflow_assignment_load_nep2035.sql',		# Copy loads from SQ scenario
-	# 'ego_dp_powerflow_timeseries_generator.sql',			# Transfer renpassG!S results into the corresponding powerflow table
-	# 'ego_dp_powerflow_griddistrict_demand.py',			# Demand per MV Griddistrict
-	# 'ego_dp_powerflow_timeseries_demand.sql',				# Insert demand series into corresponding powerflow table
-	# 'ego_dp_powerflow_lopf_data.sql',						# Set marginal costs for generators and storages
-	# 'ego_dp_powerflow_load_timeseries_NEP2035.sql' 		# Copy demand timeseries to NEP 2035 scenario
+  	'ego_dp_powerflow_assignment_generator.sql',  		# Assign generators to corresponding substation
+	'ego_dp_powerflow_assignment_load.sql',        		# Assign loads to their corresponding substation
+	'ego_dp_powerflow_grid_NEP2035.sql',					# Copy grid to scenario NEP 2035
+	'ego_dp_powerflow_assignment_generator_nep2035.sql',	# Assign generators from NEP 2035 to corresponding substation
+	'ego_dp_powerflow_assignment_load_nep2035.sql',		# Copy loads from SQ scenario
+	'ego_dp_powerflow_timeseries_generator.sql',			# Transfer renpassG!S results into the corresponding powerflow table
+	'ego_dp_powerflow_griddistrict_demand.py',			# Demand per MV Griddistrict
+	'ego_dp_powerflow_timeseries_demand.sql',				# Insert demand series into corresponding powerflow table
+	'ego_dp_powerflow_lopf_data.sql',						# Set marginal costs for generators and storages
+	'ego_dp_powerflow_load_timeseries_NEP2035.sql', 		# Copy demand timeseries to NEP 2035 scenario
 	
 	## LOWVOLTAGE
 	# 'ego_dp_lv_substation.sql',						# MVLV Substation inside Loadarea
 	# 'ego_dp_lv_substation_voronoi.sql',				# MVLV Substation Voronoi
 	# 'ego_dp_lv_griddistrict.sql',    			        # LV Griddistrict
-    'ego_dp_lv_peakload.sql',						    # LV Peakload
+    # 'ego_dp_lv_peakload.sql',						    # LV OSM areas
+    # 'ego_dp_lv_consumption_peakload.sql',				# LV Consumption and Peakload
     
     ## VERSIONING
-    # 'ego_dp_versioning.sql',						    # Versioning
+    # 'ego_dp_versioning.sql'						    # Versioning
     
     ]
 
