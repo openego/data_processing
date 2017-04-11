@@ -4,7 +4,7 @@ In progess
 __copyright__ 	= "Reiner Lemoine Institut"
 __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
 __url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
-__author__ 	= "jong42, Ludee"
+__author__ 	= "Ludee, jong42"
 */
 
 
@@ -60,7 +60,7 @@ CREATE INDEX	ego_grid_lv_griddistrict_gidx
 INSERT INTO	model_draft.ego_grid_lv_griddistrict (id,mvlv_subst_id,subst_id,la_id,nn,geom)
 	SELECT	*
 	FROM	model_draft.ego_grid_lv_griddistrict_cut_nn_collect
-	ORDER BY mvlv_subst_id_new;
+	ORDER BY mvlv_subst_id;
 
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)

@@ -92,8 +92,8 @@ def data_processing():
 	## LOWVOLTAGE
 	# 'ego_dp_lv_substation.sql',						# MVLV Substation inside Loadarea
 	# 'ego_dp_lv_substation_voronoi.sql',				# MVLV Substation Voronoi
-	'ego_dp_lv_griddistrict.sql',    			        # LV Griddistrict
-    # 'ego_dp_lv_peakload.sql',						    # LV Peakload
+	# 'ego_dp_lv_griddistrict.sql',    			        # LV Griddistrict
+    'ego_dp_lv_peakload.sql',						    # LV Peakload
     
     ## VERSIONING
     # 'ego_dp_versioning.sql',						    # Versioning
