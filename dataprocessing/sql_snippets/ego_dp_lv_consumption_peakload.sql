@@ -1,3 +1,16 @@
+/*
+Update LV grid district table by
+ a. sectoral consumption in each LV grid district
+ b. sectoral peak load in each LV grid district
+
+__copyright__ 	= "Reiner Lemoine Institut"
+__license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
+__url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
+__author__ 	= "gplssm"
+*/
+
+-- CONSUMPTION
+
 -- residential
 UPDATE 	model_draft.ego_grid_lv_griddistrict AS t1
 	SET sector_consumption_residential = COALESCE(t2.real_cons,0)
