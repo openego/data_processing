@@ -105,14 +105,16 @@ SELECT ego_scenario_log('v0.2.8','input','model_draft','ego_grid_hvmv_substation
 UPDATE model_draft.ego_supply_conv_powerplant a
 	SET 	subst_id = b.subst_id
 	FROM	model_draft.ego_grid_mv_griddistrict b
-	WHERE 	ST_Intersects (a.geom, ST_TRANSFORM(b.geom,4326)) 
+	WHERE 	a.geom && ST_TRANSFORM(b.geom,4326)
+		AND ST_Intersects(a.geom, ST_TRANSFORM(b.geom,4326)) 
 		AND voltage_level >= 3; 
 
 -- Identify corresponding bus with the help of ehv-Voronoi
 UPDATE model_draft.ego_supply_conv_powerplant a
 	SET 	subst_id = b.subst_id
 	FROM 	model_draft.ego_grid_ehv_substation_voronoi b
-	WHERE 	ST_Intersects (a.geom, b.geom) = TRUE
+	WHERE 	a.geom && b.geom
+		AND ST_Intersects(a.geom, b.geom)
 		AND voltage_level <= 2;
 
 -- Insert otg_id of bus
@@ -269,14 +271,16 @@ SELECT ego_scenario_log('v0.2.8','input','model_draft','ego_grid_hvmv_substation
 UPDATE model_draft.ego_supply_res_powerplant a
 	SET 	subst_id = b.subst_id
 	FROM	model_draft.ego_grid_mv_griddistrict b
-	WHERE 	ST_Intersects (a.geom, ST_TRANSFORM(b.geom,4326)) 
+	WHERE 	a.geom && ST_TRANSFORM(b.geom,4326)
+		AND ST_Intersects(a.geom, ST_TRANSFORM(b.geom,4326)) 
 		AND voltage_level >= 3;  
 
 -- Identify corresponding bus with the help of ehv-Voronoi
 UPDATE model_draft.ego_supply_res_powerplant a
 	SET 	subst_id = b.subst_id
 	FROM 	model_draft.ego_grid_ehv_substation_voronoi b
-	WHERE 	ST_Intersects (a.geom, b.geom) = TRUE 
+	WHERE 	a.geom && b.geom
+		AND ST_Intersects(a.geom, b.geom)
 		AND voltage_level <= 2; 
 
 -- Insert otg_id of bus
@@ -393,7 +397,8 @@ UPDATE model_draft.ego_supply_pf_generator_single a
 		FROM 	(SELECT c.un_id, c.geom 
 			FROM model_draft.ego_supply_generator c) AS result,
 			model_draft.renpassgis_economic_weatherpoint_voronoi b 
-		WHERE 	ST_Intersects (result.geom, b.geom) 
+		WHERE 	result.geom && b.geom
+			AND ST_Intersects(result.geom, b.geom) 
 			AND generator_id = result.un_id;
 
 
