@@ -139,7 +139,7 @@ SELECT
   1, -- default
   11, -- source is for now the one of pumped_storage
   0.01, -- marginal costs are set low in order to dispatch after RES and before conv. PP
-  229357, -- set according to Acatech2015 for Lithium-Ion. Annual cost method based on investment costs per MW. Must be reduced to size of snapshots if extendable storage shall be used.
+  65822, -- set according to Acatech2015 for Lithium-Ion (base year is 2023, not 2035!). Annual cost method based on investment costs per MW. Must be reduced to size of snapshots if extendable storage shall be used.
   1, -- efficiency will be set via efficiency_store and efficiency_dispatch
   0, -- initial storage level is 0
   false, -- cyclic state of charge is false
