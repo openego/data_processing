@@ -170,3 +170,78 @@ SELECT 'SH Status Quo', a.trafo_id, a.bus0, a.bus1, a.x, a.r, a.g, a.b, a.s_nom,
 FROM 	model_draft.ego_grid_pf_hv_transformer a 
 WHERE 	scn_name= 'Status Quo' AND a.bus0 IN (SELECT bus_id FROM model_draft.ego_grid_pf_hv_bus WHERE scn_name = 'SH Status Quo') 
 	AND a.bus1 IN (SELECT bus_id FROM model_draft.ego_grid_pf_hv_bus WHERE scn_name = 'SH Status Quo'); 
+
+
+-- Delete subnetworks identified in PyPSA
+
+DELETE FROM model_draft.ego_grid_pf_hv_bus
+WHERE scn_name = 'SH Status Quo' AND bus_id IN 
+(24415,
+26999,  
+1053,
+1052,
+5636,
+30,
+17146,
+23784,
+17384); -- include ID of buses which shall be deleted 
+
+--- This part deletes all lines in the 'Status Quo EHV' scenario first and includes those lines connecting buses which are included in the adjusted Bus-Table 
+
+DELETE FROM model_draft.ego_grid_pf_hv_line WHERE scn_name = 'SH Status Quo'; 
+
+INSERT INTO 	model_draft.ego_grid_pf_hv_line
+SELECT 	'SH Status Quo', a.line_id, a.bus0, a.bus1, a.x, a.r, a.g, a.b, a.s_nom, a.s_nom_extendable, a.s_nom_min, 
+	a.s_nom_max, a.capital_cost, a.length, a.cables, a.frequency, a.terrain_factor, a.geom, a.topo
+FROM 	model_draft.ego_grid_pf_hv_line a 
+WHERE 	scn_name= 'Status Quo' AND a.bus0 IN (SELECT bus_id FROM model_draft.ego_grid_pf_hv_bus WHERE scn_name = 'SH Status Quo') 
+	AND a.bus1 IN (SELECT bus_id FROM model_draft.ego_grid_pf_hv_bus WHERE scn_name = 'SH Status Quo');
+
+--- The same approach for transformers 
+
+DELETE FROM model_draft.ego_grid_pf_hv_transformer WHERE scn_name = 'SH Status Quo'; 
+
+INSERT INTO model_draft.ego_grid_pf_hv_transformer
+SELECT 'SH Status Quo', a.trafo_id, a.bus0, a.bus1, a.x, a.r, a.g, a.b, a.s_nom, a.s_nom_extendable, a.s_nom_min, 
+	a.s_nom_max, a.tap_ratio, a.phase_shift, a.capital_cost, a.geom, a.topo
+FROM 	model_draft.ego_grid_pf_hv_transformer a 
+WHERE 	scn_name= 'Status Quo' AND a.bus0 IN (SELECT bus_id FROM model_draft.ego_grid_pf_hv_bus WHERE scn_name = 'SH Status Quo') 
+	AND a.bus1 IN (SELECT bus_id FROM model_draft.ego_grid_pf_hv_bus WHERE scn_name = 'SH Status Quo'); 
+
+
+-- Delete all generators which were connected to deleted buses
+
+DELETE FROM model_draft.ego_grid_pf_hv_generator 
+WHERE scn_name = 'SH Status Quo' AND bus NOT IN 
+(SELECT bus_id FROM model_draft.ego_grid_pf_hv_bus WHERE scn_name='SH Status Quo'); -- include ID of buses which shall be deleted 
+
+
+DELETE FROM model_draft.ego_grid_pf_hv_generator_pq_set 
+WHERE scn_name='SH Status Quo' AND generator_id NOT IN 
+	(SELECT generator_id FROM model_draft.ego_grid_pf_hv_generator WHERE scn_name='SH Status Quo'); 
+
+
+
+-- Delete all loads which were connected to deleted buses
+
+DELETE FROM model_draft.ego_grid_pf_hv_load 
+WHERE scn_name = 'SH Status Quo' AND bus NOT IN 
+(SELECT bus_id FROM model_draft.ego_grid_pf_hv_bus WHERE scn_name='SH Status Quo'); -- include ID of buses which shall be deleted 
+
+
+DELETE FROM model_draft.ego_grid_pf_hv_load_pq_set 
+WHERE scn_name='SH Status Quo' AND load_id NOT IN 
+	(SELECT load_id FROM model_draft.ego_grid_pf_hv_load WHERE scn_name='SH Status Quo'); 
+
+
+
+-- Delete all storages which were connected to deleted buses
+
+DELETE FROM model_draft.ego_grid_pf_hv_storage 
+WHERE scn_name = 'SH Status Quo' AND bus NOT IN 
+(SELECT bus_id FROM model_draft.ego_grid_pf_hv_bus WHERE scn_name='SH Status Quo'); -- include ID of buses which shall be deleted 
+
+
+DELETE FROM model_draft.ego_grid_pf_hv_storage_pq_set 
+WHERE scn_name='SH Status Quo' AND storage_id NOT IN 
+	(SELECT storage_id FROM model_draft.ego_grid_pf_hv_storage WHERE scn_name='SH Status Quo'); 
