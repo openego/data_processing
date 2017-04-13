@@ -81,7 +81,7 @@ def data_processing():
 
 ##     	# 'ego_dp_powerflow_assignment_generator.sql',  		# Assign generators to corresponding substation
 	# 'ego_dp_powerflow_assignment_load.sql',        		# Assign loads to their corresponding substation
-	'ego_dp_powerflow_grid_NEP2035.sql',					# Copy grid to scenario NEP 2035
+	# 'ego_dp_powerflow_grid_NEP2035.sql',					# Copy grid to scenario NEP 2035
 	'ego_dp_powerflow_assignment_generator_nep2035.sql',	# Assign generators from NEP 2035 to corresponding substation
 	'ego_dp_powerflow_assignment_load_nep2035.sql',		# Copy loads from SQ scenario
 	'ego_dp_powerflow_timeseries_generator.sql',			# Transfer renpassG!S results into the corresponding powerflow table
