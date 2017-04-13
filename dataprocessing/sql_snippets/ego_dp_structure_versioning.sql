@@ -418,22 +418,8 @@ SELECT obj_description('grid.ego_dp_mv_griddistrict' ::regclass) ::json;
 SELECT ego_scenario_log('v0.2.8','result','grid','ego_dp_mv_griddistrict','ego_dp_structure_versioning.sql','mv grid district');
 
 
--- in process
 /* 
 -- LV griddistrict
-DROP TABLE IF EXISTS	grid.ego_dp_lv_griddistrict CASCADE;
-CREATE TABLE 		grid.ego_dp_lv_griddistrict (
-	version 	text,
-	mvlv_subst_id	integer,
-	mvlv_subst_id_new	integer,
-	subst_id	integer,
-	la_id 		integer,
-	nn		boolean,
-	geom		geometry(MultiPolygon,3035),
-	CONSTRAINT ego_dp_lv_griddistrict_pkey PRIMARY KEY (version,mvlv_subst_id));
-*/
-/* 
--- LV griddistrict (older version)
 DROP TABLE IF EXISTS	grid.ego_dp_lv_griddistrict CASCADE;
 CREATE TABLE 		grid.ego_dp_lv_griddistrict (
 	version 	text,
