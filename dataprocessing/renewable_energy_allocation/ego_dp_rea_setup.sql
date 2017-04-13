@@ -9,7 +9,7 @@ __url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
 __author__ 	= "Ludee"
 */
 
--- number of grid_district -> 3606
+-- number of grid_district -> 3608
 	SELECT	COUNT(*)
 	FROM	model_draft.ego_grid_mv_griddistrict;
 
