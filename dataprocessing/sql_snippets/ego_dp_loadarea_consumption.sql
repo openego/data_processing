@@ -247,7 +247,7 @@ SELECT obj_description('model_draft.ego_demand_loadarea' ::regclass) ::json;
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.8','output','model_draft','ego_demand_loadarea','ego_dp_loadarea_consumption.sql',' ');
 
-
+/* 
 -- backup view
 CREATE OR REPLACE VIEW model_draft.ego_demand_per_load_area AS
 	SELECT	*
@@ -258,3 +258,4 @@ ALTER TABLE	model_draft.ego_demand_per_load_area OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.8','temp','model_draft','ego_demand_per_load_area','ego_dp_loadarea_consumption.sql','BACKUP use ego_demand_loadarea');
+ */

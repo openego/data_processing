@@ -108,15 +108,13 @@ ALTER TABLE model_draft.ego_demand_pf_load_single
 -----------
 
 
--- Add un_id for small scale consumer (ssc) 
-
+-- Add un_id for small scale consumer (ssc) -- WARNING: THIS IS A VIEW AND NOT loadarea @ILKA
 UPDATE model_draft.ego_demand_per_load_area a
 	SET un_id = b.un_id 
 	FROM model_draft.ego_demand_loads b
 	WHERE a.id = b.ssc_id; 
 
 -- Add un_id for large scale consumer (lsc)
-
 UPDATE model_draft.ego_demand_hv_largescaleconsumer a
 	SET un_id = b.un_id 
 	FROM model_draft.ego_demand_loads b

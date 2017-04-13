@@ -79,6 +79,10 @@ INSERT INTO     model_draft.ego_demand_loadarea (geom)
 CREATE INDEX  	ego_demand_loadarea_geom_idx
 	ON    	model_draft.ego_demand_loadarea USING gist (geom);
 
+-- index GIST (geom_centre)
+CREATE INDEX  	ego_demand_loadarea_geom_centre_idx
+	ON    	model_draft.ego_demand_loadarea USING gist (geom_centre);
+	
 -- update area (area_ha)
 UPDATE 	model_draft.ego_demand_loadarea AS t1
 	SET  	area_ha = t2.area
