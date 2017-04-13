@@ -9,7 +9,7 @@ __author__ 	= "IlkaCu, Ludee"
 
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.8','input','model_draft','nep_supply_conv_powerplant_nep2015','ego_dp_preprocessing_conv_powerplant_nep2035.sql','');
+SELECT ego_scenario_log('v0.2.9','input','model_draft','nep_supply_conv_powerplant_nep2015','ego_dp_preprocessing_conv_powerplant_nep2035.sql','');
 
 --- Create table for processed power plant data
 DROP TABLE IF EXISTS model_draft.ego_supply_conv_powerplant_2035 CASCADE; 
@@ -79,7 +79,7 @@ UPDATE model_draft.ego_supply_conv_powerplant_2035
 -- metadata
 COMMENT ON TABLE model_draft.ego_supply_conv_powerplant_2035 IS '{
 	"comment": "eGoDP - Temporary table",
-	"version": "v0.2.8" }' ;
+	"version": "v0.2.9" }' ;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.8','output','model_draft','ego_supply_conv_powerplant_2035','ego_dp_preprocessing_conv_powerplant_nep2035.sql','');
+SELECT ego_scenario_log('v0.2.9','output','model_draft','ego_supply_conv_powerplant_2035','ego_dp_preprocessing_conv_powerplant_nep2035.sql','');

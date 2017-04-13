@@ -163,7 +163,7 @@ CREATE INDEX  	ego_demand_loadarea_geom_centre_idx
 
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.8','input','model_draft','ego_demand_loadarea_peak_load','ego_dp_loadarea_peakload.sql','');
+SELECT ego_scenario_log('v0.2.9','input','model_draft','ego_demand_loadarea_peak_load','ego_dp_loadarea_peakload.sql','');
 
 -- copy peakload to loadarea (temp)
 UPDATE 	model_draft.ego_demand_loadarea AS t1
@@ -182,4 +182,4 @@ UPDATE 	model_draft.ego_demand_loadarea AS t1
 	WHERE  	t1.id = t2.id;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.8','output','model_draft','ego_demand_loadarea','ego_dp_loadarea_peakload.sql','');
+SELECT ego_scenario_log('v0.2.9','output','model_draft','ego_demand_loadarea','ego_dp_loadarea_peakload.sql','');

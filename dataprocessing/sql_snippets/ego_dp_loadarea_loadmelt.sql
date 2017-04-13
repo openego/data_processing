@@ -19,10 +19,10 @@ CREATE TABLE		model_draft.ego_demand_load_collect (
 	CONSTRAINT ego_demand_load_collect_pkey PRIMARY KEY (id));
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.8','input','model_draft','ego_demand_la_osm','ego_dp_loadarea_loadmelt.sql',' ');
+SELECT ego_scenario_log('v0.2.9','input','model_draft','ego_demand_la_osm','ego_dp_loadarea_loadmelt.sql',' ');
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.8','input','model_draft','ego_demand_la_zensus_cluster','ego_dp_loadarea_loadmelt.sql',' ');
+SELECT ego_scenario_log('v0.2.9','input','model_draft','ego_demand_la_zensus_cluster','ego_dp_loadarea_loadmelt.sql',' ');
 
 -- insert loads OSM
 INSERT INTO	model_draft.ego_demand_load_collect (geom)
@@ -42,7 +42,7 @@ CREATE INDEX	ego_demand_load_collect_geom_idx
 ALTER TABLE	model_draft.ego_demand_load_collect OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.8','temp','model_draft','ego_demand_load_collect','ego_dp_loadarea_loadmelt.sql',' ');
+SELECT ego_scenario_log('v0.2.9','temp','model_draft','ego_demand_load_collect','ego_dp_loadarea_loadmelt.sql',' ');
 
 
 -- buffer with 100m
@@ -67,7 +67,7 @@ CREATE INDEX	ego_demand_load_collect_buffer100_geom_idx
 ALTER TABLE	model_draft.ego_demand_load_collect_buffer100 OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.8','temp','model_draft','ego_demand_load_collect_buffer100','ego_dp_loadarea_loadmelt.sql',' ');
+SELECT ego_scenario_log('v0.2.9','temp','model_draft','ego_demand_load_collect_buffer100','ego_dp_loadarea_loadmelt.sql',' ');
 
 
 -- unbuffer with 100m
@@ -94,7 +94,7 @@ CREATE INDEX	ego_demand_load_melt_geom_idx
 ALTER TABLE	model_draft.ego_demand_load_melt OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.8','temp','model_draft','ego_demand_load_melt','ego_dp_loadarea_loadmelt.sql',' ');
+SELECT ego_scenario_log('v0.2.9','temp','model_draft','ego_demand_load_melt','ego_dp_loadarea_loadmelt.sql',' ');
 
 
 -- validate geom
@@ -125,7 +125,7 @@ CREATE INDEX	ego_demand_load_melt_error_geom_mview_geom_idx
 ALTER TABLE	model_draft.ego_demand_load_melt_error_geom_mview OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.8','temp','model_draft','ego_demand_load_melt_error_geom_mview','ego_dp_loadarea_loadmelt.sql',' ');
+SELECT ego_scenario_log('v0.2.9','temp','model_draft','ego_demand_load_melt_error_geom_mview','ego_dp_loadarea_loadmelt.sql',' ');
 
 
 -- fix geoms with error
@@ -157,7 +157,7 @@ CREATE INDEX	ego_demand_load_melt_error_geom_fix_mview_geom_idx
 ALTER TABLE	model_draft.ego_demand_load_melt_error_geom_fix_mview OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.8','temp','model_draft','ego_demand_load_melt_error_geom_fix_mview','ego_dp_loadarea_loadmelt.sql',' ');
+SELECT ego_scenario_log('v0.2.9','temp','model_draft','ego_demand_load_melt_error_geom_fix_mview','ego_dp_loadarea_loadmelt.sql',' ');
 
 
 -- update fixed geoms
@@ -171,7 +171,7 @@ UPDATE 	model_draft.ego_demand_load_melt AS t1
 	WHERE  	t1.id = t2.id;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.8','output','model_draft','ego_demand_load_melt','ego_dp_loadarea_loadmelt.sql',' ');
+SELECT ego_scenario_log('v0.2.9','output','model_draft','ego_demand_load_melt','ego_dp_loadarea_loadmelt.sql',' ');
 
 
 -- check for errors again
@@ -202,7 +202,7 @@ CREATE INDEX	ego_demand_load_melt_error_2_geom_mview_geom_idx
 ALTER TABLE	model_draft.ego_demand_load_melt_error_2_geom_mview OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.8','temp','model_draft','ego_demand_load_melt_error_2_geom_mview','ego_dp_loadarea_loadmelt.sql',' ');
+SELECT ego_scenario_log('v0.2.9','temp','model_draft','ego_demand_load_melt_error_2_geom_mview','ego_dp_loadarea_loadmelt.sql',' ');
 
 
 /* -- drop temp

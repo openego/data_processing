@@ -11,6 +11,10 @@ __author__ 	= "gplssm"
 
 -- CONSUMPTION
 
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.9','input','model_draft','ego_demand_loadarea','ego_dp_lv_consumption_peakload.sql',' ');
+SELECT ego_scenario_log('v0.2.9','input','model_draft','ego_grid_lv_griddistrict','ego_dp_lv_consumption_peakload.sql',' ');
+
 -- residential
 UPDATE 	model_draft.ego_grid_lv_griddistrict AS t1
 	SET sector_consumption_residential = COALESCE(t2.real_cons,0)
@@ -119,3 +123,6 @@ UPDATE model_draft.ego_grid_lv_griddistrict as t1
 		scenario.ego_slp_parameters AS slp
 		WHERE slp.parameter = 'consumption_peak_l0') AS t2
 	WHERE t1.mvlv_subst_id = t2.mvlv_subst_id;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.9','output','model_draft','ego_grid_lv_griddistrict','ego_dp_lv_consumption_peakload.sql',' ');
