@@ -35,7 +35,8 @@ INSERT INTO	model_draft.ego_scenario (version,version_name,release,comment,times
 	('v0.2.5', 'mockrun', 'FALSE', 'finished but revealed major bugs', '2017-03-03' ),
 	('v0.2.6', 'premiere', 'TRUE', 'first complete relase', '2017-03-24' ),
 	('v0.2.7', 'debugbranch', 'FALSE', 'run blocks to debug', '2017-04-06' ),
-	('v0.2.8', 'homerun', 'TRUE', 'finish in one run', '2017-04-09' ); 
+	('v0.2.8', 'eastereggs', 'TRUE', 'big and small eggs everywhere', '2017-04-13' ),
+	('v0.2.9', 'homerun', 'TRUE', 'finish in one run', '2017-04-14' );
 
 -- metadata
 COMMENT ON TABLE model_draft.ego_scenario IS '{
