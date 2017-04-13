@@ -159,7 +159,7 @@ UPDATE model_draft.ego_supply_res_powerplant
 
 UPDATE model_draft.ego_supply_res_powerplant
 	SET 	voltage_level='7'
-	WHERE 	electrical_capacity <100 AND generation_subtype='wind_onshore';
+	WHERE 	electrical_capacity <100 AND generation_subtype<>'wind_onshore';
 
 -- Update onshore_wind with voltage_level higher than suggested by allocation table
 UPDATE model_draft.ego_supply_res_powerplant
