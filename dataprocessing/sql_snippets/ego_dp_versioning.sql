@@ -123,6 +123,35 @@ INSERT INTO demand.ego_dp_loadarea
 SELECT ego_scenario_log('v0.2.8','result','demand','ego_dp_loadarea','ego_dp_versioning.sql','versioning');
 
 
+-- GENERATOR
+
+-- conv versioning
+DELETE FROM supply.ego_dp_conv_powerplant
+	WHERE	version = 'v0.2.8';
+
+INSERT INTO supply.ego_dp_conv_powerplant
+	SELECT	'v0.2.8',
+		*
+	FROM	model_draft.ego_supply_conv_powerplant;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.8','result','supply','ego_dp_conv_powerplant','ego_dp_versioning.sql','versioning');
+
+-- res versioning
+DELETE FROM supply.ego_dp_res_powerplant
+	WHERE	version = 'v0.2.8';
+
+INSERT INTO supply.ego_dp_res_powerplant
+	SELECT	'v0.2.8',
+		*
+	FROM	model_draft.ego_supply_res_powerplant;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.8','result','supply','ego_dp_res_powerplant','ego_dp_versioning.sql','versioning');
+
+
+
+
 -- overview
 DELETE FROM model_draft.ego_scenario_overview
 	WHERE	version = 'v0.2.8';
@@ -168,4 +197,17 @@ UNION ALL
 		version,
 		count(*) AS cnt
 	FROM 	demand.ego_dp_loadarea
-	GROUP BY version;
+	GROUP BY version 
+UNION ALL
+	SELECT 	'supply.ego_dp_conv_powerplant' AS name,
+		version,
+		count(*) AS cnt
+	FROM 	supply.ego_dp_conv_powerplant
+	GROUP BY version 
+UNION ALL
+	SELECT 	'supply.ego_dp_res_powerplant' AS name,
+		version,
+		count(*) AS cnt
+	FROM 	supply.ego_dp_res_powerplant
+	GROUP BY version 
+	;
