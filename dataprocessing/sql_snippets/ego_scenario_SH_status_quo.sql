@@ -18,7 +18,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_bus
 SELECT 'SH Status Quo', a.bus_id, a.v_nom, a.current_type, a.v_mag_pu_min, a.v_mag_pu_max, a.geom
 FROM 	model_draft.ego_grid_pf_hv_bus a, 
 	political_boundary.bkg_vg250_2_lan b
-WHERE scn_name= 'Status Quo' AND b.gid=26 AND ST_Intersects(ST_Transform(ST_SetSRID(b.geom,31467),4326), a.geom); -- gid=26 is valid for Schleswig-Holstein
+WHERE scn_name= 'Status Quo' AND b.id=26 AND ST_Intersects(ST_Transform(ST_SetSRID(b.geom,31467),4326), a.geom); -- gid=26 is valid for Schleswig-Holstein
 
 
 -- Include lines connecting buses within the boundaries of the federal state
