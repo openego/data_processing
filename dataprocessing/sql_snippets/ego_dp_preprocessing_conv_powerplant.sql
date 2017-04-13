@@ -21,7 +21,7 @@ ALTER TABLE model_draft.ego_supply_conv_powerplant
 	ADD COLUMN subst_id bigint,
   	ADD COLUMN otg_id bigint,
   	ADD COLUMN un_id bigint
-	ADD PRIMARY KEY (id);
+	ADD PRIMARY KEY (gid);
 
 CREATE INDEX ego_supply_conv_powerplant_idx
 	ON model_draft.ego_supply_conv_powerplant
