@@ -102,7 +102,7 @@ DELETE FROM grid.ego_dp_lv_griddistrict
 INSERT INTO grid.ego_dp_lv_griddistrict
 	SELECT	'v0.2.8',
 		*
-	FROM	model_draft.ego_grid_lv_griddistrict_cut_nn_collect;
+	FROM	model_draft.ego_grid_lv_griddistrict;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.8','result','grid','ego_dp_lv_griddistrict','ego_dp_versioning.sql','versioning');

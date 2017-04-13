@@ -11,7 +11,6 @@ __author__ 	= "Ludee"
 
 
 -- SUBSTATIONS (EHV, HVMV, MVLV)
-
 /* 
 -- EHV(HV) substation
 DROP TABLE IF EXISTS	grid.ego_dp_ehv_substation CASCADE;
@@ -197,7 +196,6 @@ SELECT obj_description('grid.ego_dp_hvmv_substation' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.8','result','grid','ego_dp_hvmv_substation','ego_dp_structure_versioning.sql','hvmv substation');
-
 
 /* 
 -- MVLV substation
@@ -417,7 +415,6 @@ SELECT obj_description('grid.ego_dp_mv_griddistrict' ::regclass) ::json;
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.8','result','grid','ego_dp_mv_griddistrict','ego_dp_structure_versioning.sql','mv griddistrict');
 
-
 /* 
 -- LV griddistrict
 DROP TABLE IF EXISTS	grid.ego_dp_lv_griddistrict CASCADE;
@@ -460,8 +457,7 @@ CREATE TABLE 		grid.ego_dp_lv_griddistrict (
 	sector_peakload_agricultural double precision,
 	geom geometry(MultiPolygon,3035),
 	CONSTRAINT ego_dp_lv_griddistrict_pkey PRIMARY KEY (version,id));
- */
-/* 
+
 --FK
 ALTER TABLE grid.ego_dp_lv_griddistrict
 	ADD CONSTRAINT ego_dp_lv_griddistrict_fkey FOREIGN KEY (version) 
@@ -654,7 +650,7 @@ SELECT ego_scenario_log('v0.2.8','result','demand','ego_dp_loadarea','ego_dp_str
 
 
 -- GENERATOR  (con, res)
-
+/* 
 -- conventinal powerlants
 DROP TABLE IF EXISTS	supply.ego_dp_conv_powerplant;
 CREATE TABLE 		supply.ego_dp_conv_powerplant (
@@ -707,7 +703,7 @@ ALTER TABLE supply.ego_dp_conv_powerplant OWNER TO oeuser;
 -- index GIST (geom)
 CREATE INDEX ego_dp_conv_powerplant_geom_idx
 	ON supply.ego_dp_conv_powerplant USING GIST (geom);
-
+ */
 -- metadata
 COMMENT ON TABLE supply.ego_dp_conv_powerplant IS '{
 	"title": "eGo dataprocessing - Conventional powerplants",
@@ -745,7 +741,7 @@ SELECT obj_description('supply.ego_dp_conv_powerplant' ::regclass) ::json;
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.8','result','supply','ego_dp_conv_powerplant','ego_dp_structure_versioning.sql','conventional powerplants');
 
-
+/* 
 -- renewable powerlants
 DROP TABLE IF EXISTS	supply.ego_dp_res_powerplant;
 CREATE TABLE 		supply.ego_dp_res_powerplant (
@@ -797,7 +793,7 @@ ALTER TABLE supply.ego_dp_res_powerplant OWNER TO oeuser;
 -- index GIST (geom)
 CREATE INDEX ego_dp_res_powerplant_geom_idx
 	ON supply.ego_dp_res_powerplant USING GIST (geom);
-
+ */
 -- metadata
 COMMENT ON TABLE supply.ego_dp_res_powerplant IS '{
 	"title": "eGo dataprocessing - Renewable powerlants",
@@ -836,8 +832,7 @@ SELECT obj_description('supply.ego_dp_res_powerplant' ::regclass) ::json;
 SELECT ego_scenario_log('v0.2.8','result','supply','ego_dp_res_powerplant','ego_dp_structure_versioning.sql','conventional powerplants');
 
 
-
-
+/* 
 -- OVERVIEW
 DROP TABLE IF EXISTS	model_draft.ego_scenario_overview CASCADE;
 CREATE TABLE 		model_draft.ego_scenario_overview (
@@ -852,3 +847,4 @@ ALTER TABLE	model_draft.ego_scenario_overview OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.8','result','model_draft','ego_scenario_overview','ego_dp_structure_versioning.sql','overview');
+ */
