@@ -10,7 +10,7 @@ __author__ 	= "Ludee"
 */
 
 
--- substation (EHV, HVMV, MVLV)
+-- SUBSTATIONS (EHV, HVMV, MVLV)
 
 /* 
 -- EHV(HV) substation
@@ -102,7 +102,7 @@ COMMENT ON TABLE grid.ego_dp_ehv_substation IS '{
 SELECT obj_description('grid.ego_dp_ehv_substation' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.8','result','grid','ego_dp_ehv_substation','ego_dp_structure_versioning.sql','hvmv substation');
+SELECT ego_scenario_log('v0.2.8','result','grid','ego_dp_ehv_substation','ego_dp_structure_versioning.sql','ehv substation');
 
 /* 
 -- HVMV substation
@@ -262,10 +262,10 @@ COMMENT ON TABLE grid.ego_dp_mvlv_substation IS '{
 SELECT obj_description('grid.ego_dp_mvlv_substation' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.8','result','grid','ego_dp_mvlv_substation','ego_dp_structure_versioning.sql','hvmv substation');
+SELECT ego_scenario_log('v0.2.8','result','grid','ego_dp_mvlv_substation','ego_dp_structure_versioning.sql','mvlv substation');
 
 
--- Catchment areas
+-- GRIDDISTRICTS (EHV, HVMV, MVLV)
 /* 
 -- EHV Transmission grid area
 DROP TABLE IF EXISTS	grid.ego_dp_ehv_griddistrict CASCADE;
@@ -324,7 +324,7 @@ COMMENT ON TABLE grid.ego_dp_ehv_griddistrict IS '{
 SELECT obj_description('grid.ego_dp_ehv_griddistrict' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.8','result','grid','ego_dp_ehv_griddistrict','ego_dp_structure_versioning.sql','mv grid district');
+SELECT ego_scenario_log('v0.2.8','result','grid','ego_dp_ehv_griddistrict','ego_dp_structure_versioning.sql','ehv griddistrict');
 
 /* 
 -- MV griddistrict
@@ -415,7 +415,7 @@ COMMENT ON TABLE grid.ego_dp_mv_griddistrict IS '{
 SELECT obj_description('grid.ego_dp_mv_griddistrict' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.8','result','grid','ego_dp_mv_griddistrict','ego_dp_structure_versioning.sql','mv grid district');
+SELECT ego_scenario_log('v0.2.8','result','grid','ego_dp_mv_griddistrict','ego_dp_structure_versioning.sql','mv griddistrict');
 
 
 /* 
@@ -514,10 +514,10 @@ COMMENT ON TABLE grid.ego_dp_lv_griddistrict IS '{
 SELECT obj_description('grid.ego_dp_lv_griddistrict' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.8','result','grid','ego_dp_lv_griddistrict','ego_dp_structure_versioning.sql','mv grid district');
+SELECT ego_scenario_log('v0.2.8','result','grid','ego_dp_lv_griddistrict','ego_dp_structure_versioning.sql','lv griddistrict');
 
 
--- Demand
+-- DEMAND
 /* 
 -- load area
 DROP TABLE IF EXISTS	demand.ego_dp_loadarea CASCADE;
@@ -650,7 +650,192 @@ COMMENT ON TABLE demand.ego_dp_loadarea IS '{
 SELECT obj_description('demand.ego_dp_loadarea' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.8','result','demand','ego_dp_loadarea','ego_dp_structure_versioning.sql','load area');
+SELECT ego_scenario_log('v0.2.8','result','demand','ego_dp_loadarea','ego_dp_structure_versioning.sql','loadarea');
+
+
+-- GENERATOR  (con, res)
+
+-- conventinal powerlants
+DROP TABLE IF EXISTS	supply.ego_dp_conv_powerplant;
+CREATE TABLE 		supply.ego_dp_conv_powerplant (
+	version 	text,
+	gid integer NOT NULL,
+	bnetza_id text,
+	company text,
+	name text,
+	postcode text,
+	city text,
+	street text,
+	state text,
+	block text,
+	commissioned_original text,
+	commissioned double precision,
+	retrofit double precision,
+	shutdown double precision,
+	status text,
+	fuel text,
+	technology text,
+	type text,
+	eeg text,
+	chp text,
+	capacity double precision,
+	capacity_uba double precision,
+	chp_capacity_uba double precision,
+	efficiency_data double precision,
+	efficiency_estimate double precision,
+	network_node text,
+	voltage text,
+	network_operator text,
+	name_uba text,
+	lat double precision,
+	lon double precision,
+	comment text,
+	geom geometry(Point,4326),
+	voltage_level smallint,
+	subst_id bigint,
+	otg_id bigint,
+	un_id bigint,
+	CONSTRAINT ego_dp_conv_powerplant_pkey PRIMARY KEY (version,gid) );
+  
+--FK
+ALTER TABLE supply.ego_dp_conv_powerplant
+	ADD CONSTRAINT ego_dp_conv_powerplant_fkey FOREIGN KEY (version) 
+	REFERENCES model_draft.ego_scenario(version) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+ALTER TABLE supply.ego_dp_conv_powerplant OWNER TO oeuser;
+
+-- index GIST (geom)
+CREATE INDEX ego_dp_conv_powerplant_geom_idx
+	ON supply.ego_dp_conv_powerplant USING GIST (geom);
+
+-- metadata
+COMMENT ON TABLE supply.ego_dp_conv_powerplant IS '{
+	"title": "eGo dataprocessing - Conventional powerplants",
+	"description": "",
+	"language": [ "eng", "ger" ],
+	"reference_date": " ",
+	"sources": [
+		{"name": "eGo dataprocessing", "description": " ", "url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)", "copyright": "© Reiner Lemoine Institut"},
+		{"name": "OpenStreetMap", "description": " ", "url": "http://www.openstreetmap.org/", "license": "Open Database License (ODbL) v1.0", "copyright": "© OpenStreetMap contributors"},
+		{"name": "BKG - Verwaltungsgebiete 1:250.000 (vg250)", "description": " ", "url": "http://www.geodatenzentrum.de/", "license": "Geodatenzugangsgesetz (GeoZG)", "copyright": "© GeoBasis-DE / BKG 2016 (data changed)"},
+		{"name": "Statistisches Bundesamt (Destatis) - Zensus2011", "description": " ", "url": "https://www.destatis.de/DE/Methoden/Zensus_/Zensus.html", "license": "Datenlizenz Deutschland – Namensnennung – Version 2.0", "copyright": "© Statistisches Bundesamt, Wiesbaden, Genesis-Online, 2016; Datenlizenz by-2-0"} ],
+	"spatial": [
+		{"extend": "Gemany",
+		"resolution": " "} ],
+	"license": [
+		{"id": "ODbL-1.0",
+		"name": "Open Data Commons Open Database License 1.0",
+		"version": "1.0",
+		"url": "https://opendatacommons.org/licenses/odbl/1.0/",
+		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
+		"copyright": "© Reiner Lemoine Institut"} ],
+	"contributors": [
+		{"name": "Ludee", "email": " ", "date": "2017-04-13", "comment": "Create table" } ],
+	"resources": [{
+		"schema": {
+			"fields": [
+				{"name": "version", 	"description": "Version id", "unit": "" },
+				{"name": "id", 		"description": "Unique identifier", "unit": "" }
+				 ]},
+		"meta_version": "1.2"}] }';
+
+-- select description
+SELECT obj_description('supply.ego_dp_conv_powerplant' ::regclass) ::json;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.8','result','supply','ego_dp_conv_powerplant','ego_dp_structure_versioning.sql','conventional powerplants');
+
+
+-- renewable powerlants
+DROP TABLE IF EXISTS	supply.ego_dp_res_powerplant;
+CREATE TABLE 		supply.ego_dp_res_powerplant (
+	version 	text,
+	id bigint NOT NULL,
+	start_up_date timestamp without time zone,
+	electrical_capacity numeric,
+	generation_type text,
+	generation_subtype character varying,
+	thermal_capacity numeric,
+	city character varying,
+	postcode character varying,
+	address character varying,
+	lon numeric,
+	lat numeric,
+	gps_accuracy character varying,
+	validation character varying,
+	notification_reason character varying,
+	eeg_id character varying,
+	tso double precision,
+	tso_eic character varying,
+	dso_id character varying,
+	dso character varying,
+	voltage_level_var character varying,
+	network_node character varying,
+	power_plant_id character varying,
+	source character varying,
+	comment character varying,
+	geom geometry(Point,4326),
+	subst_id bigint,
+	otg_id bigint,
+	un_id bigint,
+	voltage_level smallint,
+	la_id integer,
+	mvlv_subst_id integer,
+	rea_sort integer,
+	rea_flag character varying,
+	rea_geom_line geometry(LineString,3035),
+	rea_geom_new geometry(Point,3035),
+	CONSTRAINT ego_dp_res_powerplant_pkey PRIMARY KEY (version,id) );
+  
+--FK
+ALTER TABLE supply.ego_dp_res_powerplant
+	ADD CONSTRAINT ego_dp_res_powerplant_fkey FOREIGN KEY (version) 
+	REFERENCES model_draft.ego_scenario(version) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+ALTER TABLE supply.ego_dp_res_powerplant OWNER TO oeuser;
+
+-- index GIST (geom)
+CREATE INDEX ego_dp_res_powerplant_geom_idx
+	ON supply.ego_dp_res_powerplant USING GIST (geom);
+
+-- metadata
+COMMENT ON TABLE supply.ego_dp_res_powerplant IS '{
+	"title": "eGo dataprocessing - Renewable powerlants",
+	"description": "",
+	"language": [ "eng", "ger" ],
+	"reference_date": " ",
+	"sources": [
+		{"name": "eGo dataprocessing", "description": " ", "url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)", "copyright": "© Reiner Lemoine Institut"},
+		{"name": "OpenStreetMap", "description": " ", "url": "http://www.openstreetmap.org/", "license": "Open Database License (ODbL) v1.0", "copyright": "© OpenStreetMap contributors"},
+		{"name": "BKG - Verwaltungsgebiete 1:250.000 (vg250)", "description": " ", "url": "http://www.geodatenzentrum.de/", "license": "Geodatenzugangsgesetz (GeoZG)", "copyright": "© GeoBasis-DE / BKG 2016 (data changed)"},
+		{"name": "Statistisches Bundesamt (Destatis) - Zensus2011", "description": " ", "url": "https://www.destatis.de/DE/Methoden/Zensus_/Zensus.html", "license": "Datenlizenz Deutschland – Namensnennung – Version 2.0", "copyright": "© Statistisches Bundesamt, Wiesbaden, Genesis-Online, 2016; Datenlizenz by-2-0"} ],
+	"spatial": [
+		{"extend": "Gemany",
+		"resolution": " "} ],
+	"license": [
+		{"id": "ODbL-1.0",
+		"name": "Open Data Commons Open Database License 1.0",
+		"version": "1.0",
+		"url": "https://opendatacommons.org/licenses/odbl/1.0/",
+		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
+		"copyright": "© Reiner Lemoine Institut"} ],
+	"contributors": [
+		{"name": "Ludee", "email": " ", "date": "2017-04-13", "comment": "Create table" } ],
+	"resources": [{
+		"schema": {
+			"fields": [
+				{"name": "version", 	"description": "Version id", "unit": "" },
+				{"name": "id", 		"description": "Unique identifier", "unit": "" }
+				 ]},
+		"meta_version": "1.2"}] }';
+
+-- select description
+SELECT obj_description('supply.ego_dp_res_powerplant' ::regclass) ::json;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.8','result','supply','ego_dp_res_powerplant','ego_dp_structure_versioning.sql','conventional powerplants');
+
+
 
 
 -- OVERVIEW
