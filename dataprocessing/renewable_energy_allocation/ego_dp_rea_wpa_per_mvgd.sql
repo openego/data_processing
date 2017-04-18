@@ -20,14 +20,14 @@ CREATE TABLE         	model_draft.ego_supply_wpa (
 CONSTRAINT 	ego_supply_wpa_pkey PRIMARY KEY (id));
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','input','supply','soethe_wind_potential_area','ego_dp_rea_wpa_per_mvgd.sql',' ');
+SELECT ego_scenario_log('v0.2.6','input','supply','vernetzen_wind_potential_area','ego_dp_rea_wpa_per_mvgd.sql',' ');
 
 -- insert wpa dump
 INSERT INTO     model_draft.ego_supply_wpa (geom)
 	SELECT	(ST_DUMP(ST_MULTI(ST_UNION(
 			ST_BUFFER(ST_BUFFER(ST_TRANSFORM(wpa.geom,3035),-0,01),0,01)
 		)))).geom AS geom
-	FROM	supply.soethe_wind_potential_area AS wpa;
+	FROM	supply.vernetzen_wind_potential_area AS wpa;
 
 -- index gist (geom)
 CREATE INDEX 	ego_supply_wpa_geom_idx
@@ -69,14 +69,14 @@ CONSTRAINT 	ego_supply_wpa_per_mvgd_pkey PRIMARY KEY (id));
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.6','input','model_draft','ego_grid_mv_griddistrict','ego_dp_rea_wpa_per_mvgd.sql',' ');
-SELECT ego_scenario_log('v0.2.6','input','supply','soethe_wind_potential_area','ego_dp_rea_wpa_per_mvgd.sql',' ');
+SELECT ego_scenario_log('v0.2.6','input','supply','vernetzen_wind_potential_area','ego_dp_rea_wpa_per_mvgd.sql',' ');
 
 -- insert wpa per mv-griddistrict
 WITH	wpa_dump AS (
 	SELECT	(ST_DUMP(ST_MULTI(ST_UNION(
 			ST_BUFFER(ST_BUFFER(ST_TRANSFORM(geom,3035),-0,01),0,01)
 		)))).geom AS geom
-	FROM	supply.soethe_wind_potential_area)
+	FROM	supply.vernetzen_wind_potential_area)
 INSERT INTO     model_draft.ego_supply_wpa_per_mvgd (area_ha, geom)
 	SELECT	ST_AREA(c.geom)/10000,
 		c.geom ::geometry(Polygon,3035)

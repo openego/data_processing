@@ -75,14 +75,22 @@ INSERT INTO     model_draft.ego_demand_loadarea (geom)
 		) AS c
 	WHERE	ST_GeometryType(c.geom) = 'ST_Polygon';
 
--- index GIST (geom)
-CREATE INDEX  	ego_demand_loadarea_geom_idx
-	ON    	model_draft.ego_demand_loadarea USING gist (geom);
+-- index GIST (geom_centroid)
+CREATE INDEX  	ego_demand_loadarea_geom_centroid_idx
+	ON    	model_draft.ego_demand_loadarea USING GIST (geom_centroid);
+
+-- index GIST (geom_surfacepoint)
+CREATE INDEX  	ego_demand_loadarea_geom_surfacepoint_idx
+	ON    	model_draft.ego_demand_loadarea USING GIST (geom_surfacepoint);
 
 -- index GIST (geom_centre)
 CREATE INDEX  	ego_demand_loadarea_geom_centre_idx
 	ON    	model_draft.ego_demand_loadarea USING gist (geom_centre);
-	
+
+-- index GIST (geom)
+CREATE INDEX  	ego_demand_loadarea_geom_idx
+	ON    	model_draft.ego_demand_loadarea USING gist (geom);
+
 -- update area (area_ha)
 UPDATE 	model_draft.ego_demand_loadarea AS t1
 	SET  	area_ha = t2.area
@@ -135,11 +143,6 @@ UPDATE 	model_draft.ego_demand_loadarea AS t1
 		) AS t2
 	WHERE  	t1.id = t2.id;
 
--- index GIST (geom_centroid)
-CREATE INDEX  	ego_demand_loadarea_geom_centroid_idx
-	ON    	model_draft.ego_demand_loadarea USING GIST (geom_centroid);
-
-
 -- surfacepoint
 UPDATE 	model_draft.ego_demand_loadarea AS t1
 	SET  	geom_surfacepoint = t2.geom_surfacepoint
@@ -149,11 +152,6 @@ UPDATE 	model_draft.ego_demand_loadarea AS t1
 		FROM	model_draft.ego_demand_loadarea AS loads
 		) AS t2
 	WHERE  	t1.id = t2.id;
-
--- index GIST (geom_surfacepoint)
-CREATE INDEX  	ego_demand_loadarea_geom_surfacepoint_idx
-	ON    	model_draft.ego_demand_loadarea USING GIST (geom_surfacepoint);
-
 
 -- centre with centroid if inside loadarea
 UPDATE 	model_draft.ego_demand_loadarea AS t1
@@ -177,10 +175,6 @@ UPDATE 	model_draft.ego_demand_loadarea AS t1
 		WHERE  	loads.geom_centre IS NULL
 		)AS t2
 	WHERE  	t1.id = t2.id;
-
--- create index GIST (geom_centre)
-CREATE INDEX  	ego_demand_loadarea_geom_centre_idx
-	ON    	model_draft.ego_demand_loadarea USING GIST (geom_centre);
 
 /* -- validate geom_centre
 	SELECT	loads.id AS id
