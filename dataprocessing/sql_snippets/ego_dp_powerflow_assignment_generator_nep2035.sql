@@ -121,7 +121,7 @@ INSERT INTO model_draft.ego_supply_pf_generator_single (scn_name, generator_id)
 UPDATE model_draft.ego_supply_rea_2035 a
 	SET 	subst_id = b.subst_id
 	FROM	model_draft.ego_grid_mv_griddistrict b
-	WHERE 	a.geom_new && ST_TRANSFORM(b.geom)
+	WHERE 	a.geom_new && b.geom
 		AND ST_Intersects (a.geom_new, b.geom) 
 		AND voltage_level >= 3;  
 
