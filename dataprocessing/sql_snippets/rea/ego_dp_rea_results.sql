@@ -14,7 +14,7 @@ Results
 */ 
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','input','model_draft','ego_supply_res_powerplant','ego_dp_rea_results.sql',' ');
+SELECT ego_scenario_log('v0.2.9','input','model_draft','ego_supply_res_powerplant','ego_dp_rea_results.sql',' ');
 
 -- dea capacity and count per generation types and voltage level
 DROP TABLE IF EXISTS 	model_draft.ego_supply_rea_per_gentype_and_voltlevel CASCADE;
@@ -34,7 +34,7 @@ ALTER TABLE	model_draft.ego_supply_rea_per_gentype_and_voltlevel
 	OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_supply_rea_per_gentype_and_voltlevel','ego_dp_rea_results.sql',' ');
+SELECT ego_scenario_log('v0.2.9','output','model_draft','ego_supply_rea_per_gentype_and_voltlevel','ego_dp_rea_results.sql',' ');
 
 	
 /* 
@@ -66,7 +66,7 @@ ALTER TABLE model_draft.ego_supply_rea_per_mvgd OWNER TO oeuser;
  */
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','input','model_draft','ego_grid_mv_griddistrict','ego_dp_rea_results.sql',' ');
+SELECT ego_scenario_log('v0.2.9','input','model_draft','ego_grid_mv_griddistrict','ego_dp_rea_results.sql',' ');
 
 UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
 	SET  	dea_cnt = t2.dea_cnt,
@@ -113,7 +113,7 @@ UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
 	WHERE  	t1.subst_id = t2.subst_id;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_grid_mv_griddistrict','ego_dp_rea_results.sql',' ');
+SELECT ego_scenario_log('v0.2.9','output','model_draft','ego_grid_mv_griddistrict','ego_dp_rea_results.sql',' ');
 
 
 -- DEA capacity and count per load area
@@ -152,7 +152,7 @@ FROM	model_draft.ego_supply_rea_per_loadarea AS la,
 */
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_supply_rea_per_loadarea','ego_dp_rea_results.sql',' ');
+SELECT ego_scenario_log('v0.2.9','output','model_draft','ego_supply_rea_per_loadarea','ego_dp_rea_results.sql',' ');
 
 
 -- DEA capacity and count per load area
@@ -223,4 +223,4 @@ ALTER TABLE	model_draft.ego_supply_rea_per_method
 	OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_supply_rea_per_method','ego_dp_rea_results.sql',' ');
+SELECT ego_scenario_log('v0.2.9','output','model_draft','ego_supply_rea_per_method','ego_dp_rea_results.sql',' ');

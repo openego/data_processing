@@ -19,7 +19,7 @@ CREATE TABLE         	model_draft.ego_lattice_50m (
 CONSTRAINT 	ego_lattice_50m_pkey PRIMARY KEY (id));
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','input','political_boundary','bkg_vg250_1_sta_union_mview','ego_dp_lattice_50m.sql',' ');
+SELECT ego_scenario_log('v0.2.9','input','political_boundary','bkg_vg250_1_sta_union_mview','ego_dp_lattice_50m.sql',' ');
 
 -- insert lattice
 INSERT INTO     model_draft.ego_lattice_50m (geom_box)
@@ -88,4 +88,4 @@ COMMENT ON TABLE model_draft.ego_lattice_50m IS '{
 SELECT obj_description('model_draft.ego_lattice_50m' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_lattice_50m','ego_dp_lattice_50m.sql',' ');
+SELECT ego_scenario_log('v0.2.9','output','model_draft','ego_lattice_50m','ego_dp_lattice_50m.sql',' ');
