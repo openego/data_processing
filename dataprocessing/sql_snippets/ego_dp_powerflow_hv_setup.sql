@@ -51,7 +51,7 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_scenario_settings IS
                   "URL":  "https://github.com/openego/data_processing" }],
 "Reference date": "2016",
 "Date of collection": "...",
-"Original file": "calc_ego_hv_powerflow.sql",
+"Original file": "ego_dp_powerflow_hv_setup.sql",
 "Spatial resolution": ["Germany"],
 "Description": ["Overview of scenarios for the hv powerflow"],
 "Column": [
@@ -111,7 +111,7 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_scenario_settings IS
 SELECT obj_description('model_draft.ego_grid_pf_hv_scenario_settings' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_grid_pf_hv_scenario_settings','calc_ego_hv_powerflow.sql',' ');
+SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_grid_pf_hv_scenario_settings','ego_dp_powerflow_hv_setup.sql',' ');
 
 
 -- PF HV source
@@ -132,7 +132,7 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_source IS
                   "URL":  "https://github.com/openego/data_processing" }],
 "Reference date": "...",
 "Date of collection": "...",
-"Original file": "calc_ego_hv_powerflow.sql",
+"Original file": "ego_dp_powerflow_hv_setup.sql",
 "Spatial resolution": ["Germany"],
 "Description": ["Different generation types/sources considered in hv powerflow"],
 "Column": [
@@ -168,7 +168,7 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_source IS
 SELECT obj_description('model_draft.ego_grid_pf_hv_source' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_grid_pf_hv_source','calc_ego_hv_powerflow.sql',' ');
+SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_grid_pf_hv_source','ego_dp_powerflow_hv_setup.sql',' ');
 
 
 -- PF HV bus
@@ -192,7 +192,7 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_bus IS
                   "URL":  "https://github.com/openego/data_processing" }],
 "Reference date": "...",
 "Date of collection": "...",
-"Original file": "calc_ego_hv_powerflow.sql",
+"Original file": "ego_dp_powerflow_hv_setup.sql",
 "Spatial resolution": ["Germany"],
 "Description": ["Bus considered in hv powerflow calculation"],
 "Column": [
@@ -236,7 +236,7 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_bus IS
 SELECT obj_description('model_draft.ego_grid_pf_hv_bus' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_grid_pf_hv_bus','calc_ego_hv_powerflow.sql',' ');
+SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_grid_pf_hv_bus','ego_dp_powerflow_hv_setup.sql',' ');
 
 
 -- PF HV generator
@@ -271,7 +271,7 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_generator IS
                   "URL":  "https://github.com/openego/data_processing" }],
 "Reference date": "...",
 "Date of collection": "...",
-"Original file": "calc_ego_hv_powerflow.sql",
+"Original file": "ego_dp_powerflow_hv_setup.sql",
 "Spatial resolution": ["Germany"],
 "Description": ["Generators considered in hv powerflow"],
 "Column": [
@@ -342,7 +342,7 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_generator IS
 SELECT obj_description('model_draft.ego_grid_pf_hv_generator' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_grid_pf_hv_generator','calc_ego_hv_powerflow.sql',' ');
+SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_grid_pf_hv_generator','ego_dp_powerflow_hv_setup.sql',' ');
 
 
 -- PF HV line
@@ -458,7 +458,7 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_line IS
 SELECT obj_description('model_draft.ego_grid_pf_hv_line' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_grid_pf_hv_line','calc_ego_hv_powerflow.sql',' ');
+SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_grid_pf_hv_line','ego_dp_powerflow_hv_setup.sql',' ');
 
 
 -- PF HV load
@@ -518,7 +518,7 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_load IS
 SELECT obj_description('model_draft.ego_grid_pf_hv_load' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_grid_pf_hv_load','calc_ego_hv_powerflow.sql',' ');
+SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_grid_pf_hv_load','ego_dp_powerflow_hv_setup.sql',' ');
 
 
 -- PF HV storage
@@ -648,7 +648,7 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_storage IS
 SELECT obj_description('model_draft.ego_grid_pf_hv_storage' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_grid_pf_hv_storage','calc_ego_hv_powerflow.sql',' ');
+SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_grid_pf_hv_storage','ego_dp_powerflow_hv_setup.sql',' ');
 
 
 -- PF HV temp resolution
@@ -673,7 +673,7 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_temp_resolution IS
                   "URL":  "https://github.com/openego/data_processing" }],
 "Reference date": "...",
 "Date of collection": "...",
-"Original file": "calc_ego_hv_powerflow.sql",
+"Original file": "ego_dp_powerflow_hv_setup.sql",
 "Spatial resolution": ["Germany"],
 "Description": ["Temporal resolution of hv powerflow"],
 "Column": [
@@ -708,7 +708,7 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_temp_resolution IS
 SELECT obj_description('model_draft.ego_grid_pf_hv_temp_resolution' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_grid_pf_hv_temp_resolution','calc_ego_hv_powerflow.sql',' ');
+SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_grid_pf_hv_temp_resolution','ego_dp_powerflow_hv_setup.sql',' ');
 
 
 -- PF HV transformer
@@ -742,7 +742,7 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_transformer IS
                   "URL":  "https://github.com/openego/data_processing" }],
 "Reference date": "...",
 "Date of collection": "...",
-"Original file": "calc_ego_hv_powerflow.sql",
+"Original file": "ego_dp_powerflow_hv_setup.sql",
 "Spatial resolution": ["Germany"],
 "Description": ["Transformer converts from one AC voltage level to another"],
 "Column": [
@@ -817,7 +817,7 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_transformer IS
 SELECT obj_description('model_draft.ego_grid_pf_hv_transformer' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_grid_pf_hv_transformer','calc_ego_hv_powerflow.sql',' ');
+SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_grid_pf_hv_transformer','ego_dp_powerflow_hv_setup.sql',' ');
 
 
 --------------------------------------------------------------------
@@ -878,7 +878,7 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_bus_v_mag_set IS
 SELECT obj_description('model_draft.ego_grid_pf_hv_bus_v_mag_set' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_grid_pf_hv_bus_v_mag_set','calc_ego_hv_powerflow.sql',' ');
+SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_grid_pf_hv_bus_v_mag_set','ego_dp_powerflow_hv_setup.sql',' ');
 
 
 -- PF HV generator PQ set
@@ -948,7 +948,7 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_generator_pq_set IS
 SELECT obj_description('model_draft.ego_grid_pf_hv_generator_pq_set' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_grid_pf_hv_generator_pq_set','calc_ego_hv_powerflow.sql',' ');
+SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_grid_pf_hv_generator_pq_set','ego_dp_powerflow_hv_setup.sql',' ');
 
 
 -- PF HV load PQ set
@@ -1010,7 +1010,7 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_load_pq_set IS
 SELECT obj_description('model_draft.ego_grid_pf_hv_load_pq_set' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_grid_pf_hv_load_pq_set','calc_ego_hv_powerflow.sql',' ');
+SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_grid_pf_hv_load_pq_set','ego_dp_powerflow_hv_setup.sql',' ');
 
 
 -- PF HV storage PQ set
@@ -1088,7 +1088,7 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_storage_pq_set IS
 SELECT obj_description('model_draft.ego_grid_pf_hv_storage_pq_set' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_grid_pf_hv_storage_pq_set','calc_ego_hv_powerflow.sql',' ');
+SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_grid_pf_hv_storage_pq_set','ego_dp_powerflow_hv_setup.sql',' ');
 
 
 -------------------------------------------------------------------

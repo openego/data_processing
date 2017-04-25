@@ -9,7 +9,7 @@ __author__ 	= "Ludee"
 */
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','input','model_draft','ego_grid_hvmv_substation','ego_grid_hvmv_substation.sql',' ');
+SELECT ego_scenario_log('v0.2.6','input','model_draft','ego_grid_hvmv_substation','ego_dp_substation_hvmv_voronoi.sql',' ');
 
 -- set id as subst_id - move to get_substation.sql
 ALTER TABLE	model_draft.ego_grid_hvmv_substation
@@ -28,7 +28,7 @@ CREATE INDEX	ego_grid_hvmv_substation_geom_idx
 	ON	model_draft.ego_grid_hvmv_substation USING GIST (geom);
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','input','model_draft','ego_political_boundary_bkg_vg250_6_gem_clean','ego_grid_hvmv_substation.sql',' ');
+SELECT ego_scenario_log('v0.2.6','input','model_draft','ego_political_boundary_bkg_vg250_6_gem_clean','ego_dp_substation_hvmv_voronoi.sql',' ');
 
 -- Gemeindeschlüssel
 UPDATE 	model_draft.ego_grid_hvmv_substation AS t1
@@ -44,7 +44,7 @@ UPDATE 	model_draft.ego_grid_hvmv_substation AS t1
 	WHERE  	t1.subst_id = t2.subst_id;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_grid_hvmv_substation','ego_grid_hvmv_substation.sql',' ');
+SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_grid_hvmv_substation','ego_dp_substation_hvmv_voronoi.sql',' ');
 
 
 -- create dummy points for voronoi calculation
@@ -118,7 +118,7 @@ COMMENT ON TABLE model_draft.ego_grid_hvmv_substation_dummy IS '{
 SELECT obj_description('model_draft.ego_grid_hvmv_substation_dummy' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_grid_hvmv_substation_dummy','ego_grid_hvmv_substation.sql',' ');
+SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_grid_hvmv_substation_dummy','ego_dp_substation_hvmv_voronoi.sql',' ');
 
 
 -- voronoi polygons with eucldean distance
@@ -221,4 +221,4 @@ COMMENT ON TABLE model_draft.ego_grid_hvmv_substation_voronoi IS '{
 SELECT obj_description('model_draft.ego_grid_hvmv_substation_voronoi' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_grid_hvmv_substation_voronoi','ego_grid_hvmv_substation.sql',' ');
+SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_grid_hvmv_substation_voronoi','ego_dp_substation_hvmv_voronoi.sql',' ');

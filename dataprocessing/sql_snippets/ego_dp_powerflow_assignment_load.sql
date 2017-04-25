@@ -45,7 +45,7 @@ COMMENT ON TABLE  model_draft.ego_demand_loads IS
                   "URL":  "https://github.com/openego/data_processing" }],
 "Reference date": "2016",
 "Date of collection": "20. October 2016",
-"Original file": "assignment_load_bus.sql",
+"Original file": "ego_dp_powerflow_assignment_load.sql",
 "Spatial resolution": ["Germany"],
 "Description": ["Unique identifier are assigned to loads from different voltage levels"],
 "Column": [
@@ -148,7 +148,7 @@ COMMENT ON TABLE  model_draft.ego_demand_pf_load_single IS
                   "URL":  "https://github.com/openego/data_processing" }],
 "Reference date": "2016",
 "Date of collection": "20. October 2016",
-"Original file": "assignment_load_bus.sql",
+"Original file": "ego_dp_powerflow_assignment_load.sql",
 "Spatial resolution": ["Germany"],
 "Description": ["non aggregated loads powerflow-ready"],
 "Column": [
@@ -194,4 +194,4 @@ WHERE a.bus IS NOT NULL
 GROUP BY a.bus;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_grid_pf_hv_load','assignment_load_bus.sql',' ');
+SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_grid_pf_hv_load','ego_dp_powerflow_assignment_load.sql',' ');

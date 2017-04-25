@@ -9,7 +9,7 @@ __author__ 	= "Ludee"
 
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','input','openstreetmap','osm_deu_polygon','analyse_osm_landuse.sql',' ');
+SELECT ego_scenario_log('v0.2.6','input','openstreetmap','osm_deu_polygon','ego_dp_structure_osm_landuse.sql',' ');
 
 -- 2016-10-01 openstreetmap
 DROP MATERIALIZED VIEW IF EXISTS	openstreetmap.osm_deu_polygon_landuse_mview CASCADE;
@@ -34,7 +34,7 @@ COMMENT ON MATERIALIZED VIEW openstreetmap.osm_deu_polygon_landuse_mview IS '{
 	"version": "v0.2.6" }' ;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','output','openstreetmap','osm_deu_polygon_landuse_mview','analyse_osm_landuse.sql',' ');
+SELECT ego_scenario_log('v0.2.6','output','openstreetmap','osm_deu_polygon_landuse_mview','ego_dp_structure_osm_landuse.sql',' ');
 
 
 /* 
@@ -60,7 +60,7 @@ INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_na
 	SELECT	'0.2' AS version,
 		'openstreetmap' AS schema_name,
 		'osm_deu_landuse_20160113_mview' AS table_name,
-		'analyse_osm_landuse.sql' AS script_name,
+		'ego_dp_structure_osm_landuse.sql' AS script_name,
 		COUNT(geom)AS entries,
 		'OK' AS status,
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
@@ -89,7 +89,7 @@ INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_na
 	SELECT	'0.2' AS version,
 		'openstreetmap' AS schema_name,
 		'osm_deu_landuse_20160916_mview' AS table_name,
-		'analyse_osm_landuse.sql' AS script_name,
+		'ego_dp_structure_osm_landuse.sql' AS script_name,
 		COUNT(geom)AS entries,
 		'OK' AS status,
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
@@ -122,7 +122,7 @@ INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_na
 	SELECT	'0.2' AS version,
 		'openstreetmap' AS schema_name,
 		'osm_deu_landuse_20161005_mview' AS table_name,
-		'analyse_osm_landuse.sql' AS script_name,
+		'ego_dp_structure_osm_landuse.sql' AS script_name,
 		COUNT(*)AS entries,
 		'OK' AS status,
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
