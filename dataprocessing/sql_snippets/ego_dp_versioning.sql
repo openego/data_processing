@@ -119,8 +119,8 @@ INSERT INTO supply.ego_dp_conv_powerplant
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.9','result','supply','ego_dp_conv_powerplant','ego_dp_versioning.sql','versioning');
 
-/* -- res versioning
-DELETE FROM supply.ego_dp_res_powerplant
+-- res versioning
+/* DELETE FROM supply.ego_dp_res_powerplant
 	WHERE	version = 'v0.2.9'; */
 
 INSERT INTO supply.ego_dp_res_powerplant

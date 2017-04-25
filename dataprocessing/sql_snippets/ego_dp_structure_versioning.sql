@@ -793,6 +793,10 @@ ALTER TABLE supply.ego_dp_res_powerplant OWNER TO oeuser;
 -- index GIST (geom)
 CREATE INDEX ego_dp_res_powerplant_geom_idx
 	ON supply.ego_dp_res_powerplant USING GIST (geom);
+
+-- index GIST (rea_geom_new)
+CREATE INDEX ego_dp_res_powerplant_rea_geom_new_idx
+	ON supply.ego_dp_res_powerplant USING GIST (rea_geom_new);
  */
 -- metadata
 COMMENT ON TABLE supply.ego_dp_res_powerplant IS '{
