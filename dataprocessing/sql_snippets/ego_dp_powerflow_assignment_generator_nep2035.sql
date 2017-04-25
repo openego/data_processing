@@ -10,9 +10,9 @@ __author__ 	= "IlkaCu"
 
 -- Add columns to ego_supply_rea_2035 - THIS TABLE IS ONLY USED TEMPORARILY!
 
---ALTER TABLE model_draft.ego_supply_rea_2035
---  	ADD COLUMN otg_id bigint,
---	ADD COLUMN un_id bigint;
+ALTER TABLE model_draft.ego_supply_rea_2035
+  	ADD COLUMN otg_id bigint,
+	ADD COLUMN un_id bigint;
 
 -- Create a table that contains all generators for 'NEP 2035' (RE and conventional) but no duplicates. 
 
@@ -60,23 +60,27 @@ SELECT ego_scenario_log('v0.2.9','output','model_draft','ego_supply_generator_ne
 -- Identify corresponding bus with the help of grid districts
 
 UPDATE model_draft.ego_supply_conv_powerplant_2035 a
-	SET subst_id = b.subst_id
-	FROM model_draft.ego_grid_mv_griddistrict b
-	WHERE ST_Intersects (a.geom, ST_TRANSFORM(b.geom,4326))  AND a.voltage_level >= 3; 
+	SET 	subst_id = b.subst_id
+	FROM 	model_draft.ego_grid_mv_griddistrict b
+	WHERE 	a.geom && ST_TRANSFORM(b.geom,4326)
+		AND ST_Intersects (a.geom, ST_TRANSFORM(b.geom,4326))  
+		AND a.voltage_level >= 3; 
 
 -- Identify corresponding bus with the help of ehv-Voronoi
 
 UPDATE model_draft.ego_supply_conv_powerplant_2035 a
-	SET subst_id = b.subst_id
-	FROM model_draft.ego_grid_ehv_substation_voronoi b
-	WHERE ST_Intersects (a.geom, b.geom) =TRUE AND a.voltage_level <= 2;
+	SET 	subst_id = b.subst_id
+	FROM 	model_draft.ego_grid_ehv_substation_voronoi b
+	WHERE 	a.geom && b.geom
+		AND ST_Intersects (a.geom, b.geom) =TRUE 
+		AND a.voltage_level <= 2;
 
 -- Insert otg_id of bus
 
 UPDATE model_draft.ego_supply_conv_powerplant_2035 a
 	SET otg_id =b.otg_id 
 	FROM model_draft.ego_grid_hvmv_substation b
-	WHERE a.subst_id = b.subst_id;
+	WHERE 	a.subst_id = b.subst_id;
 
  
 -- Update un_id from generators_total  
@@ -115,16 +119,20 @@ INSERT INTO model_draft.ego_supply_pf_generator_single (scn_name, generator_id)
 -- Identify corresponding bus with the help of grid districts
 
 UPDATE model_draft.ego_supply_rea_2035 a
-	SET subst_id = b.subst_id
+	SET 	subst_id = b.subst_id
 	FROM	model_draft.ego_grid_mv_griddistrict b
-	WHERE ST_Intersects (a.geom_new, b.geom) AND voltage_level >= 3;  
+	WHERE 	a.geom_new && b.geom
+		AND ST_Intersects (a.geom_new, b.geom) 
+		AND voltage_level >= 3;  
 
 -- Identify corresponding bus with the help of ehv-Voronoi
 
 UPDATE model_draft.ego_supply_rea_2035 a
-	SET subst_id = b.subst_id
-	FROM model_draft.ego_grid_ehv_substation_voronoi b
-	WHERE ST_Intersects (ST_Transform(a.geom_new, 4326), b.geom) AND voltage_level <= 2; 
+	SET 	subst_id = b.subst_id
+	FROM 	model_draft.ego_grid_ehv_substation_voronoi b
+	WHERE 	ST_TRANSFORM(a.geom_new,4326) && b.geom
+		AND ST_Intersects (ST_Transform(a.geom_new, 4326), b.geom) 
+		AND voltage_level <= 2; 
 	
 
 -- Insert otg_id of bus
