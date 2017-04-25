@@ -73,6 +73,29 @@ def data_processing():
 	# 'ego_dp_loadarea_griddistrict_results.sql',		# Results for MV Griddistrict
 	# 'ego_dp_loadarea_statistic.sql',					# Results and statistics for eGoDP
 
+	## LOWVOLTAGE
+	# 'ego_dp_lv_substation.sql',						# MVLV Substation inside Loadarea
+	# 'ego_dp_lv_substation_voronoi.sql',				# MVLV Substation Voronoi
+	# 'ego_dp_lv_griddistrict.sql',    			        # LV Griddistrict
+ #    'ego_dp_lv_peakload.sql',						    # LV OSM areas
+ #    'ego_dp_lv_consumption_peakload.sql',				# LV Consumption and Peakload
+    
+	## REA
+	# 'rea/ego_dp_lattice_500m.sql', 				# lattice (point grid) 500m
+    # 'rea/ego_dp_lattice_500m.sql', 				# lattice (point grid) 50m
+    # 'rea/ego_dp_rea_wpa_per_mvgd.sql', 			# wind potential area
+	
+    # 'rea/ego_dp_rea_lattice_per_area_500m.sql', 	# prepare 500m lattice
+    # 'rea/ego_dp_rea_lattice_per_area_50m.sql', 	    # prepare 50m lattice
+	
+    # 'rea/ego_dp_rea_setup.sql',					    # setup table for allocation
+    # 'rea/ego_dp_rea_m1.sql',	# M1 biomass and solar to farmyard
+    # 'rea/ego_dp_rea_m2.sql',	# M2 windfarms
+    # 'rea/ego_dp_rea_m3.sql',	# M3 wind turbines to wpa
+    # 'rea/ego_dp_rea_m4.sql',	# M4 other and rest
+    # 'rea/ego_dp_rea_m5.sql',	# M5 LV to LA
+    # 'rea/ego_dp_rea_results.sql'    # results and statistics
+	
 	## POWERFLOW
 	# 'ego_dp_powerflow_voronoi_weatherpoint.sql',		# Create voronoi cells based on weather points
 	# 'ego_dp_powerflow_hv_setup.sql',					# Set schema/tables for EHV/HV powerflow calculations up
@@ -90,13 +113,7 @@ def data_processing():
 	# 'ego_dp_powerflow_lopf_data.sql',						# Set marginal costs for generators and storages
 	# 'ego_dp_powerflow_load_timeseries_NEP2035.sql', 		# Copy demand timeseries to NEP 2035 scenario
 	
-	## LOWVOLTAGE
-	# 'ego_dp_lv_substation.sql',						# MVLV Substation inside Loadarea
-	# 'ego_dp_lv_substation_voronoi.sql',				# MVLV Substation Voronoi
-	# 'ego_dp_lv_griddistrict.sql',    			        # LV Griddistrict
- #    'ego_dp_lv_peakload.sql',						    # LV OSM areas
- #    'ego_dp_lv_consumption_peakload.sql',				# LV Consumption and Peakload
-    
+	
     ## VERSIONING
     'ego_dp_versioning.sql'						    # Versioning
     
