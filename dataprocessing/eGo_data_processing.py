@@ -88,13 +88,13 @@ def data_processing():
     # 'rea/ego_dp_rea_lattice_per_area_500m.sql', 	# prepare 500m lattice
     # 'rea/ego_dp_rea_lattice_per_area_50m.sql', 	# prepare 50m lattice
 	
-    'rea/ego_dp_rea_setup.sql',					   # setup table for allocation
-    'rea/ego_dp_rea_m1.sql',	                   # M1 biomass and solar to farmyard
-    'rea/ego_dp_rea_m2.sql',	                   # M2 windfarms
-    'rea/ego_dp_rea_m3.sql',	                   # M3 wind turbines to wpa
-    'rea/ego_dp_rea_m4.sql',	                   # M4 other and rest
-    'rea/ego_dp_rea_m5.sql',	                   # M5 LV to LA
-    'rea/ego_dp_rea_results.sql'                   # results and statistics
+    #'rea/ego_dp_rea_setup.sql',					   # setup table for allocation
+    #'rea/ego_dp_rea_m1.sql',	                   # M1 biomass and solar to farmyard
+    #'rea/ego_dp_rea_m2.sql',	                   # M2 windfarms
+    #'rea/ego_dp_rea_m3.sql',	                   # M3 wind turbines to wpa
+    #'rea/ego_dp_rea_m4.sql',	                   # M4 other and rest
+    #'rea/ego_dp_rea_m5.sql',	                   # M5 LV to LA
+    #'rea/ego_dp_rea_results.sql'                   # results and statistics
 	
 	## POWERFLOW
 	'ego_dp_powerflow_voronoi_weatherpoint.sql',		# Create voronoi cells based on weather points
