@@ -41,8 +41,8 @@ UPDATE 	model_draft.ego_supply_res_powerplant AS t1
 			b.subst_id AS subst_id
 		FROM	model_draft.ego_supply_res_powerplant AS a,
 			model_draft.ego_grid_mv_griddistrict AS b
-		WHERE  	b.geom && a.geom AND
-			ST_CONTAINS(b.geom,a.geom)
+		WHERE  	b.geom && ST_TRANSFORM(a.geom,3035) AND
+			ST_CONTAINS(b.geom,ST_TRANSFORM(a.geom,3035))
 		) AS t2
 	WHERE  	t1.id = t2.id;
 
@@ -57,14 +57,14 @@ UPDATE 	model_draft.ego_supply_res_powerplant
 	SET	rea_flag = 'out',
 		rea_geom_new = NULL,
 		rea_geom_line = NULL
-	WHERE	dea.subst_id IS NULL;
+	WHERE	subst_id IS NULL;
 
 -- re outside mv-griddistrict -> offshore wind
 UPDATE 	model_draft.ego_supply_res_powerplant
 	SET	rea_flag = 'wind_offshore',
 		rea_geom_new = NULL,
 		rea_geom_line = NULL
-	WHERE	dea.generation_subtype = 'wind_offshore';
+	WHERE	generation_subtype = 'wind_offshore';
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.9','output','model_draft','ego_supply_res_powerplant','ego_dp_rea_setup.sql',' ');
@@ -79,8 +79,8 @@ Offshore wind power plants are not moved.
 -- re outside mv-griddistrict
 DROP MATERIALIZED VIEW IF EXISTS 	model_draft.ego_supply_res_powerplant_out_mview CASCADE;
 CREATE MATERIALIZED VIEW 		model_draft.ego_supply_res_powerplant_out_mview AS
-	SELECT	dea.*
-	FROM 	model_draft.ego_supply_res_powerplant AS dea
+	SELECT	*
+	FROM 	model_draft.ego_supply_res_powerplant
 	WHERE	rea_flag = 'out' OR rea_flag = 'wind_offshore';
 
 -- index GIST (geom)
@@ -108,17 +108,17 @@ SELECT ego_scenario_log('v0.2.9','input','model_draft','ego_grid_hvmv_substation
 -- new geom, DEA to next substation
 DROP TABLE IF EXISTS	model_draft.ego_supply_res_powerplant_out_nn CASCADE;
 CREATE TABLE 		model_draft.ego_supply_res_powerplant_out_nn AS 
-	SELECT DISTINCT ON (dea.id)
-		dea.id AS dea_id,
-		dea.generation_type,
-		sub.subst_id, 
-		sub.geom ::geometry(Point,3035) AS geom_sub,
-		ST_Distance(dea.geom,sub.geom) AS distance,
-		dea.geom ::geometry(Point,3035) AS geom
-	FROM 	model_draft.ego_supply_res_powerplant_out_mview AS dea,
-		model_draft.ego_grid_hvmv_substation AS sub
-	WHERE 	ST_DWithin(dea.geom,sub.geom, 100000) -- In a 100 km radius
-	ORDER BY 	dea.id, ST_Distance(dea.geom,sub.geom);
+	SELECT DISTINCT ON (a.id)
+		a.id AS dea_id,
+		a.generation_type,
+		b.subst_id, 
+		b.geom ::geometry(Point,3035) AS geom_sub,
+		ST_Distance(ST_TRANSFORM(a.geom,3035),b.geom) AS distance,
+		ST_TRANSFORM(a.geom,3035) ::geometry(Point,3035) AS geom
+	FROM 	model_draft.ego_supply_res_powerplant_out_mview AS a,
+		model_draft.ego_grid_hvmv_substation AS b
+	WHERE 	ST_DWithin(ST_TRANSFORM(a.geom,3035),b.geom, 100000) -- In a 100 km radius
+	ORDER BY 	a.id, ST_Distance(ST_TRANSFORM(a.geom,3035),b.geom);
 
 ALTER TABLE	model_draft.ego_supply_res_powerplant_out_nn
 	ADD PRIMARY KEY (dea_id),
