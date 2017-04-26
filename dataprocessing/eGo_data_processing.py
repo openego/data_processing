@@ -102,7 +102,7 @@ def data_processing():
 	'ego_dp_powerflow_osmtgmod_to_pypsa.sql',			# Include data from osmTGmod into EHV/HV powerflow schema
 	'ego_dp_powerflow_electrical_neighbour.sql',		# Create border crossing lines and buses in neighbouring countries
 
-    'ego_dp_powerflow_assignment_generator.sql',  		# Assign generators to corresponding substation
+    	'ego_dp_powerflow_assignment_generator.sql',  		# Assign generators to corresponding substation
 	'ego_dp_powerflow_assignment_load.sql',        		# Assign loads to their corresponding substation
 	'ego_dp_powerflow_grid_NEP2035.sql',					# Copy grid to scenario NEP 2035
 	'ego_dp_powerflow_assignment_generator_nep2035.sql',	# Assign generators from NEP 2035 to corresponding substation
