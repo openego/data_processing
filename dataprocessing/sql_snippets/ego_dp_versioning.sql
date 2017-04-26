@@ -132,6 +132,148 @@ INSERT INTO supply.ego_dp_res_powerplant
 SELECT ego_scenario_log('v0.2.9','result','supply','ego_dp_res_powerplant','ego_dp_versioning.sql','versioning');
 
 
+-- hv pf bus
+/* DELETE FROM grid.ego_pf_hv_bus
+	WHERE	version = 'v0.2.9'; */
+	
+INSERT INTO grid.ego_pf_hv_bus
+	SELECT	'v0.2.9',
+		*
+	FROM	model_draft.ego_grid_pf_hv_bus;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.9','result','grid','ego_pf_hv_bus','ego_dp_versioning.sql','versioning');
+
+-- hv pf generator
+/* DELETE FROM grid.ego_pf_hv_generator
+	WHERE	version = 'v0.2.9'; */
+	
+INSERT INTO grid.ego_pf_hv_generator
+	SELECT	'v0.2.9',
+		*
+	FROM	model_draft.ego_grid_pf_hv_generator;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.9','result','grid','ego_pf_hv_generator','ego_dp_versioning.sql','versioning');
+
+
+-- hv pf generator_pq_set
+/* DELETE FROM grid.ego_pf_hv_generator_pq_set
+	WHERE	version = 'v0.2.9'; */
+	
+INSERT INTO grid.ego_pf_hv_generator_pq_set
+	SELECT	'v0.2.9',
+		*
+	FROM	model_draft.ego_grid_pf_hv_generator_pq_set;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.9','result','grid','ego_pf_hv_generator_pq_set','ego_dp_versioning.sql','versioning');
+
+
+-- hv pf line
+/* DELETE FROM grid.ego_pf_hv_line
+	WHERE	version = 'v0.2.9'; */
+	
+INSERT INTO grid.ego_pf_hv_line
+	SELECT	'v0.2.9',
+		*
+	FROM	model_draft.ego_grid_pf_hv_line;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.9','result','grid','ego_pf_hv_line','ego_dp_versioning.sql','versioning');
+
+
+-- hv pf load
+/* DELETE FROM grid.ego_pf_hv_load
+	WHERE	version = 'v0.2.9'; */
+	
+INSERT INTO grid.ego_pf_hv_load
+	SELECT	'v0.2.9',
+		*
+	FROM	model_draft.ego_grid_pf_hv_load;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.9','result','grid','ego_pf_hv_load','ego_dp_versioning.sql','versioning');
+
+
+-- hv pf load_pq_set
+/* DELETE FROM grid.ego_pf_hv_load_pq_set
+	WHERE	version = 'v0.2.9'; */
+	
+INSERT INTO grid.ego_pf_hv_load_pq_set
+	SELECT	'v0.2.9',
+		*
+	FROM	model_draft.ego_grid_pf_hv_load_pq_set;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.9','result','grid','ego_pf_hv_load_pq_set','ego_dp_versioning.sql','versioning');
+
+
+-- hv pf source
+/* DELETE FROM grid.ego_pf_hv_source
+	WHERE	version = 'v0.2.9'; */
+	
+INSERT INTO grid.ego_pf_hv_source
+	SELECT	'v0.2.9',
+		*
+	FROM	model_draft.ego_grid_pf_hv_source;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.9','result','grid','ego_pf_hv_source','ego_dp_versioning.sql','versioning');
+
+
+-- hv pf storage
+/* DELETE FROM grid.ego_pf_hv_storage
+	WHERE	version = 'v0.2.9'; */
+	
+INSERT INTO grid.ego_pf_hv_storage
+	SELECT	'v0.2.9',
+		*
+	FROM	model_draft.ego_grid_pf_hv_storage;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.9','result','grid','ego_pf_hv_storage','ego_dp_versioning.sql','versioning');
+
+
+-- hv pf storage_pq_set
+/* DELETE FROM grid.ego_pf_hv_storage_pq_set
+	WHERE	version = 'v0.2.9'; */
+	
+INSERT INTO grid.ego_pf_hv_storage_pq_set
+	SELECT	'v0.2.9',
+		*
+	FROM	model_draft.ego_grid_pf_hv_storage_pq_set;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.9','result','grid','ego_pf_hv_storage_pq_set','ego_dp_versioning.sql','versioning');
+
+
+-- hv pf temp_resolution
+/* DELETE FROM grid.ego_pf_hv_temp_resolution
+	WHERE	version = 'v0.2.9'; */
+	
+INSERT INTO grid.ego_pf_hv_temp_resolution
+	SELECT	'v0.2.9',
+		*
+	FROM	model_draft.ego_grid_pf_hv_temp_resolution;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.9','result','grid','ego_pf_hv_temp_resolution','ego_dp_versioning.sql','versioning');
+
+
+-- hv pf transformer
+/* DELETE FROM grid.ego_pf_hv_transformer
+	WHERE	version = 'v0.2.9'; */
+	
+INSERT INTO grid.ego_pf_hv_transformer
+	SELECT	'v0.2.9',
+		*
+	FROM	model_draft.ego_grid_pf_hv_transformer;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.9','result','grid','ego_pf_hv_transformer','ego_dp_versioning.sql','versioning');
+
+
 
 
 -- overview
@@ -192,4 +334,70 @@ UNION ALL
 		count(*) AS cnt
 	FROM 	supply.ego_dp_res_powerplant
 	GROUP BY version 
+UNION ALL
+	SELECT 	'grid.ego_pf_hv_bus' AS name,
+		version,
+		count(*) AS cnt
+	FROM 	grid.ego_pf_hv_bus
+	GROUP BY version
+UNION ALL
+	SELECT 	'grid.ego_pf_hv_generator' AS name,
+		version,
+		count(*) AS cnt
+	FROM 	grid.ego_pf_hv_generator
+	GROUP BY version
+UNION ALL
+	SELECT 	'grid.ego_pf_hv_generator_pq_set' AS name,
+		version,
+		count(*) AS cnt
+	FROM 	grid.ego_pf_hv_generator_pq_set
+	GROUP BY version
+UNION ALL
+	SELECT 	'grid.ego_pf_hv_line' AS name,
+		version,
+		count(*) AS cnt
+	FROM 	grid.ego_pf_hv_line
+	GROUP BY version
+UNION ALL
+	SELECT 	'grid.ego_pf_hv_load' AS name,
+		version,
+		count(*) AS cnt
+	FROM 	grid.ego_pf_hv_load
+	GROUP BY version
+UNION ALL
+	SELECT 	'grid.ego_pf_hv_load_pq_set' AS name,
+		version,
+		count(*) AS cnt
+	FROM 	grid.ego_pf_hv_load_pq_set
+	GROUP BY version
+UNION ALL
+	SELECT 	'grid.ego_pf_hv_source' AS name,
+		version,
+		count(*) AS cnt
+	FROM 	grid.ego_pf_hv_source
+	GROUP BY version
+UNION ALL
+	SELECT 	'grid.ego_pf_hv_storage' AS name,
+		version,
+		count(*) AS cnt
+	FROM 	grid.ego_pf_hv_storage
+	GROUP BY version
+UNION ALL
+	SELECT 	'grid.ego_pf_hv_storage_pq_set' AS name,
+		version,
+		count(*) AS cnt
+	FROM 	grid.ego_pf_hv_storage_pq_set
+	GROUP BY version
+UNION ALL
+	SELECT 	'grid.ego_pf_hv_temp_resolution' AS name,
+		version,
+		count(*) AS cnt
+	FROM 	grid.ego_pf_hv_temp_resolution
+	GROUP BY version
+UNION ALL
+	SELECT 	'grid.ego_pf_hv_transformer' AS name,
+		version,
+		count(*) AS cnt
+	FROM 	grid.ego_pf_hv_transformer
+	GROUP BY version
 	;
