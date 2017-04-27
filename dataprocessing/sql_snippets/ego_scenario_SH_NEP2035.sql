@@ -23,7 +23,7 @@ WHERE scn_name= 'NEP 2035' AND b.id=26 AND ST_Intersects(ST_Transform(ST_SetSRID
 -- Insert buses relevant for SH grid topology manually
 
 INSERT INTO model_draft.ego_grid_pf_hv_bus
-	SELECT 		'SH Status Quo', a.bus_id, a.v_nom, a.current_type, a.v_mag_pu_min, a.v_mag_pu_max, a.geom
+	SELECT 		'SH NEP 2035', a.bus_id, a.v_nom, a.current_type, a.v_mag_pu_min, a.v_mag_pu_max, a.geom
 	FROM 		model_draft.ego_grid_pf_hv_bus a
 	WHERE 		scn_name='Status Quo' AND bus_id IN (1055, 23786);
 
