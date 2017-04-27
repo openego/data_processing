@@ -15,10 +15,17 @@ __author__ 	= "IlkaCu"
 DELETE FROM model_draft.ego_grid_pf_hv_bus WHERE scn_name = 'SH Status Quo'; 
 
 INSERT INTO model_draft.ego_grid_pf_hv_bus
-SELECT 'SH Status Quo', a.bus_id, a.v_nom, a.current_type, a.v_mag_pu_min, a.v_mag_pu_max, a.geom
-FROM 	model_draft.ego_grid_pf_hv_bus a, 
-	political_boundary.bkg_vg250_2_lan b
-WHERE scn_name= 'Status Quo' AND b.id=26 AND ST_Intersects(ST_Transform(ST_SetSRID(b.geom,31467),4326), a.geom); -- gid=26 is valid for Schleswig-Holstein
+   SELECT 'SH Status Quo', a.bus_id, a.v_nom, a.current_type, a.v_mag_pu_min, a.v_mag_pu_max, a.geom
+   FROM 	model_draft.ego_grid_pf_hv_bus a, 
+		political_boundary.bkg_vg250_2_lan b
+   WHERE 	(scn_name= 'Status Quo' AND b.id=26 AND (ST_Intersects(ST_Transform(ST_SetSRID(b.geom,31467),4326), a.geom))); 
+
+-- Insert buses relevant for SH grid topology manually
+
+INSERT INTO model_draft.ego_grid_pf_hv_bus
+	SELECT 		'SH Status Quo', a.bus_id, a.v_nom, a.current_type, a.v_mag_pu_min, a.v_mag_pu_max, a.geom
+	FROM 		model_draft.ego_grid_pf_hv_bus a
+	WHERE 		scn_name='Status Quo' AND bus_id IN (1055, 23786);
 
 
 -- Include lines connecting buses within the boundaries of the federal state
@@ -176,15 +183,12 @@ WHERE 	scn_name= 'Status Quo' AND a.bus0 IN (SELECT bus_id FROM model_draft.ego_
 
 DELETE FROM model_draft.ego_grid_pf_hv_bus
 WHERE scn_name = 'SH Status Quo' AND bus_id IN 
-(24415,
-26999,  
-1053,
-1052,
-5636,
-30,
-17146,
-23784,
-17384); -- include ID of buses which shall be deleted 
+(24415, 
+ 26999, 
+ 30, 
+ 17146, 
+ 23784, 
+ 17384); -- include ID of buses which shall be deleted 
 
 --- This part deletes all lines in the 'Status Quo EHV' scenario first and includes those lines connecting buses which are included in the adjusted Bus-Table 
 
@@ -244,4 +248,4 @@ WHERE scn_name = 'SH Status Quo' AND bus NOT IN
 
 DELETE FROM model_draft.ego_grid_pf_hv_storage_pq_set 
 WHERE scn_name='SH Status Quo' AND storage_id NOT IN 
-	(SELECT storage_id FROM model_draft.ego_grid_pf_hv_storage WHERE scn_name='SH Status Quo'); 
+(SELECT storage_id FROM model_draft.ego_grid_pf_hv_storage WHERE scn_name='SH Status Quo'); 
