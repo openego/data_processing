@@ -117,6 +117,28 @@ UPDATE model_draft.ego_supply_conv_powerplant a
 		AND ST_Intersects(a.geom, b.geom)
 		AND voltage_level <= 2;
 
+-- Assign conventional pp with voltage_level >2 located outside of Germany to their closest 110 kV substation
+
+ALTER TABLE model_draft.ego_supply_conv_powerplant
+   ADD COLUMN subst_id_NN int; 
+
+UPDATE model_draft.ego_supply_conv_powerplant a
+   SET subst_id_NN = result.subst_id	
+   FROM 
+	(SELECT DISTINCT ON (pp.gid) pp.gid, subst.subst_id, ST_Distance(ST_Transform(subst.geom, 4326), pp.geom)  as dist
+	   FROM model_draft.ego_supply_conv_powerplant As pp, model_draft.ego_grid_hvmv_substation As subst   
+	   ORDER BY pp.gid, ST_Distance(ST_Transform(subst.geom, 4326), pp.geom), subst.subst_id) as result
+	   WHERE a.gid=result.gid;
+
+UPDATE model_draft.ego_supply_conv_powerplant a
+   SET subst_id=subst_id_NN
+   WHERE subst_id IS NULL and voltage_level > 2; 
+
+ALTER TABLE model_draft.ego_supply_conv_powerplant 
+   DROP COLUMN subst_id_NN; 
+
+
+
 -- Insert otg_id of bus
 UPDATE model_draft.ego_supply_conv_powerplant a
 	SET 	otg_id = b.otg_id 
