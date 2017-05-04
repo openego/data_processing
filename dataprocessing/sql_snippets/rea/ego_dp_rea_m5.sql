@@ -222,9 +222,9 @@ UPDATE 	model_draft.ego_supply_res_powerplant AS t1
 	SET  	mvlv_subst_id = t2.mvlv_subst_id
 	FROM    (
 		SELECT	a.id AS id,
-			b.mvlv_subst_id_new AS mvlv_subst_id
+			b.mvlv_subst_id AS mvlv_subst_id
 		FROM	model_draft.ego_supply_res_powerplant AS a,
-			temp_lv.ego_grid_lv_griddistrict_pre_nn_collect AS b
+			model_draft.ego_grid_lv_griddistrict AS b
 		WHERE  	b.geom && a.rea_geom_new AND
 			ST_CONTAINS(b.geom,a.rea_geom_new)
 		) AS t2
