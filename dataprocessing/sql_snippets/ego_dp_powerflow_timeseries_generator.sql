@@ -74,7 +74,7 @@ SELECT
 	array_agg(A.fraction_of_installed * B.val ORDER BY B.datetime) AS p_set
 		FROM calc_renpass_gis.pf_pp_by_source_aggr_id A,
 		calc_renpass_gis.pp_feedin_by_pf_source B
-WHERE A.source = B.source AND aggr_id IS NOT NULL
+WHERE A.source = B.source
 GROUP BY A.aggr_id;
 
 -- NEP 2035
@@ -140,7 +140,7 @@ SELECT
 	array_agg(A.fraction_of_installed * B.val ORDER BY B.datetime) AS p_set
 		FROM calc_renpass_gis.pf_pp_by_source_aggr_id A,
 		calc_renpass_gis.pp_feedin_by_pf_source B
-WHERE A.source = B.source AND aggr_id IS NOT NULL
+WHERE A.source = B.source
 GROUP BY A.aggr_id;
 
 
