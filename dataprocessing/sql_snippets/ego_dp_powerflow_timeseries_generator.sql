@@ -23,6 +23,7 @@ FROM
 	sum(p_nom) AS p_nom
 	FROM model_draft.ego_supply_pf_generator_single
 	WHERE scn_name = 'Status Quo'
+	AND aggr_id IS NOT NULL
 	GROUP BY aggr_id, source) SQ;
 
 -- map renpassG!S power sources to pf generators, aggr on fuel types, neglect efficiency classes
@@ -92,6 +93,7 @@ FROM
 	sum(p_nom) AS p_nom
 	FROM model_draft.ego_supply_pf_generator_single
 	WHERE scn_name = 'NEP 2035'
+	AND aggr_id IS NOT NULL
 	GROUP BY aggr_id, source) SQ;
 
 -- map renpassG!S power sources to pf generators, aggr on fuel types, neglect efficiency classes
