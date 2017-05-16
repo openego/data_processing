@@ -137,6 +137,7 @@ WHERE generation_type in ('solar', 'wind', 'hydro', 'geothermal', 'biomass', 'ga
 -- Time Log server = 59.3 secs 
 -- Time Log server = 2788359 rows affected, 01:28 minutes execution time.
 
+
 --
 VACUUM FULL ANALYZE model_draft.ego_supply_res_powerplant_2050;
 
@@ -570,6 +571,9 @@ Limit 1
 -- Use of "easy" ProxToNow
 --
 
+--DROP Table model_draft.ego_supply_wo_dev_2050_germany_mun CASCADE; 
+-- DROP SEQUENCE model_draft.ego_supply_wo_dev_2050_germany_mun_id_seq CASCADE;
+
 CREATE SEQUENCE model_draft.ego_supply_wo_dev_2050_germany_mun_id_seq START 1;
 
 Create Table model_draft.ego_supply_wo_dev_2050_germany_mun
@@ -584,6 +588,9 @@ wo_avg_cap integer, 		-- average capacity per region and voltage level
 wo_new_units numeric(9,2), 	-- New number of region per voltage level 
 CONSTRAINT wo_dev_2050_germany_mun_pkey PRIMARY KEY (id)
 );
+--
+VACUUM FULL ANALYZE model_draft.ego_supply_wo_dev_2050_germany_mun;
+
 --
 Insert into model_draft.ego_supply_wo_dev_2050_germany_mun (wo_units,wo_cap_2035,voltage_level,rs_0,wo_avg_cap)
 SELECT
@@ -601,11 +608,8 @@ AND A.generation_type = 'wind'
 AND A.generation_subtype = 'wind_onshore'
 Group by A.voltage_level, B.id, B.rs_0;
 --
--- Server log time = 
-
--- hier weiter
-
-
+-- Server log time =  07:45 h
+VACUUM FULL ANALYZE model_draft.ego_supply_wo_dev_2050_germany_mun;
 
 -- SELECT * FROM model_draft.ego_supply_wo_dev_2050_germany_mun LIMIT 10;
 --
@@ -641,6 +645,7 @@ FROM
 --AND substring(AA.rs_0 from 1 for 2) =  wo_sq_2035.rs
 --AND substring(AA.rs_0 from 1 for 2) =  wo_scn_2050.rs
 ;
+
 --
 --- ------------------------------------------------------------------------------------------------------------
 -- Count new additional Units -> new_units
@@ -684,7 +689,6 @@ Group by scn.capacity_2050, scn.state --, substring(rs_0 from 1 for 2)
 Order by scn.state
 ;
 --
-
 -- Add new wind shore units 
 Insert into model_draft.ego_supply_res_powerplant_2050 (id,scenario_year,electrical_capacity,
             generation_type, generation_subtype, voltage_level, source, comment,geom)
@@ -707,7 +711,7 @@ Insert into model_draft.ego_supply_res_powerplant_2050 (id,scenario_year,electri
 	       else  unnest(array_fill(A.wo_avg_cap, Array[(A.wo_new_units)::int])) END as electrical_capacity ,    -- in kW 
 	 ST_Transform(ST_PointOnSurface(B.geom), 4326) as geom     
 	FROM 
-	  orig_geo_powerplants.wo_2050_nep_germany_mun A,
+	  model_draft.ego_supply_wo_dev_2050_germany_mun A,
 	  orig_geo_vg250.vg250_6_gem_clean B
 	Where A.rs_0 = B.rs_0
 	) as sub ,
@@ -718,21 +722,24 @@ Insert into model_draft.ego_supply_res_powerplant_2050 (id,scenario_year,electri
 	  ) as sub2 
 ;
 -- log time local:  5072 rows affected, 09:18:32400 hours execution time.
-
 --- ------------------------------------------------------------------------------------------------------------
 -- CHP/ KWK Part here
 -- Q: Also for 2050 needed? or only 2035 data?
+-- A: No CHP
+
+
+-- Temp
+SELECT
+count(*),
+sum(electrical_capacity)/1000000
+FROM
+model_draft.ego_supply_res_powerplant_2050
+Where generation_type = 'wind'
+AND generation_subtype =  'wind_onshore'
+--98350
 
 
 
--- ------------------------------------------------------------------------------------------------------------
--- Validation and Analyse Part
---
---- # # # # # # # # # # # # # # #
--- 
--- Check Scenario Data per felderal state
---
---- # # # # # # # # # # # # # # #
 
 
 --- ------------------------------------------------------------------------------------------------------------
@@ -753,7 +760,7 @@ COMMENT ON TABLE  model_draft.ego_supply_res_powerplant_2050 IS
 "Date of collection": "21-11-2016",
 "Original file": "https://github.com/openego/data_processing/blob/refactor/oedb-restructuring_v0.2/calc_geo_powerplants/development_res_ProxToNow_2050.sql",
 "Spatial resolution": ["Germany"],
-"Description": ["This data set includes a XX M units of renewable power plants with a high geographical resolution. The development of renewable units is done by a proportional to the amount of renewable units per Germany as state by scenario data RES 100% in 2050 (“ego-100-2050”). The Script for this “proxToNow” Method and the allocation of units by spatial aspects can be found under: https://github.com/openego/data_processing/blob/refactor/oedb-restructuring_v0.2/calc_geo_powerplants/development_res_ProxToNow_2050.sql"],
+"Description": ["This data set includes units of renewable power plants with a high geographical resolution. The development of renewable units is done by a proportional to the amount of renewable units per Germany as state by scenario data RES 100% in 2050 (“ego-100-2050”). The Script for this “proxToNow” Method and the allocation of units by spatial aspects can be found under: https://github.com/openego/data_processing/blob/refactor/oedb-restructuring_v0.2/calc_geo_powerplants/development_res_ProxToNow_2050.sql"],
 "Column": [
                    {"Name": "id",
                     "Description": "Primary ID",
@@ -826,10 +833,8 @@ COMMENT ON TABLE  model_draft.ego_supply_res_powerplant_2050 IS
 	            "Copyright":  "Europa-Universität Flensburg, Centre for Sustainable Energy Systems"}],
 "Instructions for proper use": ["..."] 
 }';
-
 --- 
 SELECT obj_description('model_draft.ego_supply_res_powerplant_2050'::regclass)::json;
-
 --
 VACUUM FULL ANALYZE model_draft.ego_supply_res_powerplant_2050;
 

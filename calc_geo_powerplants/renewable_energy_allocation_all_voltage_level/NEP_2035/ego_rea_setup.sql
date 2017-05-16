@@ -15,6 +15,7 @@ __author__ 	= "Ludee"
 
 -- table for allocated dea
 DROP TABLE IF EXISTS 	model_draft.ego_supply_rea_2035 CASCADE;
+
 CREATE TABLE 		model_draft.ego_supply_rea_2035 (
 	id bigint,
 	electrical_capacity numeric,
@@ -30,27 +31,36 @@ CREATE TABLE 		model_draft.ego_supply_rea_2035 (
 	geom geometry(Point,3035),
 	geom_line geometry(LineString,3035),
 	geom_new geometry(Point,3035),
-CONSTRAINT ego_supply_rea_pkey PRIMARY KEY (id));
+CONSTRAINT ego_supply_rea_2035_pkey PRIMARY KEY (id));
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.3','input','supply','ego_supply_res_powerplant_2035','ego_rea_setup.sql',' ');
+SELECT ego_scenario_log('v0.2.3','input','model_draft','ego_supply_res_powerplant_2035','ego_rea_setup.sql',' ');
+
+
+-- Hier weiter
 
 -- insert DEA, with no geom excluded
-INSERT INTO model_draft.ego_supply_rea (id, electrical_capacity, generation_type, generation_subtype, voltage_level, postcode, source, geom)
+INSERT INTO model_draft.ego_supply_rea_2035 (id, electrical_capacity, generation_type, generation_subtype, voltage_level, postcode, source, geom)
 	SELECT	id, electrical_capacity, generation_type, generation_subtype, voltage_level, postcode, source, ST_TRANSFORM(geom,3035)
 	FROM	model_draft.ego_supply_res_powerplant_2035
 	WHERE	geom IS NOT NULL;
 
+
+
+
+
+
+
 -- index GIST (geom)
-CREATE INDEX	ego_supply_rea_geom_idx
-	ON	model_draft.ego_supply_rea USING GIST (geom);
+CREATE INDEX	ego_supply_rea_2035_geom_idx
+	ON	model_draft.ego_supply_rea_2035 USING GIST (geom);
 
 -- index GIST (geom_line)
 CREATE INDEX ego_supply_rea_geom_line_idx
-	ON model_draft.ego_supply_rea USING gist (geom_line);
+	ON model_draft.ego_supply_rea_2035 USING gist (geom_line);
 
 -- index GIST (geom_new)
-CREATE INDEX ego_supply_rea_geom_new_idx
+CREATE INDEX ego_supply_rea_2035_geom_new_idx
 	ON model_draft.ego_supply_rea USING gist (geom_new);
 
 -- grant (oeuser)
