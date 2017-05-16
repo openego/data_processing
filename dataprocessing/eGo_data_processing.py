@@ -137,7 +137,7 @@ def data_processing():
             script_str = open(filename, "rb").read()
 
             # execute desired sql snippet
-            exec(compile(script_str, filename, 'exec'))
+            exec(compile(script_str, filename, 'exec'), globals())
         else:
             raise NameError('{} is neither a python nor a sql script (at least it '
                             'has not the right extension). Please add an extension '
