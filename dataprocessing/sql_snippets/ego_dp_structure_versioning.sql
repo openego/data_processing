@@ -101,7 +101,7 @@ COMMENT ON TABLE grid.ego_dp_ehv_substation IS '{
 SELECT obj_description('grid.ego_dp_ehv_substation' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.9','result','grid','ego_dp_ehv_substation','ego_dp_structure_versioning.sql','ehv substation');
+SELECT ego_scenario_log('v0.2.10','result','grid','ego_dp_ehv_substation','ego_dp_structure_versioning.sql','ehv substation');
 
 /* 
 -- HVMV substation
@@ -195,7 +195,7 @@ COMMENT ON TABLE grid.ego_dp_hvmv_substation IS '{
 SELECT obj_description('grid.ego_dp_hvmv_substation' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.9','result','grid','ego_dp_hvmv_substation','ego_dp_structure_versioning.sql','hvmv substation');
+SELECT ego_scenario_log('v0.2.10','result','grid','ego_dp_hvmv_substation','ego_dp_structure_versioning.sql','hvmv substation');
 
 /* 
 -- MVLV substation
@@ -260,7 +260,7 @@ COMMENT ON TABLE grid.ego_dp_mvlv_substation IS '{
 SELECT obj_description('grid.ego_dp_mvlv_substation' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.9','result','grid','ego_dp_mvlv_substation','ego_dp_structure_versioning.sql','mvlv substation');
+SELECT ego_scenario_log('v0.2.10','result','grid','ego_dp_mvlv_substation','ego_dp_structure_versioning.sql','mvlv substation');
 
 
 -- GRIDDISTRICTS (EHV, HVMV, MVLV)
@@ -322,7 +322,7 @@ COMMENT ON TABLE grid.ego_dp_ehv_griddistrict IS '{
 SELECT obj_description('grid.ego_dp_ehv_griddistrict' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.9','result','grid','ego_dp_ehv_griddistrict','ego_dp_structure_versioning.sql','ehv griddistrict');
+SELECT ego_scenario_log('v0.2.10','result','grid','ego_dp_ehv_griddistrict','ego_dp_structure_versioning.sql','ehv griddistrict');
 
 /* 
 -- MV griddistrict
@@ -413,7 +413,7 @@ COMMENT ON TABLE grid.ego_dp_mv_griddistrict IS '{
 SELECT obj_description('grid.ego_dp_mv_griddistrict' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.9','result','grid','ego_dp_mv_griddistrict','ego_dp_structure_versioning.sql','mv griddistrict');
+SELECT ego_scenario_log('v0.2.10','result','grid','ego_dp_mv_griddistrict','ego_dp_structure_versioning.sql','mv griddistrict');
 
 /* 
 -- LV griddistrict
@@ -510,7 +510,7 @@ COMMENT ON TABLE grid.ego_dp_lv_griddistrict IS '{
 SELECT obj_description('grid.ego_dp_lv_griddistrict' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.9','result','grid','ego_dp_lv_griddistrict','ego_dp_structure_versioning.sql','lv griddistrict');
+SELECT ego_scenario_log('v0.2.10','result','grid','ego_dp_lv_griddistrict','ego_dp_structure_versioning.sql','lv griddistrict');
 
 
 -- DEMAND
@@ -646,7 +646,7 @@ COMMENT ON TABLE demand.ego_dp_loadarea IS '{
 SELECT obj_description('demand.ego_dp_loadarea' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.9','result','demand','ego_dp_loadarea','ego_dp_structure_versioning.sql','loadarea');
+SELECT ego_scenario_log('v0.2.10','result','demand','ego_dp_loadarea','ego_dp_structure_versioning.sql','loadarea');
 
 
 -- GENERATOR  (con, res)
@@ -739,7 +739,7 @@ COMMENT ON TABLE supply.ego_dp_conv_powerplant IS '{
 SELECT obj_description('supply.ego_dp_conv_powerplant' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.9','result','supply','ego_dp_conv_powerplant','ego_dp_structure_versioning.sql','conventional powerplants');
+SELECT ego_scenario_log('v0.2.10','result','supply','ego_dp_conv_powerplant','ego_dp_structure_versioning.sql','conventional powerplants');
 
 /* 
 -- renewable powerlants
@@ -833,7 +833,7 @@ COMMENT ON TABLE supply.ego_dp_res_powerplant IS '{
 SELECT obj_description('supply.ego_dp_res_powerplant' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.9','result','supply','ego_dp_res_powerplant','ego_dp_structure_versioning.sql','conventional powerplants');
+SELECT ego_scenario_log('v0.2.10','result','supply','ego_dp_res_powerplant','ego_dp_structure_versioning.sql','conventional powerplants');
 
 
 /* 
@@ -850,7 +850,7 @@ CREATE TABLE 		model_draft.ego_scenario_overview (
 ALTER TABLE	model_draft.ego_scenario_overview OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.9','result','model_draft','ego_scenario_overview','ego_dp_structure_versioning.sql','overview');
+SELECT ego_scenario_log('v0.2.10','result','model_draft','ego_scenario_overview','ego_dp_structure_versioning.sql','overview');
  */
 
 ----------------------
@@ -925,7 +925,7 @@ COMMENT ON TABLE grid.ego_pf_hv_bus IS '{
 SELECT obj_description('grid.ego_pf_hv_bus' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.9','result','grid','ego_pf_hv_bus','ego_dp_structure_versioning.sql','hv pf buses');
+SELECT ego_scenario_log('v0.2.10','result','grid','ego_pf_hv_bus','ego_dp_structure_versioning.sql','hv pf buses');
 
 -- powerflow generator 
 /*
@@ -1014,7 +1014,7 @@ COMMENT ON TABLE grid.ego_pf_hv_generator IS '{
 SELECT obj_description('grid.ego_pf_hv_generator' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.9','result','grid','ego_pf_hv_generator','ego_dp_structure_versioning.sql','hv pf generators');
+SELECT ego_scenario_log('v0.2.10','result','grid','ego_pf_hv_generator','ego_dp_structure_versioning.sql','hv pf generators');
 
 
 -- powerflow generator_pq_set 
@@ -1081,7 +1081,7 @@ COMMENT ON TABLE grid.ego_pf_hv_generator_pq_set IS '{
 SELECT obj_description('grid.ego_pf_hv_generator_pq_set' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.9','result','grid','ego_pf_hv_generator_pq_set','ego_dp_structure_versioning.sql','hv pf generator time series');
+SELECT ego_scenario_log('v0.2.10','result','grid','ego_pf_hv_generator_pq_set','ego_dp_structure_versioning.sql','hv pf generator time series');
 
 
 -- powerflow line 
@@ -1173,7 +1173,7 @@ COMMENT ON TABLE grid.ego_pf_hv_line IS '{
 SELECT obj_description('grid.ego_pf_hv_line' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.9','result','grid','ego_pf_hv_line','ego_dp_structure_versioning.sql','hv pf lines');
+SELECT ego_scenario_log('v0.2.10','result','grid','ego_pf_hv_line','ego_dp_structure_versioning.sql','hv pf lines');
 
 -- powerflow load 
 /*
@@ -1243,7 +1243,7 @@ COMMENT ON TABLE grid.ego_pf_hv_load IS '{
 SELECT obj_description('grid.ego_pf_hv_load' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.9','result','grid','ego_pf_hv_load','ego_dp_structure_versioning.sql','hv pf loads');
+SELECT ego_scenario_log('v0.2.10','result','grid','ego_pf_hv_load','ego_dp_structure_versioning.sql','hv pf loads');
 
 -- powerflow load_pq_set
 /*
@@ -1304,7 +1304,7 @@ COMMENT ON TABLE grid.ego_pf_hv_load_pq_set IS '{
 SELECT obj_description('grid.ego_pf_hv_load_pq_set' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.9','result','grid','ego_pf_hv_load_pq_set','ego_dp_structure_versioning.sql','hv pf load time series');
+SELECT ego_scenario_log('v0.2.10','result','grid','ego_pf_hv_load_pq_set','ego_dp_structure_versioning.sql','hv pf load time series');
 
 -- powerflow source
 /*
@@ -1363,7 +1363,7 @@ COMMENT ON TABLE grid.ego_pf_hv_source IS '{
 SELECT obj_description('grid.ego_pf_hv_source' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.9','result','grid','ego_pf_hv_source','ego_dp_structure_versioning.sql','hv pf sources');
+SELECT ego_scenario_log('v0.2.10','result','grid','ego_pf_hv_source','ego_dp_structure_versioning.sql','hv pf sources');
 
 -- powerflow storage 
 /*
@@ -1463,7 +1463,7 @@ COMMENT ON TABLE grid.ego_pf_hv_storage IS '{
 SELECT obj_description('grid.ego_pf_hv_storage' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.9','result','grid','ego_pf_hv_storage','ego_dp_structure_versioning.sql','hv pf storages');
+SELECT ego_scenario_log('v0.2.10','result','grid','ego_pf_hv_storage','ego_dp_structure_versioning.sql','hv pf storages');
 
 -- powerflow storage_pq_set 
 /*
@@ -1533,7 +1533,7 @@ COMMENT ON TABLE grid.ego_pf_hv_storage_pq_set IS '{
 SELECT obj_description('grid.ego_pf_hv_storage_pq_set' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.9','result','grid','ego_pf_hv_storage_pq_set','ego_dp_structure_versioning.sql','hv pf storage time series');
+SELECT ego_scenario_log('v0.2.10','result','grid','ego_pf_hv_storage_pq_set','ego_dp_structure_versioning.sql','hv pf storage time series');
 
 -- powerflow temp_resolution 
 /*
@@ -1592,7 +1592,7 @@ COMMENT ON TABLE grid.ego_pf_hv_temp_resolution IS '{
 SELECT obj_description('grid.ego_pf_hv_temp_resolution' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.9','result','grid','ego_pf_hv_temp_resolution','ego_dp_structure_versioning.sql','hv pf temporal resolution');
+SELECT ego_scenario_log('v0.2.10','result','grid','ego_pf_hv_temp_resolution','ego_dp_structure_versioning.sql','hv pf temporal resolution');
 
 -- powerflow transformer 
 /*
@@ -1679,7 +1679,7 @@ COMMENT ON TABLE grid.ego_pf_hv_transformer IS '{
 SELECT obj_description('grid.ego_pf_hv_transformer' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.9','result','grid','ego_pf_hv_transformer','ego_dp_structure_versioning.sql','hv pf transformer');
+SELECT ego_scenario_log('v0.2.10','result','grid','ego_pf_hv_transformer','ego_dp_structure_versioning.sql','hv pf transformer');
 
 
 

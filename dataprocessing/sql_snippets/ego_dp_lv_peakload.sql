@@ -64,7 +64,7 @@ INSERT INTO	model_draft.ego_grid_lv_griddistrict (id,mvlv_subst_id,subst_id,la_i
 
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.9','input','model_draft','ego_grid_mvlv_substation','ego_dp_lv_peakload.sql',' ');
+SELECT ego_scenario_log('v0.2.10','input','model_draft','ego_grid_mvlv_substation','ego_dp_lv_peakload.sql',' ');
 
 -- mvlv substation count
 UPDATE 	model_draft.ego_grid_lv_griddistrict AS t1
@@ -90,7 +90,7 @@ UPDATE 	model_draft.ego_grid_lv_griddistrict AS t1
 	
 	
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.9','input','social','destatis_zensus_population_per_ha_mview','ego_dp_lv_peakload.sql',' ');
+SELECT ego_scenario_log('v0.2.10','input','social','destatis_zensus_population_per_ha_mview','ego_dp_lv_peakload.sql',' ');
 
 -- zensus 2011 population
 UPDATE 	model_draft.ego_grid_lv_griddistrict AS t1
@@ -126,7 +126,7 @@ CREATE INDEX  	ego_osm_sector_per_lvgd_1_residential_gidx
 ALTER TABLE	model_draft.ego_osm_sector_per_lvgd_1_residential OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.9','input','model_draft','ego_osm_sector_per_griddistrict_1_residential','ego_dp_lv_peakload.sql',' ');
+SELECT ego_scenario_log('v0.2.10','input','model_draft','ego_osm_sector_per_griddistrict_1_residential','ego_dp_lv_peakload.sql',' ');
 
 -- intersect sector with mv-griddistrict
 INSERT INTO     model_draft.ego_osm_sector_per_lvgd_1_residential (geom)
@@ -156,7 +156,7 @@ UPDATE 	model_draft.ego_grid_lv_griddistrict AS t1
 	WHERE  	t1.id = t2.id;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.9','output','model_draft','ego_osm_sector_per_lvgd_1_residential','ego_dp_lv_peakload.sql',' ');
+SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_osm_sector_per_lvgd_1_residential','ego_dp_lv_peakload.sql',' ');
 
 
 
@@ -175,7 +175,7 @@ CREATE INDEX  	ego_osm_sector_per_lvgd_2_retail_gidx
 ALTER TABLE	model_draft.ego_osm_sector_per_lvgd_2_retail OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.9','input','model_draft','ego_osm_sector_per_griddistrict_2_retail','ego_dp_lv_peakload.sql',' ');
+SELECT ego_scenario_log('v0.2.10','input','model_draft','ego_osm_sector_per_griddistrict_2_retail','ego_dp_lv_peakload.sql',' ');
 
 -- intersect sector with mv-griddistrict
 INSERT INTO     model_draft.ego_osm_sector_per_lvgd_2_retail (geom)
@@ -205,7 +205,7 @@ UPDATE 	model_draft.ego_grid_lv_griddistrict AS t1
 	WHERE  	t1.id = t2.id;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.9','output','model_draft','ego_osm_sector_per_lvgd_2_retail','ego_dp_lv_peakload.sql',' ');
+SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_osm_sector_per_lvgd_2_retail','ego_dp_lv_peakload.sql',' ');
 
 
 -- 3. industrial sector
@@ -223,7 +223,7 @@ CREATE INDEX  	ego_osm_sector_per_lvgd_3_industrial_gidx
 ALTER TABLE	model_draft.ego_osm_sector_per_lvgd_3_industrial OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.9','input','model_draft','ego_osm_sector_per_griddistrict_3_industrial','ego_dp_lv_peakload.sql',' ');
+SELECT ego_scenario_log('v0.2.10','input','model_draft','ego_osm_sector_per_griddistrict_3_industrial','ego_dp_lv_peakload.sql',' ');
 
 -- intersect sector with mv-griddistrict
 INSERT INTO     model_draft.ego_osm_sector_per_lvgd_3_industrial (geom)
@@ -253,7 +253,7 @@ UPDATE 	model_draft.ego_grid_lv_griddistrict AS t1
 	WHERE  	t1.id = t2.id;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.9','output','model_draft','ego_osm_sector_per_lvgd_3_industrial','ego_dp_lv_peakload.sql',' ');
+SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_osm_sector_per_lvgd_3_industrial','ego_dp_lv_peakload.sql',' ');
 
 
 
@@ -272,7 +272,7 @@ CREATE INDEX  	ego_osm_sector_per_lvgd_4_agricultural_gidx
 ALTER TABLE	model_draft.ego_osm_sector_per_lvgd_4_agricultural OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.9','input','model_draft','ego_osm_sector_per_griddistrict_4_agricultural','ego_dp_lv_peakload.sql',' ');
+SELECT ego_scenario_log('v0.2.10','input','model_draft','ego_osm_sector_per_griddistrict_4_agricultural','ego_dp_lv_peakload.sql',' ');
 
 -- intersect sector with mv-griddistrict
 INSERT INTO     model_draft.ego_osm_sector_per_lvgd_4_agricultural (geom)
@@ -302,7 +302,7 @@ UPDATE 	model_draft.ego_grid_lv_griddistrict AS t1
 	WHERE  	t1.id = t2.id;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.9','output','model_draft','ego_osm_sector_per_lvgd_4_agricultural','ego_dp_lv_peakload.sql',' ');
+SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_osm_sector_per_lvgd_4_agricultural','ego_dp_lv_peakload.sql',' ');
 
 
 -- sector stats

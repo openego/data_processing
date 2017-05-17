@@ -10,7 +10,7 @@ __author__ 	= "Ludee"
 
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.9','input','social','destatis_zensus_population_per_ha','eGo_dp_structure_census.sql',' ');
+SELECT ego_scenario_log('v0.2.10','input','social','destatis_zensus_population_per_ha','eGo_dp_structure_census.sql',' ');
 
 -- zensus points with population 
 DROP MATERIALIZED VIEW IF EXISTS	social.destatis_zensus_population_per_ha_mview CASCADE;
@@ -77,12 +77,12 @@ COMMENT ON MATERIALIZED VIEW social.destatis_zensus_population_per_ha_mview IS '
 SELECT obj_description('social.destatis_zensus_population_per_ha_mview' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.9','output','social','destatis_zensus_population_per_ha_mview','eGo_dp_structure_census.sql',' ');
+SELECT ego_scenario_log('v0.2.10','output','social','destatis_zensus_population_per_ha_mview','eGo_dp_structure_census.sql',' ');
 
 
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.9','input','social','destatis_zensus_population_per_ha','eGo_dp_structure_census.sql',' ');
+SELECT ego_scenario_log('v0.2.10','input','social','destatis_zensus_population_per_ha','eGo_dp_structure_census.sql',' ');
 
 -- census points inside Germany (vg250)
 DROP TABLE IF EXISTS	model_draft.destatis_zensus_population_per_ha_inside CASCADE;
@@ -111,7 +111,7 @@ UPDATE	model_draft.destatis_zensus_population_per_ha_inside AS t1
 -- metadata
 COMMENT ON TABLE model_draft.destatis_zensus_population_per_ha_inside IS '{
 	"comment": "eGoDP - Temporary table",
-	"version": "v0.2.9" }' ;
+	"version": "v0.2.10" }' ;
 
 
 -- zensus points with population inside vg250
@@ -145,13 +145,13 @@ ALTER TABLE	model_draft.destatis_zensus_population_per_ha_invg_mview OWNER TO oe
 -- metadata
 COMMENT ON MATERIALIZED VIEW model_draft.destatis_zensus_population_per_ha_invg_mview IS '{
 	"comment": "eGoDP - Temporary table",
-	"version": "v0.2.9" }' ;
+	"version": "v0.2.10" }' ;
 
 -- select description
 SELECT obj_description('model_draft.destatis_zensus_population_per_ha_invg_mview' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.9','output','model_draft','destatis_zensus_population_per_ha_invg_mview','eGo_dp_structure_census.sql',' ');
+SELECT ego_scenario_log('v0.2.10','output','model_draft','destatis_zensus_population_per_ha_invg_mview','eGo_dp_structure_census.sql',' ');
 
 
 
@@ -186,13 +186,13 @@ ALTER TABLE	model_draft.destatis_zensus_population_per_ha_outvg_mview OWNER TO o
 -- metadata
 COMMENT ON MATERIALIZED VIEW model_draft.destatis_zensus_population_per_ha_outvg_mview IS '{
 	"comment": "eGoDP - Temporary table",
-	"version": "v0.2.9" }' ;
+	"version": "v0.2.10" }' ;
 
 -- select description
 SELECT obj_description('model_draft.destatis_zensus_population_per_ha_outvg_mview' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.9','output','model_draft','destatis_zensus_population_per_ha_outvg_mview','eGo_dp_structure_census.sql',' ');
+SELECT ego_scenario_log('v0.2.10','output','model_draft','destatis_zensus_population_per_ha_outvg_mview','eGo_dp_structure_census.sql',' ');
 
 /* 
 -- statistics

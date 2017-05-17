@@ -41,7 +41,7 @@ def write_ego_scenario_log(conn, version, io, schema, table,
     Example
     -------
     write_ego_scenario_log(conn=conn,
-                           version='v0.2.6',
+                           version='v0.2.1010',
                            io='output',
                            schema='model_draft',
                            table='ego_demand_loadarea_peak_load',

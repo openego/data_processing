@@ -41,19 +41,19 @@ DROP VIEW IF EXISTS model_draft.way_substations_with_hoes CASCADE;
 DROP VIEW IF EXISTS model_draft.way_substations CASCADE;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.9','input','openstreetmap','osm_deu_ways','ego_dp_substation_ehv.sql',' ');
+SELECT ego_scenario_log('v0.2.10','input','openstreetmap','osm_deu_ways','ego_dp_substation_ehv.sql',' ');
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.9','input','openstreetmap','osm_deu_polygon','ego_dp_substation_ehv.sql',' ');
+SELECT ego_scenario_log('v0.2.10','input','openstreetmap','osm_deu_polygon','ego_dp_substation_ehv.sql',' ');
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.9','input','openstreetmap','osm_deu_line','ego_dp_substation_ehv.sql',' ');
+SELECT ego_scenario_log('v0.2.10','input','openstreetmap','osm_deu_line','ego_dp_substation_ehv.sql',' ');
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.9','input','openstreetmap','osm_deu_nodes','ego_dp_substation_ehv.sql',' ');
+SELECT ego_scenario_log('v0.2.10','input','openstreetmap','osm_deu_nodes','ego_dp_substation_ehv.sql',' ');
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.9','input','openstreetmap','osm_deu_rels','ego_dp_substation_ehv.sql',' ');
+SELECT ego_scenario_log('v0.2.10','input','openstreetmap','osm_deu_rels','ego_dp_substation_ehv.sql',' ');
 
 
 --> WAY: Erzeuge einen VIEW aus OSM way substations:
@@ -148,7 +148,7 @@ CREATE MATERIALIZED VIEW model_draft.summary_hoes AS
 CREATE INDEX summary_hoes_gix ON model_draft.summary_hoes USING GIST (polygon);
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.9','input','political_boundary','bkg_vg250_1_sta_union_mview','ego_dp_substation_ehv.sql',' ');
+SELECT ego_scenario_log('v0.2.10','input','political_boundary','bkg_vg250_1_sta_union_mview','ego_dp_substation_ehv.sql',' ');
 
 -- eliminate substation that are not within VG250
 CREATE VIEW model_draft.summary_de_hoes AS
@@ -282,4 +282,4 @@ COMMENT ON TABLE  model_draft.ego_grid_ehv_substation IS
 SELECT obj_description('model_draft.ego_grid_ehv_substation'::regclass)::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.9','output','model_draft','ego_grid_ehv_substation','ego_dp_substation_ehv.sql',' ');
+SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_grid_ehv_substation','ego_dp_substation_ehv.sql',' ');
