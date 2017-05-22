@@ -69,6 +69,19 @@ Group by generation_subtype
 1.204.716
 
 
+-- Plots 
+SELECT
+ state.gen fs_name,
+ sum(res.electrical_capacity) sum_cap,
+ res.generation_type,
+ state.geom
+FROM
+  political_boundary.bkg_vg250_2_lan_mview state,
+  supply.ego_renewable_powerplant res
+Where 
+  ST_Intersects(St_Transform(res.geom,3035),state.geom)
+Group by state.gen,res.generation_type, state.geom
+;
 
 
 Limit 1
