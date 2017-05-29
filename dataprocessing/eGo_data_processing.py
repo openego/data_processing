@@ -101,13 +101,13 @@ def data_processing():
 #	'ego_dp_powerflow_hv_setup.sql',					# Set schema/tables for EHV/HV powerflow calculations up
 #	'ego_dp_powerflow_osmtgmod_to_pypsa.sql',			# Include data from osmTGmod into EHV/HV powerflow schema
 #	'ego_dp_powerflow_electrical_neighbour.sql',		# Create border crossing lines and buses in neighbouring countries
-
-#    	'ego_dp_powerflow_assignment_generator.sql',  		# Assign generators to corresponding substation
+#
+ #   	'ego_dp_powerflow_assignment_generator.sql',  		# Assign generators to corresponding substation
 #	'ego_dp_powerflow_assignment_load.sql',        		# Assign loads to their corresponding substation
 #	'ego_dp_powerflow_grid_NEP2035.sql',					# Copy grid to scenario NEP 2035
-	'ego_dp_powerflow_assignment_generator_nep2035.sql',	# Assign generators from NEP 2035 to corresponding substation
-	'ego_dp_powerflow_assignment_load_nep2035.sql',		# Copy loads from SQ scenario
-	'ego_dp_powerflow_timeseries_generator.sql',			# Transfer renpassG!S results into the corresponding powerflow table
+#	'ego_dp_powerflow_assignment_generator_nep2035.sql',	# Assign generators from NEP 2035 to corresponding substation
+#	'ego_dp_powerflow_assignment_load_nep2035.sql',		# Copy loads from SQ scenario
+#	'ego_dp_powerflow_timeseries_generator.sql',			# Transfer renpassG!S results into the corresponding powerflow table
 	'ego_dp_powerflow_griddistrict_demand.py',			# Demand per MV Griddistrict
 	'ego_dp_powerflow_timeseries_demand.sql',				# Insert demand series into corresponding powerflow table
 	'ego_dp_powerflow_lopf_data.sql',						# Set marginal costs for generators and storages
@@ -137,7 +137,7 @@ def data_processing():
             script_str = open(filename, "rb").read()
 
             # execute desired sql snippet
-            exec(compile(script_str, filename, 'exec'))
+            exec(compile(script_str, filename, 'exec'), globals())
         else:
             raise NameError('{} is neither a python nor a sql script (at least it '
                             'has not the right extension). Please add an extension '

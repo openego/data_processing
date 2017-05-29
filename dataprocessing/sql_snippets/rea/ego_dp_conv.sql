@@ -9,7 +9,7 @@ __author__ 	= "Ludee"
 
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','input','model_draft','ego_supply_conv_powerplant','ego_dp_conv.sql',' ');
+SELECT ego_scenario_log('v0.2.10','input','model_draft','ego_supply_conv_powerplant','ego_dp_conv.sql',' ');
 
 -- la_id
 ALTER TABLE model_draft.ego_supply_conv_powerplant
@@ -31,4 +31,4 @@ UPDATE 	model_draft.ego_supply_conv_powerplant AS t1
 	WHERE  	t1.gid = t2.id;
 	
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_supply_conv_powerplant','ego_dp_conv.sql',' ');
+SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_supply_conv_powerplant','ego_dp_conv.sql',' ');
