@@ -19,12 +19,14 @@ __author__ = "wolfbunke"
 
 -- -- --- -- --- -- -- ---- -- --- -- -- - ---- ---- --- -----
 
-DROP SEQUENCE IF EXISTS	supply.nep_powerplant_seq CASCADE;
-CREATE SEQUENCE supply.nep_powerplant_seq;
+
+--DROP SEQUENCE IF EXISTS	model_draft.nep_supply_conv_powerplant_nep2015_seq CASCADE;
+--CREATE SEQUENCE model_draft.nep_supply_conv_powerplant_nep2015_seq;
 
 
-DROP TABLE IF EXISTS	supply.nep_powerplant CASCADE;
-CREATE TABLE supply.nep_powerplant
+--DROP TABLE IF EXISTS	model_draft.nep_supply_conv_powerplant_nep2015 CASCADE;
+
+CREATE TABLE model_draft.nep_supply_conv_powerplant_nep2015
 (
   bnetza_id character varying,
   tso character varying,
@@ -44,7 +46,7 @@ CREATE TABLE supply.nep_powerplant
   lon double precision,
   location_checked text,
   geom geometry(Point,4326),
-  gid integer NOT NULL DEFAULT nextval('supply.nep_powerplant_seq'::regclass),
+  gid integer NOT NULL DEFAULT nextval('model_draft.nep_supply_conv_powerplant_nep2015_seq'::regclass),
   CONSTRAINT nep_powerplants_pkey PRIMARY KEY (gid)
 );
 
@@ -52,7 +54,7 @@ CREATE TABLE supply.nep_powerplant
 -- Set metadata
 --
 
-COMMENT ON TABLE  supply.nep_powerplant IS
+COMMENT ON TABLE  model_draft.nep_supply_conv_powerplant_nep2015 IS
 '{
 "Name": "NEP 2015 List of Powerplants in Germany",
 "Source": [{
@@ -133,7 +135,7 @@ COMMENT ON TABLE  supply.nep_powerplant IS
                   ],
 "Notes": ["Check licence, meta style V 0.01"],
 "Licence": [{
-            "Name":		"Open Database License (ODbL) v1.0",
+                 "Name":		"Open Database License (ODbL) v1.0",
 	          "URL":		"http://opendatacommons.org/licenses/odbl/1.0/",
 	          "Copyright": 	"ZNES EUF"}],
 "Instructions for proper use": ["..."]            
@@ -142,15 +144,15 @@ COMMENT ON TABLE  supply.nep_powerplant IS
 -- -- --- -- --- -- -- ---- -- --- -- -- - ---- ---- --- -----
 -- check metadata
 
-SELECT obj_description('supply.nep_powerplant'::regclass)::json;
+SELECT obj_description('model_draft.nep_supply_conv_powerplant_nep2015 '::regclass)::json;
 -- -- --- -- --- -- -- ---- -- --- -- -- - ---- ---- --- -----
 
 -- -- --- -- --- -- -- ---- -- --- -- -- - ---- ---- --- -----
 -- Insert data from V1
 
-INSERT INTO   supply.nep_powerplant
+INSERT INTO  model_draft.nep_supply_conv_powerplant_nep2015
 	SELECT *
-	FROM  orig_geo_powerplants.ego_conventional_power_plants_nep2035;
+	FROM   orig_geo_powerplants.nep_2015_powerplants;
 
 -- -- --- -- --- -- -- ---- -- --- -- -- - ---- ---- --- -----
 -- END
