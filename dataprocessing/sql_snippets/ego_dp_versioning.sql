@@ -87,7 +87,7 @@ INSERT INTO grid.ego_dp_lv_griddistrict
 	FROM	model_draft.ego_grid_lv_griddistrict;
 
 INSERT INTO grid.ego_dp_lv_griddistrict
-	SELECT	'v0.2.9',
+	SELECT	'v0.2.10',
 		id,
 		mvlv_subst_id,
 		subst_id,
