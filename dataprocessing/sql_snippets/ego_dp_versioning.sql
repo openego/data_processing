@@ -86,6 +86,46 @@ INSERT INTO grid.ego_dp_lv_griddistrict
 		*
 	FROM	model_draft.ego_grid_lv_griddistrict;
 
+INSERT INTO grid.ego_dp_lv_griddistrict
+	SELECT	'v0.2.9',
+		id,
+		mvlv_subst_id,
+		subst_id,
+		la_id,
+		nn,
+		subst_cnt,
+		zensus_sum,
+		zensus_count,
+		zensus_density,
+		population_density,
+		area_ha,
+		sector_area_residential,
+		sector_area_retail,
+		sector_area_industrial,
+		sector_area_agricultural,
+		sector_area_sum,
+		sector_share_residential,
+		sector_share_retail,
+		sector_share_industrial,
+		sector_share_agricultural,
+		sector_share_sum,
+		sector_count_residential,
+		sector_count_retail,
+		sector_count_industrial,
+		sector_count_agricultural,
+		sector_count_sum,
+		sector_consumption_residential,
+		sector_consumption_retail,
+		sector_consumption_industrial,
+		sector_consumption_agricultural,
+		sector_consumption_sum,
+		sector_peakload_residential, --verdreht
+		sector_peakload_retail,
+		sector_peakload_industrial,
+		sector_peakload_agricultural,
+		geom
+	FROM	model_draft.ego_grid_lv_griddistrict;
+	
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.9','result','grid','ego_dp_lv_griddistrict','ego_dp_versioning.sql','versioning');
 
