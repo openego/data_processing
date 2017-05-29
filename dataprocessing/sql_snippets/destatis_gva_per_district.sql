@@ -20,8 +20,8 @@ __author__ 	= "IlkaCu"
 -- ;
 
 
-CREATE TABLE economic.destatis_gva_per_district AS
-  SELECT * FROM orig_ego_consumption.destatis_gva_per_district; 
+--CREATE TABLE economic.destatis_gva_per_district AS
+--SELECT * FROM orig_ego_consumption.destatis_gva_per_district; 
 
   COMMENT ON TABLE  economic.destatis_gva_per_district IS
 '{
