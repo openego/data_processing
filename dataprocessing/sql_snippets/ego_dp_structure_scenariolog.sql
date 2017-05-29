@@ -47,7 +47,7 @@ COMMENT ON TABLE model_draft.ego_scenario IS '{
 	"reference_date": " ",
 	"sources": [
 		{"name": "eGo dataprocessing", "description": " ",
-		"url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)", "copyright": "© Reiner Lemoine Institut"} ],
+		"url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)", "copyright": "Â© Reiner Lemoine Institut"} ],
 	"spatial": [
 		{"extend": "",
 		"resolution": ""} ],
@@ -57,7 +57,7 @@ COMMENT ON TABLE model_draft.ego_scenario IS '{
 		"version": "1.0",
 		"url": "https://opendatacommons.org/licenses/odbl/1.0/",
 		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
-		"copyright": "© Reiner Lemoine Institut"} ],
+		"copyright": "Â© Reiner Lemoine Institut"} ],
 	"contributors": [
 		{"name": "Ludee", "email": "", "date": "01.10.2016", "comment": "Create table" },
 		{"name": "Ludee", "email": "", "date": "16.11.2016", "comment": "Add metadata" },
@@ -119,7 +119,7 @@ COMMENT ON TABLE model_draft.ego_scenario_log IS '{
 	"language": [ "eng", "ger" ],
 	"reference_date": " ",
 	"sources": [
-		{"name": "eGo dataprocessing", "description": " ", "url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)", "copyright": "© Reiner Lemoine Institut"} ],
+		{"name": "eGo dataprocessing", "description": " ", "url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)", "copyright": "Â© Reiner Lemoine Institut"} ],
 	"spatial": [
 		{"extend": "",
 		"resolution": ""} ],
@@ -129,7 +129,7 @@ COMMENT ON TABLE model_draft.ego_scenario_log IS '{
 		"version": "1.0",
 		"url": "https://opendatacommons.org/licenses/odbl/1.0/",
 		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
-		"copyright": "© Reiner Lemoine Institut"} ],
+		"copyright": "Â© Reiner Lemoine Institut"} ],
 	"contributors": [
 		{"name": "Ludee", "email": "", "date": "01.10.2016", "comment": "Create table" },
 		{"name": "Ludee", "email": "", "date": "12.10.2016", "comment": "Add user_name" },

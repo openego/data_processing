@@ -255,10 +255,10 @@ WHERE  	t1.subst_id = t2.subst_id;
 UPDATE 	model_draft.ego_grid_mv_griddistrict
 SET  	"group" = (SELECT	
 		CASE
-			WHEN	type1 = '1' AND type2 = '0' AND type3 = '1' THEN 'A' -- l‰ndlich
+			WHEN	type1 = '1' AND type2 = '0' AND type3 = '1' THEN 'A' -- l√§ndlich
 			WHEN	type1 = '0' AND type2 = '1' AND type3 = '1' THEN 'B'
 			WHEN	type1 = '1' AND type2 = '0' AND type3 = '0' THEN 'C'
-			WHEN	type1 = '0' AND type2 = '1' AND type3 = '0' THEN 'D' -- st‰dtisch
+			WHEN	type1 = '0' AND type2 = '1' AND type3 = '0' THEN 'D' -- st√§dtisch
 		END);
 
 
@@ -487,7 +487,7 @@ SELECT	'> 500 ha' AS name,
 WHERE	area_ha > '500'; */
 
 /* 
--- Schnittl‰ngen (Umrisse)
+-- Schnittl√§ngen (Umrisse)
 SELECT	'Raw LA' AS name,
 	count(la.geom) AS number,
 	ST_Perimeter(ST_Collect(la.geom))/1000000 AS perimeter_in_tkm 
