@@ -46,8 +46,7 @@ COMMENT ON TABLE model_draft.ego_scenario IS '{
 	"language": [ "eng", "ger" ],
 	"reference_date": " ",
 	"sources": [
-		{"name": "eGo dataprocessing", "description": " ",
-		"url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)", "copyright": "© Reiner Lemoine Institut"} ],
+		{"name": "eGo dataprocessing", "description": " ", "url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)", "copyright": "© Reiner Lemoine Institut"} ],
 	"spatial": [
 		{"extend": "",
 		"resolution": ""} ],
