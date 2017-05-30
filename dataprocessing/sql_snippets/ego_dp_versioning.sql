@@ -81,10 +81,10 @@ SELECT ego_scenario_log('v0.2.10','result','grid','ego_dp_mv_griddistrict','ego_
 /* DELETE FROM grid.ego_dp_lv_griddistrict
 	WHERE	version = 'v0.2.10'; */
 	
-INSERT INTO grid.ego_dp_lv_griddistrict
-	SELECT	'v0.2.10',
-		*
-	FROM	model_draft.ego_grid_lv_griddistrict;
+--INSERT INTO grid.ego_dp_lv_griddistrict
+--	SELECT	'v0.2.10',
+--		*
+--	FROM	model_draft.ego_grid_lv_griddistrict;
 
 INSERT INTO grid.ego_dp_lv_griddistrict
 	SELECT	'v0.2.10',
