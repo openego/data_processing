@@ -4,7 +4,7 @@ Inputs are german administrative borders (boundaries.bkg_vg250)
 Create mviews with transformed CRS (EPSG:3035) and corrected geometries
 Municipalities / Gemeinden are fragmented and cleaned from ringholes (bkg_vg250_6_gem_clean)
 
-__copyright__ 	= "Reiner Lemoine Institut gGmbH"
+__copyright__ 	= "Reiner Lemoine Institut"
 __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
 __url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
 __author__ 	= "Ludee"
@@ -13,7 +13,7 @@ __author__ 	= "Ludee"
 -- 1. Nationalstaat (sta) - country (cntry)
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','input','political_boundary','bkg_vg250_1_sta','ego_dp_structure_boundaries_vg250.sql',' ');
+SELECT ego_scenario_log('v0.2.10','input','political_boundary','bkg_vg250_1_sta','ego_dp_structure_boundaries_vg250.sql',' ');
 
 -- 1. country - mview with tiny buffer because of intersection (in official data)
 DROP MATERIALIZED VIEW IF EXISTS	political_boundary.bkg_vg250_1_sta_mview CASCADE;
@@ -46,7 +46,7 @@ COMMENT ON MATERIALIZED VIEW political_boundary.bkg_vg250_1_sta_mview IS '{
 	"language": [ "eng", "ger" ],
 	"reference_date": "2016-01-01",
 	"sources": [
-		{"name": "Dienstleistungszentrum des Bundes für Geoinformation und Geodäsie - Open Data", "description": ""Dieser Datenbestand steht über Geodatendienste gemäß Geodatenzugangsgesetz (GeoZG) (http://www.geodatenzentrum.de/auftrag/pdf/geodatenzugangsgesetz.pdf) für die kommerzielle und nicht kommerzielle Nutzung geldleistungsfrei zum Download und zur Online-Nutzung zur Verfügung. Die Nutzung der Geodaten und Geodatendienste wird durch die Verordnung zur Festlegung der Nutzungsbestimmungen für die Bereitstellung von Geodaten des Bundes (GeoNutzV) (http://www.geodatenzentrum.de/auftrag/pdf/geonutz.pdf) geregelt. Insbesondere hat jeder Nutzer den Quellenvermerk zu allen Geodaten, Metadaten und Geodatendiensten erkennbar und in optischem Zusammenhang zu platzieren. Veränderungen, Bearbeitungen, neue Gestaltungen oder sonstige Abwandlungen sind mit einem Veränderungshinweis im Quellenvermerk zu versehen. Quellenvermerk und Veränderungshinweis sind wie folgt zu gestalten. Bei der Darstellung auf einer Webseite ist der Quellenvermerk mit der URL http://www.bkg.bund.de zu verlinken. © GeoBasis-DE / BKG <Jahr des letzten Datenbezugs> © GeoBasis-DE / BKG <Jahr des letzten Datenbezugs> (Daten verändert) Beispiel: © GeoBasis-DE / BKG 2013"",
+		{"name": "Dienstleistungszentrum des Bundes für Geoinformation und Geodäsie - Open Data", "description": "Dieser Datenbestand steht über Geodatendienste gemäß Geodatenzugangsgesetz (GeoZG) (http://www.geodatenzentrum.de/auftrag/pdf/geodatenzugangsgesetz.pdf) für die kommerzielle und nicht kommerzielle Nutzung geldleistungsfrei zum Download und zur Online-Nutzung zur Verfügung. Die Nutzung der Geodaten und Geodatendienste wird durch die Verordnung zur Festlegung der Nutzungsbestimmungen für die Bereitstellung von Geodaten des Bundes (GeoNutzV) (http://www.geodatenzentrum.de/auftrag/pdf/geonutz.pdf) geregelt. Insbesondere hat jeder Nutzer den Quellenvermerk zu allen Geodaten, Metadaten und Geodatendiensten erkennbar und in optischem Zusammenhang zu platzieren. Veränderungen, Bearbeitungen, neue Gestaltungen oder sonstige Abwandlungen sind mit einem Veränderungshinweis im Quellenvermerk zu versehen. Quellenvermerk und Veränderungshinweis sind wie folgt zu gestalten. Bei der Darstellung auf einer Webseite ist der Quellenvermerk mit der URL http://www.bkg.bund.de zu verlinken. © GeoBasis-DE / BKG <Jahr des letzten Datenbezugs> © GeoBasis-DE / BKG <Jahr des letzten Datenbezugs> (Daten verändert) Beispiel: © GeoBasis-DE / BKG 2013",
 		"url": "http://www.geodatenzentrum.de/geodaten/gdz_rahmen.gdz_div?gdz_spr=deu&gdz_akt_zeile=5&gdz_anz_zeile=1&gdz_unt_zeile=14&gdz_user_id=0", "license": "Geodatenzugangsgesetz (GeoZG)"},
 		{"name": "BKG - Verwaltungsgebiete 1:250.000 (vg250)", "description": "© GeoBasis-DE / BKG 2016 (Daten verändert)",
 		"url": "http://www.geodatenzentrum.de/", "license": "Geodatenzugangsgesetz (GeoZG)"} ],
@@ -111,7 +111,7 @@ COMMENT ON MATERIALIZED VIEW political_boundary.bkg_vg250_1_sta_mview IS '{
 SELECT obj_description('political_boundary.bkg_vg250_1_sta_mview' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','output','political_boundary','bkg_vg250_1_sta_mview','ego_dp_structure_boundaries_vg250.sql',' ');
+SELECT ego_scenario_log('v0.2.10','output','political_boundary','bkg_vg250_1_sta_mview','ego_dp_structure_boundaries_vg250.sql',' ');
 
 
 -- 1. country - error geom
@@ -176,7 +176,7 @@ COMMENT ON MATERIALIZED VIEW political_boundary.bkg_vg250_1_sta_error_geom_mview
 SELECT obj_description('political_boundary.bkg_vg250_1_sta_error_geom_mview' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','output','political_boundary','bkg_vg250_1_sta_error_geom_mview','ego_dp_structure_boundaries_vg250.sql',' ');
+SELECT ego_scenario_log('v0.2.10','output','political_boundary','bkg_vg250_1_sta_error_geom_mview','ego_dp_structure_boundaries_vg250.sql',' ');
 
 
 -- 1. country - union
@@ -238,7 +238,7 @@ COMMENT ON MATERIALIZED VIEW political_boundary.bkg_vg250_1_sta_union_mview IS '
 SELECT obj_description('political_boundary.bkg_vg250_1_sta_union_mview' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','output','political_boundary','bkg_vg250_1_sta_union_mview','ego_dp_structure_boundaries_vg250.sql',' ');
+SELECT ego_scenario_log('v0.2.10','output','political_boundary','bkg_vg250_1_sta_union_mview','ego_dp_structure_boundaries_vg250.sql',' ');
 
 
 -- 1. state borders - bounding box
@@ -299,13 +299,13 @@ COMMENT ON MATERIALIZED VIEW political_boundary.bkg_vg250_1_sta_bbox_mview IS '{
 SELECT obj_description('political_boundary.bkg_vg250_1_sta_bbox_mview' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','output','political_boundary','bkg_vg250_1_sta_bbox_mview','ego_dp_structure_boundaries_vg250.sql',' ');
+SELECT ego_scenario_log('v0.2.10','output','political_boundary','bkg_vg250_1_sta_bbox_mview','ego_dp_structure_boundaries_vg250.sql',' ');
 
 	
 -- 2. Bundesland (lan) - federal state (fst)
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','input','political_boundary','bkg_vg250_2_lan','ego_dp_structure_boundaries_vg250.sql',' ');
+SELECT ego_scenario_log('v0.2.10','input','political_boundary','bkg_vg250_2_lan','ego_dp_structure_boundaries_vg250.sql',' ');
 
 -- 2. federal state - mview with tiny buffer because of intersection (in official data)
 DROP MATERIALIZED VIEW IF EXISTS	political_boundary.bkg_vg250_2_lan_mview CASCADE;
@@ -369,13 +369,13 @@ COMMENT ON MATERIALIZED VIEW political_boundary.bkg_vg250_2_lan_mview IS '{
 SELECT obj_description('political_boundary.bkg_vg250_2_lan_mview' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','output','political_boundary','bkg_vg250_2_lan_mview','ego_dp_structure_boundaries_vg250.sql',' ');
+SELECT ego_scenario_log('v0.2.10','output','political_boundary','bkg_vg250_2_lan_mview','ego_dp_structure_boundaries_vg250.sql',' ');
 
 
 -- 4. Landkreis (krs) - district (dist)
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','input','political_boundary','bkg_vg250_4_krs','ego_dp_structure_boundaries_vg250.sql',' ');
+SELECT ego_scenario_log('v0.2.10','input','political_boundary','bkg_vg250_4_krs','ego_dp_structure_boundaries_vg250.sql',' ');
 
 -- 4. district - mview 
 DROP MATERIALIZED VIEW IF EXISTS	political_boundary.bkg_vg250_4_krs_mview CASCADE;
@@ -443,7 +443,7 @@ COMMENT ON MATERIALIZED VIEW political_boundary.bkg_vg250_4_krs_mview IS '{
 SELECT obj_description('political_boundary.bkg_vg250_4_krs_mview' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','output','political_boundary','bkg_vg250_4_krs_mview','ego_dp_structure_boundaries_vg250.sql',' ');
+SELECT ego_scenario_log('v0.2.10','output','political_boundary','bkg_vg250_4_krs_mview','ego_dp_structure_boundaries_vg250.sql',' ');
 
 
 -- 6. Gemeinde (gem) - municipality (mun)
@@ -468,7 +468,7 @@ INSERT INTO social.destatis_zensus_population_per_bkg_vg250_6_gem (reference_dat
 	ORDER BY vg.id;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','input','social','destatis_zensus_population_per_ha_mview','ego_dp_structure_boundaries_vg250.sql',' ');
+SELECT ego_scenario_log('v0.2.10','input','social','destatis_zensus_population_per_ha_mview','ego_dp_structure_boundaries_vg250.sql',' ');
 
 -- zensus 2011 population
 UPDATE 	social.destatis_zensus_population_per_bkg_vg250_6_gem AS t1
@@ -503,7 +503,7 @@ UPDATE 	social.destatis_zensus_population_per_bkg_vg250_6_gem AS ce
  */
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','input','political_boundary','bkg_vg250_6_gem','ego_dp_structure_boundaries_vg250.sql',' ');
+SELECT ego_scenario_log('v0.2.10','input','political_boundary','bkg_vg250_6_gem','ego_dp_structure_boundaries_vg250.sql',' ');
 
 -- 6. municipality - mview
 DROP MATERIALIZED VIEW IF EXISTS	political_boundary.bkg_vg250_6_gem_mview CASCADE;
@@ -577,7 +577,7 @@ COMMENT ON MATERIALIZED VIEW political_boundary.bkg_vg250_6_gem_mview IS '{
 SELECT obj_description('political_boundary.bkg_vg250_6_gem_mview' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','output','political_boundary','bkg_vg250_6_gem_mview','ego_dp_structure_boundaries_vg250.sql',' ');
+SELECT ego_scenario_log('v0.2.10','output','political_boundary','bkg_vg250_6_gem_mview','ego_dp_structure_boundaries_vg250.sql',' ');
 
 
 -- 6. municipality - error geom
@@ -642,7 +642,7 @@ COMMENT ON MATERIALIZED VIEW political_boundary.bkg_vg250_6_gem_error_geom_mview
 SELECT obj_description('political_boundary.bkg_vg250_6_gem_error_geom_mview' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','output','political_boundary','bkg_vg250_6_gem_error_geom_mview','ego_dp_structure_boundaries_vg250.sql',' ');
+SELECT ego_scenario_log('v0.2.10','output','political_boundary','bkg_vg250_6_gem_error_geom_mview','ego_dp_structure_boundaries_vg250.sql',' ');
 
 
 -- 6. municipality - dump
@@ -722,7 +722,7 @@ COMMENT ON MATERIALIZED VIEW political_boundary.bkg_vg250_6_gem_dump_mview IS '{
 SELECT obj_description('political_boundary.bkg_vg250_6_gem_dump_mview' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','output','political_boundary','bkg_vg250_6_gem_dump_mview','ego_dp_structure_boundaries_vg250.sql',' ');
+SELECT ego_scenario_log('v0.2.10','output','political_boundary','bkg_vg250_6_gem_dump_mview','ego_dp_structure_boundaries_vg250.sql',' ');
 
 
 -- ego
@@ -839,7 +839,7 @@ COMMENT ON MATERIALIZED VIEW model_draft.ego_political_boundary_bkg_vg250_6_gem_
 SELECT obj_description('model_draft.ego_political_boundary_bkg_vg250_6_gem_hole_mview' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_political_boundary_bkg_vg250_6_gem_hole_mview','ego_dp_structure_boundaries_vg250.sql',' ');
+SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_political_boundary_bkg_vg250_6_gem_hole_mview','ego_dp_structure_boundaries_vg250.sql',' ');
 
 
 -- update holes
@@ -902,7 +902,7 @@ COMMENT ON TABLE model_draft.ego_political_boundary_bkg_vg250_6_gem_clean IS '{
 SELECT obj_description('model_draft.ego_political_boundary_bkg_vg250_6_gem_clean' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_political_boundary_bkg_vg250_6_gem_clean','ego_dp_structure_boundaries_vg250.sql',' ');
+SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_political_boundary_bkg_vg250_6_gem_clean','ego_dp_structure_boundaries_vg250.sql',' ');
 
 
 -- validation
@@ -941,9 +941,9 @@ WHERE	gf='1' OR gf='2';
 ALTER VIEW	political_boundary.bkg_vg250_statistics_view OWNER TO oeuser;
 
 -- metadata
-COMMENT ON MATERIALIZED VIEW political_boundary.bkg_vg250_statistics_view IS '{
+COMMENT ON VIEW political_boundary.bkg_vg250_statistics_view IS '{
 	"comment": "eGoDP - Temporary table",
-	"version": "v0.2.6" }' ;
+	"version": "v0.2.10" }' ;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','output','political_boundary','bkg_vg250_statistics_view','ego_dp_structure_boundaries_vg250.sql',' ');
+SELECT ego_scenario_log('v0.2.10','output','political_boundary','bkg_vg250_statistics_view','ego_dp_structure_boundaries_vg250.sql',' ');

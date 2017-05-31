@@ -1,7 +1,7 @@
 /*
 analyse OSM landuse data
 
-__copyright__ 	= "Reiner Lemoine Institut gGmbH"
+__copyright__ 	= "Reiner Lemoine Institut"
 __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
 __url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
 __author__ 	= "Ludee"
@@ -9,7 +9,7 @@ __author__ 	= "Ludee"
 
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','input','openstreetmap','osm_deu_polygon','ego_dp_structure_osm_landuse.sql',' ');
+SELECT ego_scenario_log('v0.2.10','input','openstreetmap','osm_deu_polygon','ego_dp_structure_osm_landuse.sql',' ');
 
 -- 2016-10-01 openstreetmap
 DROP MATERIALIZED VIEW IF EXISTS	openstreetmap.osm_deu_polygon_landuse_mview CASCADE;
@@ -31,10 +31,10 @@ ALTER TABLE	openstreetmap.osm_deu_polygon_landuse_mview OWNER TO oeuser;
 -- metadata
 COMMENT ON MATERIALIZED VIEW openstreetmap.osm_deu_polygon_landuse_mview IS '{
 	"comment": "eGoDP - Temporary table",
-	"version": "v0.2.6" }' ;
+	"version": "v0.2.10" }' ;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','output','openstreetmap','osm_deu_polygon_landuse_mview','ego_dp_structure_osm_landuse.sql',' ');
+SELECT ego_scenario_log('v0.2.10','output','openstreetmap','osm_deu_polygon_landuse_mview','ego_dp_structure_osm_landuse.sql',' ');
 
 
 /* 

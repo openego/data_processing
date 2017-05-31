@@ -1,5 +1,6 @@
 /*
 Creates border crossing lines and buses for electrical neighbours
+
 __copyright__ 	= "Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems"
 __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
 __url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
@@ -626,7 +627,12 @@ SET phase_shift = 0;
 
 DELETE FROM model_draft.ego_grid_hv_electrical_neighbours_transformer WHERE x IS NULL;
 
-DELETE FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE v_nom != 380 AND bus_id NOT IN (SELECT bus0 FROM model_draft.ego_grid_hv_electrical_neighbours_line );
+DELETE FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE v_nom <> 380 AND bus_id NOT IN (SELECT bus0 FROM model_draft.ego_grid_hv_electrical_neighbours_line );
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_grid_hv_electrical_neighbours_transformer','ego_dp_powerflow_electrical_neighbour.sql',' ');
+SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_grid_hv_electrical_neighbours_bus','ego_dp_powerflow_electrical_neighbour.sql',' ');
+SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_grid_hv_electrical_neighbours_line','ego_dp_powerflow_electrical_neighbour.sql',' ');
 
 
 -- Include border crossing lines, transformer and buses for neighbouring states (electrical neighbours) for Status Quo

@@ -1,0 +1,19 @@
+<NotepadPlus>
+    <Session activeView="0">
+        <mainView activeIndex="11">
+            <File firstVisibleLine="0" xOffset="0" scrollWidth="1107" startPos="0" endPos="0" selMode="0" lang="SQL" encoding="-1" filename="L:\github\openego\data_processing\dataprocessing\sql_snippets\rea\ego_dp_lattice_500m.sql" backupFilePath="" originalFileLastModifTimestamp="1490715556" />
+            <File firstVisibleLine="0" xOffset="0" scrollWidth="1098" startPos="0" endPos="0" selMode="0" lang="SQL" encoding="-1" filename="L:\github\openego\data_processing\dataprocessing\sql_snippets\rea\ego_dp_lattice_50m.sql" backupFilePath="" originalFileLastModifTimestamp="1490715556" />
+            <File firstVisibleLine="0" xOffset="0" scrollWidth="1053" startPos="0" endPos="0" selMode="0" lang="SQL" encoding="-1" filename="L:\github\openego\data_processing\dataprocessing\sql_snippets\rea\ego_dp_rea_wpa_per_mvgd.sql" backupFilePath="" originalFileLastModifTimestamp="1492520163" />
+            <File firstVisibleLine="0" xOffset="0" scrollWidth="1134" startPos="0" endPos="0" selMode="0" lang="SQL" encoding="-1" filename="L:\github\openego\data_processing\dataprocessing\sql_snippets\rea\ego_dp_rea_lattice_per_area_500m.sql" backupFilePath="" originalFileLastModifTimestamp="1490715556" />
+            <File firstVisibleLine="0" xOffset="0" scrollWidth="1125" startPos="0" endPos="0" selMode="0" lang="SQL" encoding="-1" filename="L:\github\openego\data_processing\dataprocessing\sql_snippets\rea\ego_dp_rea_lattice_per_area_50m.sql" backupFilePath="" originalFileLastModifTimestamp="1490715556" />
+            <File firstVisibleLine="0" xOffset="0" scrollWidth="999" startPos="0" endPos="0" selMode="0" lang="SQL" encoding="-1" filename="L:\github\openego\data_processing\dataprocessing\sql_snippets\rea\ego_dp_rea_setup.sql" backupFilePath="" originalFileLastModifTimestamp="1493124323" />
+            <File firstVisibleLine="0" xOffset="0" scrollWidth="1" startPos="0" endPos="0" selMode="0" lang="SQL" encoding="-1" filename="L:\github\openego\data_processing\dataprocessing\sql_snippets\rea\ego_dp_rea_m1.sql" backupFilePath="" originalFileLastModifTimestamp="1492092146" />
+            <File firstVisibleLine="0" xOffset="0" scrollWidth="1" startPos="0" endPos="0" selMode="0" lang="SQL" encoding="-1" filename="L:\github\openego\data_processing\dataprocessing\sql_snippets\rea\ego_dp_rea_m2.sql" backupFilePath="" originalFileLastModifTimestamp="1492092149" />
+            <File firstVisibleLine="0" xOffset="0" scrollWidth="1" startPos="0" endPos="0" selMode="0" lang="SQL" encoding="-1" filename="L:\github\openego\data_processing\dataprocessing\sql_snippets\rea\ego_dp_rea_m3.sql" backupFilePath="" originalFileLastModifTimestamp="1492092149" />
+            <File firstVisibleLine="0" xOffset="0" scrollWidth="1" startPos="0" endPos="0" selMode="0" lang="SQL" encoding="-1" filename="L:\github\openego\data_processing\dataprocessing\sql_snippets\rea\ego_dp_rea_m4.sql" backupFilePath="" originalFileLastModifTimestamp="1492092149" />
+            <File firstVisibleLine="0" xOffset="0" scrollWidth="981" startPos="0" endPos="0" selMode="0" lang="SQL" encoding="-1" filename="L:\github\openego\data_processing\dataprocessing\sql_snippets\rea\ego_dp_rea_m5.sql" backupFilePath="" originalFileLastModifTimestamp="1492092149" />
+            <File firstVisibleLine="0" xOffset="0" scrollWidth="1161" startPos="0" endPos="0" selMode="0" lang="SQL" encoding="-1" filename="L:\github\openego\data_processing\dataprocessing\sql_snippets\rea\ego_dp_rea_results.sql" backupFilePath="" originalFileLastModifTimestamp="1490715556" />
+        </mainView>
+        <subView activeIndex="0" />
+    </Session>
+</NotepadPlus>

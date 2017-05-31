@@ -41,3 +41,8 @@ SELECT 'NEP 2035', a.trafo_id, a.bus0, a.bus1, a.x, a.r, a.g, a.b, a.s_nom, a.s_
 	a.s_nom_max, a.tap_ratio, a.phase_shift, a.capital_cost, a.geom, a.topo
 FROM 	model_draft.ego_grid_pf_hv_transformer a 
 WHERE scn_name= 'Status Quo';
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_grid_pf_hv_bus','ego_dp_powerflow_grid_NEP2035.sql',' ');
+SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_grid_pf_hv_line','ego_dp_powerflow_grid_NEP2035.sql',' ');
+SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_grid_pf_hv_transformer','ego_dp_powerflow_grid_NEP2035.sql',' ');

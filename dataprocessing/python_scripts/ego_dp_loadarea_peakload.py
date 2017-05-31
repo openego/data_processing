@@ -2,7 +2,7 @@
 Calculates peak load per load area
 """
 
-__copyright__ 	= "Reiner Lemoine Institut gGmbH, Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems"
+__copyright__ 	= "Reiner Lemoine Institut, Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems"
 __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
 __url__ 		= "https://github.com/openego/data_processing/blob/master/LICENSE"
 __author__ 		= "gplssm, IlkaCu" 
@@ -128,7 +128,7 @@ if __name__ == '__main__':
                                       columns=columns)
 
     write_ego_scenario_log(conn=conn,
-                           version='v0.2.6',
+                           version='v0.2.10',
                            io='input',
                            schema='model_draft',
                            table=table,
@@ -276,7 +276,7 @@ if __name__ == '__main__':
     metadata.submit_comment(conn, json_str, schema, target_table)
 
     write_ego_scenario_log(conn=conn,
-                           version='v0.2.6',
+                           version='v0.2.10',
                            io='output',
                            schema='model_draft',
                            table=target_table,

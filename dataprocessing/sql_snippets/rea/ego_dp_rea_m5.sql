@@ -15,7 +15,7 @@ There should be no rest.
 */
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','input','model_draft','ego_supply_res_powerplant','ego_dp_rea_m5.sql',' ');
+SELECT ego_scenario_log('v0.2.10','input','model_draft','ego_supply_res_powerplant','ego_dp_rea_m5.sql',' ');
 
 -- MView M5 DEA 
 DROP MATERIALIZED VIEW IF EXISTS 	model_draft.ego_supply_rea_m5_a_mview CASCADE;
@@ -43,7 +43,7 @@ CREATE INDEX ego_supply_rea_m5_a_mview_geom_idx
 ALTER TABLE model_draft.ego_supply_rea_m5_a_mview OWNER TO oeuser;  
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_supply_rea_m5_a_mview','ego_dp_rea_m5.sql',' ');
+SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_supply_rea_m5_a_mview','ego_dp_rea_m5.sql',' ');
 
 
 -- rea_flag M5
@@ -75,7 +75,7 @@ CREATE INDEX ego_supply_rea_m5_dea_temp_geom_idx
 	ON model_draft.ego_supply_rea_m5_dea_temp USING gist (geom);
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','temp','model_draft','ego_supply_rea_m5_dea_temp','ego_dp_rea_m5.sql',' ');
+SELECT ego_scenario_log('v0.2.10','temp','model_draft','ego_supply_rea_m5_dea_temp','ego_dp_rea_m5.sql',' ');
 
 DROP TABLE IF EXISTS 	model_draft.ego_supply_rea_m5_grid_la_temp CASCADE;
 CREATE TABLE 		model_draft.ego_supply_rea_m5_grid_la_temp (
@@ -91,7 +91,7 @@ CREATE INDEX ego_supply_rea_m5_grid_la_temp_geom_idx
 	ON model_draft.ego_supply_rea_m5_grid_la_temp USING gist (geom);
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','temp','model_draft','ego_supply_rea_m5_grid_la_temp','ego_dp_rea_m5.sql',' ');
+SELECT ego_scenario_log('v0.2.10','temp','model_draft','ego_supply_rea_m5_grid_la_temp','ego_dp_rea_m5.sql',' ');
 
 DROP TABLE IF EXISTS 	model_draft.ego_supply_rea_m5_jnt_temp CASCADE;
 CREATE TABLE 		model_draft.ego_supply_rea_m5_jnt_temp (
@@ -105,7 +105,7 @@ CREATE INDEX ego_supply_rea_m5_jnt_temp_geom_idx
 	ON model_draft.ego_supply_rea_m5_jnt_temp USING gist (geom);
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','temp','model_draft','ego_supply_rea_m5_jnt_temp','ego_dp_rea_m5.sql',' ');
+SELECT ego_scenario_log('v0.2.10','temp','model_draft','ego_supply_rea_m5_jnt_temp','ego_dp_rea_m5.sql',' ');
 
 
 -- loop for grid_district
@@ -113,7 +113,7 @@ DO
 $$
 DECLARE	gd integer;
 BEGIN
-	FOR gd IN 1..3606	-- subst_id
+	FOR gd IN 1..3608	-- subst_id
 	LOOP
         EXECUTE '
 		INSERT INTO model_draft.ego_supply_rea_m5_dea_temp
@@ -176,7 +176,7 @@ CREATE INDEX ego_supply_rea_m5_mview_rea_geom_new_idx
 ALTER TABLE model_draft.ego_supply_rea_m5_mview OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_supply_rea_m5_mview','ego_dp_rea_m5.sql',' ');
+SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_supply_rea_m5_mview','ego_dp_rea_m5.sql',' ');
 
 
 -- M5 rest
@@ -201,7 +201,7 @@ CREATE INDEX ego_supply_rea_m5_rest_mview_geom_idx
 ALTER TABLE model_draft.ego_supply_rea_m5_rest_mview OWNER TO oeuser;  
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_supply_rea_m5_rest_mview','ego_dp_rea_m5.sql','Should be 0!');
+SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_supply_rea_m5_rest_mview','ego_dp_rea_m5.sql','Should be 0!');
 
 
 -- update la_id from loadarea
@@ -222,9 +222,9 @@ UPDATE 	model_draft.ego_supply_res_powerplant AS t1
 	SET  	mvlv_subst_id = t2.mvlv_subst_id
 	FROM    (
 		SELECT	a.id AS id,
-			b.mvlv_subst_id_new AS mvlv_subst_id
+			b.mvlv_subst_id AS mvlv_subst_id
 		FROM	model_draft.ego_supply_res_powerplant AS a,
-			temp_lv.ego_grid_lv_griddistrict_pre_nn_collect AS b
+			model_draft.ego_grid_lv_griddistrict AS b
 		WHERE  	b.geom && a.rea_geom_new AND
 			ST_CONTAINS(b.geom,a.rea_geom_new)
 		) AS t2

@@ -2,7 +2,7 @@
 mvlv substation voronoi
 voronoi polygons with eucldean distance / manhattan distance would be better but not available in sql
 
-__copyright__ 	= "Reiner Lemoine Institut gGmbH"
+__copyright__ 	= "Reiner Lemoine Institut"
 __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
 __url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
 __author__ 	= "jong42, Ludee"
@@ -111,7 +111,7 @@ DELETE FROM model_draft.ego_grid_mvlv_substation WHERE is_dummy = TRUE;
 
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','temp','model_draft','ego_grid_mvlv_substation_voronoi','ego_dp_lv_substation_voronoi.sql',' ');
+SELECT ego_scenario_log('v0.2.10','temp','model_draft','ego_grid_mvlv_substation_voronoi','ego_dp_lv_substation_voronoi.sql',' ');
 
 
 
@@ -210,10 +210,10 @@ CREATE INDEX	ego_grid_mvlv_substation_voronoi_geom_idx
 ALTER TABLE	model_draft.ego_grid_mvlv_substation_voronoi OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','input','model_draft','ego_grid_mvlv_substation','ego_dp_lv_griddistrict.sql',' ');
+SELECT ego_scenario_log('v0.2.10','input','model_draft','ego_grid_mvlv_substation','ego_dp_lv_griddistrict.sql',' ');
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','input','model_draft','ego_grid_hvmv_substation_dummy','ego_dp_lv_griddistrict.sql',' ');
+SELECT ego_scenario_log('v0.2.10','input','model_draft','ego_grid_hvmv_substation_dummy','ego_dp_lv_griddistrict.sql',' ');
 
 -- loop over mv-griddistricts
 DO
@@ -385,7 +385,7 @@ COMMENT ON TABLE model_draft.ego_grid_mvlv_substation_voronoi IS '{
 SELECT obj_description('model_draft.ego_grid_mvlv_substation_voronoi' ::regclass) ::json;
 	
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_grid_mvlv_substation_voronoi','ego_dp_lv_griddistrict.sql',' ');
+SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_grid_mvlv_substation_voronoi','ego_dp_lv_griddistrict.sql',' ');
 
  */
 

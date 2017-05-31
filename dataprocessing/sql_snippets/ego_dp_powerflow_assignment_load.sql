@@ -25,7 +25,7 @@ DELETE FROM model_draft.ego_demand_loads;
 
 INSERT INTO model_draft.ego_demand_loads (ssc_id, geom) 
 	SELECT id, ST_Multi(geom)
-	FROM model_draft.ego_demand_per_load_area; 
+	FROM model_draft.ego_demand_loadarea; 
 
 INSERT INTO model_draft.ego_demand_loads (lsc_id, geom) 
 	SELECT polygon_id, geom
@@ -108,15 +108,13 @@ ALTER TABLE model_draft.ego_demand_pf_load_single
 -----------
 
 
--- Add un_id for small scale consumer (ssc) 
-
-UPDATE model_draft.ego_demand_per_load_area a
+-- Add un_id for small scale consumer (ssc) -- WARNING: THIS IS A VIEW AND NOT loadarea @ILKA
+UPDATE model_draft.ego_demand_loadarea a
 	SET un_id = b.un_id 
 	FROM model_draft.ego_demand_loads b
 	WHERE a.id = b.ssc_id; 
 
 -- Add un_id for large scale consumer (lsc)
-
 UPDATE model_draft.ego_demand_hv_largescaleconsumer a
 	SET un_id = b.un_id 
 	FROM model_draft.ego_demand_loads b
@@ -131,7 +129,7 @@ UPDATE model_draft.ego_demand_hv_largescaleconsumer a
 
 INSERT INTO model_draft.ego_demand_pf_load_single (load_id, bus, e_annual)
 	SELECT un_id, otg_id, (sector_consumption_residential+sector_consumption_retail+sector_consumption_industrial+sector_consumption_agricultural)
-	FROM model_draft.ego_demand_per_load_area; 
+	FROM model_draft.ego_demand_loadarea; 
 
 -- Add data for large scale consumer to pf_load_single 
 
@@ -194,4 +192,4 @@ WHERE a.bus IS NOT NULL
 GROUP BY a.bus;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_grid_pf_hv_load','ego_dp_powerflow_assignment_load.sql',' ');
+SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_grid_pf_hv_load','ego_dp_powerflow_assignment_load.sql',' ');

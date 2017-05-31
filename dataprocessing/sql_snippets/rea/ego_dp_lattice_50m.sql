@@ -1,5 +1,5 @@
 /*
-lattice (regular point grid) with 500m
+lattice (regular point grid) with 50m
 lattice on bbox of Germany
 
 __copyright__ 	= "Reiner Lemoine Institut"
@@ -8,49 +8,49 @@ __url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
 __author__ 	= "Ludee"
 */
 
--- table for lattice 500m
-DROP TABLE IF EXISTS  	model_draft.ego_lattice_500m CASCADE;
-CREATE TABLE         	model_draft.ego_lattice_500m (
+-- table for lattice 50m
+DROP TABLE IF EXISTS  	model_draft.ego_lattice_50m CASCADE;
+CREATE TABLE         	model_draft.ego_lattice_50m (
 		id SERIAL NOT NULL,
 		subst_id integer,
 		area_type text,
 		geom_box geometry(Polygon,3035),
 		geom geometry(Point,3035),
-CONSTRAINT 	ego_lattice_500m_pkey PRIMARY KEY (id));
+CONSTRAINT 	ego_lattice_50m_pkey PRIMARY KEY (id));
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','input','political_boundary','bkg_vg250_1_sta_union_mview','ego_dp_lattice_500m.sql',' ');
+SELECT ego_scenario_log('v0.2.10','input','political_boundary','bkg_vg250_1_sta_union_mview','ego_dp_lattice_50m.sql',' ');
 
--- lattice on bbox of Germany with 500m
-INSERT INTO     model_draft.ego_lattice_500m (geom_box)
-	SELECT 	ST_SETSRID(ST_CreateFishnet(
-			ROUND((ST_ymax(box2d(box.geom)) - ST_ymin(box2d(box.geom))) /500)::integer,
-			ROUND((ST_xmax(box2d(box.geom)) - ST_xmin(box2d(box.geom))) /500)::integer,
-			500,
-			500,
-			ST_xmin (box2d(box.geom)),
-			ST_ymin (box2d(box.geom))
+-- insert lattice
+INSERT INTO     model_draft.ego_lattice_50m (geom_box)
+	SELECT 	ST_SETSRID(ST_CREATEFISHNET(
+			ROUND((ST_ymax(box2d(geom)) - ST_ymin(box2d(geom))) /50)::integer,
+			ROUND((ST_xmax(box2d(geom)) - ST_xmin(box2d(geom))) /50)::integer,
+			50,
+			50,
+			ST_xmin (box2d(geom)),
+			ST_ymin (box2d(geom))
 		),3035)::geometry(POLYGON,3035) AS geom
-	FROM political_boundary.bkg_vg250_1_sta_union_mview AS box ;
+	FROM political_boundary.bkg_vg250_1_sta_union_mview;
 
 -- index gist (geom_box)
-CREATE INDEX 	ego_lattice_500m_geom_box_idx
-	ON 	model_draft.ego_lattice_500m USING gist (geom_box);
+CREATE INDEX 	ego_lattice_50m_geom_box_idx
+	ON 	model_draft.ego_lattice_50m USING gist (geom_box);
 
 -- centroid
-UPDATE 	model_draft.ego_lattice_500m
+UPDATE 	model_draft.ego_lattice_50m
 	SET	geom = ST_CENTROID(geom_box);
 
 -- index gist (geom)
-CREATE INDEX 	ego_lattice_500m_geom_idx
-	ON 	model_draft.ego_lattice_500m USING gist (geom);	
+CREATE INDEX 	ego_lattice_50m_geom_idx
+	ON 	model_draft.ego_lattice_50m USING gist (geom);
 
 -- grant (oeuser)
-ALTER TABLE	model_draft.ego_lattice_500m OWNER TO oeuser;
+ALTER TABLE	model_draft.ego_lattice_50m OWNER TO oeuser;
 
 -- metadata
-COMMENT ON TABLE model_draft.ego_lattice_500m IS '{
-	"title": "eGoDP - lattice on bbox of Germany with 500m",
+COMMENT ON TABLE model_draft.ego_lattice_50m IS '{
+	"title": "eGoDP - lattice on loadarea with 50m",
 	"description": "lattice (regular point grid)",
 	"language": [ "eng" ],
 	"reference_date": "",
@@ -58,7 +58,7 @@ COMMENT ON TABLE model_draft.ego_lattice_500m IS '{
 		{"name": "political_boundary.bkg_vg250_1_sta_union_mview","description": "","url": ""} ],
 	"spatial": [
 		{"extend": "Germany",
-		"resolution": "500m"} ],
+		"resolution": "50m"} ],
 	"license": [
 		{"id": "tba",
 		"name": "tba",
@@ -85,7 +85,7 @@ COMMENT ON TABLE model_draft.ego_lattice_500m IS '{
 		"meta_version": "1.0"}] }';
 
 -- select description
-SELECT obj_description('model_draft.ego_lattice_500m' ::regclass) ::json;
+SELECT obj_description('model_draft.ego_lattice_50m' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_lattice_500m','ego_dp_lattice_500m.sql',' ');
+SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_lattice_50m','ego_dp_lattice_50m.sql',' ');

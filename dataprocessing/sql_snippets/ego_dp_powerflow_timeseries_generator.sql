@@ -4,7 +4,7 @@ Quick workaround to transfer renpassG!S results into the corresponding powerflow
 __copyright__ 	= "Europa Universitaet Flensburg, Centre for Sustainable Energy Systems"
 __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
 __url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
-__author__ 	= "s3pp"
+__author__ 	= "wolfbunke"
 
 TODO: storage in storage_pqset #1069
 */
@@ -23,6 +23,7 @@ FROM
 	sum(p_nom) AS p_nom
 	FROM model_draft.ego_supply_pf_generator_single
 	WHERE scn_name = 'Status Quo'
+	AND aggr_id IS NOT NULL
 	GROUP BY aggr_id, source) SQ;
 
 -- map renpassG!S power sources to pf generators, aggr on fuel types, neglect efficiency classes
@@ -92,6 +93,7 @@ FROM
 	sum(p_nom) AS p_nom
 	FROM model_draft.ego_supply_pf_generator_single
 	WHERE scn_name = 'NEP 2035'
+	AND aggr_id IS NOT NULL
 	GROUP BY aggr_id, source) SQ;
 
 -- map renpassG!S power sources to pf generators, aggr on fuel types, neglect efficiency classes
@@ -190,7 +192,7 @@ INSERT into model_draft.ego_grid_pf_hv_generator
 		WHERE SQ.v_nom = SQ.max_v_nom
 		) B
 		ON (substring(A.source, 1, 2) = B.cntr_id)
-	WHERE substring(A.source, 1, 2) != 'DE'
+	WHERE substring(A.source, 1, 2) <> 'DE'
 	AND A.nominal_value IS not NULL
 	AND A.nominal_value[1] > 0.001
 	AND A.source not LIKE '%%powerline%%'
@@ -237,7 +239,7 @@ INSERT into model_draft.ego_grid_pf_hv_generator
 		WHERE SQ.v_nom = SQ.max_v_nom
 		) B
 		ON (substring(A.source, 1, 2) = B.cntr_id)
-	WHERE substring(A.source, 1, 2) != 'DE'
+	WHERE substring(A.source, 1, 2) <> 'DE'
 	AND A.nominal_value IS not NULL
 	AND A.nominal_value[1] > 0.001
 	AND A.source not LIKE '%%powerline%%'
@@ -280,7 +282,7 @@ INSERT into model_draft.ego_grid_pf_hv_generator
 		WHERE SQ.v_nom = SQ.max_v_nom
 		) B
 		ON (substring(A.source, 1, 2) = B.cntr_id)
-	WHERE substring(A.source, 1, 2) != 'DE'
+	WHERE substring(A.source, 1, 2) <> 'DE'
 	AND A.nominal_value[1] > 0.001
 	AND A.scenario_id = 37;
 
@@ -320,7 +322,7 @@ INSERT into model_draft.ego_grid_pf_hv_generator
 		WHERE SQ.v_nom = SQ.max_v_nom
 		) B
 		ON (substring(A.source, 1, 2) = B.cntr_id)
-	WHERE substring(A.source, 1, 2) != 'DE'
+	WHERE substring(A.source, 1, 2) <> 'DE'
 	AND A.nominal_value[1] > 0.001
 	AND A.scenario_id = 38;
 
@@ -520,4 +522,4 @@ INSERT INTO model_draft.ego_grid_pf_hv_load_pq_set (scn_name, load_id, temp_id, 
 */
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.6','output','model_draft','ego_grid_pf_hv_generator_pq_set','ego_dp_powerflow_timeseries_generator.sql',' ');
+SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_grid_pf_hv_generator_pq_set','ego_dp_powerflow_timeseries_generator.sql',' ');
