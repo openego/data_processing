@@ -11,6 +11,8 @@
 /ego_deu_loads_per_grid_district/2016-04-26_ego_deu_mv_loads.pdf
 /data_processing.egg-info/*
 /dataprocessing.egg-info/
+/calc_geo_powerplants/renewable_energy_allocation_all_voltage_level/ego_allocation_res_scenario.odp
+/calc_geo_powerplants/renewable_energy_allocation_all_voltage_level/todo_RES_allo.txt
 /calc_geo_powerplants/Comments_res_scenario.txt
 gurobi.log
 *.pyc

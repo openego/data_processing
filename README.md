@@ -1,5 +1,11 @@
-# data_processing
+# eGo dataprocessing
 (geo)data processing, database setup, data validation
+
+# Copyleft
+
+Code licensed under "GNU Affero General Public License Version 3 (AGPL-3.0)"
+It is a collaborative work with several copyright owner:
+Cite as "eGo dataprocessing © Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems © Europa-Universität Flensburg, Centre for Sustainable Energy Systems © Reiner Lemoine Institut © NEXT ENERGY"
 
 ## Installation
 

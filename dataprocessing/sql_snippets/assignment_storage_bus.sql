@@ -151,7 +151,7 @@ INSERT INTO model_draft.ego_supply_pf_storage_single (scn_name, storage_id)
 	FROM model_draft.ego_supply_generator
 	WHERE conv_id IN 
 		(SELECT a.gid 
-		  FROM supply.ego_conv_powerplant a
+		  FROM model_draft.ego_supply_conv_powerplant a
 		  WHERE a.fuel= 'pumped_storage'
 		); -- only (pumped) storage units are selected and written into pf_storage_single 
 
@@ -165,10 +165,10 @@ UPDATE model_draft.ego_supply_pf_storage_single a
 		FROM 
 			(SELECT c.source_id as source, d.fuel as fuel
 			FROM 	model_draft.ego_grid_pf_hv_source c, 
-				supply.ego_conv_powerplant d 
+				model_draft.ego_supply_conv_powerplant d 
 			WHERE	d.fuel = c.name) 
 			AS 	result,		
-			supply.ego_conv_powerplant b
+			model_draft.ego_supply_conv_powerplant b
 WHERE a.storage_id = b.un_id and result.fuel = 'pumped_storage' AND result.fuel = b.fuel;
 
 DELETE FROM model_draft.ego_supply_pf_storage_single WHERE p_nom IS NULL; -- Delete those PS units without an entry on the installed capacity
