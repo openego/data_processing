@@ -24,7 +24,8 @@ when 5 THEN (4.1832 + 0.5)  -- uranium / uranium
 when 6 THEN (20.0586 + 3.9) -- biomass / biomass
 when 7 THEN (30.3012 + 2.0) -- eeg_gas / gas
 when 8 THEN (10.9541 + 4.0) -- coal / hard_coal
-ELSE 0                      -- run_of_river/reservoir/pumped_storage/solar/wind/geothermal/other_non_renewable
+when 15 THEN (39.5156 + 1.5) -- other_non_renewable / other_non_renewable -- assumption:same price as oil!
+ELSE 0                      -- run_of_river/reservoir/pumped_storage/solar/wind/geothermal
 END)
 where scn_name = 'Status Quo';
 
@@ -40,7 +41,8 @@ when 5 THEN (4.9781 + 0.5)  -- uranium / uranium
 when 6 THEN (27.5112 + 3.9) -- biomass / biomass
 when 7 THEN (39.9344 + 2.0) -- eeg_gas / gas
 when 8 THEN (20.7914 + 4.0) -- coal / hard_coal
-ELSE 0                      -- run_of_river/reservoir/pumped_storage/solar/wind/geothermal/other_non_renewable
+when 15 THEN (39.5156 + 1.5) -- other_non_renewable / other_non_renewable -- assumption:same price as oil!
+ELSE 0                      -- run_of_river/reservoir/pumped_storage/solar/wind/geothermal
 END)
 where scn_name = 'NEP 2035';
 
