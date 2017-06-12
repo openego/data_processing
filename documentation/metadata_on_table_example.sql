@@ -33,7 +33,7 @@ COMMENT ON TABLE model_draft.test_table IS '{
 		{"name": "eGo dataprocessing", "description": " ", "url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)", "copyright": "© Reiner Lemoine Institut"},
 		{"name": " ", "description": " ", "url": " ", "license": " ", "copyright": " "} ],
 	"spatial": [
-		{"extend": "europe",
+		{"extent": "europe",
 		"resolution": "100m"} ],
 	"temporal": [
 		{"start": "2017-01-01",
