@@ -11,7 +11,8 @@ __contains__	= "http://stackoverflow.com/questions/383692/what-is-json-and-why-w
 
 Additional information:
 - Dates must follow the ISO8601 (JJJJ-MM-TT)
-- No space between Numbers and units (100m)
+- Use a space between Numbers and units (100 m)
+- If not applicable use "none"
 */
 
 -- test table
@@ -34,7 +35,7 @@ COMMENT ON TABLE model_draft.test_table IS '{
 		{"name": " ", "description": " ", "url": " ", "license": " ", "copyright": " "} ],
 	"spatial": [
 		{"extent": "europe",
-		"resolution": "100m"} ],
+		"resolution": "100 m"} ],
 	"temporal": [
 		{"start": "2017-01-01",
 		"end": "2017-12-31",
@@ -60,8 +61,8 @@ COMMENT ON TABLE model_draft.test_table IS '{
 			{"name": "id", "description": "Unique identifier", "unit": "" },
 			{"name": "year", "description": "Reference year", "unit": "" },
 			{"name": "value", "description": "Example value", "unit": "MW" },
-			{"name": "geom", "description": "Geometry", "unit": "" } ],
-		"metadata_version": "1.3" } ] }';
+			{"name": "geom", "description": "Geometry", "unit": "" }] }],
+	"metadata_version": "1.3"}';
 
 -- select description
 SELECT obj_description('model_draft.test_table' ::regclass) ::json;
