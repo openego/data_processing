@@ -143,7 +143,12 @@ ALTER TABLE model_draft.ego_supply_conv_powerplant
 UPDATE model_draft.ego_supply_conv_powerplant a
 	SET 	otg_id = b.otg_id 
 	FROM 	model_draft.ego_grid_hvmv_substation b
-	WHERE 	a.subst_id = b.subst_id;
+	WHERE 	a.subst_id = b.subst_id AND voltage_level > 2;
+	
+UPDATE model_draft.ego_supply_conv_powerplant a
+	SET 	otg_id = b.otg_id 
+	FROM 	model_draft.ego_grid_ehv_substation b
+	WHERE 	a.subst_id = b.subst_id AND voltage_level < 3;
 	
 
 -- Update un_id from generators_total  
@@ -309,7 +314,12 @@ UPDATE model_draft.ego_supply_res_powerplant a
 UPDATE model_draft.ego_supply_res_powerplant a
 	SET 	otg_id =b.otg_id 
 	FROM 	model_draft.ego_grid_hvmv_substation b
-	WHERE 	a.subst_id = b.subst_id; 
+	WHERE 	a.subst_id = b.subst_id AND voltage_level > 2;
+	
+UPDATE model_draft.ego_supply_res_powerplant a
+	SET 	otg_id = b.otg_id 
+	FROM 	model_draft.ego_grid_ehv_substation b
+	WHERE 	a.subst_id = b.subst_id AND voltage_level < 3;
 	
 -- Update otg_id of offshore windturbines manually 
 
