@@ -83,7 +83,7 @@ UPDATE model_draft.ego_supply_conv_powerplant_2035 a
 	
 UPDATE model_draft.ego_supply_conv_powerplant_2035 a
 	SET 	otg_id = b.otg_id 
-	FROM 	model_draft.ego_grid_ehv_substation b
+	FROM 	model_draft.ego_ehv_substation b
 	WHERE a.subst_id = b.subst_id AND voltage_level < 3;
 
  
@@ -148,7 +148,7 @@ UPDATE model_draft.ego_supply_res_powerplant_2035 a
 	
 UPDATE model_draft.ego_supply_res_powerplant_2035 a
 	SET 	otg_id = b.otg_id 
-	FROM 	model_draft.ego_grid_ehv_substation b
+	FROM 	model_draft.ego_ehv_substation b
 	WHERE a.subst_id = b.subst_id AND voltage_level < 3;
 
 
