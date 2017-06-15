@@ -74,10 +74,7 @@ FROM (
 	GROUP BY T2.generator_id
 ) T3 WHERE T3.generator_id = Y.generator_id;
 
-
--- set storage parameters to every node with p_nom_extendable as true
--- by Lukas
-
+-- Insert Battery storages to all substations (Status Quo)
 INSERT INTO model_draft.ego_grid_pf_hv_storage
 (scn_name,
   storage_id,
@@ -105,7 +102,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_storage
 SELECT 
   'Status Quo',
   nextval('orig_geo_powerplants.pf_storage_single_aggr_id') as aggr_id,
-  model_draft.ego_grid_pf_hv_bus.bus_id,  -- assign one storage to each substation
+  model_draft.ego_grid_hvmv_substation.otg_id,  -- assign storage to substation
   'flexible', 	-- set storage to be flexible
   'PQ',  -- PQ control
   0,  -- initial power of storage is 0
@@ -125,9 +122,9 @@ SELECT
   1, -- no losses for storing
   1, -- no losses for dispatch
   0 -- no standing losses
-FROM model_draft.ego_grid_pf_hv_bus
-WHERE scn_name = 'Status Quo';
+FROM model_draft.ego_grid_hvmv_substation;
 
+-- Insert Hydrogen storages to substations with potential (NEP 2035)
 INSERT INTO model_draft.ego_grid_pf_hv_storage
 (scn_name,
   storage_id,
@@ -155,7 +152,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_storage
 SELECT 
   'NEP 2035',
   nextval('orig_geo_powerplants.pf_storage_single_aggr_id') as aggr_id,
-  model_draft.ego_grid_pf_hv_bus.bus_id,  -- assign one storage to each substation
+  model_draft.ego_grid_hvmv_substation.otg_id,  -- assign storage to substation
   'flexible', 	-- set storage to be flexible
   'PQ',  -- PQ control
   0,  -- initial power of storage is 0
@@ -175,8 +172,117 @@ SELECT
   1, -- no losses for storing
   1, -- no losses for dispatch
   0 -- no standing losses
-FROM model_draft.ego_grid_pf_hv_bus
-WHERE scn_name = 'NEP 2035';
+FROM model_draft.ego_grid_hvmv_substation;
+
+-- Insert Hydrogen storages to substations with potential (Status Quo)
+INSERT INTO model_draft.ego_grid_pf_hv_storage
+(scn_name,
+  storage_id,
+  bus,
+  dispatch, 
+  control, 
+  p_nom, 
+  p_nom_extendable,
+  p_nom_min,
+  p_nom_max, 
+  p_min_pu_fixed, 
+  p_max_pu_fixed,
+  sign, 
+  source,
+  marginal_cost, 
+  capital_cost, 
+  efficiency,
+  soc_initial, 
+  soc_cyclic, 
+  max_hours,
+  efficiency_store, 
+  efficiency_dispatch, 
+  standing_loss 
+)
+SELECT 
+  'Status Quo',
+  nextval('orig_geo_powerplants.pf_storage_single_aggr_id') as aggr_id,
+  model_draft.ego_grid_hvmv_substation.otg_id,  -- assign storage to substation
+  'flexible', 	-- set storage to be flexible
+  'PQ',  -- PQ control
+  0,  -- initial power of storage is 0
+  false, -- storage is set to extendable in appl.py
+  0, -- there is no lower limit to storage power 
+  1000000, -- inf could not be defined, thus very high number
+  -1, -- default
+  1, -- default
+  1, -- default
+  11, -- source is for now the one of pumped_storage
+  0.01, -- marginal costs are set low in order to dispatch after RES and before conv. PP
+  94776, -- set according to Acatech2015 for Hydrogen. Annual cost method based on investment costs per MW. Is reduced to size of snapshots if extendable storage shall be used.
+  0.2531, -- efficiency according to Acatech2015
+  0, -- initial storage level is 0
+  false, -- cyclic state of charge is false
+  168, -- set to 168, to represent weekly storage operation  
+  1, -- no losses for storing
+  1, -- no losses for dispatch
+  0 -- no standing losses
+FROM model_draft.ego_grid_hvmv_substation
+WHERE model_draft.ego_grid_hvmv_substation.subst_id IN (
+            SELECT model_draft.ego_grid_hvmv_substation.subst_id
+				FROM model_draft.ego_grid_hvmv_substation, model_draft.ego_storage_h2_areas_de as salt
+				WHERE salt.geom && model_draft.ego_grid_hvmv_substation.point
+				AND ST_CONTAINS(salt.geom,model_draft.ego_grid_hvmv_substation.point));
+				
+-- Insert Hydrogen storages to substations with potential (NEP 2035)
+INSERT INTO model_draft.ego_grid_pf_hv_storage
+(scn_name,
+  storage_id,
+  bus,
+  dispatch, 
+  control, 
+  p_nom, 
+  p_nom_extendable,
+  p_nom_min,
+  p_nom_max, 
+  p_min_pu_fixed, 
+  p_max_pu_fixed,
+  sign, 
+  source,
+  marginal_cost, 
+  capital_cost, 
+  efficiency,
+  soc_initial, 
+  soc_cyclic, 
+  max_hours,
+  efficiency_store, 
+  efficiency_dispatch, 
+  standing_loss 
+)
+SELECT 
+  'NEP 2035',
+  nextval('orig_geo_powerplants.pf_storage_single_aggr_id') as aggr_id,
+  model_draft.ego_grid_hvmv_substation.otg_id,  -- assign storage to substation
+  'flexible', 	-- set storage to be flexible
+  'PQ',  -- PQ control
+  0,  -- initial power of storage is 0
+  false, -- storage is set to extendable in appl.py
+  0, -- there is no lower limit to storage power 
+  1000000, -- inf could not be defined, thus very high number
+  -1, -- default
+  1, -- default
+  1, -- default
+  11, -- source is for now the one of pumped_storage
+  0.01, -- marginal costs are set low in order to dispatch after RES and before conv. PP
+  65402, -- set according to Acatech2015 for Hydrogen (reference year is 2023). Annual cost method based on investment costs per MW. Is reduced to size of snapshots if extendable storage shall be used.
+  0.3081, -- efficiency according to Acatech2015
+  0, -- initial storage level is 0
+  false, -- cyclic state of charge is false
+  168, -- set to 168, to represent weekly storage operation  
+  1, -- no losses for storing
+  1, -- no losses for dispatch
+  0 -- no standing losses
+FROM model_draft.ego_grid_hvmv_substation
+WHERE model_draft.ego_grid_hvmv_substation.subst_id IN (
+            SELECT model_draft.ego_grid_hvmv_substation.subst_id
+				FROM model_draft.ego_grid_hvmv_substation, model_draft.ego_storage_h2_areas_de as salt
+				WHERE salt.geom && model_draft.ego_grid_hvmv_substation.point
+				AND ST_CONTAINS(salt.geom,model_draft.ego_grid_hvmv_substation.point));
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_grid_pf_hv_generator_pq_set','ego_dp_powerflow_lopf_data.sql',' ');
