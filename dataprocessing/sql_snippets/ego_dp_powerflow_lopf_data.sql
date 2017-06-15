@@ -283,6 +283,9 @@ WHERE model_draft.ego_grid_hvmv_substation.subst_id IN (
 				FROM model_draft.ego_grid_hvmv_substation, model_draft.ego_storage_h2_areas_de as salt
 				WHERE salt.geom && model_draft.ego_grid_hvmv_substation.point
 				AND ST_CONTAINS(salt.geom,model_draft.ego_grid_hvmv_substation.point));
+				
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_grid_pf_hv_storage','ego_dp_powerflow_lopf_data.sql',' ');				
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_grid_pf_hv_generator_pq_set','ego_dp_powerflow_lopf_data.sql',' ');
