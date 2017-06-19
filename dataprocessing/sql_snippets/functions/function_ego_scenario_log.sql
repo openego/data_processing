@@ -42,3 +42,8 @@ ALTER FUNCTION		ego_scenario_log(text,text,text,text,text,text) OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('0','input','model_draft','ego_scenario_log','function_ego_scenario_log.sql','Function test');
+
+
+/* -- rename column name "metadata" to "meta_data" because of SQLA error (2017-06-19 Ludee)
+ALTER TABLE model_draft.ego_scenario_log
+	RENAME COLUMN metadata TO meta_data; */
