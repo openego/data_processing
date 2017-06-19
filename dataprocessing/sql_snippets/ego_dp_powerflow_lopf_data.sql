@@ -117,13 +117,13 @@ SELECT
   11, -- source is for now the one of pumped_storage
   0.01, -- marginal costs are set low in order to dispatch after RES and before conv. PP
   229357, -- set according to Acatech2015 for Lithium-Ion. Annual cost method based on investment costs per MW. Must be reduced to size of snapshots if extendable storage shall be used.
-  0.855, -- efficiency according to Acatech2015
+  1, -- efficiency is set below 
   0, -- initial storage level is 0
   false, -- cyclic state of charge is false
   6, -- set to 6, to represent daily storage operation  
-  1, -- no losses for storing
-  1, -- no losses for dispatch
-  0 -- no standing losses
+  0.9247, -- efficiency according to Acatech2015
+  0.9247, -- efficiency according to Acatech2015
+  0.00972 -- standing losses according to Acatech2015
 FROM model_draft.ego_grid_hvmv_substation;
 
 -- Insert battery storages to all substations (NEP 2035)
@@ -167,13 +167,13 @@ SELECT
   11, -- source is for now the one of pumped_storage
   0.01, -- marginal costs are set low in order to dispatch after RES and before conv. PP
   65822, -- set according to Acatech2015 for Lithium-Ion (base year is 2023, not 2035!). Annual cost method based on investment costs per MW. Must be reduced to size of snapshots if extendable storage shall be used.
-  0.87, -- efficiency according to Acatech2015
+  1, -- efficiency is set below
   0, -- initial storage level is 0
   false, -- cyclic state of charge is false
   6, -- set to 6, to represent daily storage operation  
-  1, -- no losses for storing
-  1, -- no losses for dispatch
-  0 -- no standing losses
+  0.9327, -- efficiency according to Acatech2015
+  0.9327, -- efficiency according to Acatech2015
+  0.00694 -- standing losses according to Acatech2015
 FROM model_draft.ego_grid_hvmv_substation;
 
 
@@ -218,13 +218,13 @@ FROM model_draft.ego_grid_hvmv_substation;
 --  11, -- source is for now the one of pumped_storage
 --  0.01, -- marginal costs are set low in order to dispatch after RES and before conv. PP
 --  44546, -- set according to Acatech2015 for Lithium-Ion (base year is 2023, not 2035!). Annual cost method based on investment costs per MW. Must be reduced to size of snapshots if extendable storage shall be used.
---  0.9, -- efficiency according to Acatech2015
+--  1, -- efficiency is set below
 -- 0, -- initial storage level is 0
 --  false, -- cyclic state of charge is false
 --  6, -- set to 6, to represent daily storage operation  
---  1, -- no losses for storing
---  1, -- no losses for dispatch
---  0 -- no standing losses
+--  0.9487, -- efficiency according to Acatech2015
+--  0.9487, -- efficiency according to Acatech2015
+--  0.00417 -- standing losses according to Acatech2015
 --FROM model_draft.ego_grid_hvmv_substation;
 
 -- Insert Hydrogen storages to substations with potential (Status Quo)
@@ -268,13 +268,13 @@ SELECT
   11, -- source is for now the one of pumped_storage
   0.01, -- marginal costs are set low in order to dispatch after RES and before conv. PP
   94776, -- set according to Acatech2015 for Hydrogen. Annual cost method based on investment costs per MW. Is reduced to size of snapshots if extendable storage shall be used.
-  0.2531, -- efficiency according to Acatech2015
+  1, -- efficiency is set below
   0, -- initial storage level is 0
   false, -- cyclic state of charge is false
   168, -- set to 168, to represent weekly storage operation  
-  1, -- no losses for storing
-  1, -- no losses for dispatch
-  0 -- no standing losses
+  0.675, -- efficiency according to Acatech2015
+  0.375, -- efficiency according to Acatech2015
+  0.000694 -- standing losses according to Acatech2015
 FROM model_draft.ego_grid_hvmv_substation
 WHERE model_draft.ego_grid_hvmv_substation.subst_id IN (
             SELECT model_draft.ego_grid_hvmv_substation.subst_id
@@ -323,13 +323,13 @@ SELECT
   11, -- source is for now the one of pumped_storage
   0.01, -- marginal costs are set low in order to dispatch after RES and before conv. PP
   65402, -- set according to Acatech2015 for Hydrogen (reference year is 2023). Annual cost method based on investment costs per MW. Is reduced to size of snapshots if extendable storage shall be used.
-  0.3081, -- efficiency according to Acatech2015
+  1, -- efficiency is set below
   0, -- initial storage level is 0
   false, -- cyclic state of charge is false
   168, -- set to 168, to represent weekly storage operation  
-  1, -- no losses for storing
-  1, -- no losses for dispatch
-  0 -- no standing losses
+  0.725, -- efficiency according to Acatech2015
+  0.425, -- efficiency according to Acatech2015
+  0.000694 -- standing losses according to Acatech2015
 FROM model_draft.ego_grid_hvmv_substation
 WHERE model_draft.ego_grid_hvmv_substation.subst_id IN (
             SELECT model_draft.ego_grid_hvmv_substation.subst_id
@@ -378,13 +378,13 @@ WHERE model_draft.ego_grid_hvmv_substation.subst_id IN (
 --  11, -- source is for now the one of pumped_storage
 --  0.01, -- marginal costs are set low in order to dispatch after RES and before conv. PP
 --  47777, -- set according to Acatech2015 for Hydrogen (reference year is 2023). Annual cost method based on investment costs per MW. Is reduced to size of snapshots if extendable storage shall be used.
---  0.4475, -- efficiency according to Acatech2015
+--  1, -- efficiency is set below
 --  0, -- initial storage level is 0
 --  false, -- cyclic state of charge is false
 --  168, -- set to 168, to represent weekly storage operation  
---  1, -- no losses for storing
---  1, -- no losses for dispatch
---  0 -- no standing losses
+--  0.785, -- efficiency according to Acatech2015
+--  0.57, -- efficiency according to Acatech2015
+--  0.000694 -- standing losses according to Acatech2015
 --FROM model_draft.ego_grid_hvmv_substation
 --WHERE model_draft.ego_grid_hvmv_substation.subst_id IN (
 --            SELECT model_draft.ego_grid_hvmv_substation.subst_id

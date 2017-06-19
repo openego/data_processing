@@ -4,7 +4,7 @@ Assignment of storage units to the relevant substation in the grid model.
 __copyright__ 	= "Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems"
 __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
 __url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
-__author__ 	= "IlkaCu" 
+__author__ 	= "IlkaCu", "lukasol" 
 */
 
 
@@ -209,8 +209,6 @@ UPDATE model_draft.ego_supply_pf_storage_single a
 -- Accumulate data from pf_storage_single and insert into hv_powerflow schema. 
 -----------
 
-DELETE FROM model_draft.ego_grid_pf_hv_storage WHERE scn_name = 'Status Quo'; 
-
 -- source = (pumped_storage) and p_nom < 50 MW
 
 INSERT INTO model_draft.ego_grid_pf_hv_storage (
@@ -224,7 +222,16 @@ INSERT INTO model_draft.ego_grid_pf_hv_storage (
   p_min_pu_fixed,
   p_max_pu_fixed,
   sign,
-  source
+  source,
+  marginal_cost, 
+  capital_cost, 
+  efficiency, 
+  soc_initial, 
+  soc_cyclic, 
+  max_hours, 
+  efficiency_store, 
+  efficiency_dispatch, 
+  standing_loss 
 )
 SELECT 
   aggr_id,
@@ -237,11 +244,19 @@ SELECT
   min(p_min_pu_fixed),
   max(p_max_pu_fixed),
   max(sign),
-  source
+  source,
+  0, -- marginal_cost 
+  0, -- capital_cost 0 since PHP are not extendable 
+  1, --  efficiency is set below 
+  0, -- soc_initial 
+  false, -- soc_cyclic 
+  6, -- max_hours as an average for existing German PHP 
+  0.88, -- efficiency_store according to Acatech2015 
+  0.89, -- efficiency_dispatch according to Acatech2015 
+  0.00052 -- standing_loss according to Acatech2015 
 FROM model_draft.ego_supply_pf_storage_single a
 WHERE a.p_nom < 50 AND a.aggr_id IS NOT NULL AND source IN 
 	(SELECT source_id from model_draft.ego_grid_pf_hv_source WHERE name = 'pumped_storage')
-	
 GROUP BY a.aggr_id, a.bus, a.source;
 
 -- source = (pumped_storage) and p_nom > 50 MW
@@ -257,7 +272,16 @@ INSERT INTO model_draft.ego_grid_pf_hv_storage (
   p_min_pu_fixed,
   p_max_pu_fixed,
   sign,
-  source
+  source,
+  marginal_cost, 
+  capital_cost, 
+  efficiency, 
+  soc_initial, 
+  soc_cyclic, 
+  max_hours, 
+  efficiency_store, 
+  efficiency_dispatch, 
+  standing_loss
 )
 SELECT   
   aggr_id,
@@ -270,7 +294,18 @@ SELECT
   p_min_pu_fixed,
   p_max_pu_fixed,
   sign,
-  source
+  source,
+  0, -- marginal_cost 
+  0, -- capital_cost 0 since PHP are not extendable 
+  1, --  efficiency is set below 
+  0, -- soc_initial 
+  false, -- soc_cyclic 
+  6, -- max_hours as an average for existing German PHP 
+  0.88, -- efficiency_store according to Acatech2015 
+  0.89, -- efficiency_dispatch according to Acatech2015 
+  0.00052 -- standing_loss according to Acatech2015 
 FROM model_draft.ego_supply_pf_storage_single a
 WHERE a.p_nom >= 50 AND a.aggr_id IS NOT NULL AND source IN 
 (SELECT source_id from model_draft.ego_grid_pf_hv_source WHERE name = 'pumped_storage');
+
+
