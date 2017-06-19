@@ -1192,6 +1192,10 @@ ALTER TABLE model_draft.ego_grid_pf_hv_transformer
   OWNER TO oeuser;
 GRANT ALL ON TABLE model_draft.ego_grid_pf_hv_transformer TO oeuser;
 
+ALTER TABLE model_draft.ego_grid_pf_hv_busmap
+  OWNER TO oeuser;
+GRANT ALL ON TABLE model_draft.ego_grid_pf_hv_busmap TO oeuser;
+
 -------------------------------------------------------------------
 ----------------------------- Comments ----------------------------
 -------------------------------------------------------------------
