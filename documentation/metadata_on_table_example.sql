@@ -34,8 +34,8 @@ COMMENT ON TABLE model_draft.test_table IS '{
 	"language": [ "eng", "ger", "fre" ],
 	"reference_date": "2016-01-01",
 	"sources": [
-		{"name": "eGo dataprocessing", "description": " ", "url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)", "copyright": "© Reiner Lemoine Institut"},
-		{"name": " ", "description": " ", "url": " ", "license": " ", "copyright": " "} ],
+		{"name": "eGo dataprocessing", "description": "", "url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)", "copyright": "© Reiner Lemoine Institut"},
+		{"name": "", "description": "", "url": "", "license": "", "copyright": ""} ],
 	"spatial": [
 		{"extent": "europe",
 		"resolution": "100 m"} ],
@@ -51,12 +51,12 @@ COMMENT ON TABLE model_draft.test_table IS '{
 		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
 		"copyright": "© Reiner Lemoine Institut"} ],
 	"contributors": [
-		{"name": "Ludee", "email": " ", "date": "2016-06-16", "comment": "Create metadata"},
-		{"name": "Ludee", "email": " ", "date": "2016-11-22", "comment": "Update metadata"},
-		{"name": "Ludee", "email": " ", "date": "2016-11-22", "comment": "Update header and license"},
-		{"name": "Ludee", "email": " ", "date": "2017-03-16", "comment": "Add license to source"},
-		{"name": "Ludee", "email": " ", "date": "2017-03-28", "comment": "Add copyright to source and license"},
-		{"name": "Ludee", "email": " ", "date": "2017-05-30", "comment": "Update metadata to version 1.3"} ],
+		{"name": "Ludee", "email": "", "date": "2016-06-16", "comment": "Create metadata"},
+		{"name": "Ludee", "email": "", "date": "2016-11-22", "comment": "Update metadata"},
+		{"name": "Ludee", "email": "", "date": "2016-11-22", "comment": "Update header and license"},
+		{"name": "Ludee", "email": "", "date": "2017-03-16", "comment": "Add license to source"},
+		{"name": "Ludee", "email": "", "date": "2017-03-28", "comment": "Add copyright to source and license"},
+		{"name": "Ludee", "email": "", "date": "2017-05-30", "comment": "Update metadata to version 1.3"} ],
 	"resources": [
 		{"name": "model_draft.test_table",		
 		"format": "sql",
@@ -73,32 +73,32 @@ SELECT obj_description('model_draft.test_table' ::regclass) ::json;
 
 -- metadata template
 COMMENT ON TABLE . IS '{
-	"title": " ",
-	"description": " ",
+	"title": "",
+	"description": "",
 	"language": [ "eng", "ger" ],
 	"reference_date": "2017-01-01",
 	"sources": [
-		{"name": "eGo dataprocessing", "description": " ", "url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)", "copyright": "© Reiner Lemoine Institut"},
-		{"name": " ", "description": " ", "url": " ", "license": " ", "copyright": " "} ],
+		{"name": "eGo dataprocessing", "description": "", "url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)", "copyright": "© Reiner Lemoine Institut"},
+		{"name": "", "description": "", "url": "", "license": "", "copyright": ""} ],
 	"spatial": [
-		{"extent": " ",
-		"resolution": " "} ],
+		{"extent": "",
+		"resolution": ""} ],
 	"temporal": [
-		{"start": " ",
-		"end": " ",
-		"resolution": " "} ],
+		{"start": "",
+		"end": "",
+		"resolution": ""} ],
 	"license": [
-		{"id": " ",
-		"name": " ",
-		"version": " ",
-		"url": " ",
-		"instruction": " ",
-		"copyright": " "} ],
+		{"id": "",
+		"name": "",
+		"version": "",
+		"url": "",
+		"instruction": "",
+		"copyright": ""} ],
 	"contributors": [
-		{"name": " ", "email": " ", "date": " ", "comment": " "} ],
+		{"name": "", "email": "", "date": "", "comment": ""} ],
 	"resources": [
-		{"name": " ",		
-		"format": " ",
+		{"name": "",		
+		"format": "",
 		"fields": [
 			{"name": "id", "description": "Unique identifier", "unit": "" },
 			{"name": "year", "description": "Reference year", "unit": "" },
