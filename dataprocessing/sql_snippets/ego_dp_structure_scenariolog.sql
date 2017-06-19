@@ -44,12 +44,17 @@ COMMENT ON TABLE model_draft.ego_scenario IS '{
 	"title": "eGo dataprocessing - Scenario list",
 	"description": "Version info",
 	"language": [ "eng", "ger" ],
-	"reference_date": " ",
+	"reference_date": "none",
 	"sources": [
-		{"name": "eGo dataprocessing", "description": " ", "url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)", "copyright": "© Reiner Lemoine Institut"} ],
+		{"name": "eGo dataprocessing", "description": " ", "url": "https://github.com/openego/data_processing", 
+		"license": "GNU Affero General Public License Version 3 (AGPL-3.0)", "copyright": "© Reiner Lemoine Institut"} ],
 	"spatial": [
-		{"extend": "",
-		"resolution": ""} ],
+		{"extent": "none",
+		"resolution": "none"} ],
+	"temporal": [
+		{"start": "none",
+		"end": "none",
+		"resolution": "none"} ],
 	"license": [
 		{"id": 	"ODbL-1.0",
 		"name": "Open Data Commons Open Database License 1.0",
@@ -58,22 +63,21 @@ COMMENT ON TABLE model_draft.ego_scenario IS '{
 		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
 		"copyright": "© Reiner Lemoine Institut"} ],
 	"contributors": [
-		{"name": "Ludee", "email": "", "date": "01.10.2016", "comment": "Create table" },
-		{"name": "Ludee", "email": "", "date": "16.11.2016", "comment": "Add metadata" },
-		{"name": "Ludee", "email": " ", "date": "21.03.2017", "comment": "Update metadata to 1.1"},
-		{"name": "Ludee", "email": "", "date": "2017-04-06", "comment": "Update metadata to 1.2"} ],
-	"resources": [{
-		"schema": {
-			"fields": [
-				{"name": "version", "description": "scenario version number", "unit": "" },
-				{"name": "version_name", "description": "version name", "unit": "" },
-				{"name": "release", "description": "external release", "unit": "" },
-				{"name": "comment", "description": "additional information and comments", "unit": "" },
-				{"name": "timestamp", "description": "timestamp (Berlin)", "unit": "" } ]},
-		"meta_version": "1.2"}] }' ;
-
--- select description
-SELECT obj_description('model_draft.ego_scenario' ::regclass) ::json;
+		{"name": "Ludee", "email": "", "date": "2016-10-01", "comment": "Create table" },
+		{"name": "Ludee", "email": "", "date": "2016-11-16", "comment": "Add metadata" },
+		{"name": "Ludee", "email": "", "date": "2017-03-21", "comment": "Update metadata to 1.1" },
+		{"name": "Ludee", "email": "", "date": "2017-04-06", "comment": "Update metadata to 1.2" },
+		{"name": "Ludee", "email": "", "date": "2017-06-19", "comment": "Update metadata to 1.3" } ],
+	"resources": [
+		{"name": "model_draft.ego_scenario",		
+		"format": "sql",
+		"fields": [
+			{"name": "version", "description": "scenario version number", "unit": "none" },
+			{"name": "version_name", "description": "version name", "unit": "none" },
+			{"name": "release", "description": "external release", "unit": "none" },
+			{"name": "comment", "description": "additional information and comments", "unit": "none" },
+			{"name": "timestamp", "description": "timestamp (Berlin)", "unit": "none" } ] }],
+	"metadata_version": "1.3"}';
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_scenario','ego_dp_structure_scenariolog.sql','Update scenario list');
@@ -99,7 +103,7 @@ CREATE TABLE 		model_draft.ego_scenario_log (
 	status 		text,
 	user_name 	text,
 	"timestamp" 	timestamp,
-	metadata 	text,
+	meta_data 	text,
 	CONSTRAINT ego_scenario_log_pkey PRIMARY KEY (id));
 
 --FK
@@ -116,12 +120,17 @@ COMMENT ON TABLE model_draft.ego_scenario_log IS '{
 	"title": "eGo dataprocessing - Scenario log",
 	"description": "Versioning and table info",
 	"language": [ "eng", "ger" ],
-	"reference_date": " ",
+	"reference_date": "none",
 	"sources": [
-		{"name": "eGo dataprocessing", "description": " ", "url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)", "copyright": "© Reiner Lemoine Institut"} ],
+		{"name": "eGo dataprocessing", "description": " ", "url": "https://github.com/openego/data_processing", 
+		"license": "GNU Affero General Public License Version 3 (AGPL-3.0)", "copyright": "© Reiner Lemoine Institut"} ],
 	"spatial": [
-		{"extend": "",
-		"resolution": ""} ],
+		{"extent": "none",
+		"resolution": "none"} ],
+	"temporal": [
+		{"start": "none",
+		"end": "none",
+		"resolution": "none"} ],
 	"license": [
 		{"id": "ODbL-1.0",
 		"name": "Open Data Commons Open Database License 1.0",
@@ -130,32 +139,30 @@ COMMENT ON TABLE model_draft.ego_scenario_log IS '{
 		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
 		"copyright": "© Reiner Lemoine Institut"} ],
 	"contributors": [
-		{"name": "Ludee", "email": "", "date": "01.10.2016", "comment": "Create table" },
-		{"name": "Ludee", "email": "", "date": "12.10.2016", "comment": "Add user_name" },
-		{"name": "Ludee", "email": "", "date": "16.11.2016", "comment": "Add io" },
-		{"name": "Ludee", "email": "", "date": "16.11.2016", "comment": "Add metadata" },
-		{"name": "Ludee", "email": "", "date": "15.01.2017", "comment": "Update metadata"},
-		{"name": "Ludee", "email": "", "date": "21.03.2017", "comment": "Update metadata to 1.1"},
-		{"name": "Ludee", "email": "", "date": "2017-04-06", "comment": "Update metadata to 1.2"} ],
-	"resources": [{
-		"schema": {
-			"fields": [
-				{"name": "id", "description": "unique identifier", "unit": "" },
-				{"name": "version", "description": "scenario version", "unit": "" },
-				{"name": "io", "description": "input or output", "unit": "" },
-				{"name": "schema_name", "description": "Schema name", "unit": "" },
-				{"name": "table_name", "description": "Table name", "unit": "" },
-				{"name": "script_name", "description": "Script name", "unit": "" },
-				{"name": "entries", "description": "Number of rows", "unit": "" },
-				{"name": "status", "description": "Current status and comments", "unit": "" },
-				{"name": "user_name", "description": "Author (session user)", "unit": "" },
-				{"name": "metadata", "description": "Copy of the input metadta", "unit": "" },
-				{"name": "timestamp", "description": "Timestamp (Berlin)", "unit": "" },
-				{"name": "metadata", "description": "Metadata of table", "unit": "" } ]},
-		"meta_version": "1.2"}] }';
-
--- select description
-SELECT obj_description('model_draft.ego_scenario_log' ::regclass) ::json;
+		{"name": "Ludee", "email": "", "date": "2016-10-01", "comment": "Create table" },
+		{"name": "Ludee", "email": "", "date": "2016-10-12", "comment": "Add user_name" },
+		{"name": "Ludee", "email": "", "date": "2016-11-16", "comment": "Add io" },
+		{"name": "Ludee", "email": "", "date": "2016-11-16", "comment": "Add metadata" },
+		{"name": "Ludee", "email": "", "date": "2017-01-15", "comment": "Update metadata"},
+		{"name": "Ludee", "email": "", "date": "2017-03-21", "comment": "Update metadata to 1.1"},
+		{"name": "Ludee", "email": "", "date": "2017-04-06", "comment": "Update metadata to 1.2"},
+		{"name": "Ludee", "email": "", "date": "2017-06-19", "comment": "Update metadata to 1.3"} ],
+	"resources": [
+		{"name": "model_draft.ego_scenario_log",		
+		"format": "sql",
+		"fields": [
+			{"name": "id", "description": "unique identifier", "unit": "none" },
+				{"name": "version", "description": "scenario version", "unit": "none" },
+				{"name": "io", "description": "input or output", "unit": "none" },
+				{"name": "schema_name", "description": "Schema name", "unit": "none" },
+				{"name": "table_name", "description": "Table name", "unit": "none" },
+				{"name": "script_name", "description": "Script name", "unit": "none" },
+				{"name": "entries", "description": "Number of rows", "unit": "none" },
+				{"name": "status", "description": "Current status and comments", "unit": "none" },
+				{"name": "user_name", "description": "Author (session user)", "unit": "none" },
+				{"name": "timestamp", "description": "Timestamp without time zone", "unit": "YYYY-MM-DD HH:MM:SS" },
+				{"name": "meta_data", "description": "Copy of the input metadta", "unit": "none" } ] }],
+	"metadata_version": "1.3"}';
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_scenario_log','ego_dp_structure_scenariolog.sql','Reset scenario log');
