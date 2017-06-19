@@ -130,8 +130,6 @@ COMMENT ON TABLE openstreetmap.osm_deu_line IS '{
 	"description": "OpenStreetMap is a free, editable map of the whole world that is being built by volunteers largely from scratch and released with an open-content license.",
 	"language": [ "eng", "ger" ],
 	"reference_date": "2016-10-01",
-	"sources": [
-		{"name": "Geofabrik - Download - OpenStreetMap Data Extracts", "description": "", "url": "http://download.geofabrik.de/europe/germany.html", "license": "Open Data Commons Open Database License 1.0 (ODbL-1.0)", "copyright": "© OpenStreetMap contributors"} ],
 	"spatial": [
 		{"extent": "Germany",
 		"resolution": "vector"} ],
@@ -139,6 +137,8 @@ COMMENT ON TABLE openstreetmap.osm_deu_line IS '{
 		{"start": "none",
 		"end": "none",
 		"resolution": "none"} ],
+	"sources": [
+		{"name": "Geofabrik - Download - OpenStreetMap Data Extracts", "description": "", "url": "http://download.geofabrik.de/europe/germany.html", "license": "Open Data Commons Open Database License 1.0 (ODbL-1.0)", "copyright": "© OpenStreetMap contributors"} ],
 	"license": [
 		{"id": 	"ODbL-1.0",
 		"name": "Open Data Commons Open Database License 1.0",
