@@ -1,9 +1,10 @@
 ﻿/*
-[...]
+Function to add an entry to the ego_scenario_log table
 
-__copyright__ = "tba"
-__license__ = "tba"
-__author__ = "ludee"
+__copyright__ 	= "Reiner Lemoine Institut"
+__license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
+__url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
+__author__ 	= "Ludee"
 */
 
 -- function
@@ -20,7 +21,7 @@ DECLARE
 
 	BEGIN
 		EXECUTE 'INSERT INTO model_draft.ego_scenario_log ' ||
-			'(version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
+			'(version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,meta_data)
 			SELECT ' || quote_literal(_version) || ',' || 
 				quote_literal(_io) || ',' ||
 				quote_literal(_schema_name) || ',' ||
