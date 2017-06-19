@@ -33,9 +33,6 @@ COMMENT ON TABLE model_draft.test_table IS '{
 	"description": "example metadata for example data",
 	"language": [ "eng", "ger", "fre" ],
 	"reference_date": "2016-01-01",
-	"sources": [
-		{"name": "eGo dataprocessing", "description": "", "url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)", "copyright": "© Reiner Lemoine Institut"},
-		{"name": "", "description": "", "url": "", "license": "", "copyright": ""} ],
 	"spatial": [
 		{"extent": "europe",
 		"resolution": "100 m"} ],
@@ -43,6 +40,9 @@ COMMENT ON TABLE model_draft.test_table IS '{
 		{"start": "2017-01-01",
 		"end": "2017-12-31",
 		"resolution": "hour"} ],
+	"sources": [
+		{"name": "eGo dataprocessing", "description": "", "url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)", "copyright": "© Reiner Lemoine Institut"},
+		{"name": "", "description": "", "url": "", "license": "", "copyright": ""} ],
 	"license": [
 		{"id": "ODbL-1.0",
 		"name": "Open Data Commons Open Database License 1.0",
@@ -76,10 +76,7 @@ COMMENT ON TABLE . IS '{
 	"title": "",
 	"description": "",
 	"language": [ "eng", "ger" ],
-	"reference_date": "2017-01-01",
-	"sources": [
-		{"name": "eGo dataprocessing", "description": "", "url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)", "copyright": "© Reiner Lemoine Institut"},
-		{"name": "", "description": "", "url": "", "license": "", "copyright": ""} ],
+	"reference_date": "",
 	"spatial": [
 		{"extent": "",
 		"resolution": ""} ],
@@ -87,6 +84,8 @@ COMMENT ON TABLE . IS '{
 		{"start": "",
 		"end": "",
 		"resolution": ""} ],
+	"sources": [
+		{"name": "", "description": "", "url": "", "license": "", "copyright": ""} ],
 	"license": [
 		{"id": "",
 		"name": "",
