@@ -9,6 +9,9 @@ __url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
 __author__ 	= "Ludee"
 __contains__	= "http://stackoverflow.com/questions/383692/what-is-json-and-why-would-i-use-it","https://specs.frictionlessdata.io/data-package/"
 
+-- metadata description
+-- metadata template
+
 Additional information:
 - Dates must follow the ISO8601 (JJJJ-MM-TT)
 - Use a space between Numbers and units (100 m)
@@ -24,7 +27,7 @@ CREATE TABLE model_draft.test_table (
 	geom	geometry(Point, 4326),
 	CONSTRAINT table_pkey PRIMARY KEY (id) );
 
--- metadata
+-- metadata description
 COMMENT ON TABLE model_draft.test_table IS '{
 	"title": "Good example title",
 	"description": "example metadata for example data",
@@ -66,3 +69,42 @@ COMMENT ON TABLE model_draft.test_table IS '{
 
 -- select description
 SELECT obj_description('model_draft.test_table' ::regclass) ::json;
+
+
+-- metadata template
+COMMENT ON TABLE . IS '{
+	"title": " ",
+	"description": " ",
+	"language": [ "eng", "ger" ],
+	"reference_date": "2017-01-01",
+	"sources": [
+		{"name": "eGo dataprocessing", "description": " ", "url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)", "copyright": "© Reiner Lemoine Institut"},
+		{"name": " ", "description": " ", "url": " ", "license": " ", "copyright": " "} ],
+	"spatial": [
+		{"extent": " ",
+		"resolution": " "} ],
+	"temporal": [
+		{"start": " ",
+		"end": " ",
+		"resolution": " "} ],
+	"license": [
+		{"id": " ",
+		"name": " ",
+		"version": " ",
+		"url": " ",
+		"instruction": " ",
+		"copyright": " "} ],
+	"contributors": [
+		{"name": " ", "email": " ", "date": " ", "comment": " "} ],
+	"resources": [
+		{"name": " ",		
+		"format": " ",
+		"fields": [
+			{"name": "id", "description": "Unique identifier", "unit": "" },
+			{"name": "year", "description": "Reference year", "unit": "" },
+			{"name": "value", "description": "Example value", "unit": "" },
+			{"name": "geom", "description": "Geometry", "unit": "" }] }],
+	"metadata_version": "1.3"}';
+
+-- select description
+SELECT obj_description('.' ::regclass) ::json;
