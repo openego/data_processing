@@ -1,6 +1,0 @@
-
-Windows:
-
-cd C:\Program Files\PostgreSQL\cygwin-package
-
-osm2pgsql -c -s -C 2000 -j -H 141.44.24.88 -P 5432 -d oedb -U user_name -W -p osm_deu -S path\default.style path\germany-latest.osm
