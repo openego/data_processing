@@ -1,19 +1,15 @@
 /*
-script to assign osmTGmod-id to substation
+Script to assign osmTGmod-id to substation
 
-__copyright__ = "NEXT ENERGY"
-__license__ = "GNU Affero General Public License Version 3 (AGPL-3.0)"
-__url__ = "https://github.com/openego/data_processing/blob/master/LICENSE"
-__author__ = "lukasol, C. Matke"
+__copyright__ 	= "NEXT ENERGY"
+__license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
+__url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
+__author__ 	= "lukasol, C. Matke"
 */
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.10','input','grid','otg_ehvhv_bus_data','ego_dp_substation_otg.sql',' ');
-
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.10','input','model_draft','ego_grid_hvmv_substation','ego_dp_substation_otg.sql',' ');
-
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.10','input','model_draft','ego_grid_ehv_substation','ego_dp_substation_otg.sql',' ');
 
 
