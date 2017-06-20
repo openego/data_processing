@@ -114,7 +114,7 @@ SELECT
   -1, -- default
   1, -- default
   1, -- default
-  11, -- source is for now the one of pumped_storage
+  16, -- source is extendable_storage
   0.01, -- marginal costs are set low in order to dispatch after RES and before conv. PP
   229357, -- set according to Acatech2015 for Lithium-Ion. Annual cost method based on investment costs per MW. Must be reduced to size of snapshots if extendable storage shall be used.
   1, -- efficiency is set below 
@@ -164,7 +164,7 @@ SELECT
   -1, -- default
   1, -- default
   1, -- default
-  11, -- source is for now the one of pumped_storage
+  16, -- source is extendable_storage
   0.01, -- marginal costs are set low in order to dispatch after RES and before conv. PP
   65822, -- set according to Acatech2015 for Lithium-Ion (base year is 2023, not 2035!). Annual cost method based on investment costs per MW. Must be reduced to size of snapshots if extendable storage shall be used.
   1, -- efficiency is set below
@@ -215,7 +215,7 @@ FROM model_draft.ego_grid_hvmv_substation;
 --  -1, -- default
 --  1, -- default
 --  1, -- default
---  11, -- source is for now the one of pumped_storage
+--  16, -- source is extendable_storage
 --  0.01, -- marginal costs are set low in order to dispatch after RES and before conv. PP
 --  44546, -- set according to Acatech2015 for Lithium-Ion (base year is 2023, not 2035!). Annual cost method based on investment costs per MW. Must be reduced to size of snapshots if extendable storage shall be used.
 --  1, -- efficiency is set below
@@ -265,7 +265,7 @@ SELECT
   -1, -- default
   1, -- default
   1, -- default
-  11, -- source is for now the one of pumped_storage
+  16, -- source is extendable_storage
   0.01, -- marginal costs are set low in order to dispatch after RES and before conv. PP
   94776, -- set according to Acatech2015 for Hydrogen. Annual cost method based on investment costs per MW. Is reduced to size of snapshots if extendable storage shall be used.
   1, -- efficiency is set below
@@ -320,7 +320,7 @@ SELECT
   -1, -- default
   1, -- default
   1, -- default
-  11, -- source is for now the one of pumped_storage
+  16, -- source is extendable_storage
   0.01, -- marginal costs are set low in order to dispatch after RES and before conv. PP
   65402, -- set according to Acatech2015 for Hydrogen (reference year is 2023). Annual cost method based on investment costs per MW. Is reduced to size of snapshots if extendable storage shall be used.
   1, -- efficiency is set below
@@ -375,7 +375,7 @@ WHERE model_draft.ego_grid_hvmv_substation.subst_id IN (
 --  -1, -- default
 --  1, -- default
 -- 1, -- default
---  11, -- source is for now the one of pumped_storage
+--  16, -- source is extendable_storage
 --  0.01, -- marginal costs are set low in order to dispatch after RES and before conv. PP
 --  47777, -- set according to Acatech2015 for Hydrogen (reference year is 2023). Annual cost method based on investment costs per MW. Is reduced to size of snapshots if extendable storage shall be used.
 --  1, -- efficiency is set below
