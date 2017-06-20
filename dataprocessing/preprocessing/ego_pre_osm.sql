@@ -136,7 +136,7 @@ COMMENT ON TABLE openstreetmap.osm_deu_line IS '{
 	"temporal": [
 		{"start": "none",
 		"end": "none",
-		"resolution": "none"} ],0,
+		"resolution": "none"} ],
 	"sources": [
 		{"name": "Geofabrik - Download - OpenStreetMap Data Extracts", "description": "", "url": "http://download.geofabrik.de/europe/germany.html", "license": "Open Data Commons Open Database License 1.0 (ODbL-1.0)", "copyright": "© OpenStreetMap contributors"} ],
 	"license": [
