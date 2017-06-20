@@ -33,6 +33,6 @@ sudo pip3 install -e <path-to-data_processing-repo>
  You can run data processing by calling command-line script
 
  ```
- ~$ ega_data_processing
+ ~$ ego_data_processing
  ```    
 
