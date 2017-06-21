@@ -1,4 +1,4 @@
-/*
+﻿/*
 Skript to allocate decentralized renewable power plants (dea)
 Methods base on technology and voltage level
 Uses different lattice from setup_ego_wpa_per_grid_district.sql
@@ -15,8 +15,8 @@ The rest could not be allocated, consider in M4.
 */
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','input','model_draft','ego_supply_res_powerplant','ego_dp_rea_m2.sql',' ');
-
+-- SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_dp_supply_res_powerplant','ego_dp_rea_m2.sql',' ');
+ 
 -- MView M2
 DROP MATERIALIZED VIEW IF EXISTS 	model_draft.ego_supply_rea_m2_a_mview CASCADE;
 CREATE MATERIALIZED VIEW 		model_draft.ego_supply_rea_m2_a_mview AS
@@ -28,9 +28,11 @@ CREATE MATERIALIZED VIEW 		model_draft.ego_supply_rea_m2_a_mview AS
 		subst_id,
 		ST_TRANSFORM(geom,3035) AS geom,
 		rea_flag
-	FROM 	model_draft.ego_supply_res_powerplant AS dea
+	FROM 	model_draft.ego_dp_supply_res_powerplant AS dea
 	WHERE 	(dea.voltage_level = 4 AND 
-		dea.generation_type = 'wind');
+		dea.generation_type = 'wind')
+		AND (dea.flag in ('commissioning','constantly') 
+		AND dea.generation_subtype not in ('wind_offshore'));
 
 -- create index GIST (geom)
 CREATE INDEX ego_supply_rea_m2_a_mview_geom_idx
@@ -40,14 +42,16 @@ CREATE INDEX ego_supply_rea_m2_a_mview_geom_idx
 ALTER TABLE model_draft.ego_supply_rea_m2_a_mview OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','temp','model_draft','ego_supply_rea_m2_a_mview','ego_dp_rea_m2.sql',' ');
+-- SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_supply_rea_m2_a_mview','ego_dp_rea_m2.sql',' ');
 
 
 -- rea_flag M2
-UPDATE 	model_draft.ego_supply_res_powerplant AS dea
+UPDATE 	model_draft.ego_dp_supply_res_powerplant AS dea
 	SET	rea_flag = 'M2_rest'
 	WHERE	dea.voltage_level = 4 AND 
-		dea.generation_type = 'wind';
+		dea.generation_type = 'wind'
+		AND (dea.flag in ('commissioning','constantly') 
+		AND dea.generation_subtype not in ('wind_offshore'));
 
 
 -- get windfarms   (OK!) -> 485.000ms =317
@@ -70,9 +74,11 @@ INSERT INTO model_draft.ego_supply_rea_m2_windfarm (area_ha,geom)
 	FROM	(SELECT	(ST_DUMP(ST_MULTI(ST_UNION(
 				ST_BUFFER(ST_TRANSFORM(dea.geom,3035), 1000)
 			)))).geom ::geometry(Polygon,3035) AS geom_farm
-		FROM 	model_draft.ego_supply_res_powerplant AS dea
+		FROM 	model_draft.ego_dp_supply_res_powerplant AS dea
 		WHERE 	(dea.voltage_level = 4) AND
 			(dea.generation_type = 'wind')
+			AND (dea.flag in ('commissioning','constantly') 
+		AND dea.generation_subtype not in ('wind_offshore'))
 		) AS farm;
 
 -- create index GIST (geom)
@@ -103,31 +109,33 @@ UPDATE 	model_draft.ego_supply_rea_m2_windfarm AS t1
 		SELECT	farm.farm_id AS farm_id,
 			COUNT(dea.geom) AS dea_cnt,
 			SUM(dea.electrical_capacity) AS electrical_capacity_sum
-		FROM	model_draft.ego_supply_res_powerplant AS dea,
+		FROM	model_draft.ego_dp_supply_res_powerplant AS dea,
 			model_draft.ego_supply_rea_m2_windfarm AS farm
 		WHERE  	(dea.voltage_level = 4 AND
-			dea.generation_type = 'wind') AND
-			(farm.geom && dea.geom AND
-			ST_CONTAINS(farm.geom,dea.geom))
+			dea.generation_type = 'wind') 
+			AND (dea.flag in ('commissioning','constantly') 
+		        AND dea.generation_subtype not in ('wind_offshore')) 
+		        AND (farm.geom && dea.geom AND ST_CONTAINS(farm.geom,dea.geom))
 		GROUP BY farm.farm_id
 		) AS t2
 	WHERE  	t1.farm_id = t2.farm_id;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','temp','model_draft','ego_supply_rea_m2_windfarm','ego_dp_rea_m2.sql',' ');
+-- SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_supply_rea_m2_windfarm','ego_dp_rea_m2.sql',' ');
 
 -- update DEA in wind farms
-UPDATE 	model_draft.ego_supply_res_powerplant AS t1
+UPDATE 	model_draft.ego_dp_supply_res_powerplant AS t1
 	SET  	rea_sort = t2.farm_id   -- temporary store farm_id in rea_sort!
 	FROM    (
 		SELECT	dea.id AS id,
 			farm.farm_id AS farm_id
-		FROM	model_draft.ego_supply_res_powerplant AS dea,
+		FROM	model_draft.ego_dp_supply_res_powerplant AS dea,
 			model_draft.ego_supply_rea_m2_windfarm AS farm
 		WHERE  	(dea.voltage_level = 4 AND
-			dea.generation_type = 'wind') AND
-			(farm.geom && dea.geom AND
-			ST_CONTAINS(farm.geom,dea.geom))
+			dea.generation_type = 'wind') 
+			AND (dea.flag in ('commissioning','constantly') 
+			AND dea.generation_subtype not in ('wind_offshore')) 
+			AND (farm.geom && dea.geom AND ST_CONTAINS(farm.geom,dea.geom))
 		) AS t2
 	WHERE  	t1.id = t2.id;
 
@@ -151,7 +159,7 @@ CREATE INDEX ego_supply_rea_m2_farm_temp_geom_idx
 	ON model_draft.ego_supply_rea_m2_farm_temp USING gist (geom);
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','temp','model_draft','ego_supply_rea_m2_farm_temp','ego_dp_rea_m2.sql',' ');
+-- SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_supply_rea_m2_farm_temp','ego_dp_rea_m2.sql',' ');
 
 DROP TABLE IF EXISTS 	model_draft.ego_supply_rea_m2_wpa_temp CASCADE;
 CREATE TABLE 		model_draft.ego_supply_rea_m2_wpa_temp (
@@ -166,7 +174,7 @@ CREATE INDEX ego_supply_rea_m2_wpa_temp_geom_idx
 	ON model_draft.ego_supply_rea_m2_wpa_temp USING gist (geom);
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','temp','model_draft','ego_supply_rea_m2_wpa_temp','ego_dp_rea_m2.sql',' ');
+-- SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_supply_rea_m2_wpa_temp','ego_dp_rea_m2.sql',' ');
 
 DROP TABLE IF EXISTS 	model_draft.ego_supply_rea_m2_jnt_temp CASCADE;
 CREATE TABLE 		model_draft.ego_supply_rea_m2_jnt_temp (
@@ -181,10 +189,10 @@ CREATE INDEX ego_supply_rea_m2_jnt_temp_geom_idx
 	ON model_draft.ego_supply_rea_m2_jnt_temp USING gist (geom);
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','temp','model_draft','ego_supply_rea_m2_jnt_temp','ego_dp_rea_m2.sql',' ');
+-- SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_supply_rea_m2_jnt_temp','ego_dp_rea_m2.sql',' ');
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','input','model_draft','ego_supply_wpa_per_mvgd','ego_dp_rea_m2.sql',' ');
+-- SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_supply_wpa_per_mvgd','ego_dp_rea_m2.sql',' ');
 
 
 -- loop for grid_district
@@ -216,7 +224,7 @@ BEGIN
 			FROM	model_draft.ego_supply_rea_m2_farm_temp AS farm
 			INNER JOIN model_draft.ego_supply_rea_m2_wpa_temp AS wpa ON (farm.rea_sorted = wpa.rea_sorted);
 
-		UPDATE 	model_draft.ego_supply_res_powerplant AS t1
+		UPDATE 	model_draft.ego_dp_supply_res_powerplant AS t1
 			SET  	rea_geom_new = t2.rea_geom_new,
 				rea_geom_line = t2.rea_geom_line,
 				rea_flag = ''M2''
@@ -237,7 +245,7 @@ $$;
 DROP MATERIALIZED VIEW IF EXISTS 	model_draft.ego_supply_rea_m2_mview CASCADE;
 CREATE MATERIALIZED VIEW 		model_draft.ego_supply_rea_m2_mview AS
 	SELECT 	dea.*
-	FROM	model_draft.ego_supply_res_powerplant AS dea
+	FROM	model_draft.ego_dp_supply_res_powerplant AS dea
 	WHERE	rea_flag = 'M2';
 
 -- create index GIST (geom)
@@ -256,7 +264,7 @@ CREATE INDEX ego_supply_rea_m2_mview_rea_geom_new_idx
 ALTER TABLE model_draft.ego_supply_rea_m2_mview OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_supply_rea_m2_mview','ego_dp_rea_m2.sql',' ');
+-- SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_supply_rea_m2_mview','ego_dp_rea_m2.sql',' ');
 
 
 -- M2 rest
@@ -270,7 +278,7 @@ CREATE MATERIALIZED VIEW 		model_draft.ego_supply_rea_m2_rest_mview AS
 		subst_id,
 		geom,
 		rea_flag
-	FROM	model_draft.ego_supply_res_powerplant AS dea
+	FROM	model_draft.ego_dp_supply_res_powerplant AS dea
 	WHERE	rea_flag = 'M2_rest';
 
 -- create index GIST (geom)
@@ -281,7 +289,7 @@ CREATE INDEX ego_supply_rea_m2_rest_mview_geom_idx
 ALTER TABLE model_draft.ego_supply_rea_m2_rest_mview OWNER TO oeuser;	
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_supply_rea_m2_rest_mview','ego_dp_rea_m2.sql',' ');
+-- SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_supply_rea_m2_rest_mview','ego_dp_rea_m2.sql',' ');
 
 
 -- Drop temp
