@@ -113,7 +113,7 @@ if __name__ == '__main__':
     holidays = dict(cal.holidays(2011))
 
     # get database connection object
-    conn = io.oedb_session(section='oedb')
+    conn = io.oedb_session(section='oep')
     Session = sessionmaker(bind=conn)
     session = Session()
 

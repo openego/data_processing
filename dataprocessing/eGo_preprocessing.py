@@ -42,7 +42,7 @@ def preprocessing():
     snippets = ['ego_pre_slp_parameters.sql']
 
     # get database connection
-    conn = io.oedb_session(section='oedb')
+    conn = io.oedb_session(section='oep')
 
     # iterate over list of sql- and python-snippets and execute them
     for snippet in snippets:

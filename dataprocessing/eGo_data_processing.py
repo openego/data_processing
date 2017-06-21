@@ -14,7 +14,7 @@ import logging
 import time
 import os
 import codecs
-from tools import io
+from dataprocessing.tools import io
 
 def data_processing():
     # Configure logging
@@ -120,7 +120,7 @@ def data_processing():
     ]
 
     # get database connection
-    conn = io.oedb_session(section='oedb')
+    conn = io.oedb_session(section='oep')
 
     # iterate over list of sql- and python-snippets and execute them
     for snippet in snippets:

@@ -46,7 +46,7 @@ def demand_per_mv_grid_district():
     # retrieve sectoral demand from oedb
 
     # get database connection
-    conn = io.oedb_session(section='oedb')
+    conn = io.oedb_session(section='oep')
     Session = sessionmaker(bind=conn)
     session = Session()
 
