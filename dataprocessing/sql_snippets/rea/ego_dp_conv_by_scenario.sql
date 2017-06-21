@@ -15,17 +15,13 @@ Notes:
    
   Part I:
            Set up Status Quo data and create standardized table of all scenarios
-           
   Part II:
             Power plants by NEP 2035 scenario data
-  
   Part III:
             Power plants by eGo 100 scenario data
-  
   Part IV:
            Create View per Scenario
-           
-           
+
 Documentation:
 --------------
  flags:
@@ -404,5 +400,5 @@ CREATE MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_ego2050_mview AS
 	WHERE scenario in('Status Quo','NEP 2035', 'eGo 100')
 	AND fuel = 'pumped_storage'
 	AND capacity >= 0;
----
+
 -- END
