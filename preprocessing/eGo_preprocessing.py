@@ -39,7 +39,10 @@ def preprocessing():
         os.path.join(os.path.dirname(__file__),
                      'python_scripts'))
 
-    snippets = ['ego_pre_slp_parameters.sql']
+    snippets = [
+     'ego_pre_voltage_level.sql',
+     'ego_pre_slp_parameters.sql'
+    ]
 
     # get database connection
     conn = io.oedb_session(section='oedb')
