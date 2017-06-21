@@ -6,34 +6,19 @@ __copyright__ = "Europa-Universität Flensburg - ZNES"
 __license__ = "GNU Affero General Public License Version 3 (AGPL-3.0)"
 __url__ = "https://github.com/openego/data_processing/blob/master/LICENSE"
 __author__ = "wolfbunke"	
-
-
-
-ToDo:
-
-  set View to table -> controll mview -> temp 
-
-  Change of rea filies and integration into dataprocessing 
-  
-
-  check für Verteilung nach FS solar wind onshore
   
 Notes:
 ------
   This script is divided into four parts:
   
   Part I:
-           Set up status quo data and create standardized table of all scenarios
-           
+           Set up status quo data and create standardized table of all scenarios     
   Part II:
            Development of new renewable power plants by NEP 2035 scenario data
-  
   Part III:
            Development of new renewable power plants by ego 100% scenario data
-  
   Part IV:
            Create View per Scenario
-           
            
 Documentation:
 --------------
@@ -53,7 +38,7 @@ Documentation:
 */
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
---SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_dp_supply_res_powerplant','ego_db_res_rea_by_scenario.sql','');
+SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_dp_supply_res_powerplant','ego_db_res_rea_by_scenario.sql','');
 
 DROP TABLE IF EXISTS model_draft.ego_dp_supply_res_powerplant;
 CREATE TABLE model_draft.ego_dp_supply_res_powerplant
@@ -256,7 +241,7 @@ Insert into model_draft.ego_dp_supply_res_powerplant
 -- Insert CHP 2035 plants all as gas
 ---
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
---SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_supply_res_powerplant_2035','ego_db_res_rea_by_scenario.sql',' ');  
+SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_supply_res_powerplant_2035','ego_db_res_rea_by_scenario.sql',' ');  
 
 Insert into model_draft.ego_dp_supply_res_powerplant 
 	SELECT
@@ -332,7 +317,7 @@ AND upt.id = aa.id
 AND upt.nuts IS NULL;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
---SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_dp_supply_res_powerplant','ego_db_res_rea_by_scenario.sql',' ');  
+SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_dp_supply_res_powerplant','ego_db_res_rea_by_scenario.sql',' ');  
 
 ---
 -- Biomass power plants
@@ -594,20 +579,16 @@ Insert into model_draft.ego_dp_supply_res_powerplant
 -- Photovoltaic Method
 --
 /*
-
 Step 0 Get Nuts id per Unit 
 Step 1 capacity per municipality -> Pro2Now
        Status Quo
 Step 2 Structure of PV ( voltage level, size, Number)
 Step 3 add new PV at center of municipality polygon
 Step 4 add volatage level, etc.
-
-
 */
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
--- SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_supply_res_pv_to_region_temp','ego_db_res_rea_by_scenario.sql',' ');  
-
+SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_supply_res_pv_to_region_temp','ego_db_res_rea_by_scenario.sql',' ');  
 
 -- Nep 2035 Photovoltaic
 -- Step 0
@@ -637,7 +618,7 @@ INSERT INTO model_draft.ego_supply_res_pv_to_region_temp (re_id,subst_id,otg_id,
 	  model_draft.ego_dp_supply_res_powerplant
 	WHERE scenario =  'Status Quo'
 	AND generation_type ='solar';
---
+
 Update model_draft.ego_supply_res_pv_to_region_temp A
 set id_vg250 = B.id,
     rs = B.rs,
@@ -654,7 +635,6 @@ FROM (
       ) as B
 WHERE B.re_id = A.re_id;
 
---
 Update model_draft.ego_supply_res_pv_to_region_temp A
 set id_vg250 = B.id,
     rs = B.rs,
@@ -677,8 +657,7 @@ AND A.nuts IS NULL;
 -- Step 1
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
--- SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_supply_res_pv_2035_germany_mun_temp','ego_db_res_rea_by_scenario.sql',' ');  
-
+SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_supply_res_pv_2035_germany_mun_temp','ego_db_res_rea_by_scenario.sql',' ');  
 
 DROP SEQUENCE IF EXISTS model_draft.ego_supply_res_pv_2035_germany_mun_id_seq;
 CREATE SEQUENCE model_draft.ego_supply_res_pv_2035_germany_mun_id_seq START 1;
@@ -719,35 +698,13 @@ Group by A.voltage_level, B.id, B.rs;
 -- Nep 2035 Photovoltaic
 -- Step 2 - Photovoltaic Prox2Now per municipality and voltage level
 
-/*
-
-1. Pro Gemeinde Polygon werden die PV Anlagen 2015 pro Voltage level, Anzahl und installierter Leistung aufsummiert,
-   Eine Durchschnittliche Anlage wird pro Gemeinde und Voltagelevel gebildet
-	Gemeinden und voltage level die nicht betroffen sind, werden nicht mehr berücksichtigt
-2. Der Zubau pro Gemeinde und voltage level wird Proportional zu 2015 anhand der NEP 2035 Szenariodaten gebildet
-   Formel P_add(Gemeinde,Voltage Level, 2035) =  (P_sum(Gemeinde,Voltage Level, 2014)/ P_sum(Bundesland,2014) 
-						 ) x P_sum(Bundesland,2035) - P_sum(Gemeinde,Voltage Level, 2014)
-
-3. Anhand der Zubauzahlen pro Gemeinde und voltage level wird die Anzahl neuer Anlagen anhand der durchschnittlichen
-   Größe (kW) gebildet.
-
-4. Die Status Quo Daten werden in model_draft.ego_supply_res_powerplant_2035 überführt
-
-5. Die neuen Anlagen werden anhand des Mittelpunktes der Gemeinde in model_draft.ego_supply_res_powerplant_2035 
-   hinzugefügt
-   
-6. Übergabe an weiten Skript zur Zuweisung der Netzknoten
-               
-
-*/
-
 UPDATE model_draft.ego_supply_res_pv_2035_germany_mun_temp AA
 set     pv_add_cap_2035 = ( (AA.pv_cap_2014::numeric / pv_sq_2014.fs_cap_2014::numeric)*pv_scn_2035.fs_cap_2035 
                              -AA.pv_cap_2014)::integer                             
 FROM
 (
 SELECT
- substring(A.rs from 1 for 2) as rs,        -- Regionalschlüssel first 2 numbers = federal state
+ substring(A.rs from 1 for 2) as rs,          -- Regionalschlüssel first 2 numbers = federal state
  scn.capacity*1000 as fs_cap_2035 ,           -- in kW
  scn.nuts  				      -- nuts code federal state
  FROM
@@ -761,7 +718,7 @@ Order by rs
 ) as pv_scn_2035,
 (
 SELECT
-   substring(A.rs from 1 for 2) as rs,        -- Regionalschlüssel first 2 numbers = federal state
+   substring(A.rs from 1 for 2) as rs,          -- Regionalschlüssel first 2 numbers = federal state
    sum(A.pv_cap_2014) as fs_cap_2014            -- in kW
 FROM
   model_draft.ego_supply_res_pv_2035_germany_mun_temp A
@@ -806,13 +763,10 @@ Group by substring(A.rs from 1 for 2),scn.capacity_2035;
 -- Take status quo and add new Photovoltaic plants 
 -- Insert new units by pv_new_units 
 -- geom = centroid of municipality geom , see http://postgis.net/docs/ST_PointOnSurface.html
--- generation_subtype is not defined 
+-- generation_subtype defined as solar
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
--- SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_supply_res_pv_2035_germany_mun_temp','ego_db_res_rea_by_scenario.sql',' '); 
-
--- Hier weiter 
--- Hier check für Verteilung nach FS
+SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_supply_res_pv_2035_germany_mun_temp','ego_db_res_rea_by_scenario.sql',' '); 
 
 -- Add new PV units 
 Insert into model_draft.ego_dp_supply_res_powerplant  (id, start_up_date,electrical_capacity,
@@ -862,7 +816,7 @@ AND upt.nuts is null;
 -- Add NEP 2035 Wind parks from own data research
 ---
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
--- SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_dp_supply_res_powerplant','ego_db_res_rea_by_scenario.sql',' '); 
+SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_dp_supply_res_powerplant','ego_db_res_rea_by_scenario.sql',' '); 
 
 -- 1
 INSERT INTO model_draft.ego_dp_supply_res_powerplant  (id, start_up_date, electrical_capacity, generation_type, generation_subtype, thermal_capacity, 
@@ -995,32 +949,22 @@ INSERT INTO model_draft.ego_dp_supply_res_powerplant  (id, start_up_date, electr
     NULL, 1, NULL, 'ONEP', 'NVP: Lubmin', ST_Transform('0101000020E6100000C396890D74072A404ADF5A5C48744B40'::geometry,3035), 
     '380', NULL, NULL, NULL,'NEP 2035','commissioning'
   FROM model_draft.ego_dp_supply_res_powerplant;
---
--- Check 
-SELECT
- *
-FROM
-  model_draft.ego_dp_supply_res_powerplant
-  WHERE generation_subtype = 'wind_offshore'
-  AND start_up_date = '2034-12-31 00:00:00'
-  AND source = 'ONEP';
+
 --- 
 --   Wind Onshore 
 --   Use of "easy" Prox2Now Method like Photovoltaic 
 /*
-
 Step 0 Get Nuts id per Unit 
 Step 1 capacity per municipality -> Pro2Now
        Status Quo
 Step 2 Structure of  Wind Onshore ( volatage level, size, Number)
 Step 3 add new Wind Onshore at center of municipality polygon
 Step 4 add voltage level, etc.
-
 */
 
 -- Step 1
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
--- SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_supply_res_wo_2035_germany_mun_temp','ego_db_res_rea_by_scenario.sql',' '); 
+SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_supply_res_wo_2035_germany_mun_temp','ego_db_res_rea_by_scenario.sql',' '); 
 
 DROP SEQUENCE IF EXISTS model_draft.ego_supply_res_wo_2035_germany_mun_id_seq CASCADE;
 CREATE SEQUENCE model_draft.ego_supply_res_wo_2035_germany_mun_id_seq START 1;
@@ -1137,7 +1081,7 @@ AND generation_subtype = 'wind_onshore'
 AND upt.nuts IS NULL;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
--- SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_supply_res_wo_2035_germany_mun_temp','ego_db_res_rea_by_scenario.sql',' '); 
+SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_supply_res_wo_2035_germany_mun_temp','ego_db_res_rea_by_scenario.sql',' '); 
 
 -- Add new wind onshore units 
 Insert into model_draft.ego_dp_supply_res_powerplant (id,start_up_date,electrical_capacity,
@@ -1191,37 +1135,6 @@ DROP TABLE IF EXISTS model_draft.ego_supply_res_hydro_2035_temp CASCADE;
 DROP TABLE IF EXISTS model_draft.ego_supply_res_pv_to_region_temp  CASCADE;
 DROP TABLE IF EXISTS model_draft.ego_supply_res_pv_2035_germany_mun_temp  CASCADE;
 
-
-
-/*
-DROP TABLE IF EXISTS model_draft.model_draft.ego_supply_rea_2035  CASCADE;
-
-DROP TABLE IF EXISTS model_draft.ego_supply_rea  CASCADE;
-DROP TABLE IF EXISTS model_draft.ego_supply_rea_2035  CASCADE;
-DROP TABLE IF EXISTS model_draft.ego_supply_rea_2035_m2_windfarm  CASCADE;
-DROP TABLE IF EXISTS model_draft.ego_supply_rea_2050_m2_windfarm  CASCADE;
-DROP TABLE IF EXISTS model_draft.ego_supply_pv_dev_2050_germany_mun  CASCADE;
-
- 
-
-DROP TABLE IF EXISTS model_draft.ego_supply_pv_dev_2050_germany_mun  CASCADE;
-
- 
- model_draft.ego_supply_res_powerplant_germany_to_region
-model_draft.ego_supply_res_powerplant_germany_to_region_2050
- model_draft.ego_supply_res_pv_2035_germany_mun_temp
-model_draft.ego_supply_res_pv_to_region_temp
-model_draft.ego_supply_res_wo_2035_germany_mun_temp
-model_draft.ego_supply_wo_dev_2035_germany_mun
- model_draft.ego_supply_wo_dev_2050_germany_mun
-
- 
-idx:
-ego_supply_res_biomass_2035_temp_geom_idx
-ego_supply_res_hydro_2035_temp_geom_idx
-
-*/
-
 -- VACUUM FULL ANALYZE model_draft.ego_dp_supply_res_powerplant;
 	  
 --------------------------------------------------------------------------------
@@ -1244,7 +1157,7 @@ CREATE TABLE 		model_draft.ego_supply_res_biomass_2050_temp AS
 	AND scenario in ( 'Status Quo');
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
--- SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_dp_supply_res_powerplant','ego_db_res_rea_by_scenario.sql',' ');  
+SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_dp_supply_res_powerplant','ego_db_res_rea_by_scenario.sql',' ');  
 
 -- Biomass Method Prox2Now
 -- increase installed capacity by scenario data
@@ -1279,9 +1192,9 @@ CREATE INDEX ego_supply_res_biomass_2050_temp_geom_idx
 ALTER TABLE model_draft.ego_supply_res_biomass_2050_temp OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
--- SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_dp_supply_res_powerplant','ego_db_res_rea_by_scenario.sql',' ');  
+SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_dp_supply_res_powerplant','ego_db_res_rea_by_scenario.sql',' ');  
 
--- Insert ego_dp_supply_res_powerplant 								-- Check
+-- Insert ego_dp_supply_res_powerplant
 Insert into model_draft.ego_dp_supply_res_powerplant
   SELECT
     *
@@ -1293,7 +1206,6 @@ Insert into model_draft.ego_dp_supply_res_powerplant
 -- Geothermal Method
 -- No changes set status quo
 ---
-
 
 --- 
 -- CHP Method
@@ -1374,25 +1286,21 @@ Insert into model_draft.ego_dp_supply_res_powerplant
 	SELECT *
 	FROM  model_draft.ego_supply_res_hydro_2050_temp
 	WHERE scenario =  'eGo 100';
-
 ---
 -- Photovoltaic Methode 
 --- 
 
 /*
-
 Step 0 Create temp temp 
 Step 1 capacity per municipality -> Pro2Now
        Status Quo
 Step 2 Structure of PV ( voltage level, size, Number)
 Step 3 add new PV at center of municipality polygon
 Step 4 add volatage level, etc.
-
 */
 
-  
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
--- SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_supply_res_pv_to_region_temp','ego_db_res_rea_by_scenario.sql',' ');  
+SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_supply_res_pv_to_region_temp','ego_db_res_rea_by_scenario.sql',' ');  
 
 -- eGo 100 Photovoltaic
 -- Step 0
@@ -1423,7 +1331,7 @@ INSERT INTO model_draft.ego_supply_res_pv_to_region_temp (re_id,subst_id,otg_id,
 	WHERE scenario in ( 'Status Quo','NEP 2035')
 	AND generation_type = 'solar' 
 	AND flag in ('commissioning','constantly');
---
+
 Update model_draft.ego_supply_res_pv_to_region_temp A
 set id_vg250 = B.id,
     rs = B.rs,
@@ -1466,7 +1374,7 @@ AND AA.re_id = A.re_id;
 ---
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
--- SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_supply_res_pv_2050_germany_mun_temp','ego_db_res_rea_by_scenario.sql',' ');  
+SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_supply_res_pv_2050_germany_mun_temp','ego_db_res_rea_by_scenario.sql',' ');  
 
 DROP SEQUENCE IF EXISTS model_draft.ego_supply_res_pv_2050_germany_mun_id_seq CASCADE;
 CREATE SEQUENCE model_draft.ego_supply_res_pv_2050_germany_mun_id_seq START 1;
@@ -1509,27 +1417,6 @@ Group by A.voltage_level, B.id, B.rs;
 -- ego 100 Photovoltaic
 -- Step 2 - Photovoltaic Prox2Now per municipality and voltage level
 ---
-/*
-
-1. Pro Gemeinde Polygon werden die PV Anlagen 2015 pro Voltage level, Anzahl und installierter Leistung aufsummiert,
-   Eine Durchschnittliche Anlage wird pro Gemeinde und Voltagelevel gebildet
-	Gemeinden und voltage level die nicht betroffen sind, werden nicht mehr berücksichtigt
-2. Der Zubau pro Gemeinde und voltage level wird Proportional zu 2035 anhand der Szenariodaten gebildet
-   Formel P_add(Gemeinde,Voltage Level, 2050) =  (P_sum(Gemeinde,Voltage Level, 2014)/ P_sum(Bundesland,2035) 
-						 ) x P_sum(Bundesland,2050) - P_sum(Gemeinde,Voltage Level, 2035)
-
-3. Anhand der Zubauzahlen pro Gemeinde und voltage level wird die Anzahl neuer Anlagen anhand der durchschnittlichen
-   Größe (kW) gebildet.
-
-4. Die Status Quo Daten werden in model_draft.ego_supply_res_powerplant_2035 überführt
-
-5. Die neuen Anlagen werden anhand des Mittelpunktes der Gemeinde in model_draft.ego_supply_res_powerplant_2035 
-   hinzugefügt
-   
-6. Übergabe an weiten Skript zur Zuweisung der Netzknoten
-               
-*/
-
 
 UPDATE model_draft.ego_supply_res_pv_2050_germany_mun_temp AA
 set     pv_add_cap_2050 = ( (AA.pv_cap_2035::numeric / pv_sq_2035.fs_cap_2035::numeric)*pv_scn_2050.fs_cap_2050 
@@ -1557,7 +1444,6 @@ FROM
 -- Count new additional Units -> new_units
 UPDATE model_draft.ego_supply_res_pv_2050_germany_mun_temp
   set pv_new_units =  CASE WHEN pv_add_cap_2050 = 0 Then pv_add_cap_2050 ELSE round(pv_add_cap_2050/pv_avg_cap,0)::int END; 
-
 
 -- Control Photovoltaic development 
 SELECT
@@ -1595,10 +1481,10 @@ AND upt.nuts IS NULL;
 -- Take status quo and add new Photovoltaic plants 
 -- Insert new units by pv_new_units 
 -- geom = centroid of municipality geom , see http://postgis.net/docs/ST_PointOnSurface.html
--- generation_subtype is not defined 
+-- generation_subtype is defined as solar
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
--- SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_supply_res_pv_2050_germany_mun_temp','ego_db_res_rea_by_scenario.sql',' '); 
+SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_supply_res_pv_2050_germany_mun_temp','ego_db_res_rea_by_scenario.sql',' '); 
 
 -- Add new PV units 
 Insert into model_draft.ego_dp_supply_res_powerplant (id,start_up_date, electrical_capacity,
@@ -1643,9 +1529,8 @@ WHERE ST_Intersects(regions.geom, upt.geom)
 AND generation_type = 'solar'
 AND upt.nuts is NULL;
 
-
 ---
-﻿-- Wind offshore eGo 100
+-- Wind offshore eGo 100
 ---
 
 DROP TABLE IF EXISTS 	model_draft.ego_supply_res_woff_2050_temp CASCADE;
@@ -1694,19 +1579,17 @@ Insert into model_draft.ego_dp_supply_res_powerplant
 --  Use of "easy" Prox2Now Method like Photovoltaic
 --- 
 /*
-
 Step 0 Get Nuts id per Unit 
 Step 1 capacity per municipality -> Pro2Now
        Status Quo
 Step 2 Structure of  Wind Onshore ( volatage level, size, Number)
 Step 3 add new Wind Onshore at center of municipality polygon
 Step 4 add voltage level, etc.
-
 */
 
 -- Step 1
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
--- SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_supply_res_wo_2050_germany_mun_temp','ego_db_res_rea_by_scenario.sql',' '); 
+SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_supply_res_wo_2050_germany_mun_temp','ego_db_res_rea_by_scenario.sql',' '); 
 
 DROP SEQUENCE IF EXISTS model_draft.ego_supply_res_wo_2050_germany_mun_id_seq CASCADE;
 CREATE SEQUENCE model_draft.ego_supply_res_wo_2050_germany_mun_id_seq START 1;
@@ -1814,12 +1697,11 @@ AND generation_subtype = 'wind_onshore'
 AND upt.nuts is Null;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
--- SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_supply_res_wo_2050_germany_mun_temp','ego_db_res_rea_by_scenario.sql',' '); 
+SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_supply_res_wo_2050_germany_mun_temp','ego_db_res_rea_by_scenario.sql',' '); 
 
 -- Add new wind shore units 
 Insert into model_draft.ego_dp_supply_res_powerplant (id,start_up_date, electrical_capacity,
             generation_type, generation_subtype, voltage_level, source, comment,geom,scenario,flag)
-
 	SELECT
 	  sub2.max_rown + row_number() over () as id ,
 	  '2049-12-31 00:00:00' as start_up_date,
@@ -1983,5 +1865,4 @@ CREATE MATERIALIZED VIEW model_draft.ego_supply_res_powerplant_ego100_mview AS
 		 ORDER BY id	
 	) sub3
 	Order by id;
-
 -- END
