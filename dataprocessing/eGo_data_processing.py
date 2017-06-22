@@ -115,7 +115,7 @@ def data_processing():
 #	
 #	
     ## VERSIONING
-     'ego_dp_versioning.sql'						    # Versioning
+     # 'ego_dp_versioning.sql'						    # Versioning
     
     ]
 

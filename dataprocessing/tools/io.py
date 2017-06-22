@@ -6,7 +6,7 @@ import sys
 def oedb_session(section='oep'):
     """Get SQLAlchemy session object with valid connection to OEDB"""
 
-    # get session object by oemof.db tools (requires ~/.egoio/config.ini
+    # get session object by oemof.db tools (requires ~/.egoio/config.ini)
     try:
         conn = connection(section=section)
 
