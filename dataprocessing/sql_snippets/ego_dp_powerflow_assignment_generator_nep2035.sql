@@ -283,6 +283,18 @@ WHERE scn_name='NEP 2035' AND generator_id IN
 	(SELECT un_id FROM model_draft.ego_supply_generator_nep2035 WHERE re_id IN 
 		(SELECT id FROM model_draft.ego_supply_res_powerplant_2035
 		WHERE generation_type='chp'));
+		
+-- Use generation_subtype if value of generation_type is not defined in pf-source table 
+
+UPDATE model_draft.ego_supply_pf_generator_single a
+	SET source = result.source
+		FROM 
+			(SELECT c.source_id as source, d.un_id as un_id
+			  FROM 	model_draft.ego_grid_pf_hv_source c, 
+			       	model_draft.ego_supply_res_powerplant_2035 d
+			  WHERE	d.generation_subtype = c.name) 
+			  AS 	result, model_draft.ego_supply_res_powerplant_2035 b
+WHERE a.scn_name = 'NEP 2035' AND a.generator_id = b.un_id AND a.generator_id = result.un_id AND source IS NULL; 
 
 
 -- Control is changed to PV for biomass powerplants > 50 MW
