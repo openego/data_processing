@@ -13,7 +13,7 @@ __author__ 	= "Ludee"
 Relocate "solar" with "6" & "7" to la_grid.
 There should be no rest.
 */
-
+ 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_dp_supply_res_powerplant','ego_dp_rea_m5.sql',' ');
 
