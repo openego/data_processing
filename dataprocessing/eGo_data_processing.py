@@ -45,7 +45,7 @@ def data_processing():
     # 'ego_dp_structure_versioning.sql',				# Setup versioning tables
     # 'ego_dp_structure_boundaries_vg250.sql',			# Setup vg250 borders
     # 'ego_dp_structure_osm_landuse.sql',         		# Filter OSM landuse
-    # 'eGo_dp_structure_census.sql',          			# Filter Census2011 with population
+    # 'ego_dp_structure_census.sql',          			# Filter Census2011 with population
     # 'ego_dp_preprocessing_conv_powerplant.sql',		# Setup conventional power plant list
     # 'ego_dp_preprocessing_res_powerplant.sql',		# Setup renewable power plant list
 
@@ -115,7 +115,7 @@ def data_processing():
 #	
 #	
     ## VERSIONING
-     'ego_dp_versioning.sql'						    # Versioning
+     # 'ego_dp_versioning.sql'						    # Versioning
     
     ]
 
