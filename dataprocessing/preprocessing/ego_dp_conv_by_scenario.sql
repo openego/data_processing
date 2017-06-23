@@ -19,8 +19,6 @@ Notes:
             Power plants by NEP 2035 scenario data
   Part III:
             Power plants by eGo 100 scenario data
-  Part IV:
-           Create View per Scenario
 
 Documentation:
 --------------
@@ -327,78 +325,5 @@ Update model_draft.ego_dp_supply_conv_powerplant A
 -- only pumed_storage for NEP2035 and Satatus Quo 
 -- No entries or changes use of MView
 
-
---------------------------------------------------------------------------------
--- Part IV 
---          Create Views by scenario
---	    Scenarios: ego 100%
---------------------------------------------------------------------------------
-
--- MView for Status Quo
-DROP MATERIALIZED VIEW IF EXISTS  model_draft.ego_supply_conv_powerplant_sq_mview CASCADE;
-CREATE MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_sq_view AS
-    SELECT *
-    FROM model_draft.ego_dp_supply_conv_powerplant
-    WHERE scenario = 'Status Quo';
-
--- MView for NEP 2035
-DROP MATERIALIZED VIEW IF EXISTS model_draft.ego_supply_conv_powerplant_nep2035_mview CASCADE;
-CREATE MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_nep2035_mview AS
-    SELECT *
-    FROM  model_draft.ego_dp_supply_conv_powerplant
-    WHERE scenario = 'NEP 2035'
-    AND   capacity >= 0 
-    AND   fuel not in ('hydro', 'run_of_river', 'reservoir')
-    ;
-
--- MView for eGo 100
-DROP MATERIALIZED VIEW IF EXISTS  model_draft.ego_supply_conv_powerplant_ego100_mview CASCADE;
-CREATE MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_ego2050_mview AS
-	SELECT 
-	  'tba'::text as version,
-	  id,
-	  bnetza_id,
-	  company,
-	  name,
-	  postcode,
-	  city,
-	  street,
-	  state,
-	  block,
-	  commissioned_original,
-	  commissioned,
-	  retrofit,
-	  shutdown,
-	  status,
-	  fuel,
-	  technology,
-	  type,
-	  eeg,
-	  chp,
-	  capacity,
-	  capacity_uba,
-	  chp_capacity_uba,
-	  efficiency_data,
-	  efficiency_estimate,
-	  network_node,
-	  voltage,
-	  network_operator,
-	  name_uba,
-	  lat,
-	  lon,
-	  'pumed storage for eGo 100'::text as comment,
-	  geom,
-	  voltage_level,
-	  subst_id,
-	  otg_id,
-	  un_id,
-	  la_id,
-	  'eGo 100'::text as scenario,
-	  'constantly'::text as flag,
-	  nuts
-	FROM model_draft.ego_dp_supply_conv_powerplant
-	WHERE scenario in('Status Quo','NEP 2035', 'eGo 100')
-	AND fuel = 'pumped_storage'
-	AND capacity >= 0;
 
 -- END
