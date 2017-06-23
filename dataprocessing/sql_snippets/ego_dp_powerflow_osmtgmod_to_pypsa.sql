@@ -106,6 +106,7 @@ AND bus_id NOT IN
 AND bus_id NOT IN 
 	(SELECT bus1 FROM model_draft.ego_grid_pf_hv_transformer WHERE scn_name='Status Quo'); 
 
+/*
 -- order bus0 and bus1 IDs for easier grouping of parallel lines
 
 UPDATE model_draft.ego_grid_pf_hv_line b
@@ -167,7 +168,6 @@ FROM model_draft.ego_grid_pf_hv_line
 WHERE scn_name = 'Status Quo'
 GROUP BY bus0,bus1;
 
-
 DELETE FROM  model_draft.ego_grid_pf_hv_line WHERE scn_name = 'Status Quo';
 UPDATE model_draft.ego_grid_pf_hv_line SET scn_name = 'Status Quo' WHERE scn_name = 'Status Quo grouped';
-
+*/
