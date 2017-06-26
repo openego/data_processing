@@ -27,36 +27,38 @@ CREATE TABLE model_draft.test_table (
 	geom	geometry(Point, 4326),
 	CONSTRAINT table_pkey PRIMARY KEY (id) );
 
+
 -- metadata description
 COMMENT ON TABLE model_draft.test_table IS '{
 	"title": "Good example title",
 	"description": "example metadata for example data",
 	"language": [ "eng", "ger", "fre" ],
-	"reference_date": "2016-01-01",
-	"spatial": [
+	"spatial":
 		{"extent": "europe",
-		"resolution": "100 m"} ],
-	"temporal": [
-		{"start": "2017-01-01",
+		"resolution": "100 m"},
+	"temporal":
+		{"reference_date": "2016-01-01",
+		"start": "2017-01-01",
 		"end": "2017-12-31",
-		"resolution": "hour"} ],
+		"resolution": "hour"},
 	"sources": [
 		{"name": "eGo dataprocessing", "description": "", "url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)", "copyright": "© Reiner Lemoine Institut"},
 		{"name": "", "description": "", "url": "", "license": "", "copyright": ""} ],
-	"license": [
-		{"id": "ODbL-1.0",
+	"license": {
+		"id": "ODbL-1.0",
 		"name": "Open Data Commons Open Database License 1.0",
 		"version": "1.0",
 		"url": "https://opendatacommons.org/licenses/odbl/1.0/",
 		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
-		"copyright": "© Reiner Lemoine Institut"} ],
+		"copyright": "© Reiner Lemoine Institut"},
 	"contributors": [
 		{"name": "Ludee", "email": "", "date": "2016-06-16", "comment": "Create metadata"},
 		{"name": "Ludee", "email": "", "date": "2016-11-22", "comment": "Update metadata"},
 		{"name": "Ludee", "email": "", "date": "2016-11-22", "comment": "Update header and license"},
 		{"name": "Ludee", "email": "", "date": "2017-03-16", "comment": "Add license to source"},
 		{"name": "Ludee", "email": "", "date": "2017-03-28", "comment": "Add copyright to source and license"},
-		{"name": "Ludee", "email": "", "date": "2017-05-30", "comment": "Update metadata to version 1.3"} ],
+		{"name": "Ludee", "email": "", "date": "2017-05-30", "comment": "Update metadata to version 1.3"},
+		{"name": "Ludee", "email": "", "date": "2017-06-26", "comment": "Update metadata version 1.3: move reference_date into temporal and remove some array"} ],
 	"resources": [
 		{"name": "model_draft.test_table",		
 		"format": "sql",
@@ -64,36 +66,41 @@ COMMENT ON TABLE model_draft.test_table IS '{
 			{"name": "id", "description": "Unique identifier", "unit": "" },
 			{"name": "year", "description": "Reference year", "unit": "" },
 			{"name": "value", "description": "Example value", "unit": "MW" },
-			{"name": "geom", "description": "Geometry", "unit": "" }] }],
+			{"name": "geom", "description": "Geometry", "unit": "" } ] } ],
 	"metadata_version": "1.3"}';
+
+-- select description
+SELECT obj_description('model_draft.test_table' ::regclass) ::json;
 
 -- select description
 SELECT obj_description('model_draft.test_table' ::regclass) ::json;
 
 
 -- metadata template
-COMMENT ON TABLE . IS '{
+COMMENT ON TABLE model_draft.test_table IS '{
 	"title": "",
 	"description": "",
 	"language": [ "eng", "ger" ],
-	"reference_date": "",
-	"spatial": [
-		{"extent": "",
-		"resolution": ""} ],
-	"temporal": [
+	"spatial": 
+		{"reference_date": "",
+		"extent": "",
+		"resolution": ""},
+	"temporal": 
 		{"start": "",
 		"end": "",
-		"resolution": ""} ],
+		"resolution": ""},
 	"sources": [
+		{"name": "", "description": "", "url": "", "license": "", "copyright": ""},
 		{"name": "", "description": "", "url": "", "license": "", "copyright": ""} ],
-	"license": [
+	"license":
 		{"id": "",
 		"name": "",
 		"version": "",
 		"url": "",
 		"instruction": "",
-		"copyright": ""} ],
+		"copyright": ""},
 	"contributors": [
+		{"name": "", "email": "", "date": "", "comment": ""},
 		{"name": "", "email": "", "date": "", "comment": ""} ],
 	"resources": [
 		{"name": "",		
@@ -106,4 +113,4 @@ COMMENT ON TABLE . IS '{
 	"metadata_version": "1.3"}';
 
 -- select description
-SELECT obj_description('.' ::regclass) ::json;
+SELECT obj_description('model_draft.test_table' ::regclass) ::json;
