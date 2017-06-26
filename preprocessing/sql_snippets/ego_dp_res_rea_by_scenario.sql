@@ -1767,6 +1767,9 @@ CREATE MATERIALIZED VIEW model_draft.ego_supply_res_powerplant_sq_mview AS
     FROM model_draft.ego_dp_supply_res_powerplant
     WHERE scenario =  'Status Quo';
 
+-- grant (oeuser)    
+ALTER TABLE model_draft.ego_supply_res_powerplant_sq_mview OWNER TO oeuser;
+
 -- MView for NEP 2035
 DROP MATERIALIZED VIEW IF EXISTS model_draft.ego_supply_res_powerplant_nep2035_mview CASCADE;
 CREATE MATERIALIZED VIEW model_draft.ego_supply_res_powerplant_nep2035_mview AS
@@ -1805,6 +1808,11 @@ CREATE MATERIALIZED VIEW model_draft.ego_supply_res_powerplant_nep2035_mview AS
 	) sub2
 	Order by id;
 -- 01:56:3626 hours execution time.
+
+-- grant (oeuser)    
+ALTER TABLE model_draft.ego_supply_res_powerplant_nep2035_mview OWNER TO oeuser;
+
+
 
 -- MView for eGo 100
 DROP MATERIALIZED VIEW IF EXISTS model_draft.ego_supply_res_powerplant_ego100_mview CASCADE;
@@ -1865,4 +1873,8 @@ CREATE MATERIALIZED VIEW model_draft.ego_supply_res_powerplant_ego100_mview AS
 		 ORDER BY id	
 	) sub3
 	Order by id;
+	
+-- grant (oeuser)    
+ALTER TABLE model_draft.ego_supply_res_powerplant_ego100_mview OWNER TO oeuser;
+
 -- END
