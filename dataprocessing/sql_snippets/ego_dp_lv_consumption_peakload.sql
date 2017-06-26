@@ -27,7 +27,7 @@ UPDATE 	model_draft.ego_grid_lv_griddistrict AS t1
 		SELECT
 		    lvgd.mvlv_subst_id as mvlv_subst_id,
 		    la.id AS la_id,
-			la.sector_consumption_residential * lvgd.sector_area_residential / zensus_sum.lvgd_zensus_sum AS real_cons
+			la.sector_consumption_residential * lvgd.zensus_sum / zensus_sum.lvgd_zensus_sum AS real_cons
 		FROM 	model_draft.ego_demand_loadarea AS la
 			INNER JOIN model_draft.ego_grid_lv_griddistrict AS lvgd ON (la.id = lvgd.la_id)
 			INNER JOIN zensus_sum AS zensus_sum ON (zensus_sum.la_id = lvgd.la_id)
