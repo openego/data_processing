@@ -34,7 +34,8 @@ COMMENT ON TABLE model_draft.test_table IS '{
 	"description": "example metadata for example data",
 	"language": [ "eng", "ger", "fre" ],
 	"spatial":
-		{"extent": "europe",
+		{"location": "none",
+		"extent": "europe",
 		"resolution": "100 m"},
 	"temporal":
 		{"reference_date": "2016-01-01",
@@ -82,11 +83,12 @@ COMMENT ON TABLE model_draft.test_table IS '{
 	"description": "",
 	"language": [ "eng", "ger" ],
 	"spatial": 
-		{"reference_date": "",
+		{"location": "",
 		"extent": "",
 		"resolution": ""},
 	"temporal": 
-		{"start": "",
+		{"reference_date": "",
+		"start": "",
 		"end": "",
 		"resolution": ""},
 	"sources": [
