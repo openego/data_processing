@@ -34,6 +34,8 @@ FROM	(SELECT	st.relid AS oid,
 			(table_schema='openstreetmap' AND table_name='osm_deu_polygon') OR
 			(table_schema='openstreetmap' AND table_name='osm_deu_ways') OR 
 			(table_schema='openstreetmap' AND table_name='osm_deu_nodes') OR
-			(table_schema='openstreetmap' AND table_name='osm_deu_line')
+			(table_schema='openstreetmap' AND table_name='osm_deu_line') OR
+			--(table_schema='economic' AND table_name='destatis_gva_per_district') OR
+			(table_schema='demand' AND table_name='ego_demand_federalstate')
 			) AS sub
 ORDER BY table_schema, table_name;
