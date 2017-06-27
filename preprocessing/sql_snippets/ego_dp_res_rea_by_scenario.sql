@@ -1800,10 +1800,10 @@ CREATE MATERIALIZED VIEW model_draft.ego_supply_res_powerplant_nep2035_mview AS
 		WHERE id in (
 			SELECT id
 			FROM model_draft.ego_dp_supply_res_powerplant
-			Where scenario in ('NEP 2035', 'ego-nep2035')
+			Where scenario in ('NEP 2035')
 			Group BY id
 			Order by id)
-		 AND scenario in ('NEP 2035', 'ego-nep2035')
+		 AND scenario in ('NEP 2035')
 		 ORDER BY id	
 	) sub2
 	Order by id;
@@ -1864,12 +1864,12 @@ CREATE MATERIALIZED VIEW model_draft.ego_supply_res_powerplant_ego100_mview AS
 		WHERE id in (
 			SELECT id
 			FROM model_draft.ego_dp_supply_res_powerplant
-			Where scenario in ('NEP 2035', 'ego-nep2035')
+			Where scenario in ('NEP 2035')
 			AND generation_subtype in ('solar','wind_offshore')
 			AND flag in ('commissioning')
 			Group BY id
 			Order by id)
-		 AND scenario in ('NEP 2035', 'ego-nep2035')
+		 AND scenario in ('NEP 2035')
 		 ORDER BY id	
 	) sub3
 	Order by id;
