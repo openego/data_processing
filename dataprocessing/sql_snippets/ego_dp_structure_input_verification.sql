@@ -35,7 +35,11 @@ FROM	(SELECT	st.relid AS oid,
 			(table_schema='openstreetmap' AND table_name='osm_deu_ways') OR 
 			(table_schema='openstreetmap' AND table_name='osm_deu_nodes') OR
 			(table_schema='openstreetmap' AND table_name='osm_deu_line') OR
+			(table_schema='social' AND table_name='destatis_zensus_population_per_ha') OR
 			--(table_schema='economic' AND table_name='destatis_gva_per_district') OR
-			(table_schema='demand' AND table_name='ego_demand_federalstate')
+			(table_schema='demand' AND table_name='ego_demand_federalstate') OR
+			(table_schema='supply' AND table_name='soethe_wind_potential_area') OR
+			(table_schema='model_draft' AND table_name='ego_supply_res_powerplant_sq_mview') OR
+			(table_schema='model_draft' AND table_name='ego_supply_conv_powerplant_sq_mview')
 			) AS sub
 ORDER BY table_schema, table_name;
