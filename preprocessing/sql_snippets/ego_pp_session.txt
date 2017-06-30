@@ -1,0 +1,11 @@
+<NotepadPlus>
+    <Session activeView="0">
+        <mainView activeIndex="0">
+            <File firstVisibleLine="0" xOffset="0" scrollWidth="791" startPos="0" endPos="0" selMode="0" lang="SQL" encoding="-1" filename="F:\git\github\openego\data_processing\preprocessing\sql_snippets\openstreetmap\ego_pp_osm_deu_import.sql" backupFilePath="" originalFileLastModifTimestamp="1498844910" />
+            <File firstVisibleLine="5" xOffset="0" scrollWidth="3136" startPos="710" endPos="710" selMode="0" lang="SQL" encoding="-1" filename="F:\git\github\openego\data_processing\preprocessing\sql_snippets\openstreetmap\ego_pp_osm_deu_metadata.sql" backupFilePath="" originalFileLastModifTimestamp="1498845834" />
+            <File firstVisibleLine="0" xOffset="0" scrollWidth="6223" startPos="463" endPos="463" selMode="0" lang="SQL" encoding="-1" filename="F:\git\github\openego\data_processing\preprocessing\sql_snippets\openstreetmap\ego_pp_osm_line_street_mview.sql" backupFilePath="" originalFileLastModifTimestamp="1498845866" />
+            <File firstVisibleLine="0" xOffset="0" scrollWidth="6223" startPos="267" endPos="267" selMode="0" lang="SQL" encoding="-1" filename="F:\git\github\openego\data_processing\preprocessing\sql_snippets\openstreetmap\ego_pp_osm_polygon_building_mview.sql" backupFilePath="" originalFileLastModifTimestamp="1498846356" />
+        </mainView>
+        <subView activeIndex="0" />
+    </Session>
+</NotepadPlus>

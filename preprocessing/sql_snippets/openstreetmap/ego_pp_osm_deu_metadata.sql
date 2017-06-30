@@ -41,7 +41,7 @@ COMMENT ON TABLE openstreetmap.osm_deu_line IS '{
 		{"name": "Ludee", "email": "", "date": "2017-06-30", "comment": "Update metadata to 1.3"} ],
 	"resources": [
 		{"name": "openstreetmap.osm_deu_line",		
-		"format": "sql",
+		"format": "PostgreSQL",
 		"fields": [
 			{"name": "gid", "description": "Unique identifier", "unit": "none" },
 			{"name": "osm_id", "description": "OSM identifier", "unit": "none" },
@@ -81,7 +81,7 @@ COMMENT ON TABLE openstreetmap.osm_deu_nodes IS '{
 		{"name": "Ludee", "email": "", "date": "2017-06-30", "comment": "Update metadata to 1.3"} ],
 	"resources": [
 		{"name": "openstreetmap.osm_deu_nodes",		
-		"format": "sql",
+		"format": "PostgreSQL",
 		"fields": [
 			{"name": "id", "description": "Unique identifier", "unit": "none" },
 			{"name": "lat", "description": "Latitude", "unit": "none" },
@@ -121,7 +121,7 @@ COMMENT ON TABLE openstreetmap.osm_deu_point IS '{
 		{"name": "Ludee", "email": "", "date": "2017-06-30", "comment": "Update metadata to 1.3"} ],
 	"resources": [
 		{"name": "openstreetmap.osm_deu_point",		
-		"format": "sql",
+		"format": "PostgreSQL",
 		"fields": [
 			{"name": "gid", "description": "Unique identifier", "unit": "none" },
 			{"name": "osm_id", "description": "OSM identifier", "unit": "none" },
@@ -161,7 +161,7 @@ COMMENT ON TABLE openstreetmap.osm_deu_polygon IS '{
 		{"name": "Ludee", "email": "", "date": "2017-06-30", "comment": "Update metadata to 1.3"} ],
 	"resources": [
 		{"name": "openstreetmap.osm_deu_polygon",		
-		"format": "sql",
+		"format": "PostgreSQL",
 		"fields": [
 			{"name": "gid", "description": "Unique identifier", "unit": "none" },
 			{"name": "osm_id", "description": "OSM identifier", "unit": "none" },
@@ -201,7 +201,7 @@ COMMENT ON TABLE openstreetmap.osm_deu_rels IS '{
 		{"name": "Ludee", "email": "", "date": "2017-06-30", "comment": "Update metadata to 1.3"} ],
 	"resources": [
 		{"name": "openstreetmap.osm_deu_rels",		
-		"format": "sql",
+		"format": "PostgreSQL",
 		"fields": [
 			{"name": "id", "description": "Unique identifier", "unit": "none" },
 			{"name": "way_off", "description": "", "unit": "none" },
@@ -244,7 +244,7 @@ COMMENT ON TABLE openstreetmap.osm_deu_roads IS '{
 		{"name": "Ludee", "email": "", "date": "2017-06-30", "comment": "Update metadata to 1.3"} ],
 	"resources": [
 		{"name": "openstreetmap.osm_deu_roads",		
-		"format": "sql",
+		"format": "PostgreSQL",
 		"fields": [
 			{"name": "gid", "description": "Unique identifier", "unit": "none" },
 			{"name": "osm_id", "description": "OSM identifier", "unit": "none" },
@@ -284,7 +284,7 @@ COMMENT ON TABLE openstreetmap.osm_deu_ways IS '{
 		{"name": "Ludee", "email": "", "date": "2017-06-30", "comment": "Update metadata to 1.3"} ],
 	"resources": [
 		{"name": "openstreetmap.osm_deu_ways",		
-		"format": "sql",
+		"format": "PostgreSQL",
 		"fields": [
 			{"name": "id", "description": "Unique identifier", "unit": "none" },
 			{"name": "nodes", "description": "", "unit": "none" },

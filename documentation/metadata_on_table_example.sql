@@ -62,12 +62,12 @@ COMMENT ON TABLE model_draft.test_table IS '{
 		{"name": "Ludee", "email": "", "date": "2017-06-26", "comment": "Update metadata version 1.3: move reference_date into temporal and remove some array"} ],
 	"resources": [
 		{"name": "model_draft.test_table",		
-		"format": "sql",
+		"format": "PostgreSQL",
 		"fields": [
-			{"name": "id", "description": "Unique identifier", "unit": "" },
-			{"name": "year", "description": "Reference year", "unit": "" },
-			{"name": "value", "description": "Example value", "unit": "MW" },
-			{"name": "geom", "description": "Geometry", "unit": "" } ] } ],
+			{"name": "id", "description": "Unique identifier", "unit": ""},
+			{"name": "year", "description": "Reference year", "unit": ""},
+			{"name": "value", "description": "Example value", "unit": "MW"},
+			{"name": "geom", "description": "Geometry", "unit": ""} ] } ],
 	"metadata_version": "1.3"}';
 
 -- select description
@@ -94,7 +94,7 @@ COMMENT ON TABLE model_draft.test_table IS '{
 	"sources": [
 		{"name": "", "description": "", "url": "", "license": "", "copyright": ""},
 		{"name": "", "description": "", "url": "", "license": "", "copyright": ""} ],
-	"license":
+	"license": 
 		{"id": "",
 		"name": "",
 		"version": "",
@@ -106,12 +106,12 @@ COMMENT ON TABLE model_draft.test_table IS '{
 		{"name": "", "email": "", "date": "", "comment": ""} ],
 	"resources": [
 		{"name": "",		
-		"format": "",
+		"format": "PostgreSQL",
 		"fields": [
-			{"name": "id", "description": "Unique identifier", "unit": "" },
-			{"name": "year", "description": "Reference year", "unit": "" },
-			{"name": "value", "description": "Example value", "unit": "" },
-			{"name": "geom", "description": "Geometry", "unit": "" }] }],
+			{"name": "id", "description": "Unique identifier", "unit": ""},
+			{"name": "year", "description": "Reference year", "unit": ""},
+			{"name": "value", "description": "Example value", "unit": ""},
+			{"name": "geom", "description": "Geometry", "unit": ""} ] } ],
 	"metadata_version": "1.3"}';
 
 -- select description

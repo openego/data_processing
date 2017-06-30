@@ -1,85 +1,81 @@
-﻿CREATE MATERIALIZED VIEW openstreetmap.osm_deu_polygon_building_mview
+﻿/*
+Extracted OSM buildings from polygon
 
-AS
+__copyright__ 	= "Reiner Lemoine Institut"
+__license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
+__url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
+__author__ 	= "Ludee"
+*/
 
-SELECT gid,ST_TRANSFORM(geom,3035) AS geom,building FROM openstreetmap.osm_deu_polygon
-WHERE building IS NOT NULL;
 
-ALTER TABLE openstreetmap.osm_deu_polygon_building_mview
-  OWNER TO oeuser;
-GRANT ALL ON TABLE openstreetmap.osm_deu_polygon_building_mview TO oeuser WITH GRANT OPTION;
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.10','input','openstreetmap','osm_deu_polygon','ego_pp_osm_polygon_building_mview.sql','');
 
+-- building
+DROP MATERIALIZED VIEW IF EXISTS	openstreetmap.osm_deu_polygon_building_mview;
+CREATE MATERIALIZED VIEW 		openstreetmap.osm_deu_polygon_building_mview AS
+	SELECT 	gid,
+		osm_id,
+		building,
+		tags,
+		ST_TRANSFORM(geom,3035) AS geom
+	FROM 	openstreetmap.osm_deu_polygon
+	WHERE 	building IS NOT NULL;
+
+-- grant (oeuser)
+ALTER TABLE openstreetmap.osm_deu_polygon_building_mview OWNER TO oeuser;
+
+-- index
+CREATE UNIQUE INDEX osm_deu_polygon_building_mview_gid_idx
+	ON openstreetmap.osm_deu_polygon_building_mview (gid);
+
+-- index GIST (geom)
 CREATE INDEX osm_deu_polygon_building_mview_geom_idx
-  ON openstreetmap.osm_deu_polygon_building_mview
-  USING gist
-  (geom);
-
-COMMENT ON MATERIALIZED VIEW openstreetmap.osm_deu_polygon_building_mview
-  IS '{
-        "Name": "osm_deu_polygon_building_mview",
-
-	"Source": [{
-                  "Name": "Geofabrik - Download - OpenStreetMap Data Extracts",
-                  "URL":  "http://download.geofabrik.de/europe/germany.html#" }],
-
-	"Reference date": ["01.10.2016"],
-
-	"Date of collection": ["10.10.2016"],
-
-	"Original file": ["germany-161001.osm.pbf"],
-
-	"Spatial resolution": ["Germany"],
-
-	"Description": ["OSM Datensatz Deutschland - nur Gebäudepolygone"],
-
-	"Column":[ 
-	
-	{"name":"gid",
-	"description":"unique identifier",
-	"unit":" " },
-
-	{"name":"geom",
-	"description":"geometry information , SRID 3035",
-	"unit":" " }
+	ON openstreetmap.osm_deu_polygon_building_mview USING GIST (geom);
 
 
-	],
+-- metadata
+COMMENT ON MATERIALIZED VIEW openstreetmap.osm_deu_polygon_building_mview IS '{
+	"title": "OpenStreetMap (OSM) - Germany - Polygon - Building",
+	"description": "OpenStreetMap is a free, editable map of the whole world that is being built by volunteers largely from scratch and released with an open-content license.",
+	"language": [ "eng", "ger" ],
+	"spatial": 
+		{"location": "none",
+		"extent": "Germany",
+		"resolution": "vector"},
+	"temporal": 
+		{"reference_date": "2016-10-01",
+		"start": "none",
+		"end": "none",
+		"resolution": "none"},
+	"sources": [
+		{"name": "Geofabrik - Download - OpenStreetMap Data Extracts",
+		"description": "",
+		"url": "http://download.geofabrik.de/europe/germany.html",
+		"license": "Open Data Commons Open Database License 1.0 (ODbL-1.0)",
+		"copyright": "© OpenStreetMap contributors"} ],
+	"license": 
+		{"id": 	"ODbL-1.0",
+		"name": "Open Data Commons Open Database License 1.0",
+		"version": "1.0",
+		"url": "http://www.openstreetmap.org/copyright/en",
+		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
+		"copyright": "© OpenStreetMap contributors"},
+	"contributors": [
+		{"name": "Martin Glauer", "email": "", "date": "2016-10-10", "comment": "Create table with osm2pgsql"},
+		{"name": "Ludee", "email": "", "date": "2016-10-11", "comment": "Execute setup"},
+		{"name": "Jonas Gütter", "email":"", "date": "2016-11-08", "comment": "Filter buildings"},
+		{"name": "Ludee", "email": "", "date": "2017-06-30", "comment": "Update metadata to 1.3"} ],
+	"resources": [
+		{"name": "openstreetmap.osm_deu_polygon_building_mview",		
+		"format": "PostgreSQL",
+		"fields": [
+			{"name": "gid", "description": "Unique identifier", "unit": "none" },
+			{"name": "osm_id", "description": "OSM identifier", "unit": "none" },
+			{"name": "building", "description": "Building key", "unit": "none" },
+			{"name": "tags", "description": "A tag consists of two items, a key and a value. Tags describe specific features of map elements (nodes, ways, or relations) or changesets. Both items are free format text fields, but often represent numeric or other structured items. Conventions are agreed on the meaning and use of tags, which are captured on this wiki.", "url": "http://wiki.openstreetmap.org/wiki/Tags", "unit": "none" },
+			{"name": "geom", "description": "Geometry", "unit": "" } ] } ],
+	"metadata_version": "1.3"}';
 
-	"Changes":[
-	  { "name":"Martin Glauer", 
-	    "mail":" ", 
-	    "date":"10.10.2016", 
-	    "comment":"Created table with osm2pgsql"},
-
-	   { "name":"Ludwig Hülk", 
-	    "mail":"ludwig.huelk@rl-institut.de", 
-	    "date":"11.10.2016", 
-	    "comment":"Executed setup"},
-	    
-	   { "name":"Jonas Gütter", 
-	    "mail":"jonas.guetterk@rl-institut.de", 
-	    "date":"16.10.2016", 
-	    "comment":"filtered buildings"}  ],
-
-	
-	"Licence": ["Open Data Commons Open Database Lizenz (ODbL)"],
-
-	"Instructions for proper use": ["Wir verlangen die Verwendung des Hinweises OpenStreetMap-Mitwirkende. Du musst auch klarstellen, dass die Daten unter der Open-Database-Lizenz verfügbar sind, und, sofern du unsere Kartenkacheln verwendest, dass die Kartografie gemäß CC BY-SA lizenziert ist. Du kannst dies tun, indem du auf www.openstreetmap.org/copyright verlinkst. Ersatzweise, und als Erfordernis, falls du OSM in Datenform weitergibst, kannst du die Lizenz(en) direkt verlinken und benennen. In Medien, in denen keine Links möglich sind (z.B. gedruckten Werken), empfehlen wir dir, deine Leser direkt auf openstreetmap.org zu verweisen (möglicherweise mit dem Erweitern von OpenStreetMap zur vollen Adresse), auf opendatacommons.org, und, sofern zutreffend, auf creativecommons.org. Der Hinweis sollte für eine durchsuchbare elektronische Karte in der Ecke der Karte stehen."]
-	}';
-
-
-SELECT obj_description('openstreetmap.osm_deu_polygon_building_mview' ::regclass) ::json;
-
- -- Add entry to scenario logtable
-INSERT INTO	model_draft.ego_scenario_log (version,io,schema_name,table_name,script_name,entries,status,user_name,timestamp,metadata)
-SELECT	'0.2' AS version,
-	'output' AS io,
-	'openstreetmap' AS schema_name,
-	'osm_deu_polygon_building_mview' AS table_name,
-	'osm_deu_polygon_building_mview.sql' AS script_name,
-	COUNT(*)AS entries,
-	'OK' AS status,
-	session_user AS user_name,
-	NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp,
-	obj_description('openstreetmap.osm_deu_polygon_building_mview' ::regclass) ::json AS metadata
-FROM	openstreetmap.osm_deu_polygon_building_mview;
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.10','output','openstreetmap','osm_deu_polygon_building_mview','ego_pp_osm_polygon_building_mview.sql','');

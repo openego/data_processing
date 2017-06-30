@@ -75,7 +75,7 @@ COMMENT ON MATERIALIZED VIEW openstreetmap.osm_deu_line_street_mview IS '{
 		{"name": "Ludee", "email": "", "date": "2017-06-30", "comment": "Update metadata to 1.3"} ],
 	"resources": [
 		{"name": "openstreetmap.osm_deu_line_street_mview",		
-		"format": "sql",
+		"format": "PostgreSQL",
 		"fields": [
 			{"name": "gid", "description": "Unique identifier", "unit": "none" },
 			{"name": "osm_id", "description": "OSM identifier", "unit": "none" },
