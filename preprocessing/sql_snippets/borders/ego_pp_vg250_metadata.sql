@@ -41,7 +41,7 @@ COMMENT ON TABLE political_boundary.bkg_vg250_2_lan IS '{
 		"instruction": "",
 		"copyright": "© GeoBasis-DE / BKG 2016 (Daten verändert)"},
 	"contributors": [
-		{"name": "Ludee", "email": "", "date": "2015-09-02", "comment": "Create MView (with tiny buffer because of intersection in official data)"},
+		{"name": "Ludee", "email": "", "date": "2016-09-02", "comment": "Create table"},
 		{"name": "Ludee", "email": "", "date": "2016-11-16", "comment": "Add metadata"},
 		{"name": "Ludee", "email": "", "date": "2017-03-21", "comment": "Update metadata to 1.1"},
 		{"name": "Ludee", "email": "", "date": "2017-06-30", "comment": "Update metadata to 1.3"} ],
@@ -110,7 +110,7 @@ COMMENT ON TABLE political_boundary.bkg_vg250_3_rbz IS '{
 		"instruction": "",
 		"copyright": "© GeoBasis-DE / BKG 2016 (Daten verändert)"},
 	"contributors": [
-		{"name": "Ludee", "email": "", "date": "2015-09-02", "comment": "Create MView (with tiny buffer because of intersection in official data)"},
+		{"name": "Ludee", "email": "", "date": "2016-09-02", "comment": "Create table"},
 		{"name": "Ludee", "email": "", "date": "2016-11-16", "comment": "Add metadata"},
 		{"name": "Ludee", "email": "", "date": "2017-03-21", "comment": "Update metadata to 1.1"},
 		{"name": "Ludee", "email": "", "date": "2017-06-30", "comment": "Update metadata to 1.3"} ],
@@ -179,7 +179,7 @@ COMMENT ON TABLE political_boundary.bkg_vg250_4_krs IS '{
 		"instruction": "",
 		"copyright": "© GeoBasis-DE / BKG 2016 (Daten verändert)"},
 	"contributors": [
-		{"name": "Ludee", "email": "", "date": "2015-09-02", "comment": "Create MView (with tiny buffer because of intersection in official data)"},
+		{"name": "Ludee", "email": "", "date": "2016-09-02", "comment": "Create table"},
 		{"name": "Ludee", "email": "", "date": "2016-11-16", "comment": "Add metadata"},
 		{"name": "Ludee", "email": "", "date": "2017-03-21", "comment": "Update metadata to 1.1"},
 		{"name": "Ludee", "email": "", "date": "2017-06-30", "comment": "Update metadata to 1.3"} ],
@@ -248,7 +248,7 @@ COMMENT ON TABLE political_boundary.bkg_vg250_5_vwg IS '{
 		"instruction": "",
 		"copyright": "© GeoBasis-DE / BKG 2016 (Daten verändert)"},
 	"contributors": [
-		{"name": "Ludee", "email": "", "date": "2015-09-02", "comment": "Create MView (with tiny buffer because of intersection in official data)"},
+		{"name": "Ludee", "email": "", "date": "2016-09-02", "comment": "Create table"},
 		{"name": "Ludee", "email": "", "date": "2016-11-16", "comment": "Add metadata"},
 		{"name": "Ludee", "email": "", "date": "2017-03-21", "comment": "Update metadata to 1.1"},
 		{"name": "Ludee", "email": "", "date": "2017-06-30", "comment": "Update metadata to 1.3"} ],
@@ -317,7 +317,7 @@ COMMENT ON TABLE political_boundary.bkg_vg250_6_gem IS '{
 		"instruction": "",
 		"copyright": "© GeoBasis-DE / BKG 2016 (Daten verändert)"},
 	"contributors": [
-		{"name": "Ludee", "email": "", "date": "2015-09-02", "comment": "Create MView (with tiny buffer because of intersection in official data)"},
+		{"name": "Ludee", "email": "", "date": "2016-09-02", "comment": "Create table"},
 		{"name": "Ludee", "email": "", "date": "2016-11-16", "comment": "Add metadata"},
 		{"name": "Ludee", "email": "", "date": "2017-03-21", "comment": "Update metadata to 1.1"},
 		{"name": "Ludee", "email": "", "date": "2017-06-30", "comment": "Update metadata to 1.3"} ],
