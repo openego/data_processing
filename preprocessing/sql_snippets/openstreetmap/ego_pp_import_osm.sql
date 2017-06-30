@@ -30,35 +30,18 @@ WHERE     schemaname='public'
     AND indexname LIKE '%_pkey';
 */ 
 
--- 0. Create new schema
---CREATE SCHEMA openstreetmap;
-
--- ALTER DEFAULT PRIVILEGES IN SCHEMA openstreetmap
---     GRANT INSERT, SELECT, UPDATE, DELETE, TRUNCATE, REFERENCES, TRIGGER ON TABLES
---     TO oeuser;
--- 
--- ALTER DEFAULT PRIVILEGES IN SCHEMA openstreetmap
---     GRANT SELECT, UPDATE, USAGE ON SEQUENCES
---     TO oeuser;
--- 
--- ALTER DEFAULT PRIVILEGES IN SCHEMA openstreetmap
---     GRANT EXECUTE ON FUNCTIONS
---     TO oeuser;
-
-
 -- 0. grant oeuser
 DO
 $$
 DECLARE
     row record;
 BEGIN
-    FOR row IN SELECT tablename FROM pg_tables WHERE schemaname = 'public' AND tablename LIKE 'osm_test_%'
+    FOR row IN SELECT tablename FROM pg_tables WHERE schemaname = 'public' AND tablename LIKE 'osm_%'
     LOOP
         EXECUTE 'ALTER TABLE public.' || quote_ident(row.tablename) || ' OWNER TO oeuser;';
     END LOOP;
 END;
 $$;
-
 
 
 -- 1. Remove wrong index
@@ -95,7 +78,6 @@ BEGIN
     END LOOP;
 END;
 $$;
-
 
 -- 2. Add column 'gid' serial
 -- 3. Add primary keys
@@ -139,7 +121,7 @@ $$;
 --         USING ST_SetSRID(geom,3857);
 
 
--- 6. Add imdex
+-- 6. Add index
 -- 6.1 Add indexes GIST (geom)
 DO
 $$
@@ -176,72 +158,9 @@ BEGIN
 END;
 $$;
 
--- 7. Add metadata
-DO
-$$
-DECLARE
-    row record;
-    comment_string text;
-BEGIN
-    comment_string := '{
-        "Name": "OpenStreetMap - Germany",
 
-	"Source": [{
-                  "Name": "Geofabrik - Download - OpenStreetMap Data Extracts",
-                  "URL":  "http://download.geofabrik.de/europe/germany.html#" }],
 
-	"Reference date": ["01.10.2016"],
-
-	"Date of collection": ["10.10.2016"],
-
-	"Original file": ["germany-161001.osm.pbf"],
-
-	"Spatial resolution": ["Germany"],
-
-	"Description": ["OSM Datensatz Deutschland"],
-
-	"Column":[ 
-	
-	{"name":"osm_id",
-	"description":"OSM ID",
-	"description_german":"OSM ID",
-	"unit":" " },
-
-	{"name":"oedb.style",
-	"description":"Keys defined in this file",
-	"description_german":"Alle keys in diesem Dokument dokumentiert",
-	"unit":" "}
-	],
-
-	"Changes":[
-	  { "name":"Martin Glauer", 
-	    "mail":" ", 
-	    "date":"10.10.2016", 
-	    "comment":"Created table with osm2pgsql"},
-
-	   { "name":"Ludwig Hülk", 
-	    "mail":"ludwig.huelk@rl-institut.de", 
-	    "date":"11.10.2016", 
-	    "comment":"Executed setup"}  ],
-
-	"ToDo": ["Keys beschreiben und/oder aus osm.wiki verlinken"],
-
-	"Licence": ["Open Data Commons Open Database Lizenz (ODbL)"],
-
-	"Instructions for proper use": ["Wir verlangen die Verwendung des Hinweises OpenStreetMap-Mitwirkende. Du musst auch klarstellen, dass die Daten unter der Open-Database-Lizenz verfügbar sind, und, sofern du unsere Kartenkacheln verwendest, dass die Kartografie gemäß CC BY-SA lizenziert ist. Du kannst dies tun, indem du auf www.openstreetmap.org/copyright verlinkst. Ersatzweise, und als Erfordernis, falls du OSM in Datenform weitergibst, kannst du die Lizenz(en) direkt verlinken und benennen. In Medien, in denen keine Links möglich sind (z.B. gedruckten Werken), empfehlen wir dir, deine Leser direkt auf openstreetmap.org zu verweisen (möglicherweise mit dem Erweitern von OpenStreetMap zur vollen Adresse), auf opendatacommons.org, und, sofern zutreffend, auf creativecommons.org. Der Hinweis sollte für eine durchsuchbare elektronische Karte in der Ecke der Karte stehen."]
-	}';
-
-    FOR row IN SELECT tablename FROM pg_tables 
-    WHERE schemaname='public' 
-    AND tablename LIKE 'osm_%'
-    LOOP
-        EXECUTE 'COMMENT ON TABLE public.' || quote_ident(row.tablename) || ' IS ' || quote_literal(comment_string);
-
-    END LOOP;
-END;
-$$;
-
--- 8. Move all tables to new schema
+-- 7. Move all tables to new schema
 DO
 $$
 DECLARE
@@ -253,3 +172,299 @@ BEGIN
     END LOOP;
 END;
 $$;
+
+
+-- 8. metadata
+COMMENT ON TABLE openstreetmap.osm_deu_line IS '{
+	"title": "OpenStreetMap (OSM) - Germany - Line",
+	"description": "OpenStreetMap is a free, editable map of the whole world that is being built by volunteers largely from scratch and released with an open-content license.",
+	"language": [ "eng", "ger" ],
+	"spatial": 
+		{"location": "none",
+		"extent": "Germany",
+		"resolution": "vector"},
+	"temporal": 
+		{"reference_date": "2016-10-01",
+		"start": "none",
+		"end": "none",
+		"resolution": "none"},
+	"sources": [
+		{"name": "Geofabrik - Download - OpenStreetMap Data Extracts",
+		"description": "",
+		"url": "http://download.geofabrik.de/europe/germany.html",
+		"license": "Open Data Commons Open Database License 1.0 (ODbL-1.0)",
+		"copyright": "© OpenStreetMap contributors"} ],
+	"license": 
+		{"id": 	"ODbL-1.0",
+		"name": "Open Data Commons Open Database License 1.0",
+		"version": "1.0",
+		"url": "http://www.openstreetmap.org/copyright/en",
+		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
+		"copyright": "© OpenStreetMap contributors"},
+	"contributors": [
+		{"name": "Martin Glauer", "mail": "", "date": "2016-10-10", "comment": "Create table with osm2pgsql"},
+		{"name": "Ludee", "mail": "", "date": "2016-10-11", "comment": "Execute setup"},
+		{"name": "Ludee", "mail": "", "date": "2017-06-30", "comment": "Update metadata to 1.3"} ],
+	"resources": [
+		{"name": "openstreetmap.osm_deu_line",		
+		"format": "sql",
+		"fields": [
+			{"name": "gid", "description": "Unique identifier", "unit": "none" },
+			{"name": "osm_id", "description": "OSM identifier", "unit": "none" },
+			{"name": "tags", "description": "A tag consists of two items, a key and a value. Tags describe specific features of map elements (nodes, ways, or relations) or changesets. Both items are free format text fields, but often represent numeric or other structured items. Conventions are agreed on the meaning and use of tags, which are captured on this wiki.", "url": "http://wiki.openstreetmap.org/wiki/Tags", "unit": "none" },
+			{"name": "geom", "description": "Geometry", "unit": "" } ] } ],
+	"metadata_version": "1.3"}';
+
+COMMENT ON TABLE openstreetmap.osm_deu_nodes IS '{
+	"title": "OpenStreetMap (OSM) - Germany - Nodes",
+	"description": "OpenStreetMap is a free, editable map of the whole world that is being built by volunteers largely from scratch and released with an open-content license.",
+	"language": [ "eng", "ger" ],
+	"spatial": 
+		{"location": "none",
+		"extent": "Germany",
+		"resolution": "none"},
+	"temporal": 
+		{"reference_date": "2016-10-01",
+		"start": "none",
+		"end": "none",
+		"resolution": "none"},
+	"sources": [
+		{"name": "Geofabrik - Download - OpenStreetMap Data Extracts",
+		"description": "",
+		"url": "http://download.geofabrik.de/europe/germany.html",
+		"license": "Open Data Commons Open Database License 1.0 (ODbL-1.0)",
+		"copyright": "© OpenStreetMap contributors"} ],
+	"license": 
+		{"id": 	"ODbL-1.0",
+		"name": "Open Data Commons Open Database License 1.0",
+		"version": "1.0",
+		"url": "http://www.openstreetmap.org/copyright/en",
+		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
+		"copyright": "© OpenStreetMap contributors"},
+	"contributors": [
+		{"name": "Martin Glauer", "mail": "", "date": "2016-10-10", "comment": "Create table with osm2pgsql"},
+		{"name": "Ludee", "mail": "", "date": "2016-10-11", "comment": "Execute setup"},
+		{"name": "Ludee", "mail": "", "date": "2017-06-30", "comment": "Update metadata to 1.3"} ],
+	"resources": [
+		{"name": "openstreetmap.osm_deu_nodes",		
+		"format": "sql",
+		"fields": [
+			{"name": "id", "description": "Unique identifier", "unit": "none" },
+			{"name": "lat", "description": "Latitude", "unit": "none" },
+			{"name": "lon", "description": "Longitutde", "unit": "none" },
+			{"name": "tags", "description": "Tags", "unit": "" } ] } ],
+	"metadata_version": "1.3"}';
+
+COMMENT ON TABLE openstreetmap.osm_deu_point IS '{
+	"title": "OpenStreetMap (OSM) - Germany - Point",
+	"description": "OpenStreetMap is a free, editable map of the whole world that is being built by volunteers largely from scratch and released with an open-content license.",
+	"language": [ "eng", "ger" ],
+	"spatial": 
+		{"location": "none",
+		"extent": "Germany",
+		"resolution": "none"},
+	"temporal": 
+		{"reference_date": "2016-10-01",
+		"start": "none",
+		"end": "none",
+		"resolution": "none"},
+	"sources": [
+		{"name": "Geofabrik - Download - OpenStreetMap Data Extracts",
+		"description": "",
+		"url": "http://download.geofabrik.de/europe/germany.html",
+		"license": "Open Data Commons Open Database License 1.0 (ODbL-1.0)",
+		"copyright": "© OpenStreetMap contributors"} ],
+	"license": 
+		{"id": 	"ODbL-1.0",
+		"name": "Open Data Commons Open Database License 1.0",
+		"version": "1.0",
+		"url": "http://www.openstreetmap.org/copyright/en",
+		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
+		"copyright": "© OpenStreetMap contributors"},
+	"contributors": [
+		{"name": "Martin Glauer", "mail": "", "date": "2016-10-10", "comment": "Create table with osm2pgsql"},
+		{"name": "Ludee", "mail": "", "date": "2016-10-11", "comment": "Execute setup"},
+		{"name": "Ludee", "mail": "", "date": "2017-06-30", "comment": "Update metadata to 1.3"} ],
+	"resources": [
+		{"name": "openstreetmap.osm_deu_point",		
+		"format": "sql",
+		"fields": [
+			{"name": "gid", "description": "Unique identifier", "unit": "none" },
+			{"name": "osm_id", "description": "OSM identifier", "unit": "none" },
+			{"name": "tags", "description": "A tag consists of two items, a key and a value. Tags describe specific features of map elements (nodes, ways, or relations) or changesets. Both items are free format text fields, but often represent numeric or other structured items. Conventions are agreed on the meaning and use of tags, which are captured on this wiki.", "url": "http://wiki.openstreetmap.org/wiki/Tags", "unit": "none" },
+			{"name": "geom", "description": "Geometry", "unit": "" } ] } ],
+	"metadata_version": "1.3"}';
+
+COMMENT ON TABLE openstreetmap.osm_deu_polygon IS '{
+	"title": "OpenStreetMap (OSM) - Germany - Polygon",
+	"description": "OpenStreetMap is a free, editable map of the whole world that is being built by volunteers largely from scratch and released with an open-content license.",
+	"language": [ "eng", "ger" ],
+	"spatial": 
+		{"location": "none",
+		"extent": "Germany",
+		"resolution": "none"},
+	"temporal": 
+		{"reference_date": "2016-10-01",
+		"start": "none",
+		"end": "none",
+		"resolution": "none"},
+	"sources": [
+		{"name": "Geofabrik - Download - OpenStreetMap Data Extracts",
+		"description": "",
+		"url": "http://download.geofabrik.de/europe/germany.html",
+		"license": "Open Data Commons Open Database License 1.0 (ODbL-1.0)",
+		"copyright": "© OpenStreetMap contributors"} ],
+	"license": 
+		{"id": 	"ODbL-1.0",
+		"name": "Open Data Commons Open Database License 1.0",
+		"version": "1.0",
+		"url": "http://www.openstreetmap.org/copyright/en",
+		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
+		"copyright": "© OpenStreetMap contributors"},
+	"contributors": [
+		{"name": "Martin Glauer", "mail": "", "date": "2016-10-10", "comment": "Create table with osm2pgsql"},
+		{"name": "Ludee", "mail": "", "date": "2016-10-11", "comment": "Execute setup"},
+		{"name": "Ludee", "mail": "", "date": "2017-06-30", "comment": "Update metadata to 1.3"} ],
+	"resources": [
+		{"name": "openstreetmap.osm_deu_polygon",		
+		"format": "sql",
+		"fields": [
+			{"name": "gid", "description": "Unique identifier", "unit": "none" },
+			{"name": "osm_id", "description": "OSM identifier", "unit": "none" },
+			{"name": "tags", "description": "A tag consists of two items, a key and a value. Tags describe specific features of map elements (nodes, ways, or relations) or changesets. Both items are free format text fields, but often represent numeric or other structured items. Conventions are agreed on the meaning and use of tags, which are captured on this wiki.", "url": "http://wiki.openstreetmap.org/wiki/Tags", "unit": "none" },
+			{"name": "geom", "description": "Geometry", "unit": "" } ] } ],
+	"metadata_version": "1.3"}';
+
+COMMENT ON TABLE openstreetmap.osm_deu_rels IS '{
+	"title": "OpenStreetMap (OSM) - Germany - Rels",
+	"description": "OpenStreetMap is a free, editable map of the whole world that is being built by volunteers largely from scratch and released with an open-content license.",
+	"language": [ "eng", "ger" ],
+	"spatial": 
+		{"location": "none",
+		"extent": "Germany",
+		"resolution": "none"},
+	"temporal": 
+		{"reference_date": "2016-10-01",
+		"start": "none",
+		"end": "none",
+		"resolution": "none"},
+	"sources": [
+		{"name": "Geofabrik - Download - OpenStreetMap Data Extracts",
+		"description": "",
+		"url": "http://download.geofabrik.de/europe/germany.html",
+		"license": "Open Data Commons Open Database License 1.0 (ODbL-1.0)",
+		"copyright": "© OpenStreetMap contributors"} ],
+	"license": 
+		{"id": 	"ODbL-1.0",
+		"name": "Open Data Commons Open Database License 1.0",
+		"version": "1.0",
+		"url": "http://www.openstreetmap.org/copyright/en",
+		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
+		"copyright": "© OpenStreetMap contributors"},
+	"contributors": [
+		{"name": "Martin Glauer", "mail": "", "date": "2016-10-10", "comment": "Create table with osm2pgsql"},
+		{"name": "Ludee", "mail": "", "date": "2016-10-11", "comment": "Execute setup"},
+		{"name": "Ludee", "mail": "", "date": "2017-06-30", "comment": "Update metadata to 1.3"} ],
+	"resources": [
+		{"name": "openstreetmap.osm_deu_rels",		
+		"format": "sql",
+		"fields": [
+			{"name": "id", "description": "Unique identifier", "unit": "none" },
+			{"name": "way_off", "description": "", "unit": "none" },
+			{"name": "rel_off", "description": "", "unit": "none" },
+			{"name": "parts", "description": "", "unit": "none" },
+			{"name": "members", "description": "", "unit": "none" },
+			{"name": "tags", "description": "", "unit": "none" },
+			{"name": "pending", "description": "", "unit": "" } ] } ],
+	"metadata_version": "1.3"}';
+
+COMMENT ON TABLE openstreetmap.osm_deu_roads IS '{
+	"title": "OpenStreetMap (OSM) - Germany - Roads",
+	"description": "OpenStreetMap is a free, editable map of the whole world that is being built by volunteers largely from scratch and released with an open-content license.",
+	"language": [ "eng", "ger" ],
+	"spatial": 
+		{"location": "none",
+		"extent": "Germany",
+		"resolution": "none"},
+	"temporal": 
+		{"reference_date": "2016-10-01",
+		"start": "none",
+		"end": "none",
+		"resolution": "none"},
+	"sources": [
+		{"name": "Geofabrik - Download - OpenStreetMap Data Extracts",
+		"description": "",
+		"url": "http://download.geofabrik.de/europe/germany.html",
+		"license": "Open Data Commons Open Database License 1.0 (ODbL-1.0)",
+		"copyright": "© OpenStreetMap contributors"} ],
+	"license": 
+		{"id": 	"ODbL-1.0",
+		"name": "Open Data Commons Open Database License 1.0",
+		"version": "1.0",
+		"url": "http://www.openstreetmap.org/copyright/en",
+		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
+		"copyright": "© OpenStreetMap contributors"},
+	"contributors": [
+		{"name": "Martin Glauer", "mail": "", "date": "2016-10-10", "comment": "Create table with osm2pgsql"},
+		{"name": "Ludee", "mail": "", "date": "2016-10-11", "comment": "Execute setup"},
+		{"name": "Ludee", "mail": "", "date": "2017-06-30", "comment": "Update metadata to 1.3"} ],
+	"resources": [
+		{"name": "openstreetmap.osm_deu_roads",		
+		"format": "sql",
+		"fields": [
+			{"name": "gid", "description": "Unique identifier", "unit": "none" },
+			{"name": "osm_id", "description": "OSM identifier", "unit": "none" },
+			{"name": "tags", "description": "A tag consists of two items, a key and a value. Tags describe specific features of map elements (nodes, ways, or relations) or changesets. Both items are free format text fields, but often represent numeric or other structured items. Conventions are agreed on the meaning and use of tags, which are captured on this wiki.", "url": "http://wiki.openstreetmap.org/wiki/Tags", "unit": "none" },
+			{"name": "geom", "description": "Geometry", "unit": "" } ] } ],
+	"metadata_version": "1.3"}';
+
+COMMENT ON TABLE openstreetmap.osm_deu_ways IS '{
+	"title": "OpenStreetMap (OSM) - Germany - Ways",
+	"description": "OpenStreetMap is a free, editable map of the whole world that is being built by volunteers largely from scratch and released with an open-content license.",
+	"language": [ "eng", "ger" ],
+	"spatial": 
+		{"location": "none",
+		"extent": "Germany",
+		"resolution": "none"},
+	"temporal": 
+		{"reference_date": "2016-10-01",
+		"start": "none",
+		"end": "none",
+		"resolution": "none"},
+	"sources": [
+		{"name": "Geofabrik - Download - OpenStreetMap Data Extracts",
+		"description": "",
+		"url": "http://download.geofabrik.de/europe/germany.html",
+		"license": "Open Data Commons Open Database License 1.0 (ODbL-1.0)",
+		"copyright": "© OpenStreetMap contributors"} ],
+	"license": 
+		{"id": 	"ODbL-1.0",
+		"name": "Open Data Commons Open Database License 1.0",
+		"version": "1.0",
+		"url": "http://www.openstreetmap.org/copyright/en",
+		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
+		"copyright": "© OpenStreetMap contributors"},
+	"contributors": [
+		{"name": "Martin Glauer", "mail": "", "date": "2016-10-10", "comment": "Create table with osm2pgsql"},
+		{"name": "Ludee", "mail": "", "date": "2016-10-11", "comment": "Execute setup"},
+		{"name": "Ludee", "mail": "", "date": "2017-06-30", "comment": "Update metadata to 1.3"} ],
+	"resources": [
+		{"name": "openstreetmap.osm_deu_ways",		
+		"format": "sql",
+		"fields": [
+			{"name": "id", "description": "Unique identifier", "unit": "none" },
+			{"name": "nodes", "description": "", "unit": "none" },
+			{"name": "tags", "description": "A tag consists of two items, a key and a value. Tags describe specific features of map elements (nodes, ways, or relations) or changesets. Both items are free format text fields, but often represent numeric or other structured items. Conventions are agreed on the meaning and use of tags, which are captured on this wiki.", "url": "http://wiki.openstreetmap.org/wiki/Tags", "unit": "none" },
+			{"name": "pending", "description": "", "unit": "" } ] } ],
+	"metadata_version": "1.3"}';
+
+-- 9. scenario log
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.10','preprocessing','openstreetmap','osm_deu_line','ego_pp_import_osm.sql','setup osm tables');
+SELECT ego_scenario_log('v0.2.10','preprocessing','openstreetmap','osm_deu_nodes','ego_pp_import_osm.sql','setup osm tables');
+SELECT ego_scenario_log('v0.2.10','preprocessing','openstreetmap','osm_deu_point','ego_pp_import_osm.sql','setup osm tables');
+SELECT ego_scenario_log('v0.2.10','preprocessing','openstreetmap','osm_deu_polygon','ego_pp_import_osm.sql','setup osm tables');
+SELECT ego_scenario_log('v0.2.10','preprocessing','openstreetmap','osm_deu_rels','ego_pp_import_osm.sql','setup osm tables');
+SELECT ego_scenario_log('v0.2.10','preprocessing','openstreetmap','osm_deu_roads','ego_pp_import_osm.sql','setup osm tables');
+SELECT ego_scenario_log('v0.2.10','preprocessing','openstreetmap','osm_deu_ways','ego_pp_import_osm.sql','setup osm tables');

@@ -33,11 +33,11 @@ COMMENT ON TABLE model_draft.test_table IS '{
 	"title": "Good example title",
 	"description": "example metadata for example data",
 	"language": [ "eng", "ger", "fre" ],
-	"spatial":
+	"spatial": 
 		{"location": "none",
 		"extent": "europe",
 		"resolution": "100 m"},
-	"temporal":
+	"temporal": 
 		{"reference_date": "2016-01-01",
 		"start": "2017-01-01",
 		"end": "2017-12-31",
@@ -45,8 +45,8 @@ COMMENT ON TABLE model_draft.test_table IS '{
 	"sources": [
 		{"name": "eGo dataprocessing", "description": "", "url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)", "copyright": "© Reiner Lemoine Institut"},
 		{"name": "", "description": "", "url": "", "license": "", "copyright": ""} ],
-	"license": {
-		"id": "ODbL-1.0",
+	"license": 
+		{"id": "ODbL-1.0",
 		"name": "Open Data Commons Open Database License 1.0",
 		"version": "1.0",
 		"url": "https://opendatacommons.org/licenses/odbl/1.0/",
