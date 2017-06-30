@@ -1,7 +1,7 @@
 /*
 Script to assign osmTGmod-id to substation
 
-__copyright__ 	= "NEXT ENERGY"
+__copyright__ 	= "DLR Institute for Networked Energy Systems"
 __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
 __url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
 __author__ 	= "lukasol, C. Matke"
