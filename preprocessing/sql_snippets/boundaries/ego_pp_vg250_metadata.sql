@@ -43,8 +43,8 @@ COMMENT ON TABLE political_boundary.bkg_vg250_2_lan IS '{
 	"contributors": [
 		{"name": "Ludee", "email": "", "date": "2016-09-02", "comment": "Create table"},
 		{"name": "Ludee", "email": "", "date": "2016-11-16", "comment": "Add metadata"},
-		{"name": "Ludee", "email": "", "date": "2017-03-21", "comment": "Update metadata to 1.1"},
-		{"name": "Ludee", "email": "", "date": "2017-06-30", "comment": "Update metadata to 1.3"} ],
+		{"name": "Ludee", "email": "", "date": "2017-03-21", "comment": "Update metadata to v1.1"},
+		{"name": "Ludee", "email": "", "date": "2017-06-30", "comment": "Update metadata to v1.3"} ],
 	"resources": [
 		{"name": "political_boundary.bkg_vg250_2_lan",		
 		"format": "PostgreSQL",
@@ -112,8 +112,8 @@ COMMENT ON TABLE political_boundary.bkg_vg250_3_rbz IS '{
 	"contributors": [
 		{"name": "Ludee", "email": "", "date": "2016-09-02", "comment": "Create table"},
 		{"name": "Ludee", "email": "", "date": "2016-11-16", "comment": "Add metadata"},
-		{"name": "Ludee", "email": "", "date": "2017-03-21", "comment": "Update metadata to 1.1"},
-		{"name": "Ludee", "email": "", "date": "2017-06-30", "comment": "Update metadata to 1.3"} ],
+		{"name": "Ludee", "email": "", "date": "2017-03-21", "comment": "Update metadata to v1.1"},
+		{"name": "Ludee", "email": "", "date": "2017-06-30", "comment": "Update metadata to v1.3"} ],
 	"resources": [
 		{"name": "political_boundary.bkg_vg250_3_rbz",		
 		"format": "PostgreSQL",
@@ -181,8 +181,8 @@ COMMENT ON TABLE political_boundary.bkg_vg250_4_krs IS '{
 	"contributors": [
 		{"name": "Ludee", "email": "", "date": "2016-09-02", "comment": "Create table"},
 		{"name": "Ludee", "email": "", "date": "2016-11-16", "comment": "Add metadata"},
-		{"name": "Ludee", "email": "", "date": "2017-03-21", "comment": "Update metadata to 1.1"},
-		{"name": "Ludee", "email": "", "date": "2017-06-30", "comment": "Update metadata to 1.3"} ],
+		{"name": "Ludee", "email": "", "date": "2017-03-21", "comment": "Update metadata to v1.1"},
+		{"name": "Ludee", "email": "", "date": "2017-06-30", "comment": "Update metadata to v1.3"} ],
 	"resources": [
 		{"name": "political_boundary.bkg_vg250_4_krs",		
 		"format": "PostgreSQL",
@@ -250,8 +250,8 @@ COMMENT ON TABLE political_boundary.bkg_vg250_5_vwg IS '{
 	"contributors": [
 		{"name": "Ludee", "email": "", "date": "2016-09-02", "comment": "Create table"},
 		{"name": "Ludee", "email": "", "date": "2016-11-16", "comment": "Add metadata"},
-		{"name": "Ludee", "email": "", "date": "2017-03-21", "comment": "Update metadata to 1.1"},
-		{"name": "Ludee", "email": "", "date": "2017-06-30", "comment": "Update metadata to 1.3"} ],
+		{"name": "Ludee", "email": "", "date": "2017-03-21", "comment": "Update metadata to v1.1"},
+		{"name": "Ludee", "email": "", "date": "2017-06-30", "comment": "Update metadata to v1.3"} ],
 	"resources": [
 		{"name": "political_boundary.bkg_vg250_5_vwg",		
 		"format": "PostgreSQL",
@@ -319,8 +319,8 @@ COMMENT ON TABLE political_boundary.bkg_vg250_6_gem IS '{
 	"contributors": [
 		{"name": "Ludee", "email": "", "date": "2016-09-02", "comment": "Create table"},
 		{"name": "Ludee", "email": "", "date": "2016-11-16", "comment": "Add metadata"},
-		{"name": "Ludee", "email": "", "date": "2017-03-21", "comment": "Update metadata to 1.1"},
-		{"name": "Ludee", "email": "", "date": "2017-06-30", "comment": "Update metadata to 1.3"} ],
+		{"name": "Ludee", "email": "", "date": "2017-03-21", "comment": "Update metadata to v1.1"},
+		{"name": "Ludee", "email": "", "date": "2017-06-30", "comment": "Update metadata to v1.3"} ],
 	"resources": [
 		{"name": "political_boundary.bkg_vg250_6_gem",		
 		"format": "PostgreSQL",

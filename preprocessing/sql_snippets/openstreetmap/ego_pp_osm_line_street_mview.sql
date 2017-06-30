@@ -72,7 +72,7 @@ COMMENT ON MATERIALIZED VIEW openstreetmap.osm_deu_line_street_mview IS '{
 		{"name": "Martin Glauer", "email": "", "date": "2016-10-10", "comment": "Create table with osm2pgsql"},
 		{"name": "Ludee", "email": "", "date": "2016-10-11", "comment": "Execute setup"},
 		{"name": "Jonas Gütter", "email":"", "date": "2016-11-08", "comment": "Filter streets"},
-		{"name": "Ludee", "email": "", "date": "2017-06-30", "comment": "Update metadata to 1.3"} ],
+		{"name": "Ludee", "email": "", "date": "2017-06-30", "comment": "Update metadata to v1.3"} ],
 	"resources": [
 		{"name": "openstreetmap.osm_deu_line_street_mview",		
 		"format": "PostgreSQL",

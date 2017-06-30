@@ -38,7 +38,7 @@ COMMENT ON TABLE openstreetmap.osm_deu_line IS '{
 	"contributors": [
 		{"name": "Martin Glauer", "email": "", "date": "2016-10-10", "comment": "Create table with osm2pgsql"},
 		{"name": "Ludee", "email": "", "date": "2016-10-11", "comment": "Execute setup"},
-		{"name": "Ludee", "email": "", "date": "2017-06-30", "comment": "Update metadata to 1.3"} ],
+		{"name": "Ludee", "email": "", "date": "2017-06-30", "comment": "Update metadata to v1.3"} ],
 	"resources": [
 		{"name": "openstreetmap.osm_deu_line",		
 		"format": "PostgreSQL",
@@ -78,7 +78,7 @@ COMMENT ON TABLE openstreetmap.osm_deu_nodes IS '{
 	"contributors": [
 		{"name": "Martin Glauer", "email": "", "date": "2016-10-10", "comment": "Create table with osm2pgsql"},
 		{"name": "Ludee", "email": "", "date": "2016-10-11", "comment": "Execute setup"},
-		{"name": "Ludee", "email": "", "date": "2017-06-30", "comment": "Update metadata to 1.3"} ],
+		{"name": "Ludee", "email": "", "date": "2017-06-30", "comment": "Update metadata to v1.3"} ],
 	"resources": [
 		{"name": "openstreetmap.osm_deu_nodes",		
 		"format": "PostgreSQL",
@@ -118,7 +118,7 @@ COMMENT ON TABLE openstreetmap.osm_deu_point IS '{
 	"contributors": [
 		{"name": "Martin Glauer", "email": "", "date": "2016-10-10", "comment": "Create table with osm2pgsql"},
 		{"name": "Ludee", "email": "", "date": "2016-10-11", "comment": "Execute setup"},
-		{"name": "Ludee", "email": "", "date": "2017-06-30", "comment": "Update metadata to 1.3"} ],
+		{"name": "Ludee", "email": "", "date": "2017-06-30", "comment": "Update metadata to v1.3"} ],
 	"resources": [
 		{"name": "openstreetmap.osm_deu_point",		
 		"format": "PostgreSQL",
@@ -158,7 +158,7 @@ COMMENT ON TABLE openstreetmap.osm_deu_polygon IS '{
 	"contributors": [
 		{"name": "Martin Glauer", "email": "", "date": "2016-10-10", "comment": "Create table with osm2pgsql"},
 		{"name": "Ludee", "email": "", "date": "2016-10-11", "comment": "Execute setup"},
-		{"name": "Ludee", "email": "", "date": "2017-06-30", "comment": "Update metadata to 1.3"} ],
+		{"name": "Ludee", "email": "", "date": "2017-06-30", "comment": "Update metadata to v1.3"} ],
 	"resources": [
 		{"name": "openstreetmap.osm_deu_polygon",		
 		"format": "PostgreSQL",
@@ -198,7 +198,7 @@ COMMENT ON TABLE openstreetmap.osm_deu_rels IS '{
 	"contributors": [
 		{"name": "Martin Glauer", "email": "", "date": "2016-10-10", "comment": "Create table with osm2pgsql"},
 		{"name": "Ludee", "email": "", "date": "2016-10-11", "comment": "Execute setup"},
-		{"name": "Ludee", "email": "", "date": "2017-06-30", "comment": "Update metadata to 1.3"} ],
+		{"name": "Ludee", "email": "", "date": "2017-06-30", "comment": "Update metadata to v1.3"} ],
 	"resources": [
 		{"name": "openstreetmap.osm_deu_rels",		
 		"format": "PostgreSQL",
@@ -241,7 +241,7 @@ COMMENT ON TABLE openstreetmap.osm_deu_roads IS '{
 	"contributors": [
 		{"name": "Martin Glauer", "email": "", "date": "2016-10-10", "comment": "Create table with osm2pgsql"},
 		{"name": "Ludee", "email": "", "date": "2016-10-11", "comment": "Execute setup"},
-		{"name": "Ludee", "email": "", "date": "2017-06-30", "comment": "Update metadata to 1.3"} ],
+		{"name": "Ludee", "email": "", "date": "2017-06-30", "comment": "Update metadata to v1.3"} ],
 	"resources": [
 		{"name": "openstreetmap.osm_deu_roads",		
 		"format": "PostgreSQL",
@@ -281,7 +281,7 @@ COMMENT ON TABLE openstreetmap.osm_deu_ways IS '{
 	"contributors": [
 		{"name": "Martin Glauer", "email": "", "date": "2016-10-10", "comment": "Create table with osm2pgsql"},
 		{"name": "Ludee", "email": "", "date": "2016-10-11", "comment": "Execute setup"},
-		{"name": "Ludee", "email": "", "date": "2017-06-30", "comment": "Update metadata to 1.3"} ],
+		{"name": "Ludee", "email": "", "date": "2017-06-30", "comment": "Update metadata to v1.3"} ],
 	"resources": [
 		{"name": "openstreetmap.osm_deu_ways",		
 		"format": "PostgreSQL",
