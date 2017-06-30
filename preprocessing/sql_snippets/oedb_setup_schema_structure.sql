@@ -266,6 +266,27 @@ COMMENT ON SCHEMA society IS '{
 		"comment": "Rename schema name" }
 		] }';
 
+-- CREATE SCHEMA openstreetmap; 
+ALTER SCHEMA openstreetmap OWNER TO oeuser;
+GRANT ALL ON SCHEMA openstreetmap TO oeuser WITH GRANT OPTION;
+ALTER DEFAULT PRIVILEGES IN SCHEMA openstreetmap GRANT ALL ON TABLES TO oeuser;
+ALTER DEFAULT PRIVILEGES IN SCHEMA openstreetmap GRANT ALL ON SEQUENCES TO oeuser;
+ALTER DEFAULT PRIVILEGES IN SCHEMA openstreetmap GRANT EXECUTE ON FUNCTIONS TO oeuser;
+COMMENT ON SCHEMA openstreetmap IS '{
+"name": "OpenStreetMap (OSM)",
+"description": "OSM dumps from geofabrik.de",
+"examples": "Line, node, point, polygon, rels, roads, ways",
+"contributors": [
+		{"name": "Ludwig Hülk",
+		"email": "",
+		"date":  "2016-09-13",
+		"comment": "Create schema" },
+		{"name": "Ludwig Hülk",
+		"email": "",
+		"date":  "2017-06-30",
+		"comment": "Update schema metadata" }
+		] }';
+		
 -- CREATE SCHEMA public; 
 COMMENT ON SCHEMA public IS '{
 "name": "Public",
