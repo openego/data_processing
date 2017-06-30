@@ -66,7 +66,7 @@ COMMENT ON TABLE grid.ego_dp_ehv_substation IS '{
 		"version": "1.0",
 		"url": "https://opendatacommons.org/licenses/odbl/1.0/",
 		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
-		"copyright": "© NEXT ENERGY"} ],
+		"copyright": "© DLR Institute for Networked Energy Systems"} ],
 	"contributors": [
 		{"name": "lukasol", "email": "", "date":  "20.10.2016", "comment": "Create substations" },
 		{"name": "Ludee", "email": "", "date": "15.01.2017", "comment": "Update metadata"},
@@ -160,7 +160,7 @@ COMMENT ON TABLE grid.ego_dp_hvmv_substation IS '{
 		"version": "1.0",
 		"url": "https://opendatacommons.org/licenses/odbl/1.0/",
 		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
-		"copyright": "© NEXT ENERGY"} ],
+		"copyright": "© DLR Institute for Networked Energy Systems"} ],
 	"contributors": [
 		{"name": "lukasol", "email": "", "date":  "20.10.2016", "comment": "Create substations" },
 		{"name": "Ludee", "email": "", "date": "15.01.2017", "comment": "Update metadata"},
@@ -1141,7 +1141,7 @@ COMMENT ON TABLE grid.ego_pf_hv_line IS '{
 		"version": "1.0",
 		"url": "https://opendatacommons.org/licenses/odbl/1.0/",
 		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
-		"copyright": "© NEXT ENERGY"} ],
+		"copyright": "© DLR Institute for Networked Energy Systems"} ],
 	"contributors": [
 		{"name": "IlkaCu", "email": "", "date": "26.04.2017", "comment": "Create table"}],
 	"resources": [{
@@ -1649,7 +1649,7 @@ COMMENT ON TABLE grid.ego_pf_hv_transformer IS '{
 		"version": "1.0",
 		"url": "https://opendatacommons.org/licenses/odbl/1.0/",
 		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
-		"copyright": "© NEXT ENERGY"} ],
+		"copyright": "© DLR Institute for Networked Energy Systems"} ],
 	"contributors": [
 		{"name": "IlkaCu", "email": "", "date": "26.04.2017", "comment": "Create table"}],
 	"resources": [{
