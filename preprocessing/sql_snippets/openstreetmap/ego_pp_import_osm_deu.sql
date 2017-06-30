@@ -14,19 +14,19 @@ __author__ 	= "Ludee"
 SELECT     *
 FROM     information_schema.tables
 WHERE     table_schema = 'public'
-    AND table_name LIKE 'osm_%';
+    AND table_name LIKE 'osm_deu_%';
 
 -- Select all tables with OSM in public
 SELECT     * 
 FROM     pg_tables
 WHERE     schemaname='public'
-    AND tablename LIKE 'osm_%';
+    AND tablename LIKE 'osm_deu_%';
 
 -- Select all indexes with OSM in public
 SELECT     * 
 FROM     pg_indexes
 WHERE     schemaname='public'
-    AND tablename LIKE 'osm_%'
+    AND tablename LIKE 'osm_deu_%'
     AND indexname LIKE '%_pkey';
 */ 
 
@@ -36,7 +36,7 @@ $$
 DECLARE
     row record;
 BEGIN
-    FOR row IN SELECT tablename FROM pg_tables WHERE schemaname = 'public' AND tablename LIKE 'osm_%'
+    FOR row IN SELECT tablename FROM pg_tables WHERE schemaname = 'public' AND tablename LIKE 'osm_deu_%'
     LOOP
         EXECUTE 'ALTER TABLE public.' || quote_ident(row.tablename) || ' OWNER TO oeuser;';
     END LOOP;
@@ -166,7 +166,7 @@ $$
 DECLARE
     row record;
 BEGIN
-    FOR row IN SELECT tablename FROM pg_tables WHERE schemaname = 'public' AND tablename LIKE 'osm_%'
+    FOR row IN SELECT tablename FROM pg_tables WHERE schemaname = 'public' AND tablename LIKE 'osm_deu_%'
     LOOP
         EXECUTE 'ALTER TABLE public.' || quote_ident(row.tablename) || ' SET SCHEMA openstreetmap;';
     END LOOP;
@@ -461,10 +461,10 @@ COMMENT ON TABLE openstreetmap.osm_deu_ways IS '{
 -- 9. scenario log
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','preprocessing','openstreetmap','osm_deu_line','ego_pp_import_osm.sql','setup osm tables');
-SELECT ego_scenario_log('v0.2.10','preprocessing','openstreetmap','osm_deu_nodes','ego_pp_import_osm.sql','setup osm tables');
-SELECT ego_scenario_log('v0.2.10','preprocessing','openstreetmap','osm_deu_point','ego_pp_import_osm.sql','setup osm tables');
-SELECT ego_scenario_log('v0.2.10','preprocessing','openstreetmap','osm_deu_polygon','ego_pp_import_osm.sql','setup osm tables');
-SELECT ego_scenario_log('v0.2.10','preprocessing','openstreetmap','osm_deu_rels','ego_pp_import_osm.sql','setup osm tables');
-SELECT ego_scenario_log('v0.2.10','preprocessing','openstreetmap','osm_deu_roads','ego_pp_import_osm.sql','setup osm tables');
-SELECT ego_scenario_log('v0.2.10','preprocessing','openstreetmap','osm_deu_ways','ego_pp_import_osm.sql','setup osm tables');
+SELECT ego_scenario_log('v0.2.10','preprocessing','openstreetmap','osm_deu_line','ego_pp_import_osm_deu.sql','setup osm tables');
+SELECT ego_scenario_log('v0.2.10','preprocessing','openstreetmap','osm_deu_nodes','ego_pp_import_osm_deu.sql','setup osm tables');
+SELECT ego_scenario_log('v0.2.10','preprocessing','openstreetmap','osm_deu_point','ego_pp_import_osm_deu.sql','setup osm tables');
+SELECT ego_scenario_log('v0.2.10','preprocessing','openstreetmap','osm_deu_polygon','ego_pp_import_osm_deu.sql','setup osm tables');
+SELECT ego_scenario_log('v0.2.10','preprocessing','openstreetmap','osm_deu_rels','ego_pp_import_osm_deu.sql','setup osm tables');
+SELECT ego_scenario_log('v0.2.10','preprocessing','openstreetmap','osm_deu_roads','ego_pp_import_osm_deu.sql','setup osm tables');
+SELECT ego_scenario_log('v0.2.10','preprocessing','openstreetmap','osm_deu_ways','ego_pp_import_osm_deu.sql','setup osm tables');
