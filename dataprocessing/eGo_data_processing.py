@@ -40,6 +40,9 @@ def data_processing():
                      'python_scripts'))
 
     snippets = [
+	## VACUUM FULL
+	# 'ego_dp_vacuum_full.sql'
+	
     ## STRUCTURE & SETUP (WARNING)
     # 'ego_dp_structure_scenariolog.sql',				# Setup scenario log table
     # 'ego_dp_structure_versioning.sql',				# Setup versioning tables
@@ -112,11 +115,13 @@ def data_processing():
 #	'ego_dp_powerflow_timeseries_demand.sql',				# Insert demand series into corresponding powerflow table
 #	'ego_dp_powerflow_lopf_data.sql',						# Set marginal costs for generators and storages
 #	'ego_dp_powerflow_load_timeseries_NEP2035.sql', 		# Copy demand timeseries to NEP 2035 scenario
-#	
-#	
+	
+	
     ## VERSIONING
      # 'ego_dp_versioning.sql'						    # Versioning
     
+	## VACUUM FULL
+	# 'ego_dp_vacuum_full.sql'
     ]
 
     # get database connection
