@@ -55,6 +55,7 @@ COMMENT ON TABLE political_boundary.bkg_vg250_1_sta IS '{
 		"format": "PostgreSQL",
 		"fields": [
 			{"name": "reference_date", "description": "Reference date", "unit": "none"},
+			{"name": "level", "description": "Ebene???", "unit": "none"},
 			{"name": "id", "description": "Unique identifier", "unit": "none"},
 			{"name": "ade", "description": "Administrative Ebene", "unit": "none"},
 			{"name": "gf", "description": "Geofaktor", "unit": "none"},
