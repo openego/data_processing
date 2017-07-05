@@ -341,10 +341,13 @@ UPDATE model_draft.ego_supply_pf_generator_single a
 	SET 	aggr_id = nextval('model_draft.ego_supply_pf_generator_single_aggr_id')
 	WHERE 	scn_name= 'eGo 100' AND a.p_nom >= 50;
 
+-- Delete all generators with p_nom=0
+
+DELETE FROM model_draft.ego_supply_pf_generator_single WHERE p_nom IS NULL OR p_nom = 0; 
 
 -- Accumulate data from pf_generator_single and insert into hv_powerflow schema. 
 
-DELETE * FROM model_draft.ego_grid_pf_hv_generator WHERE scn_name IN ('Status Quo', 'NEP 2035', 'eGo 100'); 
+DELETE FROM model_draft.ego_grid_pf_hv_generator WHERE scn_name IN ('Status Quo', 'NEP 2035', 'eGo 100'); 
 
 -- source = (wind and solar) and p_nom < 50 MW
 INSERT INTO model_draft.ego_grid_pf_hv_generator (
