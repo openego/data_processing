@@ -108,14 +108,12 @@ def data_processing():
 ##
 #	'ego_dp_powerflow_grid_future_scenarios.sql',		# Copy grid to future scenarios
 #  	'ego_dp_powerflow_assignment_generator.sql',  		# Assign generators to corresponding substation (SQ, NEP2035, eGo100)
-#	'ego_dp_powerflow_assignment_load.sql',        		# Assign loads to their corresponding substation
+#	'ego_dp_powerflow_assignment_load.sql',        		# Assign loads to their corresponding substation (SQ, NEP2035, eGo100)
 
-#	'ego_dp_powerflow_assignment_load_nep2035.sql',		# Copy loads from SQ scenario
-#	'ego_dp_powerflow_timeseries_generator.sql',			# Transfer renpassG!S results into the corresponding powerflow table
-#	'ego_dp_powerflow_griddistrict_demand.py',			# Demand per MV Griddistrict
-#	'ego_dp_powerflow_timeseries_demand.sql',				# Insert demand series into corresponding powerflow table
-#	'ego_dp_powerflow_lopf_data.sql',						# Set marginal costs for generators and storages
-#	'ego_dp_powerflow_load_timeseries_NEP2035.sql', 		# Copy demand timeseries to NEP 2035 scenario
+#	'ego_dp_powerflow_timeseries_generator.sql',		# Transfer renpassG!S results into the corresponding powerflow table
+#	'ego_dp_powerflow_griddistrict_demand.py',		# Demand per MV Griddistrict
+#	'ego_dp_powerflow_timeseries_demand.sql',		# Insert demand series into corresponding powerflow table (SQ, NEP2035, eGo100)
+#	'ego_dp_powerflow_lopf_data.sql',			# Set marginal costs for generators and storages
 #	
 #	
     ## VERSIONING
