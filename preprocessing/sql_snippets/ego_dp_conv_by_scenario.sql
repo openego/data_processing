@@ -19,8 +19,6 @@ Notes:
             Power plants by NEP 2035 scenario data
   Part III:
             Power plants by eGo 100 scenario data
-  Part IV:
-           Create View per Scenario
 
 Documentation:
 --------------
@@ -328,6 +326,7 @@ Update model_draft.ego_dp_supply_conv_powerplant A
 -- No entries or changes use of MView
 
 
+<<<<<<< HEAD:preprocessing/sql_snippets/ego_dp_conv_by_scenario.sql
 --------------------------------------------------------------------------------
 -- Part IV 
 --          Create Views by scenario
@@ -410,4 +409,6 @@ CREATE MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_ego100_mview AS
 
 -- grant (oeuser)    
 ALTER TABLE model_draft.ego_supply_conv_powerplant_ego100_mview OWNER TO oeuser;
+=======
+>>>>>>> refactor/assignment_generator:dataprocessing/preprocessing/ego_dp_conv_by_scenario.sql
 -- END

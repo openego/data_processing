@@ -193,3 +193,30 @@ GROUP BY a.bus;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_grid_pf_hv_load','ego_dp_powerflow_assignment_load.sql',' ');
+
+
+
+-------------
+-- Add information for future scenarios to hv_powerflow schema under the assumption that the consumption remains constant 
+-------------
+
+-- Loads in scenario 'NEP 2035' are equivalent to 'Status Quo'
+
+DELETE FROM model_draft.ego_grid_pf_hv_load WHERE scn_name = 'NEP 2035'; 
+
+INSERT INTO model_draft.ego_grid_pf_hv_load
+SELECT 'NEP 2035', a.load_id, a.bus, a.sign, a.e_annual
+FROM model_draft.ego_grid_pf_hv_load a
+WHERE scn_name= 'Status Quo'; 
+
+-- Loads in scenario 'eGo 100' are equivalent to 'Status Quo'
+
+DELETE FROM model_draft.ego_grid_pf_hv_load WHERE scn_name = 'eGo 100'; 
+
+INSERT INTO model_draft.ego_grid_pf_hv_load
+SELECT 'eGo 100', a.load_id, a.bus, a.sign, a.e_annual
+FROM model_draft.ego_grid_pf_hv_load a
+WHERE scn_name= 'Status Quo'; 
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_grid_pf_hv_load','ego_dp_powerflow_assignment_load_nep2035.sql',' ');
