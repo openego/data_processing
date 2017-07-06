@@ -98,15 +98,21 @@ CREATE INDEX ego_dp_supply_res_powerplant_idx
   ON model_draft.ego_dp_supply_res_powerplant
   USING gist
   (geom);
-
--- set meta data
-COMMENT ON TABLE model_draft.ego_dp_supply_res_powerplant
-  IS 
-  '{
+  
+-- set metadata  
+COMMENT ON TABLE model_draft.ego_dp_supply_res_powerplant IS '{
 	"title": "Renewable power plants in Germany by Scenario",
-	"description": "example meta data for example data",
-	"language": [ "eng", "ger"],
-	"reference_date": "2016-01-01",
+	"description": "Liste of renewable power plants in Germany by Scenario status quo, NEP 2035 and 2050 of the eGo project",
+	"language": [ "eng", "ger" ],
+	"spatial": 
+		{"location": "Germany",
+		"extent": "Europe",
+		"resolution": "100m"},
+	"temporal": 
+		{"reference_date": "2016-01-01",
+		"start": "1900-01-01",
+		"end": "2049-12-31",
+		"resolution": ""},
 	"sources": [
 		{"name": "eGo data processing", 
 		"description": "Scripts with allocate Geometry by OpenStreetMap Objects or create future scenarios by high resolution geo-allocation", 
@@ -125,10 +131,7 @@ COMMENT ON TABLE model_draft.ego_dp_supply_res_powerplant
 		"url": "https://www.bundesnetzagentur.de/DE/Sachgebiete/ElektrizitaetundGas/Unternehmen_Institutionen/ErneuerbareEnergien/Anlagenregister/Anlagenregister_Veroeffentlichung/Anlagenregister_Veroeffentlichungen_node.html", 
 		"license": "Creative Commons Namensnennung-Keine Bearbeitung 3.0 Deutschland Lizenz", 
 		"copyright": "© Bundesnetzagentur für Elektrizität, Gas, Telekommunikation, Post und Eisenbahnen; Pressestelle"}
-		 ],
-	"spatial": [
-		{"extend": "Germany",
-		"resolution": "100m"} ],
+	        ],
 	"license": [
 		{"id": "ODbL-1.0",
 		"name": "Open Data Commons Open Database License 1.0",
@@ -137,10 +140,12 @@ COMMENT ON TABLE model_draft.ego_dp_supply_res_powerplant
 		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
 		"copyright": "©  ZNES Europa-Universität Flensburg"} ],
 	"contributors": [
-		{"name": "wolfbunke", "email": " ", "date": "01.06.2017", "comment": "Create and restructure scripts and table"}],
-	"resources": [{
-		"schema": {
-			"fields": [
+		{"name": "wolfbunke", "email": " ", 
+		"date": "01.06.2017", "comment": "Create and restructure scripts and table"}],
+	"resources": [
+		{"name": "model_draft.ego_dp_supply_res_powerplant",		
+		"format": "PostgreSQL",
+		"fields": [
 			        {"name": "version", "description": "version number of data processing", "unit": "" },
 				{"name": "id", "description": "Unique identifier", "unit": "" },
 				{"name": "start_up_date", "description": "start_up date of unit", "unit": "" },
@@ -179,8 +184,8 @@ COMMENT ON TABLE model_draft.ego_dp_supply_res_powerplant
 				{"name": "rea_geom_new", "description": "Geometry of new position", "unit": "" },				
 				{"name": "scenario", "description": "Name of scenario", "unit": "" },
 				{"name": "flag", "description": "Flag of scenario changes of an power plant unit (repowering, decommission or commissioning).", "unit": "" },
-				{"name": "nuts", "description": "NUTS ID).", "unit": "" }]},
-		"meta_version": "1.2" }] }';
+				{"name": "nuts", "description": "NUTS ID).", "unit": "" } ] } ],		
+	"metadata_version": "1.3"}';
 
 -- select description
 SELECT obj_description('model_draft.ego_dp_supply_res_powerplant'::regclass)::json;
