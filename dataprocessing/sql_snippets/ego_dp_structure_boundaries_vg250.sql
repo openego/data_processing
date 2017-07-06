@@ -450,8 +450,8 @@ SELECT ego_scenario_log('v0.2.10','output','political_boundary','bkg_vg250_4_krs
 
 /* 
 -- census data per municipality
-DROP TABLE IF EXISTS	social.destatis_zensus_population_per_bkg_vg250_6_gem;
-CREATE TABLE		social.destatis_zensus_population_per_bkg_vg250_6_gem (
+DROP TABLE IF EXISTS	society.destatis_zensus_population_per_bkg_vg250_6_gem;
+CREATE TABLE		society.destatis_zensus_population_per_bkg_vg250_6_gem (
 	reference_date 	date NOT NULL,
 	gem_id 		integer,
 	ags_0 		character varying(12),
@@ -460,7 +460,7 @@ CREATE TABLE		social.destatis_zensus_population_per_bkg_vg250_6_gem (
 	census_density 	integer,
 	CONSTRAINT destatis_zensus_population_per_bkg_vg250_6_gem_pkey PRIMARY KEY (reference_date, gem_id) );
 
-INSERT INTO social.destatis_zensus_population_per_bkg_vg250_6_gem (reference_date,gem_id,ags_0)
+INSERT INTO society.destatis_zensus_population_per_bkg_vg250_6_gem (reference_date,gem_id,ags_0)
 	SELECT	vg.reference_date,
 		vg.id,
 		vg.ags_0
@@ -468,10 +468,10 @@ INSERT INTO social.destatis_zensus_population_per_bkg_vg250_6_gem (reference_dat
 	ORDER BY vg.id;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','input','social','destatis_zensus_population_per_ha_mview','ego_dp_structure_boundaries_vg250.sql',' ');
+SELECT ego_scenario_log('v0.2.10','input','society','destatis_zensus_population_per_ha_mview','ego_dp_structure_boundaries_vg250.sql',' ');
 
 -- zensus 2011 population
-UPDATE 	social.destatis_zensus_population_per_bkg_vg250_6_gem AS t1
+UPDATE 	society.destatis_zensus_population_per_bkg_vg250_6_gem AS t1
 	SET  	census_sum = t2.census_sum,
 		census_count = t2.census_count,
 		census_density = t2.census_density
@@ -480,7 +480,7 @@ UPDATE 	social.destatis_zensus_population_per_bkg_vg250_6_gem AS t1
 			COUNT(pts.geom)::integer AS census_count,
 			coalesce(SUM(pts.population)/COUNT(pts.geom),0)::double precision AS census_density
 		FROM	political_boundary.bkg_vg250_6_gem AS gem,
-			social.destatis_zensus_population_per_ha_mview AS pts
+			society.destatis_zensus_population_per_ha_mview AS pts
 		WHERE  	ST_TRANSFORM(gem.geom,3035) && pts.geom_point AND
 			ST_CONTAINS(ST_TRANSFORM(gem.geom,3035),pts.geom_point)
 		GROUP BY gem.id
@@ -488,16 +488,16 @@ UPDATE 	social.destatis_zensus_population_per_bkg_vg250_6_gem AS t1
 	WHERE  	t1.gem_id = t2.id;
 
 -- grant (oeuser)
-ALTER TABLE	social.destatis_zensus_population_per_bkg_vg250_6_gem OWNER TO oeuser;
+ALTER TABLE	society.destatis_zensus_population_per_bkg_vg250_6_gem OWNER TO oeuser;
 
 -- NULL to 0
-UPDATE 	social.destatis_zensus_population_per_bkg_vg250_6_gem AS ce
+UPDATE 	society.destatis_zensus_population_per_bkg_vg250_6_gem AS ce
 	SET	census_sum = '0'
 	WHERE	census_sum IS NULL;
-UPDATE 	social.destatis_zensus_population_per_bkg_vg250_6_gem AS ce
+UPDATE 	society.destatis_zensus_population_per_bkg_vg250_6_gem AS ce
 	SET	census_count = '0'
 	WHERE	census_count IS NULL;
-UPDATE 	social.destatis_zensus_population_per_bkg_vg250_6_gem AS ce
+UPDATE 	society.destatis_zensus_population_per_bkg_vg250_6_gem AS ce
 	SET	census_density = '0'
 	WHERE	census_density IS NULL;
  */
@@ -523,7 +523,7 @@ CREATE MATERIALIZED VIEW		political_boundary.bkg_vg250_6_gem_mview AS
 		ce.census_density ::integer,
 		ce.census_sum / (ST_AREA(vg.geom) / 1000000) ::double precision AS pd,
 		ST_TRANSFORM(vg.geom,3035) ::geometry(MultiPolygon,3035) AS geom
-	FROM	political_boundary.bkg_vg250_6_gem AS vg JOIN social.destatis_zensus_population_per_bkg_vg250_6_gem AS ce ON (vg.id = ce.gem_id)
+	FROM	political_boundary.bkg_vg250_6_gem AS vg JOIN society.destatis_zensus_population_per_bkg_vg250_6_gem AS ce ON (vg.id = ce.gem_id)
 	WHERE	vg.reference_date = '2016-01-01'
 	ORDER BY vg.id;
 

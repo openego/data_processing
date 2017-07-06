@@ -181,7 +181,7 @@ CREATE INDEX  	ego_demand_loadarea_voi_geom_centre_idx
 
 /* 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','input','social','destatis_zensus_population_per_ha_mview','ego_dp_loadarea_loadcut_voronoi.sql',' ');
+SELECT ego_scenario_log('v0.2.10','input','society','destatis_zensus_population_per_ha_mview','ego_dp_loadarea_loadcut_voronoi.sql',' ');
 
 -- zensus 2011 population
 UPDATE 	model_draft.ego_demand_loadarea_voi AS t1
@@ -193,7 +193,7 @@ UPDATE 	model_draft.ego_demand_loadarea_voi AS t1
 			COUNT(pts.geom)::integer AS zensus_count,
 			(SUM(pts.population)/COUNT(pts.geom))::double precision AS zensus_density
 		FROM	model_draft.ego_demand_loadarea_voi AS loads,
-			social.destatis_zensus_population_per_ha_mview AS pts
+			society.destatis_zensus_population_per_ha_mview AS pts
 		WHERE  	loads.geom && pts.geom AND
 			ST_CONTAINS(loads.geom,pts.geom)
 		GROUP BY loads.id

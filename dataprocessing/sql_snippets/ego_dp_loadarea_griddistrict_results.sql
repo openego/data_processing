@@ -165,7 +165,7 @@ SET  	"group" = (SELECT
 
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','input','social','destatis_zensus_population_per_ha_mview','ego_dp_loadarea_griddistrict_results.sql',' ');
+SELECT ego_scenario_log('v0.2.10','input','society','destatis_zensus_population_per_ha_mview','ego_dp_loadarea_griddistrict_results.sql',' ');
 
 -- population results
 UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
@@ -179,7 +179,7 @@ FROM    (SELECT	gd.subst_id AS subst_id,
 		(SUM(pts.population)/COUNT(pts.geom))::double precision AS zensus_density,
 		(SUM(pts.population)/gd.area_ha)::double precision AS population_density
 	FROM	model_draft.ego_grid_mv_griddistrict AS gd,
-		social.destatis_zensus_population_per_ha_mview AS pts
+		society.destatis_zensus_population_per_ha_mview AS pts
 	WHERE  	gd.geom && pts.geom AND
 		ST_CONTAINS(gd.geom,pts.geom)
 	GROUP BY gd.subst_id
@@ -322,7 +322,7 @@ FROM    (SELECT	gd.subst_id AS subst_id,
 		(SUM(pts.population)/COUNT(pts.geom))::double precision AS zensus_density,
 		(SUM(pts.population)/gd.area_ha)::double precision AS population_density
 	FROM	model_draft.ego_grid_mv_griddistrict AS gd,
-		social.destatis_zensus_population_per_ha_mview AS pts
+		society.destatis_zensus_population_per_ha_mview AS pts
 	WHERE  	gd.geom && pts.geom AND
 		ST_CONTAINS(gd.geom,pts.geom)
 	GROUP BY gd.subst_id

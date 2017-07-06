@@ -90,7 +90,7 @@ UPDATE 	model_draft.ego_grid_lv_griddistrict AS t1
 	
 	
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','input','social','destatis_zensus_population_per_ha_mview','ego_dp_lv_peakload.sql',' ');
+SELECT ego_scenario_log('v0.2.10','input','society','destatis_zensus_population_per_ha_mview','ego_dp_lv_peakload.sql',' ');
 
 -- zensus 2011 population
 UPDATE 	model_draft.ego_grid_lv_griddistrict AS t1
@@ -102,7 +102,7 @@ UPDATE 	model_draft.ego_grid_lv_griddistrict AS t1
 			COUNT(b.geom_point)::integer AS zensus_count,
 			(SUM(b.population)/COUNT(b.geom_point))::double precision AS zensus_density
 		FROM	model_draft.ego_grid_lv_griddistrict AS a,
-			social.destatis_zensus_population_per_ha_mview AS b
+			society.destatis_zensus_population_per_ha_mview AS b
 		WHERE  	a.geom && b.geom_point AND
 			ST_CONTAINS(a.geom,b.geom_point)
 		GROUP BY a.id
