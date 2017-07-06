@@ -168,8 +168,8 @@ CREATE TABLE		model_draft.ego_data_processing_results_mvgd AS
 		'0' ::double precision AS la_area,
 		'0' ::double precision AS free_area,
 		'0' ::double precision AS area_share,
-		'0' ::numeric AS consumption,
-		'0' ::numeric AS consumption_per_area,
+		'0' ::double precision AS consumption,
+		'0' ::double precision AS consumption_per_area,
 		geom,
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
 	FROM	model_draft.ego_grid_mv_griddistrict AS gd;
@@ -367,7 +367,7 @@ FROM	model_draft.ego_grid_mv_griddistrict ;
 UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
 	SET  	consumption = t2.consumption
 	FROM	(SELECT	gd.subst_id,
-			SUM(la.sector_consumption_sum)::numeric AS consumption
+			SUM(la.sector_consumption_sum)::double precision AS consumption
 		FROM	model_draft.ego_demand_loadarea AS la,
 			model_draft.ego_grid_mv_griddistrict AS gd
 		WHERE	gd.subst_id = la.subst_id

@@ -71,7 +71,7 @@ DROP TABLE IF EXISTS 	model_draft.ego_supply_rea_m4_dea_temp CASCADE;
 CREATE TABLE 		model_draft.ego_supply_rea_m4_dea_temp (
 	rea_sorted bigint NOT NULL,
 	id bigint NOT NULL,
-	electrical_capacity numeric,
+	electrical_capacity double precision,
 	generation_type text,
 	generation_subtype character varying,
 	voltage_level character varying,
