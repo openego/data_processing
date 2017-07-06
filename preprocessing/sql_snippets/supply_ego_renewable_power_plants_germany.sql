@@ -1,4 +1,4 @@
-/*
+﻿/*
 Setup for renewables power plants list
 
 __copyright__ 	= "Europa-Universität Flensburg, Centre for Sustainable Energy Systems"
@@ -7,11 +7,10 @@ __url__  	= "https://github.com/openego/data_processing/blob/master/LICENSE"
 __author__ 	= "wolfbunke"
 */
 
--- DROP TABLE supply.ego_renewable_power_plants_germany;
+-- DROP TABLE supply.ego_renewable_powerplant;
 
-/*
 
-CREATE TABLE supply.ego_renewable_power_plants_germany
+CREATE TABLE supply.ego_renewable_powerplant
 (
   id bigint NOT NULL,
   start_up_date timestamp without time zone,
@@ -38,17 +37,17 @@ CREATE TABLE supply.ego_renewable_power_plants_germany
   source character varying,
   comment character varying,
   geom geometry(Point,4326),
-  CONSTRAINT opsd_renewable_power_platns_germany_pkey PRIMARY KEY (id)
+  CONSTRAINT ego_renewable_powerplant_pkey PRIMARY KEY (id)
 )
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE supply.ego_renewable_power_plants_germany
+ALTER TABLE supply.ego_renewable_powerplant
   OWNER TO oeuser;
-GRANT ALL ON TABLE supply.ego_renewable_power_plants_germany TO oeuser;
+GRANT ALL ON TABLE supply.ego_renewable_powerplant TO oeuser;
 
 -- set metadata
-COMMENT ON TABLE supply.ego_renewable_power_plants_germany IS '{
+COMMENT ON TABLE supply.ego_renewable_powerplant IS '{
 	"title": "Renewable power plants in Germany",
 	"description": "This table contains a list of renewable energy power plants in Germany. This data join two sources: energymap.info, a data platform of the ''Deutsche Gesellschaft für Sonnenenergie e.V.'' and Bundesnetzagentur, the regularor together. ",
 	"language": [ "eng", "ger"],
@@ -116,7 +115,7 @@ COMMENT ON TABLE supply.ego_renewable_power_plants_germany IS '{
 	"metadata_version": "1.3"}';
 
 -- select description
-SELECT obj_description('supply.ego_renewable_power_plants_germany'::regclass)::json;
+SELECT obj_description('supply.ego_renewable_powerplant'::regclass)::json;
 
 
 	
