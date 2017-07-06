@@ -177,55 +177,55 @@ SELECT
 FROM model_draft.ego_grid_hvmv_substation;
 
 
----- Insert battery storages to all substations (eGo 100)
---INSERT INTO model_draft.ego_grid_pf_hv_storage
---(scn_name,
---  storage_id,
---  bus,
---  dispatch, 
---  control, 
---  p_nom, 
---  p_nom_extendable,
--- p_nom_min,
---  p_nom_max, 
---  p_min_pu_fixed, 
---  p_max_pu_fixed,
---  sign, 
---  source,
---  marginal_cost, 
---  capital_cost, 
---  efficiency,
---  soc_initial, 
---  soc_cyclic, 
---  max_hours,
---  efficiency_store, 
---  efficiency_dispatch, 
---  standing_loss 
---)
---SELECT 
---  'eGo 100',
---  nextval('orig_geo_powerplants.pf_storage_single_aggr_id') as aggr_id,
---  model_draft.ego_grid_hvmv_substation.otg_id,  -- assign storage to substation
--- 'flexible', 	-- set storage to be flexible
---  'PQ',  -- PQ control
---  0,  -- initial power of storage is 0
---  false, -- storage is set to extendable in python script
---  0, -- there is no lower limit to storage power 
---  1000000, -- inf could not be defined, thus very high number
---  -1, -- default
---  1, -- default
---  1, -- default
---  16, -- source is extendable_storage
---  0.01, -- marginal costs are set low in order to dispatch after RES and before conv. PP
---  44546, -- set according to Acatech2015 for Lithium-Ion (base year is 2023, not 2035!). Annual cost method based on investment costs per MW. Must be reduced to size of snapshots if extendable storage shall be used.
---  1, -- efficiency is set below
--- 0, -- initial storage level is 0
---  false, -- cyclic state of charge is false
---  6, -- set to 6, to represent daily storage operation  
---  0.9487, -- efficiency according to Acatech2015
---  0.9487, -- efficiency according to Acatech2015
---  0.00417 -- standing losses according to Acatech2015
---FROM model_draft.ego_grid_hvmv_substation;
+-- Insert battery storages to all substations (eGo 100)
+INSERT INTO model_draft.ego_grid_pf_hv_storage
+(scn_name,
+  storage_id,
+  bus,
+  dispatch, 
+  control, 
+  p_nom, 
+  p_nom_extendable,
+  p_nom_min,
+  p_nom_max, 
+  p_min_pu_fixed, 
+  p_max_pu_fixed,
+  sign, 
+  source,
+  marginal_cost, 
+  capital_cost, 
+  efficiency,
+  soc_initial, 
+  soc_cyclic, 
+  max_hours,
+  efficiency_store, 
+  efficiency_dispatch, 
+  standing_loss 
+)
+SELECT 
+  'eGo 100',
+  nextval('orig_geo_powerplants.pf_storage_single_aggr_id') as aggr_id,
+  model_draft.ego_grid_hvmv_substation.otg_id,  -- assign storage to substation
+ 'flexible', 	-- set storage to be flexible
+  'PQ',  -- PQ control
+  0,  -- initial power of storage is 0
+  false, -- storage is set to extendable in python script
+  0, -- there is no lower limit to storage power 
+  1000000, -- inf could not be defined, thus very high number
+  -1, -- default
+  1, -- default
+  1, -- default
+  16, -- source is extendable_storage
+  0.01, -- marginal costs are set low in order to dispatch after RES and before conv. PP
+  44546, -- set according to Acatech2015 for Lithium-Ion (base year is 2023, not 2035!). Annual cost method based on investment costs per MW. Must be reduced to size of snapshots if extendable storage shall be used.
+  1, -- efficiency is set below
+ 0, -- initial storage level is 0
+  false, -- cyclic state of charge is false
+  6, -- set to 6, to represent daily storage operation  
+  0.9487, -- efficiency according to Acatech2015
+  0.9487, -- efficiency according to Acatech2015
+  0.00417 -- standing losses according to Acatech2015
+FROM model_draft.ego_grid_hvmv_substation;
 
 -- Insert Hydrogen storages to substations with potential (Status Quo)
 INSERT INTO model_draft.ego_grid_pf_hv_storage
@@ -337,60 +337,60 @@ WHERE model_draft.ego_grid_hvmv_substation.subst_id IN (
 				WHERE salt.geom && model_draft.ego_grid_hvmv_substation.point
 				AND ST_CONTAINS(salt.geom,model_draft.ego_grid_hvmv_substation.point));
 				
----- Insert Hydrogen storages to substations with potential (eGo 100)
---INSERT INTO model_draft.ego_grid_pf_hv_storage
---(scn_name,
---  storage_id,
---  bus,
---  dispatch, 
---  control, 
---  p_nom, 
---  p_nom_extendable,
---  p_nom_min,
---  p_nom_max, 
---  p_min_pu_fixed, 
---  p_max_pu_fixed,
---  sign, 
---  source,
---  marginal_cost, 
---  capital_cost, 
---  efficiency,
---  soc_initial, 
---  soc_cyclic, 
---  max_hours,
---  efficiency_store, 
---  efficiency_dispatch, 
---  standing_loss 
---)
---SELECT 
---  'eGo 100',
---  nextval('orig_geo_powerplants.pf_storage_single_aggr_id') as aggr_id,
---  model_draft.ego_grid_hvmv_substation.otg_id,  -- assign storage to substation
---  'flexible', 	-- set storage to be flexible
---  'PQ',  -- PQ control
---  0,  -- initial power of storage is 0
--- false, -- storage is set to extendable in appl.py
---  0, -- there is no lower limit to storage power 
---  1000000, -- inf could not be defined, thus very high number
---  -1, -- default
---  1, -- default
--- 1, -- default
---  16, -- source is extendable_storage
---  0.01, -- marginal costs are set low in order to dispatch after RES and before conv. PP
---  47777, -- set according to Acatech2015 for Hydrogen (reference year is 2023). Annual cost method based on investment costs per MW. Is reduced to size of snapshots if extendable storage shall be used.
---  1, -- efficiency is set below
---  0, -- initial storage level is 0
---  false, -- cyclic state of charge is false
---  168, -- set to 168, to represent weekly storage operation  
---  0.785, -- efficiency according to Acatech2015
---  0.57, -- efficiency according to Acatech2015
---  0.000694 -- standing losses according to Acatech2015
---FROM model_draft.ego_grid_hvmv_substation
---WHERE model_draft.ego_grid_hvmv_substation.subst_id IN (
---            SELECT model_draft.ego_grid_hvmv_substation.subst_id
---				FROM model_draft.ego_grid_hvmv_substation, model_draft.ego_storage_h2_areas_de as salt
---				WHERE salt.geom && model_draft.ego_grid_hvmv_substation.point
---				AND ST_CONTAINS(salt.geom,model_draft.ego_grid_hvmv_substation.point));
+-- Insert Hydrogen storages to substations with potential (eGo 100)
+INSERT INTO model_draft.ego_grid_pf_hv_storage
+(scn_name,
+  storage_id,
+  bus,
+  dispatch, 
+  control, 
+  p_nom, 
+  p_nom_extendable,
+  p_nom_min,
+  p_nom_max, 
+  p_min_pu_fixed, 
+  p_max_pu_fixed,
+  sign, 
+  source,
+  marginal_cost, 
+  capital_cost, 
+  efficiency,
+  soc_initial, 
+  soc_cyclic, 
+  max_hours,
+  efficiency_store, 
+  efficiency_dispatch, 
+  standing_loss 
+)
+SELECT 
+  'eGo 100',
+  nextval('orig_geo_powerplants.pf_storage_single_aggr_id') as aggr_id,
+  model_draft.ego_grid_hvmv_substation.otg_id,  -- assign storage to substation
+  'flexible', 	-- set storage to be flexible
+  'PQ',  -- PQ control
+  0,  -- initial power of storage is 0
+  false, -- storage is set to extendable in appl.py
+  0, -- there is no lower limit to storage power 
+  1000000, -- inf could not be defined, thus very high number
+  -1, -- default
+  1, -- default
+  1, -- default
+  16, -- source is extendable_storage
+  0.01, -- marginal costs are set low in order to dispatch after RES and before conv. PP
+  47777, -- set according to Acatech2015 for Hydrogen (reference year is 2023). Annual cost method based on investment costs per MW. Is reduced to size of snapshots if extendable storage shall be used.
+  1, -- efficiency is set below
+  0, -- initial storage level is 0
+  false, -- cyclic state of charge is false
+  168, -- set to 168, to represent weekly storage operation  
+  0.785, -- efficiency according to Acatech2015
+  0.57, -- efficiency according to Acatech2015
+  0.000694 -- standing losses according to Acatech2015
+FROM model_draft.ego_grid_hvmv_substation
+WHERE model_draft.ego_grid_hvmv_substation.subst_id IN (
+            SELECT model_draft.ego_grid_hvmv_substation.subst_id
+				FROM model_draft.ego_grid_hvmv_substation, model_draft.ego_storage_h2_areas_de as salt
+				WHERE salt.geom && model_draft.ego_grid_hvmv_substation.point
+				AND ST_CONTAINS(salt.geom,model_draft.ego_grid_hvmv_substation.point));
 				
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_grid_pf_hv_storage','ego_dp_powerflow_lopf_data.sql',' ');				

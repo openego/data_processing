@@ -1,12 +1,29 @@
 ﻿/*
-Script to process OpenStreetMap tables after import with osm2pgsql
-Basic operations: move to schema; update pkey and index
+Preprocess OpenStreetMap tables after import in public schema with osm2pgsql
+Basic operations: 
+0. grant
+1. remove index
+2. add column 'gid' serial
+3. add primary keys
+4. rename geo-column 'way' to 'geom'
+6. add index
+7. move tables to openstreetmap schema
 
-__copyright__ 	= "Reiner Lemoine Institut gGmbH"
+__copyright__ 	= "Reiner Lemoine Institut"
 __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
 __url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
 __author__ 	= "Ludee"
 */
+
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.10','input','public','osm_deu_line','ego_pp_osm_deu_import.sql','verification');
+SELECT ego_scenario_log('v0.2.10','input','public','osm_deu_nodes','ego_pp_osm_deu_import.sql','verification');
+SELECT ego_scenario_log('v0.2.10','input','public','osm_deu_point','ego_pp_osm_deu_import.sql','verification');
+SELECT ego_scenario_log('v0.2.10','input','public','osm_deu_polygon','ego_pp_osm_deu_import.sql','verification');
+SELECT ego_scenario_log('v0.2.10','input','public','osm_deu_rels','ego_pp_osm_deu_import.sql','verification');
+SELECT ego_scenario_log('v0.2.10','input','public','osm_deu_roads','ego_pp_osm_deu_import.sql','verification');
+SELECT ego_scenario_log('v0.2.10','input','public','osm_deu_ways','ego_pp_osm_deu_import.sql','verification');
 
 /*
 -- Tests for the loops
@@ -14,37 +31,21 @@ __author__ 	= "Ludee"
 SELECT     *
 FROM     information_schema.tables
 WHERE     table_schema = 'public'
-    AND table_name LIKE 'osm_%';
+    AND table_name LIKE 'osm_deu_%';
 
 -- Select all tables with OSM in public
 SELECT     * 
 FROM     pg_tables
 WHERE     schemaname='public'
-    AND tablename LIKE 'osm_%';
+    AND tablename LIKE 'osm_deu_%';
 
 -- Select all indexes with OSM in public
 SELECT     * 
 FROM     pg_indexes
 WHERE     schemaname='public'
-    AND tablename LIKE 'osm_%'
+    AND tablename LIKE 'osm_deu_%'
     AND indexname LIKE '%_pkey';
 */ 
-
--- 0. Create new schema
---CREATE SCHEMA openstreetmap;
-
--- ALTER DEFAULT PRIVILEGES IN SCHEMA openstreetmap
---     GRANT INSERT, SELECT, UPDATE, DELETE, TRUNCATE, REFERENCES, TRIGGER ON TABLES
---     TO oeuser;
--- 
--- ALTER DEFAULT PRIVILEGES IN SCHEMA openstreetmap
---     GRANT SELECT, UPDATE, USAGE ON SEQUENCES
---     TO oeuser;
--- 
--- ALTER DEFAULT PRIVILEGES IN SCHEMA openstreetmap
---     GRANT EXECUTE ON FUNCTIONS
---     TO oeuser;
-
 
 -- 0. grant oeuser
 DO
@@ -52,7 +53,7 @@ $$
 DECLARE
     row record;
 BEGIN
-    FOR row IN SELECT tablename FROM pg_tables WHERE schemaname = 'public' AND tablename LIKE 'osm_test_%'
+    FOR row IN SELECT tablename FROM pg_tables WHERE schemaname = 'public' AND tablename LIKE 'osm_deu_%'
     LOOP
         EXECUTE 'ALTER TABLE public.' || quote_ident(row.tablename) || ' OWNER TO oeuser;';
     END LOOP;
@@ -60,9 +61,8 @@ END;
 $$;
 
 
-
--- 1. Remove wrong index
--- 1.1 Remove all wrong 'pkey' (_line, _point, _polygon, _roads)
+-- 1. remove wrong index
+-- 1.1 remove all wrong 'pkey' (_line, _point, _polygon, _roads)
 DO
 $$
 DECLARE
@@ -81,7 +81,7 @@ BEGIN
 END;
 $$;
 
--- 1.2 Remove all wrong other indexes (_line, _point, _polygon, _roads)
+-- 1.2 remove all wrong other indexes (_line, _point, _polygon, _roads)
 DO
 $$
 DECLARE
@@ -96,10 +96,9 @@ BEGIN
 END;
 $$;
 
-
--- 2. Add column 'gid' serial
--- 3. Add primary keys
--- 4. Rename geo-column 'way' to 'geom'
+-- 2. add column 'gid' serial
+-- 3. add primary keys
+-- 4. rename geo-column 'way' to 'geom'
 DO
 $$
 DECLARE
@@ -139,8 +138,8 @@ $$;
 --         USING ST_SetSRID(geom,3857);
 
 
--- 6. Add imdex
--- 6.1 Add indexes GIST (geom)
+-- 6. add index
+-- 6.1 add indexes GIST (geom)
 DO
 $$
 DECLARE
@@ -176,80 +175,26 @@ BEGIN
 END;
 $$;
 
--- 7. Add metadata
-DO
-$$
-DECLARE
-    row record;
-    comment_string text;
-BEGIN
-    comment_string := '{
-        "Name": "OpenStreetMap - Germany",
 
-	"Source": [{
-                  "Name": "Geofabrik - Download - OpenStreetMap Data Extracts",
-                  "URL":  "http://download.geofabrik.de/europe/germany.html#" }],
 
-	"Reference date": ["01.10.2016"],
-
-	"Date of collection": ["10.10.2016"],
-
-	"Original file": ["germany-161001.osm.pbf"],
-
-	"Spatial resolution": ["Germany"],
-
-	"Description": ["OSM Datensatz Deutschland"],
-
-	"Column":[ 
-	
-	{"name":"osm_id",
-	"description":"OSM ID",
-	"description_german":"OSM ID",
-	"unit":" " },
-
-	{"name":"oedb.style",
-	"description":"Keys defined in this file",
-	"description_german":"Alle keys in diesem Dokument dokumentiert",
-	"unit":" "}
-	],
-
-	"Changes":[
-	  { "name":"Martin Glauer", 
-	    "mail":" ", 
-	    "date":"10.10.2016", 
-	    "comment":"Created table with osm2pgsql"},
-
-	   { "name":"Ludwig Hülk", 
-	    "mail":"ludwig.huelk@rl-institut.de", 
-	    "date":"11.10.2016", 
-	    "comment":"Executed setup"}  ],
-
-	"ToDo": ["Keys beschreiben und/oder aus osm.wiki verlinken"],
-
-	"Licence": ["Open Data Commons Open Database Lizenz (ODbL)"],
-
-	"Instructions for proper use": ["Wir verlangen die Verwendung des Hinweises OpenStreetMap-Mitwirkende. Du musst auch klarstellen, dass die Daten unter der Open-Database-Lizenz verfügbar sind, und, sofern du unsere Kartenkacheln verwendest, dass die Kartografie gemäß CC BY-SA lizenziert ist. Du kannst dies tun, indem du auf www.openstreetmap.org/copyright verlinkst. Ersatzweise, und als Erfordernis, falls du OSM in Datenform weitergibst, kannst du die Lizenz(en) direkt verlinken und benennen. In Medien, in denen keine Links möglich sind (z.B. gedruckten Werken), empfehlen wir dir, deine Leser direkt auf openstreetmap.org zu verweisen (möglicherweise mit dem Erweitern von OpenStreetMap zur vollen Adresse), auf opendatacommons.org, und, sofern zutreffend, auf creativecommons.org. Der Hinweis sollte für eine durchsuchbare elektronische Karte in der Ecke der Karte stehen."]
-	}';
-
-    FOR row IN SELECT tablename FROM pg_tables 
-    WHERE schemaname='public' 
-    AND tablename LIKE 'osm_%'
-    LOOP
-        EXECUTE 'COMMENT ON TABLE public.' || quote_ident(row.tablename) || ' IS ' || quote_literal(comment_string);
-
-    END LOOP;
-END;
-$$;
-
--- 8. Move all tables to new schema
+-- 7. move tables to openstreetmap schema
 DO
 $$
 DECLARE
     row record;
 BEGIN
-    FOR row IN SELECT tablename FROM pg_tables WHERE schemaname = 'public' AND tablename LIKE 'osm_%'
+    FOR row IN SELECT tablename FROM pg_tables WHERE schemaname = 'public' AND tablename LIKE 'osm_deu_%'
     LOOP
         EXECUTE 'ALTER TABLE public.' || quote_ident(row.tablename) || ' SET SCHEMA openstreetmap;';
     END LOOP;
 END;
 $$;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.10','preprocessing','openstreetmap','osm_deu_line','ego_pp_osm_deu_import.sql','setup osm tables');
+SELECT ego_scenario_log('v0.2.10','preprocessing','openstreetmap','osm_deu_nodes','ego_pp_osm_deu_import.sql','setup osm tables');
+SELECT ego_scenario_log('v0.2.10','preprocessing','openstreetmap','osm_deu_point','ego_pp_osm_deu_import.sql','setup osm tables');
+SELECT ego_scenario_log('v0.2.10','preprocessing','openstreetmap','osm_deu_polygon','ego_pp_osm_deu_import.sql','setup osm tables');
+SELECT ego_scenario_log('v0.2.10','preprocessing','openstreetmap','osm_deu_rels','ego_pp_osm_deu_import.sql','setup osm tables');
+SELECT ego_scenario_log('v0.2.10','preprocessing','openstreetmap','osm_deu_roads','ego_pp_osm_deu_import.sql','setup osm tables');
+SELECT ego_scenario_log('v0.2.10','preprocessing','openstreetmap','osm_deu_ways','ego_pp_osm_deu_import.sql','setup osm tables');

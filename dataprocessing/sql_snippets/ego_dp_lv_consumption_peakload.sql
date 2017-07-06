@@ -19,10 +19,18 @@ SELECT ego_scenario_log('v0.2.10','input','model_draft','ego_grid_lv_griddistric
 UPDATE 	model_draft.ego_grid_lv_griddistrict AS t1
 	SET sector_consumption_residential = COALESCE(t2.real_cons,0)
 	FROM  (
-		SELECT 	lvgd.mvlv_subst_id,
-			la.sector_consumption_residential * lvgd.sector_area_residential / la.sector_area_residential AS real_cons
+	    WITH    zensus_sum AS (
+	            SELECT	lvgd.la_id,
+			SUM(lvgd.zensus_sum) AS lvgd_zensus_sum
+			FROM    model_draft.ego_grid_lv_griddistrict AS lvgd
+			GROUP BY lvgd.la_id)
+		SELECT
+		    lvgd.mvlv_subst_id as mvlv_subst_id,
+		    la.id AS la_id,
+			la.sector_consumption_residential * lvgd.zensus_sum / zensus_sum.lvgd_zensus_sum AS real_cons
 		FROM 	model_draft.ego_demand_loadarea AS la
 			INNER JOIN model_draft.ego_grid_lv_griddistrict AS lvgd ON (la.id = lvgd.la_id)
+			INNER JOIN zensus_sum AS zensus_sum ON (zensus_sum.la_id = lvgd.la_id)
 		) AS t2
 	WHERE t1.mvlv_subst_id = t2.mvlv_subst_id;
 
@@ -31,10 +39,18 @@ UPDATE 	model_draft.ego_grid_lv_griddistrict AS t1
 UPDATE 	model_draft.ego_grid_lv_griddistrict AS t1
 	SET sector_consumption_retail = COALESCE(t2.real_cons,0)
 	FROM  (
-		SELECT 	lvgd.mvlv_subst_id,
-			la.sector_consumption_retail * lvgd.sector_area_retail / la.sector_area_retail AS real_cons
+	    WITH    lvgd_sector_area_retail_sum AS (
+	            SELECT	lvgd.la_id,
+			SUM(lvgd.sector_area_retail) AS sum
+			FROM    model_draft.ego_grid_lv_griddistrict AS lvgd
+			GROUP BY lvgd.la_id)
+		SELECT
+		    lvgd.mvlv_subst_id as mvlv_subst_id,
+		    la.id AS la_id,
+			la.sector_consumption_retail * lvgd.sector_area_retail / sum.sum AS real_cons
 		FROM 	model_draft.ego_demand_loadarea AS la
 			INNER JOIN model_draft.ego_grid_lv_griddistrict AS lvgd ON (la.id = lvgd.la_id)
+			INNER JOIN lvgd_sector_area_retail_sum AS sum ON (sum.la_id = lvgd.la_id)
 		) AS t2
 	WHERE t1.mvlv_subst_id = t2.mvlv_subst_id;
 	
@@ -43,10 +59,18 @@ UPDATE 	model_draft.ego_grid_lv_griddistrict AS t1
 UPDATE 	model_draft.ego_grid_lv_griddistrict AS t1
 	SET sector_consumption_industrial = COALESCE(t2.real_cons,0)
 	FROM  (
-		SELECT 	lvgd.mvlv_subst_id,
-			la.sector_consumption_industrial * lvgd.sector_area_industrial / la.sector_area_industrial AS real_cons
+	    WITH    lvgd_sector_area_industrial_sum AS (
+	            SELECT	lvgd.la_id,
+			SUM(lvgd.sector_area_industrial) AS sum
+			FROM    model_draft.ego_grid_lv_griddistrict AS lvgd
+			GROUP BY lvgd.la_id)
+		SELECT
+		    lvgd.mvlv_subst_id as mvlv_subst_id,
+		    la.id AS la_id,
+			la.sector_consumption_industrial * lvgd.sector_area_industrial / sum.sum AS real_cons
 		FROM 	model_draft.ego_demand_loadarea AS la
 			INNER JOIN model_draft.ego_grid_lv_griddistrict AS lvgd ON (la.id = lvgd.la_id)
+			INNER JOIN lvgd_sector_area_industrial_sum AS sum ON (sum.la_id = lvgd.la_id)
 		) AS t2
 	WHERE t1.mvlv_subst_id = t2.mvlv_subst_id;
 	
@@ -54,11 +78,19 @@ UPDATE 	model_draft.ego_grid_lv_griddistrict AS t1
 -- agricultural
 UPDATE 	model_draft.ego_grid_lv_griddistrict AS t1
 	SET sector_consumption_agricultural = COALESCE(t2.real_cons,0)
-	FROM  (
-		SELECT 	lvgd.mvlv_subst_id,
-			la.sector_consumption_agricultural * lvgd.sector_area_agricultural / la.sector_area_agricultural AS real_cons
+    FROM  (
+	    WITH    lvgd_sector_area_agricultural_sum AS (
+	            SELECT	lvgd.la_id,
+			SUM(lvgd.sector_area_agricultural) AS sum
+			FROM    model_draft.ego_grid_lv_griddistrict AS lvgd
+			GROUP BY lvgd.la_id)
+		SELECT
+		    lvgd.mvlv_subst_id as mvlv_subst_id,
+		    la.id AS la_id,
+			la.sector_consumption_agricultural * lvgd.sector_area_agricultural / sum.sum AS real_cons
 		FROM 	model_draft.ego_demand_loadarea AS la
 			INNER JOIN model_draft.ego_grid_lv_griddistrict AS lvgd ON (la.id = lvgd.la_id)
+			INNER JOIN lvgd_sector_area_agricultural_sum AS sum ON (sum.la_id = lvgd.la_id)
 		) AS t2
 	WHERE t1.mvlv_subst_id = t2.mvlv_subst_id;
 	

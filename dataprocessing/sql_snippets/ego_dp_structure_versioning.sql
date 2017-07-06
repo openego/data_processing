@@ -92,7 +92,7 @@ COMMENT ON TABLE grid.ego_dp_ehv_substation IS '{
         "version": "1.0",
         "url": "https://opendatacommons.org/licenses/odbl/1.0/",
         "instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
-        "copyright": "\u00a9 NEXT ENERGY"
+        "copyright": "© DLR Institute for Networked Energy Systems"
     },
     "contributors": [
         {
@@ -326,7 +326,7 @@ COMMENT ON TABLE grid.ego_dp_hvmv_substation IS '{
         "version": "1.0",
         "url": "https://opendatacommons.org/licenses/odbl/1.0/",
         "instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
-        "copyright": "\u00a9 NEXT ENERGY"
+        "copyright": "© DLR Institute for Networked Energy Systems"
     },
     "contributors": [
         {
@@ -2359,7 +2359,7 @@ COMMENT ON TABLE grid.ego_pf_hv_line IS '{
         "version": "1.0",
         "url": "https://opendatacommons.org/licenses/odbl/1.0/",
         "instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
-        "copyright": "\u00a9 NEXT ENERGY"
+        "copyright": "© DLR Institute for Networked Energy Systems"
     },
     "contributors": [
         {
@@ -3481,7 +3481,7 @@ COMMENT ON TABLE grid.ego_pf_hv_transformer IS '{
         "version": "1.0",
         "url": "https://opendatacommons.org/licenses/odbl/1.0/",
         "instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
-        "copyright": "\u00a9 NEXT ENERGY"
+        "copyright": "© DLR Institute for Networked Energy Systems"
     },
     "contributors": [
         {
@@ -3603,5 +3603,3 @@ SELECT obj_description('grid.ego_pf_hv_transformer' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.10','result','grid','ego_pf_hv_transformer','ego_dp_structure_versioning.sql','hv pf transformer');
-
-
