@@ -209,7 +209,7 @@ WHERE  	t1.subst_id = t2.subst_id;
 UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
 SET  	la_area = t2.la_area
 FROM	(SELECT	gd.subst_id,
-		SUM(ST_AREA(la.geom)/10000) ::decimal(10,3) AS la_area
+		SUM(ST_AREA(la.geom)/10000) ::double precision AS la_area
 	FROM	model_draft.ego_demand_loadarea AS la,
 		model_draft.ego_grid_mv_griddistrict AS gd
 	WHERE	gd.geom && la.geom AND

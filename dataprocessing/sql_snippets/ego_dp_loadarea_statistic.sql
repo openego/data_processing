@@ -82,7 +82,7 @@ INSERT INTO model_draft.ego_data_processing_results (schema_name,table_name,desc
 	SELECT	'model_draft',
 		'ego_grid_mv_griddistrict',
 		'Minmal GD area',
-		MIN(ST_AREA(geom)/10000) ::decimal(10,1) AS result,
+		MIN(ST_AREA(geom)/10000) ::double precision AS result,
 		'ha' ::text AS unit,
 		NOW() AT TIME ZONE 'Europe/Berlin'
 	FROM	model_draft.ego_grid_mv_griddistrict
@@ -91,7 +91,7 @@ INSERT INTO model_draft.ego_data_processing_results (schema_name,table_name,desc
 	SELECT	'model_draft',
 		'ego_grid_mv_griddistrict',
 		'Minmal GD area',
-		MIN(area_ha) ::decimal(10,1) AS result,
+		MIN(area_ha) ::double precision AS result,
 		'ha' ::text AS unit,
 		NOW() AT TIME ZONE 'Europe/Berlin'
 	FROM	model_draft.ego_grid_mv_griddistrict
@@ -100,7 +100,7 @@ INSERT INTO model_draft.ego_data_processing_results (schema_name,table_name,desc
 	SELECT	'model_draft',
 		'ego_grid_mv_griddistrict',
 		'Maximal GD area',
-		MAX(ST_AREA(geom)/10000) ::decimal(10,1) AS result,
+		MAX(ST_AREA(geom)/10000) ::double precision AS result,
 		'ha' ::text AS unit,
 		NOW() AT TIME ZONE 'Europe/Berlin'
 	FROM	model_draft.ego_grid_mv_griddistrict
@@ -118,7 +118,7 @@ INSERT INTO model_draft.ego_data_processing_results (schema_name,table_name,desc
 	SELECT	'model_draft',
 		'ego_demand_loadarea',
 		'Load Areas area',
-		SUM(ST_AREA(geom)/10000) ::decimal(10,1) AS result,
+		SUM(ST_AREA(geom)/10000) ::double precision AS result,
 		'ha' ::text AS unit,
 		NOW() AT TIME ZONE 'Europe/Berlin'
 	FROM	model_draft.ego_demand_loadarea
@@ -128,7 +128,7 @@ INSERT INTO model_draft.ego_data_processing_results (schema_name,table_name,desc
 	SELECT	'model_draft',
 		'ego_demand_loadarea',
 		'Minmal LA area',
-		MIN(ST_AREA(geom)/10000) ::decimal(10,3) AS result,
+		MIN(ST_AREA(geom)/10000) ::double precision AS result,
 		'ha' ::text AS unit,
 		NOW() AT TIME ZONE 'Europe/Berlin'
 	FROM	model_draft.ego_demand_loadarea
@@ -137,7 +137,7 @@ INSERT INTO model_draft.ego_data_processing_results (schema_name,table_name,desc
 	SELECT	'model_draft',
 		'ego_demand_loadarea',
 		'Maximal LA area',
-		MAX(ST_AREA(geom)/10000) ::decimal(10,3) AS result,
+		MAX(ST_AREA(geom)/10000) ::double precision AS result,
 		'ha' ::text AS unit,
 		NOW() AT TIME ZONE 'Europe/Berlin'
 	FROM	model_draft.ego_demand_loadarea;
@@ -164,10 +164,10 @@ CREATE TABLE		model_draft.ego_data_processing_results_mvgd AS
 		'0' ::integer AS gem,
 		'0' ::integer AS gem_clean,
 		'0' ::integer AS la_count,
-		'0' ::decimal(10,1) AS area_ha,	
-		'0' ::decimal(10,1) AS la_area,
-		'0' ::decimal(10,1) AS free_area,
-		'0' ::decimal(4,1) AS area_share,
+		'0' ::double precision AS area_ha,
+		'0' ::double precision AS la_area,
+		'0' ::double precision AS free_area,
+		'0' ::double precision AS area_share,
 		'0' ::numeric AS consumption,
 		'0' ::numeric AS consumption_per_area,
 		geom,
@@ -329,7 +329,7 @@ WHERE  	t1.subst_id = t2.subst_id;
 UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
 SET  	la_area = t2.la_area
 FROM	(SELECT	gd.subst_id,
-		SUM(ST_AREA(la.geom)/10000) ::decimal(10,3) AS la_area
+		SUM(ST_AREA(la.geom)/10000) ::double precision AS la_area
 	FROM	model_draft.ego_demand_loadarea AS la,
 		model_draft.ego_grid_mv_griddistrict AS gd
 	WHERE	gd.geom && la.geom AND
