@@ -43,6 +43,9 @@ def data_processing():
 	## VACUUM FULL
 	# 'ego_dp_vacuum_full.sql'
 	
+	## INPUT DATA CHECK eGoPP
+	# 'ego_dp_structure_input_verification.sql'			# Check input tables and versions from eGoPP
+	
     ## STRUCTURE & SETUP (WARNING)
     # 'ego_dp_structure_scenariolog.sql',				# Setup scenario log table
     # 'ego_dp_structure_versioning.sql',				# Setup versioning tables
