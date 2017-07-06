@@ -9,7 +9,7 @@ __author__ 	= "Ludee"
 
 
 -- metadata
-COMMENT ON TABLE social.destatis_zensus_population_per_ha IS '{
+COMMENT ON TABLE society.destatis_zensus_population_per_ha IS '{
 	"title": "DESTATIS - Zensus 2011 - Population per hectar",
 	"description": "National census in Germany in 2011",
 	"language": [ "eng", "ger" ],
@@ -45,7 +45,7 @@ COMMENT ON TABLE social.destatis_zensus_population_per_ha IS '{
 		{"name": "Ludee", "email": "", "date": "2016-10-25", "comment": "Moved table and add metadata"},
 		{"name": "Ludee", "email": "", "date": "2017-06-30", "comment": "Update metadata to v1.3"} ],
 	"resources": [
-		{"name": "social.destatis_zensus_population_per_ha",		
+		{"name": "society.destatis_zensus_population_per_ha",		
 		"format": "PostgreSQL",
 		"fields": [
 			{"name": "gid",	"description": "Unique identifier", "unit": "none"},
@@ -58,4 +58,4 @@ COMMENT ON TABLE social.destatis_zensus_population_per_ha IS '{
 	"metadata_version": "1.3"}';
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','preprocessing','social','destatis_zensus_population_per_ha','ego_pp_destatis_zensus_import.sql','metadata');
+SELECT ego_scenario_log('v0.2.10','preprocessing','society','destatis_zensus_population_per_ha','ego_pp_destatis_zensus_import.sql','metadata');
