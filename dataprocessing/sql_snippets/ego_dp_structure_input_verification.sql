@@ -18,7 +18,7 @@ SELECT ego_scenario_log('v0.2.10','check','openstreetmap','osm_deu_ways','ego_dp
 SELECT ego_scenario_log('v0.2.10','check','openstreetmap','osm_deu_nodes','ego_dp_structure_versioning.sql','preprocessing verification');
 SELECT ego_scenario_log('v0.2.10','check','openstreetmap','osm_deu_line','ego_dp_structure_versioning.sql','preprocessing verification');
 SELECT ego_scenario_log('v0.2.10','check','society','destatis_zensus_population_per_ha','ego_dp_structure_versioning.sql','preprocessing verification');
-SELECT ego_scenario_log('v0.2.10','check','economic','destatis_gva_per_district','ego_dp_structure_versioning.sql','preprocessing verification');
+SELECT ego_scenario_log('v0.2.10','check','economy','destatis_gva_per_district','ego_dp_structure_versioning.sql','preprocessing verification');
 SELECT ego_scenario_log('v0.2.10','check','demand','ego_demand_federalstate','ego_dp_structure_versioning.sql','preprocessing verification');
 SELECT ego_scenario_log('v0.2.10','check','supply','vernetzen_wind_potential_area','ego_dp_structure_versioning.sql','preprocessing verification');
 SELECT ego_scenario_log('v0.2.10','check','model_draft','ego_supply_res_powerplant_sq_mview','ego_dp_structure_versioning.sql','preprocessing verification');
@@ -51,7 +51,7 @@ FROM	(SELECT	st.relid AS oid,
 			(table_schema='openstreetmap' AND table_name='osm_deu_nodes') OR
 			(table_schema='openstreetmap' AND table_name='osm_deu_line') OR
 			(table_schema='society' AND table_name='destatis_zensus_population_per_ha') OR
-			(table_schema='economic' AND table_name='destatis_gva_per_district') OR
+			(table_schema='economy' AND table_name='destatis_gva_per_district') OR
 			(table_schema='demand' AND table_name='ego_demand_federalstate') OR
 			(table_schema='supply' AND table_name='vernetzen_wind_potential_area') OR
 			(table_schema='model_draft' AND table_name='ego_supply_res_powerplant_sq_mview') OR

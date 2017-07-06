@@ -972,7 +972,7 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_generator_pq_set IS
                     "Description": "If control=variable this gives the minimum output for each snapshot per unit of p_nom for the OPF",
                     "Unit": "per unit" },
                    {"Name": "p_max_pu",
-                    "Description": "If control=variable this gives the maximum output for each snapshot per unit of p_nom for the OPF, relevant e.g. if for renewables the power output is limited by the weather",
+                    "Description": "If control=variable this gives the maximum output for each snapshot per unit of p_nom for the OPF, relevant e.g. if for renewables the power output is limited by the climate",
                     "Unit": "per unit" }],
 "Changes":[
                    {"Name": "Mario Kropshofer",
@@ -1273,7 +1273,7 @@ COMMENT ON COLUMN model_draft.ego_grid_pf_hv_generator_pq_set.p_min_pu IS 'Unit:
 Description: If control=variable this gives the minimum output for each snapshot per unit of p_nom for the OPF.
 Status: Input (optional)';
 COMMENT ON COLUMN model_draft.ego_grid_pf_hv_generator_pq_set.p_max_pu IS 'Unit: per unit
-Description: If control=variable this gives the maximum output for each snapshot per unit of p_nom for the OPF, relevant e.g. if for renewables the power output is limited by the weather.
+Description: If control=variable this gives the maximum output for each snapshot per unit of p_nom for the OPF, relevant e.g. if for renewables the power output is limited by the climate.
 Status: Input (optional)';
 COMMENT ON COLUMN model_draft.ego_grid_pf_hv_line.line_id IS 'Unit: n/a
 Description: Unique name
@@ -1417,7 +1417,7 @@ COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage_pq_set.p_min_pu IS 'Unit: p
 Description: If control=variable this gives the minimum output for each snapshot per unit of p_nom for the OPF.
 Status: Input (optional)';
 COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage_pq_set.p_max_pu IS 'Unit: per unit
-Description: If control=variable this gives the maximum output for each snapshot per unit of p_nom for the OPF, relevant e.g. if for renewables the power output is limited by the weather.
+Description: If control=variable this gives the maximum output for each snapshot per unit of p_nom for the OPF, relevant e.g. if for renewables the power output is limited by the climate.
 Status: Input (optional)';
 COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage_pq_set.soc_set IS 'Unit: MWh
 Description: State of charge set points for snapshots in the OPF.

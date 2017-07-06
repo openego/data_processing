@@ -202,7 +202,7 @@ UPDATE 	model_draft.ego_demand_loadarea_voi AS t1
 
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','input','economic','ioer_urban_share_industrial_centroid','ego_dp_loadarea_loadcut_voronoi.sql',' ');
+SELECT ego_scenario_log('v0.2.10','input','economy','ioer_urban_share_industrial_centroid','ego_dp_loadarea_loadcut_voronoi.sql',' ');
 
 -- ioer industry share
 UPDATE 	model_draft.ego_demand_loadarea_voi AS t1
@@ -214,7 +214,7 @@ UPDATE 	model_draft.ego_demand_loadarea_voi AS t1
 			COUNT(pts.geom)::integer AS ioer_count,
 			(SUM(pts.ioer_share)/COUNT(pts.geom))::double precision AS ioer_density
 		FROM	model_draft.ego_demand_loadarea_voi AS loads,
-			economic.ioer_urban_share_industrial_centroid AS pts
+			economy.ioer_urban_share_industrial_centroid AS pts
 		WHERE  	loads.geom && pts.geom AND
 			ST_CONTAINS(loads.geom,pts.geom)
 		GROUP BY loads.id
