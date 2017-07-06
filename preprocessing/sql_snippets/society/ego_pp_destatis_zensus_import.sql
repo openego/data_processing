@@ -1,4 +1,4 @@
-﻿/*
+/*
 Import DESTATIS zensus 2011 table
 
 __copyright__ 	= "Reiner Lemoine Institut"
