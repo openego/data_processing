@@ -93,25 +93,7 @@ CREATE INDEX ego_dp_supply_conv_powerplant_idx
   USING gist
   (geom);
 -- metadata description
-COMMENT ON TABLE model_draft.test_table IS '{
-	"title": "Good example title",
-	"description": "example metadata for example data",
-	"language": [ "eng", "ger", "fre" ],
-	"spatial": 
-		{"location": "none",
-		"extent": "europe",
-		"resolution": "100 m"},
-	"temporal": 
-		{"reference_date": "2016-01-01",
-		"start": "2017-01-01",
-		"end": "2017-12-31",
-		"resolution": "hour"},
 
-	"spatial": [
-		{"extend": "Germany",
-		"resolution": "100m"} ],
-
--- set meta data
 COMMENT ON TABLE model_draft.ego_dp_supply_conv_powerplant
  IS 
   '{
