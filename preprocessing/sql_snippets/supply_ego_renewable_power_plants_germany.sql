@@ -3,7 +3,7 @@ Setup for renewables power plants list
 
 __copyright__ 	= "Europa-Universität Flensburg, Centre for Sustainable Energy Systems"
 __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
-__url__ 	    = "https://github.com/openego/data_processing/blob/master/LICENSE"
+__url__  	= "https://github.com/openego/data_processing/blob/master/LICENSE"
 __author__ 	= "wolfbunke"
 */
 
@@ -47,148 +47,78 @@ ALTER TABLE supply.ego_renewable_power_plants_germany
   OWNER TO oeuser;
 GRANT ALL ON TABLE supply.ego_renewable_power_plants_germany TO oeuser;
 
+-- set metadata
+COMMENT ON TABLE supply.ego_renewable_power_plants_germany IS '{
+	"title": "Renewable power plants in Germany",
+	"description": "This table contains a list of renewable energy power plants in Germany. This data join two sources: energymap.info, a data platform of the ''Deutsche Gesellschaft für Sonnenenergie e.V.'' and Bundesnetzagentur, the regularor together. ",
+	"language": [ "eng", "ger"],
+	"spatial": 
+		{"location": "Germany",
+		"extent": "europe",
+		"resolution": "100 m"},
+	"temporal": 
+		{"reference_date": "2016-01-01",
+		"start": "1900-01-01",
+		"end": "2015-12-31",
+		"resolution": ""},
+	"sources": [
+		{"name": "EnergyMap.info ", 
+		"description": "Data provider how collects and clean TSO and DSO data of Germany", 
+		"url": "http://www.energymap.info/download.html", 
+		"license": "unknown ", 
+		"copyright": "Deutsche Gesellschaft für Sonnenenergie e.V."},
+		
+		{"name": "Bundesnetzagentur (BNetzA)", 
+		"description": "The Federal Network Agency for Electricity, Gas, Telecommunications, Posts and Railway Data is in Germany data provider of power plant", 
+		"url": "https://www.bundesnetzagentur.de/DE/Sachgebiete/ElektrizitaetundGas/Unternehmen_Institutionen/ErneuerbareEnergien/Anlagenregister/Anlagenregister_Veroeffentlichung/Anlagenregister_Veroeffentlichungen_node.html", 
+		"license": "Creative Commons Namensnennung-Keine Bearbeitung 3.0 Deutschland Lizenz", 
+		"copyright": "© Bundesnetzagentur für Elektrizität, Gas, Telekommunikation, Post und Eisenbahnen; Pressestelle"}
+	        ],
+	"license": 
+		{"id": "ODbL-1.0",
+		"name": "Open Data Commons Open Database License 1.0",
+		"version": "1.0",
+		"url": "https://opendatacommons.org/licenses/odbl/1.0/",
+		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
+		"copyright": "© Reiner Lemoine Institut"},
+	"contributors": [
+		{"name": "wolfbunke", "email": "", "date": "2016-06-16", "comment": "Update metadata version 1.3"}
+		],
+	"resources": [
+		{"name": "supply.ego_renewable_power_plants_germany",		
+		"format": "PostgreSQL",
+		"fields": [
+			{"name": "id",	"description": "Unique identifier","unit": "" },
+			{"name": "start_up_date","description": "start-up date","unit": "" },
+			{"name": "electrical_capacity",	"description": "electrical capacity","unit": "kW" },
+			{"name": "generation_type","description": "generation_type or main fuel type","unit": "" },
+			{"name": "generation_subtype","description": "generation subtype","unit": "" },
+			{"name": "thermal_capacity","description": "thermal capacity","unit": "kW" },
+			{"name": "city","description": "Name of city or location","unit": "" },
+			{"name": "postcode","description": "postcode","unit": "" },
+			{"name": "address","description": "address","unit": "" },
+			{"name": "lon",	"description": "longitude","unit": "" },
+			{"name": "lat",	"description": "latitude","unit": "" },
+			{"name": "gps_accuracy","description": "gps accuracy in meter",	"unit": "meter" },
+			{"name": "validation",	"description": "validation comments",	"unit": "" },
+			{"name":"notification_reason",	"description":"notification reason from BNetzA sources","unit":"" },
+			{"name":"eeg_id","description":"EEG id of Unit","unit":"" },
+			{"name":"tso",	"description":"Name of Transmission system operator","unit":"" },
+			{"name":"tso_eic","description":"Name of Transmission system operator",	"unit":"" },
+			{"name":"dso_id","description":"Name of District system operator","unit":"" },
+			{"name":"dso",	"description":"Name of District system operator","unit":"" },
+			{"name":"voltage_level","description":"voltage level",	"unit":"" },
+			{"name":"network_node",	"description":"Name or code of network node","unit":"" },
+			{"name":"power_plant_id","description":"power plant id from BNetzA","unit":"" },
+			{"name":"source","description":"short Name of source: energymap or bnetza","unit":"" },
+			{"name":"comment","description":"Further comment of changes","unit":"" },
+			{"name":"geom",	"description":"Geometry","unit":"" } ] } ],
+	"metadata_version": "1.3"}';
+
+-- select description
+SELECT obj_description('supply.ego_renewable_power_plants_germany'::regclass)::json;
 
 
-COMMENT ON TABLE supply.ego_renewable_power_plants_germany
-  IS '{"Name": "Renewable power plants in Germany",
-
-"Source": [{
-                     "Name": "EnergyMap",
-                      "URL": "www.energymap.info" },
-                     {
-                     "Name": "Bundesnetzagentur (BNetzA)",
-                      "URL": "www.bundesnetzagentur.de" }
-],
-
-"Reference date": ["31.12.2015"],
-
-"Retrieved": ["16.03.2016"],
-
-"Date of collection": ["31.12.2015"],
-
-"Original file": ["eeg_anlagenregister_2015.08.utf8.csv.zip,Meldungen_Aug-Dez2015.xls, 2016_01_Veroeff_AnlReg.xls"],
-
-"Spatial resolution": ["Germany"],
-
-"Description": ["This table contains a list of renewable energy power plants in Germany. This data join two sources: energymap.info, a data platform of the ''Deutsche Gesellschaft für Sonnenenergie e.V.'' and Bundesnetzagentur, the regularor together."], 
-
-"Regional level": ["minimum postcode level"],
-
-"Column":[
-
-	{"Name": "id",
-	"Description": "Primary Key",
-	"Unit": "" },
-
-	{"Name": "start_up_date",
-	"Description": "start-up date",
-	"Unit": "" },
-
-	{"Name": "electrical_capacity",
-	"Description": "electrical capacity",
-	"Unit": "kW" },
-
-	{"Name": "generation_type",
-	"Description": "generation_type or main fuel type",
-	"Unit": "" },
-
-	{"Name": "generation_subtype",
-	"Description": "generation subtype",
-	"Unit": "" },
-
-	{"Name": "thermal_capacity",
-	"Description": "thermal capacity",
-	"Unit": "kW" },
-
-	{"Name": "city",
-	"Description": "Name of city or location",
-	"Unit": "" },
-
-	{"Name": "postcode",
-	"Description": "postcode",
-	"Unit": "" },
-
-	{"Name": "address",
-	"Description": "address",
-	"Unit": "" },
-
-	{"Name": "lon",
-	"Description": "longitude",
-	"Unit": "" },
-
-	{"Name": "lat",
-	"Description": "latitude",
-	"Unit": "" },
-
-	{"Name": "gps_accuracy",
-	"Description": "gps accuracy in meter",
-	"Unit": "meter" },
-
-	{"Name": "validation",
-	"Description": "validation comments",
-	"Unit": "" },
-
-	{"Name":"notification_reason",
-	"Description":"notification reason from BNetzA sources",
-	"Unit":"" },
-
-	{"Name":"eeg_id",
-	"Description":"EEG id of Unit",
-	"Unit":"" },
-
-	{"Name":"tso",
-	"Description":"Name of Transmission system operator",
-	"Unit":"" },
-
-	{"Name":"tso_eic",
-	"Description":"Name of Transmission system operator",
-	"Unit":"" },
-
-	{"Name":"dso_id",
-	"Description":"Name of District system operator",
-	"Unit":"" },
-
-	{"Name":"dso",
-	"Description":"Name of District system operator",
-	"Unit":"" },
-
-	{"Name":"voltage_level",
-	"Description":"voltage level",
-	"Unit":"" },
-
-	{"Name":"network_node",
-	"Description":"Name or code of network node",
-	"Unit":"" },
-
-	{"Name":"power_plant_id",
-	"Description":"power plant id from BNetzA",
-	"Unit":"" },
-
-	{"Name":"source",
-	"Description":"short Name of source: energymap or bnetza",
-	"Unit":"" },
-
-	{"Name":"comment",
-	"Description":"Further comment of changes",
-	"Unit":"" },
-
-	{"Name":"geom",
-	"Description":"Geometry",
-	"Unit":"" }
-],
-
-"Changes":[
-  { "Name":"Wolf-Dieter Bunke", 
-    "Mail":"wolf-dieter.bunke@uni-flensburg.de", 
-    "Date":"16.03.2016", 
-    "Comment":"Created table" }],
-
-"Notes": ["ckeck licence"],
-
-"Licence": [{"Name": "unspecified Licence",
-             "URL": " "}],
-
-"Instructions for proper use": ["..."]}';
-*/
+	
 
 
