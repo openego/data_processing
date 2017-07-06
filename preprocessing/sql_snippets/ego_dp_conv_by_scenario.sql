@@ -92,6 +92,24 @@ CREATE INDEX ego_dp_supply_conv_powerplant_idx
   ON model_draft.ego_dp_supply_conv_powerplant
   USING gist
   (geom);
+-- metadata description
+COMMENT ON TABLE model_draft.test_table IS '{
+	"title": "Good example title",
+	"description": "example metadata for example data",
+	"language": [ "eng", "ger", "fre" ],
+	"spatial": 
+		{"location": "none",
+		"extent": "europe",
+		"resolution": "100 m"},
+	"temporal": 
+		{"reference_date": "2016-01-01",
+		"start": "2017-01-01",
+		"end": "2017-12-31",
+		"resolution": "hour"},
+
+	"spatial": [
+		{"extend": "Germany",
+		"resolution": "100m"} ],
 
 -- set meta data
 COMMENT ON TABLE model_draft.ego_dp_supply_conv_powerplant
@@ -99,8 +117,16 @@ COMMENT ON TABLE model_draft.ego_dp_supply_conv_powerplant
   '{
 	"title": "eGo Conventional power plants in Germany by Scenario",
 	"description": "This dataset contains an augmented and corrected power plant list based on the power plant list provided by the OPSD (BNetzA and UBA) and NEP Kraftwerksliste 2015 for the scenario B1-2035 and the ZNES scenario eGo 100 in 2050.",
-	"language": [ "eng", "ger"],
-	"reference_date": "2016-01-01",
+	"language": [ "eng", "ger" ],
+	"spatial": 
+		{"location": "Germany",
+		"extent": "europe",
+		"resolution": "100 m"},
+	"temporal": 
+		{"reference_date": "2016-01-01",
+		"start": "1900-01-01",
+		"end": "2049-12-31",
+		"resolution": ""},
 	"sources": [
 		{"name": "eGo data processing", 
 		"description": "Scripts with allocate Geometry by OpenStreetMap Objects or create future scenarios by high resolution geo-allocation", 
@@ -119,9 +145,6 @@ COMMENT ON TABLE model_draft.ego_dp_supply_conv_powerplant
 		"license": "Creative Commons Namensnennung-Keine Bearbeitung 3.0 Deutschland Lizenz", 
 		"copyright": "© Bundesnetzagentur für Elektrizität, Gas, Telekommunikation, Post und Eisenbahnen; Pressestelle"}
 		 ],
-	"spatial": [
-		{"extend": "Germany",
-		"resolution": "100m"} ],
 	"license": [
 		{"id": "ODbL-1.0",
 		"name": "Open Data Commons Open Database License 1.0",
@@ -131,9 +154,10 @@ COMMENT ON TABLE model_draft.ego_dp_supply_conv_powerplant
 		"copyright": "© ZNES Europa-Universität Flensburg"} ],
 	"contributors": [
 		{"name": "wolfbunke", "email": " ", "date": "01.06.2017", "comment": "Create and restructure scripts and table"}],
-	"resources": [{
-		"schema": {
-			"fields": [
+	"resources": [
+		{"name": "model_draft.ego_dp_supply_conv_powerplant",		
+		"format": "PostgreSQL",
+		"fields": [
 				{"name": "version", "description": "Version ID", "unit": "" },
 				{"name": "id", "description": "Unique identifier", "unit": "" },
 				{"name": "bnetza_id", "description": "Bundesnetzagentur unit ID", "unit": " " },			
@@ -174,9 +198,9 @@ COMMENT ON TABLE model_draft.ego_dp_supply_conv_powerplant
 				{"name": "la_id", "description": "Unique identifier of RES and CONV power plants", "unit": "" },									
 				{"name": "scenario", "description": "Name of scenario", "unit": "" },
 				{"name": "flag", "description": "Flag of scenario changes of an power plant unit (repowering, decommission or commissioning).", "unit": "" },
-				{"name": "nuts", "description": "NUTS ID).", "unit": "" }]},
-		"meta_version": "1.3" }] }';
-
+				{"name": "nuts", "description": "NUTS ID).", "unit": ""} ] } ],
+		"meta_version": "1.3" }';
+	  
 -- select description
 SELECT obj_description('model_draft.ego_dp_supply_conv_powerplant'::regclass)::json;
 
