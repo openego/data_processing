@@ -269,7 +269,7 @@ SELECT ego_scenario_log('v0.2.10','temp','model_draft','summary','ego_dp_substat
 DROP VIEW IF EXISTS 	model_draft.summary_de CASCADE;
 CREATE VIEW 		model_draft.summary_de AS
 	SELECT 	*
-	FROM	model_draft.summary, political_boundary.bkg_vg250_1_sta_union_mview as vg
+	FROM	model_draft.summary, boundaries.bkg_vg250_1_sta_union_mview as vg
 	WHERE 	ST_Transform(vg.geom,4326) && model_draft.summary.polygon 
 	AND 	ST_CONTAINS(ST_Transform(vg.geom,4326),model_draft.summary.polygon);
 
@@ -282,7 +282,7 @@ COMMENT ON TABLE  model_draft.summary_de IS '{
 	"version": "v0.2.10" }' ;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','input','political_boundary','bkg_vg250_1_sta_union_mview','ego_dp_substation_hvmv.sql',' ');
+SELECT ego_scenario_log('v0.2.10','input','boundaries','bkg_vg250_1_sta_union_mview','ego_dp_substation_hvmv.sql',' ');
 SELECT ego_scenario_log('v0.2.10','temp','model_draft','summary_de','ego_dp_substation_hvmv.sql',' ');
 
 

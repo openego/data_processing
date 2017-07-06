@@ -52,22 +52,22 @@ INSERT INTO model_draft.ego_data_processing_results (schema_name,table_name,desc
 
 	UNION ALL
 	-- Area vg250.gem
-	SELECT	'political_boundary',
+	SELECT	'boundaries',
 		'bkg_vg250_6_gem',
 		'Gemeinde area',
 		SUM(ST_AREA(ST_TRANSFORM(geom,3025))/10000) ::integer AS result,
 		'ha' ::text AS unit,
 		NOW() AT TIME ZONE 'Europe/Berlin'
-	FROM	political_boundary.bkg_vg250_6_gem
+	FROM	boundaries.bkg_vg250_6_gem
 	UNION ALL	
 	-- Area vg250.gem_clean
 	SELECT	'model_draft',
-		'ego_political_boundary_bkg_vg250_6_gem_clean',
+		'ego_boundaries_bkg_vg250_6_gem_clean',
 		'Processed gemeinde area',
 		SUM(ST_AREA(ST_TRANSFORM(geom,3025))/10000) ::integer AS result,
 		'ha' ::text AS unit,
 		NOW() AT TIME ZONE 'Europe/Berlin'
-	FROM	model_draft.ego_political_boundary_bkg_vg250_6_gem_clean
+	FROM	model_draft.ego_boundaries_bkg_vg250_6_gem_clean
 	UNION ALL
 	-- Area GD
 	SELECT	'model_draft',
@@ -191,7 +191,7 @@ UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
 SET  	type1_cnt = t2.type_cnt
 FROM	(SELECT	gd.subst_id,
 		COUNT(ST_PointOnSurface(typ.geom))::integer AS type_cnt
-	FROM	model_draft.ego_political_boundary_hvmv_subst_per_gem_1_mview AS typ,
+	FROM	model_draft.ego_boundaries_hvmv_subst_per_gem_1_mview AS typ,
 		model_draft.ego_grid_mv_griddistrict AS gd
 	WHERE	gd.geom && typ.geom AND
 		ST_CONTAINS(gd.geom,ST_PointOnSurface(typ.geom))
@@ -242,7 +242,7 @@ UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
 SET  	type3_cnt = t2.type_cnt
 FROM	(SELECT	gd.subst_id,
 		COUNT(ST_PointOnSurface(typ.geom))::integer AS type_cnt
-	FROM	model_draft.ego_political_boundary_hvmv_subst_per_gem_3_mview AS typ,
+	FROM	model_draft.ego_boundaries_hvmv_subst_per_gem_3_mview AS typ,
 		model_draft.ego_grid_mv_griddistrict AS gd
 	WHERE	gd.geom && typ.geom AND
 		ST_CONTAINS(gd.geom,ST_PointOnSurface(typ.geom))
@@ -262,19 +262,19 @@ SET  	"group" = (SELECT
 		END);
 
 
-DROP MATERIALIZED VIEW IF EXISTS political_boundary.bkg_vg250_6_gem_pts;
-CREATE MATERIALIZED VIEW political_boundary.bkg_vg250_6_gem_pts AS
+DROP MATERIALIZED VIEW IF EXISTS boundaries.bkg_vg250_6_gem_pts;
+CREATE MATERIALIZED VIEW boundaries.bkg_vg250_6_gem_pts AS
 SELECT	id,
 	ags_0,
 	ST_PointOnSurface(geom) AS geom
-FROM	political_boundary.bkg_vg250_6_gem;
+FROM	boundaries.bkg_vg250_6_gem;
 
 -- Gemeinden
 UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
 SET  	gem = t2.gem
 FROM	(SELECT	gd.subst_id,
 		COUNT(ST_PointOnSurface(gem.geom))::integer AS gem
-	FROM	political_boundary.bkg_vg250_6_gem AS gem,
+	FROM	boundaries.bkg_vg250_6_gem AS gem,
 		model_draft.ego_grid_mv_griddistrict AS gd
 	WHERE	gd.geom && ST_TRANSFORM(gem.geom,3035) AND
 		ST_CONTAINS(gd.geom,ST_PointOnSurface(ST_TRANSFORM(gem.geom,3035)))
@@ -283,19 +283,19 @@ FROM	(SELECT	gd.subst_id,
 WHERE  	t1.subst_id = t2.subst_id;
 
 /* -- bkg_vg250_6_gem_clean_pts
-DROP MATERIALIZED VIEW IF EXISTS model_draft.ego_political_boundary_bkg_vg250_6_gem_clean_pts;
-CREATE MATERIALIZED VIEW model_draft.ego_political_boundary_bkg_vg250_6_gem_clean_pts AS
+DROP MATERIALIZED VIEW IF EXISTS model_draft.ego_boundaries_bkg_vg250_6_gem_clean_pts;
+CREATE MATERIALIZED VIEW model_draft.ego_boundaries_bkg_vg250_6_gem_clean_pts AS
 SELECT	id,
 	ags_0,
 	ST_PointOnSurface(geom) AS geom
-FROM	model_draft.ego_political_boundary_bkg_vg250_6_gem_clean; */
+FROM	model_draft.ego_boundaries_bkg_vg250_6_gem_clean; */
 
 -- Gemeinde Parts
 UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
 SET  	gem_clean = t2.gem_clean
 FROM	(SELECT	gd.subst_id,
 		COUNT(ST_PointOnSurface(gem.geom))::integer AS gem_clean
-	FROM	model_draft.ego_political_boundary_bkg_vg250_6_gem_clean AS gem,
+	FROM	model_draft.ego_boundaries_bkg_vg250_6_gem_clean AS gem,
 		model_draft.ego_grid_mv_griddistrict AS gd
 	WHERE	gd.geom && gem.geom AND
 		ST_CONTAINS(gd.geom,ST_PointOnSurface(gem.geom))
@@ -401,48 +401,48 @@ SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_grid_mv_griddistric
 	
 
 -- Calculate statistics for BKG-vg250 
-DROP MATERIALIZED VIEW IF EXISTS 	political_boundary.bkg_vg250_statistics_mview CASCADE;
-CREATE MATERIALIZED VIEW		political_boundary.bkg_vg250_statistics_mview AS 
+DROP MATERIALIZED VIEW IF EXISTS 	boundaries.bkg_vg250_statistics_mview CASCADE;
+CREATE MATERIALIZED VIEW		boundaries.bkg_vg250_statistics_mview AS 
 -- Calculate areas
 SELECT	'1' ::integer AS id,
 	'1_sta' ::text AS table,
 	'vg' ::text AS descript_nameion,
 	SUM(vg.area_ha) ::integer AS area_sum_ha
-FROM	political_boundary.bkg_vg250_1_sta_mview AS vg
+FROM	boundaries.bkg_vg250_1_sta_mview AS vg
 UNION ALL
 SELECT	'3' ::integer AS id,
 	'1_sta' ::text AS table,
 	'deu' ::text AS descript_nameion,
 	SUM(vg.area_ha) ::integer AS area_sum_ha
-FROM	political_boundary.bkg_vg250_1_sta_mview AS vg
+FROM	boundaries.bkg_vg250_1_sta_mview AS vg
 WHERE	bez='Bundesrepublik'
 UNION ALL
 SELECT	'4' ::integer AS id,
 	'1_sta' ::text AS table,
 	'NOT deu' ::text AS descript_nameion,
 	SUM(vg.area_ha) ::integer AS area_sum_ha
-FROM	political_boundary.bkg_vg250_1_sta_mview AS vg
+FROM	boundaries.bkg_vg250_1_sta_mview AS vg
 WHERE	bez='--'
 UNION ALL
 SELECT	'5' ::integer AS id,
 	'1_sta' ::text AS table,
 	'land' ::text AS descript_nameion,
 	SUM(vg.area_ha) ::integer AS area_sum_ha
-FROM	political_boundary.bkg_vg250_1_sta_mview AS vg
+FROM	boundaries.bkg_vg250_1_sta_mview AS vg
 WHERE	gf='3' OR gf='4'
 UNION ALL
 SELECT	'6' ::integer AS id,
 	'1_sta' ::text AS table,
 	'water' ::text AS descript_nameion,
 	SUM(vg.area_ha) ::integer AS area_sum_ha
-FROM	political_boundary.bkg_vg250_1_sta_mview AS vg
+FROM	boundaries.bkg_vg250_1_sta_mview AS vg
 WHERE	gf='1' OR gf='2';
 
 -- grant (oeuser)
-ALTER TABLE political_boundary.bkg_vg250_statistics_mview OWNER TO oeuser;
+ALTER TABLE boundaries.bkg_vg250_statistics_mview OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','output','political_boundary','bkg_vg250_statistics_mview','ego_dp_loadarea_statistic.sql',' ');
+SELECT ego_scenario_log('v0.2.10','output','boundaries','bkg_vg250_statistics_mview','ego_dp_loadarea_statistic.sql',' ');
 
 
 -- drid district
@@ -460,15 +460,15 @@ WHERE	geom IS NOT NULL;
 
 
 SELECT	count(id)
-FROM	model_draft.ego_political_boundary_hvmv_subst_per_gem
+FROM	model_draft.ego_boundaries_hvmv_subst_per_gem
 WHERE	subst_type = '1';
 
 SELECT	count(id)
-FROM	model_draft.ego_political_boundary_hvmv_subst_per_gem
+FROM	model_draft.ego_boundaries_hvmv_subst_per_gem
 WHERE	subst_type = '2';
 
 SELECT	count(id)
-FROM	model_draft.ego_political_boundary_hvmv_subst_per_gem
+FROM	model_draft.ego_boundaries_hvmv_subst_per_gem
 WHERE	subst_type = '3'; */
 
 /* -- LA Sizes
@@ -515,7 +515,7 @@ FROM	(SELECT	la.id,
 		la.ags_0 AS ags_0_la,
 		gem.ags_0 AS ags_0_gem,
 		la.geom
-	FROM	model_draft.ego_demand_load_melt AS la JOIN political_boundary.bkg_vg250_6_gem_mview AS gem ON (la.ags_0 = gem.ags_0)
+	FROM	model_draft.ego_demand_load_melt AS la JOIN boundaries.bkg_vg250_6_gem_mview AS gem ON (la.ags_0 = gem.ags_0)
 	) AS  lapd
 WHERE	lapd.pd_km2 > '500'
 UNION ALL
@@ -529,7 +529,7 @@ FROM	(SELECT	la.id,
 		la.ags_0 AS ags_0_la,
 		gem.ags_0 AS ags_0_gem,
 		la.geom
-	FROM	model_draft.ego_demand_loadarea AS la JOIN political_boundary.bkg_vg250_6_gem_mview AS gem ON (la.ags_0 = gem.ags_0)
+	FROM	model_draft.ego_demand_loadarea AS la JOIN boundaries.bkg_vg250_6_gem_mview AS gem ON (la.ags_0 = gem.ags_0)
 	) AS  lapd
 WHERE	lapd.pd_km2 > '500'
 UNION ALL
@@ -542,7 +542,7 @@ FROM	(SELECT	la.id,
 		la.ags_0 AS ags_0_la,
 		gem.ags_0 AS ags_0_gem,
 		la.geom
-	FROM	model_draft.ego_demand_loadarea AS la JOIN political_boundary.bkg_vg250_6_gem_mview AS gem ON (la.ags_0 = gem.ags_0)
+	FROM	model_draft.ego_demand_loadarea AS la JOIN boundaries.bkg_vg250_6_gem_mview AS gem ON (la.ags_0 = gem.ags_0)
 	) AS  lapd
 WHERE	lapd.pd_km2 < '500'
 UNION ALL
@@ -556,7 +556,7 @@ FROM	(SELECT	la.id,
 		la.ags_0 AS ags_0_la,
 		gem.ags_0 AS ags_0_gem,
 		la.geom
-	FROM	model_draft.ego_demand_loadarea_voi AS la JOIN political_boundary.bkg_vg250_6_gem_mview AS gem ON (la.ags_0 = gem.ags_0)
+	FROM	model_draft.ego_demand_loadarea_voi AS la JOIN boundaries.bkg_vg250_6_gem_mview AS gem ON (la.ags_0 = gem.ags_0)
 	) AS  lapd
 WHERE	lapd.pd_km2 > '500'
 UNION ALL
@@ -569,7 +569,7 @@ FROM	(SELECT	la.id,
 		la.ags_0 AS ags_0_la,
 		gem.ags_0 AS ags_0_gem,
 		la.geom
-	FROM	model_draft.ego_demand_loadarea_voi AS la JOIN political_boundary.bkg_vg250_6_gem_mview AS gem ON (la.ags_0 = gem.ags_0)
+	FROM	model_draft.ego_demand_loadarea_voi AS la JOIN boundaries.bkg_vg250_6_gem_mview AS gem ON (la.ags_0 = gem.ags_0)
 	) AS  lapd
 WHERE	lapd.pd_km2 < '500'; */
 

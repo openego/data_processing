@@ -227,11 +227,11 @@ CREATE INDEX  	landuse_industry_geom_centre_idx
 -- Calculate NUTS
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','input','political_boundary','bkg_vg250_4_krs_mview','ego_dp_loadarea_industry_consumer.sql',' ');
+SELECT ego_scenario_log('v0.2.10','input','boundaries','bkg_vg250_4_krs_mview','ego_dp_loadarea_industry_consumer.sql',' ');
 
 UPDATE 	model_draft.ego_landuse_industry a
 	SET 	nuts = b.nuts
-	FROM 	political_boundary.bkg_vg250_4_krs_mview b
+	FROM 	boundaries.bkg_vg250_4_krs_mview b
 	WHERE 	b.geom && a.geom_centre AND
 		st_intersects(b.geom, a.geom_centre); 
 

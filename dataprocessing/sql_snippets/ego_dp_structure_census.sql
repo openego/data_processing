@@ -102,7 +102,7 @@ INSERT INTO	model_draft.destatis_zensus_population_per_ha_inside (gid, inside_bo
 -- set if inside borders
 UPDATE	model_draft.destatis_zensus_population_per_ha_inside AS t1
 	SET	inside_borders = TRUE
-	FROM	political_boundary.bkg_vg250_1_sta_union_mview AS a,
+	FROM	boundaries.bkg_vg250_1_sta_union_mview AS a,
 		society.destatis_zensus_population_per_ha AS b
 	WHERE  	a.geom && b.geom_point AND
 		ST_CONTAINS(a.geom,b.geom_point) AND
