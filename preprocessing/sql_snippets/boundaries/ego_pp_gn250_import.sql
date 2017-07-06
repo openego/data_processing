@@ -10,7 +10,7 @@ __author__ 	= "Ludee"
 
 
 -- 1.
-CREATE TABLE political_boundary.bkg_gn250_p (
+CREATE TABLE boundaries.bkg_gn250_p (
 	reference_date date,
 	id serial NOT NULL,
 	nnid character varying(16),
@@ -52,15 +52,15 @@ CREATE TABLE political_boundary.bkg_gn250_p (
 	CONSTRAINT bkg_gn250_p_pkey PRIMARY KEY (reference_date,id) );
 
 -- grant (oeuser)
-ALTER TABLE political_boundary.bkg_gn250_p OWNER TO oeuser;
+ALTER TABLE boundaries.bkg_gn250_p OWNER TO oeuser;
 
 -- index GIST (geom)
-CREATE INDEX bkg_gn250_p_geom_idx ON political_boundary.bkg_gn250_p USING gist (geom);
+CREATE INDEX bkg_gn250_p_geom_idx ON boundaries.bkg_gn250_p USING gist (geom);
 
 
 
 -- 2.
-CREATE TABLE political_boundary.gn250_b (
+CREATE TABLE boundaries.gn250_b (
 	reference_date date,
 	id serial NOT NULL,
 	nnid character varying(16),
@@ -102,12 +102,12 @@ CREATE TABLE political_boundary.gn250_b (
 	CONSTRAINT gn250_b_pkey PRIMARY KEY (reference_date,id) );
 
 -- grant (oeuser)
-ALTER TABLE political_boundary.gn250_b OWNER TO oeuser;
+ALTER TABLE boundaries.gn250_b OWNER TO oeuser;
 
 -- index GIST (geom)
-CREATE INDEX bkg_vg250_2_lan_geom_idx ON political_boundary.gn250_b USING gist (geom);
+CREATE INDEX bkg_vg250_2_lan_geom_idx ON boundaries.gn250_b USING gist (geom);
 
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','preprocessing','political_boundary','gn250_p','ego_pp_gn250_import.sql','setup gn250 tables');
-SELECT ego_scenario_log('v0.2.10','preprocessing','political_boundary','gn250_b','ego_pp_gn250_import.sql','setup gn250 tables');
+SELECT ego_scenario_log('v0.2.10','preprocessing','boundaries','gn250_p','ego_pp_gn250_import.sql','setup gn250 tables');
+SELECT ego_scenario_log('v0.2.10','preprocessing','boundaries','gn250_b','ego_pp_gn250_import.sql','setup gn250 tables');

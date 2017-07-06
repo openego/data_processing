@@ -9,7 +9,7 @@ __author__ 	= "Ludee"
 
 
 -- metadata
-COMMENT ON TABLE political_boundary.bkg_vg250_1_sta IS '{
+COMMENT ON TABLE boundaries.bkg_vg250_1_sta IS '{
 	"title": "BKG - Verwaltungsgebiete 1:250.000 - Staat (STA)",
 	"description": "Der Datenbestand umfasst die Verwaltungseinheiten der hierarchischen Verwaltungsebenen vom Staat bis zu den Gemeinden",
 	"language": [ "ger" ],
@@ -51,7 +51,7 @@ COMMENT ON TABLE political_boundary.bkg_vg250_1_sta IS '{
 		{"name": "Ludee", "email": "", "date": "2017-03-21", "comment": "Update metadata to v1.1"},
 		{"name": "Ludee", "email": "", "date": "2017-06-30", "comment": "Update metadata to v1.3"} ],
 	"resources": [
-		{"name": "political_boundary.bkg_vg250_1_sta",		
+		{"name": "boundaries.bkg_vg250_1_sta",		
 		"format": "PostgreSQL",
 		"fields": [
 			{"name": "reference_date", "description": "Reference date", "unit": "none"},
@@ -84,7 +84,7 @@ COMMENT ON TABLE political_boundary.bkg_vg250_1_sta IS '{
 	"metadata_version": "1.3"}';
 
 -- metadata
-COMMENT ON TABLE political_boundary.bkg_vg250_2_lan IS '{
+COMMENT ON TABLE boundaries.bkg_vg250_2_lan IS '{
 	"title": "BKG - Verwaltungsgebiete 1:250.000 - Länder (LAN)",
 	"description": "Der Datenbestand umfasst die Verwaltungseinheiten der hierarchischen Verwaltungsebenen vom Staat bis zu den Gemeinden",
 	"language": [ "ger" ],
@@ -126,7 +126,7 @@ COMMENT ON TABLE political_boundary.bkg_vg250_2_lan IS '{
 		{"name": "Ludee", "email": "", "date": "2017-03-21", "comment": "Update metadata to v1.1"},
 		{"name": "Ludee", "email": "", "date": "2017-06-30", "comment": "Update metadata to v1.3"} ],
 	"resources": [
-		{"name": "political_boundary.bkg_vg250_2_lan",		
+		{"name": "boundaries.bkg_vg250_2_lan",		
 		"format": "PostgreSQL",
 		"fields": [
 			{"name": "reference_date", "description": "Reference date", "unit": "none"},
@@ -158,7 +158,7 @@ COMMENT ON TABLE political_boundary.bkg_vg250_2_lan IS '{
 	"metadata_version": "1.3"}';
 
 -- metadata
-COMMENT ON TABLE political_boundary.bkg_vg250_3_rbz IS '{
+COMMENT ON TABLE boundaries.bkg_vg250_3_rbz IS '{
 	"title": "BKG - Verwaltungsgebiete 1:250.000 - Regierungsbezirke (RBZ)",
 	"description": "Der Datenbestand umfasst die Verwaltungseinheiten der hierarchischen Verwaltungsebenen vom Staat bis zu den Gemeinden",
 	"language": [ "ger" ],
@@ -200,7 +200,7 @@ COMMENT ON TABLE political_boundary.bkg_vg250_3_rbz IS '{
 		{"name": "Ludee", "email": "", "date": "2017-03-21", "comment": "Update metadata to v1.1"},
 		{"name": "Ludee", "email": "", "date": "2017-06-30", "comment": "Update metadata to v1.3"} ],
 	"resources": [
-		{"name": "political_boundary.bkg_vg250_3_rbz",		
+		{"name": "boundaries.bkg_vg250_3_rbz",		
 		"format": "PostgreSQL",
 		"fields": [
 			{"name": "reference_date", "description": "Reference date", "unit": "none"},
@@ -232,7 +232,7 @@ COMMENT ON TABLE political_boundary.bkg_vg250_3_rbz IS '{
 	"metadata_version": "1.3"}';
 
 -- metadata
-COMMENT ON TABLE political_boundary.bkg_vg250_4_krs IS '{
+COMMENT ON TABLE boundaries.bkg_vg250_4_krs IS '{
 	"title": "BKG - Verwaltungsgebiete 1:250.000 - Kreise (KRS)",
 	"description": "Der Datenbestand umfasst die Verwaltungseinheiten der hierarchischen Verwaltungsebenen vom Staat bis zu den Gemeinden",
 	"language": [ "ger" ],
@@ -274,7 +274,7 @@ COMMENT ON TABLE political_boundary.bkg_vg250_4_krs IS '{
 		{"name": "Ludee", "email": "", "date": "2017-03-21", "comment": "Update metadata to v1.1"},
 		{"name": "Ludee", "email": "", "date": "2017-06-30", "comment": "Update metadata to v1.3"} ],
 	"resources": [
-		{"name": "political_boundary.bkg_vg250_4_krs",		
+		{"name": "boundaries.bkg_vg250_4_krs",		
 		"format": "PostgreSQL",
 		"fields": [
 			{"name": "reference_date", "description": "Reference date", "unit": "none"},
@@ -306,7 +306,7 @@ COMMENT ON TABLE political_boundary.bkg_vg250_4_krs IS '{
 	"metadata_version": "1.3"}';
 
 -- metadata
-COMMENT ON TABLE political_boundary.bkg_vg250_5_vwg IS '{
+COMMENT ON TABLE boundaries.bkg_vg250_5_vwg IS '{
 	"title": "BKG - Verwaltungsgebiete 1:250.000 - Verwaltungsgemeinschaften (VWG)",
 	"description": "Der Datenbestand umfasst die Verwaltungseinheiten der hierarchischen Verwaltungsebenen vom Staat bis zu den Gemeinden",
 	"language": [ "ger" ],
@@ -348,7 +348,7 @@ COMMENT ON TABLE political_boundary.bkg_vg250_5_vwg IS '{
 		{"name": "Ludee", "email": "", "date": "2017-03-21", "comment": "Update metadata to v1.1"},
 		{"name": "Ludee", "email": "", "date": "2017-06-30", "comment": "Update metadata to v1.3"} ],
 	"resources": [
-		{"name": "political_boundary.bkg_vg250_5_vwg",		
+		{"name": "boundaries.bkg_vg250_5_vwg",		
 		"format": "PostgreSQL",
 		"fields": [
 			{"name": "reference_date", "description": "Reference date", "unit": "none"},
@@ -380,7 +380,7 @@ COMMENT ON TABLE political_boundary.bkg_vg250_5_vwg IS '{
 	"metadata_version": "1.3"}';
 
 -- metadata
-COMMENT ON TABLE political_boundary.bkg_vg250_6_gem IS '{
+COMMENT ON TABLE boundaries.bkg_vg250_6_gem IS '{
 	"title": "BKG - Verwaltungsgebiete 1:250.000 - Gemeinden (GEM)",
 	"description": "Der Datenbestand umfasst die Verwaltungseinheiten der hierarchischen Verwaltungsebenen vom Staat bis zu den Gemeinden",
 	"language": [ "ger" ],
@@ -422,7 +422,7 @@ COMMENT ON TABLE political_boundary.bkg_vg250_6_gem IS '{
 		{"name": "Ludee", "email": "", "date": "2017-03-21", "comment": "Update metadata to v1.1"},
 		{"name": "Ludee", "email": "", "date": "2017-06-30", "comment": "Update metadata to v1.3"} ],
 	"resources": [
-		{"name": "political_boundary.bkg_vg250_6_gem",		
+		{"name": "boundaries.bkg_vg250_6_gem",		
 		"format": "PostgreSQL",
 		"fields": [
 			{"name": "reference_date", "description": "Reference date", "unit": "none"},
@@ -455,9 +455,9 @@ COMMENT ON TABLE political_boundary.bkg_vg250_6_gem IS '{
 
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','output','political_boundary','bkg_vg250_1_sta','ego_pp_vg250_metadata.sql','');
-SELECT ego_scenario_log('v0.2.10','output','political_boundary','bkg_vg250_2_lan','ego_pp_vg250_metadata.sql','');
-SELECT ego_scenario_log('v0.2.10','output','political_boundary','bkg_vg250_3_rbz','ego_pp_vg250_metadata.sql','');
-SELECT ego_scenario_log('v0.2.10','output','political_boundary','bkg_vg250_4_krs','ego_pp_vg250_metadata.sql','');
-SELECT ego_scenario_log('v0.2.10','output','political_boundary','bkg_vg250_5_vwg','ego_pp_vg250_metadata.sql','');
-SELECT ego_scenario_log('v0.2.10','output','political_boundary','bkg_vg250_6_gem','ego_pp_vg250_metadata.sql','');
+SELECT ego_scenario_log('v0.2.10','output','boundaries','bkg_vg250_1_sta','ego_pp_vg250_metadata.sql','');
+SELECT ego_scenario_log('v0.2.10','output','boundaries','bkg_vg250_2_lan','ego_pp_vg250_metadata.sql','');
+SELECT ego_scenario_log('v0.2.10','output','boundaries','bkg_vg250_3_rbz','ego_pp_vg250_metadata.sql','');
+SELECT ego_scenario_log('v0.2.10','output','boundaries','bkg_vg250_4_krs','ego_pp_vg250_metadata.sql','');
+SELECT ego_scenario_log('v0.2.10','output','boundaries','bkg_vg250_5_vwg','ego_pp_vg250_metadata.sql','');
+SELECT ego_scenario_log('v0.2.10','output','boundaries','bkg_vg250_6_gem','ego_pp_vg250_metadata.sql','');
