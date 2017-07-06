@@ -187,7 +187,7 @@ SELECT obj_description('model_draft.ego_dp_supply_conv_powerplant'::regclass)::j
 
 INSERT INTO model_draft.ego_dp_supply_conv_powerplant
 	SELECT 
-	  'tba' as version,
+	  'v0.3.0'::text  as version,
 	  gid as id,
 	  bnetza_id,
 	  company,
@@ -241,7 +241,7 @@ SELECT ego_scenario_log('v0.3.0','input','supply','ego_dp_supply_conv_powerplant
 
 INSERT INTO model_draft.ego_dp_supply_conv_powerplant
 SELECT 
-  'tba' as version,
+  'v0.3.0'::text  as version,
   b.max +row_number() over (ORDER BY gid) as id,
   bnetza_id,
   NULL::text as company,
@@ -360,7 +360,7 @@ ALTER TABLE model_draft.ego_supply_conv_powerplant_nep2035_mview OWNER TO oeuser
 DROP MATERIALIZED VIEW IF EXISTS  model_draft.ego_supply_conv_powerplant_ego100_mview CASCADE;
 CREATE MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_ego100_mview AS
 	SELECT 
-	  'tba'::text as version,
+	  'v0.3.0'::text as version,
 	  id,
 	  bnetza_id,
 	  company,
