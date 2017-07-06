@@ -7,5 +7,5 @@ __copyright__ 	= "Copyright Reiner Lemoine Institut gGmbH"
 __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
 __url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
 __author__ 	= "Ludee"
-__contains__	= " "
+__contains__	= "url"
 */
