@@ -478,7 +478,7 @@ UPDATE 	social.destatis_zensus_population_per_bkg_vg250_6_gem AS t1
 	FROM    (SELECT	gem.id AS id,
 			SUM(coalesce(pts.population,0))::integer AS census_sum,
 			COUNT(pts.geom)::integer AS census_count,
-			coalesce(SUM(pts.population)/COUNT(pts.geom),0)::double precision AS census_density
+			coalesce(SUM(pts.population)/COUNT(pts.geom),0)::numeric AS census_density
 		FROM	political_boundary.bkg_vg250_6_gem AS gem,
 			social.destatis_zensus_population_per_ha_mview AS pts
 		WHERE  	ST_TRANSFORM(gem.geom,3035) && pts.geom_point AND

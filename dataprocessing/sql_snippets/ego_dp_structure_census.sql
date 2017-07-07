@@ -16,7 +16,7 @@ SELECT ego_scenario_log('v0.2.10','input','social','destatis_zensus_population_p
 DROP MATERIALIZED VIEW IF EXISTS	social.destatis_zensus_population_per_ha_mview CASCADE;
 CREATE MATERIALIZED VIEW         	social.destatis_zensus_population_per_ha_mview AS
 	SELECT	a.gid 		::integer AS gid,
-		a.population 	::integer AS population,
+		a.population 	::numeric(10,0) AS population,
 		a.geom_point 	::geometry(Point,3035) AS geom_point,
 		a.geom 		::geometry(Polygon,3035) AS geom
 	FROM	social.destatis_zensus_population_per_ha AS a
@@ -118,7 +118,7 @@ COMMENT ON TABLE model_draft.destatis_zensus_population_per_ha_inside IS '{
 DROP MATERIALIZED VIEW IF EXISTS	model_draft.destatis_zensus_population_per_ha_invg_mview CASCADE;
 CREATE MATERIALIZED VIEW         	model_draft.destatis_zensus_population_per_ha_invg_mview AS
 	SELECT	a.gid ::integer AS gid,
-		a.population ::integer AS population,
+		a.population ::numeric(10,0) AS population,
 		b.inside_borders ::boolean,
 		a.geom_point ::geometry(Point,3035) AS geom_point,
 		a.geom ::geometry(Polygon,3035) AS geom
@@ -159,7 +159,7 @@ SELECT ego_scenario_log('v0.2.10','output','model_draft','destatis_zensus_popula
 DROP MATERIALIZED VIEW IF EXISTS	model_draft.destatis_zensus_population_per_ha_outvg_mview CASCADE;
 CREATE MATERIALIZED VIEW         	model_draft.destatis_zensus_population_per_ha_outvg_mview AS
 	SELECT	a.gid ::integer AS gid,
-		a.population ::integer AS population,
+		a.population ::numeric(10,0) AS population,
 		b.inside_borders ::boolean,
 		a.geom_point ::geometry(Point,3035) AS geom_point,
 		a.geom ::geometry(Polygon,3035) AS geom

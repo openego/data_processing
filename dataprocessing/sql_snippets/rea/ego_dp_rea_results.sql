@@ -45,7 +45,7 @@ DROP TABLE IF EXISTS 	model_draft.ego_supply_rea_per_mvgd CASCADE;
 CREATE TABLE 		model_draft.ego_supply_rea_per_mvgd AS
 	SELECT	gd.subst_id,
 		'0'::integer dea_cnt,
-		'0'::double precision dea_capacity,
+		'0'::numeric dea_capacity,
 		'0'::integer lv_dea_cnt,
 		'0.0'::decimal lv_dea_capacity,
 		'0'::integer mv_dea_cnt,

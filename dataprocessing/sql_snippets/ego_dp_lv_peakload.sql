@@ -100,7 +100,7 @@ UPDATE 	model_draft.ego_grid_lv_griddistrict AS t1
 	FROM    (SELECT	a.id AS id,
 			SUM(b.population)::integer AS zensus_sum,
 			COUNT(b.geom_point)::integer AS zensus_count,
-			(SUM(b.population)/COUNT(b.geom_point))::double precision AS zensus_density
+			(SUM(b.population)/COUNT(b.geom_point))::numeric AS zensus_density
 		FROM	model_draft.ego_grid_lv_griddistrict AS a,
 			social.destatis_zensus_population_per_ha_mview AS b
 		WHERE  	a.geom && b.geom_point AND

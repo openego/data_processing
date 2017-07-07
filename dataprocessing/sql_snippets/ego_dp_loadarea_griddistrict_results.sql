@@ -176,8 +176,8 @@ SET  	zensus_sum = t2.zensus_sum,
 FROM    (SELECT	gd.subst_id AS subst_id,
 		SUM(pts.population)::integer AS zensus_sum,
 		COUNT(pts.geom)::integer AS zensus_count,
-		(SUM(pts.population)/COUNT(pts.geom))::double precision AS zensus_density,
-		(SUM(pts.population)/gd.area_ha)::double precision AS population_density
+		(SUM(pts.population)/COUNT(pts.geom))::numeric AS zensus_density,
+		(SUM(pts.population)/gd.area_ha)::numeric AS population_density
 	FROM	model_draft.ego_grid_mv_griddistrict AS gd,
 		social.destatis_zensus_population_per_ha_mview AS pts
 	WHERE  	gd.geom && pts.geom AND
@@ -248,7 +248,7 @@ FROM	model_draft.ego_grid_mv_griddistrict ; */
 UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
 	SET  	consumption = t2.consumption
 	FROM	(SELECT	gd.subst_id,
-			SUM(la.sector_consumption_sum)::double precision AS consumption
+			SUM(la.sector_consumption_sum)::numeric AS consumption
 		FROM	model_draft.ego_demand_loadarea AS la,
 			model_draft.ego_grid_mv_griddistrict AS gd
 		WHERE	gd.subst_id = la.subst_id
@@ -291,7 +291,7 @@ SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_grid_mv_griddistri
 DROP TABLE IF EXISTS  	model_draft.ego_grid_mv_griddistrict CASCADE;
 CREATE TABLE         	model_draft.ego_grid_mv_griddistrict AS
 	SELECT	gd.subst_id ::integer,
-		gd.area_ha ::double precision,
+		gd.area_ha ::numeric,
 		gd.geom ::geometry(MultiPolygon,3035)
 	FROM	calc_ego_grid_district.grid_district AS gd;
 	
@@ -305,8 +305,8 @@ ALTER TABLE	model_draft.ego_grid_mv_griddistrict
 	ADD PRIMARY KEY (subst_id),
 	ADD COLUMN zensus_sum integer,
 	ADD COLUMN zensus_count integer,
-	ADD COLUMN zensus_density double precision,
-	ADD COLUMN population_density double precision;
+	ADD COLUMN zensus_density numeric,
+	ADD COLUMN population_density numeric;
 
 -- "Zensus2011 Population"   (OK!) -> 62.000ms =3.610
 UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
@@ -316,11 +316,11 @@ SET  	area_ha = t2.area_ha,
 	zensus_density = t2.zensus_density,
 	population_density = t2.population_density
 FROM    (SELECT	gd.subst_id AS subst_id,
-		ST_AREA(gd.geom)/10000 ::double precision AS area_ha,
+		ST_AREA(gd.geom)/10000 ::numeric AS area_ha,
 		SUM(pts.population)::integer AS zensus_sum,
 		COUNT(pts.geom)::integer AS zensus_count,
-		(SUM(pts.population)/COUNT(pts.geom))::double precision AS zensus_density,
-		(SUM(pts.population)/gd.area_ha)::double precision AS population_density
+		(SUM(pts.population)/COUNT(pts.geom))::numeric AS zensus_density,
+		(SUM(pts.population)/gd.area_ha)::numeric AS population_density
 	FROM	model_draft.ego_grid_mv_griddistrict AS gd,
 		social.destatis_zensus_population_per_ha_mview AS pts
 	WHERE  	gd.geom && pts.geom AND
@@ -333,8 +333,8 @@ WHERE  	t1.subst_id = t2.subst_id;
 -- "Extend Table"   (OK!) 100ms =0
 ALTER TABLE	model_draft.ego_grid_mv_griddistrict
 	ADD COLUMN la_count integer,
-	ADD COLUMN la_area double precision,
-	ADD COLUMN consumption_sum double precision;
+	ADD COLUMN la_area numeric,
+	ADD COLUMN consumption_sum numeric;
 
 -- "LA data"   (OK!) -> 411.000ms =173.278
 UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
@@ -343,8 +343,8 @@ SET  	la_count = t2.la_count,
 	consumption_sum = t2.consumption_sum
 FROM    (SELECT	gd.subst_id AS subst_id,
 		COUNT(la.geom_centre) ::integer AS la_count,
-		SUM(la.area_ha) ::double precision AS la_area,
-		SUM(la.sector_consumption_sum) ::double precision AS consumption_sum
+		SUM(la.area_ha) ::numeric AS la_area,
+		SUM(la.sector_consumption_sum) ::numeric AS consumption_sum
 	FROM	model_draft.ego_grid_mv_griddistrict AS gd,
 		calc_ego_loads.ego_deu_load_area AS la
 	WHERE  	gd.geom && la.geom_centre AND
@@ -365,7 +365,7 @@ SET  	dea_count = t2.dea_count,
 	dea_cap_sum = t2.dea_cap_sum
 FROM    (SELECT	gd.subst_id AS subst_id,
 		COUNT(dea.geom) ::integer AS dea_count,
-		SUM(dea.electrical_capacity) ::double precision AS dea_cap_sum
+		SUM(dea.electrical_capacity) ::numeric AS dea_cap_sum
 	FROM	model_draft.ego_grid_mv_griddistrict AS gd,
 		calc_ego_re.ego_deu_dea AS dea
 	WHERE  	gd.geom && dea.geom AND
