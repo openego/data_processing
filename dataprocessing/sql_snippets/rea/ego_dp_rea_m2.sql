@@ -59,7 +59,7 @@ DROP TABLE IF EXISTS 	model_draft.ego_supply_rea_m2_windfarm CASCADE;
 CREATE TABLE 		model_draft.ego_supply_rea_m2_windfarm (
 	farm_id serial,
 	subst_id integer,
-	area_ha double precision,
+	area_ha decimal,
 	dea_cnt integer,
 	electrical_capacity_sum double precision,
 	rea_geom_new geometry(Polygon,3035),

@@ -47,9 +47,9 @@ CREATE TABLE 		model_draft.ego_supply_rea_per_mvgd AS
 		'0'::integer dea_cnt,
 		'0'::double precision dea_capacity,
 		'0'::integer lv_dea_cnt,
-		'0.0'::double precision lv_dea_capacity,
+		'0.0'::decimal lv_dea_capacity,
 		'0'::integer mv_dea_cnt,
-		'0.0'::double precision mv_dea_capacity,
+		'0.0'::decimal mv_dea_capacity,
 		gd.geom
 	FROM	model_draft.ego_grid_mv_griddistrict AS gd;
 
@@ -122,7 +122,7 @@ CREATE TABLE 		model_draft.ego_supply_rea_per_loadarea AS
 	SELECT	la.id,
 		la.subst_id,
 		'0'::integer lv_dea_cnt,
-		'0.0'::double precision lv_dea_capacity
+		'0.0'::decimal lv_dea_capacity
 	FROM	model_draft.ego_demand_loadarea AS la;
 
 ALTER TABLE	model_draft.ego_supply_rea_per_loadarea

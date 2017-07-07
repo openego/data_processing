@@ -738,7 +738,7 @@ CREATE TABLE		model_draft.ego_political_boundary_bkg_vg250_6_gem_clean (
 	nuts varchar(5),
 	rs_0 varchar(12),
 	ags_0 varchar(12),
-	area_ha double precision,
+	area_ha decimal,
 	count_hole integer,
 	path integer[],
 	is_hole boolean,
@@ -754,7 +754,7 @@ INSERT INTO	model_draft.ego_political_boundary_bkg_vg250_6_gem_clean (old_id,gen
 		dump.nuts ::varchar(5) AS nuts,
 		dump.rs_0 ::varchar(12) AS rs_0,
 		dump.ags_0 ::varchar(12) AS ags_0,
-		ST_AREA(dump.geom) / 10000 ::double precision AS area_ha,
+		ST_AREA(dump.geom) / 10000 ::decimal AS area_ha,
 		dump.count_hole ::integer,
 		dump.path ::integer[] AS path,
 		dump.geom ::geometry(Polygon,3035) AS geom		
