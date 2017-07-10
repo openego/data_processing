@@ -162,8 +162,8 @@ ALTER TABLE model_draft.ego_landuse_industry
 	ADD COLUMN geom_surfacepoint geometry(POINT,3035),
 	ADD COLUMN geom_centre geometry(POINT,3035),
 	ADD COLUMN nuts varchar(5),
-	ADD COLUMN consumption double precision, 
-	ADD COLUMN peak_load double precision, 
+	ADD COLUMN consumption numeric, 
+	ADD COLUMN peak_load numeric, 
 	ADD PRIMARY KEY (gid);
 
 
@@ -394,8 +394,8 @@ ALTER TABLE model_draft.ego_demand_hv_largescaleconsumer
 	ADD COLUMN subst_id integer, 
 	ADD COLUMN otg_id integer,  
 	ADD COLUMN un_id integer,
-	ADD COLUMN consumption double precision, 
-	ADD COLUMN peak_load double precision,
+	ADD COLUMN consumption numeric, 
+	ADD COLUMN peak_load numeric,
 	ADD COLUMN geom geometry(MultiPolygon,3035),
 	ADD COLUMN geom_centre geometry(Point,3035);
 

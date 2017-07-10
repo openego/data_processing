@@ -61,7 +61,7 @@ DROP TABLE IF EXISTS 	model_draft.ego_supply_rea_m1_1_dea_temp CASCADE;
 CREATE TABLE 		model_draft.ego_supply_rea_m1_1_dea_temp (
 	rea_sorted bigint NOT NULL,
 	id bigint NOT NULL,
-	electrical_capacity double precision,
+	electrical_capacity numeric,
 	generation_type text,
 	generation_subtype character varying,
 	voltage_level character varying,
@@ -81,7 +81,7 @@ CREATE TABLE 		model_draft.ego_supply_rea_m1_1_osm_temp (
 	rea_sorted bigint NOT NULL,
 	id integer,
 	subst_id integer,
-	area_ha double precision,
+	area_ha numeric,
 	geom geometry(Polygon,3035),
 	CONSTRAINT ego_supply_rea_m1_1_osm_temp_pkey PRIMARY KEY (rea_sorted));
 
@@ -257,7 +257,7 @@ DROP TABLE IF EXISTS 	model_draft.ego_supply_rea_m1_2_dea_temp CASCADE;
 CREATE TABLE 		model_draft.ego_supply_rea_m1_2_dea_temp (
 	rea_sorted bigint NOT NULL,
 	id bigint NOT NULL,
-	electrical_capacity double precision,
+	electrical_capacity numeric,
 	generation_type text,
 	generation_subtype character varying,
 	voltage_level character varying,
@@ -277,7 +277,7 @@ CREATE TABLE 		model_draft.ego_supply_rea_m1_2_osm_temp (
 	rea_sorted bigint NOT NULL,
 	id integer,
 	subst_id integer,
-	area_ha double precision,
+	area_ha numeric,
 	geom geometry(Polygon,3035),
 	CONSTRAINT ego_supply_rea_m1_2_osm_temp_pkey PRIMARY KEY (rea_sorted));
 
@@ -291,7 +291,7 @@ DROP TABLE IF EXISTS 	model_draft.ego_supply_rea_m1_2_jnt_temp CASCADE;
 CREATE TABLE 		model_draft.ego_supply_rea_m1_2_jnt_temp (
 	rea_sorted bigint NOT NULL,
 	id bigint,
-	electrical_capacity double precision,
+	electrical_capacity numeric,
 	generation_type text,
 	generation_subtype character varying,
 	voltage_level character varying,

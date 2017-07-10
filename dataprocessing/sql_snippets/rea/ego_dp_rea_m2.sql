@@ -59,9 +59,9 @@ DROP TABLE IF EXISTS 	model_draft.ego_supply_rea_m2_windfarm CASCADE;
 CREATE TABLE 		model_draft.ego_supply_rea_m2_windfarm (
 	farm_id serial,
 	subst_id integer,
-	area_ha double precision,
+	area_ha decimal,
 	dea_cnt integer,
-	electrical_capacity_sum double precision,
+	electrical_capacity_sum numeric,
 	rea_geom_new geometry(Polygon,3035),
 	rea_geom_line geometry(LineString,3035),
 	geom geometry(Polygon,3035),
@@ -146,9 +146,9 @@ CREATE TABLE 		model_draft.ego_supply_rea_m2_farm_temp (
 	rea_sorted bigint NOT NULL,
 	farm_id bigint NOT NULL,
 	subst_id integer,
-	area_ha double precision,
+	area_ha numeric,
 	dea_cnt integer,
-	electrical_capacity_sum double precision,
+	electrical_capacity_sum numeric,
 	rea_geom_new geometry(Point,3035),
 	rea_geom_line geometry(LineString,3035),
 	geom geometry(Polygon,3035),
@@ -166,7 +166,7 @@ CREATE TABLE 		model_draft.ego_supply_rea_m2_wpa_temp (
 	rea_sorted bigint NOT NULL,
 	id integer,
 	subst_id integer,
-	area_ha double precision,
+	area_ha numeric,
 	geom geometry(Polygon,3035),
 	CONSTRAINT ego_supply_rea_m2_wpa_temp_pkey PRIMARY KEY (rea_sorted));
 

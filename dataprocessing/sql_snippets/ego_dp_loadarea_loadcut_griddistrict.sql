@@ -14,7 +14,7 @@ DROP TABLE IF EXISTS  	model_draft.ego_demand_loadarea CASCADE;
 CREATE TABLE         	model_draft.ego_demand_loadarea (
 	id SERIAL NOT NULL,
 	subst_id integer,
-	area_ha double precision,
+	area_ha numeric,
 	nuts varchar(5),
 	rs_0 varchar(12),
 	ags_0 varchar(12),
@@ -22,20 +22,20 @@ CREATE TABLE         	model_draft.ego_demand_loadarea (
 	un_id integer,
 	zensus_sum integer,
 	zensus_count integer,
-	zensus_density double precision,
-	ioer_sum double precision,
+	zensus_density numeric,
+	ioer_sum numeric,
 	ioer_count integer,
-	ioer_density double precision,
-	sector_area_residential double precision,
-	sector_area_retail double precision,
-	sector_area_industrial double precision,
-	sector_area_agricultural double precision,
-	sector_area_sum double precision,
-	sector_share_residential double precision,
-	sector_share_retail double precision,
-	sector_share_industrial double precision,
-	sector_share_agricultural double precision,
-	sector_share_sum double precision,
+	ioer_density numeric,
+	sector_area_residential numeric,
+	sector_area_retail numeric,
+	sector_area_industrial numeric,
+	sector_area_agricultural numeric,
+	sector_area_sum numeric,	
+	sector_share_residential numeric,
+	sector_share_retail numeric,
+	sector_share_industrial numeric,
+	sector_share_agricultural numeric,
+	sector_share_sum numeric,
 	sector_count_residential integer,
 	sector_count_retail integer,
 	sector_count_industrial integer,
@@ -193,7 +193,7 @@ UPDATE 	model_draft.ego_demand_loadarea AS t1
 	FROM    (SELECT	a.id AS id,
 			SUM(b.population)::integer AS zensus_sum,
 			COUNT(b.geom_point)::integer AS zensus_count,
-			(SUM(b.population)/COUNT(b.geom_point))::double precision AS zensus_density
+			(SUM(b.population)/COUNT(b.geom_point))::numeric AS zensus_density
 		FROM	model_draft.ego_demand_loadarea AS a,
 			society.destatis_zensus_population_per_ha_mview AS b
 		WHERE  	a.geom && b.geom_point AND
@@ -212,9 +212,9 @@ UPDATE 	model_draft.ego_demand_loadarea AS t1
 		ioer_count = t2.ioer_count,
 		ioer_density = t2.ioer_density
 	FROM    (SELECT	loads.id AS id,
-			SUM(pts.ioer_share)/100::double precision AS ioer_sum,
+			SUM(pts.ioer_share)/100::numeric AS ioer_sum,
 			COUNT(pts.geom)::integer AS ioer_count,
-			(SUM(pts.ioer_share)/COUNT(pts.geom))::double precision AS ioer_density
+			(SUM(pts.ioer_share)/COUNT(pts.geom))::numeric AS ioer_density
 		FROM	model_draft.ego_demand_loadarea AS loads,
 			economy.ioer_urban_share_industrial_centroid AS pts
 		WHERE  	loads.geom && pts.geom AND
