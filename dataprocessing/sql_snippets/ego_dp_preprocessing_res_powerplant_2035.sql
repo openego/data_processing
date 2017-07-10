@@ -9,7 +9,7 @@ __author__ 	= "IlkaCu, Ludee"
 
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','input','model_draft','ego_supply_res_powerplant','ego_dp_preprocessing_res_powerplant_2035.sql','');
+SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_supply_res_powerplant','ego_dp_preprocessing_res_powerplant_2035.sql','');
 
 UPDATE model_draft.ego_supply_res_powerplant_2035
 	SET voltage_level=1
@@ -43,4 +43,4 @@ UPDATE model_draft.ego_supply_res_powerplant_2035 a
 	WHERE a.id=b.id; 
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_supply_res_powerplant_2035','ego_dp_preprocessing_res_powerplant_2035.sql','');
+SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_supply_res_powerplant_2035','ego_dp_preprocessing_res_powerplant_2035.sql','');

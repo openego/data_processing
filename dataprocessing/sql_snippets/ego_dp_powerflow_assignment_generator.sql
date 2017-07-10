@@ -164,7 +164,7 @@ COMMENT ON TABLE  model_draft.ego_supply_pf_generator_single IS
 SELECT obj_description('model_draft.ego_supply_pf_generator_single' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_supply_pf_generator_single','ego_dp_powerflow_assignment_generator.sql',' ');
+SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_supply_pf_generator_single','ego_dp_powerflow_assignment_generator.sql',' ');
 
 
 
@@ -172,7 +172,7 @@ SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_supply_pf_generato
 -- Insert generator data into powerflow schema, that contains all generators seperately 
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','input','model_draft','ego_grid_pf_hv_source','ego_dp_powerflow_assignment_generator.sql',' ');
+SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_grid_pf_hv_source','ego_dp_powerflow_assignment_generator.sql',' ');
 
 
 UPDATE model_draft.ego_supply_pf_generator_single a
@@ -211,7 +211,7 @@ UPDATE model_draft.ego_supply_pf_generator_single a
 
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','input','model_draft','renpassgis_economy_climatepoint_voronoi','ego_dp_powerflow_assignment_generator.sql',' ');
+SELECT ego_scenario_log('v0.3.0','input','model_draft','renpassgis_economy_climatepoint_voronoi','ego_dp_powerflow_assignment_generator.sql',' ');
 
 
 -- Identify climate point IDs for each renewables generator
@@ -476,4 +476,4 @@ INSERT INTO model_draft.ego_grid_pf_hv_generator
 		AND base_kv > 110;
 */
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_grid_pf_hv_generator','ego_dp_powerflow_assignment_generator.sql',' ');
+SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_grid_pf_hv_generator','ego_dp_powerflow_assignment_generator.sql',' ');
