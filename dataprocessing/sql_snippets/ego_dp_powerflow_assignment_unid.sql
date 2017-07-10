@@ -42,6 +42,8 @@ CREATE INDEX 	ego_supply_generator_idx
 	ON 	model_draft.ego_supply_generator USING gist (geom);
 
 
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_supply_generator','ego_dp_powerflow_assignment_unid.sql',' ');
 	
 
 -- Update power plant tables and add information on unified id of generators
@@ -58,6 +60,14 @@ UPDATE model_draft.ego_supply_dp_res_powerplant a
 	SET 	un_id = b.un_id 
 	FROM 	model_draft.ego_supply_generator b
 	WHERE 	a.id = b.re_id; 
+
+
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_supply_dp_res_powerplant','ego_dp_powerflow_assignment_unid.sql',' ');
+SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_supply_dp_conv_powerplant','ego_dp_powerflow_assignment_unid.sql',' ');
+
+
 
 
 
