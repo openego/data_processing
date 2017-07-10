@@ -9,16 +9,16 @@ __author__ 	= "Ludee"
 */
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','check','political_boundary','bkg_vg250_1_sta','ego_dp_structure_versioning.sql','preprocessing verification');
-SELECT ego_scenario_log('v0.2.10','check','political_boundary','bkg_vg250_2_lan','ego_dp_structure_versioning.sql','preprocessing verification');
-SELECT ego_scenario_log('v0.2.10','check','political_boundary','bkg_vg250_4_krs','ego_dp_structure_versioning.sql','preprocessing verification');
-SELECT ego_scenario_log('v0.2.10','check','political_boundary','bkg_vg250_6_gem','ego_dp_structure_versioning.sql','preprocessing verification');
+SELECT ego_scenario_log('v0.2.10','check','boundaries','bkg_vg250_1_sta','ego_dp_structure_versioning.sql','preprocessing verification');
+SELECT ego_scenario_log('v0.2.10','check','boundaries','bkg_vg250_2_lan','ego_dp_structure_versioning.sql','preprocessing verification');
+SELECT ego_scenario_log('v0.2.10','check','boundaries','bkg_vg250_4_krs','ego_dp_structure_versioning.sql','preprocessing verification');
+SELECT ego_scenario_log('v0.2.10','check','boundaries','bkg_vg250_6_gem','ego_dp_structure_versioning.sql','preprocessing verification');
 SELECT ego_scenario_log('v0.2.10','check','openstreetmap','osm_deu_polygon','ego_dp_structure_versioning.sql','preprocessing verification');
 SELECT ego_scenario_log('v0.2.10','check','openstreetmap','osm_deu_ways','ego_dp_structure_versioning.sql','preprocessing verification');
 SELECT ego_scenario_log('v0.2.10','check','openstreetmap','osm_deu_nodes','ego_dp_structure_versioning.sql','preprocessing verification');
 SELECT ego_scenario_log('v0.2.10','check','openstreetmap','osm_deu_line','ego_dp_structure_versioning.sql','preprocessing verification');
-SELECT ego_scenario_log('v0.2.10','check','social','destatis_zensus_population_per_ha','ego_dp_structure_versioning.sql','preprocessing verification');
-SELECT ego_scenario_log('v0.2.10','check','economic','destatis_gva_per_district','ego_dp_structure_versioning.sql','preprocessing verification');
+SELECT ego_scenario_log('v0.2.10','check','society','destatis_zensus_population_per_ha','ego_dp_structure_versioning.sql','preprocessing verification');
+SELECT ego_scenario_log('v0.2.10','check','economy','destatis_gva_per_district','ego_dp_structure_versioning.sql','preprocessing verification');
 SELECT ego_scenario_log('v0.2.10','check','demand','ego_demand_federalstate','ego_dp_structure_versioning.sql','preprocessing verification');
 SELECT ego_scenario_log('v0.2.10','check','supply','vernetzen_wind_potential_area','ego_dp_structure_versioning.sql','preprocessing verification');
 SELECT ego_scenario_log('v0.2.10','check','model_draft','ego_supply_res_powerplant_sq_mview','ego_dp_structure_versioning.sql','preprocessing verification');
@@ -42,16 +42,16 @@ FROM	(SELECT	st.relid AS oid,
 	FROM	information_schema.tables AS i
 		INNER JOIN pg_catalog.pg_statio_all_tables AS st ON (st.schemaname=i.table_schema and st.relname=i.table_name)
 		INNER JOIN pg_catalog.pg_description AS pgd ON (pgd.objoid=st.relid)
-		WHERE 	(table_schema='political_boundary' AND table_name='bkg_vg250_1_sta') OR
-			(table_schema='political_boundary' AND table_name='bkg_vg250_2_lan') OR
-			(table_schema='political_boundary' AND table_name='bkg_vg250_4_krs') OR
-			(table_schema='political_boundary' AND table_name='bkg_vg250_6_gem') OR
+		WHERE 	(table_schema='boundaries' AND table_name='bkg_vg250_1_sta') OR
+			(table_schema='boundaries' AND table_name='bkg_vg250_2_lan') OR
+			(table_schema='boundaries' AND table_name='bkg_vg250_4_krs') OR
+			(table_schema='boundaries' AND table_name='bkg_vg250_6_gem') OR
 			(table_schema='openstreetmap' AND table_name='osm_deu_polygon') OR
 			(table_schema='openstreetmap' AND table_name='osm_deu_ways') OR 
 			(table_schema='openstreetmap' AND table_name='osm_deu_nodes') OR
 			(table_schema='openstreetmap' AND table_name='osm_deu_line') OR
-			(table_schema='social' AND table_name='destatis_zensus_population_per_ha') OR
-			(table_schema='economic' AND table_name='destatis_gva_per_district') OR
+			(table_schema='society' AND table_name='destatis_zensus_population_per_ha') OR
+			(table_schema='economy' AND table_name='destatis_gva_per_district') OR
 			(table_schema='demand' AND table_name='ego_demand_federalstate') OR
 			(table_schema='supply' AND table_name='vernetzen_wind_potential_area') OR
 			(table_schema='model_draft' AND table_name='ego_supply_res_powerplant_sq_mview') OR

@@ -181,7 +181,7 @@ CREATE INDEX  	ego_demand_loadarea_voi_geom_centre_idx
 
 /* 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','input','social','destatis_zensus_population_per_ha_mview','ego_dp_loadarea_loadcut_voronoi.sql',' ');
+SELECT ego_scenario_log('v0.2.10','input','society','destatis_zensus_population_per_ha_mview','ego_dp_loadarea_loadcut_voronoi.sql',' ');
 
 -- zensus 2011 population
 UPDATE 	model_draft.ego_demand_loadarea_voi AS t1
@@ -193,7 +193,7 @@ UPDATE 	model_draft.ego_demand_loadarea_voi AS t1
 			COUNT(pts.geom)::integer AS zensus_count,
 			(SUM(pts.population)/COUNT(pts.geom))::numeric AS zensus_density
 		FROM	model_draft.ego_demand_loadarea_voi AS loads,
-			social.destatis_zensus_population_per_ha_mview AS pts
+			society.destatis_zensus_population_per_ha_mview AS pts
 		WHERE  	loads.geom && pts.geom AND
 			ST_CONTAINS(loads.geom,pts.geom)
 		GROUP BY loads.id
@@ -202,7 +202,7 @@ UPDATE 	model_draft.ego_demand_loadarea_voi AS t1
 
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','input','economic','ioer_urban_share_industrial_centroid','ego_dp_loadarea_loadcut_voronoi.sql',' ');
+SELECT ego_scenario_log('v0.2.10','input','economy','ioer_urban_share_industrial_centroid','ego_dp_loadarea_loadcut_voronoi.sql',' ');
 
 -- ioer industry share
 UPDATE 	model_draft.ego_demand_loadarea_voi AS t1
@@ -214,7 +214,7 @@ UPDATE 	model_draft.ego_demand_loadarea_voi AS t1
 			COUNT(pts.geom)::integer AS ioer_count,
 			(SUM(pts.ioer_share)/COUNT(pts.geom))::numeric AS ioer_density
 		FROM	model_draft.ego_demand_loadarea_voi AS loads,
-			economic.ioer_urban_share_industrial_centroid AS pts
+			economy.ioer_urban_share_industrial_centroid AS pts
 		WHERE  	loads.geom && pts.geom AND
 			ST_CONTAINS(loads.geom,pts.geom)
 		GROUP BY loads.id
@@ -443,7 +443,7 @@ UPDATE 	model_draft.ego_demand_loadarea_voi AS t1
  */
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','input','model_draft','ego_political_boundary_bkg_vg250_6_gem_clean','ego_dp_loadarea_loadcut_voronoi.sql',' ');
+SELECT ego_scenario_log('v0.2.10','input','model_draft','ego_boundaries_bkg_vg250_6_gem_clean','ego_dp_loadarea_loadcut_voronoi.sql',' ');
 
 -- nuts code (nuts)
 UPDATE 	model_draft.ego_demand_loadarea_voi AS t1
@@ -452,7 +452,7 @@ UPDATE 	model_draft.ego_demand_loadarea_voi AS t1
 		SELECT	loads.id AS id,
 			vg.nuts AS nuts
 		FROM	model_draft.ego_demand_loadarea_voi AS loads,
-			model_draft.ego_political_boundary_bkg_vg250_6_gem_clean AS vg
+			model_draft.ego_boundaries_bkg_vg250_6_gem_clean AS vg
 		WHERE  	vg.geom && loads.geom_centre AND
 			ST_CONTAINS(vg.geom,loads.geom_centre)
 		) AS t2
@@ -465,7 +465,7 @@ UPDATE 	model_draft.ego_demand_loadarea_voi AS t1
 		SELECT	loads.id,
 			vg.rs_0
 		FROM	model_draft.ego_demand_loadarea_voi AS loads,
-			model_draft.ego_political_boundary_bkg_vg250_6_gem_clean AS vg
+			model_draft.ego_boundaries_bkg_vg250_6_gem_clean AS vg
 		WHERE  	vg.geom && loads.geom_centre AND
 			ST_CONTAINS(vg.geom,loads.geom_centre)
 		) AS t2
@@ -478,7 +478,7 @@ UPDATE 	model_draft.ego_demand_loadarea_voi AS t1
 		SELECT	loads.id AS id,
 			vg.ags_0 AS ags_0
 		FROM	model_draft.ego_demand_loadarea_voi AS loads,
-			model_draft.ego_political_boundary_bkg_vg250_6_gem_clean AS vg
+			model_draft.ego_boundaries_bkg_vg250_6_gem_clean AS vg
 		WHERE  	vg.geom && loads.geom_centre AND
 			ST_CONTAINS(vg.geom,loads.geom_centre)
 		) AS t2

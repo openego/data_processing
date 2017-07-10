@@ -1,4 +1,4 @@
-﻿/*
+/*
 Import DESTATIS zensus 2011 table
 
 __copyright__ 	= "Reiner Lemoine Institut"
@@ -9,7 +9,7 @@ __author__ 	= "Ludee"
 
 
 -- zensus
-CREATE TABLE social.destatis_zensus_population_per_ha (
+CREATE TABLE society.destatis_zensus_population_per_ha (
 	gid integer NOT NULL,
 	grid_id character varying(254) NOT NULL,
 	x_mp numeric(10,0),
@@ -20,10 +20,10 @@ CREATE TABLE social.destatis_zensus_population_per_ha (
 	CONSTRAINT destatis_zensus_population_per_ha_pkey PRIMARY KEY (gid));
 
 -- grant (oeuser)
-ALTER TABLE social.destatis_zensus_population_per_ha OWNER TO oeuser;
+ALTER TABLE society.destatis_zensus_population_per_ha OWNER TO oeuser;
 
 -- metadata
-COMMENT ON TABLE  social.destatis_zensus_population_per_ha IS '{
+COMMENT ON TABLE  society.destatis_zensus_population_per_ha IS '{
 	"Name": "German Census 2011 - Population in 100m grid",
 	"Source": [{
 		"Name": "Statistisches Bundesamt (Destatis)",
@@ -51,21 +51,21 @@ COMMENT ON TABLE  social.destatis_zensus_population_per_ha IS '{
 	"Instructions for proper use": ["..."]
 	}';
 
-SELECT obj_description('social.destatis_zensus_population_per_ha' ::regclass) ::json;
+SELECT obj_description('society.destatis_zensus_population_per_ha' ::regclass) ::json;
 
 -- index GIST (geom)
 CREATE INDEX destatis_zensus_population_per_ha_geom_idx
-	ON social.destatis_zensus_population_per_ha USING gist (geom);
+	ON society.destatis_zensus_population_per_ha USING gist (geom);
 
 -- index GIST (geom_point)
 CREATE INDEX destatis_zensus_population_per_ha_geom_point_idx
-	ON social.destatis_zensus_population_per_ha USING gist (geom_point);	
+	ON society.destatis_zensus_population_per_ha USING gist (geom_point);	
 
 -- insert data
-INSERT INTO social.destatis_zensus_population_per_ha
+INSERT INTO society.destatis_zensus_population_per_ha
 	SELECT	pnt.gid,pnt.grid_id,pnt.x_mp,pnt.y_mp,pnt.population,pnt.geom AS geom_point,poly.geom
 	FROM	orig_destatis.zensus_population_per_ha AS pnt 
 		JOIN orig_destatis.zensus_population_per_ha_grid AS poly ON (pnt.gid=poly.gid);
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','preprocessing','social','destatis_zensus_population_per_ha','ego_pp_destatis_zensus_import.sql','setup zensus table');
+SELECT ego_scenario_log('v0.2.10','preprocessing','society','destatis_zensus_population_per_ha','ego_pp_destatis_zensus_import.sql','setup zensus table');

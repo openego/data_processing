@@ -101,7 +101,7 @@ ALTER TABLE	openstreetmap.osm_deu_polygon_urban OWNER TO oeuser;
 -- OSM Urban Landuse Inside vg250
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','input','political_boundary','bkg_vg250_1_sta_union_mview','ego_dp_loadarea_landuse.sql',' ');
+SELECT ego_scenario_log('v0.2.10','input','boundaries','bkg_vg250_1_sta_union_mview','ego_dp_loadarea_landuse.sql',' ');
 
 -- Calculate 'inside' vg250
 UPDATE 	openstreetmap.osm_deu_polygon_urban AS t1
@@ -109,7 +109,7 @@ UPDATE 	openstreetmap.osm_deu_polygon_urban AS t1
 	FROM    (
 		SELECT	osm.gid AS gid,
 			'inside' ::text AS vg250
-		FROM	political_boundary.bkg_vg250_1_sta_union_mview AS vg,
+		FROM	boundaries.bkg_vg250_1_sta_union_mview AS vg,
 			openstreetmap.osm_deu_polygon_urban AS osm
 		WHERE  	vg.geom && osm.geom AND
 			ST_CONTAINS(vg.geom,osm.geom)
@@ -122,7 +122,7 @@ UPDATE 	openstreetmap.osm_deu_polygon_urban AS t1
 	FROM    (
 		SELECT	osm.gid AS gid,
 			'crossing' ::text AS vg250
-		FROM	political_boundary.bkg_vg250_1_sta_union_mview AS vg,
+		FROM	boundaries.bkg_vg250_1_sta_union_mview AS vg,
 			openstreetmap.osm_deu_polygon_urban AS osm
 		WHERE  	osm.vg250 = 'outside' AND
 			vg.geom && osm.geom AND
@@ -180,7 +180,7 @@ CREATE MATERIALIZED VIEW		openstreetmap.osm_deu_polygon_urban_vg250_cut_mview AS
 	FROM	(SELECT	poly.*,
 			ST_INTERSECTION(poly.geom,cut.geom) AS geom_new
 		FROM	openstreetmap.osm_deu_polygon_urban_error_geom_vg250_mview AS poly,
-			political_boundary.bkg_vg250_1_sta_union_mview AS cut
+			boundaries.bkg_vg250_1_sta_union_mview AS cut
 		WHERE	poly.vg250 = 'crossing'
 		) AS cut
 	ORDER BY 	cut.gid;

@@ -10,7 +10,7 @@ __author__ 	= "Ludee"
 
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','input','social','destatis_zensus_population_per_ha_mview','ego_dp_loadarea_census.sql',' ');
+SELECT ego_scenario_log('v0.2.10','input','society','destatis_zensus_population_per_ha_mview','ego_dp_loadarea_census.sql',' ');
 
 -- zensus load
 DROP TABLE IF EXISTS  	model_draft.ego_demand_la_zensus CASCADE;
@@ -30,7 +30,7 @@ INSERT INTO	model_draft.ego_demand_la_zensus (gid,population,inside_la,geom_poin
 		'FALSE' ::boolean AS inside_la,
 		zensus.geom_point ::geometry(Point,3035),
 		zensus.geom ::geometry(Polygon,3035)
-	FROM	social.destatis_zensus_population_per_ha_mview AS zensus;
+	FROM	society.destatis_zensus_population_per_ha_mview AS zensus;
 
 -- index gist (geom_point)
 CREATE INDEX  	ego_demand_la_zensus_geom_point_idx
@@ -191,12 +191,12 @@ SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_demand_la_zensus_c
 
 
 -- zensus stats
-DROP MATERIALIZED VIEW IF EXISTS	model_draft.ego_social_zensus_per_la_mview CASCADE;
-CREATE MATERIALIZED VIEW         	model_draft.ego_social_zensus_per_la_mview AS
+DROP MATERIALIZED VIEW IF EXISTS	model_draft.ego_society_zensus_per_la_mview CASCADE;
+CREATE MATERIALIZED VIEW         	model_draft.ego_society_zensus_per_la_mview AS
 	SELECT 	'destatis_zensus_population_per_ha_mview' AS name,
 		sum(population), 
 		count(geom) AS census_count
-	FROM	social.destatis_zensus_population_per_ha_mview
+	FROM	society.destatis_zensus_population_per_ha_mview
 	UNION ALL 
 	SELECT 	'ego_demand_la_zensus' AS name,
 		sum(population), 
@@ -209,7 +209,7 @@ CREATE MATERIALIZED VIEW         	model_draft.ego_social_zensus_per_la_mview AS
 	FROM	model_draft.ego_demand_la_zensus_cluster;
 
 -- grant (oeuser)
-ALTER TABLE	model_draft.ego_social_zensus_per_la_mview OWNER TO oeuser;
+ALTER TABLE	model_draft.ego_society_zensus_per_la_mview OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_social_zensus_per_la_mview','ego_dp_loadarea_census.sql',' ');
+SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_society_zensus_per_la_mview','ego_dp_loadarea_census.sql',' ');

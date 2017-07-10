@@ -10,35 +10,35 @@ __author__ 	= "Ludee"
 
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','input','social','destatis_zensus_population_per_ha','eGo_dp_structure_census.sql',' ');
+SELECT ego_scenario_log('v0.2.10','input','society','destatis_zensus_population_per_ha','eGo_dp_structure_census.sql',' ');
 
 -- zensus points with population 
-DROP MATERIALIZED VIEW IF EXISTS	social.destatis_zensus_population_per_ha_mview CASCADE;
-CREATE MATERIALIZED VIEW         	social.destatis_zensus_population_per_ha_mview AS
+DROP MATERIALIZED VIEW IF EXISTS	society.destatis_zensus_population_per_ha_mview CASCADE;
+CREATE MATERIALIZED VIEW         	society.destatis_zensus_population_per_ha_mview AS
 	SELECT	a.gid 		::integer AS gid,
 		a.population 	::numeric(10,0) AS population,
 		a.geom_point 	::geometry(Point,3035) AS geom_point,
 		a.geom 		::geometry(Polygon,3035) AS geom
-	FROM	social.destatis_zensus_population_per_ha AS a
+	FROM	society.destatis_zensus_population_per_ha AS a
 	WHERE	a.population >= 0 ;
 	
 -- index (id)
 CREATE UNIQUE INDEX  	destatis_zensus_population_per_ha_mview_gid_idx
-	ON	social.destatis_zensus_population_per_ha_mview (gid);
+	ON	society.destatis_zensus_population_per_ha_mview (gid);
 
 -- index gist (geom_point)
 CREATE INDEX  	destatis_zensus_population_per_ha_mview_geom_point_idx
-	ON    	social.destatis_zensus_population_per_ha_mview USING GIST (geom_point);
+	ON    	society.destatis_zensus_population_per_ha_mview USING GIST (geom_point);
     
 -- index gist (geom)
 CREATE INDEX  	destatis_zensus_population_per_ha_mview_geom_idx
-	ON    	social.destatis_zensus_population_per_ha_mview USING GIST (geom);
+	ON    	society.destatis_zensus_population_per_ha_mview USING GIST (geom);
     
 -- grant (oeuser)
-ALTER TABLE	social.destatis_zensus_population_per_ha_mview OWNER TO oeuser;
+ALTER TABLE	society.destatis_zensus_population_per_ha_mview OWNER TO oeuser;
 
 -- metadata
-COMMENT ON MATERIALIZED VIEW social.destatis_zensus_population_per_ha_mview IS '{
+COMMENT ON MATERIALIZED VIEW society.destatis_zensus_population_per_ha_mview IS '{
 	"title": "German Census 2011 - Population in 100m grid",
 	"description": "example metadata for example data",
 	"language": [ "eng", "ger", "fre" ],
@@ -74,15 +74,15 @@ COMMENT ON MATERIALIZED VIEW social.destatis_zensus_population_per_ha_mview IS '
 		"meta_version": "1.2" }] }';
 
 -- select description
-SELECT obj_description('social.destatis_zensus_population_per_ha_mview' ::regclass) ::json;
+SELECT obj_description('society.destatis_zensus_population_per_ha_mview' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','output','social','destatis_zensus_population_per_ha_mview','eGo_dp_structure_census.sql',' ');
+SELECT ego_scenario_log('v0.2.10','output','society','destatis_zensus_population_per_ha_mview','eGo_dp_structure_census.sql',' ');
 
 
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','input','social','destatis_zensus_population_per_ha','eGo_dp_structure_census.sql',' ');
+SELECT ego_scenario_log('v0.2.10','input','society','destatis_zensus_population_per_ha','eGo_dp_structure_census.sql',' ');
 
 -- census points inside Germany (vg250)
 DROP TABLE IF EXISTS	model_draft.destatis_zensus_population_per_ha_inside CASCADE;
@@ -97,13 +97,13 @@ ALTER TABLE model_draft.destatis_zensus_population_per_ha_inside OWNER TO oeuser
 INSERT INTO	model_draft.destatis_zensus_population_per_ha_inside (gid, inside_borders)
 	SELECT	gid,
 		FALSE 
-	FROM	social.destatis_zensus_population_per_ha;
+	FROM	society.destatis_zensus_population_per_ha;
 
 -- set if inside borders
 UPDATE	model_draft.destatis_zensus_population_per_ha_inside AS t1
 	SET	inside_borders = TRUE
-	FROM	political_boundary.bkg_vg250_1_sta_union_mview AS a,
-		social.destatis_zensus_population_per_ha AS b
+	FROM	boundaries.bkg_vg250_1_sta_union_mview AS a,
+		society.destatis_zensus_population_per_ha AS b
 	WHERE  	a.geom && b.geom_point AND
 		ST_CONTAINS(a.geom,b.geom_point) AND
 		t1.gid = b.gid;
@@ -122,7 +122,7 @@ CREATE MATERIALIZED VIEW         	model_draft.destatis_zensus_population_per_ha_
 		b.inside_borders ::boolean,
 		a.geom_point ::geometry(Point,3035) AS geom_point,
 		a.geom ::geometry(Polygon,3035) AS geom
-	FROM	social.destatis_zensus_population_per_ha AS a
+	FROM	society.destatis_zensus_population_per_ha AS a
 		JOIN model_draft.destatis_zensus_population_per_ha_inside AS b ON (a.gid = b.gid)
 	WHERE	a.population >= 0 AND
 		b.inside_borders = TRUE;
@@ -163,7 +163,7 @@ CREATE MATERIALIZED VIEW         	model_draft.destatis_zensus_population_per_ha_
 		b.inside_borders ::boolean,
 		a.geom_point ::geometry(Point,3035) AS geom_point,
 		a.geom ::geometry(Polygon,3035) AS geom
-	FROM	social.destatis_zensus_population_per_ha AS a
+	FROM	society.destatis_zensus_population_per_ha AS a
 		JOIN model_draft.destatis_zensus_population_per_ha_inside AS b ON (a.gid = b.gid)
 	WHERE	a.population >= 0 AND
 		b.inside_borders = FALSE;
@@ -199,12 +199,12 @@ SELECT ego_scenario_log('v0.2.10','output','model_draft','destatis_zensus_popula
 SELECT 	'destatis_zensus_population_per_ha (with -1!)' AS name,
 	sum(population), 
 	count(geom) AS census_count
-FROM	social.destatis_zensus_population_per_ha
+FROM	society.destatis_zensus_population_per_ha
 UNION ALL 
 SELECT 	'destatis_zensus_population_per_ha_mview' AS name,
 	sum(population), 
 	count(geom) AS census_count
-FROM	social.destatis_zensus_population_per_ha_mview
+FROM	society.destatis_zensus_population_per_ha_mview
 UNION ALL 
 SELECT 	'destatis_zensus_population_per_ha_invg_mview' AS name,
 	sum(population), 

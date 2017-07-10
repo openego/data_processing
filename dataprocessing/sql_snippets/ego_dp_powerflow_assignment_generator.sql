@@ -211,15 +211,15 @@ UPDATE model_draft.ego_supply_pf_generator_single a
 
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','input','model_draft','renpassgis_economic_weatherpoint_voronoi','ego_dp_powerflow_assignment_generator.sql',' ');
+SELECT ego_scenario_log('v0.2.10','input','model_draft','renpassgis_economy_climatepoint_voronoi','ego_dp_powerflow_assignment_generator.sql',' ');
 
 
--- Identify weather point IDs for each renewables generator
+-- Identify climate point IDs for each renewables generator
 UPDATE model_draft.ego_supply_pf_generator_single a
 	SET w_id = b.id
 		FROM 	(SELECT c.un_id, c.geom 
 			FROM model_draft.ego_supply_res_powerplant_sq_view c) AS result,
-			model_draft.renpassgis_economic_weatherpoint_voronoi b 
+			model_draft.renpassgis_economy_climatepoint_voronoi b 
 		WHERE 	result.geom && b.geom
 			AND ST_Intersects(result.geom, b.geom) 
 			AND generator_id = result.un_id;
