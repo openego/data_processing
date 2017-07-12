@@ -36,10 +36,10 @@ ALTER TABLE model_draft.ego_dp_supply_conv_powerplant
 UPDATE model_draft.ego_dp_supply_conv_powerplant a
    SET subst_id_NN = result.subst_id	
    FROM 
-	(SELECT DISTINCT ON (pp.gid) pp.gid, subst.subst_id, ST_Distance(ST_Transform(subst.geom, 4326), pp.geom)  as dist
+	(SELECT DISTINCT ON (pp.id) pp.id, subst.subst_id, ST_Distance(ST_Transform(subst.geom, 4326), pp.geom)  as dist
 	   FROM model_draft.ego_dp_supply_conv_powerplant As pp, model_draft.ego_grid_hvmv_substation As subst   
-	   ORDER BY pp.gid, ST_Distance(ST_Transform(subst.geom, 4326), pp.geom), subst.subst_id) as result
-	   WHERE a.gid=result.gid;
+	   ORDER BY pp.id, ST_Distance(ST_Transform(subst.geom, 4326), pp.geom), subst.subst_id) as result
+	   WHERE a.id=result.id;
 
 UPDATE model_draft.ego_dp_supply_conv_powerplant a
    SET subst_id=subst_id_NN
@@ -49,7 +49,7 @@ ALTER TABLE model_draft.ego_dp_supply_conv_powerplant
    DROP COLUMN subst_id_NN; 
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_supply_dp_conv_powerplant','ego_dp_substation_id_to_generator.sql',' ');
+SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_dp_supply_conv_powerplant','ego_dp_substation_id_to_generator.sql',' ');
 
 ------------------
 -- Renewable power plants
@@ -72,4 +72,4 @@ UPDATE model_draft.ego_dp_supply_res_powerplant a
 AND voltage_level <= 2; 
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_supply_dp_res_powerplant','ego_dp_substation_id_to_generator.sql',' ');
+SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_dp_supply_res_powerplant','ego_dp_substation_id_to_generator.sql',' ');

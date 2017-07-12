@@ -12,13 +12,13 @@ __author__ 	= "Ludee"
 ---------- ---------- ----------
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_boundaries_bkg_vg250_6_gem_clean','ego_dp_mv_griddistrict.sql',' ');
+SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_political_boundary_bkg_vg250_6_gem_clean','ego_dp_mv_griddistrict.sql',' ');
 
 -- municipalities
 DROP TABLE IF EXISTS	model_draft.ego_boundaries_hvmv_subst_per_gem CASCADE;
 CREATE TABLE		model_draft.ego_boundaries_hvmv_subst_per_gem AS
 	SELECT	vg.*
-	FROM	model_draft.ego_boundaries_bkg_vg250_6_gem_clean AS vg;
+	FROM	model_draft.ego_political_boundary_bkg_vg250_6_gem_clean AS vg;
 
 ALTER TABLE model_draft.ego_boundaries_hvmv_subst_per_gem
 	ADD COLUMN subst_sum integer,

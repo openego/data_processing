@@ -31,11 +31,6 @@ CREATE TABLE 		model_draft.ego_grid_hvmv_substation (
 -- grant (oeuser)
 ALTER TABLE model_draft.ego_grid_hvmv_substation OWNER TO oeuser;
 
--- metadata
-COMMENT ON TABLE  model_draft.ego_grid_hvmv_substation IS '{
-	"comment": "eGoDP - Versioning table",
-	"version": "v0.3.0" }' ;
-
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.3.0','input','openstreetmap','osm_deu_ways','ego_dp_substation_hvmv.sql',' ');
@@ -58,10 +53,6 @@ CREATE VIEW 		model_draft.way_substations AS
 -- grant (oeuser)
 ALTER VIEW model_draft.way_substations OWNER TO oeuser;
 
--- metadata
-COMMENT ON TABLE  model_draft.way_substations IS '{
-	"comment": "eGoDP - Temporary table",
-	"version": "v0.3.0" }' ;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.3.0','temp','model_draft','way_substations','ego_dp_substation_hvmv.sql',' ');
@@ -78,10 +69,6 @@ CREATE VIEW 		model_draft.way_substations_with_110kV AS
 -- grant (oeuser)
 ALTER VIEW model_draft.way_substations_with_110kV OWNER TO oeuser;
 
--- metadata
-COMMENT ON TABLE  model_draft.way_substations_with_110kV IS '{
-	"comment": "eGoDP - Temporary table",
-	"version": "v0.3.0" }' ;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.3.0','temp','model_draft','way_substations_with_110kV','ego_dp_substation_hvmv.sql',' ');
@@ -99,10 +86,6 @@ CREATE VIEW 		model_draft.way_substations_without_110kV AS
 -- grant (oeuser)
 ALTER VIEW model_draft.way_substations_without_110kV OWNER TO oeuser;
 
--- metadata
-COMMENT ON TABLE  model_draft.way_substations_without_110kV IS '{
-	"comment": "eGoDP - Temporary table",
-	"version": "v0.3.0" }' ;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.3.0','temp','model_draft','way_substations_without_110kV','ego_dp_substation_hvmv.sql',' ');
@@ -121,10 +104,6 @@ CREATE VIEW 		model_draft.node_substations_with_110kV AS
 -- grant (oeuser)
 ALTER VIEW model_draft.node_substations_with_110kV OWNER TO oeuser;
 
--- metadata
-COMMENT ON TABLE  model_draft.node_substations_with_110kV IS '{
-	"comment": "eGoDP - Temporary table",
-	"version": "v0.3.0" }' ;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.3.0','temp','model_draft','node_substations_with_110kV','ego_dp_substation_hvmv.sql',' ');
@@ -143,10 +122,6 @@ CREATE VIEW 		model_draft.way_lines_110kV AS
 -- grant (oeuser)
 ALTER VIEW model_draft.way_lines_110kV OWNER TO oeuser;
 
--- metadata
-COMMENT ON TABLE  model_draft.way_lines_110kV IS '{
-	"comment": "eGoDP - Temporary table",
-	"version": "v0.3.0" }' ;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.3.0','temp','model_draft','way_lines_110kV','ego_dp_substation_hvmv.sql',' ');
@@ -163,10 +138,6 @@ CREATE VIEW 		model_draft.way_substations_without_110kV_intersected_by_110kV_lin
 -- grant (oeuser)
 ALTER VIEW model_draft.way_substations_without_110kV_intersected_by_110kV_line OWNER TO oeuser;
 
--- metadata
-COMMENT ON TABLE  model_draft.way_substations_without_110kV_intersected_by_110kV_line IS '{
-	"comment": "eGoDP - Temporary table",
-	"version": "v0.3.0" }' ;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.3.0','temp','model_draft','way_substations_without_110kV_intersected_by_110kV_line','ego_dp_substation_hvmv.sql',' ');
@@ -196,10 +167,6 @@ CREATE VIEW 		model_draft.substation_110kV AS
 -- grant (oeuser)
 ALTER VIEW model_draft.substation_110kV OWNER TO oeuser;
 
--- metadata
-COMMENT ON TABLE  model_draft.substation_110kV IS '{
-	"comment": "eGoDP - Temporary table",
-	"version": "v0.3.0" }' ;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.3.0','temp','model_draft','substation_110kV','ego_dp_substation_hvmv.sql',' ');
@@ -234,10 +201,6 @@ CREATE VIEW 		model_draft.summary_total AS
 -- grant (oeuser)
 ALTER VIEW model_draft.summary_total OWNER TO oeuser;
 
--- metadata
-COMMENT ON TABLE  model_draft.summary_total IS '{
-	"comment": "eGoDP - Temporary table",
-	"version": "v0.3.0" }' ;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.3.0','temp','model_draft','summary_total','ego_dp_substation_hvmv.sql',' ');
@@ -256,10 +219,6 @@ CREATE INDEX summary_gix ON model_draft.summary USING GIST (polygon);
 -- grant (oeuser)
 ALTER MATERIALIZED VIEW model_draft.summary OWNER TO oeuser;
 
--- metadata
-COMMENT ON TABLE  model_draft.summary IS '{
-	"comment": "eGoDP - Temporary table",
-	"version": "v0.3.0" }' ;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.3.0','temp','model_draft','summary','ego_dp_substation_hvmv.sql',' ');
@@ -276,10 +235,6 @@ CREATE VIEW 		model_draft.summary_de AS
 -- grant (oeuser)
 ALTER VIEW model_draft.summary_de OWNER TO oeuser;
 
--- metadata
-COMMENT ON TABLE  model_draft.summary_de IS '{
-	"comment": "eGoDP - Temporary table",
-	"version": "v0.3.0" }' ;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.3.0','input','boundaries','bkg_vg250_1_sta_union_mview','ego_dp_substation_hvmv.sql',' ');
@@ -295,10 +250,6 @@ CREATE MATERIALIZED VIEW 		model_draft.buffer_75 AS
 -- grant (oeuser)
 ALTER MATERIALIZED VIEW model_draft.buffer_75 OWNER TO oeuser;
 
--- metadata
-COMMENT ON TABLE  model_draft.buffer_75 IS '{
-	"comment": "eGoDP - Temporary table",
-	"version": "v0.3.0" }' ;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.3.0','temp','model_draft','buffer_75','ego_dp_substation_hvmv.sql',' ');
@@ -312,11 +263,6 @@ CREATE MATERIALIZED VIEW 		model_draft.buffer_75_a AS
 
 -- grant (oeuser)
 ALTER MATERIALIZED VIEW model_draft.buffer_75_a OWNER TO oeuser;
-
--- metadata
-COMMENT ON TABLE  model_draft.buffer_75_a IS '{
-	"comment": "eGoDP - Temporary table",
-	"version": "v0.3.0" }' ;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.3.0','temp','model_draft','buffer_75_a','ego_dp_substation_hvmv.sql',' ');
@@ -336,10 +282,6 @@ CREATE MATERIALIZED VIEW 		model_draft.substations_to_drop AS
 -- grant (oeuser)
 ALTER MATERIALIZED VIEW model_draft.substations_to_drop OWNER TO oeuser;
 
--- metadata
-COMMENT ON TABLE  model_draft.substations_to_drop IS '{
-	"comment": "eGoDP - Temporary table",
-	"version": "v0.3.0" }' ;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.3.0','temp','model_draft','substations_to_drop','ego_dp_substation_hvmv.sql',' ');
@@ -355,10 +297,6 @@ CREATE VIEW 		model_draft.final_result AS
 -- grant (oeuser)
 ALTER VIEW model_draft.final_result OWNER TO oeuser;
 
--- metadata
-COMMENT ON TABLE  model_draft.final_result IS '{
-	"comment": "eGoDP - Temporary table",
-	"version": "v0.3.0" }' ;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.3.0','temp','model_draft','final_result','ego_dp_substation_hvmv.sql',' ');
