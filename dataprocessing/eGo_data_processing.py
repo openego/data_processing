@@ -100,6 +100,7 @@ def data_processing():
 #	'ego_dp_powerflow_voronoi_weatherpoint.sql',		# Create voronoi cells based on weather points
 #	'ego_dp_powerflow_hv_setup.sql',					# Set schema/tables for EHV/HV powerflow calculations up
 #	'ego_dp_powerflow_osmtgmod_to_pypsa.sql',			# Include data from osmTGmod into EHV/HV powerflow schema
+#	'ego_dp_powerflow_fix_topological_HV_errors.sql'	# Fix topological errors in HV grid
 #	'ego_dp_powerflow_electrical_neighbour.sql',		# Create border crossing lines and buses in neighbouring countries
 ##
   #  	'ego_dp_powerflow_assignment_generator.sql',  		# Assign generators to corresponding substation
