@@ -1406,7 +1406,7 @@ CREATE TABLE 		model_draft.ego_grid_pf_hv_storage_result (
 	state_of_charge double precision[],
 	spill double precision[],
 	p_nom_opt double precision,
-	CONSTRAINT storage_data_pkey PRIMARY KEY (result_id, storage_id, scn_name)) WITH ( OIDS=FALSE );
+	CONSTRAINT storage_data_result_pkey PRIMARY KEY (result_id, storage_id, scn_name)) WITH ( OIDS=FALSE );
 
 -- metadata
 COMMENT ON TABLE  model_draft.ego_grid_pf_hv_storage_result IS
@@ -1473,7 +1473,7 @@ CREATE TABLE 		model_draft.ego_grid_pf_hv_transformer_result (
 	g_pu numeric, -- Unit: Siemens...
 	b_pu numeric, -- Unit: Siemens...
 	s_nom_opt numeric, -- Unit: MVA...
-	CONSTRAINT transformer_data_pkey PRIMARY KEY (result_id, trafo_id, scn_name) ) WITH ( OIDS=FALSE );
+	CONSTRAINT transformer_data_result_pkey PRIMARY KEY (result_id, trafo_id, scn_name) ) WITH ( OIDS=FALSE );
 
 -- metadata
 COMMENT ON TABLE  model_draft.ego_grid_pf_hv_transformer_result IS
