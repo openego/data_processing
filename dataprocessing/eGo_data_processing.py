@@ -75,10 +75,10 @@ def data_processing():
 #	 'ego_dp_loadarea_consumption.sql',				# Allocate consumption to Loadareas
 #	 'ego_dp_loadarea_peakload.sql',					# Peak loads per Loadarea
 #	 'ego_dp_loadarea_griddistrict_results.sql',		# Results for MV Griddistrict
-	 'ego_dp_loadarea_statistic.sql',				# Results and statistics for eGoDP
+#	 'ego_dp_loadarea_statistic.sql',				# Results and statistics for eGoDP
 
 	## LOWVOLTAGE
-	 'ego_dp_lv_substation.sql',						# MVLV Substation inside Loadarea
+#	 'ego_dp_lv_substation.sql',						# MVLV Substation inside Loadarea
 	 'ego_dp_lv_substation_voronoi.sql',				# MVLV Substation Voronoi
 	 'ego_dp_lv_griddistrict.sql',    				# LV Griddistrict
   	 'ego_dp_lv_peakload.sql',						# LV OSM areas
