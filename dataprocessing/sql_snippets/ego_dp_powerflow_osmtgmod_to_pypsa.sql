@@ -51,7 +51,7 @@ SELECT
   branch_id AS trafo_id,
   f_bus AS bus0,
   t_bus AS bus1,
-  br_x*100 AS x,
+  br_x/100 AS x,
   rate_a as s_nom,
   tap AS tap_ratio,
   shift AS phase_shift,
