@@ -484,6 +484,7 @@ UPDATE 	model_draft.ego_demand_loadarea AS t1
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_boundaries_bkg_vg250_6_gem_clean','ego_dp_loadarea_loadcut_griddistrict.sql',' ');
 
+
 -- nuts code (nuts)
 UPDATE 	model_draft.ego_demand_loadarea AS t1
 	SET  	nuts = t2.nuts

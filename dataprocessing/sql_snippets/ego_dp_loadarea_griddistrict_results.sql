@@ -28,7 +28,9 @@ WHERE  	t1.subst_id = t2.subst_id;
 -- municipality and method types
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','input','boundaries','bkg_vg250_6_gem','ego_dp_loadarea_griddistrict_results.sql',' ');
+SELECT ego_scenario_log('v0.3.0','input', 'boundaries','bkg_vg250_6_gem','ego_dp_loadarea_griddistrict_results.sql',' ');
+
+
 
 -- Gemeinden
 UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
@@ -46,12 +48,14 @@ WHERE  	t1.subst_id = t2.subst_id;
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_boundaries_bkg_vg250_6_gem_clean','ego_dp_loadarea_griddistrict_results.sql',' ');
 
+
 -- Gemeinde Parts
 UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
 SET  	gem_clean = t2.gem_clean
 FROM	(SELECT	gd.subst_id,
 		COUNT(ST_PointOnSurface(gem.geom))::integer AS gem_clean
 	FROM	model_draft.ego_boundaries_bkg_vg250_6_gem_clean AS gem,
+
 		model_draft.ego_grid_mv_griddistrict AS gd
 	WHERE	gd.geom && gem.geom AND
 		ST_CONTAINS(gd.geom,ST_PointOnSurface(gem.geom))
@@ -77,6 +81,7 @@ WHERE  	t1.subst_id = t2.subst_id;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_boundaries_hvmv_subst_per_gem_1_mview','ego_dp_loadarea_griddistrict_results.sql',' ');
+
 
 UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
 SET  	type1_cnt = t2.type_cnt
