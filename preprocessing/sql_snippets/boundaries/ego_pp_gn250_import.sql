@@ -60,7 +60,7 @@ CREATE INDEX bkg_gn250_p_geom_idx ON boundaries.bkg_gn250_p USING gist (geom);
 
 
 -- 2.
-CREATE TABLE boundaries.gn250_b (
+CREATE TABLE boundaries.bkg_gn250_b (
 	reference_date date,
 	id serial NOT NULL,
 	nnid character varying(16),
@@ -98,14 +98,14 @@ CREATE TABLE boundaries.gn250_b (
 	box_geo character varying(250),
 	box_gk character varying(250),
 	box_utm character varying(250),
-	geom geometry(Point,31467),
-	CONSTRAINT gn250_b_pkey PRIMARY KEY (reference_date,id) );
+	geom geometry(Multipolygon,31467),
+	CONSTRAINT bkg_gn250_b_pkey PRIMARY KEY (reference_date,id) );
 
 -- grant (oeuser)
-ALTER TABLE boundaries.gn250_b OWNER TO oeuser;
+ALTER TABLE boundaries.bkg_gn250_b OWNER TO oeuser;
 
 -- index GIST (geom)
-CREATE INDEX bkg_vg250_2_lan_geom_idx ON boundaries.gn250_b USING gist (geom);
+CREATE INDEX bkg_vg250_2_lan_geom_idx ON boundaries.bkg_gn250_b USING gist (geom);
 
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
