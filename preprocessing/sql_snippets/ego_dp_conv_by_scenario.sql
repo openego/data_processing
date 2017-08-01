@@ -180,7 +180,8 @@ COMMENT ON TABLE model_draft.ego_dp_supply_conv_powerplant
 				{"name": "la_id", "description": "Unique identifier of RES and CONV power plants", "unit": "" },									
 				{"name": "scenario", "description": "Name of scenario", "unit": "" },
 				{"name": "flag", "description": "Flag of scenario changes of an power plant unit (repowering, decommission or commissioning).", "unit": "" },
-				{"name": "nuts", "description": "NUTS ID).", "unit": ""} ] } ],
+				{"name": "nuts", "description": "NUTS ID).", "unit": ""},
+				{"name": "coastdat_gid", "description": "Coastdat-2 Geo-ID).", "unit": "" }] } ],
 		"meta_version": "1.3" }';
 	  
 -- select description
