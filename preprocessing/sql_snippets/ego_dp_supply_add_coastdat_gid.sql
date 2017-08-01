@@ -67,5 +67,29 @@ FROM model_draft.ego_dp_supply_res_powerplant
 Group by coastdat_gid, subst_id;
 
 
+-- check ids
+SELECT
+coastdat_gid, count(*)
+FROM
+ model_draft.ego_dp_supply_conv_powerplant
+group by coastdat_gid
+
+
+-- relation tables for oedb
+CREATE TABLE model_draft.ego_conv_powerplant_costdat_gid AS
+  SELECT id, coastdat_gid FROM model_draft.ego_dp_supply_conv_powerplant;
+
+CREATE TABLE model_draft.ego_res_powerplant_costdat_gid AS
+  SELECT id, coastdat_gid FROM model_draft.ego_dp_supply_res_powerplant;
+
+Update  model_draft.ego_dp_supply_res_powerplant as A
+  set coastdat_gid = B.coastdat_gid
+  FROM  model_draft.ego_res_powerplant_costdat_gid B
+  Where A.id = B.id;
+
+Update  model_draft.ego_conv_powerplant_costdat_gid as A
+  set coastdat_gid = B.coastdat_gid
+  FROM  model_draft.ego_conv_powerplant_costdat_gid B
+  Where A.id = B.id;
 
 
