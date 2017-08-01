@@ -1782,8 +1782,6 @@ Update model_draft.ego_dp_supply_res_powerplant
 
 -- VACUUM FULL ANALYZE model_draft.ego_dp_supply_res_powerplant;
 
-
-<<<<<<< HEAD:preprocessing/sql_snippets/ego_dp_res_rea_by_scenario.sql
 -- MView for Status Quo
 DROP MATERIALIZED VIEW IF EXISTS  model_draft.ego_supply_res_powerplant_sq_mview CASCADE;
 CREATE MATERIALIZED VIEW model_draft.ego_supply_res_powerplant_sq_mview AS
@@ -1901,6 +1899,4 @@ CREATE MATERIALIZED VIEW model_draft.ego_supply_res_powerplant_ego100_mview AS
 -- grant (oeuser)    
 ALTER TABLE model_draft.ego_supply_res_powerplant_ego100_mview OWNER TO oeuser;
 
-=======
->>>>>>> refactor/assignment_generator:dataprocessing/preprocessing/ego_dp_res_rea_by_scenario.sql
 -- END
