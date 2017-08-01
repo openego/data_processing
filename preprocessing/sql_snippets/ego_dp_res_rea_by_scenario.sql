@@ -184,7 +184,8 @@ COMMENT ON TABLE model_draft.ego_dp_supply_res_powerplant IS '{
 				{"name": "rea_geom_new", "description": "Geometry of new position", "unit": "" },				
 				{"name": "scenario", "description": "Name of scenario", "unit": "" },
 				{"name": "flag", "description": "Flag of scenario changes of an power plant unit (repowering, decommission or commissioning).", "unit": "" },
-				{"name": "nuts", "description": "NUTS ID).", "unit": "" } ] } ],		
+				{"name": "nuts", "description": "NUTS ID).", "unit": "" },
+				{"name": "coastdat_gid", "description": "Coastdat-2 Geo-ID).", "unit": "" }] } ],		
 	"metadata_version": "1.3"}';
 
 -- select description
