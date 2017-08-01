@@ -148,6 +148,7 @@ Insert into grid.bnetza_vorhaben_bbplg
 SELECT*
 From  grid_bnetza."Projekt_VerNetzen_20170613 Vorhaben_BBPlG";
 
+
 -- Table: grid.bnetza_vorhaben_enlag
 -- DROP TABLE grid.bnetza_vorhaben_enlag;
 
@@ -290,10 +291,8 @@ CREATE TABLE grid.bnetza_vorhabenpunkte_bbplg
   object_id bigint,
   name character varying(50),
   CONSTRAINT bnetza_vorhabenpunkte_bbplg_pkey PRIMARY KEY (id)
-)
-WITH (
-  OIDS=FALSE
 );
+
 ALTER TABLE grid.bnetza_vorhabenpunkte_bbplg
   OWNER TO oeuser;
 
@@ -304,7 +303,6 @@ CREATE INDEX idx_bnetza_vorhabenpunkte_bbplg_geom
   ON grid.bnetza_vorhabenpunkte_bbplg
   USING gist
   (geom);
-
 
 -- Meta data
 COMMENT ON TABLE grid.bnetza_vorhabenpunkte_bbplg IS '{
@@ -355,25 +353,23 @@ From grid_bnetza."Projekt_VerNetzen_20170613 Vorhabenpunkte_BBPlG";
 -- Table: grid.bnetza_vorhabenpunkte_bbplg
 -- DROP TABLE grid.bnetza_vorhabenpunkte_bbplg;
 
-CREATE TABLE grid.bnetza_vorhabenpunkte_bbplg
+CREATE TABLE grid.bnetza_vorhabenpunkte_enlag
 (
   id serial NOT NULL,
   geom geometry(Point,4647),
   object_id bigint,
   name character varying(50),
-  CONSTRAINT bnetza_vorhabenpunkte_bbplg_pkey PRIMARY KEY (id)
-)
-WITH (
-  OIDS=FALSE
+  CONSTRAINT bnetza_vorhabenpunkte_enlag_pkey PRIMARY KEY (id)
 );
-ALTER TABLE grid.bnetza_vorhabenpunkte_bbplg
+
+ALTER TABLE grid.bnetza_vorhabenpunkte_enlag
   OWNER TO oeuser;
 
--- Index: grid.sidx_bnetza_vorhabenpunkte_bbplg_geom
--- DROP INDEX grid.sidx_bnetza_vorhabenpunkte_bbplg_geom;
+-- Index: grid.sidx_bnetza_vorhabenpunkte_enlag_geom
+-- DROP INDEX grid.sidx_bnetza_vorhabenpunkte_enlag_geom;
 
-CREATE INDEX idx_bnetza_vorhabenpunkte_bbplg_geom
-  ON grid.bnetza_vorhabenpunkte_bbplg
+CREATE INDEX idx_bnetza_vorhabenpunkte_enlag_geom
+  ON grid.bnetza_vorhabenpunkte_enlag
   USING gist
   (geom);
 
@@ -422,3 +418,15 @@ SELECT obj_description('grid.bnetza_vorhabenpunkte_enlag' ::regclass) ::json;
 Insert into grid.bnetza_vorhabenpunkte_enlag
 SELECT*
 From grid_bnetza."Projekt_VerNetzen_20170613 Vorhabenpunkte_EnLAG";
+
+/*
+work around with CSV import:
+
+COPY grid_bnetza."Projekt_VerNetzen_20170613 Vorhaben_BBPlG" TO '/tmp/vorhaben_bbplg.csv' WITH  DELIMITER ',' CSV HEADER ;
+COPY grid_bnetza."Projekt_VerNetzen_20170613 Vorhaben_EnLAG" TO '/tmp/vorhaben_enlag.csv' WITH  DELIMITER ',' CSV HEADER ;
+COPY grid_bnetza."Projekt_VerNetzen_20170613 Vorhabenpunkte_BBPlG" TO '/tmp/vorhabenpunkt_bbplg.csv' WITH  DELIMITER ',' CSV HEADER ;
+COPY grid_bnetza."Projekt_VerNetzen_20170613 Vorhabenpunkte_EnLAG" TO '/tmp/vorhabenpunkt_enlag.csv' WITH  DELIMITER ',' CSV HEADER ;
+*/
+
+
+
