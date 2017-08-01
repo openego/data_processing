@@ -1780,6 +1780,12 @@ Update model_draft.ego_dp_supply_res_powerplant
         rea_flag = NULL,
 	rea_geom_line = NULL,
 	rea_geom_new = NULL;
+	
+-- fill NUll values for solar = generation_subtype
+Update model_draft.ego_dp_supply_res_powerplant
+  set generation_subtype ='solar'
+  where generation_type = 'solar'
+  and generation_subtype is NULL;
 
 -- VACUUM FULL ANALYZE model_draft.ego_dp_supply_res_powerplant;
 
