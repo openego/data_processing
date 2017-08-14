@@ -56,7 +56,7 @@ UPDATE model_draft.ego_dp_supply_conv_powerplant a
 
 
 -- Update un_id from generators_total 
-UPDATE model_draft.ego_supply_dp_res_powerplant a
+UPDATE model_draft.ego_dp_supply_res_powerplant a
 	SET 	un_id = b.un_id 
 	FROM 	model_draft.ego_supply_generator b
 	WHERE 	a.id = b.re_id; 
@@ -64,8 +64,8 @@ UPDATE model_draft.ego_supply_dp_res_powerplant a
 
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_supply_dp_res_powerplant','ego_dp_powerflow_assignment_unid.sql',' ');
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_supply_dp_conv_powerplant','ego_dp_powerflow_assignment_unid.sql',' ');
+SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_dp_supply_res_powerplant','ego_dp_powerflow_assignment_unid.sql',' ');
+SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_dp_supply_conv_powerplant','ego_dp_powerflow_assignment_unid.sql',' ');
 
 
 

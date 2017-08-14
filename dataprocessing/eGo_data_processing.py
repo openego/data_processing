@@ -79,29 +79,29 @@ def data_processing():
 
 	## LOWVOLTAGE
 #	 'ego_dp_lv_substation.sql',						# MVLV Substation inside Loadarea
-	 'ego_dp_lv_substation_voronoi.sql',				# MVLV Substation Voronoi
-	 'ego_dp_lv_griddistrict.sql',    				# LV Griddistrict
-  	 'ego_dp_lv_peakload.sql',						# LV OSM areas
-  	 'ego_dp_lv_consumption_peakload.sql',			# LV Consumption and Peakload
+#	 'ego_dp_lv_substation_voronoi.sql',				# MVLV Substation Voronoi
+#	 'ego_dp_lv_griddistrict.sql',    				# LV Griddistrict
+# 	 'ego_dp_lv_peakload.sql',						# LV OSM areas
+#	 'ego_dp_lv_consumption_peakload.sql',			# LV Consumption and Peakload
    
 	## REA
-  	 'rea/ego_dp_lattice_500m.sql', 					# lattice (point grid) 500m
-  	 'rea/ego_dp_lattice_50m.sql', 					# lattice (point grid) 50m
- 	 'rea/ego_dp_rea_wpa_per_mvgd.sql', 				# wind potential area
+#  	 'rea/ego_dp_lattice_500m.sql', 					# lattice (point grid) 500m
+#  	 'rea/ego_dp_lattice_50m.sql', 					# lattice (point grid) 50m
+# 	 'rea/ego_dp_rea_wpa_per_mvgd.sql', 				# wind potential area
 
-	 'rea/ego_dp_rea_lattice_per_area_500m.sql', 	# prepare 500m lattice
-	 'rea/ego_dp_rea_lattice_per_area_50m.sql', 		# prepare 50m lattice
+#	 'rea/ego_dp_rea_lattice_per_area_500m.sql', 	# prepare 500m lattice
+#	 'rea/ego_dp_rea_lattice_per_area_50m.sql', 		# prepare 50m lattice
 
-    	 'rea/ego_dp_rea_setup.sql',					   # setup table for allocation
-    	 'rea/ego_dp_rea_m1.sql',	                   # M1 biomass and solar to farmyard
-    	 'rea/ego_dp_rea_m2.sql',	                   # M2 windfarms
-    	 'rea/ego_dp_rea_m3.sql',	                   # M3 wind turbines to wpa
-    	 'rea/ego_dp_rea_m4.sql',	                   # M4 other and rest
-    	 'rea/ego_dp_rea_m5.sql',	                   # M5 LV to LA
-    	 'rea/ego_dp_rea_results.sql',                  # results and statistics
+#    	 'rea/ego_dp_rea_setup.sql',					   # setup table for allocation
+#    	 'rea/ego_dp_rea_m1.sql',	                   # M1 biomass and solar to farmyard
+#    	 'rea/ego_dp_rea_m2.sql',	                   # M2 windfarms
+#    	 'rea/ego_dp_rea_m3.sql',	                   # M3 wind turbines to wpa
+#    	 'rea/ego_dp_rea_m4.sql',	                   # M4 other and rest
+#    	 'rea/ego_dp_rea_m5.sql',	                   # M5 LV to LA
+#    	 'rea/ego_dp_rea_results.sql',                  # results and statistics
 	
 	## POWERFLOW
-	'ego_dp_powerflow_assignment_otgid.sql',			# assign otg_id to pp lists
+#	'ego_dp_powerflow_assignment_otgid.sql',			# assign otg_id to pp lists
  	'ego_dp_powerflow_assignment_unid.sql',			# create a unified_id over all pp (res and conv) 
  	'ego_dp_powerflow_create_pp_mview.sql',			# create mviews to display power plants per scenario
 	'ego_dp_powerflow_voronoi_weatherpoint.sql',		# Create voronoi cells based on weather points
