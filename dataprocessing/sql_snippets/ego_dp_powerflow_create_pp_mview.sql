@@ -12,15 +12,17 @@ __author__ = "wolfbunke"
 --------------------------------------------------------------------------------
 -- Part IV 
 --          Create Views by scenario
---	    Scenarios: ego 100%
 --------------------------------------------------------------------------------
 
 -- MView for Status Quo
 DROP MATERIALIZED VIEW IF EXISTS  model_draft.ego_supply_conv_powerplant_sq_mview CASCADE;
-CREATE MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_sq_view AS
+CREATE MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_sq_mview AS
     SELECT *
     FROM model_draft.ego_dp_supply_conv_powerplant
     WHERE scenario = 'Status Quo';
+
+ALTER VIEW model_draft.ego_supply_conv_powerplant_sq_mview
+    OWNER TO oeuser; 
 
 -- MView for NEP 2035
 DROP MATERIALIZED VIEW IF EXISTS model_draft.ego_supply_conv_powerplant_nep2035_mview CASCADE;
@@ -29,12 +31,14 @@ CREATE MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_nep2035_mview AS
     FROM  model_draft.ego_dp_supply_conv_powerplant
     WHERE scenario = 'NEP 2035'
     AND   capacity >= 0 
-    AND   fuel not in ('hydro', 'run_of_river', 'reservoir')
-    ;
+    AND   fuel not in ('hydro', 'run_of_river', 'reservoir');
+
+ALTER VIEW model_draft.ego_supply_conv_powerplant_nep2035_mview
+    OWNER TO oeuser;
 
 -- MView for eGo 100
 DROP MATERIALIZED VIEW IF EXISTS  model_draft.ego_supply_conv_powerplant_ego100_mview CASCADE;
-CREATE MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_ego2050_mview AS
+CREATE MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_ego100_mview AS
 	SELECT 
 	  'tba'::text as version,
 	  id,
@@ -82,6 +86,8 @@ CREATE MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_ego2050_mview AS
 	AND fuel = 'pumped_storage'
 	AND capacity >= 0;
 
+ALTER VIEW model_draft.ego_supply_conv_powerplant_ego100_mview
+    OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_supply_conv_powerplant_sq_mview','ego_dp_powerflow_create_pp_mview.sql',' ');
@@ -100,6 +106,9 @@ CREATE MATERIALIZED VIEW model_draft.ego_supply_res_powerplant_sq_mview AS
     SELECT *
     FROM model_draft.ego_dp_supply_res_powerplant
     WHERE scenario =  'Status Quo';
+
+ALTER VIEW model_draft.ego_supply_res_powerplant_sq_mview
+    OWNER TO oeuser;
 
 -- MView for NEP 2035
 DROP MATERIALIZED VIEW IF EXISTS model_draft.ego_supply_res_powerplant_nep2035_mview CASCADE;
@@ -139,6 +148,9 @@ CREATE MATERIALIZED VIEW model_draft.ego_supply_res_powerplant_nep2035_mview AS
 	) sub2
 	Order by id;
 -- 01:56:3626 hours execution time.
+
+ALTER VIEW model_draft.ego_supply_res_powerplant_nep2035_mview
+    OWNER TO oeuser;
 
 -- MView for eGo 100
 DROP MATERIALIZED VIEW IF EXISTS model_draft.ego_supply_res_powerplant_ego100_mview CASCADE;
@@ -200,9 +212,10 @@ CREATE MATERIALIZED VIEW model_draft.ego_supply_res_powerplant_ego100_mview AS
 	) sub3
 	Order by id;
 
+ALTER VIEW model_draft.ego_supply_res_powerplant_ego100_mview
+    OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_supply_res_powerplant_sq_mview','ego_dp_powerflow_create_pp_mview.sql',' ');
 SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_supply_res_powerplant_nep2035_mview','ego_dp_powerflow_create_pp_mview.sql',' ');
 SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_supply_res_powerplant_ego100_mview','ego_dp_powerflow_create_pp_mview.sql',' ');
-
