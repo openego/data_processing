@@ -82,8 +82,11 @@ def meta_definition(meta, conn):
     """ Populates SQLAlchemy Meta object
     """
     meta.reflect(bind=conn, schema='coastdat')
-    meta.reflect(bind=conn, schema='public',
-                 only=['weather_measurement_point'])
+    meta.reflect(bind=conn, schema='model_draft',
+                 only=['ego_weather_measurement_point'])  
+        
+    #meta.reflect(bind=conn, schema='public',
+    #             only=['weather_measurement_point'])  # table with given/ own defined points
 
 
 def other_classes():
@@ -122,7 +125,7 @@ path = os.path.join(os.path.expanduser("~"), '.open_eGo', 'config.ini')
 config = readcfg(path=path)
 
 # establish DB connection
-section = 'home'
+section = 'coastdat'
 conn = dbconnect(section=section, cfg=config)
 
 # instantiate container object MetaData
@@ -141,13 +144,14 @@ Base.prepare()
 Datatype, Projection, Spatial, Timeseries, Year, Point =\
     Base.classes.datatype, Base.classes.projection, Base.classes.spatial,\
     Base.classes.timeseries, Base.classes.year,\
-    Base.classes.weather_measurement_point
+    Base.classes.ego_weather_measurement_point
+   # Base.classes.weather_measurement_point
 
 session = sessionmaker(bind=conn)()
 
 print('Retrieve data...')
-query = session.query(Point.name, Point.type_of_generation, Point.geom)
-Points =  [(name, type_of_generation, shape.to_shape(geom))
-           for name, type_of_generation, geom in query.all()]
+query = session.query(Point.name, Point.type_of_generation, Point.scnenario, Point.geom)
+Points =  [(name, type_of_generation, scnenario, shape.to_shape(geom))
+           for name, type_of_generation, scnenario, geom in query.all()]
 
 print('Done!')
