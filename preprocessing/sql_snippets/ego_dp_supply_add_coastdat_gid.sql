@@ -12,12 +12,15 @@ __author__ = "wolfbunke"
 
 --
 Alter Table  model_draft.ego_dp_supply_conv_powerplant
+ DROP COLUMN IF EXISTS coastdat_gid CASCADE,
  ADD COLUMN coastdat_gid bigint;
+
 
 Alter Table  model_draft.ego_dp_supply_res_powerplant
+ DROP COLUMN IF EXISTS coastdat_gid CASCADE,
  ADD COLUMN coastdat_gid bigint;
 
---
+-- local Database until Open_Fred is publishing
 Update model_draft.ego_dp_supply_conv_powerplant as b
   set coastdat_gid = a.gid
   From coastdat.cosmoclmgrid a
