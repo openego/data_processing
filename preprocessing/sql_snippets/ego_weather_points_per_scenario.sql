@@ -23,7 +23,7 @@ CREATE TABLE model_draft.ego_weather_measurement_point
   type_of_generation text NOT NULL,
   comment text,
   source text,
-  scnenario text,
+  scenario text,
   capacity_scale numeric,
   geom geometry(Point,4326),
   CONSTRAINT weather_measurement_point_pkey PRIMARY KEY (name, type_of_generation,scnenario)
@@ -153,4 +153,16 @@ Insert Into model_draft.ego_weather_measurement_point
 	group by A.coastdat_gid, A.generation_subtype, B.geom, A.scenario, C.sum_cap, A.subst_id
 	Order by A.scenario,A.subst_id
 	) as sub
-	;
+;
+---
+-- get Geographical weight of distripution 
+
+Select
+*
+from  model_draft.ego_weather_measurement_point
+--where scenario = 'Status Quo'
+limit 1
+;
+
+
+	
