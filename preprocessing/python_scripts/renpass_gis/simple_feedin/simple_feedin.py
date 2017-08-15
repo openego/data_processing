@@ -35,6 +35,7 @@ Notes
 TODO
 ----
     How to handle different timezones?
+    Add scenario case
 """
 
 
@@ -51,8 +52,9 @@ import pandas as pd
 
 points = db.Points
 conn = db.conn
+scenario_name = 'eGo 100'
 weather_year = 2011
-filename = '~/open_eGo/scenario/simple_feedin.csv'
+filename = 'simple_feedin_test.csv'
 config = 'config.ini'
 correction_offshore = 0.83
 correction_solar = 0.8
@@ -117,22 +119,24 @@ def main():
         **to_dictionary(cfg=cfg, section='Photovoltaic'))
 
     print('Calculating feedins...')
+    #toDo
     # calculate feedins applying correction factors
-    for name, type_of_generation, geom in points:
+    for name, type_of_generation, scenario, geom in points:
 
         weather = coastdat.get_weather(conn, geom, weather_year)
 
-        if type_of_generation == 'windoffshore':
+        if type_of_generation == 'windoffshore' and scenario == scenario_name:
             feedin = correction_offshore * powerplants[type_of_generation].\
                 feedin(weather=weather, installed_capacity=1)
-        elif type_of_generation == 'windonshore':
+        elif type_of_generation == 'windonshore' and scenario == scenario_name:
             feedin = powerplants[type_of_generation].\
                 feedin(weather=weather, installed_capacity=1)
-        else:
+        elif type_of_generation == 'solar' and scenario == scenario_name:
             feedin = correction_solar * powerplants[type_of_generation].\
                 feedin(weather=weather, peak_power=1)
-
-        temp[(name, type_of_generation)] = feedin
+        else:
+            print('Upps, something wrong here?!?')
+        temp[(scenario, name, type_of_generation)] = feedin
 
     print('Writing results to %s.' % filename)
     # write results to file
