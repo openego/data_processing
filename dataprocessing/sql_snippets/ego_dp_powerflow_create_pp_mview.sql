@@ -21,7 +21,7 @@ CREATE MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_sq_mview AS
     FROM model_draft.ego_dp_supply_conv_powerplant
     WHERE scenario = 'Status Quo';
 
-ALTER VIEW model_draft.ego_supply_conv_powerplant_sq_mview
+ALTER MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_sq_mview
     OWNER TO oeuser; 
 
 -- MView for NEP 2035
@@ -33,7 +33,7 @@ CREATE MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_nep2035_mview AS
     AND   capacity >= 0 
     AND   fuel not in ('hydro', 'run_of_river', 'reservoir');
 
-ALTER VIEW model_draft.ego_supply_conv_powerplant_nep2035_mview
+ALTER MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_nep2035_mview
     OWNER TO oeuser;
 
 -- MView for eGo 100
@@ -86,7 +86,7 @@ CREATE MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_ego100_mview AS
 	AND fuel = 'pumped_storage'
 	AND capacity >= 0;
 
-ALTER VIEW model_draft.ego_supply_conv_powerplant_ego100_mview
+ALTER MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_ego100_mview
     OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
@@ -107,7 +107,7 @@ CREATE MATERIALIZED VIEW model_draft.ego_supply_res_powerplant_sq_mview AS
     FROM model_draft.ego_dp_supply_res_powerplant
     WHERE scenario =  'Status Quo';
 
-ALTER VIEW model_draft.ego_supply_res_powerplant_sq_mview
+ALTER MATERIALIZED VIEW model_draft.ego_supply_res_powerplant_sq_mview
     OWNER TO oeuser;
 
 -- MView for NEP 2035
@@ -149,7 +149,7 @@ CREATE MATERIALIZED VIEW model_draft.ego_supply_res_powerplant_nep2035_mview AS
 	Order by id;
 -- 01:56:3626 hours execution time.
 
-ALTER VIEW model_draft.ego_supply_res_powerplant_nep2035_mview
+ALTER MATERIALIZED VIEW model_draft.ego_supply_res_powerplant_nep2035_mview
     OWNER TO oeuser;
 
 -- MView for eGo 100
@@ -212,7 +212,7 @@ CREATE MATERIALIZED VIEW model_draft.ego_supply_res_powerplant_ego100_mview AS
 	) sub3
 	Order by id;
 
-ALTER VIEW model_draft.ego_supply_res_powerplant_ego100_mview
+ALTER MATERIALIZED VIEW model_draft.ego_supply_res_powerplant_ego100_mview
     OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)

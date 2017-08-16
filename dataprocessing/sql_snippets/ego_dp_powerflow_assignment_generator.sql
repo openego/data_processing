@@ -41,12 +41,13 @@ CREATE TABLE 		model_draft.ego_supply_pf_generator_single (
 
 INSERT INTO model_draft.ego_supply_pf_generator_single (generator_id)
 	SELECT 	un_id
-	FROM 	model_draft.ego_supply_conv_powerplant_sq_mview
-	WHERE 	a.fuel <> 'pumped_storage'; -- pumped storage units are ignored here and will be listed in storage table 
+	FROM 	model_draft.ego_supply_conv_powerplant_sq_mview a
+	WHERE 	a.fuel <> 'pumped_storage' AND a.un_id IS NOT NULL; -- pumped storage units are ignored here and will be listed in storage table 
 
 INSERT INTO model_draft.ego_supply_pf_generator_single (generator_id)
 	SELECT 	un_id
-	FROM 	model_draft.ego_supply_res_powerplant_sq_mview;
+	FROM 	model_draft.ego_supply_res_powerplant_sq_mview a
+	WHERE 	a.un_id IS NOT NULL;
 
 -- NEP 2035 
 
@@ -54,12 +55,13 @@ INSERT INTO model_draft.ego_supply_pf_generator_single (generator_id)
 
 INSERT INTO model_draft.ego_supply_pf_generator_single (scn_name, generator_id)
 	SELECT 	'NEP 2035', un_id
-	FROM 	model_draft.ego_supply_conv_powerplant_nep2035_mview
-	WHERE 	a.fuel <> 'pumped_storage'; -- pumped storage units are ignored here and will be listed in storage table 
+	FROM 	model_draft.ego_supply_conv_powerplant_nep2035_mview a
+	WHERE 	a.fuel <> 'pumped_storage' AND a.un_id IS NOT NULL; -- pumped storage units are ignored here and will be listed in storage table 
 
 INSERT INTO model_draft.ego_supply_pf_generator_single (scn_name, generator_id)
 	SELECT 	'NEP 2035', un_id
-	FROM 	model_draft.ego_supply_res_powerplant_nep2035_mview;
+	FROM 	model_draft.ego_supply_res_powerplant_nep2035_mview a
+	WHERE   a.un_id IS NOT NULL;
 
 -- eGo 100 
 
@@ -67,13 +69,13 @@ INSERT INTO model_draft.ego_supply_pf_generator_single (scn_name, generator_id)
 
 INSERT INTO model_draft.ego_supply_pf_generator_single (scn_name, generator_id)
 	SELECT 	'eGo 100', un_id
-	FROM 	model_draft.ego_supply_conv_powerplant_ego100_mview
-	WHERE 	a.fuel <> 'pumped_storage'; -- pumped storage units are ignored here and will be listed in storage table 
+	FROM 	model_draft.ego_supply_conv_powerplant_ego100_mview a
+	WHERE 	a.fuel <> 'pumped_storage' AND a.un_id IS NOT NULL; -- pumped storage units are ignored here and will be listed in storage table 
 
 INSERT INTO model_draft.ego_supply_pf_generator_single (scn_name, generator_id)
 	SELECT 	'eGo 100', un_id
-	FROM 	model_draft.ego_supply_res_powerplant_ego100_mview;
-
+	FROM 	model_draft.ego_supply_res_powerplant_ego100_mview a
+	WHERE   a.un_id IS NOT NULL;
 
 -- grant (oeuser)
 ALTER TABLE model_draft.ego_supply_pf_generator_single OWNER TO oeuser;
@@ -177,7 +179,7 @@ SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_grid_pf_hv_source','
 
 UPDATE model_draft.ego_supply_pf_generator_single a
 	SET 	bus = b.otg_id, 
-		p_nom = b.capacity
+		p_nom = b.capacity,
 		source = result.source
 		FROM 	(SELECT c.source_id as source, d.fuel as fuel
 				FROM 	model_draft.ego_grid_pf_hv_source c, 
@@ -190,7 +192,7 @@ UPDATE model_draft.ego_supply_pf_generator_single a
 
 UPDATE model_draft.ego_supply_pf_generator_single a
 	SET 	bus = b.otg_id, 
-		p_nom = b.capacity
+		p_nom = b.capacity,
 		source = result.source
 		FROM 	(SELECT c.source_id as source, d.fuel as fuel
 				FROM 	model_draft.ego_grid_pf_hv_source c, 
@@ -241,7 +243,7 @@ UPDATE model_draft.ego_supply_pf_generator_single a
 	SET aggr_id = result.aggr_id
 		FROM 	(SELECT	b.bus, 
 				b.w_id, 
-				b.source 
+				b.source, 
 				nextval('model_draft.ego_supply_pf_generator_single_aggr_id') as aggr_id
 			FROM 	model_draft.ego_supply_pf_generator_single b 
 			WHERE 	scn_name='Status Quo' AND p_nom < 50 AND source IN 
@@ -276,7 +278,7 @@ UPDATE model_draft.ego_supply_pf_generator_single a
 	SET aggr_id = result.aggr_id
 		FROM 	(SELECT	b.bus, 
 				b.w_id, 
-				b.source 
+				b.source, 
 				nextval('model_draft.ego_supply_pf_generator_single_aggr_id') as aggr_id
 			FROM 	model_draft.ego_supply_pf_generator_single b 
 			WHERE 	scn_name='NEP 2035' AND p_nom < 50 AND source IN 
@@ -313,7 +315,7 @@ UPDATE model_draft.ego_supply_pf_generator_single a
 	SET aggr_id = result.aggr_id
 		FROM 	(SELECT	b.bus, 
 				b.w_id, 
-				b.source 
+				b.source, 
 				nextval('model_draft.ego_supply_pf_generator_single_aggr_id') as aggr_id
 			FROM 	model_draft.ego_supply_pf_generator_single b 
 			WHERE 	scn_name='eGo 100' AND p_nom < 50 AND source IN 
