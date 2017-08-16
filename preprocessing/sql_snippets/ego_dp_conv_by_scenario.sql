@@ -244,6 +244,7 @@ INSERT INTO model_draft.ego_dp_supply_conv_powerplant
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.3.0','input','supply','ego_dp_supply_conv_powerplant',' .sql','');
 
+-- DELETE FROM model_draft.ego_dp_supply_conv_powerplant Where scenario = 'NEP 2035';
 
 INSERT INTO model_draft.ego_dp_supply_conv_powerplant
 SELECT 
@@ -322,6 +323,7 @@ Update model_draft.ego_dp_supply_conv_powerplant A
   set  flag = 'constantly' 
   WHERE scenario = 'Status Quo'
 
+
 --------------------------------------------------------------------------------
 -- Part III 
 --          Add given Hydro storages
@@ -332,7 +334,7 @@ Update model_draft.ego_dp_supply_conv_powerplant A
 -- No entries or changes use of MView
 
 
-<<<<<<< HEAD:preprocessing/sql_snippets/ego_dp_conv_by_scenario.sql
+
 --------------------------------------------------------------------------------
 -- Part IV 
 --          Create Views by scenario
@@ -415,6 +417,5 @@ CREATE MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_ego100_mview AS
 
 -- grant (oeuser)    
 ALTER TABLE model_draft.ego_supply_conv_powerplant_ego100_mview OWNER TO oeuser;
-=======
->>>>>>> refactor/assignment_generator:dataprocessing/preprocessing/ego_dp_conv_by_scenario.sql
+
 -- END
