@@ -633,6 +633,152 @@ FROM model_draft.ego_supply_pf_storage_single a
 WHERE scn_name = 'eGo 100' AND a.p_nom >= 50 AND a.aggr_id IS NOT NULL AND source IN 
 (SELECT source_id from model_draft.ego_grid_pf_hv_source WHERE name = 'pumped_storage');
 
+------------------ NEIGHBOURING COUNTRIES
+DELETE FROM model_draft.ego_grid_pf_hv_storage WHERE storage_id > 200000 AND scn_name = 'Status Quo';
+DELETE FROM model_draft.ego_grid_pf_hv_storage WHERE storage_id > 200000 AND scn_name = 'NEP 2035';
+
+-- INSERT params of Storages in model_draft.ego_grid_pf_hv_storage (countries besides Germany)
+-- starting storage_id at 200000
+-- Status Quo
+
+INSERT into model_draft.ego_grid_pf_hv_storage (
+  scn_name,
+  storage_id,
+  bus,
+  dispatch,
+  control,
+  p_nom,
+  p_nom_extendable,
+  p_nom_min,
+  p_min_pu_fixed,
+  p_max_pu_fixed,
+  sign,
+  source,
+  marginal_cost,
+  capital_cost,
+  efficiency,
+  soc_initial,
+  soc_cyclic,
+  max_hours,
+  efficiency_store,
+  efficiency_dispatch,
+  standing_loss
+)
+  SELECT
+  'Status Quo' as scn_name,
+  row_number() over () + 200000 as storage_id,
+  B.bus_id as bus,
+  'flexible' AS dispatch,
+  'PV' AS control,
+  nominal_value[1] AS p_nom,
+  FALSE as p_nom_extendable,
+  0 as p_nom_min,
+  0 as p_min_pu_fixed,
+  1 as p_max_pu_fixed,
+  1 as sign,
+  11 as source,
+  A.variable_costs[1] as marginal_cost,
+  0 as capital_cost,
+  1 as efficiency,
+  0 as soc_inital,
+  false as soc_cyclic,
+  6 as max_hours,
+  A.inflow_conversion_factor[1] as efficiency_store,
+  A.outflow_conversion_factor[1] as efficiency_dispatch,
+  A.capacity_loss[1] as standing_loss
+
+		FROM calc_renpass_gis.renpass_gis_storage A join
+		(
+		SELECT
+		*
+		FROM
+			(SELECT *,
+			max(v_nom) over (partition by cntr_id) AS max_v_nom
+			FROM
+			model_draft.ego_grid_hv_electrical_neighbours_bus
+			where id <= 27
+			) SQ
+		WHERE SQ.v_nom = SQ.max_v_nom
+		) B
+		ON (substring(A.source, 1, 2) = B.cntr_id)
+	WHERE substring(A.source, 1, 2) <> 'DE'
+	AND A.nominal_value IS not NULL
+	AND A.nominal_value[1] > 0.001
+	AND A.source not LIKE '%%powerline%%'
+	AND A.scenario_id = 37
+	AND A.nominal_capacity IS not NULL;
+
+
+-- NEP 2035
+
+INSERT into model_draft.ego_grid_pf_hv_storage (
+  scn_name,
+  storage_id,
+  bus,
+  dispatch,
+  control,
+  p_nom,
+  p_nom_extendable,
+  p_nom_min,
+  p_min_pu_fixed,
+  p_max_pu_fixed,
+  sign,
+  source,
+  marginal_cost,
+  capital_cost,
+  efficiency,
+  soc_initial,
+  soc_cyclic,
+  max_hours,
+  efficiency_store,
+  efficiency_dispatch,
+  standing_loss
+)
+
+  SELECT
+  'NEP 2035' as scn_name,
+  row_number() over () + 200000 as storage_id,
+  B.bus_id as bus,
+  'flexible' AS dispatch,
+  'PV' AS control,
+  nominal_value[1] AS p_nom,
+  FALSE as p_nom_extendable,
+  0 as p_nom_min,
+  0 as p_min_pu_fixed,
+  1 as p_max_pu_fixed,
+  1 as sign,
+  11 as source,
+  A.variable_costs[1] as marginal_cost,
+  0 as capital_cost,
+  1 as efficiency,
+  0 as soc_inital,
+  false as soc_cyclic,
+  6 as max_hours,
+  A.inflow_conversion_factor[1] as efficiency_store,
+  A.outflow_conversion_factor[1] as efficiency_dispatch,
+  A.capacity_loss[1] as standing_loss
+
+		FROM calc_renpass_gis.renpass_gis_storage A join
+		(
+		SELECT
+		*
+		FROM
+			(SELECT *,
+			max(v_nom) over (partition by cntr_id) AS max_v_nom
+			FROM
+			model_draft.ego_grid_hv_electrical_neighbours_bus
+			where id <= 27
+			) SQ
+		WHERE SQ.v_nom = SQ.max_v_nom
+		) B
+		ON (substring(A.source, 1, 2) = B.cntr_id)
+	WHERE substring(A.source, 1, 2) <> 'DE'
+	AND A.nominal_value IS not NULL
+	AND A.nominal_value[1] > 0.001
+	AND A.source not LIKE '%%powerline%%'
+	AND A.scenario_id = 38
+	AND A.nominal_capacity IS not NULL;
+
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_grid_pf_hv_storage','ego_dp_powerflow_assignment_storage.sql',' ');
