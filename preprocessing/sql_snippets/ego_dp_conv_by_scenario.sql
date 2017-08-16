@@ -296,23 +296,6 @@ FROM
     FROM 	model_draft.ego_dp_supply_conv_powerplant
   ) as b;
 
--- update id's of same bnetza id
-Update model_draft.ego_dp_supply_conv_powerplant A
-  set id = sub.id  
-FROM
-(
-  SELECT DISTINCT A.id, A.bnetza_id, A.scenario
-  FROM model_draft.ego_dp_supply_conv_powerplant A
-  INNER JOIN model_draft.ego_dp_supply_conv_powerplant B
-  ON A.bnetza_id = B.bnetza_id
-  WHERE A.scenario  in('Status Quo','NEP 2035')
-  AND A.id != B.id
-  Order by A.bnetza_id
- ) sub
-WHERE sub.scenario = 'Status Quo'
-AND A.bnetza_id = sub.bnetza_id 
-AND A.scenario = 'NEP 2035';
-
 --change flag
 Update model_draft.ego_dp_supply_conv_powerplant A
   set flag = 'decommissioning'
