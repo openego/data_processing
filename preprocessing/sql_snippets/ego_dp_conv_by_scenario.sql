@@ -76,7 +76,8 @@ CREATE TABLE model_draft.ego_dp_supply_conv_powerplant
   la_id integer,
   scenario text,
   flag text,
-  nuts varchar
+  nuts varchar,
+  CONSTRAINT ego_dp_supply_conv_powerplant_pkey PRIMARY KEY (version,id,scenario)
 )
 WITH (
   OIDS=FALSE
