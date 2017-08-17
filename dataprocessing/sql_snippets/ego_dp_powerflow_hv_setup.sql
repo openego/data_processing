@@ -1149,10 +1149,19 @@ SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_grid_pf_hv_storage
 -- PF HV results meta
 DROP TABLE IF EXISTS 	model_draft.ego_grid_pf_hv_result_meta CASCADE; 
 CREATE TABLE 		model_draft.ego_grid_pf_hv_result_meta (
-	result_id serial NOT NULL,
+	result_id bigint NOT NULL,
 	scn_name character varying,
 	calc_date timestamp without time zone,
-	calc_type character varying,
+	method character varying,
+	network_clustering boolean,
+	gridversion character varying,
+	start_h integer,
+	end_h integer,
+	solver character varying,
+	branch_cap_factor double precision,
+	storage_extendable boolean,
+	load_shedding boolean,
+	generator_noise boolean,
 	commentary character varying,
 	CONSTRAINT result_meta_pkey PRIMARY KEY (result_id)) WITH ( OIDS=FALSE );
 
@@ -1196,20 +1205,24 @@ SELECT obj_description('model_draft.ego_grid_pf_hv_result_meta' ::regclass) ::js
 SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_grid_pf_hv_result_meta','ego_dp_powerflow_hv_setup.sql',' ');
 
 -- PF HV bus results
-DROP TABLE IF EXISTS 	model_draft.ego_grid_pf_hv_bus_result CASCADE; 
-CREATE TABLE 		model_draft.ego_grid_pf_hv_bus_result (
+DROP TABLE IF EXISTS 	model_draft.ego_grid_pf_hv_result_bus CASCADE; 
+CREATE TABLE 		model_draft.ego_grid_pf_hv_result_bus (
   result_id bigint NOT NULL,
-  scn_name character varying NOT NULL,
   bus_id bigint NOT NULL, -- Unit: n/a...
+  v_nom double precision,
+  current_type text,
+  v_mag_pu_min double precision,
+  v_mag_pu_max double precision,
   p double precision[],
   q double precision[],
   v_mag_pu double precision[],
   v_ang double precision[],
   marginal_price double precision[],
-  CONSTRAINT bus_data_result_pkey PRIMARY KEY (result_id, bus_id, scn_name) ) WITH ( OIDS=FALSE );
+  geom geometry(Point,4326),
+  CONSTRAINT bus_data_result_pkey PRIMARY KEY (result_id, bus_id) ) WITH ( OIDS=FALSE );
 
 -- metadata
-COMMENT ON TABLE  model_draft.ego_grid_pf_hv_bus_result IS
+COMMENT ON TABLE  model_draft.ego_grid_pf_hv_result_bus IS
 '{
 "Name": "hv powerflow bus result",
 "Source": [{
@@ -1223,9 +1236,6 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_bus_result IS
 "Column": [
                    {"Name": "result_id",
                     "Description": "Result ID",
-                    "Unit": "" },
-				   {"Name": "scn_name",
-                    "Description": "scenario name",
                     "Unit": "" },
                    {"Name": "bus_id",
                     "Description": "unique id for bus, equivalent to id from osmtgmod",
@@ -1254,26 +1264,39 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_bus_result IS
 }';
 
 -- select description
-SELECT obj_description('model_draft.ego_grid_pf_hv_bus_result' ::regclass) ::json;
+SELECT obj_description('model_draft.ego_grid_pf_hv_result_bus' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_grid_pf_hv_bus_result','ego_dp_powerflow_hv_setup.sql',' ');
+SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_grid_pf_hv_result_bus','ego_dp_powerflow_hv_setup.sql',' ');
 
 -- PF HV generator results
 
-DROP TABLE IF EXISTS 	model_draft.ego_grid_pf_hv_generator_result CASCADE; 
-CREATE TABLE 		model_draft.ego_grid_pf_hv_generator_result (
+DROP TABLE IF EXISTS 	model_draft.ego_grid_pf_hv_result_generator CASCADE; 
+CREATE TABLE 		model_draft.ego_grid_pf_hv_result_generator (
 	result_id bigint NOT NULL,
-	scn_name character varying,
-	generator_id bigint NOT NULL, -- Unit: n/a...
+	generator_id bigint NOT NULL,
+	bus bigint,
+	dispatch text,
+	control text,
+	p_nom double precision,
+	p_nom_extendable boolean, 
+	p_nom_min double precision,
+	p_nom_max double precision,
+	p_min_pu_fixed double precision,
+	p_max_pu_fixed double precision,
+	sign double precision,
+	source bigint,
+	marginal_cost double precision,
+	capital_cost double precision,
+	efficiency double precision,
 	p double precision[],
 	q double precision[],
 	p_nom_opt double precision,
 	status bigint[],
-	CONSTRAINT generator_data_result_pkey PRIMARY KEY (result_id, generator_id, scn_name) ) WITH ( OIDS=FALSE );
+	CONSTRAINT generator_data_result_pkey PRIMARY KEY (result_id, generator_id) ) WITH ( OIDS=FALSE );
 
 -- metadata
-COMMENT ON TABLE  model_draft.ego_grid_pf_hv_generator_result IS
+COMMENT ON TABLE  model_draft.ego_grid_pf_hv_result_generator IS
 '{
 "Name": "hv powerflow generator results",
 "Source": [{
@@ -1286,9 +1309,6 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_generator_result IS
 "Description": ["Results of generators considered in hv powerflow"],
 "Column": [		   {"Name": "result_id",
                     "Description": "Result ID",
-                    "Unit": "" },
-                   {"Name": "scn_name",
-                    "Description": "scenario name",
                     "Unit": "" },
                    {"Name": "generator_id",
                     "Description": "unique id for generators",
@@ -1313,17 +1333,31 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_generator_result IS
 }';
 
 -- select description
-SELECT obj_description('model_draft.ego_grid_pf_hv_generator_result' ::regclass) ::json;
+SELECT obj_description('model_draft.ego_grid_pf_hv_result_generator' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_grid_pf_hv_generator_result','ego_dp_powerflow_hv_setup.sql',' ');
+SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_grid_pf_hv_result_generator','ego_dp_powerflow_hv_setup.sql',' ');
 
 -- PF HV line results
-DROP TABLE IF EXISTS 	model_draft.ego_grid_pf_hv_line_result CASCADE; 
-CREATE TABLE 		model_draft.ego_grid_pf_hv_line_result (
+DROP TABLE IF EXISTS 	model_draft.ego_grid_pf_hv_result_line CASCADE; 
+CREATE TABLE 		model_draft.ego_grid_pf_hv_result_line (
 	result_id bigint NOT NULL,
-	scn_name character varying,
 	line_id bigint NOT NULL,
+	bus0 bigint, -- Unit: n/a...
+	bus1 bigint, -- Unit: n/a...
+	x numeric, -- Unit: Ohm...
+	r numeric, -- Unit: Ohm...
+	g numeric, -- Unit: Siemens...
+	b numeric, -- Unit: Siemens...
+	s_nom numeric, -- Unit: MVA...
+	s_nom_extendable boolean, -- Unit: n/a...
+	s_nom_min double precision, -- Unit: MVA...
+	s_nom_max double precision, -- Unit: MVA...
+	capital_cost double precision, -- Unit: currency/MVA...
+	length double precision, -- Unit: km...
+	cables integer,
+	frequency numeric,
+	terrain_factor double precision DEFAULT 1,
 	p0 double precision[],
 	q0 double precision[],
 	p1 double precision[],
@@ -1333,10 +1367,12 @@ CREATE TABLE 		model_draft.ego_grid_pf_hv_line_result (
 	g_pu numeric, -- Unit: Siemens...
 	b_pu numeric, -- Unit: Siemens...
 	s_nom_opt numeric, -- Unit: MVA...
-	CONSTRAINT line_data_result_pkey PRIMARY KEY (result_id, line_id, scn_name) ) WITH ( OIDS=FALSE );
+	geom geometry(MultiLineString,4326),
+	topo geometry(LineString,4326),
+	CONSTRAINT line_data_result_pkey PRIMARY KEY (result_id, line_id) ) WITH ( OIDS=FALSE );
 
 -- metadata
-COMMENT ON TABLE  model_draft.ego_grid_pf_hv_line_result IS
+COMMENT ON TABLE  model_draft.ego_grid_pf_hv_result_line IS
 '{
 "Name": "Result of lines in hv powerflow",
 "Source": [{
@@ -1349,9 +1385,6 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_line_result IS
 "Description": [" Results of electricity lines considered in hv powerflow calculations"],
 "Column": [		   {"Name": "result_id",
                     "Description": "Result ID",
-                    "Unit": "" },
-                   {"Name": "scn_name",
-                    "Description": "scenario name",
                     "Unit": "" },
                    {"Name": "line_id",
                     "Description": "unique identifier",
@@ -1390,26 +1423,45 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_line_result IS
 }';
 
 -- select description
-SELECT obj_description('model_draft.ego_grid_pf_hv_line_result' ::regclass) ::json;
+SELECT obj_description('model_draft.ego_grid_pf_hv_result_line' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_grid_pf_hv_line_result','ego_dp_powerflow_hv_setup.sql',' ');
+SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_grid_pf_hv_result_line','ego_dp_powerflow_hv_setup.sql',' ');
 
 -- PF HV storage results
-DROP TABLE IF EXISTS 	model_draft.ego_grid_pf_hv_storage_result CASCADE; 
-CREATE TABLE 		model_draft.ego_grid_pf_hv_storage_result (
+DROP TABLE IF EXISTS 	model_draft.ego_grid_pf_hv_result_storage CASCADE; 
+CREATE TABLE 		model_draft.ego_grid_pf_hv_result_storage (
 	result_id bigint NOT NULL,
-	scn_name character varying NOT NULL,
 	storage_id bigint NOT NULL, -- Unit: n/a...
+	bus bigint, -- Unit: n/a...
+	dispatch text, -- Unit: n/a...
+	control text, -- Unit: n/a...
+	p_nom double precision, -- Unit: MW...
+	p_nom_extendable boolean, -- Unit: n/a...
+	p_nom_min double precision, -- Unit: MW...
+	p_nom_max double precision, -- Unit: MW...
+	p_min_pu_fixed double precision, -- Unit: per unit...
+	p_max_pu_fixed double precision, -- Unit: per unit...
+	sign double precision, -- Unit: n/a...
+	source bigint, -- Unit: n/a...
+	marginal_cost double precision, -- Unit: currency/MWh...
+	capital_cost double precision, -- Unit: currency/MW...
+	efficiency double precision, -- Unit: per unit...
+	soc_initial double precision, -- Unit: MWh...
+	soc_cyclic boolean DEFAULT false, -- Unit: n/a...
+	max_hours double precision, -- Unit: hours...
+	efficiency_store double precision, -- Unit: per unit...
+	efficiency_dispatch double precision, -- Unit: per unit...
+	standing_loss double precision,
 	p double precision[],
 	q double precision[],
 	state_of_charge double precision[],
 	spill double precision[],
 	p_nom_opt double precision,
-	CONSTRAINT storage_data_result_pkey PRIMARY KEY (result_id, storage_id, scn_name)) WITH ( OIDS=FALSE );
+	CONSTRAINT storage_data_result_pkey PRIMARY KEY (result_id, storage_id)) WITH ( OIDS=FALSE );
 
 -- metadata
-COMMENT ON TABLE  model_draft.ego_grid_pf_hv_storage_result IS
+COMMENT ON TABLE  model_draft.ego_grid_pf_hv_result_storage IS
 '{
 "Name": " Result of storage in hv powerflow",
 "Source": [{
@@ -1422,9 +1474,6 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_storage_result IS
 "Description": ["results of storage units considered in hv powerflow calculations"],
 "Column": [		   {"Name": "result_id",
                     "Description": "Result ID",
-                    "Unit": "" },
-                   {"Name": "scn_name",
-                    "Description": "scenario name",
                     "Unit": "" },
                    {"Name": "storage_id",
                     "Description": "unique id",
@@ -1452,18 +1501,30 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_storage_result IS
 }';
 
 -- select description
-SELECT obj_description('model_draft.ego_grid_pf_hv_storage_result' ::regclass) ::json;
+SELECT obj_description('model_draft.ego_grid_pf_hv_result_storage' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_grid_pf_hv_storage_result','ego_dp_powerflow_hv_setup.sql',' ');
+SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_grid_pf_hv_result_storage','ego_dp_powerflow_hv_setup.sql',' ');
 
 -- PF HV transformer results
 
-DROP TABLE IF EXISTS 	model_draft.ego_grid_pf_hv_transformer_result CASCADE; 
-CREATE TABLE 		model_draft.ego_grid_pf_hv_transformer_result (
+DROP TABLE IF EXISTS 	model_draft.ego_grid_pf_hv_result_transformer CASCADE; 
+CREATE TABLE 		model_draft.ego_grid_pf_hv_result_transformer (
 	result_id bigint NOT NULL,
-	scn_name character varying NOT NULL DEFAULT 'Status Quo'::character varying,
 	trafo_id bigint NOT NULL, -- Unit: n/a...
+	bus0 bigint, -- Unit: n/a...
+	bus1 bigint, -- Unit: n/a...
+	x numeric, -- Unit: Ohm...
+	r numeric, -- Unit: Ohm...
+	g numeric, -- Unit: Siemens...
+	b numeric, -- Unit: Siemens...
+	s_nom numeric, -- Unit: MVA...
+	s_nom_extendable boolean, -- Unit: n/a...
+	s_nom_min double precision, -- Unit: MVA...
+	s_nom_max double precision, -- Unit: MVA...
+	tap_ratio double precision, -- Unit: 1...
+	phase_shift double precision, -- Unit: Degrees...
+	capital_cost double precision,
 	p0 double precision[],
 	q0 double precision[],
 	p1 double precision[],
@@ -1473,10 +1534,12 @@ CREATE TABLE 		model_draft.ego_grid_pf_hv_transformer_result (
 	g_pu numeric, -- Unit: Siemens...
 	b_pu numeric, -- Unit: Siemens...
 	s_nom_opt numeric, -- Unit: MVA...
-	CONSTRAINT transformer_data_result_pkey PRIMARY KEY (result_id, trafo_id, scn_name) ) WITH ( OIDS=FALSE );
+	geom geometry(MultiLineString,4326),
+	topo geometry(LineString,4326),
+	CONSTRAINT transformer_data_result_pkey PRIMARY KEY (result_id, trafo_id) ) WITH ( OIDS=FALSE );
 
 -- metadata
-COMMENT ON TABLE  model_draft.ego_grid_pf_hv_transformer_result IS
+COMMENT ON TABLE  model_draft.ego_grid_pf_hv_result_transformer IS
 '{
 "Name": "Transformer in hv powerflow",
 "Source": [{
@@ -1489,9 +1552,6 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_transformer_result IS
 "Description": ["Transformer converts from one AC voltage level to another"],
 "Column": [		   {"Name": "result_id",
                     "Description": "Result ID",
-                    "Unit": "" },
-                   {"Name": "scn_name",
-                    "Description": "scenario name",
                     "Unit": "" },
                    {"Name": "trafo_id",
                     "Description": "unique id",
@@ -1530,10 +1590,10 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_transformer_result IS
 }';
 
 -- select description
-SELECT obj_description('model_draft.ego_grid_pf_hv_transformer_result' ::regclass) ::json;
+SELECT obj_description('model_draft.ego_grid_pf_hv_result_transformer' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_grid_pf_hv_transformer_result','ego_dp_powerflow_hv_setup.sql',' ');
+SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_grid_pf_hv_result_transformer','ego_dp_powerflow_hv_setup.sql',' ');
 
 
 -------------------------------------------------------------------
@@ -1596,25 +1656,25 @@ ALTER TABLE model_draft.ego_grid_pf_hv_busmap
   OWNER TO oeuser;
 GRANT ALL ON TABLE model_draft.ego_grid_pf_hv_busmap TO oeuser;
 
-ALTER TABLE model_draft.ego_grid_pf_hv_bus_result
+ALTER TABLE model_draft.ego_grid_pf_hv_result_bus
   OWNER TO oeuser;
-GRANT ALL ON TABLE model_draft.ego_grid_pf_hv_bus_result TO oeuser;
+GRANT ALL ON TABLE model_draft.ego_grid_pf_hv_result_bus TO oeuser;
 
-ALTER TABLE model_draft.ego_grid_pf_hv_generator_result
+ALTER TABLE model_draft.ego_grid_pf_hv_result_generator
   OWNER TO oeuser;
-GRANT ALL ON TABLE model_draft.ego_grid_pf_hv_generator_result TO oeuser;
+GRANT ALL ON TABLE model_draft.ego_grid_pf_hv_result_generator TO oeuser;
 
-ALTER TABLE model_draft.ego_grid_pf_hv_line_result
+ALTER TABLE model_draft.ego_grid_pf_hv_result_line
   OWNER TO oeuser;
-GRANT ALL ON TABLE model_draft.ego_grid_pf_hv_line_result TO oeuser;
+GRANT ALL ON TABLE model_draft.ego_grid_pf_hv_result_line TO oeuser;
 
-ALTER TABLE model_draft.ego_grid_pf_hv_storage_result
+ALTER TABLE model_draft.ego_grid_pf_hv_result_storage
   OWNER TO oeuser;
-GRANT ALL ON TABLE model_draft.ego_grid_pf_hv_storage_result TO oeuser;
+GRANT ALL ON TABLE model_draft.ego_grid_pf_hv_result_storage TO oeuser;
 
-ALTER TABLE model_draft.ego_grid_pf_hv_transformer_result
+ALTER TABLE model_draft.ego_grid_pf_hv_result_transformer
   OWNER TO oeuser;
-GRANT ALL ON TABLE model_draft.ego_grid_pf_hv_transformer_result TO oeuser;
+GRANT ALL ON TABLE model_draft.ego_grid_pf_hv_result_transformer TO oeuser;
 
 ALTER TABLE model_draft.ego_grid_pf_hv_result_meta
   OWNER TO oeuser;
