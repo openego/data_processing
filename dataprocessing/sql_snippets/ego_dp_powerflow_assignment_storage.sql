@@ -636,6 +636,7 @@ WHERE scn_name = 'eGo 100' AND a.p_nom >= 50 AND a.aggr_id IS NOT NULL AND sourc
 ------------------ NEIGHBOURING COUNTRIES
 DELETE FROM model_draft.ego_grid_pf_hv_storage WHERE storage_id > 200000 AND scn_name = 'Status Quo';
 DELETE FROM model_draft.ego_grid_pf_hv_storage WHERE storage_id > 200000 AND scn_name = 'NEP 2035';
+DELETE FROM model_draft.ego_grid_pf_hv_storage WHERE storage_id > 200000 AND scn_name = 'eGo 100';
 
 -- INSERT params of Storages in model_draft.ego_grid_pf_hv_storage (countries besides Germany)
 -- starting storage_id at 200000
