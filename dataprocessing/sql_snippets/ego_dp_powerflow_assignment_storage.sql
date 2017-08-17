@@ -640,6 +640,7 @@ DELETE FROM model_draft.ego_grid_pf_hv_storage WHERE storage_id > 200000 AND scn
 
 -- INSERT params of Storages in model_draft.ego_grid_pf_hv_storage (countries besides Germany)
 -- starting storage_id at 200000
+
 -- Status Quo
 
 INSERT into model_draft.ego_grid_pf_hv_storage (
@@ -674,11 +675,11 @@ INSERT into model_draft.ego_grid_pf_hv_storage (
   nominal_value[1] AS p_nom,
   FALSE as p_nom_extendable,
   0 as p_nom_min,
-  0 as p_min_pu_fixed,
+  -1 as p_min_pu_fixed,
   1 as p_max_pu_fixed,
   1 as sign,
   11 as source,
-  A.variable_costs[1] as marginal_cost,
+  0 as marginal_cost,
   0 as capital_cost,
   1 as efficiency,
   0 as soc_inital,
@@ -745,11 +746,11 @@ INSERT into model_draft.ego_grid_pf_hv_storage (
   nominal_value[1] AS p_nom,
   FALSE as p_nom_extendable,
   0 as p_nom_min,
-  0 as p_min_pu_fixed,
+  -1 as p_min_pu_fixed,
   1 as p_max_pu_fixed,
   1 as sign,
   11 as source,
-  A.variable_costs[1] as marginal_cost,
+  0 as marginal_cost,
   0 as capital_cost,
   1 as efficiency,
   0 as soc_inital,
@@ -815,11 +816,11 @@ INSERT into model_draft.ego_grid_pf_hv_storage (
   nominal_value[1] AS p_nom,
   FALSE as p_nom_extendable,
   0 as p_nom_min,
-  0 as p_min_pu_fixed,
+  -1 as p_min_pu_fixed,
   1 as p_max_pu_fixed,
   1 as sign,
   11 as source,
-  A.variable_costs[1] as marginal_cost,
+  0 as marginal_cost,
   0 as capital_cost,
   1 as efficiency,
   0 as soc_inital,
