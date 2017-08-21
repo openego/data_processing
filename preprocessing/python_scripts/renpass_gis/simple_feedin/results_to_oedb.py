@@ -41,7 +41,7 @@ time_series = pd.read_csv(filename,skiprows=1)
 time_series[[1]]
 
 # prepare DataFrame
-columns = ['hour','coastdat_id','sub_id', 'generation_type', 'feedin']
+columns = ['hour','coastdat_id','sub_id', 'generation_type', 'feedin', 'scenario']
 index = np.arange(1,len(time_series)-1)
 db_structure = pd.DataFrame(columns=columns, index=index)
 db_data = pd.DataFrame(columns=columns,index=index)
@@ -57,10 +57,11 @@ for k in time_series.columns:
     db_structure['sub_id'] = p
     db_structure['hour'] = index
     db_structure['generation_type'] = time_series.iloc[0,0]
-    db_structure['feedin'] = time_series[[1]].shift(-1)
+    db_structure['feedin'] = time_series[[1]].shift(-1) # Contoll ts or K !!!
+    db_structure['scenario'] = 
     db_structure = db_structure.reset_index(drop=True)
     # write df to database
-    db_structure.to_sql('ego_simple_feedin_full_test', conn, schema='model_draft',
+    db_structure.to_sql('ego_simple_feedin_full', conn, schema='model_draft',
     if_exists='append',index=False)
 
 print('Done!')
