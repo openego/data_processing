@@ -150,8 +150,8 @@ Datatype, Projection, Spatial, Timeseries, Year, Point =\
 session = sessionmaker(bind=conn)()
 
 print('Retrieve data...')
-query = session.query(Point.name, Point.type_of_generation, Point.scnenario, Point.geom)
-Points =  [(name, type_of_generation, scnenario, shape.to_shape(geom))
-           for name, type_of_generation, scnenario, geom in query.all()]
+query = session.query(Point.name, Point.type_of_generation, Point.scenario, Point.geom)
+Points =  [(name, type_of_generation, scenario, shape.to_shape(geom))
+           for name, type_of_generation, scenario, geom in query.all()]
 
 print('Done!')
