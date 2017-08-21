@@ -38,13 +38,15 @@ conn = dbconnect(section=section, cfg=config)
 
 # load data from csv
 time_series = pd.read_csv(filename,skiprows=1)
-time_series[[1]]
+scenario_name = pd.read_csv(filename,header=None,nrows=1).iloc[0,0]
+
 
 # prepare DataFrame
 columns = ['hour','coastdat_id','sub_id', 'generation_type', 'feedin', 'scenario']
 index = np.arange(1,len(time_series)-1)
 db_structure = pd.DataFrame(columns=columns, index=index)
-db_data = pd.DataFrame(columns=columns,index=index)
+
+time_series.iloc[2,2]
 
 # Insert Data to DB by DataFrame
 for k in time_series.columns:
@@ -57,11 +59,20 @@ for k in time_series.columns:
     db_structure['sub_id'] = p
     db_structure['hour'] = index
     db_structure['generation_type'] = time_series.iloc[0,0]
-    db_structure['feedin'] = time_series[[1]].shift(-1) # Contoll ts or K !!!
-    db_structure['scenario'] = 
+    db_structure['feedin'] = time_series[k].shift(-1)
+    db_structure['scenario'] = scenario_name
     db_structure = db_structure.reset_index(drop=True)
+
+    # write to csv
+    if not os.path.isfile('result_feedin.csv'):
+        db_structure.to_csv('result_feedin.csv',header ='columns')
+    else: # else it exists so append without writing the header
+        db_structure.to_csv('result_feedin.csv',mode = 'a',header=False)
+
     # write df to database
-    db_structure.to_sql('ego_simple_feedin_full', conn, schema='model_draft',
-    if_exists='append',index=False)
+    #db_structure.to_sql('ego_simple_feedin_full', conn, schema='model_draft',
+    #if_exists='append',index=False)
 
 print('Done!')
+
+#Alter DB tables
