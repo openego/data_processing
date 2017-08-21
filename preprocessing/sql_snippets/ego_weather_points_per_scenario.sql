@@ -157,12 +157,25 @@ Insert Into model_draft.ego_weather_measurement_point
 ---
 -- get Geographical weight of distripution 
 
-Select
+---
+---
+
+SELECT
+*,
+  split_part(A.name, '_', 1) AS coastdat_id, 
+  split_part(A.name, '_', 2)  AS sub_id,
+  B.geom
+FROM
+  model_draft.ego_weather_measurement_point A,
+  coastdat.spatial B
+WHERE A.scenario = 'eGo 100'
+AND B.gid = split_part(A.name, '_', 1)::int
+Limit 1;
+
+SELECT
 *
-from  model_draft.ego_weather_measurement_point
---where scenario = 'Status Quo'
-limit 1
-;
+FROM 
+  model_draft.simple_feedin_test_zwo ts,
+  model_draft.ego_weather_measurement_point cap
+Limit 1
 
-
-	
