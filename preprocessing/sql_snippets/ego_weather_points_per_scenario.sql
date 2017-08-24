@@ -6,12 +6,10 @@ __license__ = "GNU Affero General Public License Version 3 (AGPL-3.0)"
 __url__ = "https://github.com/openego/data_processing/blob/master/LICENSE"
 __author__ = "wolfbunke"	
       
-
 Comments:
 ---------
 Table works together with:
    data_processing/calc_renpass_gis/simple_feedin/simple_feedin.py
-
 */
 
 -- Table: model_draft.ego_weather_measurement_point
@@ -156,10 +154,7 @@ Insert Into model_draft.ego_weather_measurement_point
 ;
 ---
 -- get Geographical weight of distripution 
-
----
----
-
+/*
 SELECT
 *,
   split_part(A.name, '_', 1) AS coastdat_id, 
@@ -178,4 +173,4 @@ FROM
   model_draft.simple_feedin_test_zwo ts,
   model_draft.ego_weather_measurement_point cap
 Limit 1
-
+*/
