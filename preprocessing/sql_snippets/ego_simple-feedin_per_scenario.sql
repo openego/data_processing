@@ -34,6 +34,8 @@ CREATE INDEX coastdat_spatial_geom_gist
 --SELECT *
 --FROM coastdat.spatial;
 
+-- Table: model_draft.ego_simple_feedin_full
+-- DROP TABLE model_draft.ego_simple_feedin_full;
 
 -- DROP TABLE calc_renpass_gis.cosmoclmgrid CASCADE;
 CREATE TABLE calc_renpass_gis.cosmoclmgrid
@@ -65,18 +67,41 @@ CREATE INDEX cosmoclmgrid_geom_gist
 
 CREATE TABLE model_draft.ego_simple_feedin_full
 (
-  hour bigint NOT NULL,
-  coastdat_id text NOT NULL,
-  sub_id text NOT NULL,
+  hour text NOT NULL,
+  coastdat_id text bigint,
+  sub_id text bigint,
   generation_type text NOT NULL,
   feedin text,
-  CONSTRAINT ego_simple_feedin_test_pkey PRIMARY KEY (hour, coastdat_id, sub_id, generation_type)
+  scenario text NOT NULL,
+  CONSTRAINT ego_simple_feedin_full_pkey PRIMARY KEY (scenario, coastdat_id, sub_id, generation_type, hour)
 )
 WITH (
   OIDS=FALSE
 );
 ALTER TABLE model_draft.ego_simple_feedin_full
   OWNER TO oeuser;
+
+-- Index: model_draft.ego_simple_feedin_full_idx
+-- DROP INDEX model_draft.ego_simple_feedin_full_idx;
+
+CREATE INDEX ego_simple_feedin_full_idx
+  ON model_draft.ego_simple_feedin_full
+  USING btree
+  (scenario COLLATE pg_catalog."default", sub_id COLLATE pg_catalog."default");
+
+--
+/*
+ALTER TABLE  model_draft.ego_simple_feedin_full
+  ALTER COLUMN coastdat_id TYPE bigint USING coastdat_id::bigint;
+  
+ALTER TABLE  model_draft.ego_simple_feedin_full
+  ALTER COLUMN sub_id TYPE bigint USING sub_id::bigint;
+  
+ALTER TABLE  model_draft.ego_simple_feedin_full
+  ALTER COLUMN feedin TYPE numeric(23,20) USING feedin::numeric(23,20);
+  
+*/
+
 
 -- DROP TABLE model_draft.ego_weather_measurement_point;
 
@@ -102,9 +127,6 @@ CREATE INDEX ego_weather_measurement_point_geom_gist
   ON model_draft.ego_weather_measurement_point
   USING gist
   (geom);
-
-
-
 
 /*
 
