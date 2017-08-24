@@ -33,7 +33,7 @@ CREATE INDEX coastdat_spatial_geom_gist
 --INSERT INTO calc_renpass_gis.coastdat_spatial
 --SELECT *
 --FROM coastdat.spatial;
-
+/*
 -- Table: model_draft.ego_simple_feedin_full
 -- DROP TABLE model_draft.ego_simple_feedin_full;
 
@@ -50,17 +50,6 @@ WITH (
 ALTER TABLE calc_renpass_gis.cosmoclmgrid
   OWNER TO oeuser;
 
--- Set cosmoclmgrid gid as costdat_id to:
-Update model_draft.ego_dp_supply_conv_powerplant as C
-  set coastdat_gid = b.gid
-From calc_renpass_gis.cosmoclmgrid B
-Where ST_Intersects(B.geom,C.geom);
-
-Update model_draft.ego_dp_supply_res_powerplant as C
-  set coastdat_gid = gid
-From calc_renpass_gis.cosmoclmgrid B
-Where ST_Intersects(B.geom,C.geom);
-
 -- Index: calc_renpass_gis.coastdat_spatial
 -- DROP INDEX calc_renpass_gis.cosmoclmgrid_geom_gist;
 CREATE INDEX cosmoclmgrid_geom_gist
@@ -72,6 +61,20 @@ CREATE INDEX cosmoclmgrid_geom_gist
 --INSERT INTO calc_renpass_gis.cosmoclmgrid
 --SELECT *
 --FROM coastdat.cosmoclmgrid;
+see: climate.cosmoclmgrid
+*/
+
+-- Set cosmoclmgrid gid as costdat_id to:
+Update model_draft.ego_dp_supply_conv_powerplant as C
+  set coastdat_gid = b.gid
+From climate.cosmoclmgrid B
+Where ST_Intersects(B.geom,C.geom);
+
+Update model_draft.ego_dp_supply_res_powerplant as C
+  set coastdat_gid = gid
+From climate.cosmoclmgrid B
+Where ST_Intersects(B.geom,C.geom);
+
 
 CREATE TABLE model_draft.ego_simple_feedin_full
 (
