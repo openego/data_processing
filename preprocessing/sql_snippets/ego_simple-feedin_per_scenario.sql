@@ -24,7 +24,7 @@ ALTER TABLE calc_renpass_gis.cosmoclmgrid
 -- Index: calc_renpass_gis.coastdat_spatial
 
 -- DROP INDEX calc_renpass_gis.coastdat_spatial_geom_gist;
-CREATE INDEX cosmoclmgrid_geom_gist
+CREATE INDEX coastdat_spatial_geom_gist
   ON calc_renpass_gis.coastdat_spatial
   USING gist
   (geom);
@@ -33,6 +33,34 @@ CREATE INDEX cosmoclmgrid_geom_gist
 --INSERT INTO calc_renpass_gis.coastdat_spatial
 --SELECT *
 --FROM coastdat.spatial;
+
+
+-- DROP TABLE calc_renpass_gis.cosmoclmgrid CASCADE;
+CREATE TABLE calc_renpass_gis.cosmoclmgrid
+(
+  gid serial NOT NULL,
+  geom geometry(MultiPolygon,4326),
+  CONSTRAINT cosmoclmgrid_pkey PRIMARY KEY (gid)
+) 
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE calc_renpass_gis.cosmoclmgrid
+  OWNER TO oeuser;
+
+-- Index: calc_renpass_gis.coastdat_spatial
+
+-- DROP INDEX calc_renpass_gis.cosmoclmgrid_geom_gist;
+CREATE INDEX cosmoclmgrid_geom_gist
+  ON calc_renpass_gis.cosmoclmgrid
+  USING gist
+  (geom);
+
+-- get data 
+--INSERT INTO calc_renpass_gis.cosmoclmgrid
+--SELECT *
+--FROM coastdat.cosmoclmgrid;
+
 
 
 CREATE TABLE model_draft.ego_simple_feedin_full
