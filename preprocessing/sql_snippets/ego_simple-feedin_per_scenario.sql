@@ -50,8 +50,18 @@ WITH (
 ALTER TABLE calc_renpass_gis.cosmoclmgrid
   OWNER TO oeuser;
 
--- Index: calc_renpass_gis.coastdat_spatial
+-- Set cosmoclmgrid gid as costdat_id to:
+Update model_draft.ego_dp_supply_conv_powerplant as C
+  set coastdat_gid = b.gid
+From calc_renpass_gis.cosmoclmgrid B
+Where ST_Intersects(B.geom,C.geom);
 
+Update model_draft.ego_dp_supply_res_powerplant as C
+  set coastdat_gid = gid
+From calc_renpass_gis.cosmoclmgrid B
+Where ST_Intersects(B.geom,C.geom);
+
+-- Index: calc_renpass_gis.coastdat_spatial
 -- DROP INDEX calc_renpass_gis.cosmoclmgrid_geom_gist;
 CREATE INDEX cosmoclmgrid_geom_gist
   ON calc_renpass_gis.cosmoclmgrid
@@ -88,6 +98,9 @@ CREATE INDEX ego_simple_feedin_full_idx
   (scenario COLLATE pg_catalog."default", sub_id COLLATE pg_catalog."default");
 --
 /*
+ALTER TABLE  model_draft.ego_simple_feedin_full
+  ALTER COLUMN hour TYPE bigint USING feedin::bigint;
+
 ALTER TABLE  model_draft.ego_simple_feedin_full
   ALTER COLUMN coastdat_id TYPE bigint USING coastdat_id::bigint;
 
