@@ -63,12 +63,10 @@ CREATE INDEX cosmoclmgrid_geom_gist
 --SELECT *
 --FROM coastdat.cosmoclmgrid;
 
-
-
 CREATE TABLE model_draft.ego_simple_feedin_full
 (
   hour text NOT NULL,
-  coastdat_id text bigint,
+  coastdat_id text bigint NOT NULL,
   sub_id text bigint,
   generation_type text NOT NULL,
   feedin text,
@@ -88,18 +86,20 @@ CREATE INDEX ego_simple_feedin_full_idx
   ON model_draft.ego_simple_feedin_full
   USING btree
   (scenario COLLATE pg_catalog."default", sub_id COLLATE pg_catalog."default");
-
 --
 /*
 ALTER TABLE  model_draft.ego_simple_feedin_full
   ALTER COLUMN coastdat_id TYPE bigint USING coastdat_id::bigint;
-  
+
+Update model_draft.ego_simple_feedin_full
+    set sub_id = NULL
+    WHERE sub_id ='_NULL_'  
+    
 ALTER TABLE  model_draft.ego_simple_feedin_full
   ALTER COLUMN sub_id TYPE bigint USING sub_id::bigint;
   
 ALTER TABLE  model_draft.ego_simple_feedin_full
   ALTER COLUMN feedin TYPE numeric(23,20) USING feedin::numeric(23,20);
-  
 */
 
 
