@@ -102,7 +102,7 @@ CREATE INDEX ego_simple_feedin_full_idx
 --
 /*
 ALTER TABLE  model_draft.ego_simple_feedin_full
-  ALTER COLUMN hour TYPE bigint USING feedin::bigint;
+  ALTER COLUMN hour TYPE bigint USING hour::bigint;
 
 ALTER TABLE  model_draft.ego_simple_feedin_full
   ALTER COLUMN coastdat_id TYPE bigint USING coastdat_id::bigint;
