@@ -53,7 +53,7 @@ Insert Into model_draft.ego_weather_measurement_point
 		sum(A.electrical_capacity)/sum_cap as capacity_scale,	
 		B.geom
 	From model_draft.ego_dp_supply_res_powerplant A,
-	     coastdat.spatial B,
+	    climate.cosmoclmgrid B,
          ( SELECT
              sum(electrical_capacity) as sum_cap,
              scenario
@@ -94,7 +94,7 @@ Insert Into model_draft.ego_weather_measurement_point
 		sum(A.electrical_capacity)/sum_cap as capacity_scale,	
 		B.geom
 	From model_draft.ego_dp_supply_res_powerplant A,
-	     coastdat.spatial B,
+	     climate.cosmoclmgrid B,
          ( SELECT
              sum(electrical_capacity) as sum_cap,
              scenario
@@ -135,7 +135,7 @@ Insert Into model_draft.ego_weather_measurement_point
 		sum(A.electrical_capacity)/sum_cap as capacity_scale,	
 		B.geom
 	From model_draft.ego_dp_supply_res_powerplant A,
-	     coastdat.spatial B,
+	    climate.cosmoclmgrid B,
          ( SELECT
              sum(electrical_capacity) as sum_cap,
              scenario
@@ -162,7 +162,7 @@ SELECT
   B.geom
 FROM
   model_draft.ego_weather_measurement_point A,
-  coastdat.spatial B
+ climate.cosmoclmgrid B
 WHERE A.scenario = 'eGo 100'
 AND B.gid = split_part(A.name, '_', 1)::int
 Limit 1;
