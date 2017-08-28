@@ -211,7 +211,7 @@ UPDATE model_draft.ego_supply_pf_generator_single a
 
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','input','model_draft','renpassgis_economy_climatepoint_voronoi','ego_dp_powerflow_assignment_generator.sql',' ');
+SELECT ego_scenario_log('v0.2.10','input','climate','cosmoclmgrid','ego_dp_powerflow_assignment_generator.sql',' ');
 
 
 -- Identify climate point IDs for each renewables generator
@@ -241,7 +241,7 @@ UPDATE model_draft.ego_supply_pf_generator_single a
 	SET aggr_id = result.aggr_id
 		FROM 	(SELECT	b.bus, 
 				b.w_id, 
-				b.source 
+				b.source ,
 				nextval('model_draft.ego_supply_pf_generator_single_aggr_id') as aggr_id
 			FROM 	model_draft.ego_supply_pf_generator_single b 
 			WHERE 	scn_name='Status Quo' AND p_nom < 50 AND source IN 
