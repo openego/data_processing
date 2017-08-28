@@ -134,8 +134,7 @@ def main():
         elif type_of_generation == 'solar' and scenario == scenario_name:
             feedin = correction_solar * powerplants[type_of_generation].\
                 feedin(weather=weather, peak_power=1)
-        else:
-            print('Upps, something wrong here?!?')
+        
         temp[(scenario, name, type_of_generation)] = feedin
 
     print('Writing results to %s.' % filename)
