@@ -17,7 +17,7 @@ __author__ = "wolfbunke"
 
 -- MView for Status Quo
 DROP MATERIALIZED VIEW IF EXISTS  model_draft.ego_supply_conv_powerplant_sq_mview CASCADE;
-CREATE MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_sq_view AS
+CREATE MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_sq_mview AS
     SELECT *
     FROM model_draft.ego_dp_supply_conv_powerplant
     WHERE scenario = 'Status Quo';
