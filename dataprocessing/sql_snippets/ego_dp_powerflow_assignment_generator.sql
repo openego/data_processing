@@ -1,4 +1,4 @@
-/*
+﻿/*
 Information on generators which are assigned to a specific substation are transformed to a data structure which is suitable for PyPSA. This script creates the scenarios
 'Status Quo', 'NEP 2035' and 'eGo 100' in the hv powerflow schema. 
 
@@ -140,7 +140,7 @@ COMMENT ON TABLE  model_draft.ego_supply_pf_generator_single IS
                     "Description": "Ratio between primary energy and electrical energy",
                     "Unit": "per unit" },
                    {"Name": "w_id",
-                    "Description": "w_id",
+                    "Description": "w_id related to climate.cosmoclmgrid gid ",
                     "Unit": "" },                        
                    {"Name": "aggr_id",
                     "Description": "aggregate id",
@@ -216,10 +216,10 @@ SELECT ego_scenario_log('v0.2.10','input','model_draft','renpassgis_economy_clim
 
 -- Identify climate point IDs for each renewables generator
 UPDATE model_draft.ego_supply_pf_generator_single a
-	SET w_id = b.id
+	SET w_id = b.gid
 		FROM 	(SELECT c.un_id, c.geom 
 			FROM model_draft.ego_supply_res_powerplant_sq_view c) AS result,
-			model_draft.renpassgis_economy_climatepoint_voronoi b 
+			climate.cosmoclmgrid b 
 		WHERE 	result.geom && b.geom
 			AND ST_Intersects(result.geom, b.geom) 
 			AND generator_id = result.un_id;
