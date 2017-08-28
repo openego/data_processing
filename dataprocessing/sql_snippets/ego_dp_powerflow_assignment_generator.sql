@@ -218,7 +218,7 @@ SELECT ego_scenario_log('v0.2.10','input','model_draft','renpassgis_economy_clim
 UPDATE model_draft.ego_supply_pf_generator_single a
 	SET w_id = b.gid
 		FROM 	(SELECT c.un_id, c.geom 
-			FROM model_draft.ego_supply_res_powerplant_sq_view c) AS result,
+			FROM model_draft.ego_supply_res_powerplant_sq_mview c) AS result,
 			climate.cosmoclmgrid b 
 		WHERE 	result.geom && b.geom
 			AND ST_Intersects(result.geom, b.geom) 
