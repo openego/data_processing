@@ -41,10 +41,30 @@ when 5 THEN (4.9781 + 0.5)  -- uranium / uranium
 when 6 THEN (27.5112 + 3.9) -- biomass / biomass
 when 7 THEN (39.9344 + 2.0) -- eeg_gas / gas
 when 8 THEN (20.7914 + 4.0) -- coal / hard_coal
-when 15 THEN (39.5156 + 1.5) -- other_non_renewable / other_non_renewable -- assumption:same price as oil!
+when 15 THEN (67.3643 + 1.5) -- other_non_renewable / other_non_renewable -- assumption:same price as oil!
 ELSE 0                      -- run_of_river/reservoir/pumped_storage/solar/wind/geothermal
 END)
 where scn_name = 'NEP 2035';
+
+
+UPDATE model_draft.ego_grid_pf_hv_generator
+SET marginal_cost =        -- operating costs + fuel costs + CO2 crt cost
+(
+CASE source                 -- source / renpass_gis ZNES eHighway 2050
+when 1 THEN (54.0533 + 2.0) -- gas / gas
+--when 2 THEN (13.2412 + 4.4)  -- lignite / lignite
+--when 3 THEN (16.9297 + 23.0) -- waste / waste
+--when 4 THEN (67.3643 + 1.5) -- oil / oil
+---when 5 THEN (4.9781 + 0.5)  -- uranium / uranium
+when 6 THEN (27.7348 + 3.9) -- biomass / biomass
+when 7 THEN (54.0533 + 2.0) -- eeg_gas / gas
+--when 8 THEN (20.7914 + 4.0) -- coal / hard_coal
+when 15 THEN (67.3643 + 1.5) -- other_non_renewable / other_non_renewable -- assumption:same price as oil!
+ELSE 0                      -- run_of_river/reservoir/pumped_storage/solar/wind/geothermal
+END)
+where scn_name = 'eGo 100';
+
+
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_grid_pf_hv_generator','ego_dp_powerflow_lopf_data.sql',' ');
