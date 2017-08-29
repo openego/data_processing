@@ -192,12 +192,12 @@ UPDATE model_draft.ego_supply_pf_generator_single a
 
 UPDATE model_draft.ego_supply_pf_generator_single a
 	SET 	bus = b.otg_id, 
-		p_nom = b.capacity,
+		p_nom = b.electrical_capacity,
 		source = result.source
-		FROM 	(SELECT c.source_id as source, d.fuel as fuel
+		FROM 	(SELECT c.source_id as source, d.generation_type as fuel
 				FROM 	model_draft.ego_grid_pf_hv_source c, 
 					model_draft.ego_dp_supply_res_powerplant d 
-				WHERE	d.fuel = c.name) AS result,		
+				WHERE	d.generation_type = c.name) AS result,		
 			model_draft.ego_dp_supply_res_powerplant b
 	WHERE 	a.generator_id = b.un_id; 
 
