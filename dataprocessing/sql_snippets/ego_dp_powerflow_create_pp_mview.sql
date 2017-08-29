@@ -40,7 +40,7 @@ ALTER MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_nep2035_mview
 DROP MATERIALIZED VIEW IF EXISTS  model_draft.ego_supply_conv_powerplant_ego100_mview CASCADE;
 CREATE MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_ego100_mview AS
 	SELECT 
-	  'tba'::text as version,
+	  version,
 	  id,
 	  bnetza_id,
 	  company,
