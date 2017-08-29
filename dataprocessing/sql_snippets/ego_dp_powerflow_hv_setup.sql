@@ -1157,8 +1157,7 @@ CREATE TABLE 		model_draft.ego_grid_pf_hv_result_meta (
 	gridversion character varying,
 	start_step integer,
 	end_step integer,
-	start_date timestamp without time zone,
-	end_date timestamp without time zone,
+	snapshots timestamp without time zone[],
 	solver character varying,
 	branch_cap_factor double precision,
 	storage_extendable boolean,
@@ -1203,11 +1202,8 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_result_meta IS
 				   {"Name": "end_step",
                     "Description": "End step of calculation range",
                     "Unit": "" },
-				   {"Name": "start_date",
-                    "Description": "Start date of calculation range",
-                    "Unit": "" },
-				   {"Name": "end_date",
-                    "Description": "End date of calculation range",
+				   {"Name": "snapshots",
+                    "Description": "PyPSA snapshots",
                     "Unit": "" },
 				   {"Name": "solver",
                     "Description": "Name of solver used in calculations",
@@ -2239,21 +2235,49 @@ ALTER TABLE model_draft.ego_grid_pf_hv_result_bus
   OWNER TO oeuser;
 GRANT ALL ON TABLE model_draft.ego_grid_pf_hv_result_bus TO oeuser;
 
+ALTER TABLE model_draft.ego_grid_pf_hv_result_bus_t
+  OWNER TO oeuser;
+GRANT ALL ON TABLE model_draft.ego_grid_pf_hv_result_bus_t TO oeuser;
+
 ALTER TABLE model_draft.ego_grid_pf_hv_result_generator
   OWNER TO oeuser;
 GRANT ALL ON TABLE model_draft.ego_grid_pf_hv_result_generator TO oeuser;
+
+ALTER TABLE model_draft.ego_grid_pf_hv_result_generator_t
+  OWNER TO oeuser;
+GRANT ALL ON TABLE model_draft.ego_grid_pf_hv_result_generator_t TO oeuser;
 
 ALTER TABLE model_draft.ego_grid_pf_hv_result_line
   OWNER TO oeuser;
 GRANT ALL ON TABLE model_draft.ego_grid_pf_hv_result_line TO oeuser;
 
+ALTER TABLE model_draft.ego_grid_pf_hv_result_line_t
+  OWNER TO oeuser;
+GRANT ALL ON TABLE model_draft.ego_grid_pf_hv_result_line_t TO oeuser;
+
+ALTER TABLE model_draft.ego_grid_pf_hv_result_load
+  OWNER TO oeuser;
+GRANT ALL ON TABLE model_draft.ego_grid_pf_hv_result_load TO oeuser;
+
+ALTER TABLE model_draft.ego_grid_pf_hv_result_load_t
+  OWNER TO oeuser;
+GRANT ALL ON TABLE model_draft.ego_grid_pf_hv_result_load_t TO oeuser;
+
 ALTER TABLE model_draft.ego_grid_pf_hv_result_storage
   OWNER TO oeuser;
 GRANT ALL ON TABLE model_draft.ego_grid_pf_hv_result_storage TO oeuser;
 
+ALTER TABLE model_draft.ego_grid_pf_hv_result_storage_t
+  OWNER TO oeuser;
+GRANT ALL ON TABLE model_draft.ego_grid_pf_hv_result_storage_t TO oeuser;
+
 ALTER TABLE model_draft.ego_grid_pf_hv_result_transformer
   OWNER TO oeuser;
 GRANT ALL ON TABLE model_draft.ego_grid_pf_hv_result_transformer TO oeuser;
+
+ALTER TABLE model_draft.ego_grid_pf_hv_result_transformer_t
+  OWNER TO oeuser;
+GRANT ALL ON TABLE model_draft.ego_grid_pf_hv_result_transformer_t TO oeuser;
 
 ALTER TABLE model_draft.ego_grid_pf_hv_result_meta
   OWNER TO oeuser;
