@@ -234,7 +234,7 @@ DROP SEQUENCE IF EXISTS model_draft.ego_supply_pf_generator_single_aggr_id;
 CREATE SEQUENCE 	model_draft.ego_supply_pf_generator_single_aggr_id INCREMENT 1;
 
 -- grant (oeuser)
-ALTER TABLE		model_draft.ego_supply_pf_generator_single_aggr_id OWNER TO oeuser;
+ALTER SEQUENCE		model_draft.ego_supply_pf_generator_single_aggr_id OWNER TO oeuser;
 
 -- SQ
 

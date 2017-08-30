@@ -119,10 +119,10 @@ def data_processing():
 	
 	
     ## VERSIONING
-    	 'ego_dp_versioning.sql',						    # Versioning
+#    	 'ego_dp_versioning.sql',						    # Versioning
     
 	## VACUUM FULL
-	 'ego_dp_vacuum_full.sql'
+#	 'ego_dp_vacuum_full.sql'
     ]
 
     # get database connection
