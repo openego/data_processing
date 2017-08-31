@@ -15,13 +15,19 @@ PF HV mag set
 PF HV generator PQ set		
 PF HV load PQ set		
 PF HV storage PQ set		
-
-PF HV bus results
-PF HV generator results
-PF HV line results
-PF HV storage results
-PF HV line results
-PF HV transformer results
+PF HV results bus
+PF HV results bus_t
+PF HV results generator
+PF HV results generator_t
+PF HV results line
+PF HV results line_t
+PF HV results load
+PF HV results load_t
+PF HV results meta
+PF HV results storage
+PF HV results storage_t
+PF HV results transformer
+PF HV results transformer_t
 
 
 __copyright__ 	= "Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems"
@@ -1155,8 +1161,8 @@ CREATE TABLE 		model_draft.ego_grid_pf_hv_result_meta (
 	method character varying,
 	network_clustering boolean,
 	gridversion character varying,
-	start_step integer,
-	end_step integer,
+	start_snapshot  integer,
+	end_snapshot  integer,
 	snapshots timestamp without time zone[],
 	solver character varying,
 	branch_cap_factor double precision,
