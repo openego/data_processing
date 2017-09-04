@@ -145,8 +145,7 @@ CREATE INDEX ego_weather_measurement_point_geom_gist
   (geom);
 
 /*
-
-﻿-- Count duplicates
+-- Count duplicates
 SELECT 	hour,
 	coastdat_id,
 	sub_id,
@@ -156,13 +155,33 @@ SELECT 	hour,
 FROM model_draft.ego_simple_feedin_full
 GROUP BY hour,coastdat_id,sub_id,generation_type,feedin
 HAVING ( COUNT(*) > 1 );
-
-
-SELECT
-  coastdat_id,
-  sub_id,
-  generation_type,
-  count(*)
-FROM model_draft.ego_simple_feedin_full
-Group by coastdat_id,  sub_id,  generation_type
 */
+-- 
+-- Create weighten feedin curve py types and scenario
+Alter Table model_draft.ego_simple_feedin_full 
+add column weighted_feedin numeric(23,20);
+--
+Update model_draft.ego_simple_feedin_full ts
+  set weighted_feedin = ts.feedin * mp.capacity_scale
+FROM 
+  model_draft.ego_weather_measurement_point mp
+WHERE split_part(mp.name, '_', 1)::int = ts.coastdat_id  
+AND split_part(mp.name, '_', 2)::int  = ts.sub_id 
+AND mp.type_of_generation = ts.generation_type
+AND mp.scenario =  ts.scenario
+AND REGEXP_REPLACE(COALESCE(split_part(name, '_', 2), '0'), '[^0-9]*' ,'0')::integer !=0;
+
+-- DROP MATERIALIZED VIEW IF EXISTS  model_draft.ego_renpassgis_simple_feedin_mview CASCADE;
+CREATE MATERIALIZED VIEW model_draft.ego_renpassgis_simple_feedin_mview AS
+SELECT
+hour, 
+generation_type,
+scenario,
+sum(weighted_feedin) as total_cap_feedin
+FROM model_draft.ego_simple_feedin_full
+Group by hour, generation_type, scenario
+Order by generation_type, scenario, hour
+;
+
+-- grant (oeuser)
+ALTER TABLE model_draft.ego_renpassgis_simple_feedin_mview OWNER TO oeuser;
