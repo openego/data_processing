@@ -213,7 +213,7 @@ UPDATE model_draft.ego_supply_pf_generator_single a
 
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','input','model_draft','renpassgis_economy_climatepoint_voronoi','ego_dp_powerflow_assignment_generator.sql',' ');
+SELECT ego_scenario_log('v0.3.0','input','climate','cosmoclmgrid','ego_dp_powerflow_assignment_generator.sql',' ');
 
 
 -- Identify climate point IDs for each renewables generator
