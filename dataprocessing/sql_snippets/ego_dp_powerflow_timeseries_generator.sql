@@ -56,7 +56,7 @@ FROM
 	-- conds
 	WHERE obj_label LIKE '%%DE%%' -- only Germany
 	AND obj_label not LIKE '%%powerline%%' -- without any powerlines
-	AND scenario_id = 37
+	AND scenario_id = 43
 	 -- take only one flow (input), storage output flow seems to be the right one (?)
 	AND ((obj_label LIKE '%%storage%%' AND type = 'from_bus') or (obj_label not LIKE '%%storage%%' AND type = 'to_bus'))
 ) AS SQ
@@ -126,7 +126,7 @@ FROM
 	-- conds
 	WHERE obj_label LIKE '%%DE%%' -- only Germany
 	AND obj_label not LIKE '%%powerline%%' -- without any powerlines
-	AND scenario_id = 38
+	AND scenario_id = 41
 	 -- take only one flow (input), storage output flow seems to be the right one (?)
 	AND ((obj_label LIKE '%%storage%%' AND type = 'from_bus') or (obj_label not LIKE '%%storage%%' AND type = 'to_bus'))
 ) AS NEP
@@ -198,7 +198,7 @@ INSERT into model_draft.ego_grid_pf_hv_generator
 	AND A.nominal_value IS not NULL
 	AND A.nominal_value[1] > 0.001
 	AND A.source not LIKE '%%powerline%%'
-	AND A.scenario_id = 37;
+	AND A.scenario_id = 43;
 
 
 -- NEP 2035
@@ -245,7 +245,7 @@ INSERT into model_draft.ego_grid_pf_hv_generator
 	AND A.nominal_value IS not NULL
 	AND A.nominal_value[1] > 0.001
 	AND A.source not LIKE '%%powerline%%'
-	AND A.scenario_id = 38;
+	AND A.scenario_id = 41;
 
 -- eGo 100
 
@@ -291,7 +291,7 @@ INSERT into model_draft.ego_grid_pf_hv_generator
 	AND A.nominal_value IS not NULL
 	AND A.nominal_value[1] > 0.001
 	AND A.source not LIKE '%%powerline%%'
-	AND A.scenario_id = 39;
+	AND A.scenario_id = 40;
 
 	
 
@@ -334,7 +334,7 @@ INSERT into model_draft.ego_grid_pf_hv_generator
 		ON (substring(A.source, 1, 2) = B.cntr_id)
 	WHERE substring(A.source, 1, 2) <> 'DE'
 	AND A.nominal_value[1] > 0.001
-	AND A.scenario_id = 37;
+	AND A.scenario_id = 43;
 
 -- NEP 2035
 
@@ -374,7 +374,7 @@ INSERT into model_draft.ego_grid_pf_hv_generator
 		ON (substring(A.source, 1, 2) = B.cntr_id)
 	WHERE substring(A.source, 1, 2) <> 'DE'
 	AND A.nominal_value[1] > 0.001
-	AND A.scenario_id = 38;
+	AND A.scenario_id = 41;
 
 -- eGo 100
 
@@ -414,7 +414,7 @@ INSERT into model_draft.ego_grid_pf_hv_generator
 		ON (substring(A.source, 1, 2) = B.cntr_id)
 	WHERE substring(A.source, 1, 2) <> 'DE'
 	AND A.nominal_value[1] > 0.001
-	AND A.scenario_id = 39;
+	AND A.scenario_id = 40;
 
 
 -- Copy timeseries data
@@ -455,7 +455,7 @@ CREATE MATERIALIZED VIEW calc_renpass_gis.translate_to_pf AS
 		calc_renpass_gis.renpass_gis_results C
 	WHERE
 	(C.obj_label LIKE '%%' || SQ.cntr_id || '%%' || SQ.renpass_gis_source || '%%')
-	AND C.scenario_id = 37
+	AND C.scenario_id = 43
 	AND C.type = 'to_bus';
 
 -- Make an array, INSERT into generator_pq_set
@@ -509,7 +509,7 @@ CREATE MATERIALIZED VIEW calc_renpass_gis.translate_to_pf AS
 		calc_renpass_gis.renpass_gis_results C
 	WHERE
 	(C.obj_label LIKE '%%' || NEP.cntr_id || '%%' || NEP.renpass_gis_source || '%%')
-	AND C.scenario_id = 38
+	AND C.scenario_id = 41
 	AND C.type = 'to_bus';
 
 -- Make an array, INSERT into generator_pq_set
@@ -563,7 +563,7 @@ CREATE MATERIALIZED VIEW calc_renpass_gis.translate_to_pf AS
 		calc_renpass_gis.renpass_gis_results C
 	WHERE
 	(C.obj_label LIKE '%%' || EGO.cntr_id || '%%' || EGO.renpass_gis_source || '%%')
-	AND C.scenario_id = 38
+	AND C.scenario_id = 41
 	AND C.type = 'to_bus';
 
 -- Make an array, INSERT into generator_pq_set
