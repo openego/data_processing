@@ -39,7 +39,7 @@ CREATE TABLE model_draft.ego_supply_pf_storage_single
   efficiency_dispatch double precision, -- Unit: per unit...
   standing_loss double precision,
   aggr_id integer, -- Unit: per unit...
- CONSTRAINT storage_data_pkey PRIMARY KEY (storage_id, scn_name),
+ CONSTRAINT storage_single_pkey PRIMARY KEY (storage_id, scn_name),
   CONSTRAINT storage_data_source_fkey FOREIGN KEY (source)
       REFERENCES model_draft.ego_grid_pf_hv_source (source_id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION
@@ -151,7 +151,7 @@ INSERT INTO model_draft.ego_supply_pf_storage_single (scn_name, storage_id)
 	SELECT 'Status Quo', un_id
 	FROM model_draft.ego_supply_generator
 	WHERE conv_id IN 
-		(SELECT a.gid 
+		(SELECT a.id 
 		  FROM model_draft.ego_supply_conv_powerplant_sq_mview a
 		  WHERE a.fuel= 'pumped_storage'
 		); -- only (pumped) storage units are selected and written into pf_storage_single 
@@ -323,7 +323,7 @@ INSERT INTO model_draft.ego_supply_pf_storage_single (scn_name, storage_id)
 	SELECT 'NEP 2035', un_id
 	FROM model_draft.ego_supply_generator_nep2035
 	WHERE conv_id IN 
-		(SELECT a.gid 
+		(SELECT a.id 
 		  FROM model_draft.ego_supply_conv_powerplant_nep2035_mview a
 		  WHERE a.fuel= 'pumped_storage'
 		); -- only (pumped) storage units from NEP 2035 scenario are selected and written into pf_storage_single 
