@@ -1,4 +1,4 @@
-﻿/*
+/*
 Quick workaround to transfer renpassG!S results into the corresponding powerflow table.
 
 __copyright__ 	= "Europa Universitaet Flensburg, Centre for Sustainable Energy Systems"
@@ -197,7 +197,7 @@ FROM
 	AND ((obj_label LIKE '%%storage%%' AND type = 'from_bus') or (obj_label not LIKE '%%storage%%' AND type = 'to_bus'))
 ) AS eGo
 WHERE eGo.source IS not NULL
-GROUP BY eGo.source, NEP.datetime;
+GROUP BY eGo.source, eGo.datetime;
 
 -- construct array per aggr_id according to source timeseries
 INSERT into model_draft.ego_grid_pf_hv_generator_pq_set (scn_name, generator_id, temp_id, p_set)
