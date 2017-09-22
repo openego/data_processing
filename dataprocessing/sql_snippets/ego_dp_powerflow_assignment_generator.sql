@@ -383,6 +383,11 @@ INSERT INTO model_draft.ego_grid_pf_hv_generator (
 		source
 	FROM 	model_draft.ego_supply_pf_generator_single a
 	WHERE 	a.p_nom >= 50 AND a.aggr_id IS NOT NULL;
+	
+-- set dispatch to 'variable' for wind, PV and run_of_river
+
+UPDATE model_draft.ego_grid_pf_hv_generator 
+	SET dispatch = 'variable' WHERE source IN (9, 12, 13); 
 
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
