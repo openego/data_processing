@@ -20,7 +20,8 @@ DROP MATERIALIZED VIEW IF EXISTS  model_draft.ego_supply_conv_powerplant_sq_mvie
 CREATE MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_sq_view AS
     SELECT *
     FROM model_draft.ego_dp_supply_conv_powerplant
-    WHERE scenario = 'Status Quo';
+    WHERE scenario = 'Status Quo'
+    AND shutdown IS NULL or shutdown >= 2015;
 
 -- MView for NEP 2035
 DROP MATERIALIZED VIEW IF EXISTS model_draft.ego_supply_conv_powerplant_nep2035_mview CASCADE;
@@ -30,13 +31,14 @@ CREATE MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_nep2035_mview AS
     WHERE scenario = 'NEP 2035'
     AND   capacity >= 0 
     AND   fuel not in ('hydro', 'run_of_river', 'reservoir')
+    AND shutdown IS NULL or shutdown >= 2034;
     ;
 
 -- MView for eGo 100
 DROP MATERIALIZED VIEW IF EXISTS  model_draft.ego_supply_conv_powerplant_ego100_mview CASCADE;
 CREATE MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_ego2050_mview AS
 	SELECT 
-	  'tba'::text as version,
+	  version,
 	  id,
 	  bnetza_id,
 	  company,
@@ -80,7 +82,8 @@ CREATE MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_ego2050_mview AS
 	FROM model_draft.ego_dp_supply_conv_powerplant
 	WHERE scenario in('Status Quo','NEP 2035', 'eGo 100')
 	AND fuel = 'pumped_storage'
-	AND capacity >= 0;
+	AND capacity >= 0
+	AND shutdown IS NULL or shutdown >= 2049;;
 
 
 --------------------------------------------------------------------------------
