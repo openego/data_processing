@@ -28,12 +28,9 @@ CREATE TABLE model_draft.ego_grid_hv_electrical_neighbours_bus
   current_type text DEFAULT 'AC'::text, -- Unit: n/a...
   v_mag_pu_min double precision DEFAULT 0, -- Unit: per unit...
   v_mag_pu_max double precision, -- Unit: per unit...
-  geom geometry(Point,4326)--,
-  --CONSTRAINT neighbour_bus_pkey PRIMARY KEY (bus_id, scn_name)
+  geom geometry(Point,4326) 
 );
 
-
---- Alle Länder mit exisierenden Spannungsebenen eintragen und in den Landesmittelpunkt setzen
 
 INSERT INTO model_draft.ego_grid_hv_electrical_neighbours_bus  (bus_id, cntr_id, v_nom)
 (SELECT nextval('model_draft.ego_grid_hv_electrical_neighbours_bus_id'), country, voltage FROM model_draft.entsoe_bus a WHERE country != 'DE' AND under_construction = false AND dc = false AND symbol = 'Substation');
@@ -79,6 +76,7 @@ SET bus_id = (CASE WHEN cntr_id = 'SE' AND geom = '0101000020E61000004C93AD89600
 	geom = (CASE WHEN cntr_id = 'SE' AND geom = '0101000020E61000004C93AD8960072A40DBBD816ED4B14B40' THEN '0101000020E6100000A444C3ABCE9A254079A450D5E2F24A40'
 		ELSE geom END) ;
 
+
 -- Create and fill table model_draft.ego_grid_hv_electrical_neighbours_line
 
 DROP TABLE IF EXISTS model_draft.ego_grid_hv_electrical_neighbours_line ;
@@ -112,8 +110,8 @@ CREATE TABLE model_draft.ego_grid_hv_electrical_neighbours_line
 );
 
 
---ALTER TABLE model_draft.ego_grid_hv_electrical_neighbours_line
-  --OWNER TO oeuser;
+ALTER TABLE model_draft.ego_grid_hv_electrical_neighbours_line
+  OWNER TO oeuser;
 
 
 INSERT INTO model_draft.ego_grid_hv_electrical_neighbours_line (line_id, bus1, v_nom, cntr_id_2, cntr_id_1)
