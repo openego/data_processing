@@ -19,7 +19,8 @@ DROP MATERIALIZED VIEW IF EXISTS  model_draft.ego_supply_conv_powerplant_sq_mvie
 CREATE MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_sq_mview AS
     SELECT *
     FROM model_draft.ego_dp_supply_conv_powerplant
-    WHERE scenario = 'Status Quo';
+    WHERE scenario = 'Status Quo'
+    AND version = 'v0.3.0';
 
 ALTER MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_sq_mview
     OWNER TO oeuser; 
@@ -31,7 +32,8 @@ CREATE MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_nep2035_mview AS
     FROM  model_draft.ego_dp_supply_conv_powerplant
     WHERE scenario = 'NEP 2035'
     AND   capacity >= 0 
-    AND   fuel not in ('hydro', 'run_of_river', 'reservoir');
+    AND   fuel not in ('hydro', 'run_of_river', 'reservoir')
+    AND   version = 'v0.3.0';
 
 ALTER MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_nep2035_mview
     OWNER TO oeuser;
@@ -84,7 +86,8 @@ CREATE MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_ego100_mview AS
 	FROM model_draft.ego_dp_supply_conv_powerplant
 	WHERE scenario in('Status Quo','NEP 2035', 'eGo 100')
 	AND fuel = 'pumped_storage'
-	AND capacity >= 0;
+	AND capacity >= 0
+	AND version = 'v0.3.0';
 
 ALTER MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_ego100_mview
     OWNER TO oeuser;
@@ -105,7 +108,8 @@ DROP MATERIALIZED VIEW IF EXISTS  model_draft.ego_supply_res_powerplant_sq_mview
 CREATE MATERIALIZED VIEW model_draft.ego_supply_res_powerplant_sq_mview AS
     SELECT *
     FROM model_draft.ego_dp_supply_res_powerplant
-    WHERE scenario =  'Status Quo';
+    WHERE scenario =  'Status Quo'
+    AND version = 'v0.3.0';
 
 ALTER MATERIALIZED VIEW model_draft.ego_supply_res_powerplant_sq_mview
     OWNER TO oeuser;
@@ -146,7 +150,8 @@ CREATE MATERIALIZED VIEW model_draft.ego_supply_res_powerplant_nep2035_mview AS
 		 AND scenario in ('NEP 2035', 'ego-nep2035')
 		 ORDER BY id	
 	) sub2
-	Order by id;
+	Order by id
+	AND version = 'v0.3.0';
 -- 01:56:3626 hours execution time.
 
 ALTER MATERIALIZED VIEW model_draft.ego_supply_res_powerplant_nep2035_mview
@@ -210,7 +215,8 @@ CREATE MATERIALIZED VIEW model_draft.ego_supply_res_powerplant_ego100_mview AS
 		 AND scenario in ('NEP 2035', 'ego-nep2035')
 		 ORDER BY id	
 	) sub3
-	Order by id;
+	Order by id
+	AND version = 'v0.3.0';
 
 ALTER MATERIALIZED VIEW model_draft.ego_supply_res_powerplant_ego100_mview
     OWNER TO oeuser;
