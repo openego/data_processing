@@ -140,7 +140,7 @@ CREATE MATERIALIZED VIEW model_draft.ego_supply_res_powerplant_nep2035_mview AS
 		 ORDER BY id	
 	) sub2
 	Order by id;
--- 01:56:3626 hours execution time.
+
 
 -- MView for eGo 100
 DROP MATERIALIZED VIEW IF EXISTS model_draft.ego_supply_res_powerplant_ego100_mview CASCADE;
