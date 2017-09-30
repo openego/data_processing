@@ -81,7 +81,7 @@ CREATE TABLE model_draft.ego_dp_supply_res_powerplant
   scenario character varying NOT NULL,
   flag character varying,
   nuts character varying,
-  CONSTRAINT ego_dp_supply_res_powerplant_pkey PRIMARY KEY (id,scenario)
+  CONSTRAINT ego_dp_supply_res_powerplant_pkey PRIMARY KEY (id,scenario,version)
 )
 WITH (
   OIDS=FALSE
@@ -192,7 +192,10 @@ COMMENT ON TABLE model_draft.ego_dp_supply_res_powerplant IS '{
 SELECT obj_description('model_draft.ego_dp_supply_res_powerplant'::regclass)::json;
 
 -- Insert Status Quo Data to new table with rea geom
-Insert into model_draft.ego_dp_supply_res_powerplant 
+Insert into model_draft.ego_dp_supply_res_powerplant (version, id, start_up_date, electrical_capacity, generation_type,
+	  generation_subtype, thermal_capacity,  city,  postcode,  address,  lon,  lat,  gps_accuracy,  validation,  notification_reason, eeg_id, tso,
+	  tso_eic, dso_id, dso ,  voltage_level_var,  network_node ,  power_plant_id, source, comment ,geom, subst_id, otg_id, un_id, voltage_level,
+	  la_id, mvlv_subst_id, rea_sort, rea_flag,rea_geom_line, rea_geom_new, scenario, flag, nuts)
 	SELECT
 	  'v0.3.0'::text as version,
 	  id, 
@@ -219,7 +222,7 @@ Insert into model_draft.ego_dp_supply_res_powerplant
 	  power_plant_id,
 	  source || ' ego_dp' as source,
 	  comment || ' geom changes by rea' as comment ,
-	  ST_Transform(geom,3035) as geom,                                      
+	  ST_Transform(geom,4326) as geom,                                      
 	  subst_id,
 	  otg_id,
 	  un_id,

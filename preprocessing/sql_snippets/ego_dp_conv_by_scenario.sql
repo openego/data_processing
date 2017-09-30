@@ -76,7 +76,8 @@ CREATE TABLE model_draft.ego_dp_supply_conv_powerplant
   la_id integer,
   scenario text,
   flag text,
-  nuts varchar
+  nuts varchar,
+  CONSTRAINT ego_dp_supply_conv_powerplant_pkey PRIMARY KEY (id, scenario, version)
 )
 WITH (
   OIDS=FALSE
@@ -84,7 +85,6 @@ WITH (
 
 ALTER TABLE model_draft.ego_dp_supply_conv_powerplant
   OWNER TO oeuser;
-  
 GRANT ALL ON TABLE model_draft.ego_dp_supply_conv_powerplant TO oeuser;
 
 --DROP INDEX model_draft.ego_dp_supply_res_powerplant_idx;
