@@ -23,9 +23,9 @@ CREATE MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_sq_mview AS
     WHERE scenario = 'Status Quo'
     AND shutdown IS NULL or shutdown >= 2015
     And version = 'v0.3.0';
-    
-ALTER TABLE model_draft.ego_supply_conv_powerplant_sq_mview 
-  OWNER TO oeuser;
+
+ALTER MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_sq_mview
+OWNER TO oeuser; 
 GRANT ALL ON TABLE model_draft.ego_supply_conv_powerplant_sq_mview TO oeuser;
 
 -- MView for NEP 2035
@@ -39,7 +39,8 @@ CREATE MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_nep2035_mview AS
     AND shutdown IS NULL or shutdown >= 2034
     And version = 'v0.3.0';
     
- ALTER TABLE model_draft.ego_supply_conv_powerplant_nep2035_mview 
+
+ALTER MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_nep2035_mview 
   OWNER TO oeuser;
 GRANT ALL ON TABLE model_draft.ego_supply_conv_powerplant_nep2035_mview TO oeuser;
    
@@ -96,7 +97,7 @@ CREATE MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_ego100_mview AS
 	AND shutdown IS NULL or shutdown >= 2049
 	And version = 'v0.3.0';
 	
-ALTER TABLE model_draft.ego_supply_conv_powerplant_ego100_mview 
+ALTER MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_ego100_mview 
   OWNER TO oeuser;
 GRANT ALL ON TABLE model_draft.ego_supply_conv_powerplant_ego100_mview TO oeuser;
 
@@ -114,7 +115,8 @@ CREATE MATERIALIZED VIEW model_draft.ego_supply_res_powerplant_sq_mview AS
     WHERE scenario =  'Status Quo'
     And version = 'v0.3.0';
     
-ALTER TABLE model_draft.ego_supply_res_powerplant_sq_mview 
+
+ALTER MATERIALIZED VIEW model_draft.ego_supply_res_powerplant_sq_mview 
   OWNER TO oeuser;
 GRANT ALL ON TABLE model_draft.ego_supply_res_powerplant_sq_mview TO oeuser;
 
@@ -158,7 +160,8 @@ CREATE MATERIALIZED VIEW model_draft.ego_supply_res_powerplant_nep2035_mview AS
 	) sub2
 	Order by id;
 	
-ALTER TABLE model_draft.ego_supply_res_powerplant_nep2035_mview 
+
+ALTER MATERIALIZED VIEW model_draft.ego_supply_res_powerplant_nep2035_mview 
   OWNER TO oeuser;
 GRANT ALL ON TABLE model_draft.ego_supply_res_powerplant_nep2035_mview TO oeuser;
 
@@ -225,7 +228,8 @@ CREATE MATERIALIZED VIEW model_draft.ego_supply_res_powerplant_ego100_mview AS
 	) sub3
 	Order by id;
 	
-ALTER TABLE model_draft.ego_supply_res_powerplant_ego100_mview 
+
+ALTER MATERIALIZED VIEW model_draft.ego_supply_res_powerplant_ego100_mview 
   OWNER TO oeuser;
 GRANT ALL ON TABLE model_draft.ego_supply_res_powerplant_ego100_mview TO oeuser;
 
