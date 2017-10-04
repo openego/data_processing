@@ -17,12 +17,16 @@ __author__ = "wolfbunke"
 
 -- MView for Status Quo
 DROP MATERIALIZED VIEW IF EXISTS  model_draft.ego_supply_conv_powerplant_sq_mview CASCADE;
-CREATE MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_sq_view AS
+CREATE MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_sq_mview AS
     SELECT *
     FROM model_draft.ego_dp_supply_conv_powerplant
     WHERE scenario = 'Status Quo'
     AND shutdown IS NULL or shutdown >= 2015
     And version = 'v0.3.0';
+    
+ALTER TABLE model_draft.ego_supply_conv_powerplant_sq_mview 
+  OWNER TO oeuser;
+GRANT ALL ON TABLE model_draft.ego_supply_conv_powerplant_sq_mview TO oeuser;
 
 -- MView for NEP 2035
 DROP MATERIALIZED VIEW IF EXISTS model_draft.ego_supply_conv_powerplant_nep2035_mview CASCADE;
@@ -34,10 +38,15 @@ CREATE MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_nep2035_mview AS
     AND   fuel not in ('hydro', 'run_of_river', 'reservoir')
     AND shutdown IS NULL or shutdown >= 2034
     And version = 'v0.3.0';
+    
+ ALTER TABLE model_draft.ego_supply_conv_powerplant_nep2035_mview 
+  OWNER TO oeuser;
+GRANT ALL ON TABLE model_draft.ego_supply_conv_powerplant_nep2035_mview TO oeuser;
+   
 
 -- MView for eGo 100
 DROP MATERIALIZED VIEW IF EXISTS  model_draft.ego_supply_conv_powerplant_ego100_mview CASCADE;
-CREATE MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_ego2050_mview AS
+CREATE MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_ego100_mview AS
 	SELECT 
 	  version,
 	  id,
@@ -86,6 +95,10 @@ CREATE MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_ego2050_mview AS
 	AND capacity >= 0
 	AND shutdown IS NULL or shutdown >= 2049
 	And version = 'v0.3.0';
+	
+ALTER TABLE model_draft.ego_supply_conv_powerplant_ego100_mview 
+  OWNER TO oeuser;
+GRANT ALL ON TABLE model_draft.ego_supply_conv_powerplant_ego100_mview TO oeuser;
 
 
 --------------------------------------------------------------------------------
@@ -100,6 +113,10 @@ CREATE MATERIALIZED VIEW model_draft.ego_supply_res_powerplant_sq_mview AS
     FROM model_draft.ego_dp_supply_res_powerplant
     WHERE scenario =  'Status Quo'
     And version = 'v0.3.0';
+    
+ALTER TABLE model_draft.ego_supply_res_powerplant_sq_mview 
+  OWNER TO oeuser;
+GRANT ALL ON TABLE model_draft.ego_supply_res_powerplant_sq_mview TO oeuser;
 
 -- MView for NEP 2035
 DROP MATERIALIZED VIEW IF EXISTS model_draft.ego_supply_res_powerplant_nep2035_mview CASCADE;
@@ -140,7 +157,10 @@ CREATE MATERIALIZED VIEW model_draft.ego_supply_res_powerplant_nep2035_mview AS
 		 ORDER BY id	
 	) sub2
 	Order by id;
-
+	
+ALTER TABLE model_draft.ego_supply_res_powerplant_nep2035_mview 
+  OWNER TO oeuser;
+GRANT ALL ON TABLE model_draft.ego_supply_res_powerplant_nep2035_mview TO oeuser;
 
 -- MView for eGo 100
 DROP MATERIALIZED VIEW IF EXISTS model_draft.ego_supply_res_powerplant_ego100_mview CASCADE;
@@ -204,4 +224,8 @@ CREATE MATERIALIZED VIEW model_draft.ego_supply_res_powerplant_ego100_mview AS
 		 ORDER BY id	
 	) sub3
 	Order by id;
+	
+ALTER TABLE model_draft.ego_supply_res_powerplant_ego100_mview 
+  OWNER TO oeuser;
+GRANT ALL ON TABLE model_draft.ego_supply_res_powerplant_ego100_mview TO oeuser;
 
