@@ -39,7 +39,7 @@ Documentation:
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_dp_supply_res_powerplant','ego_db_res_rea_by_scenario.sql','');
 
-DROP TABLE IF EXISTS model_draft.ego_dp_supply_res_powerplant;
+DROP TABLE IF EXISTS model_draft.ego_dp_supply_res_powerplant CASCADE;
 CREATE TABLE model_draft.ego_dp_supply_res_powerplant
 (
   preversion text,
@@ -81,7 +81,7 @@ CREATE TABLE model_draft.ego_dp_supply_res_powerplant
   scenario character varying NOT NULL,
   flag character varying,
   nuts character varying,
-  CONSTRAINT ego_dp_supply_res_powerplant_pkey PRIMARY KEY (id,scenario)
+  CONSTRAINT ego_dp_supply_res_powerplant_pkey PRIMARY KEY (preversion,id,scenario)
 )
 WITH (
   OIDS=FALSE
@@ -250,11 +250,11 @@ SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_supply_res_powerplan
 Insert into model_draft.ego_dp_supply_res_powerplant 
 	SELECT
 	 'v0.3.0'::text  as preversion,
-	  b.max +row_number() over (ORDER BY gid) as id,
+	  b.max +row_number() over (ORDER BY id) as id,
 	  '2034-12-31 00:00:00' as start_up_date,
 	  electrical_capacity,
-	  'gas' as generation_type,
-	  'chp' as generation_subtype,
+	  generation_type,
+	  generation_subtype,
 	  thermal_capacity ,
 	  NULL as city,
 	  NULL as postcode,
@@ -272,30 +272,30 @@ Insert into model_draft.ego_dp_supply_res_powerplant
 	  Null as voltage_level_var,
 	  Null as network_node ,
 	  Null as power_plant_id,
-	  source,
+	  Null as source,
 	  comment,
 	  ST_Transform(geom,3035) as geom,                                   
-	  subst_id,
-	  otg_id,
-	  un_id,
-	  voltage_level,
-	  la_id,
-	  mvlv_subst_id,
-	  rea_sort,
-	  rea_flag,
+	  Null as subst_id,
+	  Null as otg_id,
+	  Null as un_id,
+	  Null as voltage_level,
+	  Null as la_id,
+	  Null as mvlv_subst_id,
+	  Null as rea_sort,
+	  Null as rea_flag,
 	  NULL as rea_geom_line,
 	  Null as rea_geom_new,
 	  'NEP 2035'::text as scenario,
 	  'commissioning'::text as flag,
 	  NULL as nuts											
 	FROM 
-	  model_draft.ego_supply_res_powerplant_2035,
+	  model_draft.ego_small_chp_plant_germany,
 	  (
 	   SELECT max(id) as max
 	   FROM model_draft.ego_dp_supply_res_powerplant
           ) as b
 	Where
-	 generation_type = 'chp';
+	 comment = 'KWK_NEP_2035_distribution';
 
 -- set nuts
 UPDATE model_draft.ego_dp_supply_res_powerplant as upt
@@ -392,7 +392,7 @@ set comment = upt.comment || ', Method ProxToNow Biomass',
     source = 'ego NEP 2015 B2035',
     scenario = 'NEP 2035' ,
     flag = 'repowering',
-    preversion ='v0.3.0'::text
+    preversion ='v0.3.0'::text,
     electrical_capacity = CASE WHEN scn.capacity = 0 THEN 0 
 	  ELSE (upt.electrical_capacity/ cap_sum)*scn.capacity*1000    
 	 END 
@@ -635,7 +635,7 @@ FROM (
 	C.id,
 	C.rs,
 	C.nuts    
-	FROM political_boundary.bkg_vg250_6_gem_rs_mview C,
+	FROM boundaries.bkg_vg250_6_gem_rs_mview C,
 	     model_draft.ego_dp_supply_res_powerplant D
 	WHERE ST_Intersects(C.geom, D.geom)
       ) as B
@@ -651,7 +651,7 @@ FROM (
 	C.id,
 	C.rs,
 	C.nuts    
-	FROM political_boundary.bkg_vg250_6_gem_rs_mview C,
+	FROM boundaries.bkg_vg250_6_gem_rs_mview C,
 	     model_draft.ego_dp_supply_res_powerplant D
 	WHERE ST_Intersects(C.geom, St_Buffer(D.geom, 1000))
       ) as B
@@ -694,7 +694,7 @@ SELECT
   avg(A.electrical_capacity) as pv_avg_cap
 FROM
   model_draft.ego_dp_supply_res_powerplant A, 
-  political_boundary.bkg_vg250_6_gem_rs_mview B
+  boundaries.bkg_vg250_6_gem_rs_mview B
 WHERE
   ST_Intersects(A.geom ,B.geom)
 AND A.generation_type = 'solar'
@@ -714,7 +714,7 @@ SELECT
  scn.capacity*1000 as fs_cap_2035 ,           -- in kW
  scn.nuts  				      -- nuts code federal state
  FROM
-    political_boundary.bkg_vg250_6_gem_rs_mview A,
+    boundaries.bkg_vg250_6_gem_rs_mview A,
     orig_scenario_data.nep_2015_scenario_capacities scn
 WHERE scn.nuts = substring(A.nuts from 1 for 3)
 AND   scn.generation_type = 'solar' 
@@ -754,7 +754,7 @@ SELECT
   scn.capacity as capacity_2035,
   scn.generation_type
 FROM
-  political_boundary.bkg_vg250_6_gem_rs_mview AA,
+  boundaries.bkg_vg250_6_gem_rs_mview AA,
   orig_scenario_data.nep_2015_scenario_capacities as scn
 WHERE scn.nuts = substring(AA.nuts from 1 for 3)
 AND  scn.generation_type = 'solar'
@@ -799,7 +799,7 @@ generation_type, generation_subtype, voltage_level, source, comment,geom, scenar
 	 ST_PointOnSurface(B.geom) as geom     
 	FROM 
 	  model_draft.ego_supply_res_pv_2035_germany_mun_temp A,
-	  political_boundary.bkg_vg250_6_gem_rs_mview B
+	  boundaries.bkg_vg250_6_gem_rs_mview B
 	Where A.rs = B.rs 
 	) as sub ,
 	(Select
@@ -1015,7 +1015,7 @@ SELECT
   avg(A.electrical_capacity) as wo_avg_cap
 FROM
   model_draft.ego_dp_supply_res_powerplant A, 
-  political_boundary.bkg_vg250_6_gem_rs_mview B
+  boundaries.bkg_vg250_6_gem_rs_mview B
 WHERE
   ST_Intersects(B.geom, A.geom)
 AND A.generation_type = 'wind'
@@ -1033,7 +1033,7 @@ SELECT
  scn.capacity*1000 as fs_cap_2035 ,           -- in kW
  scn.nuts  				      -- nuts code federal state
  FROM
-    political_boundary.bkg_vg250_6_gem_rs_mview A,
+    boundaries.bkg_vg250_6_gem_rs_mview A,
     orig_scenario_data.nep_2015_scenario_capacities scn
 WHERE scn.nuts = substring(A.nuts from 1 for 3)
 AND   scn.generation_type = 'wind_onshore' 
@@ -1077,7 +1077,7 @@ SELECT
   scn.capacity as capacity_2035,
   scn.generation_type
 FROM
-  political_boundary.bkg_vg250_6_gem_rs_mview AA,
+  boundaries.bkg_vg250_6_gem_rs_mview AA,
   orig_scenario_data.nep_2015_scenario_capacities as scn
 WHERE scn.nuts = substring(AA.nuts from 1 for 3)
 AND  scn.generation_type = 'wind_onshore'
@@ -1128,7 +1128,7 @@ Insert into model_draft.ego_dp_supply_res_powerplant (preversion,id,start_up_dat
 	 ST_PointOnSurface(B.geom) as geom     
 	FROM 
 	  model_draft.ego_supply_res_wo_2035_germany_mun_temp A,
-	  political_boundary.bkg_vg250_6_gem_rs_mview B
+	  boundaries.bkg_vg250_6_gem_rs_mview B
 	Where A.rs = B.rs
 	) as sub ,
 	(Select
@@ -1239,7 +1239,7 @@ CREATE TABLE 		model_draft.ego_supply_res_chp_2050_temp AS
 	FROM 
 	  model_draft.ego_dp_supply_res_powerplant
 	WHERE
-	generation_subtype = 'chp'
+	comment = 'KWK_NEP_2035_distribution'
 	AND scenario = 'NEP 2035';
 
 Update model_draft.ego_supply_res_chp_2050_temp
@@ -1337,7 +1337,7 @@ CREATE TABLE 		model_draft.ego_supply_res_pv_to_region_temp
 		un_id bigint,         		
 		nuts character varying(5),	 
 		rs character varying(12),	-- German Regionalschlüssel
-		id_vg250 bigint, 		-- ID of political_boundary.bkg_vg250_6_gem_rs_mview table
+		id_vg250 bigint, 		-- ID of boundaries.bkg_vg250_6_gem_rs_mview table
 		CONSTRAINT ego_supply_res_pv_to_region_temp_pkey PRIMARY KEY (re_id)
 		);
 
@@ -1366,7 +1366,7 @@ FROM (
 	C.id,
 	C.rs,
 	C.nuts    
-	FROM political_boundary.bkg_vg250_6_gem_rs_mview C,
+	FROM boundaries.bkg_vg250_6_gem_rs_mview C,
 	     model_draft.ego_dp_supply_res_powerplant D
 	WHERE ST_Intersects(C.geom, D.geom)
       ) as B
@@ -1388,7 +1388,7 @@ FROM
 	WHERE A.re_id = B.id
 	AND A.nuts IS NULL 
   ) as AA,
-  political_boundary.bkg_vg250_6_gem_rs_mview C
+  boundaries.bkg_vg250_6_gem_rs_mview C
 WHERE ST_Intersects(C.geom, ST_Buffer(AA.geom,1000))
 AND AA.re_id = A.re_id;
 
@@ -1429,7 +1429,7 @@ SELECT
   avg(A.electrical_capacity) as pv_avg_cap
 FROM
   model_draft.ego_dp_supply_res_powerplant A, 
-  political_boundary.bkg_vg250_6_gem_rs_mview B
+  boundaries.bkg_vg250_6_gem_rs_mview B
 WHERE
   ST_Intersects(B.geom, A.geom)
 AND A.generation_type = 'solar'
@@ -1451,7 +1451,7 @@ SELECT
  scn.capacity*1000 as fs_cap_2050 ,           -- in kW
  scn.nuts  				      -- nuts code
  FROM
-   political_boundary.bkg_vg250_6_gem_rs_mview A,
+   boundaries.bkg_vg250_6_gem_rs_mview A,
     orig_scenario_data.nep_2015_scenario_capacities scn
 WHERE scn.nuts = substring(A.nuts from 1 for 2)
 AND   scn.generation_type = 'solar' 
@@ -1482,7 +1482,7 @@ SELECT
   scn.capacity as capacity_2050,
   scn.generation_type
 FROM
-  political_boundary.bkg_vg250_6_gem_rs_mview AA,
+  boundaries.bkg_vg250_6_gem_rs_mview AA,
   orig_scenario_data.nep_2015_scenario_capacities as scn
 WHERE scn.generation_type = 'solar'
 AND   scn.scenario = 'eGo 100'
@@ -1536,7 +1536,7 @@ generation_type, generation_subtype, voltage_level, source, comment,geom, scenar
 	 ST_PointOnSurface(B.geom) as geom     
 	FROM 
 	  model_draft.ego_supply_res_pv_2050_germany_mun_temp A,
-	  political_boundary.bkg_vg250_6_gem_rs_mview B
+	  boundaries.bkg_vg250_6_gem_rs_mview B
 	Where A.rs = B.rs
 	) as sub ,
 	(Select
@@ -1553,7 +1553,7 @@ from
 WHERE ST_Intersects(regions.geom, upt.geom)
 AND generation_type = 'solar'
 AND upt.nuts is NULL;
-
+--HierWEITER
 ---
 -- Wind offshore eGo 100
 ---
@@ -1646,7 +1646,7 @@ SELECT
   avg(A.electrical_capacity) as wo_avg_cap
 FROM
   model_draft.ego_dp_supply_res_powerplant A, 
-  political_boundary.bkg_vg250_6_gem_rs_mview B
+  boundaries.bkg_vg250_6_gem_rs_mview B
 WHERE
   ST_Intersects(B.geom, A.geom)
 AND A.generation_type = 'wind'
@@ -1665,7 +1665,7 @@ SELECT
  scn.capacity*1000 as fs_cap_2050 ,           -- in kW
  scn.nuts  				      -- nuts code federal state
  FROM
-    political_boundary.bkg_vg250_6_gem_rs_mview A,
+    boundaries.bkg_vg250_6_gem_rs_mview A,
     orig_scenario_data.nep_2015_scenario_capacities scn
 WHERE scn.nuts = substring(A.nuts from 1 for 2)
 AND   scn.generation_type = 'wind_onshore' 
@@ -1701,7 +1701,7 @@ SELECT
   scn.capacity as capacity_2050,
   scn.generation_type
 FROM
-  political_boundary.bkg_vg250_6_gem_rs_mview AA,
+  boundaries.bkg_vg250_6_gem_rs_mview AA,
   orig_scenario_data.nep_2015_scenario_capacities as scn
 WHERE scn.nuts = substring(AA.nuts from 1 for 2)
 AND  scn.generation_type = 'wind_onshore'
@@ -1750,7 +1750,7 @@ Insert into model_draft.ego_dp_supply_res_powerplant (preversion,id,start_up_dat
 	 ST_PointOnSurface(B.geom) as geom     
 	FROM 
 	  model_draft.ego_supply_res_wo_2050_germany_mun_temp A,
-	  political_boundary.bkg_vg250_6_gem_rs_mview B
+	  boundaries.bkg_vg250_6_gem_rs_mview B
 	Where A.rs = B.rs
 	) as sub ,
 	(Select
