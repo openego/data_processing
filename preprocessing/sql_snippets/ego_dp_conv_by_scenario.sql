@@ -36,7 +36,7 @@ SELECT ego_scenario_log('v0.3.0','input','supply','ego_dp_supply_conv_powerplant
 DROP TABLE IF EXISTS model_draft.ego_dp_supply_conv_powerplant CASCADE;
 CREATE TABLE model_draft.ego_dp_supply_conv_powerplant
 (
-  version text NOT NULL,
+  preversion text NOT NULL,
   id integer NOT NULL,
   bnetza_id text,
   company text,
@@ -77,7 +77,7 @@ CREATE TABLE model_draft.ego_dp_supply_conv_powerplant
   scenario text,
   flag text,
   nuts varchar,
-  CONSTRAINT ego_dp_supply_conv_powerplant_pkey PRIMARY KEY (version,id,scenario)
+  CONSTRAINT ego_dp_supply_conv_powerplant_pkey PRIMARY KEY (preversion,id,scenario)
 )
 WITH (
   OIDS=FALSE
@@ -141,7 +141,7 @@ COMMENT ON TABLE model_draft.ego_dp_supply_conv_powerplant
 		{"name": "model_draft.ego_dp_supply_conv_powerplant",		
 		"format": "PostgreSQL",
 		"fields": [
-				{"name": "version", "description": "Version ID", "unit": "" },
+				{"name": "preversion", "description": "Preversion ID of data preprocessing", "unit": "" },
 				{"name": "id", "description": "Unique identifier", "unit": "" },
 				{"name": "bnetza_id", "description": "Bundesnetzagentur unit ID", "unit": " " },			
 				{"name": "company", "description": "Name of company", "unit": " " },				
@@ -194,7 +194,7 @@ SELECT obj_description('model_draft.ego_dp_supply_conv_powerplant'::regclass)::j
 
 INSERT INTO model_draft.ego_dp_supply_conv_powerplant
 	SELECT 
-	  'v0.3.0'::text  as version,
+	  'v0.3.0'::text  as preversion,
 	  gid as id,
 	  bnetza_id,
 	  company,
@@ -249,7 +249,7 @@ SELECT ego_scenario_log('v0.3.0','input','supply','ego_dp_supply_conv_powerplant
 
 INSERT INTO model_draft.ego_dp_supply_conv_powerplant
 SELECT 
-  'v0.3.0'::text  as version,
+  'v0.3.0'::text  as preversion,
   b.max +row_number() over (ORDER BY gid) as id,
   bnetza_id,
   NULL::text as company,
@@ -316,90 +316,4 @@ Update model_draft.ego_dp_supply_conv_powerplant A
 
 -- only pumed_storage for NEP2035 and Satatus Quo 
 -- No entries or changes use of MView
-
-
-
---------------------------------------------------------------------------------
--- Part IV 
---          Create Views by scenario
---	    Scenarios: ego 100%
---------------------------------------------------------------------------------
-
--- MView for Status Quo
-DROP MATERIALIZED VIEW IF EXISTS  model_draft.ego_supply_conv_powerplant_sq_mview CASCADE;
-CREATE MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_sq_mview AS
-    SELECT *
-    FROM model_draft.ego_dp_supply_conv_powerplant
-    WHERE scenario = 'Status Quo';
-
--- grant (oeuser)    
-ALTER TABLE model_draft.ego_supply_conv_powerplant_sq_mview OWNER TO oeuser;
-
--- MView for NEP 2035
-DROP MATERIALIZED VIEW IF EXISTS model_draft.ego_supply_conv_powerplant_nep2035_mview CASCADE;
-CREATE MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_nep2035_mview AS
-    SELECT *
-    FROM  model_draft.ego_dp_supply_conv_powerplant
-    WHERE scenario = 'NEP 2035'
-    AND   capacity >= 0 
-    AND   fuel not in ('hydro', 'run_of_river', 'reservoir')
-    ;
-
--- grant (oeuser)    
-ALTER TABLE model_draft.ego_supply_conv_powerplant_nep2035_mview OWNER TO oeuser;
-
--- MView for eGo 100 
-DROP MATERIALIZED VIEW IF EXISTS  model_draft.ego_supply_conv_powerplant_ego100_mview CASCADE;
-CREATE MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_ego100_mview AS
-	SELECT 
-	  'v0.3.0'::text as version,
-	  id,
-	  bnetza_id,
-	  company,
-	  name,
-	  postcode,
-	  city,
-	  street,
-	  state,
-	  block,
-	  commissioned_original,
-	  commissioned,
-	  retrofit,
-	  shutdown,
-	  status,
-	  fuel,
-	  technology,
-	  type,
-	  eeg,
-	  chp,
-	  capacity,
-	  capacity_uba,
-	  chp_capacity_uba,
-	  efficiency_data,
-	  efficiency_estimate,
-	  network_node,
-	  voltage,
-	  network_operator,
-	  name_uba,
-	  lat,
-	  lon,
-	  'pumed storage for eGo 100'::text as comment,
-	  geom,
-	  voltage_level,
-	  subst_id,
-	  otg_id,
-	  un_id,
-	  la_id,
-	  'eGo 100'::text as scenario,
-	  'constantly'::text as flag,
-	  nuts
-	FROM model_draft.ego_dp_supply_conv_powerplant
-	WHERE scenario in('Status Quo','NEP 2035', 'eGo 100')
-	AND fuel = 'pumped_storage'
-	AND capacity >= 0;
-
-
--- grant (oeuser)    
-ALTER TABLE model_draft.ego_supply_conv_powerplant_ego100_mview OWNER TO oeuser;
-
--- END
+-- see: dataprocessing/sql_snippets/ego_dp_powerflow_create_pp_mview.sql
