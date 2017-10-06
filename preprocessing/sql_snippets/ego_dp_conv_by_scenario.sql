@@ -305,7 +305,7 @@ AND scenario = 'NEP 2035';
 --
 Update model_draft.ego_dp_supply_conv_powerplant A
   set  flag = 'constantly' 
-  WHERE scenario = 'Status Quo'
+  WHERE scenario = 'Status Quo';
 
 
 --------------------------------------------------------------------------------
