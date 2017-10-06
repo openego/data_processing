@@ -42,7 +42,7 @@ SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_dp_supply_res_powerp
 DROP TABLE IF EXISTS model_draft.ego_dp_supply_res_powerplant;
 CREATE TABLE model_draft.ego_dp_supply_res_powerplant
 (
-  version text,
+  preversion text,
   id bigint NOT NULL,
   start_up_date timestamp without time zone,
   electrical_capacity numeric,
@@ -146,7 +146,7 @@ COMMENT ON TABLE model_draft.ego_dp_supply_res_powerplant IS '{
 		{"name": "model_draft.ego_dp_supply_res_powerplant",		
 		"format": "PostgreSQL",
 		"fields": [
-			        {"name": "version", "description": "version number of data processing", "unit": "" },
+			        {"name": "preversion", "description": "preversion number of data preprocessing", "unit": "" },
 				{"name": "id", "description": "Unique identifier", "unit": "" },
 				{"name": "start_up_date", "description": "start_up date of unit", "unit": "" },
 				{"name": "electrical_capacity", "description": "electrical capacity", "unit": "kW" },
@@ -193,7 +193,7 @@ SELECT obj_description('model_draft.ego_dp_supply_res_powerplant'::regclass)::js
 -- Insert Status Quo Data to new table with rea geom
 Insert into model_draft.ego_dp_supply_res_powerplant 
 	SELECT
-	  'v0.3.0'::text as version,
+	  'v0.3.0'::text as preversion,
 	  id, 
 	  start_up_date,
 	  electrical_capacity,
@@ -249,7 +249,7 @@ SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_supply_res_powerplan
 
 Insert into model_draft.ego_dp_supply_res_powerplant 
 	SELECT
-	 'v0.3.0'::text  as version,
+	 'v0.3.0'::text  as preversion,
 	  b.max +row_number() over (ORDER BY gid) as id,
 	  '2034-12-31 00:00:00' as start_up_date,
 	  electrical_capacity,
@@ -330,7 +330,7 @@ SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_dp_supply_res_powerpl
 DROP TABLE IF EXISTS model_draft.ego_supply_res_biomass_2035_temp CASCADE;
 CREATE TABLE model_draft.ego_supply_res_biomass_2035_temp AS
 	SELECT
-	  'v0.3.0'::text as version,
+	  'v0.3.0'::text as preversion,
 	  id ,
 	  start_up_date,
 	  electrical_capacity,
@@ -392,7 +392,7 @@ set comment = upt.comment || ', Method ProxToNow Biomass',
     source = 'ego NEP 2015 B2035',
     scenario = 'NEP 2035' ,
     flag = 'repowering',
-    version ='v0.3.0'::text
+    preversion ='v0.3.0'::text
     electrical_capacity = CASE WHEN scn.capacity = 0 THEN 0 
 	  ELSE (upt.electrical_capacity/ cap_sum)*scn.capacity*1000    
 	 END 
@@ -447,7 +447,7 @@ set generation_type = 'hydro',
 DROP TABLE IF EXISTS 	model_draft.ego_supply_res_hydro_2035_temp CASCADE;
 CREATE TABLE 		model_draft.ego_supply_res_hydro_2035_temp AS
 	SELECT
-	 'v0.3.0'::text as version,
+	 'v0.3.0'::text as preversion,
 	  id ,
 	  start_up_date,
 	  electrical_capacity,
@@ -499,10 +499,10 @@ CREATE INDEX ego_supply_res_hydro_2035_temp_geom_idx
 -- grant (oeuser)
 ALTER TABLE model_draft.ego_supply_res_hydro_2035_temp OWNER TO oeuser;
 
-INSERT INTO model_draft.ego_supply_res_hydro_2035_temp (version,id,start_up_date,electrical_capacity, generation_type,	
+INSERT INTO model_draft.ego_supply_res_hydro_2035_temp (preversion,id,start_up_date,electrical_capacity, generation_type,	
 generation_subtype, lon, lat, voltage_level, network_node, source, comment, geom, voltage_level_var, subst_id, otg_id,un_id,scenario,flag)
 SELECT
-  'v0.3.0'::text as version,
+  'v0.3.0'::text as preversion,
   b.max +row_number() over (ORDER BY gid) as id,       
   '2034-12-31 00:00:00' as start_up_date,			  
   a.capacity *1000  as electrical_capacity,  	         -- MW -> kW
@@ -775,10 +775,10 @@ Group by substring(A.rs from 1 for 2),scn.capacity_2035;
 SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_supply_res_pv_2035_germany_mun_temp','ego_db_res_rea_by_scenario.sql',' '); 
 
 -- Add new PV units 
-Insert into model_draft.ego_dp_supply_res_powerplant  (version,id, start_up_date,electrical_capacity,
+Insert into model_draft.ego_dp_supply_res_powerplant  (preversion,id, start_up_date,electrical_capacity,
 generation_type, generation_subtype, voltage_level, source, comment,geom, scenario,flag)
         SELECT
-	  'v0.3.0'::text as version,
+	  'v0.3.0'::text as preversion,
 	  sub2.max_rown + row_number() over () as id ,
 	  '2034-12-31 00:00:00' as start_up_date,
 	  sub.electrical_capacity as electrical_capacity,
@@ -826,11 +826,11 @@ AND upt.nuts is null;
 SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_dp_supply_res_powerplant','ego_db_res_rea_by_scenario.sql',' '); 
 
 -- 1
-INSERT INTO model_draft.ego_dp_supply_res_powerplant  (version,id, start_up_date, electrical_capacity, generation_type, generation_subtype, thermal_capacity, 
+INSERT INTO model_draft.ego_dp_supply_res_powerplant  (preversion,id, start_up_date, electrical_capacity, generation_type, generation_subtype, thermal_capacity, 
  nuts, lon, lat, voltage_level, network_node, source, comment, geom, voltage_level_var, subst_id, 
  otg_id, un_id, scenario, flag)
   SELECT
-    'v0.3.0'::text as version,
+    'v0.3.0'::text as preversion,
     max(id)+ row_number() over () as id,
     '2034-12-31 00:00:00' as start_up_date, 
      840850, 'wind', 'wind_offshore', NULL, NULL, NULL, NULL, 1, NULL, 'ONEP', 
@@ -838,132 +838,132 @@ INSERT INTO model_draft.ego_dp_supply_res_powerplant  (version,id, start_up_date
     '380', NULL, NULL, NULL,'NEP 2035','commissioning'
   FROM model_draft.ego_dp_supply_res_powerplant;
  -- 2
-INSERT INTO model_draft.ego_dp_supply_res_powerplant  (version, id, start_up_date, electrical_capacity, generation_type, generation_subtype, thermal_capacity, 
+INSERT INTO model_draft.ego_dp_supply_res_powerplant  (preversion, id, start_up_date, electrical_capacity, generation_type, generation_subtype, thermal_capacity, 
  nuts, lon, lat, voltage_level, network_node, source, comment, geom, voltage_level_var, subst_id, 
  otg_id, un_id, scenario, flag)
   SELECT
-    'v0.3.0'::text as version,
+    'v0.3.0'::text as preversion,
     max(id)+ row_number() over () as id , 
     '2034-12-31 00:00:00' as start_up_date, 900000, 'wind', 'wind_offshore', NULL, NULL, NULL, 
     NULL, 1, NULL, 'ONEP', 'NVP: Segeberg', ST_Transform('0101000020E610000097549B90767B1940BD49396624894B40'::geometry,3035), 
     '380', NULL, NULL, NULL,'NEP 2035','commissioning'
   FROM model_draft.ego_dp_supply_res_powerplant;
 -- 3
-INSERT INTO model_draft.ego_dp_supply_res_powerplant  (version,id, start_up_date, electrical_capacity, generation_type, generation_subtype, thermal_capacity, 
+INSERT INTO model_draft.ego_dp_supply_res_powerplant  (preversion,id, start_up_date, electrical_capacity, generation_type, generation_subtype, thermal_capacity, 
  nuts, lon, lat, voltage_level, network_node, source, comment, geom, voltage_level_var, subst_id, 
  otg_id, un_id, scenario, flag)
   SELECT
-   'v0.3.0'::text as version,
+   'v0.3.0'::text as preversion,
     max(id)+ row_number() over () as id , 
     '2034-12-31 00:00:00' as start_up_date, 900000, 'wind', 'wind_offshore', NULL, NULL, NULL, 
     NULL, 1, NULL, 'ONEP', 'NVP: Cloppenburg', ST_Transform('0101000020E6100000734ECF8CED571C40D2AE3F9F8B044B40'::geometry,3035), 
     '380', NULL, NULL, NULL,'NEP 2035','commissioning'
   FROM model_draft.ego_dp_supply_res_powerplant;
 -- 4
-INSERT INTO model_draft.ego_dp_supply_res_powerplant  (version,id, start_up_date, electrical_capacity, generation_type, generation_subtype, thermal_capacity, 
+INSERT INTO model_draft.ego_dp_supply_res_powerplant  (preversion,id, start_up_date, electrical_capacity, generation_type, generation_subtype, thermal_capacity, 
  nuts, lon, lat, voltage_level, network_node, source, comment, geom, voltage_level_var, subst_id, 
  otg_id, un_id, scenario, flag)
   SELECT
-   'v0.3.0'::text as version,
+   'v0.3.0'::text as preversion,
     max(id)+ row_number() over () as id , 
     '2034-12-31 00:00:00' as start_up_date, 900000, 'wind', 'wind_offshore', NULL, NULL, NULL, 
     NULL, 1, NULL, 'ONEP', 'NVP: Cloppenburg', ST_Transform('0101000020E61000007B81CED535641940C088D9991E294B40'::geometry,3035), 
     '380', NULL, NULL, NULL,'NEP 2035','commissioning'
   FROM model_draft.ego_dp_supply_res_powerplant;
 -- 5
-INSERT INTO model_draft.ego_dp_supply_res_powerplant (version,id, start_up_date, electrical_capacity, generation_type, generation_subtype, thermal_capacity, 
+INSERT INTO model_draft.ego_dp_supply_res_powerplant (preversion,id, start_up_date, electrical_capacity, generation_type, generation_subtype, thermal_capacity, 
  nuts, lon, lat, voltage_level, network_node, source, comment, geom, voltage_level_var, subst_id, 
  otg_id, un_id, scenario, flag)
   SELECT
-   'v0.3.0'::text as version,
+   'v0.3.0'::text as preversion,
     max(id)+ row_number() over () as id , 
     '2034-12-31 00:00:00' as start_up_date, 900000, 'wind', 'wind_offshore', NULL, NULL, NULL, 
     NULL, 1, NULL, 'ONEP', 'NVP: Cloppenburg', ST_Transform('0101000020E6100000760FAC97AC3D184000CF66EFA2204B40'::geometry,3035), 
     '380', NULL, NULL, NULL,'NEP 2035','commissioning'
   FROM model_draft.ego_dp_supply_res_powerplant;
 -- 6
-INSERT INTO model_draft.ego_dp_supply_res_powerplant  (version,id, start_up_date, electrical_capacity, generation_type, generation_subtype, thermal_capacity, 
+INSERT INTO model_draft.ego_dp_supply_res_powerplant  (preversion,id, start_up_date, electrical_capacity, generation_type, generation_subtype, thermal_capacity, 
  nuts, lon, lat, voltage_level, network_node, source, comment, geom, voltage_level_var, subst_id, 
  otg_id, un_id, scenario, flag)
   SELECT
-   'v0.3.0'::text as version,
+   'v0.3.0'::text as preversion,
     max(id)+ row_number() over () as id , 
     '2034-12-31 00:00:00' as start_up_date, 1188400, 'wind', 'wind_offshore', NULL, NULL, NULL, 
     NULL, 1, NULL, 'ONEP', 'NVP: Dörpen West', ST_Transform('0101000020E610000044D62300A7711B400FE3B7CDB9034B40'::geometry,3035), 
     '380', NULL, NULL, NULL,'NEP 2035','commissioning'
   FROM model_draft.ego_dp_supply_res_powerplant;
 -- 7
-INSERT INTO model_draft.ego_dp_supply_res_powerplant  (version,id, start_up_date, electrical_capacity, generation_type, generation_subtype, thermal_capacity, 
+INSERT INTO model_draft.ego_dp_supply_res_powerplant  (preversion,id, start_up_date, electrical_capacity, generation_type, generation_subtype, thermal_capacity, 
  nuts, lon, lat, voltage_level, network_node, source, comment, geom, voltage_level_var, subst_id, 
  otg_id, un_id, scenario, flag)
   SELECT
-    'v0.3.0'::text as version,
+    'v0.3.0'::text as preversion,
     max(id)+ row_number() over () as id , 
     '2034-12-31 00:00:00' as start_up_date, 1800000, 'wind', 'wind_offshore', NULL, NULL, NULL, 
     NULL, 1, NULL, 'ONEP', 'NVP: Emden Ost', ST_Transform('0101000020E610000083B2A1AEEAF91B40343FC1825E054B40'::geometry,3035), 
     '380', NULL, NULL, NULL,'NEP 2035','commissioning'
   FROM model_draft.ego_dp_supply_res_powerplant;
 -- 8
-INSERT INTO model_draft.ego_dp_supply_res_powerplant  (version,id, start_up_date, electrical_capacity, generation_type, generation_subtype, thermal_capacity, 
+INSERT INTO model_draft.ego_dp_supply_res_powerplant  (preversion,id, start_up_date, electrical_capacity, generation_type, generation_subtype, thermal_capacity, 
  nuts, lon, lat, voltage_level, network_node, source, comment, geom, voltage_level_var, subst_id, 
  otg_id, un_id, scenario, flag)
   SELECT
-    'v0.3.0'::text as version,
+    'v0.3.0'::text as preversion,
     max(id)+ row_number() over () as id , 
     '2034-12-31 00:00:00' as start_up_date, 450000, 'wind', 'wind_offshore', NULL, NULL, NULL, 
     NULL, 1, NULL, 'ONEP', 'NVP: Unterweser', ST_Transform('0101000020E6100000BAF8659652801740D869CBBDC1284B40'::geometry,3035), 
     '380', NULL, NULL, NULL,'NEP 2035','commissioning'
   FROM model_draft.ego_dp_supply_res_powerplant;
 -- 9
-INSERT INTO model_draft.ego_dp_supply_res_powerplant  (version,id, start_up_date, electrical_capacity, generation_type, generation_subtype, thermal_capacity, 
+INSERT INTO model_draft.ego_dp_supply_res_powerplant  (preversion,id, start_up_date, electrical_capacity, generation_type, generation_subtype, thermal_capacity, 
  nuts, lon, lat, voltage_level, network_node, source, comment, geom, voltage_level_var, subst_id, 
  otg_id, un_id, scenario, flag)
   SELECT
-   'v0.3.0'::text as version,
+   'v0.3.0'::text as preversion,
     max(id)+ row_number() over () as id , 
     '2034-12-31 00:00:00' as start_up_date, 900000, 'wind', 'wind_offshore', NULL, NULL, NULL, 
     NULL, 1, NULL, 'ONEP', 'NVP: Wilhelmshaven 2', ST_Transform('0101000020E610000033F5B4B394751940EA0712BD2E294B40'::geometry,3035), 
     '380', NULL, NULL, NULL,'NEP 2035','commissioning'
   FROM model_draft.ego_dp_supply_res_powerplant;
 -- 10
-INSERT INTO model_draft.ego_dp_supply_res_powerplant  (version,id, start_up_date, electrical_capacity, generation_type, generation_subtype, thermal_capacity, 
+INSERT INTO model_draft.ego_dp_supply_res_powerplant  (preversion,id, start_up_date, electrical_capacity, generation_type, generation_subtype, thermal_capacity, 
  nuts, lon, lat, voltage_level, network_node, source, comment, geom, voltage_level_var, subst_id, 
  otg_id, un_id, scenario, flag)
   SELECT
-   'v0.3.0'::text as version,
+   'v0.3.0'::text as preversion,
     max(id)+ row_number() over () as id , 
     '2034-12-31 00:00:00' as start_up_date, 900000, 'wind', 'wind_offshore', NULL, NULL, NULL, 
     NULL, 1, NULL, 'ONEP', 'NVP: Wilhelmshaven 2', ST_Transform('0101000020E6100000E75D445985E61740F70188073D684B40'::geometry,3035), 
     '380', NULL, NULL, NULL,'NEP 2035','commissioning'
   FROM model_draft.ego_dp_supply_res_powerplant;
 -- 11
-INSERT INTO model_draft.ego_dp_supply_res_powerplant  (version,id, start_up_date, electrical_capacity, generation_type, generation_subtype, thermal_capacity, 
+INSERT INTO model_draft.ego_dp_supply_res_powerplant  (preversion,id, start_up_date, electrical_capacity, generation_type, generation_subtype, thermal_capacity, 
  nuts, lon, lat, voltage_level, network_node, source, comment, geom, voltage_level_var, subst_id, 
  otg_id, un_id, scenario, flag)
   SELECT
-     'v0.3.0'::text as version,
+     'v0.3.0'::text as preversion,
     max(id)+ row_number() over () as id , 
     '2034-12-31 00:00:00' as start_up_date, 900000, 'wind', 'wind_offshore', NULL, NULL, NULL, 
     NULL, 1, NULL, 'ONEP', 'NVP: Wilhelmshaven 2', ST_Transform('0101000020E610000046E764017AE71840ADB08899CC684B40'::geometry,3035), 
     '380', NULL, NULL, NULL,'NEP 2035','commissioning'
   FROM model_draft.ego_dp_supply_res_powerplant;
 -- 12
-INSERT INTO model_draft.ego_dp_supply_res_powerplant  (version,id, start_up_date, electrical_capacity, generation_type, generation_subtype, thermal_capacity, 
+INSERT INTO model_draft.ego_dp_supply_res_powerplant  (preversion,id, start_up_date, electrical_capacity, generation_type, generation_subtype, thermal_capacity, 
  nuts, lon, lat, voltage_level, network_node, source, comment, geom, voltage_level_var, subst_id, 
  otg_id, un_id, scenario, flag)
   SELECT
-    'v0.3.0'::text as version,
+    'v0.3.0'::text as preversion,
     max(id)+ row_number() over () as id , 
     '2034-12-31 00:00:00' as start_up_date, 900000, 'wind', 'wind_offshore', NULL, NULL, NULL, 
     NULL, 1, NULL, 'ONEP', 'NVP: Halbemond', ST_Transform('0101000020E610000011DD88C5680E1940A8A8439C94004B40'::geometry,3035), 
     '380', NULL, NULL, NULL,'NEP 2035','commissioning'
   FROM model_draft.ego_dp_supply_res_powerplant;
 -- 13
-INSERT INTO model_draft.ego_dp_supply_res_powerplant  (version,id, start_up_date, electrical_capacity, generation_type, generation_subtype, thermal_capacity, 
+INSERT INTO model_draft.ego_dp_supply_res_powerplant  (preversion,id, start_up_date, electrical_capacity, generation_type, generation_subtype, thermal_capacity, 
  nuts, lon, lat, voltage_level, network_node, source, comment, geom, voltage_level_var, subst_id, 
  otg_id, un_id, scenario, flag)
   SELECT
-   'v0.3.0'::text as version,
+   'v0.3.0'::text as preversion,
     max(id)+ row_number() over () as id , 
     '2034-12-31 00:00:00' as start_up_date, 1585000, 'wind', 'wind_offshore', NULL, NULL, NULL, 
     NULL, 1, NULL, 'ONEP', 'NVP: Lubmin', ST_Transform('0101000020E6100000C396890D74072A404ADF5A5C48744B40'::geometry,3035), 
@@ -1104,10 +1104,10 @@ AND upt.nuts IS NULL;
 SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_supply_res_wo_2035_germany_mun_temp','ego_db_res_rea_by_scenario.sql',' '); 
 
 -- Add new wind onshore units 
-Insert into model_draft.ego_dp_supply_res_powerplant (version,id,start_up_date,electrical_capacity,
+Insert into model_draft.ego_dp_supply_res_powerplant (preversion,id,start_up_date,electrical_capacity,
             generation_type, generation_subtype, voltage_level, source, comment,geom, scenario,flag)
 	SELECT
-	  'v0.3.0'::text as version,
+	  'v0.3.0'::text as preversion,
 	  sub2.max_rown + row_number() over () as id ,
 	  '2034-12-31 00:00:00' as start_up_date,
 	  sub.electrical_capacity,
@@ -1189,7 +1189,7 @@ set comment = upt.comment || ', Method ProxToNow Biomass',
     source = 'open_ego 2050',
     scenario = 'eGo 100' ,
     flag = 'repowering',
-    version = 'v0.3.0'::text,
+    preversion = 'v0.3.0'::text,
     electrical_capacity = CASE WHEN scn.capacity = 0 THEN 0 
 	  ELSE (upt.electrical_capacity/ cap_sum)*scn.capacity*1000    
 	 END 
@@ -1246,7 +1246,7 @@ Update model_draft.ego_supply_res_chp_2050_temp
  set scenario =  'eGo 100',
      flag = 'decommissioning',
      start_up_date = '2034-12-31 00:00:00',
-     version = 'v0.3.0'::text,
+     preversion = 'v0.3.0'::text,
      electrical_capacity = 0;  
 
 -- create index GIST (geom)
@@ -1288,7 +1288,7 @@ set comment = upt.comment || ', Method ProxToNow Hydro',
     source = 'open_ego 100',
     scenario =  'eGo 100',
     flag = 'repowering',
-    version = 'v0.3.0'::text,
+    preversion = 'v0.3.0'::text,
     electrical_capacity = CASE WHEN scn.capacity = 0 THEN upt.electrical_capacity
 	  ELSE (upt.electrical_capacity/ cap_sum)*scn.capacity*1000    
 	 END 
@@ -1511,11 +1511,11 @@ AND upt.nuts IS NULL;
 SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_supply_res_pv_2050_germany_mun_temp','ego_db_res_rea_by_scenario.sql',' '); 
 
 -- Add new PV units 
-Insert into model_draft.ego_dp_supply_res_powerplant (version,id,start_up_date, electrical_capacity,
+Insert into model_draft.ego_dp_supply_res_powerplant (preversion,id,start_up_date, electrical_capacity,
 generation_type, generation_subtype, voltage_level, source, comment,geom, scenario,flag)
 
         SELECT
-	  'v0.3.0'::text as version,
+	  'v0.3.0'::text as preversion,
 	  sub2.max_rown + row_number() over () as id ,
 	  '2050-12-31 00:00:00' as start_up_date,
 	  sub.electrical_capacity as electrical_capacity,
@@ -1579,7 +1579,7 @@ UPDATE model_draft.ego_supply_res_woff_2050_temp as scn2050
 set source   = 'open_ego 2050',
     scenario = 'eGo 100',
     flag     = 'repowering',
-    version  = 'v0.3.0'::text,
+    preversion  = 'v0.3.0'::text,
     electrical_capacity = scn2050.electrical_capacity + round(scn2050.electrical_capacity*q1.pp) 
 From
 (
@@ -1726,10 +1726,10 @@ AND upt.nuts is Null;
 SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_supply_res_wo_2050_germany_mun_temp','ego_db_res_rea_by_scenario.sql',' '); 
 
 -- Add new wind shore units 
-Insert into model_draft.ego_dp_supply_res_powerplant (version,id,start_up_date, electrical_capacity,
+Insert into model_draft.ego_dp_supply_res_powerplant (preversion,id,start_up_date, electrical_capacity,
             generation_type, generation_subtype, voltage_level, source, comment,geom,scenario,flag)
 	SELECT
-	  'v0.3.0'::text as version,
+	  'v0.3.0'::text as preversion,
 	  sub2.max_rown + row_number() over () as id ,
 	  '2049-12-31 00:00:00' as start_up_date,
 	  sub.electrical_capacity,
@@ -1781,126 +1781,4 @@ Update model_draft.ego_dp_supply_res_powerplant
 	rea_geom_new = NULL;
 
 -- VACUUM FULL ANALYZE model_draft.ego_dp_supply_res_powerplant;
-
-
-<<<<<<< HEAD:preprocessing/sql_snippets/ego_dp_res_rea_by_scenario.sql
--- MView for Status Quo
-DROP MATERIALIZED VIEW IF EXISTS  model_draft.ego_supply_res_powerplant_sq_mview CASCADE;
-CREATE MATERIALIZED VIEW model_draft.ego_supply_res_powerplant_sq_mview AS
-    SELECT *
-    FROM model_draft.ego_dp_supply_res_powerplant
-    WHERE scenario =  'Status Quo';
-
--- grant (oeuser)    
-ALTER TABLE model_draft.ego_supply_res_powerplant_sq_mview OWNER TO oeuser;
-
--- MView for NEP 2035
-DROP MATERIALIZED VIEW IF EXISTS model_draft.ego_supply_res_powerplant_nep2035_mview CASCADE;
-CREATE MATERIALIZED VIEW model_draft.ego_supply_res_powerplant_nep2035_mview AS
-	SELECT
-	sub.*
-	FROM  ( 
-		SELECT DISTINCT ON (id)
-		  *
-		FROM
-		  model_draft.ego_dp_supply_res_powerplant 
-			WHERE id not in (
-			SELECT id
-			FROM model_draft.ego_dp_supply_res_powerplant
-			Group BY id
-			HAVING count(*) > 1
-			Order by id)
-		 AND scenario = 'Status Quo'
-		 ORDER BY id	
-		 ) as sub
-	UNION 
-	SELECT
-	sub2.*
-	FROM  ( 
-		SELECT  DISTINCT ON (id)
-		  *
-		FROM
-		  model_draft.ego_dp_supply_res_powerplant	
-		WHERE id in (
-			SELECT id
-			FROM model_draft.ego_dp_supply_res_powerplant
-			Where scenario in ('NEP 2035')
-			Group BY id
-			Order by id)
-		 AND scenario in ('NEP 2035')
-		 ORDER BY id	
-	) sub2
-	Order by id;
--- 01:56:3626 hours execution time.
-
--- grant (oeuser)    
-ALTER TABLE model_draft.ego_supply_res_powerplant_nep2035_mview OWNER TO oeuser;
-
-
-
--- MView for eGo 100
-DROP MATERIALIZED VIEW IF EXISTS model_draft.ego_supply_res_powerplant_ego100_mview CASCADE;
-CREATE MATERIALIZED VIEW model_draft.ego_supply_res_powerplant_ego100_mview AS
-	SELECT
-	sub.*
-	FROM  ( 
-		SELECT DISTINCT ON (id)
-		  *
-		FROM
-		  model_draft.ego_dp_supply_res_powerplant 
-			WHERE id not in (
-			SELECT id
-			FROM model_draft.ego_dp_supply_res_powerplant
-			Group BY id
-			HAVING count(*) > 1
-			Order by id)
-		 AND scenario = 'Status Quo'
-		 ORDER BY id	
-		 ) as sub
-	UNION 
-	SELECT
-	sub2.*
-	FROM  ( 
-		SELECT  DISTINCT ON (id)
-		  *
-		FROM
-		  model_draft.ego_dp_supply_res_powerplant	
-		WHERE id in (
-			SELECT id
-			FROM model_draft.ego_dp_supply_res_powerplant
-			Where scenario in ('eGo 100')
-			AND generation_subtype not in ('solar','wind_offshore')
-			AND generation_type not in ('gas')
-			AND flag in ('decommissioning')
-			Group BY id
-			Order by id)
-		 AND scenario in ('eGo 100')
-		 ORDER BY id	
-	) sub2
-        UNION 
-	SELECT
-	sub3.*
-	FROM  ( 
-		SELECT  DISTINCT ON (id)
-		  *
-		FROM
-		  model_draft.ego_dp_supply_res_powerplant	
-		WHERE id in (
-			SELECT id
-			FROM model_draft.ego_dp_supply_res_powerplant
-			Where scenario in ('NEP 2035')
-			AND generation_subtype in ('solar','wind_offshore')
-			AND flag in ('commissioning')
-			Group BY id
-			Order by id)
-		 AND scenario in ('NEP 2035')
-		 ORDER BY id	
-	) sub3
-	Order by id;
-	
--- grant (oeuser)    
-ALTER TABLE model_draft.ego_supply_res_powerplant_ego100_mview OWNER TO oeuser;
-
-=======
->>>>>>> refactor/assignment_generator:dataprocessing/preprocessing/ego_dp_res_rea_by_scenario.sql
--- END
+-- MView for scenarios in dataprocessing/sql_snippets/ego_dp_powerflow_create_pp_mview.sql
