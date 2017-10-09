@@ -150,10 +150,10 @@ CREATE MATERIALIZED VIEW model_draft.ego_supply_res_powerplant_nep2035_mview AS
 		WHERE id in (
 			SELECT id
 			FROM model_draft.ego_dp_supply_res_powerplant
-			Where scenario in ('NEP 2035', 'ego-nep2035')
+			Where scenario in ('NEP 2035')
 			Group BY id
 			Order by id)
-		 AND scenario in ('NEP 2035', 'ego-nep2035')
+		 AND scenario in ('NEP 2035')
 		 And preversion = 'v0.3.0'
 		 AND electrical_capacity > 0
 		 ORDER BY id	
@@ -182,6 +182,7 @@ CREATE MATERIALIZED VIEW model_draft.ego_supply_res_powerplant_ego100_mview AS
 		 AND scenario = 'Status Quo'
 		 And preversion = 'v0.3.0'
 		 AND electrical_capacity > 0
+		 AND generation_type in ('solar','wind')
 		 ORDER BY id	
 		 ) as sub
 	UNION 
@@ -196,9 +197,8 @@ CREATE MATERIALIZED VIEW model_draft.ego_supply_res_powerplant_ego100_mview AS
 			SELECT id
 			FROM model_draft.ego_dp_supply_res_powerplant
 			Where scenario in ('eGo 100')
-			AND generation_subtype not in ('solar','wind_offshore')
-			AND generation_type not in ('gas')
-			AND flag in ('decommissioning')
+			AND generation_type in ('solar','wind')
+			AND flag in ('commissioning', 'repowering')
 			Group BY id
 			Order by id)
 		 AND scenario in ('eGo 100')
@@ -217,12 +217,12 @@ CREATE MATERIALIZED VIEW model_draft.ego_supply_res_powerplant_ego100_mview AS
 		WHERE id in (
 			SELECT id
 			FROM model_draft.ego_dp_supply_res_powerplant
-			Where scenario in ('NEP 2035', 'ego-nep2035')
+			Where scenario in ('NEP 2035')
 			AND generation_subtype in ('solar','wind_offshore')
-			AND flag in ('commissioning')
+			AND flag in ('commissioning', 'repowering')
 			Group BY id
 			Order by id)
-		 AND scenario in ('NEP 2035', 'ego-nep2035')
+		 AND scenario in ('NEP 2035')
 		 And preversion = 'v0.3.0'
 		 AND electrical_capacity > 0
 		 ORDER BY id	
