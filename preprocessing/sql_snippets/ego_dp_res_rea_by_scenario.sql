@@ -768,7 +768,7 @@ Group by substring(A.rs from 1 for 2),scn.capacity_2035;
 
 -- Take status quo and add new Photovoltaic plants 
 -- Insert new units by pv_new_units 
--- geom = centroid of municipality geom , see http://postgis.net/docs/ST_PointOnSurface.html
+-- geom = centroid of municipality geom , see http://postgis.net/docs/ST_Centroid.html
 -- generation_subtype defined as solar
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
@@ -796,7 +796,7 @@ generation_type, generation_subtype, voltage_level, source, comment,geom, scenar
 	  A.voltage_level,
 	  Case when A.pv_new_units = 0 Then A.pv_add_cap_2035
 	       else  unnest(array_fill(A.pv_avg_cap, Array[A.pv_new_units-1])) END as electrical_capacity ,    -- in kW 
-	 ST_PointOnSurface(B.geom) as geom     
+	 ST_Centroid(B.geom) as geom     
 	FROM 
 	  model_draft.ego_supply_res_pv_2035_germany_mun_temp A,
 	  boundaries.bkg_vg250_6_gem_rs_mview B
@@ -1125,7 +1125,7 @@ Insert into model_draft.ego_dp_supply_res_powerplant (preversion,id,start_up_dat
 	  A.voltage_level,
 	  Case when A.wo_new_units = 0 Then A.wo_add_cap_2035
 	       else  unnest(array_fill(A.wo_avg_cap, Array[A.wo_new_units-1])) END as electrical_capacity ,    -- in kW 
-	 ST_PointOnSurface(B.geom) as geom     
+	 ST_Centroid(B.geom) as geom     
 	FROM 
 	  model_draft.ego_supply_res_wo_2035_germany_mun_temp A,
 	  boundaries.bkg_vg250_6_gem_rs_mview B
@@ -1504,7 +1504,7 @@ AND upt.nuts IS NULL;
 
 -- Take status quo and add new Photovoltaic plants 
 -- Insert new units by pv_new_units 
--- geom = centroid of municipality geom , see http://postgis.net/docs/ST_PointOnSurface.html
+-- geom = centroid of municipality geom , see http://postgis.net/docs/ST_Centroid.html
 -- generation_subtype is defined as solar
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
@@ -1533,7 +1533,7 @@ generation_type, generation_subtype, voltage_level, source, comment,geom, scenar
 	  A.voltage_level,
 	  Case when A.pv_new_units = 0 Then A.pv_add_cap_2050
 	       else  unnest(array_fill(A.pv_avg_cap, Array[A.pv_new_units-1])) END as electrical_capacity ,    -- in kW 
-	 ST_PointOnSurface(B.geom) as geom     
+	 ST_Centroid(B.geom) as geom     
 	FROM 
 	  model_draft.ego_supply_res_pv_2050_germany_mun_temp A,
 	  boundaries.bkg_vg250_6_gem_rs_mview B
@@ -1747,7 +1747,7 @@ Insert into model_draft.ego_dp_supply_res_powerplant (preversion,id,start_up_dat
 	  A.voltage_level,
 	  Case when A.wo_new_units = 0 Then A.wo_add_cap_2050
 	       else  unnest(array_fill(A.wo_avg_cap, Array[A.wo_new_units-1])) END as electrical_capacity ,    -- in kW 
-	 ST_PointOnSurface(B.geom) as geom     
+	 ST_Centroid(B.geom) as geom     
 	FROM 
 	  model_draft.ego_supply_res_wo_2050_germany_mun_temp A,
 	  boundaries.bkg_vg250_6_gem_rs_mview B
