@@ -1,4 +1,4 @@
-
+﻿
 /*
 Identify corresponding subst_id for all power plants according to their voltage_level and geometry. 
 __copyright__ 	= "Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems"

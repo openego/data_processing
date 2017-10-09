@@ -197,7 +197,7 @@ CREATE MATERIALIZED VIEW model_draft.ego_supply_res_powerplant_ego100_mview AS
 			SELECT id
 			FROM model_draft.ego_dp_supply_res_powerplant
 			Where scenario in ('eGo 100')
-			AND generation_type in ('solar','wind')
+			AND generation_type not in ('gas')
 			AND flag in ('commissioning', 'repowering')
 			Group BY id
 			Order by id)
@@ -218,7 +218,7 @@ CREATE MATERIALIZED VIEW model_draft.ego_supply_res_powerplant_ego100_mview AS
 			SELECT id
 			FROM model_draft.ego_dp_supply_res_powerplant
 			Where scenario in ('NEP 2035')
-			AND generation_subtype in ('solar','wind_offshore')
+			AND generation_type not in ('biomass','gas','reservoir','run_of_river')
 			AND flag in ('commissioning', 'repowering')
 			Group BY id
 			Order by id)
