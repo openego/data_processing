@@ -1553,7 +1553,7 @@ from
 WHERE ST_Intersects(regions.geom, upt.geom)
 AND generation_type = 'solar'
 AND upt.nuts is NULL;
---HierWEITER
+
 ---
 -- Wind offshore eGo 100
 ---
