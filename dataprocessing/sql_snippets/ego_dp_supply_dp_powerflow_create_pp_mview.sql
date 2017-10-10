@@ -9,7 +9,7 @@ __author__ = "wolfbunke"
 
 toDo:
  - alter supply table add preversion
- - testing
+ - CREATE json doc-string
 
 */
 
