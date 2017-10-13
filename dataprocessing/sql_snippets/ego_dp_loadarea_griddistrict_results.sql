@@ -180,13 +180,13 @@ SET  	zensus_sum = t2.zensus_sum,
 	population_density = t2.population_density
 FROM    (SELECT	gd.subst_id AS subst_id,
 		SUM(pts.population)::integer AS zensus_sum,
-		COUNT(pts.geom)::integer AS zensus_count,
-		(SUM(pts.population)/COUNT(pts.geom))::numeric AS zensus_density,
+		COUNT(pts.geom_point)::integer AS zensus_count,
+		(SUM(pts.population)/COUNT(pts.geom_point))::numeric AS zensus_density,
 		(SUM(pts.population)/gd.area_ha)::numeric AS population_density
 	FROM	model_draft.ego_grid_mv_griddistrict AS gd,
 		society.destatis_zensus_population_per_ha_mview AS pts
-	WHERE  	gd.geom && pts.geom AND
-		ST_CONTAINS(gd.geom,pts.geom)
+	WHERE  	gd.geom && pts.geom_point AND
+		ST_CONTAINS(gd.geom,pts.geom_point)
 	GROUP BY gd.subst_id
 	)AS t2
 WHERE  	t1.subst_id = t2.subst_id;
