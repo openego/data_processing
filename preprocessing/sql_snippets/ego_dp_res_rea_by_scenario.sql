@@ -775,6 +775,7 @@ Group by substring(A.rs from 1 for 2),scn.capacity_2035;
 SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_supply_res_pv_2035_germany_mun_temp','ego_db_res_rea_by_scenario.sql',' '); 
 
 -- Add new PV units 
+-- Step 3-4 
 Insert into model_draft.ego_dp_supply_res_powerplant  (preversion,id, start_up_date,electrical_capacity,
 generation_type, generation_subtype, voltage_level, source, comment,geom, scenario,flag)
         SELECT
