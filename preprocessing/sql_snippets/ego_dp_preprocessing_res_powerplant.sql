@@ -380,4 +380,4 @@ UPDATE model_draft.ego_dp_supply_res_powerplant
 SELECT obj_description('model_draft.ego_dp_supply_res_powerplant' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_supply_res_powerplant','ego_dp_preprocessing_res_powerplant.sql','');
+SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_dp_supply_res_powerplant','ego_dp_preprocessing_res_powerplant.sql','');
