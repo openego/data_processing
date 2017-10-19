@@ -86,7 +86,7 @@ CREATE MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_ego100_mview AS
 	  'constantly'::text as flag,
 	  nuts
 	FROM model_draft.ego_dp_supply_conv_powerplant
-	WHERE scenario in('Status Quo','NEP 2035', 'eGo 100')
+	WHERE scenario in('NEP 2035')
 	AND fuel = 'pumped_storage'
 	AND capacity > 0
 	AND shutdown IS NULL or shutdown >= 2049
