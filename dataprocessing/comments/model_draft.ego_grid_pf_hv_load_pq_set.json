@@ -1,0 +1,40 @@
+{
+"Name": "Load time series hv powerflow",
+"Source": [{
+                  "Name": "open_eGo data-processing",
+                  "URL":  "https://github.com/openego/data_processing" }],
+"Reference date": "...",
+"Date of collection": "...",
+"Original file": "...",
+"Spatial resolution": ["Germany"],
+"Description": ["Times series for loads considered in hv powerflow"],
+"Column": [
+                   {"Name": "scn_name",
+                    "Description": "scenario name",
+                    "Unit": "" },
+                   {"Name": "load_id",
+                    "Description": "unique load id",
+                    "Unit": "" },                   
+                   {"Name": "temp_id",
+                    "Description": "id of temporal resolution",
+                    "Unit": "" },
+                   {"Name": "p_set",
+                    "Description": "active power set point",
+                    "Unit": "MW" },
+                   {"Name": "q_set",
+                    "Description": "reactive power set point",
+                    "Unit": "MVar" }],
+"Changes":[
+                   {"Name": "Mario Kropshofer",
+                    "Mail": "mario.kropshofer2@stud.fh-flensburg.de",
+                    "Date":  "04.10.2016",
+                    "Comment": "..." }, 
+		    {"Name": "Ilka Cussmann",
+                    "Mail": "",
+                    "Date":  "26.10.2016",
+                    "Comment": "completed json-string" }
+                  ],
+"ToDo": ["Add licence"],
+"Licence": ["..."],
+"Instructions for proper use": ["..."]
+}

@@ -1,0 +1,40 @@
+{
+"Name": "Load in hv powerflow",
+"Source": [{
+                  "Name": "open_eGo data-processing",
+                  "URL":  "https://github.com/openego/data_processing" }],
+"Reference date": "...",
+"Date of collection": "...",
+"Original file": "...",
+"Spatial resolution": ["Germany"],
+"Description": ["Loads considered in hv powerflow calculation"],
+"Column": [
+                   {"Name": "scn_name",
+                    "Description": "scenario name",
+                    "Unit": "" },
+                   {"Name": "load_id",
+                    "Description": "unique id",
+                    "Unit": "" },                   
+                   {"Name": "bus",
+                    "Description": "id of associated bus",
+                    "Unit": "" },
+                   {"Name": "sign",
+                    "Description": "power sign",
+                    "Unit": "" },
+                   {"Name": "e_annual",
+                    "Description": "annual electricity consumption",
+                    "Unit": "GWh" }],
+"Changes":[
+                   {"Name": "Mario Kropshofer",
+                    "Mail": "mario.kropshofer2@stud.fh-flensburg.de",
+                    "Date":  "04.10.2016",
+                    "Comment": "..." }, 
+                   {"Name": "Ilka Cussmann",
+                    "Mail": "",
+                    "Date":  "26.10.2016",
+                    "Comment": "completed json-string" }
+                  ],
+"ToDo": ["add licence"],
+"Licence": ["..."],
+"Instructions for proper use": ["..."]
+}

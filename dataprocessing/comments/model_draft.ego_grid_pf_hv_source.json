@@ -1,0 +1,38 @@
+{
+"Name": "Sources hv powerflow ",
+"Source": [{
+                  "Name": "open_eGo data-processing",
+                  "URL":  "https://github.com/openego/data_processing" }],
+"Reference date": "...",
+"Date of collection": "...",
+"Original file": "ego_dp_powerflow_hv_setup.sql",
+"Spatial resolution": ["Germany"],
+"Description": ["Different generation types/sources considered in hv powerflow"],
+"Column": [
+                   {"Name": "source_id",
+                    "Description": "unique source id",
+                    "Unit": "" },
+                   {"Name": "name",
+                    "Description": "source name",
+                    "Unit": "" },                   
+                   {"Name": "co2_emissions",
+                    "Description": "technology specific CO2 emissions ",
+                    "Unit": "tonnes/MWh" },
+                   {"Name": "commentary",
+                    "Description": "...",
+                    "Unit": "" }],
+"Changes":[
+                   {"Name": "Mario Kropshofer",
+                    "Mail": "mario.kropshofer2@stud.fh-flensburg.de",
+                    "Date":  "04.10.2016",
+                    "Comment": "..." },
+
+                   {"Name": "Ilka Cussmann",
+                    "Mail": "",
+                    "Date":  "26.10.2016",
+                    "Comment": "completed json-string" } 
+                  ],
+"ToDo": ["add licence"],
+"Licence": ["..."],
+"Instructions for proper use": ["..."]
+}

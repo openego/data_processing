@@ -1,0 +1,37 @@
+{
+"Name": "temporal resolution hv powerflow",
+"Source": [{
+                  "Name": "open_eGo data-processing",
+                  "URL":  "https://github.com/openego/data_processing" }],
+"Reference date": "...",
+"Date of collection": "...",
+"Original file": "ego_dp_powerflow_hv_setup.sql",
+"Spatial resolution": ["Germany"],
+"Description": ["Temporal resolution of hv powerflow"],
+"Column": [
+                   {"Name": "temp_id",
+                    "Description": "unique id",
+                    "Unit": "" },
+                   {"Name": "timesteps",
+                    "Description": "timestep",
+                    "Unit": "" },
+                   {"Name": "resolution",
+                    "Description": "temporal resolution",
+                    "Unit": "" },
+                   {"Name": "start_time",
+                    "Description": "start time with style: YYYY-MM-DD HH:MM:SS",
+                    "Unit": "" }],
+"Changes":[
+                   {"Name": "Mario Kropshofer",
+                    "Mail": "mario.kropshofer2@stud.fh-flensburg.de",
+                    "Date":  "04.10.2016",
+                    "Comment": "..." },
+                   {"Name": "Ilka Cussmann",
+                    "Mail": "",
+                    "Date":  "26.10.2016",
+                    "Comment": "completed json-string" }
+                  ],
+"ToDo": ["Add licence"],
+"Licence": ["..."],
+"Instructions for proper use": ["..."]
+}

@@ -1,0 +1,33 @@
+{
+"Name": "hv powerflow busmap",
+"Source": [{
+                  "Name": "open_eGo data-processing",
+                  "URL":  "https://github.com/openego/data_processing" }],
+"Reference date": "2017",
+"Date of collection": "",
+"Original file": "ego_dp_powerflow_hv_setup.sql",
+"Spatial resolution": [""],
+"Description": ["Bus to bus assignment by id to support PyPSA clustering."],
+"Column": [
+                   {"Name": "scn_name",
+                    "Description": "name of scenario",
+                    "Unit": "" },
+                   {"Name": "bus0",
+                    "Description": "source bus id",
+                    "Unit": "" },
+                   {"Name": "bus1",
+                    "Description": "target bus id",
+                    "Unit": "" },
+                   {"Name": "path_length",
+                    "Description": "Length of line between source and target bus.",
+                    "Unit": "" }],
+"Changes":[
+                   {"Name": "s3pp",
+                    "Mail": "",
+                    "Date":  "02.06.2017",
+                    "Comment": "Initial statement."}
+                  ],
+"ToDo": ["add licence"],
+"Licence": ["..."],
+"Instructions for proper use": ["..."]
+}

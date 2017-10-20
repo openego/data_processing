@@ -1,0 +1,103 @@
+{
+    "Name": "Scenario settings hv powerflow", 
+    "Source": [
+        {
+            "Name": "open_eGo data-processing", 
+            "URL": "https://github.com/openego/data_processing"
+        }
+    ], 
+    "Reference date": "2016", 
+    "Date of collection": "...", 
+    "Original file": "ego_dp_powerflow_hv_setup.sql", 
+    "Spatial resolution": [
+        "Germany"
+    ], 
+    "Description": [
+        "Overview of scenarios for the hv powerflow"
+    ], 
+    "Column": [
+        {
+            "Name": "scn_name", 
+            "Description": "scenario name", 
+            "Unit": ""
+        }, 
+        {
+            "Name": "bus", 
+            "Description": "scenario for bus dataset", 
+            "Unit": ""
+        }, 
+        {
+            "Name": "bus_v_mag_set", 
+            "Description": "scenario for bus dataset", 
+            "Unit": ""
+        }, 
+        {
+            "Name": "generator", 
+            "Description": "scenario for generator dataset", 
+            "Unit": ""
+        }, 
+        {
+            "Name": "generator_pq_set", 
+            "Description": "scenario for generator dataset", 
+            "Unit": ""
+        }, 
+        {
+            "Name": "line", 
+            "Description": "scenario for line dataset", 
+            "Unit": ""
+        }, 
+        {
+            "Name": "load", 
+            "Description": "scenario for load dataset", 
+            "Unit": ""
+        }, 
+        {
+            "Name": "load_pq_set", 
+            "Description": "scenario for load dataset", 
+            "Unit": ""
+        }, 
+        {
+            "Name": "storage", 
+            "Description": "scenario for storage dataset", 
+            "Unit": ""
+        }, 
+        {
+            "Name": "storage_pq_set", 
+            "Description": "scenario for storage dataset", 
+            "Unit": ""
+        }, 
+        {
+            "Name": "temp_resolution", 
+            "Description": "scenario for temp_resolution", 
+            "Unit": ""
+        }, 
+        {
+            "Name": "transformer", 
+            "Description": "scenario for transformer", 
+            "Unit": ""
+        }
+    ], 
+    "Changes": [
+        {
+            "Name": "Mario Kropshofer", 
+            "Mail": "mario.kropshofer2@stud.fh-flensburg.de", 
+            "Date": "04.10.2016", 
+            "Comment": "..."
+        }, 
+        {
+            "Name": "Ilka Cussmann", 
+            "Mail": "", 
+            "Date": "26.10.2016", 
+            "Comment": "completed json-string"
+        }
+    ], 
+    "ToDo": [
+        "add licence"
+    ], 
+    "Licence": [
+        "..."
+    ], 
+    "Instructions for proper use": [
+        "..."
+    ]
+}
