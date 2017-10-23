@@ -49,14 +49,36 @@ tablenames = ['model_draft.ego_grid_pf_hv_scenario_settings',
               'model_draft.ego_grid_pf_hv_load_pq_set',
               'model_draft.ego_grid_pf_hv_storage_pq_set']
 
+for name in tablenames:
+    # retrieve the Table object corresponding to the table name from ego.io
+    # Base
+    sqla_table = Base.metadata.tables[name]
 
+    # drop the Table in the database
+    sqla_table.drop(engine, checkfirst=True)
 
-comments = {table: loadcomment('../comments/' + table + '.json')
-            for table in tablenames}
+    # assign a comment from the comments subdirectory
+    sqla_table.comment = str(load_external_file(fname=name + '.json',
+                                                dpath='../comments/'))
 
-for tablename in tablenames:
-    table = Base.metadata.tables[tablename]
-    table.drop(engine, checkfirst=True)
-    table.comment = str(comments[tablename])
-    table.create(engine)
+    # recreate the Table in the database
+    sqla_table.create(engine)
 
+    # set ownership and permissions to oeuser
+    schema, tablename_without_schema = name.split('.')
+
+    change_owner_to(table=tablename_without_schema,
+                    schema=schema,
+                    conn=conn,
+                    role='oeuser')
+
+    grant_db_access(table=tablename_without_schema,
+                    schema=schema,
+                    conn=conn,
+                    role='oeuser')
+
+# Populate model_draft.ego_grid_pf_hv_source with sources
+name = 'model_draft.ego_grid_pf_hv_source.csv'
+for d in load_external_file(fname=name, dpath='../data/'):
+    session.add(EgoGridPfHvSource(**d))
+session.commit()
