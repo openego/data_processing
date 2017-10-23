@@ -46,13 +46,6 @@ def data_processing():
 	## INPUT DATA CHECK eGoPP
 #	 'ego_dp_structure_input_verification.sql',			# Check input tables and versions from eGoPP
 	
-    ## STRUCTURE & SETUP (WARNING)
-    ## 'ego_dp_structure_scenariolog.sql',				# Setup scenario log table
-    ## 'ego_dp_structure_versioning.sql',				# Setup versioning tables
-    ## 'ego_dp_structure_boundaries_vg250.sql',			# Setup vg250 borders
-    ## 'ego_dp_structure_osm_landuse.sql',         		# Filter OSM landuse
-    ## 'ego_dp_structure_census.sql',          			# Filter Census2011 with population
-
 	## SUBSTATION
 #     'ego_dp_substation_hvmv.sql',               	# Abstract HVMV Substations of the high voltage level from OSM
 #     'ego_dp_substation_ehv.sql',             		# Abstract EHV Substations of the extra high voltage level from OSM
