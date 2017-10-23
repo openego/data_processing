@@ -29,3 +29,40 @@ def oedb_session(section='oedb'):
                                                   database)).connect()
 
     return conn
+
+
+def load_external_file(fname, dpath):
+    """ Load external file based on the extension of the file
+
+    # TODO This could also be a dinstinction based on functions comment / data?
+
+    Parameters
+    ----------
+    fname : str
+        Filename.
+    dpath : str
+        Path to the directory.
+
+    Returns
+    -------
+    dict or list of records
+    """
+
+    fpath = dpath + fname
+
+    def loadjson(f):
+        return json.load(f)
+
+    def loadcsv(f):
+        return list(csv.DictReader(f))
+
+    methods = {'.json': loadjson,
+               '.csv' : loadcsv}
+
+    f, file_extension = os.path.splitext(fname)
+
+    try:
+        with open(fpath) as f:
+            return methods[file_extension](f)
+    except FileNotFoundError:
+        print('No external file found at %s.' % fpath)
