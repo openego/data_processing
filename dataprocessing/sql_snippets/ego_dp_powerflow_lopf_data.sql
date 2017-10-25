@@ -3,7 +3,6 @@ LOPF data -
 Setting marginal_cost ( operating cost + fuel cost + CO2 crt cost ) 
 in model_draft.ego_grid_pf_hv_generator according to renpass_gis, NEP 2014 scenario.
 In addition p_max_pu is set for all generators with variable dispatch based on p_max_pu = p_set / p_nom .
-
 __copyright__ 	= "Europa-Universität Flensburg, Centre for Sustainable Energy Systems"
 __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
 __url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
@@ -123,7 +122,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_storage
 )
 SELECT 
   'Status Quo',
-  nextval('orig_geo_powerplants.pf_storage_single_aggr_id') as aggr_id,
+  nextval('model_draft.ego_supply_pf_storage_single_aggr_id') as aggr_id,
   model_draft.ego_grid_hvmv_substation.otg_id,  -- assign storage to substation
   'flexible', 	-- set storage to be flexible
   'PQ',  -- PQ control
@@ -173,7 +172,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_storage
 )
 SELECT 
   'NEP 2035',
-  nextval('orig_geo_powerplants.pf_storage_single_aggr_id') as aggr_id,
+  nextval('model_draft.ego_supply_pf_storage_single_aggr_id') as aggr_id,
   model_draft.ego_grid_hvmv_substation.otg_id,  -- assign storage to substation
   'flexible', 	-- set storage to be flexible
   'PQ',  -- PQ control
@@ -224,7 +223,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_storage
 )
 SELECT 
   'eGo 100',
-  nextval('orig_geo_powerplants.pf_storage_single_aggr_id') as aggr_id,
+  nextval('model_draft.ego_supply_pf_storage_single_aggr_id') as aggr_id,
   model_draft.ego_grid_hvmv_substation.otg_id,  -- assign storage to substation
  'flexible', 	-- set storage to be flexible
   'PQ',  -- PQ control
@@ -274,7 +273,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_storage
 )
 SELECT 
   'Status Quo',
-  nextval('orig_geo_powerplants.pf_storage_single_aggr_id') as aggr_id,
+  nextval('model_draft.ego_supply_pf_storage_single_aggr_id') as aggr_id,
   model_draft.ego_grid_hvmv_substation.otg_id,  -- assign storage to substation
   'flexible', 	-- set storage to be flexible
   'PQ',  -- PQ control
@@ -329,7 +328,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_storage
 )
 SELECT 
   'NEP 2035',
-  nextval('orig_geo_powerplants.pf_storage_single_aggr_id') as aggr_id,
+  nextval('model_draft.ego_supply_pf_storage_single_aggr_id') as aggr_id,
   model_draft.ego_grid_hvmv_substation.otg_id,  -- assign storage to substation
   'flexible', 	-- set storage to be flexible
   'PQ',  -- PQ control
@@ -384,7 +383,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_storage
 )
 SELECT 
   'eGo 100',
-  nextval('orig_geo_powerplants.pf_storage_single_aggr_id') as aggr_id,
+  nextval('model_draft.ego_supply_pf_storage_single_aggr_id') as aggr_id,
   model_draft.ego_grid_hvmv_substation.otg_id,  -- assign storage to substation
   'flexible', 	-- set storage to be flexible
   'PQ',  -- PQ control
