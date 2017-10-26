@@ -151,10 +151,50 @@ SELECT ego_scenario_log('v0.3.0','result','demand','ego_dp_loadarea','ego_dp_ver
 /* DELETE FROM supply.ego_dp_conv_powerplant
 	WHERE	version = 'v0.3.0'; */
 
-INSERT INTO supply.ego_dp_conv_powerplant
+INSERT INTO supply.ego_dp_conv_powerplant 
 	SELECT	'v0.3.0',
-		*
-	FROM	model_draft.ego_supply_conv_powerplant;
+  		id,
+  		bnetza_id,
+  		company,
+  		name,
+  		postcode,
+  		city,
+  		street,
+  		state,
+  		block,
+  		commissioned_original,
+  		commissioned,
+  		retrofit,
+  		shutdown,
+  		status,
+  		fuel,
+  		technology,
+  		type,
+  		eeg,
+  		chp,
+  		capacity,
+  		capacity_uba,
+  		chp_capacity_uba,
+  		efficiency_data,
+  		efficiency_estimate,
+  		network_node,
+  		voltage,
+  		network_operator,
+  		name_uba,
+  		lat,
+  		lon,
+  		comment,
+  		geom,
+  		voltage_level,
+  		subst_id,
+  		otg_id,
+  		un_id,
+		preversion,
+  		la_id,
+  		scenario,
+  		flag,
+  		nuts
+	FROM	model_draft.ego_dp_supply_conv_powerplant;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.3.0','result','supply','ego_dp_conv_powerplant','ego_dp_versioning.sql','versioning');
@@ -165,8 +205,47 @@ SELECT ego_scenario_log('v0.3.0','result','supply','ego_dp_conv_powerplant','ego
 
 INSERT INTO supply.ego_dp_res_powerplant
 	SELECT	'v0.3.0',
-		*
-	FROM	model_draft.ego_supply_res_powerplant;
+  		id,
+  		start_up_date,
+  		electrical_capacity,
+  		generation_type,
+  		generation_subtype,
+  		thermal_capacity,
+  		city,
+  		postcode,
+  		address,
+  		lon,
+  		lat,
+  		gps_accuracy,
+  		validation,
+  		notification_reason,
+  		eeg_id,
+  		tso,
+  		tso_eic,
+  		dso_id,
+  		dso,
+  		voltage_level_var,
+  		network_node,
+  		power_plant_id,
+  		source,
+  		comment,
+  		geom,
+  		subst_id,
+  		otg_id,
+  		un_id,
+  		voltage_level,
+  		la_id,
+  		mvlv_subst_id,
+  		rea_sort,
+  		rea_flag,
+  		rea_geom_line,
+  		rea_geom_new,
+		preversion, 
+		flag, 
+		scenario, 
+		nuts
+
+	FROM	model_draft.ego_dp_supply_res_powerplant;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.3.0','result','supply','ego_dp_res_powerplant','ego_dp_versioning.sql','versioning');
