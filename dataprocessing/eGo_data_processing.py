@@ -44,7 +44,7 @@ def data_processing():
 #	 'ego_dp_vacuum_full.sql',
 	
 	## INPUT DATA CHECK eGoPP
-#	 'ego_dp_structure_input_verification.sql',			# Check input tables and versions from eGoPP
+    'ego_dp_structure_input_verification.sql',          # Check input tables and versions from eGoPP
 	
 	## SUBSTATION
 #     'ego_dp_substation_hvmv.sql',               	# Abstract HVMV Substations of the high voltage level from OSM
