@@ -244,6 +244,9 @@ INSERT into model_draft.ego_grid_pf_hv_generator
 		when source LIKE '%%uranium%%' THEN 5
 		when source LIKE '%%biomass%%' THEN 6
 		when source LIKE '%%hard_coal%%' THEN 8
+		when source LIKE '%%reservoir%%' THEN 10
+		when source LIKE '%%geothermal%%' THEN 14
+		when source
 	END AS source
 		FROM calc_renpass_gis.renpass_gis_linear_transformer A join
 		(
@@ -291,6 +294,8 @@ INSERT into model_draft.ego_grid_pf_hv_generator
 		when source LIKE '%%uranium%%' THEN 5
 		when source LIKE '%%biomass%%' THEN 6
 		when source LIKE '%%hard_coal%%' THEN 8
+		when source LIKE '%%reservoir%%' THEN 10 
+		when source LIKE '%%geothermal%%' THEN 14
 	END AS source
 		FROM calc_renpass_gis.renpass_gis_linear_transformer A join
 		(
@@ -337,6 +342,8 @@ INSERT into model_draft.ego_grid_pf_hv_generator
 		when source LIKE '%%uranium%%' THEN 5
 		when source LIKE '%%biomass%%' THEN 6
 		when source LIKE '%%hard_coal%%' THEN 8
+		when source LIKE '%%reservoir%%' THEN 10 
+		when source LIKE '%%geothermal%%' THEN 14
 	END AS source
 		FROM calc_renpass_gis.renpass_gis_linear_transformer A join
 		(
@@ -508,8 +515,10 @@ CREATE MATERIALIZED VIEW calc_renpass_gis.translate_to_pf AS
 			WHEN A.source =  6  THEN  'biomass'
 			WHEN A.source =  8  THEN  'hard_coal'
 			WHEN A.source =  9  THEN  'run_of_river'
+			WHEN A.source =  10 THEN  'reservoir'
 			WHEN A.source =  12 THEN  'solar'
 			WHEN A.source =  13 THEN  'wind'
+			WHEN A.source =  14 THEN  'geothermal'
 		END AS renpass_gis_source
 			FROM model_draft.ego_grid_pf_hv_generator A join
 			model_draft.ego_grid_hv_electrical_neighbours_bus B
@@ -562,8 +571,10 @@ CREATE MATERIALIZED VIEW calc_renpass_gis.translate_to_pf AS
 			WHEN A.source =  6  THEN  'biomass'
 			WHEN A.source =  8  THEN  'hard_coal'
 			WHEN A.source =  9  THEN  'run_of_river'
+			WHEN A.source =  10 THEN  'reservoir' 
 			WHEN A.source =  12 THEN  'solar'
 			WHEN A.source =  13 THEN  'wind'
+			WHEN A.source =  14 THEN  'geothermal' 
 		END AS renpass_gis_source
 			FROM model_draft.ego_grid_pf_hv_generator A join
 			model_draft.ego_grid_hv_electrical_neighbours_bus B
@@ -616,8 +627,10 @@ CREATE MATERIALIZED VIEW calc_renpass_gis.translate_to_pf AS
 			WHEN A.source =  6  THEN  'biomass'
 			WHEN A.source =  8  THEN  'hard_coal'
 			WHEN A.source =  9  THEN  'run_of_river'
+			WHEN A.source =  10 THEN  'reservoir'
 			WHEN A.source =  12 THEN  'solar'
 			WHEN A.source =  13 THEN  'wind'
+			WHEN A.source =  14 THEN  'geothermal' 
 		END AS renpass_gis_source
 			FROM model_draft.ego_grid_pf_hv_generator A join
 			model_draft.ego_grid_hv_electrical_neighbours_bus B
