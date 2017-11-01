@@ -9,221 +9,265 @@ __author__ 	= "IlkaCu, wolfbunke"
 
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','input','supply','ego_conventional_powerplant','ego_dp_preprocessing_conv_powerplant.sql','');
+SELECT ego_scenario_log('v0.3.0','input','supply','ego_dp_supply_conv_powerplant',' .sql','');
 
--- copy powerplant list
-DROP TABLE IF EXISTS model_draft.ego_supply_conv_powerplant CASCADE; 
-CREATE TABLE model_draft.ego_supply_conv_powerplant AS
-	TABLE supply.ego_conventional_powerplant; 
+DROP TABLE IF EXISTS model_draft.ego_dp_supply_conv_powerplant CASCADE;
+CREATE TABLE model_draft.ego_dp_supply_conv_powerplant
+(
+  preversion text NOT NULL,
+  id integer NOT NULL,
+  bnetza_id text,
+  company text,
+  name text,
+  postcode text,
+  city text,
+  street text,
+  state text,
+  block text,
+  commissioned_original text,
+  commissioned double precision,
+  retrofit double precision,
+  shutdown double precision,
+  status text,
+  fuel text,
+  technology text,
+  type text,
+  eeg text,
+  chp text,
+  capacity double precision,
+  capacity_uba double precision,
+  chp_capacity_uba double precision,
+  efficiency_data double precision,
+  efficiency_estimate double precision,
+  network_node text,
+  voltage text,
+  network_operator text,
+  name_uba text,
+  lat double precision,
+  lon double precision,
+  comment text,
+  geom geometry(Point,4326),
+  voltage_level smallint,
+  subst_id bigint,
+  otg_id bigint,
+  un_id bigint,
+  la_id integer,
+  scenario text,
+  flag text,
+  nuts varchar,
+  CONSTRAINT ego_dp_supply_conv_powerplant_pkey PRIMARY KEY (preversion,id,scenario)
+)
+WITH (
+  OIDS=FALSE
+);
 
-ALTER TABLE model_draft.ego_supply_conv_powerplant
-	ADD COLUMN voltage_level smallint,  	
-	ADD COLUMN subst_id bigint,
-  	ADD COLUMN otg_id bigint,
-  	ADD COLUMN un_id bigint
-	ADD PRIMARY KEY (gid);
-
-CREATE INDEX ego_supply_conv_powerplant_idx
-	ON model_draft.ego_supply_conv_powerplant
-	USING gist
-	(geom);
+ALTER TABLE model_draft.ego_dp_supply_conv_powerplant
+  OWNER TO oeuser;
   
-ALTER TABLE model_draft.ego_supply_conv_powerplant OWNER TO oeuser; 
+GRANT ALL ON TABLE model_draft.ego_dp_supply_conv_powerplant TO oeuser;
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_supply_conv_powerplant','ego_dp_preprocessing_conv_powerplant.sql','');
+--DROP INDEX model_draft.ego_dp_supply_res_powerplant_idx;
+CREATE INDEX ego_dp_supply_conv_powerplant_idx
+  ON model_draft.ego_dp_supply_conv_powerplant
+  USING gist
+  (geom);
+
+-- metadata description
+
+COMMENT ON TABLE model_draft.ego_dp_supply_conv_powerplant
+ IS 
+  '{
+	"title": "eGo Conventional power plants in Germany by Scenario",
+	"description": "This dataset contains an augmented and corrected power plant list based on the power plant list provided by the OPSD (BNetzA and UBA) and NEP Kraftwerksliste 2015 for the scenario B1-2035 and the ZNES scenario eGo 100 in 2050.",
+	"language": [ "eng", "ger" ],
+	"spatial": 
+		{"location": "Germany",
+		"extent": "europe",
+		"resolution": "100 m"},
+	"temporal": 
+		{"reference_date": "2016-01-01",
+		"start": "1900-01-01",
+		"end": "2049-12-31",
+		"resolution": ""},
+	"sources": [
+		{"name": "eGo data processing", 
+		"description": "Scripts with allocate Geometry by OpenStreetMap Objects or create future scenarios by high resolution geo-allocation", 
+		"url": "https://github.com/openego/data_processing", 
+		"license": "GNU Affero General Public License Version 3 (AGPL-3.0)", 
+		"copyright": "© ZNES Europa-Universität Flensburg"},
+		
+		{"name": "Open Power System Data (OPSD)",
+                "url":  "http://data.open-power-system-data.org/conventional_power_plants/2016-02-08/",
+                "license": "Creative Commons Attribution 4.0 International", 
+		"copyright": "© Open Power System Data. 2017"}, 
+
+		{"name": "Bundesnetzagentur (BNetzA)", 
+		"description": "The Federal Network Agency for Electricity, Gas, Telecommunications, Posts and Railway Data is in Germany data provider of power plant", 
+		"url": "https://www.bundesnetzagentur.de/DE/Sachgebiete/ElektrizitaetundGas/Unternehmen_Institutionen/ErneuerbareEnergien/Anlagenregister/Anlagenregister_Veroeffentlichung/Anlagenregister_Veroeffentlichungen_node.html", 
+		"license": "Creative Commons Namensnennung-Keine Bearbeitung 3.0 Deutschland Lizenz", 
+		"copyright": "© Bundesnetzagentur für Elektrizität, Gas, Telekommunikation, Post und Eisenbahnen; Pressestelle"}
+		 ],
+	"license": [
+		{"id": "ODbL-1.0",
+		"name": "Open Data Commons Open Database License 1.0",
+		"version": "1.0",
+		"url": "https://opendatacommons.org/licenses/odbl/1.0/",
+		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
+		"copyright": "© ZNES Europa-Universität Flensburg"} ],
+	"contributors": [
+		{"name": "wolfbunke", "email": " ", "date": "01.06.2017", "comment": "Create and restructure scripts and table"}],
+	"resources": [
+		{"name": "model_draft.ego_dp_supply_conv_powerplant",		
+		"format": "PostgreSQL",
+		"fields": [
+				{"name": "preversion", "description": "Preversion ID of data preprocessing", "unit": "" },
+				{"name": "id", "description": "Unique identifier", "unit": "" },
+				{"name": "bnetza_id", "description": "Bundesnetzagentur unit ID", "unit": " " },			
+				{"name": "company", "description": "Name of company", "unit": " " },				
+				{"name": "name", "description": "name of unit ", "unit": " " },				
+				{"name": "postcode", "description": "postcode ", "unit": " " },				
+				{"name": "city", "description": "Name of City", "unit": " " },				
+				{"name": "street", "description": "Street name, address", "unit": " " },				
+				{"name": "state", "description": "Name of federate state of location", "unit": " " },				
+				{"name": "block", "description": "Power plant block", "unit": " " },	
+				{"name": "commissioned_original", "description": "Year of commissioning (raw data)", "unit": " " },	
+				{"name": "commissioned", "description": "Year of commissioning", "unit": " " },	
+				{"name": "retrofit", "description": "Year of modernization according to UBA data", "unit": " " },	
+				{"name": "shutdown", "description": "Year of decommissioning", "unit": " " },	
+				{"name": "status", "description": "Power plant status", "unit": " " },	
+				{"name": "fuel", "description": "Used fuel or energy source", "unit": " " },	
+				{"name": "technology", "description": "Power plant technology or sort", "unit": " " },	
+				{"name": "type", "description": "Purpose of the produced power", "unit": " " },	
+				{"name": "eeg", "description":  "Status of being entitled to a renumeration", "unit": " " },	
+				{"name": "chp", "description": "Status of being able to supply heat", "unit": " " },	
+				{"name": "capacity", "description": "Power capacity", "unit": " " },	
+				{"name": "capacity_uba", "description": "Power capacity according to UBA data", "unit": " " },
+				{"name": "chp_capacity_uba", "description":  "Heat capacity according to UBA data", "unit": " " },	
+				{"name": "efficiency_data", "description": "Proportion between power output and input", "unit": " " },	
+				{"name": "efficiency_estimate", "description": "Estimated proportion between power output and input", "unit": " " },
+				{"name": "network_node", "description":  "Connection point to the electricity grid", "unit": " " },
+				{"name": "voltage", "description": "Grid or transformation level of the network node", "unit": " " },
+				{"name": "network_operator", "description": "Network operator of the grid or transformation level", "unit": " " },
+				{"name": "name_uba", "description": "Power plant name according to UBA data", "unit": " " },
+				{"name": "lat", "description": "Precise geographic coordinates - latitude", "unit": " " },
+				{"name": "lon", "description": "Precise geographic coordinates - longitude", "unit": " " },
+				{"name": "comment", "description": "Further comments", "unit": " " },
+				{"name": "geom", "description": "Geometry Point", "unit": " " },
+				{"name": "voltage_level", "description": " ", "unit": " " },
+				{"name": "subst_id", "description": "Unique identifier of related substation", "unit": "" },
+				{"name": "otg_id", "description": "Unique identifier of related substation from osmTGmod", "unit": "" },
+				{"name": "un_id", "description": "Unique identifier of RES and CONV power plants", "unit": "" },
+				{"name": "la_id", "description": "Unique identifier of RES and CONV power plants", "unit": "" },									
+				{"name": "scenario", "description": "Name of scenario", "unit": "" },
+				{"name": "flag", "description": "Flag of scenario changes of an power plant unit (repowering, decommission or commissioning).", "unit": "" },
+				{"name": "nuts", "description": "NUTS ID).", "unit": ""} ] } ],
+		"meta_version": "1.3" }';
+	  
+-- select description
+SELECT obj_description('model_draft.ego_dp_supply_conv_powerplant'::regclass)::json;
+
+--------------------------------------------------------------------------------
+--          Insert conventional power plants Scenarios: Status-Quo
+--------------------------------------------------------------------------------
+
+INSERT INTO model_draft.ego_dp_supply_conv_powerplant
+	SELECT 
+	  'v0.3.0'::text  as preversion,
+	  gid as id,
+	  bnetza_id,
+	  company,
+	  name,
+	  postcode,
+	  city,
+	  street,
+	  state,
+	  block,
+	  commissioned_original,
+	  commissioned,
+	  retrofit,
+	  shutdown,
+	  status,
+	  fuel,
+	  technology,
+	  type,
+	  eeg,
+	  chp,
+	  capacity,
+	  capacity_uba,
+	  chp_capacity_uba,
+	  efficiency_data,
+	  efficiency_estimate,
+	  network_node,
+	  voltage,
+	  network_operator,
+	  name_uba,
+	  lat,
+	  lon,
+	  comment,
+	  geom,
+	  voltage_level,
+	  subst_id,
+	  otg_id,
+	  un_id,
+	  NULL::int as la_id,
+	  'Status Quo'::text as scenario,
+	  NULL::text as flag,
+	  NULL::text as nuts
+	FROM
+	  model_draft.ego_dp_supply_conv_powerplant;
+
+--------------------------------------------------------------------------------
+--          Rectify implausible and incorrect entries
+--------------------------------------------------------------------------------
 
 
 -- Delete entries without information on installed capacity or where capacity <= 0
-DELETE  FROM model_draft.ego_supply_conv_powerplant
+DELETE  FROM model_draft.ego_dp_supply_conv_powerplant
 	WHERE capacity IS NULL OR capacity <= 0; 
 
 -- Change fuel='multiple_non_renewable' to 'other_non_renewable' for compatibility reasons
-UPDATE model_draft.ego_supply_conv_powerplant
+UPDATE model_draft.ego_dp_supply_conv_powerplant
 	SET fuel = 'other_non_renewable'
 	WHERE fuel = 'multiple_non_renewable';
 
 
 -- Correct an invalid geom in the register
-UPDATE model_draft.ego_supply_conv_powerplant
+UPDATE model_draft.ego_dp_supply_conv_powerplant
 	SET lat = 48.0261021
 	WHERE gid = 493;
 
-UPDATE  model_draft.ego_supply_conv_powerplant
+UPDATE  model_draft.ego_dp_supply_conv_powerplant
 	set geom = ST_SetSRID(ST_MakePoint(lon,lat),4326)
 	WHERE gid = 493;
 
 
 -- Update Voltage Level of Power Plants according to allocation table
-UPDATE model_draft.ego_supply_conv_powerplant
+UPDATE model_draft.ego_dp_supply_conv_powerplant
 	SET voltage_level=1
 	WHERE capacity >=120.0 /*Voltage_level =1 when capacity greater than 120 MW*/;
 
 
-UPDATE model_draft.ego_supply_conv_powerplant
+UPDATE model_draft.ego_dp_supply_conv_powerplant
 	SET voltage_level=3
 	WHERE capacity BETWEEN 17.5 AND 119.99 /*Voltage_level =2 when capacity between 17.5 and 119.99 MW*/;
 
-UPDATE model_draft.ego_supply_conv_powerplant
+UPDATE model_draft.ego_dp_supply_conv_powerplant
 	SET voltage_level=4
 	WHERE capacity BETWEEN 4.5 AND 17.49;
 
-UPDATE model_draft.ego_supply_conv_powerplant
+UPDATE model_draft.ego_dp_supply_conv_powerplant
 	SET voltage_level=5
 	WHERE capacity BETWEEN 0.3 AND 4.49 /* Voltage_level =3 when capacity between 0.3 and 4.5 kV*/;
 
-UPDATE model_draft.ego_supply_conv_powerplant
+UPDATE model_draft.ego_dp_supply_conv_powerplant
 	SET voltage_level=6
 	WHERE capacity BETWEEN 0.1 AND 0.29;
 
-UPDATE model_draft.ego_supply_conv_powerplant
+UPDATE model_draft.ego_dp_supply_conv_powerplant
 	SET voltage_level=7
 	WHERE capacity < 0.1 /*voltage_level =7 when capacity lower than 0.1*/;
-
--- metadata
-COMMENT ON TABLE model_draft.ego_supply_conv_powerplant IS '{
-	"comment": "eGoDP - Temporary table",
-	"version": "v0.3.0" }' ;
 	
-/* 
--- metadata
-COMMENT ON TABLE  model_draft.ego_supply_conv_powerplant IS
-'{
-"Name": "eGo conventional powerplant list",
-"Source": [	{ "Name": "open_eGo data_processing", "URL":  "https://github.com/openego/data_processing" }, 
-		{ "Name": "BNetzA Kraftwerksliste", "URL":  "http://www.bundesnetzagentur.de/DE/Sachgebiete/ElektrizitaetundGas/Unternehmen_Institutionen/Versorgungssicherheit/Erzeugungskapazitaeten/Kraftwerksliste/kraftwerksliste-node.html" }, 
-		{ "Name": "Umweltbundesamt Datenbank Kraftwerke in Deutschland", "URL":  "http://www.umweltbundesamt.de/dokument/datenbank-kraftwerke-in-deutschland" } }],
-"Reference date": "2016-02-08",
-"Date of collection": "...",
-"Original file": "proc_power_plant_germany.sql",
-"Spatial resolution": ["Germany"],
-"Description": ["This dataset contains processed information on powerplants from BNetzA and UBA-list"],
-"Column": [
-                   {"Name": "gid",
-                    "Description": "...",
-                    "Unit": "" }, 
-                   {"Name": "bnetza_id",
-                    "Description": "...",
-                    "Unit": "" }, 
-                   {"Name": "company",
-                    "Description": "...",
-                    "Unit": "" }, 
-                   {"Name": "name",
-                    "Description": "...",
-                    "Unit": "" }, 
-                   {"Name": "postcode",
-                    "Description": "...",
-                    "Unit": "" }, 
-                   {"Name": "city",
-                    "Description": "...",
-                    "Unit": "" }, 
-                   {"Name": "street",
-                    "Description": "...",
-                    "Unit": "" }, 
-                   {"Name": "state",
-                    "Description": "...",
-                    "Unit": "" }, 
-                   {"Name": "block",
-                    "Description": "...",
-                    "Unit": "" }, 
-                   {"Name": "commissioned_original",
-                    "Description": "...",
-                    "Unit": "" }, 
-                   {"Name": "commissioned",
-                    "Description": "...",
-                    "Unit": "" }, 
-                   {"Name": "retrofit",
-                    "Description": "...",
-                    "Unit": "" }, 
-                   {"Name": "shutdown",
-                    "Description": "...",
-                    "Unit": "" }, 
-                   {"Name": "status",
-                    "Description": "...",
-                    "Unit": "" }, 
-                   {"Name": "fuel",
-                    "Description": "...",
-                    "Unit": "" }, 
-                   {"Name": "technology",
-                    "Description": "...",
-                    "Unit": "" }, 
-                   {"Name": "type",
-                    "Description": "...",
-                    "Unit": "" }, 
-                   {"Name": "eeg",
-                    "Description": "...",
-                    "Unit": "" }, 
-                   {"Name": "chp",
-                    "Description": "...",
-                    "Unit": "" }, 
-                   {"Name": "capacity",
-                    "Description": "...",
-                    "Unit": "" }, 
-                   {"Name": "capacity_uba",
-                    "Description": "...",
-                    "Unit": "" }, 
-                   {"Name": "chp_capacity_uba",
-                    "Description": "...",
-                    "Unit": "" }, 
-                   {"Name": "efficiency_data",
-                    "Description": "...",
-                    "Unit": "" }, 
-                   {"Name": "efficiency_estimate",
-                    "Description": "...",
-                    "Unit": "" }, 
-                   {"Name": "network_node",
-                    "Description": "...",
-                    "Unit": "" }, 
-                   {"Name": "voltage",
-                    "Description": "...",
-                    "Unit": "" }, 
-                   {"Name": "network_operator",
-                    "Description": "...",
-                    "Unit": "" }, 
-                   {"Name": "name_uba",
-                    "Description": "...",
-                    "Unit": "" }, 
-                   {"Name": "lat",
-                    "Description": "...",
-                    "Unit": "" }, 
-                   {"Name": "lon",
-                    "Description": "...",
-                    "Unit": "" }, 
-                   {"Name": "comment",
-                    "Description": "...",
-                    "Unit": "" }, 
-                   {"Name": "geom",
-                    "Description": "geometry",
-                    "Unit": "" }, 
-                   {"Name": "voltage_level",
-                    "Description": "voltage level to which generator is connected (partly calculated based on installed capacity)",
-                    "Unit": "" }, 
-                   {"Name": "subst_id",
-                    "Description": "id of associated substation",
-                    "Unit": "" }, 
-                   {"Name": "otg_id",
-                    "Description": "otg_id of associated substation",
-                    "Unit": "" },                        
-                   {"Name": "un_id",
-                    "Description": "unified id for res and conv powerplants",
-                    "Unit": "" }],
-"Changes":[
-                   {"Name": "Mario Kropshofer",
-                    "Mail": "mario.kropshofer2@stud.fh-flensburg.de",
-                    "Date":  "05.10.2016",
-                    "Comment": "..." },
-                   {"Name": "Ilka Cussmann",
-                    "Mail": "",
-                    "Date":  "27.10.2016",
-                    "Comment": "added information to metadata" } 
-                  ],
-"ToDo": ["Please complete"],
-"Licence": ["..."],
-"Instructions for proper use": ["..."]
-}'; */
-
--- select description
-SELECT obj_description('model_draft.ego_supply_conv_powerplant' ::regclass) ::json;
+SELECT obj_description('model_draft.ego_dp_supply_conv_powerplant' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_supply_conv_powerplant','ego_dp_preprocessing_conv_powerplant.sql','');
+SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_dp_supply_conv_powerplant','ego_dp_preprocessing_conv_powerplant.sql','');
