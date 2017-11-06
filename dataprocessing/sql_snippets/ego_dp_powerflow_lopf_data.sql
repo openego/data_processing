@@ -93,7 +93,7 @@ FROM (
 	GROUP BY T2.generator_id
 ) T3 WHERE T3.generator_id = Y.generator_id;
 
---DELETE * FROM model_draft.ego_grid_pf_hv_storage;
+DELETE FROM model_draft.ego_grid_pf_hv_storage WHERE scn_name IN ('Status Quo', 'NEP 2035', 'eGo 100') AND source = 16;
 
 -- Insert battery storages to all substations (Status Quo)
 INSERT INTO model_draft.ego_grid_pf_hv_storage
