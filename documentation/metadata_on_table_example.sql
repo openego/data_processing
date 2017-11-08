@@ -16,6 +16,7 @@ Additional information:
 - Dates must follow the ISO8601 (JJJJ-MM-TT)
 - Use a space between Numbers and units (100 m)
 - If not applicable use "none"
+- The location must be set in the WGS 84 standard
 */
 
 -- test table
