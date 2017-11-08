@@ -17,7 +17,7 @@ COMMENT ON TABLE supply.ego_dp_res_powerplant
 	"spatial": 
 		{"location": "Germany",
 		"extent": "Europe",
-		"resolution": "100m"},
+		"resolution": "100 m"},
 	"temporal": 
 		{"reference_date": "2016-01-01",
 		"start": "1900-01-01",
@@ -51,7 +51,7 @@ COMMENT ON TABLE supply.ego_dp_res_powerplant
 		"copyright": "©  ZNES Europa-Universität Flensburg"},
 	"contributors": [
 		{"name": "wolfbunke", "email": " ", 
-		"date": "01.06.2017", "comment": "Create and restructure scripts and table"}],
+		"date": "2017-11-06", "comment": "Create and restructure scripts and table"}],
 	"resources": [
 		{"name": "model_draft.ego_dp_supply_res_powerplant",		
 		"format": "PostgreSQL",
@@ -141,7 +141,7 @@ COMMENT ON TABLE supply.ego_dp_conv_powerplant
 		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
 		"copyright": "© ZNES Europa-Universität Flensburg"},
 	"contributors": [
-		{"name": "wolfbunke", "email": " ", "date": "01.06.2017", "comment": "Create and restructure scripts and table"}],
+		{"name": "wolfbunke", "email": " ", "date": "2017-11-06", "comment": "Create and restructure scripts and table"}],
 	"resources": [
 		{"name": "model_draft.ego_dp_supply_conv_powerplant",		
 		"format": "PostgreSQL",
