@@ -244,8 +244,6 @@ INSERT into model_draft.ego_grid_pf_hv_generator
 		when source LIKE '%%uranium%%' THEN 5
 		when source LIKE '%%biomass%%' THEN 6
 		when source LIKE '%%hard_coal%%' THEN 8
-		when source LIKE '%%reservoir%%' THEN 10
-		when source LIKE '%%geothermal%%' THEN 14
 	END AS source
 		FROM calc_renpass_gis.renpass_gis_linear_transformer A join
 		(
@@ -293,8 +291,6 @@ INSERT into model_draft.ego_grid_pf_hv_generator
 		when source LIKE '%%uranium%%' THEN 5
 		when source LIKE '%%biomass%%' THEN 6
 		when source LIKE '%%hard_coal%%' THEN 8
-		when source LIKE '%%reservoir%%' THEN 10 
-		when source LIKE '%%geothermal%%' THEN 14
 	END AS source
 		FROM calc_renpass_gis.renpass_gis_linear_transformer A join
 		(
@@ -341,8 +337,6 @@ INSERT into model_draft.ego_grid_pf_hv_generator
 		when source LIKE '%%uranium%%' THEN 5
 		when source LIKE '%%biomass%%' THEN 6
 		when source LIKE '%%hard_coal%%' THEN 8
-		when source LIKE '%%reservoir%%' THEN 10 
-		when source LIKE '%%geothermal%%' THEN 14
 	END AS source
 		FROM calc_renpass_gis.renpass_gis_linear_transformer A join
 		(
@@ -388,6 +382,8 @@ INSERT into model_draft.ego_grid_pf_hv_generator
 		WHEN source LIKE '%%run_of_river%%' THEN 9
 		WHEN source LIKE '%%solar%%' THEN 12
 		WHEN source LIKE '%%wind%%' THEN 13
+		when source LIKE '%%reservoir%%' THEN 10
+		when source LIKE '%%geothermal%%' THEN 14
         END AS source
 		FROM calc_renpass_gis.renpass_gis_source A join
 		(
@@ -428,6 +424,8 @@ INSERT into model_draft.ego_grid_pf_hv_generator
 		WHEN source LIKE '%%run_of_river%%' THEN 9
 		WHEN source LIKE '%%solar%%' THEN 12
 		WHEN source LIKE '%%wind%%' THEN 13
+		when source LIKE '%%reservoir%%' THEN 10
+		when source LIKE '%%geothermal%%' THEN 14
         END AS source
 		FROM calc_renpass_gis.renpass_gis_source A join
 		(
@@ -468,6 +466,8 @@ INSERT into model_draft.ego_grid_pf_hv_generator
 		WHEN source LIKE '%%run_of_river%%' THEN 9
 		WHEN source LIKE '%%solar%%' THEN 12
 		WHEN source LIKE '%%wind%%' THEN 13
+		when source LIKE '%%reservoir%%' THEN 10
+		when source LIKE '%%geothermal%%' THEN 14
         END AS source
 		FROM calc_renpass_gis.renpass_gis_source A join
 		(
