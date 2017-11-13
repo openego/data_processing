@@ -246,7 +246,6 @@ INSERT into model_draft.ego_grid_pf_hv_generator
 		when source LIKE '%%hard_coal%%' THEN 8
 		when source LIKE '%%reservoir%%' THEN 10
 		when source LIKE '%%geothermal%%' THEN 14
-		when source
 	END AS source
 		FROM calc_renpass_gis.renpass_gis_linear_transformer A join
 		(
