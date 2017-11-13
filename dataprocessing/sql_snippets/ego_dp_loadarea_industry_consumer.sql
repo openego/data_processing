@@ -365,9 +365,9 @@ CREATE TABLE model_draft.ego_demand_hv_largescaleconsumer AS
 	(
 	SELECT	osm.gid AS polygon_id,
 		osm.area_ha,
-		pp.gid AS powerplant_id,
+		pp.id AS powerplant_id,
 		pp.voltage_level
-	FROM 	model_draft.ego_supply_conv_powerplant AS pp, 
+	FROM 	model_draft.ego_dp_supply_conv_powerplant AS pp, 
 		openstreetmap.osm_deu_polygon_urban_sector_3_industrial_mview AS osm
 	WHERE	(pp.voltage_level='3' OR pp.voltage_level='2' OR pp.voltage_level='1')
 			AND ST_Intersects(pp.geom, ST_transform(osm.geom,4326))
