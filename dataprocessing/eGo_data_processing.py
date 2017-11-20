@@ -96,8 +96,8 @@ def data_processing():
 	## POWERFLOW
 #	'ego_dp_powerflow_assignment_otgid.sql',			# assign otg_id to pp lists
 #	'ego_dp_powerflow_assignment_unid.sql',			# create a unified_id over all pp (res and conv) 
- 	'ego_dp_powerflow_create_pp_mview.sql',			# create mviews to display power plants per scenario
-	'ego_dp_powerflow_voronoi_weatherpoint.sql',		# Create voronoi cells based on weather points
+# 	'ego_dp_powerflow_create_pp_mview.sql',			# create mviews to display power plants per scenario
+#	'ego_dp_powerflow_voronoi_weatherpoint.sql',		# Create voronoi cells based on weather points
 	'ego_dp_powerflow_hv_setup.sql',					# Set schema/tables for EHV/HV powerflow calculations up
 	'ego_dp_powerflow_osmtgmod_to_pypsa.sql',			# Include data from osmTGmod into EHV/HV powerflow schema
 	'ego_dp_powerflow_electrical_neighbour.sql',		# Create border crossing lines and buses in neighbouring countries
