@@ -9,17 +9,14 @@ __author__ 	= "IlkaCu"
 
 DROP SEQUENCE IF EXISTS	 model_draft.ego_grid_hv_electrical_neighbours_bus_id CASCADE;
 CREATE SEQUENCE		 model_draft.ego_grid_hv_electrical_neighbours_bus_id;
-ALTER SEQUENCE		 model_draft.ego_grid_hv_electrical_neighbours_bus_id; 
 SELECT setval('model_draft.ego_grid_hv_electrical_neighbours_bus_id', (max(bus_id)+1)) FROM model_draft.ego_grid_pf_hv_bus;
 
 DROP SEQUENCE IF EXISTS  model_draft.ego_grid_hv_electrical_neighbours_line_id CASCADE;
 CREATE SEQUENCE		 model_draft.ego_grid_hv_electrical_neighbours_line_id;
-ALTER SEQUENCE		 model_draft.ego_grid_hv_electrical_neighbours_line_id; 
 SELECT setval('model_draft.ego_grid_hv_electrical_neighbours_line_id', (max(line_id)+1)) FROM model_draft.ego_grid_pf_hv_line;
 
 DROP SEQUENCE IF EXISTS  model_draft.ego_grid_hv_electrical_neighbours_transformer_id CASCADE;
 CREATE SEQUENCE 	 model_draft.ego_grid_hv_electrical_neighbours_transformer_id;
-ALTER SEQUENCE		 model_draft.ego_grid_hv_electrical_neighbours_transformer_id; 
 SELECT setval('model_draft.ego_grid_hv_electrical_neighbours_transformer_id', (max(trafo_id)+1)) FROM model_draft.ego_grid_pf_hv_transformer;
 
 
