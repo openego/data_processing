@@ -205,7 +205,7 @@ Insert into model_draft.ego_dp_supply_res_powerplant
 	  'constantly'::text as flag,
 	  Null as nuts
 	FROM 
-	  model_draft.ego_dp_supply_res_powerplant
+	  model_draft.ego_supply_res_powerplant
 	 WHERE geom is not NULL;
 
 
@@ -283,11 +283,11 @@ UPDATE model_draft.ego_dp_supply_res_powerplant
 		WHEN eeg_id LIKE '%%BALTIC%%' 
 		THEN (SELECT geom from model_draft.ego_dp_supply_res_powerplant where id = 1561137)
 		WHEN eeg_id LIKE '%%RIFFE%%' 
-		THEN ST_SetSRID(ST_MakePoint(6.48, 53.69),4326)
+		THEN ST_SetSRID(ST_MakePoint(6.48, 53.69),3035)
 		WHEN eeg_id LIKE '%%ALPHAVENTUE%%' 
-		THEN ST_SetSRID(ST_MakePoint(6.598333, 54.008333),4326)
+		THEN ST_SetSRID(ST_MakePoint(6.598333, 54.008333),3035)
 		WHEN eeg_id LIKE '%%BAOEE%%' 
-		THEN ST_SetSRID(ST_MakePoint(5.975, 54.358333),4326)
+		THEN ST_SetSRID(ST_MakePoint(5.975, 54.358333),3035)
 		END)
 	WHERE postcode = '00000' OR postcode = 'keine' or postcode = 'O04WF' AND generation_subtype = 'wind_offshore';
 
