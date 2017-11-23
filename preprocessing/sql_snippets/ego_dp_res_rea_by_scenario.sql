@@ -197,7 +197,7 @@ set comment = upt.comment || ', Method ProxToNow Biomass',
 	  ELSE (upt.electrical_capacity/ cap_sum)*scn.capacity*1000    
 	 END 
 FROM
-  orig_scenario_data.nep_2015_scenario_capacities as scn,
+  model_draft.ego_supply_scenario_capacities as scn,
   (SELECT nuts, sum(electrical_capacity) as cap_sum
    FROM model_draft.ego_supply_res_biomass_2035_temp
    WHERE generation_type = 'biomass'
@@ -207,7 +207,7 @@ WHERE scn.nuts = count.nuts
 AND   scn.nuts = upt.nuts 
 AND   upt.nuts = count.nuts
 AND   scn.generation_type = 'biomass' 
-AND   scn.scenario = 'NEP 2035' ;
+AND   scn.scenario_name = 'NEP 2035' ;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 -- SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_dp_supply_res_powerplant','ego_db_res_rea_by_scenario.sql',' ');  
@@ -360,7 +360,7 @@ set comment = upt.comment || ', Method ProxToNow Hydro',
 	  ELSE (upt.electrical_capacity/ cap_sum)*scn.capacity*1000    
 	 END 
 FROM
-  orig_scenario_data.nep_2015_scenario_capacities as scn,
+  model_draft.ego_supply_scenario_capacities as scn,
   (SELECT nuts, sum(electrical_capacity) as cap_sum
    FROM model_draft.ego_supply_res_hydro_2035_temp
    WHERE generation_type in ('reservoir','hydro','run_of_river')
@@ -515,10 +515,10 @@ SELECT
  scn.nuts  				      -- nuts code federal state
  FROM
     boundaries.bkg_vg250_6_gem_rs_mview A,
-    orig_scenario_data.nep_2015_scenario_capacities scn
+    model_draft.ego_supply_scenario_capacities scn
 WHERE scn.nuts = substring(A.nuts from 1 for 3)
 AND   scn.generation_type = 'solar' 
-AND scn.scenario = 'NEP 2035' 
+AND scn.scenario_name = 'NEP 2035' 
 Group by substring(A.nuts from 1 for 3),rs,scn.capacity,scn.nuts
 Order by rs
 ) as pv_scn_2035,
@@ -555,10 +555,10 @@ SELECT
   scn.generation_type
 FROM
   boundaries.bkg_vg250_6_gem_rs_mview AA,
-  orig_scenario_data.nep_2015_scenario_capacities as scn
+  model_draft.ego_supply_scenario_capacities as scn
 WHERE scn.nuts = substring(AA.nuts from 1 for 3)
 AND  scn.generation_type = 'solar'
-AND scn.scenario = 'NEP 2035' 
+AND scn.scenario_name = 'NEP 2035' 
 group by scn.nuts, substring(AA.rs from 1 for 2), substring(AA.nuts from 1 for 3),
          scn.capacity,scn.generation_type
 ) as scn,
@@ -835,10 +835,10 @@ SELECT
  scn.nuts  				      -- nuts code federal state
  FROM
     boundaries.bkg_vg250_6_gem_rs_mview A,
-    orig_scenario_data.nep_2015_scenario_capacities scn
+    model_draft.ego_supply_scenario_capacities scn
 WHERE scn.nuts = substring(A.nuts from 1 for 3)
 AND   scn.generation_type = 'wind_onshore' 
-AND   scn.scenario ='NEP 2035'
+AND   scn.scenario_name ='NEP 2035'
 AND   scn.state not in ('Deutschland')
 Group by substring(A.nuts from 1 for 3),rs,scn.capacity,scn.nuts
 ) as wo_scn_2035,
@@ -879,10 +879,10 @@ SELECT
   scn.generation_type
 FROM
   boundaries.bkg_vg250_6_gem_rs_mview AA,
-  orig_scenario_data.nep_2015_scenario_capacities as scn
+  model_draft.ego_supply_scenario_capacities as scn
 WHERE scn.nuts = substring(AA.nuts from 1 for 3)
 AND  scn.generation_type = 'wind_onshore'
-AND   scn.scenario ='NEP 2035'
+AND   scn.scenario_name ='NEP 2035'
 group by scn.nuts, substring(AA.rs from 1
  for 2), substring(AA.nuts from 1 for 3),
          scn.capacity,scn.generation_type, scn.state
@@ -995,7 +995,7 @@ set comment = upt.comment || ', Method ProxToNow Biomass',
 	  ELSE (upt.electrical_capacity/ cap_sum)*scn.capacity*1000    
 	 END 
 FROM
-  orig_scenario_data.nep_2015_scenario_capacities as scn,
+  model_draft.ego_supply_scenario_capacities as scn,
   (SELECT 'DE'::text as nuts, sum(electrical_capacity) as cap_sum
    FROM  model_draft.ego_dp_supply_res_powerplant 
    WHERE generation_type = 'biomass'
@@ -1005,7 +1005,7 @@ WHERE scn.nuts = substring(count.nuts from 1 for 2)
 AND   scn.nuts = substring(upt.nuts from 1 for 2)
 AND   substring(upt.nuts from 1 for 2) = substring(count.nuts from 1 for 2)
 AND   scn.generation_type = 'biomass'
-AND   scn.scenario = 'eGo 100' ;
+AND   scn.scenario_name = 'eGo 100' ;
 
 -- create index GIST (geom)
 CREATE INDEX ego_supply_res_biomass_2050_temp_geom_idx
@@ -1094,7 +1094,7 @@ set comment = upt.comment || ', Method ProxToNow Hydro',
 	  ELSE (upt.electrical_capacity/ cap_sum)*scn.capacity*1000    
 	 END 
 FROM
-  orig_scenario_data.nep_2015_scenario_capacities as scn,
+  model_draft.ego_supply_scenario_capacities as scn,
   (SELECT 'DE'::text as nuts,  sum(electrical_capacity) as cap_sum
    FROM model_draft.ego_supply_res_hydro_2050_temp
    WHERE generation_subtype = 'hydro'
@@ -1104,7 +1104,7 @@ AND   scn.nuts = substring(upt.nuts from 1 for 2)
 AND   substring(upt.nuts from 1 for 2) = substring(count.nuts from 1 for 2)
 AND   scn.generation_type = 'run_of_river' 
 AND   upt.generation_subtype = 'hydro'
-AND   scn.scenario = 'eGo 100';
+AND   scn.scenario_name = 'eGo 100';
 
 -- insert data
 Insert into model_draft.ego_dp_supply_res_powerplant
@@ -1253,10 +1253,10 @@ SELECT
  scn.nuts  				      -- nuts code
  FROM
    boundaries.bkg_vg250_6_gem_rs_mview A,
-    orig_scenario_data.nep_2015_scenario_capacities scn
+    model_draft.ego_supply_scenario_capacities scn
 WHERE scn.nuts = substring(A.nuts from 1 for 2)
 AND   scn.generation_type = 'solar' 
-AND   scn.scenario = 'eGo 100'
+AND   scn.scenario_name = 'eGo 100'
 Group by fs_cap_2050 ,scn.nuts
 ) as pv_scn_2050,
 (
@@ -1284,9 +1284,9 @@ SELECT
   scn.generation_type
 FROM
   boundaries.bkg_vg250_6_gem_rs_mview AA,
-  orig_scenario_data.nep_2015_scenario_capacities as scn
+  model_draft.ego_supply_scenario_capacities as scn
 WHERE scn.generation_type = 'solar'
-AND   scn.scenario = 'eGo 100'
+AND   scn.scenario_name = 'eGo 100'
 group by scn.nuts,  substring(AA.nuts from 1 for 2),
          scn.capacity,scn.generation_type
 ) as scn,
@@ -1386,10 +1386,10 @@ From
 (
 Select (scn.capacity*1000 - sum(base.electrical_capacity))/(scn.capacity*1000) as pp
 From
-      orig_scenario_data.nep_2015_scenario_capacities as scn,
+      model_draft.ego_supply_scenario_capacities as scn,
       model_draft.ego_supply_res_woff_2050_temp as base
 Where scn.generation_type = 'wind_offshore' 
-And  scn.scenario = 'eGo 100'
+And  scn.scenario_name = 'eGo 100'
 And  base.generation_subtype = 'wind_offshore'
 Group by scn.capacity
 ) as q1
@@ -1467,10 +1467,10 @@ SELECT
  scn.nuts  				      -- nuts code federal state
  FROM
     boundaries.bkg_vg250_6_gem_rs_mview A,
-    orig_scenario_data.nep_2015_scenario_capacities scn
+    model_draft.ego_supply_scenario_capacities scn
 WHERE scn.nuts = substring(A.nuts from 1 for 2)
 AND   scn.generation_type = 'wind_onshore' 
-And   scn.scenario = 'eGo 100'
+And   scn.scenario_name = 'eGo 100'
 Group by substring(A.nuts from 1 for 2),scn.capacity,scn.nuts
 ) as wo_scn_2050,
 (
@@ -1503,10 +1503,10 @@ SELECT
   scn.generation_type
 FROM
   boundaries.bkg_vg250_6_gem_rs_mview AA,
-  orig_scenario_data.nep_2015_scenario_capacities as scn
+  model_draft.ego_supply_scenario_capacities as scn
 WHERE scn.nuts = substring(AA.nuts from 1 for 2)
 AND  scn.generation_type = 'wind_onshore'
-And  scn.scenario = 'eGo 100'
+And  scn.scenario_name = 'eGo 100'
 group by scn.nuts, substring(AA.nuts from 1 for 2),
          scn.capacity,scn.generation_type, scn.state
 ) as scn,
