@@ -72,7 +72,7 @@ Insert into model_draft.ego_dp_supply_res_powerplant
 	  Null as voltage_level_var,
 	  Null as network_node ,
 	  Null as power_plant_id,
-	  Null as source,
+	  'chp_small' as source,
 	  comment,
 	  ST_Transform(geom,3035) as geom,                                   
 	  Null as subst_id,
@@ -101,7 +101,7 @@ Insert into model_draft.ego_dp_supply_res_powerplant
 UPDATE model_draft.ego_dp_supply_res_powerplant as upt
 set nuts = regions.nuts
 from 
-  orig_geo_vg250.vg250_2_lan_nuts_view as regions
+  boundaries.bkg_vg250_2_lan_nuts_view as regions
 WHERE ST_Intersects(regions.geom, upt.geom)
 AND upt.nuts is NULL;
 
@@ -109,7 +109,7 @@ AND upt.nuts is NULL;
 UPDATE model_draft.ego_dp_supply_res_powerplant as upt
 set nuts = regions.nuts::varchar
 	FROM
-	orig_geo_vg250.vg250_2_lan_nuts_view as regions,
+	boundaries.bkg_vg250_2_lan_nuts_view as regions,
 	(
 	SELECT *
 	FROM 
@@ -122,7 +122,7 @@ AND upt.nuts IS NULL;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_dp_supply_res_powerplant','ego_db_res_rea_by_scenario.sql',' ');  
-
+-- ######################################################################################################################################################   HIER WEITER '''
 ---
 -- Biomass power plants
 ---
@@ -596,7 +596,7 @@ generation_type, generation_subtype, voltage_level, source, comment,geom, scenar
 	  A.rs,
 	  A.voltage_level,
 	  Case when A.pv_new_units = 0 Then A.pv_add_cap_2035
-	       else  unnest(array_fill(A.pv_avg_cap, Array[A.pv_new_units-1])) END as electrical_capacity ,    -- in kW 
+	       else  unnest(array_fill((A.pv_add_cap_2035/A.pv_new_units), Array[A.pv_new_units-1])) END as electrical_capacity ,    -- in kW 
 	 ST_Centroid(B.geom) as geom     
 	FROM 
 	  model_draft.ego_supply_res_pv_2035_germany_mun_temp A,
@@ -925,7 +925,7 @@ Insert into model_draft.ego_dp_supply_res_powerplant (preversion,id,start_up_dat
 	  A.rs,
 	  A.voltage_level,
 	  Case when A.wo_new_units = 0 Then A.wo_add_cap_2035
-	       else  unnest(array_fill(A.wo_avg_cap, Array[A.wo_new_units-1])) END as electrical_capacity ,    -- in kW 
+	       else  unnest(array_fill((A.wo_add_cap_2035/A.wo_new_unit), Array[A.wo_new_units])) END as electrical_capacity ,    -- in kW 
 	 ST_Centroid(B.geom) as geom     
 	FROM 
 	  model_draft.ego_supply_res_wo_2035_germany_mun_temp A,
@@ -1333,7 +1333,7 @@ generation_type, generation_subtype, voltage_level, source, comment,geom, scenar
 	  A.rs,
 	  A.voltage_level,
 	  Case when A.pv_new_units = 0 Then A.pv_add_cap_2050
-	       else  unnest(array_fill(A.pv_avg_cap, Array[A.pv_new_units-1])) END as electrical_capacity ,    -- in kW 
+	       else  unnest(array_fill((A.pv_add_cap_2050/A.pv_new_units), Array[A.pv_new_units])) END as electrical_capacity ,    -- in kW 
 	 ST_Centroid(B.geom) as geom     
 	FROM 
 	  model_draft.ego_supply_res_pv_2050_germany_mun_temp A,
@@ -1547,7 +1547,7 @@ Insert into model_draft.ego_dp_supply_res_powerplant (preversion,id,start_up_dat
 	  A.rs,
 	  A.voltage_level,
 	  Case when A.wo_new_units = 0 Then A.wo_add_cap_2050
-	       else  unnest(array_fill(A.wo_avg_cap, Array[A.wo_new_units-1])) END as electrical_capacity ,    -- in kW 
+	       else  unnest(array_fill((A.wo_add_cap_2050/A.wo_new_units), Array[A.wo_new_units])) END as electrical_capacity ,    -- in kW 
 	 ST_Centroid(B.geom) as geom     
 	FROM 
 	  model_draft.ego_supply_res_wo_2050_germany_mun_temp A,
