@@ -1,4 +1,4 @@
-/*
+﻿/*
 SQL Script to create mviews diyplaying power plants by scenario.
 
 __copyright__ = "Europa-Universität Flensburg - ZNES"
@@ -184,6 +184,7 @@ CREATE MATERIALIZED VIEW model_draft.ego_supply_res_powerplant_ego100_mview AS
 		 And preversion = 'v0.3.0'
 		 AND electrical_capacity > 0
 		 AND generation_type in ('solar','wind')
+		 AND generation_subtype not in ('wind_offshore')
 		 ORDER BY id	
 		 ) as sub
 	UNION 
