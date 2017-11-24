@@ -42,7 +42,7 @@ Documentation:
 -- DELETE FROM model_draft.ego_dp_supply_res_powerplant WHERE scenario in('NEP 2035','eGo 100');
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_supply_res_powerplant_2035','ego_db_res_rea_by_scenario.sql',' ');  
+SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_small_chp_plant_germany','ego_db_res_rea_by_scenario.sql',' ');  
 
 Insert into model_draft.ego_dp_supply_res_powerplant 
 	SELECT
@@ -385,9 +385,6 @@ Step 3 add new PV at center of municipality polygon
 Step 4 add volatage level, etc.
 */
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_supply_res_pv_to_region_temp','ego_db_res_rea_by_scenario.sql',' ');  
-
 -- Nep 2035 Photovoltaic
 -- Step 0
 DROP TABLE IF EXISTS 	model_draft.ego_supply_res_pv_to_region_temp CASCADE;
@@ -405,6 +402,9 @@ CREATE TABLE 		model_draft.ego_supply_res_pv_to_region_temp
 
 -- grant (oeuser)
 ALTER TABLE model_draft.ego_supply_res_pv_to_region_temp OWNER TO oeuser;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_supply_res_pv_to_region_temp','ego_db_res_rea_by_scenario.sql',' ');  
 
 INSERT INTO model_draft.ego_supply_res_pv_to_region_temp (re_id,subst_id,otg_id,un_id)
 	SELECT
@@ -630,7 +630,7 @@ INSERT INTO model_draft.ego_dp_supply_res_powerplant  (preversion,id, start_up_d
     max(id)+ row_number() over () as id,
     '2034-12-31 00:00:00' as start_up_date, 
      840850, 'wind', 'wind_offshore', NULL, NULL, NULL, NULL, 1, NULL, 'ONEP', 
-    'NVP: Büttel', ST_Transform('0101000020E6100000AD05BE1A878A1B40003C769B02924B40'::geometry,4326), 
+    'NVP: Büttel', ST_Transform('0101000020E6100000AD05BE1A878A1B40003C769B02924B40'::geometry,3035), 
     '380', NULL, NULL, NULL,'NEP 2035','commissioning'
   FROM model_draft.ego_dp_supply_res_powerplant;
  -- 2
@@ -641,7 +641,7 @@ INSERT INTO model_draft.ego_dp_supply_res_powerplant  (preversion, id, start_up_
     'v0.3.0'::text as preversion,
     max(id)+ row_number() over () as id , 
     '2034-12-31 00:00:00' as start_up_date, 900000, 'wind', 'wind_offshore', NULL, NULL, NULL, 
-    NULL, 1, NULL, 'ONEP', 'NVP: Segeberg', ST_Transform('0101000020E610000097549B90767B1940BD49396624894B40'::geometry,4326), 
+    NULL, 1, NULL, 'ONEP', 'NVP: Segeberg', ST_Transform('0101000020E610000097549B90767B1940BD49396624894B40'::geometry,3035), 
     '380', NULL, NULL, NULL,'NEP 2035','commissioning'
   FROM model_draft.ego_dp_supply_res_powerplant;
 -- 3
@@ -652,7 +652,7 @@ INSERT INTO model_draft.ego_dp_supply_res_powerplant  (preversion,id, start_up_d
    'v0.3.0'::text as preversion,
     max(id)+ row_number() over () as id , 
     '2034-12-31 00:00:00' as start_up_date, 900000, 'wind', 'wind_offshore', NULL, NULL, NULL, 
-    NULL, 1, NULL, 'ONEP', 'NVP: Cloppenburg', ST_Transform('0101000020E6100000734ECF8CED571C40D2AE3F9F8B044B40'::geometry,4326), 
+    NULL, 1, NULL, 'ONEP', 'NVP: Cloppenburg', ST_Transform('0101000020E6100000734ECF8CED571C40D2AE3F9F8B044B40'::geometry,3035), 
     '380', NULL, NULL, NULL,'NEP 2035','commissioning'
   FROM model_draft.ego_dp_supply_res_powerplant;
 -- 4
@@ -663,7 +663,7 @@ INSERT INTO model_draft.ego_dp_supply_res_powerplant  (preversion,id, start_up_d
    'v0.3.0'::text as preversion,
     max(id)+ row_number() over () as id , 
     '2034-12-31 00:00:00' as start_up_date, 900000, 'wind', 'wind_offshore', NULL, NULL, NULL, 
-    NULL, 1, NULL, 'ONEP', 'NVP: Cloppenburg', ST_Transform('0101000020E61000007B81CED535641940C088D9991E294B40'::geometry,4326), 
+    NULL, 1, NULL, 'ONEP', 'NVP: Cloppenburg', ST_Transform('0101000020E61000007B81CED535641940C088D9991E294B40'::geometry,3035), 
     '380', NULL, NULL, NULL,'NEP 2035','commissioning'
   FROM model_draft.ego_dp_supply_res_powerplant;
 -- 5
@@ -674,7 +674,7 @@ INSERT INTO model_draft.ego_dp_supply_res_powerplant (preversion,id, start_up_da
    'v0.3.0'::text as preversion,
     max(id)+ row_number() over () as id , 
     '2034-12-31 00:00:00' as start_up_date, 900000, 'wind', 'wind_offshore', NULL, NULL, NULL, 
-    NULL, 1, NULL, 'ONEP', 'NVP: Cloppenburg', ST_Transform('0101000020E6100000760FAC97AC3D184000CF66EFA2204B40'::geometry,4326), 
+    NULL, 1, NULL, 'ONEP', 'NVP: Cloppenburg', ST_Transform('0101000020E6100000760FAC97AC3D184000CF66EFA2204B40'::geometry,3035), 
     '380', NULL, NULL, NULL,'NEP 2035','commissioning'
   FROM model_draft.ego_dp_supply_res_powerplant;
 -- 6
@@ -685,7 +685,7 @@ INSERT INTO model_draft.ego_dp_supply_res_powerplant  (preversion,id, start_up_d
    'v0.3.0'::text as preversion,
     max(id)+ row_number() over () as id , 
     '2034-12-31 00:00:00' as start_up_date, 1188400, 'wind', 'wind_offshore', NULL, NULL, NULL, 
-    NULL, 1, NULL, 'ONEP', 'NVP: Dörpen West', ST_Transform('0101000020E610000044D62300A7711B400FE3B7CDB9034B40'::geometry,4326), 
+    NULL, 1, NULL, 'ONEP', 'NVP: Dörpen West', ST_Transform('0101000020E610000044D62300A7711B400FE3B7CDB9034B40'::geometry,3035), 
     '380', NULL, NULL, NULL,'NEP 2035','commissioning'
   FROM model_draft.ego_dp_supply_res_powerplant;
 -- 7
@@ -696,7 +696,7 @@ INSERT INTO model_draft.ego_dp_supply_res_powerplant  (preversion,id, start_up_d
     'v0.3.0'::text as preversion,
     max(id)+ row_number() over () as id , 
     '2034-12-31 00:00:00' as start_up_date, 1800000, 'wind', 'wind_offshore', NULL, NULL, NULL, 
-    NULL, 1, NULL, 'ONEP', 'NVP: Emden Ost', ST_Transform('0101000020E610000083B2A1AEEAF91B40343FC1825E054B40'::geometry,4326), 
+    NULL, 1, NULL, 'ONEP', 'NVP: Emden Ost', ST_Transform('0101000020E610000083B2A1AEEAF91B40343FC1825E054B40'::geometry,3035), 
     '380', NULL, NULL, NULL,'NEP 2035','commissioning'
   FROM model_draft.ego_dp_supply_res_powerplant;
 -- 8
@@ -707,7 +707,7 @@ INSERT INTO model_draft.ego_dp_supply_res_powerplant  (preversion,id, start_up_d
     'v0.3.0'::text as preversion,
     max(id)+ row_number() over () as id , 
     '2034-12-31 00:00:00' as start_up_date, 450000, 'wind', 'wind_offshore', NULL, NULL, NULL, 
-    NULL, 1, NULL, 'ONEP', 'NVP: Unterweser', ST_Transform('0101000020E6100000BAF8659652801740D869CBBDC1284B40'::geometry,4326), 
+    NULL, 1, NULL, 'ONEP', 'NVP: Unterweser', ST_Transform('0101000020E6100000BAF8659652801740D869CBBDC1284B40'::geometry,3035), 
     '380', NULL, NULL, NULL,'NEP 2035','commissioning'
   FROM model_draft.ego_dp_supply_res_powerplant;
 -- 9
@@ -718,7 +718,7 @@ INSERT INTO model_draft.ego_dp_supply_res_powerplant  (preversion,id, start_up_d
    'v0.3.0'::text as preversion,
     max(id)+ row_number() over () as id , 
     '2034-12-31 00:00:00' as start_up_date, 900000, 'wind', 'wind_offshore', NULL, NULL, NULL, 
-    NULL, 1, NULL, 'ONEP', 'NVP: Wilhelmshaven 2', ST_Transform('0101000020E610000033F5B4B394751940EA0712BD2E294B40'::geometry,4326), 
+    NULL, 1, NULL, 'ONEP', 'NVP: Wilhelmshaven 2', ST_Transform('0101000020E610000033F5B4B394751940EA0712BD2E294B40'::geometry,3035), 
     '380', NULL, NULL, NULL,'NEP 2035','commissioning'
   FROM model_draft.ego_dp_supply_res_powerplant;
 -- 10
@@ -729,7 +729,7 @@ INSERT INTO model_draft.ego_dp_supply_res_powerplant  (preversion,id, start_up_d
    'v0.3.0'::text as preversion,
     max(id)+ row_number() over () as id , 
     '2034-12-31 00:00:00' as start_up_date, 900000, 'wind', 'wind_offshore', NULL, NULL, NULL, 
-    NULL, 1, NULL, 'ONEP', 'NVP: Wilhelmshaven 2', ST_Transform('0101000020E6100000E75D445985E61740F70188073D684B40'::geometry,4326), 
+    NULL, 1, NULL, 'ONEP', 'NVP: Wilhelmshaven 2', ST_Transform('0101000020E6100000E75D445985E61740F70188073D684B40'::geometry,3035), 
     '380', NULL, NULL, NULL,'NEP 2035','commissioning'
   FROM model_draft.ego_dp_supply_res_powerplant;
 -- 11
@@ -740,7 +740,7 @@ INSERT INTO model_draft.ego_dp_supply_res_powerplant  (preversion,id, start_up_d
      'v0.3.0'::text as preversion,
     max(id)+ row_number() over () as id , 
     '2034-12-31 00:00:00' as start_up_date, 900000, 'wind', 'wind_offshore', NULL, NULL, NULL, 
-    NULL, 1, NULL, 'ONEP', 'NVP: Wilhelmshaven 2', ST_Transform('0101000020E610000046E764017AE71840ADB08899CC684B40'::geometry,4326), 
+    NULL, 1, NULL, 'ONEP', 'NVP: Wilhelmshaven 2', ST_Transform('0101000020E610000046E764017AE71840ADB08899CC684B40'::geometry,3035), 
     '380', NULL, NULL, NULL,'NEP 2035','commissioning'
   FROM model_draft.ego_dp_supply_res_powerplant;
 -- 12
@@ -751,7 +751,7 @@ INSERT INTO model_draft.ego_dp_supply_res_powerplant  (preversion,id, start_up_d
     'v0.3.0'::text as preversion,
     max(id)+ row_number() over () as id , 
     '2034-12-31 00:00:00' as start_up_date, 900000, 'wind', 'wind_offshore', NULL, NULL, NULL, 
-    NULL, 1, NULL, 'ONEP', 'NVP: Halbemond', ST_Transform('0101000020E610000011DD88C5680E1940A8A8439C94004B40'::geometry,4326), 
+    NULL, 1, NULL, 'ONEP', 'NVP: Halbemond', ST_Transform('0101000020E610000011DD88C5680E1940A8A8439C94004B40'::geometry,3035), 
     '380', NULL, NULL, NULL,'NEP 2035','commissioning'
   FROM model_draft.ego_dp_supply_res_powerplant;
 -- 13
@@ -762,7 +762,7 @@ INSERT INTO model_draft.ego_dp_supply_res_powerplant  (preversion,id, start_up_d
    'v0.3.0'::text as preversion,
     max(id)+ row_number() over () as id , 
     '2034-12-31 00:00:00' as start_up_date, 1585000, 'wind', 'wind_offshore', NULL, NULL, NULL, 
-    NULL, 1, NULL, 'ONEP', 'NVP: Lubmin', ST_Transform('0101000020E6100000C396890D74072A404ADF5A5C48744B40'::geometry,4326), 
+    NULL, 1, NULL, 'ONEP', 'NVP: Lubmin', ST_Transform('0101000020E6100000C396890D74072A404ADF5A5C48744B40'::geometry,3035), 
     '380', NULL, NULL, NULL,'NEP 2035','commissioning'
   FROM model_draft.ego_dp_supply_res_powerplant;
 
