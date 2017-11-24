@@ -1,4 +1,4 @@
-/*
+﻿/*
 Rectifies incorrect or implausible records in power plant list and adjusts it for further use
 
 __copyright__ 	= "Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems"
@@ -277,7 +277,7 @@ CREATE TABLE 		model_draft.ego_supply_conv_nep2035_temp AS
 	SELECT * 
 	FROM 
 	  model_draft.ego_dp_supply_conv_powerplant
-	WHERE scenario in ('NEP 2035')
+	WHERE scenario in ('NEP 2035');
 
 -- create index GIST (geom)
 CREATE INDEX ego_supply_conv_nep2035_temp_geom_idx
@@ -308,7 +308,7 @@ Update   model_draft.ego_dp_supply_conv_powerplant A
 FROM model_draft.ego_supply_conv_nep2035_temp  B
 WHERE A.scenario in ('NEP 2035')
 AND A.id = B.id;
-	
+
 	
 SELECT obj_description('model_draft.ego_dp_supply_conv_powerplant' ::regclass) ::json;
 
