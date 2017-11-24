@@ -267,6 +267,49 @@ UPDATE model_draft.ego_dp_supply_conv_powerplant
 	SET voltage_level=7
 	WHERE capacity < 0.1 /*voltage_level =7 when capacity lower than 0.1*/;
 	
+
+--  Due to discrepancies between the given NEP 2035 power plant lsit
+--  and the the installed Capacities of the study NEP 2015 with scenario B2035  
+--  a correction of the capacities is done.
+
+DROP TABLE IF EXISTS 	model_draft.ego_supply_conv_nep2035_temp CASCADE;
+CREATE TABLE 		model_draft.ego_supply_conv_nep2035_temp AS
+	SELECT * 
+	FROM 
+	  model_draft.ego_dp_supply_conv_powerplant
+	WHERE scenario in ('NEP 2035')
+
+-- create index GIST (geom)
+CREATE INDEX ego_supply_conv_nep2035_temp_geom_idx
+	ON model_draft.ego_supply_conv_nep2035_temp USING gist (geom);
+
+-- grant (oeuser)
+ALTER TABLE model_draft.ego_supply_conv_nep2035_temp OWNER TO oeuser;
+
+-- Repowering units 
+UPDATE model_draft.ego_supply_conv_nep2035_temp 
+set   capacity = capacity +  round(capacity*((12700.-14477.)/12700.))
+Where fuel ='pumped_storage';
+
+UPDATE model_draft.ego_supply_conv_nep2035_temp 
+set   capacity = capacity +   round(capacity*((33500.-35390.)/33500.))
+Where fuel ='gas';
+
+UPDATE model_draft.ego_supply_conv_nep2035_temp 
+set   capacity = capacity +  round(capacity*((9100.-12240)/9100.))
+Where fuel ='lignite';
+
+UPDATE model_draft.ego_supply_conv_nep2035_temp 
+set   capacity = capacity +  round(capacity*((11000.-13860.)/11000.))
+Where fuel ='coal';
+
+Update   model_draft.ego_dp_supply_conv_powerplant A
+  set capacity =B.capacity
+FROM model_draft.ego_supply_conv_nep2035_temp  B
+WHERE A.scenario in ('NEP 2035')
+AND A.id = B.id;
+	
+	
 SELECT obj_description('model_draft.ego_dp_supply_conv_powerplant' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
