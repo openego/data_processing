@@ -1372,7 +1372,7 @@ set source   = 'open_ego 2050',
     electrical_capacity = scn2050.electrical_capacity + round(scn2050.electrical_capacity*q1.pp) 
 From
 (
-Select (scn.capacity*1000 - sum(base.electrical_capacity))/(scn.capacity*1000)+1 as pp
+Select (scn.capacity*1000 - sum(base.electrical_capacity))/(scn.capacity*1000) as pp
 From
       model_draft.ego_supply_scenario_capacities as scn,
       model_draft.ego_supply_res_woff_2050_temp as base
