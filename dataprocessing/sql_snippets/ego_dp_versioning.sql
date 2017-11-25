@@ -680,7 +680,7 @@ ALTER MATERIALIZED VIEW supply.ego_dp_res_powerplant_nep2035_mview
 -- MView for eGo 100
 DROP MATERIALIZED VIEW IF EXISTS supply.ego_dp_res_powerplant_ego100_mview CASCADE;
 CREATE MATERIALIZED VIEW supply.ego_dp_res_powerplant_ego100_mview AS
-	SELECT
+	SELECT DISTINCT ON (id)
 	sub.*
 	FROM  ( 
 		SELECT DISTINCT ON (id)
@@ -699,10 +699,11 @@ CREATE MATERIALIZED VIEW supply.ego_dp_res_powerplant_ego100_mview AS
 		 AND version = 'v0.3.0'
 		 AND electrical_capacity > 0
 		 AND generation_type in ('solar','wind')
+		 AND generation_subtype not in ('wind_offshore')
 		 ORDER BY id	
 		 ) as sub
 	UNION 
-	SELECT
+	SELECT DISTINCT ON (id)
 	sub2.*
 	FROM  ( 
 		SELECT  DISTINCT ON (id)
@@ -725,7 +726,7 @@ CREATE MATERIALIZED VIEW supply.ego_dp_res_powerplant_ego100_mview AS
 		 ORDER BY id	
 	) sub2
         UNION 
-	SELECT
+	SELECT DISTINCT ON (id)
 	sub3.*
 	FROM  ( 
 		SELECT  DISTINCT ON (id)
@@ -739,6 +740,7 @@ CREATE MATERIALIZED VIEW supply.ego_dp_res_powerplant_ego100_mview AS
 			AND version = 'v0.3.0'
 			AND generation_type not in ('biomass','gas','reservoir','run_of_river')
 			AND flag in ('commissioning', 'repowering')
+			AND generation_subtype not in ('wind_offshore')
 			Group BY id
 			Order by id)
 		 AND scenario in ('NEP 2035')
