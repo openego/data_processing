@@ -1,5 +1,4 @@
-﻿
-DROP SEQUENCE IF EXISTS model_draft.ego_grid_hv_electrical_neighbours_bus_id CASCADE;
+﻿DROP SEQUENCE IF EXISTS model_draft.ego_grid_hv_electrical_neighbours_bus_id CASCADE;
 CREATE SEQUENCE model_draft.ego_grid_hv_electrical_neighbours_bus_id;
 SELECT setval('model_draft.ego_grid_hv_electrical_neighbours_bus_id', (MAX(bus_id)+1)) FROM model_draft.ego_grid_pf_hv_bus;
 
@@ -8,6 +7,9 @@ DROP SEQUENCE IF EXISTS model_draft.ego_grid_hv_electrical_neighbours_line_id CA
 CREATE SEQUENCE model_draft.ego_grid_hv_electrical_neighbours_line_id;
 SELECT setval('model_draft.ego_grid_hv_electrical_neighbours_line_id', (MAX(line_id)+1)) FROM model_draft.ego_grid_pf_hv_line;
 
+DROP SEQUENCE IF EXISTS model_draft.ego_grid_hv_electrical_neighbours_link_id CASCADE;
+CREATE SEQUENCE model_draft.ego_grid_hv_electrical_neighbours_link_id;
+SELECT setval('model_draft.ego_grid_hv_electrical_neighbours_link_id', (MAX(link_id)+1)) FROM model_draft.ego_grid_pf_hv_link;
 
 DROP SEQUENCE IF EXISTS model_draft.ego_grid_hv_electrical_neighbours_transformer_id CASCADE;
 CREATE SEQUENCE model_draft.ego_grid_hv_electrical_neighbours_transformer_id;
@@ -37,7 +39,7 @@ INSERT INTO model_draft.ego_grid_hv_electrical_neighbours_bus  (bus_id, cntr_id,
 
 
 INSERT INTO model_draft.ego_grid_hv_electrical_neighbours_bus  (bus_id, cntr_id, v_nom, current_type)
-(SELECT nextval('model_draft.ego_grid_hv_electrical_neighbours_bus_id'), cntr_id, base_kv, (CASE WHEN frequency = 50 THEN 'AC' ELSE 'DE' END) FROM grid.otg_ehvhv_bus_data a WHERE cntr_id != 'DE');
+(SELECT nextval('model_draft.ego_grid_hv_electrical_neighbours_bus_id'), cntr_id, base_kv, (CASE WHEN frequency = 50 THEN 'AC' ELSE 'DC' END) FROM grid_2.otg_ehvhv_bus_data a WHERE cntr_id != 'DE');
 
 UPDATE model_draft.ego_grid_hv_electrical_neighbours_bus
 	SET v_nom = (CASE v_nom WHEN 132 THEN 220
@@ -120,7 +122,7 @@ CREATE TABLE model_draft.ego_grid_hv_electrical_neighbours_line
 
 INSERT INTO model_draft.ego_grid_hv_electrical_neighbours_line (line_id, bus1, v_nom, cntr_id_2, cntr_id_1)
 	SELECT nextval('model_draft.ego_grid_hv_electrical_neighbours_line_id'), bus_id, v_nom, 'DE', cntr_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus 
-	WHERE central_bus = FALSE;
+	WHERE central_bus = FALSE AND current_type = 'AC';
 	
 UPDATE model_draft.ego_grid_hv_electrical_neighbours_line a
 	SET cables = 6;
@@ -302,7 +304,7 @@ UPDATE model_draft.ego_grid_hv_electrical_neighbours_transformer
 	SET geom  = (SELECT  ST_Multi(topo));
 
 	
-DROP TABLE  model_draft.ego_grid_hv_electrical_neighbours_link;
+DROP TABLE IF EXISTS model_draft.ego_grid_hv_electrical_neighbours_link CASCADE;
 
 CREATE TABLE model_draft.ego_grid_hv_electrical_neighbours_link
 (
@@ -310,6 +312,9 @@ CREATE TABLE model_draft.ego_grid_hv_electrical_neighbours_link
   link_id bigint NOT NULL,
   bus0 bigint,
   bus1 bigint,
+  cntr_id_1 character varying, 
+  cntr_id_2 character varying,
+  v_nom bigint;
   efficiency double precision DEFAULT 1,
   p_nom numeric DEFAULT 0,
   p_nom_extendable boolean DEFAULT false,
@@ -327,9 +332,24 @@ WITH (
   OIDS=FALSE
 );
 
+/*INSERT INTO model_draft.ego_grid_hv_electrical_neighbours_link (link_id, bus0, cntr_id_1)
+SELECT nextval('model_draft.ego_grid_hv_electrical_neighbours_link_id'), bus_id, cntr_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE current_type = 'DC' AND central_bus = FALSE;
+
+UPDATE model_draft.ego_grid_hv_electrical_neighbours_link a
+	SET bus1 = (SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus b  WHERE current_type = 'DC' AND central_bus = TRUE AND )
+
+	
+INSERT INTO model_draft.ego_grid_hv_electrical_neighbours_link (link_id, cntr_id_1, cntr_id_2, v_nom )
+	SELECT nextval('model_draft.ego_grid_hv_electrical_neighbours_link_id'), country_1 , country_2, voltage FROM model_draft.entsoe_link WHERE country_1 != country_2 
+	AND country_1 IN (SELECT cntr_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus) AND country_2 IN (SELECT cntr_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus) AND dc = true AND under_construction = false;
+
+UPDATE model_draft.ego_grid_hv_electrical_neighbours_line a
+	SET	bus0 = (SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus b WHERE a.v_nom = b.v_nom AND a.cntr_id_1 = b.cntr_id AND a.current_type = 'DC' AND central_bus = TRUE),
+		bus1 = (SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus b WHERE a.v_nom = b.v_nom AND a.cntr_id_1 = b.cntr_id AND a.current_type = 'DC' AND central_bus = FALSE);
+*/
 INSERT INTO model_draft.ego_grid_hv_electrical_neighbours_link (link_id, bus0, bus1, p_nom)
-VALUES 	(1, (SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE cntr_id = 'SE' AND central_bus = TRUE AND v_nom = 450), (SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE cntr_id = 'SE' AND central_bus = FALSE AND v_nom = 450), 600),
-	(2, (SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE cntr_id = 'SE' AND central_bus = FALSE AND v_nom = 450), (SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE cntr_id = 'SE' AND central_bus = TRUE AND v_nom = 450), 600);
+VALUES 	(nextval('model_draft.ego_grid_hv_electrical_neighbours_link_id'), (SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE cntr_id = 'SE' AND central_bus = TRUE AND v_nom = 450), (SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE cntr_id = 'SE' AND central_bus = FALSE AND v_nom = 450), 600),
+	(nextval('model_draft.ego_grid_hv_electrical_neighbours_link_id'), (SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE cntr_id = 'SE' AND central_bus = FALSE AND v_nom = 450), (SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE cntr_id = 'SE' AND central_bus = TRUE AND v_nom = 450), 600);
 
 UPDATE model_draft.ego_grid_hv_electrical_neighbours_link
 	SET 	topo = (SELECT ST_MakeLine((SELECT geom FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE bus_id = bus0), (SELECT geom FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE bus_id = bus1 AND scn_name = 'Status Quo')));
@@ -357,14 +377,13 @@ UPDATE model_draft.ego_grid_hv_electrical_neighbours_link
 	SET geom = (CASE WHEN geom IS NULL THEN (SELECT ST_Multi(topo)) ELSE geom END)*/
 
 
+DELETE FROM model_draft.ego_grid_hv_electrical_neighbours_line a USING model_draft.ego_grid_pf_hv_link b WHERE a.geom = b.geom;
+
 DELETE FROM model_draft.ego_grid_pf_hv_link ;
 
 DELETE FROM model_draft.ego_grid_pf_hv_line WHERE geom IN (SELECT geom FROM model_draft.ego_grid_hv_electrical_neighbours_line);
 
-
-
 DELETE FROM model_draft.ego_grid_pf_hv_bus a USING model_draft.ego_grid_hv_electrical_neighbours_bus b WHERE a.geom = b.geom AND b.central_bus = TRUE OR a.v_nom = 450 OR a.geom = '0101000020E6100000AFB9FEB858EC2740621AE148FB474B40';
-
 
 DELETE FROM model_draft.ego_grid_pf_hv_transformer WHERE geom IN (SELECT geom FROM model_draft.ego_grid_hv_electrical_neighbours_transformer);
 

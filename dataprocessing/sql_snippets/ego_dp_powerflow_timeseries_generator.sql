@@ -1,4 +1,4 @@
-/*
+﻿/*
 Quick workaround to transfer renpassG!S results into the corresponding powerflow table.
 
 __copyright__ 	= "Europa Universitaet Flensburg, Centre for Sustainable Energy Systems"
