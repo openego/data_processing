@@ -28,14 +28,14 @@ WHERE  	t1.subst_id = t2.subst_id;
 -- municipality and method types
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','input','political_boundary','bkg_vg250_6_gem','ego_dp_loadarea_griddistrict_results.sql',' ');
+SELECT ego_scenario_log('v0.2.10','input','boundaries','bkg_vg250_6_gem','ego_dp_loadarea_griddistrict_results.sql',' ');
 
 -- Gemeinden
 UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
 SET  	gem = t2.gem
 FROM	(SELECT	gd.subst_id,
 		COUNT(ST_PointOnSurface(gem.geom))::integer AS gem
-	FROM	political_boundary.bkg_vg250_6_gem AS gem,
+	FROM	boundaries.bkg_vg250_6_gem AS gem,
 		model_draft.ego_grid_mv_griddistrict AS gd
 	WHERE	gd.geom && ST_TRANSFORM(gem.geom,3035) AND
 		ST_CONTAINS(gd.geom,ST_PointOnSurface(ST_TRANSFORM(gem.geom,3035)))
@@ -44,14 +44,14 @@ FROM	(SELECT	gd.subst_id,
 WHERE  	t1.subst_id = t2.subst_id;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','input','model_draft','ego_political_boundary_bkg_vg250_6_gem_clean','ego_dp_loadarea_griddistrict_results.sql',' ');
+SELECT ego_scenario_log('v0.2.10','input','model_draft','ego_boundaries_bkg_vg250_6_gem_clean','ego_dp_loadarea_griddistrict_results.sql',' ');
 
 -- Gemeinde Parts
 UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
 SET  	gem_clean = t2.gem_clean
 FROM	(SELECT	gd.subst_id,
 		COUNT(ST_PointOnSurface(gem.geom))::integer AS gem_clean
-	FROM	model_draft.ego_political_boundary_bkg_vg250_6_gem_clean AS gem,
+	FROM	model_draft.ego_boundaries_bkg_vg250_6_gem_clean AS gem,
 		model_draft.ego_grid_mv_griddistrict AS gd
 	WHERE	gd.geom && gem.geom AND
 		ST_CONTAINS(gd.geom,ST_PointOnSurface(gem.geom))
@@ -76,13 +76,13 @@ FROM	(SELECT	gd.subst_id,
 WHERE  	t1.subst_id = t2.subst_id;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','input','model_draft','ego_political_boundary_hvmv_subst_per_gem_1_mview','ego_dp_loadarea_griddistrict_results.sql',' ');
+SELECT ego_scenario_log('v0.2.10','input','model_draft','ego_boundaries_hvmv_subst_per_gem_1_mview','ego_dp_loadarea_griddistrict_results.sql',' ');
 
 UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
 SET  	type1_cnt = t2.type_cnt
 FROM	(SELECT	gd.subst_id,
 		COUNT(ST_PointOnSurface(typ.geom))::integer AS type_cnt
-	FROM	model_draft.ego_political_boundary_hvmv_subst_per_gem_1_mview AS typ,
+	FROM	model_draft.ego_boundaries_hvmv_subst_per_gem_1_mview AS typ,
 		model_draft.ego_grid_mv_griddistrict AS gd
 	WHERE	gd.geom && typ.geom AND
 		ST_CONTAINS(gd.geom,ST_PointOnSurface(typ.geom))
@@ -138,13 +138,13 @@ FROM	(SELECT	gd.subst_id,
 WHERE  	t1.subst_id = t2.subst_id;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','input','model_draft','ego_political_boundary_hvmv_subst_per_gem_3_mview','ego_dp_loadarea_griddistrict_results.sql',' ');
+SELECT ego_scenario_log('v0.2.10','input','model_draft','ego_boundaries_hvmv_subst_per_gem_3_mview','ego_dp_loadarea_griddistrict_results.sql',' ');
 
 UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
 SET  	type3_cnt = t2.type_cnt
 FROM	(SELECT	gd.subst_id,
 		COUNT(ST_PointOnSurface(typ.geom))::integer AS type_cnt
-	FROM	model_draft.ego_political_boundary_hvmv_subst_per_gem_3_mview AS typ,
+	FROM	model_draft.ego_boundaries_hvmv_subst_per_gem_3_mview AS typ,
 		model_draft.ego_grid_mv_griddistrict AS gd
 	WHERE	gd.geom && typ.geom AND
 		ST_CONTAINS(gd.geom,ST_PointOnSurface(typ.geom))
@@ -165,7 +165,7 @@ SET  	"group" = (SELECT
 
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','input','social','destatis_zensus_population_per_ha_mview','ego_dp_loadarea_griddistrict_results.sql',' ');
+SELECT ego_scenario_log('v0.2.10','input','society','destatis_zensus_population_per_ha_mview','ego_dp_loadarea_griddistrict_results.sql',' ');
 
 -- population results
 UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
@@ -179,7 +179,7 @@ FROM    (SELECT	gd.subst_id AS subst_id,
 		(SUM(pts.population)/COUNT(pts.geom))::numeric AS zensus_density,
 		(SUM(pts.population)/gd.area_ha)::numeric AS population_density
 	FROM	model_draft.ego_grid_mv_griddistrict AS gd,
-		social.destatis_zensus_population_per_ha_mview AS pts
+		society.destatis_zensus_population_per_ha_mview AS pts
 	WHERE  	gd.geom && pts.geom AND
 		ST_CONTAINS(gd.geom,pts.geom)
 	GROUP BY gd.subst_id
@@ -322,7 +322,7 @@ FROM    (SELECT	gd.subst_id AS subst_id,
 		(SUM(pts.population)/COUNT(pts.geom))::numeric AS zensus_density,
 		(SUM(pts.population)/gd.area_ha)::numeric AS population_density
 	FROM	model_draft.ego_grid_mv_griddistrict AS gd,
-		social.destatis_zensus_population_per_ha_mview AS pts
+		society.destatis_zensus_population_per_ha_mview AS pts
 	WHERE  	gd.geom && pts.geom AND
 		ST_CONTAINS(gd.geom,pts.geom)
 	GROUP BY gd.subst_id

@@ -19,7 +19,7 @@ CREATE TABLE         	model_draft.ego_lattice_50m (
 CONSTRAINT 	ego_lattice_50m_pkey PRIMARY KEY (id));
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','input','political_boundary','bkg_vg250_1_sta_union_mview','ego_dp_lattice_50m.sql',' ');
+SELECT ego_scenario_log('v0.2.10','input','boundaries','bkg_vg250_1_sta_union_mview','ego_dp_lattice_50m.sql',' ');
 
 -- insert lattice
 INSERT INTO     model_draft.ego_lattice_50m (geom_box)
@@ -31,7 +31,7 @@ INSERT INTO     model_draft.ego_lattice_50m (geom_box)
 			ST_xmin (box2d(geom)),
 			ST_ymin (box2d(geom))
 		),3035)::geometry(POLYGON,3035) AS geom
-	FROM political_boundary.bkg_vg250_1_sta_union_mview;
+	FROM boundaries.bkg_vg250_1_sta_union_mview;
 
 -- index gist (geom_box)
 CREATE INDEX 	ego_lattice_50m_geom_box_idx
@@ -55,7 +55,7 @@ COMMENT ON TABLE model_draft.ego_lattice_50m IS '{
 	"language": [ "eng" ],
 	"reference_date": "",
 	"sources": [
-		{"name": "political_boundary.bkg_vg250_1_sta_union_mview","description": "","url": ""} ],
+		{"name": "boundaries.bkg_vg250_1_sta_union_mview","description": "","url": ""} ],
 	"spatial": [
 		{"extend": "Germany",
 		"resolution": "50m"} ],

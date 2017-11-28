@@ -11,7 +11,7 @@ __author__ 	= "IlkaCu, Ludee"
 SELECT ego_scenario_log('v0.2.10','input','demand','ego_demand_federalstate','ego_dp_loadarea_industry_consumer.sql',' ');
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','input','economic','destatis_gva_per_district','ego_dp_loadarea_industry_consumer.sql',' ');
+SELECT ego_scenario_log('v0.2.10','input','economy','destatis_gva_per_district','ego_dp_loadarea_industry_consumer.sql',' ');
 
 -- Calculate specific electricity consumption per million Euro GVA for each federal state
 DROP TABLE IF EXISTS model_draft.ego_demand_per_gva CASCADE;
@@ -21,7 +21,7 @@ CREATE TABLE model_draft.ego_demand_per_gva AS
 		a.elec_consumption_industry/b.gva_industry AS elec_consumption_industry, 
 		a.elec_consumption_tertiary_sector/b.gva_tertiary_sector AS elec_consumption_tertiary_sector 
 	FROM  	demand.ego_demand_federalstate a,  -- ego_demand_federalstate
-		economic.destatis_gva_per_district b -- destatis_gva_per_district
+		economy.destatis_gva_per_district b -- destatis_gva_per_district
 	WHERE a.eu_code = b.eu_code 
 	ORDER BY eu_code ); 
 
@@ -81,7 +81,7 @@ CREATE TABLE 		model_draft.ego_demand_per_district as
 		a.elec_consumption_industry * b.gva_industry as elec_consumption_industry, 
 		a.elec_consumption_tertiary_sector * b.gva_tertiary_sector AS elec_consumption_tertiary_sector 
 		FROM  	model_draft.ego_demand_per_gva a, 
-			economic.destatis_gva_per_district b -- destatis_gva_per_district
+			economy.destatis_gva_per_district b -- destatis_gva_per_district
 		WHERE SUBSTR (a.eu_code,1,3) = SUBSTR(b.eu_code,1,3) ); 
 
 -- PK
@@ -227,11 +227,11 @@ CREATE INDEX  	landuse_industry_geom_centre_idx
 -- Calculate NUTS
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','input','political_boundary','bkg_vg250_4_krs_mview','ego_dp_loadarea_industry_consumer.sql',' ');
+SELECT ego_scenario_log('v0.2.10','input','boundaries','bkg_vg250_4_krs_mview','ego_dp_loadarea_industry_consumer.sql',' ');
 
 UPDATE 	model_draft.ego_landuse_industry a
 	SET 	nuts = b.nuts
-	FROM 	political_boundary.bkg_vg250_4_krs_mview b
+	FROM 	boundaries.bkg_vg250_4_krs_mview b
 	WHERE 	b.geom && a.geom_centre AND
 		st_intersects(b.geom, a.geom_centre); 
 

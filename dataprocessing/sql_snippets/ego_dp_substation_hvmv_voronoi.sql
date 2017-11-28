@@ -28,7 +28,7 @@ CREATE INDEX	ego_grid_hvmv_substation_geom_idx
 	ON	model_draft.ego_grid_hvmv_substation USING GIST (geom);
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','input','model_draft','ego_political_boundary_bkg_vg250_6_gem_clean','ego_dp_substation_hvmv_voronoi.sql',' ');
+SELECT ego_scenario_log('v0.2.10','input','model_draft','ego_boundaries_bkg_vg250_6_gem_clean','ego_dp_substation_hvmv_voronoi.sql',' ');
 
 -- Gemeindeschlüssel
 UPDATE 	model_draft.ego_grid_hvmv_substation AS t1
@@ -37,7 +37,7 @@ UPDATE 	model_draft.ego_grid_hvmv_substation AS t1
 		SELECT	sub.subst_id AS subst_id,
 			vg.ags_0 AS ags_0
 		FROM	model_draft.ego_grid_hvmv_substation AS sub,
-			model_draft.ego_political_boundary_bkg_vg250_6_gem_clean AS vg
+			model_draft.ego_boundaries_bkg_vg250_6_gem_clean AS vg
 		WHERE  	vg.geom && sub.geom AND
 			ST_CONTAINS(vg.geom,sub.geom)
 		) AS t2

@@ -1,4 +1,4 @@
-/*
+﻿/*
 Skript to allocate decentralized renewable power plants (dea)
 Methods base on technology and voltage level
 Uses different lattice from setup_ego_wpa_per_grid_district.sql
@@ -15,7 +15,7 @@ The rest could not be allocated, consider in M4.
 */ 
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','input','model_draft','ego_supply_res_powerplant','ego_dp_rea_m1.sql',' ');
+SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_dp_supply_res_powerplant','ego_dp_rea_m1.sql',' ');
 
 -- MView M1-1
 DROP MATERIALIZED VIEW IF EXISTS 	model_draft.ego_supply_rea_m1_1_a_mview CASCADE;
@@ -28,11 +28,12 @@ CREATE MATERIALIZED VIEW 		model_draft.ego_supply_rea_m1_1_a_mview AS
 		subst_id,
 		ST_TRANSFORM(geom,3035) AS geom,
 		rea_flag
-	FROM 	model_draft.ego_supply_res_powerplant AS dea
+	FROM 	model_draft.ego_dp_supply_res_powerplant AS dea
 	WHERE 	(dea.generation_type = 'biomass' OR dea.generation_type = 'gas') AND
 		(dea.voltage_level = 4 OR dea.voltage_level = 5 OR
 		dea.voltage_level = 6 OR dea.voltage_level = 7
-		OR dea.voltage_level IS NULL );
+		OR dea.voltage_level IS NULL )
+		AND (dea.flag in ('commissioning','constantly'));
 
 -- create index GIST (geom)
 CREATE INDEX ego_supply_rea_m1_1_a_mview_geom_idx
@@ -42,16 +43,17 @@ CREATE INDEX ego_supply_rea_m1_1_a_mview_geom_idx
 ALTER TABLE model_draft.ego_supply_rea_m1_1_a_mview OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','temp','model_draft','ego_supply_rea_m1_1_a_mview','ego_dp_rea_m1.sql',' ');
+SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_supply_rea_m1_1_a_mview','ego_dp_rea_m1.sql',' ');
 
 
 -- rea_flag M1-1
-UPDATE 	model_draft.ego_supply_res_powerplant AS dea
+UPDATE 	model_draft.ego_dp_supply_res_powerplant AS dea
 	SET	rea_flag = 'M1-1_rest'
 	WHERE	(dea.generation_type = 'biomass' OR dea.generation_type = 'gas') AND
 		(dea.voltage_level = 4 OR dea.voltage_level = 5 OR
 		dea.voltage_level = 6 OR dea.voltage_level = 7
-		OR dea.voltage_level IS NULL );
+		OR dea.voltage_level IS NULL )
+		AND (dea.flag in ('commissioning','constantly'));
 
 
 -- temporary tables for the loop
@@ -72,7 +74,7 @@ CREATE INDEX ego_supply_rea_m1_1_dea_temp_geom_idx
 	ON model_draft.ego_supply_rea_m1_1_dea_temp USING gist (geom);
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','temp','model_draft','ego_supply_rea_m1_1_dea_temp','ego_dp_rea_m1.sql',' ');
+SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_supply_rea_m1_1_dea_temp','ego_dp_rea_m1.sql',' ');
 
 DROP TABLE IF EXISTS 	model_draft.ego_supply_rea_m1_1_osm_temp CASCADE;
 CREATE TABLE 		model_draft.ego_supply_rea_m1_1_osm_temp (
@@ -87,7 +89,7 @@ CREATE INDEX ego_supply_rea_m1_1_osm_temp_geom_idx
 	ON model_draft.ego_supply_rea_m1_1_osm_temp USING gist (geom);
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','temp','model_draft','ego_supply_rea_m1_1_osm_temp','ego_dp_rea_m1.sql',' ');
+SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_supply_rea_m1_1_osm_temp','ego_dp_rea_m1.sql',' ');
 
 DROP TABLE IF EXISTS 	model_draft.ego_supply_rea_m1_1_jnt_temp CASCADE;
 CREATE TABLE 		model_draft.ego_supply_rea_m1_1_jnt_temp (
@@ -101,10 +103,10 @@ CREATE INDEX ego_supply_rea_m1_1_jnt_temp_geom_idx
 	ON model_draft.ego_supply_rea_m1_1_jnt_temp USING gist (geom);
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','temp','model_draft','ego_supply_rea_m1_1_jnt_temp','ego_dp_rea_m1.sql',' ');
+-- SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_supply_rea_m1_1_jnt_temp','ego_dp_rea_m1.sql',' ');
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','input','model_draft','ego_osm_sector_per_griddistrict_4_agricultural','ego_dp_rea_m1.sql',' ');
+SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_osm_sector_per_griddistrict_4_agricultural','ego_dp_rea_m1.sql',' ');
 
 -- loop for grid_district
 DO
@@ -137,7 +139,7 @@ BEGIN
 			FROM	model_draft.ego_supply_rea_m1_1_dea_temp AS dea
 			INNER JOIN model_draft.ego_supply_rea_m1_1_osm_temp AS osm ON (dea.rea_sorted = osm.rea_sorted);
 
-		UPDATE 	model_draft.ego_supply_res_powerplant AS t1
+		UPDATE 	model_draft.ego_dp_supply_res_powerplant AS t1
 			SET  	rea_geom_new = t2.rea_geom_new,
 					rea_geom_line = t2.rea_geom_line,
 					rea_flag = ''M1-1''
@@ -158,7 +160,7 @@ $$;
 DROP MATERIALIZED VIEW IF EXISTS 	model_draft.ego_supply_rea_m1_1_mview CASCADE;
 CREATE MATERIALIZED VIEW 		model_draft.ego_supply_rea_m1_1_mview AS
 	SELECT 	dea.*
-	FROM	model_draft.ego_supply_res_powerplant AS dea
+	FROM	model_draft.ego_dp_supply_res_powerplant AS dea
 	WHERE	rea_flag = 'M1-1';
 
 -- create index GIST (geom)
@@ -177,7 +179,7 @@ CREATE INDEX ego_supply_rea_m1_1_mview_rea_geom_new_idx
 ALTER TABLE model_draft.ego_supply_rea_m1_1_mview OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_supply_rea_m1_1_mview','ego_dp_rea_m1.sql',' ');
+SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_supply_rea_m1_1_mview','ego_dp_rea_m1.sql',' ');
 
 
 -- M1-1 rest
@@ -191,7 +193,7 @@ CREATE MATERIALIZED VIEW 		model_draft.ego_supply_rea_m1_1_rest_mview AS
 		subst_id,
 		geom,
 		rea_flag
-	FROM	model_draft.ego_supply_res_powerplant AS dea
+	FROM	model_draft.ego_dp_supply_res_powerplant AS dea
 	WHERE	dea.rea_flag = 'M1-1_rest';
 
 -- create index GIST (geom)
@@ -202,7 +204,7 @@ CREATE INDEX ego_supply_rea_m1_1_rest_mview_geom_idx
 ALTER TABLE model_draft.ego_supply_rea_m1_1_rest_mview OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_supply_rea_m1_1_rest_mview','ego_dp_rea_m1.sql',' ');
+SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_supply_rea_m1_1_rest_mview','ego_dp_rea_m1.sql',' ');
 
 -- Drop temp
 DROP TABLE IF EXISTS 	model_draft.ego_supply_rea_m1_1_dea_temp CASCADE;
@@ -226,9 +228,10 @@ CREATE MATERIALIZED VIEW 		model_draft.ego_supply_rea_m1_2_a_mview AS
 		subst_id,
 		ST_TRANSFORM(geom,3035) AS geom,
 		rea_flag
-	FROM 	model_draft.ego_supply_res_powerplant AS dea
+	FROM 	model_draft.ego_dp_supply_res_powerplant AS dea
 	WHERE 	(dea.voltage_level = 4 OR dea.voltage_level = 5) AND
-		(dea.generation_subtype = 'solar_roof_mounted');
+		(dea.generation_subtype = 'solar_roof_mounted')
+		AND (dea.flag in ('commissioning','constantly'));
 
 -- create index GIST (geom)
 CREATE INDEX ego_supply_rea_m1_2_a_mview_geom_idx
@@ -238,14 +241,15 @@ CREATE INDEX ego_supply_rea_m1_2_a_mview_geom_idx
 ALTER TABLE model_draft.ego_supply_rea_m1_2_a_mview OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','temp','model_draft','ego_supply_rea_m1_2_a_mview','ego_dp_rea_m1.sql',' ');
+SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_supply_rea_m1_2_a_mview','ego_dp_rea_m1.sql',' ');
 
 
 -- rea_flag M1-2
-UPDATE 	model_draft.ego_supply_res_powerplant AS dea
+UPDATE 	model_draft.ego_dp_supply_res_powerplant AS dea
 	SET	rea_flag = 'M1-2_rest'
 	WHERE	(dea.voltage_level = 4 OR dea.voltage_level = 5) AND
-		(dea.generation_subtype = 'solar_roof_mounted');
+		(dea.generation_subtype = 'solar_roof_mounted')
+		AND (dea.flag in ('commissioning','constantly'));
 
 
 -- create temporary tables for the loop
@@ -266,7 +270,7 @@ CREATE INDEX ego_supply_rea_m1_2_dea_temp_geom_idx
 	ON model_draft.ego_supply_rea_m1_2_dea_temp USING gist (geom);
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','temp','model_draft','ego_supply_rea_m1_2_dea_temp','ego_dp_rea_m1.sql',' ');
+SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_supply_rea_m1_2_dea_temp','ego_dp_rea_m1.sql',' ');
 
 DROP TABLE IF EXISTS 	model_draft.ego_supply_rea_m1_2_osm_temp ;
 CREATE TABLE 		model_draft.ego_supply_rea_m1_2_osm_temp (
@@ -281,7 +285,7 @@ CREATE INDEX ego_supply_rea_m1_2_osm_temp_geom_idx
 	ON model_draft.ego_supply_rea_m1_2_osm_temp USING gist (geom);
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','temp','model_draft','ego_supply_rea_m1_2_osm_temp','ego_dp_rea_m1.sql',' ');
+SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_supply_rea_m1_2_osm_temp','ego_dp_rea_m1.sql',' ');
 
 DROP TABLE IF EXISTS 	model_draft.ego_supply_rea_m1_2_jnt_temp CASCADE;
 CREATE TABLE 		model_draft.ego_supply_rea_m1_2_jnt_temp (
@@ -301,7 +305,7 @@ CREATE INDEX ego_supply_rea_m1_2_jnt_temp_geom_idx
 	ON model_draft.ego_supply_rea_m1_2_jnt_temp USING gist (geom);
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','temp','model_draft','ego_supply_rea_m1_2_jnt_temp','ego_dp_rea_m1.sql',' ');
+SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_supply_rea_m1_2_jnt_temp','ego_dp_rea_m1.sql',' ');
 
 -- loop for grid_district
 DO
@@ -340,7 +344,7 @@ BEGIN
 			FROM	model_draft.ego_supply_rea_m1_2_dea_temp AS dea
 			INNER JOIN model_draft.ego_supply_rea_m1_2_osm_temp AS osm ON (dea.rea_sorted = osm.rea_sorted);
 
-		UPDATE 	model_draft.ego_supply_res_powerplant AS t1
+		UPDATE 	model_draft.ego_dp_supply_res_powerplant AS t1
 			SET  	rea_geom_new = t2.rea_geom_new,
 				rea_geom_line = t2.rea_geom_line,
 				rea_flag = ''M1-2''
@@ -361,7 +365,7 @@ $$;
 DROP MATERIALIZED VIEW IF EXISTS 	model_draft.ego_supply_rea_m1_2_mview CASCADE;
 CREATE MATERIALIZED VIEW 		model_draft.ego_supply_rea_m1_2_mview AS
 	SELECT 	dea.*
-	FROM	model_draft.ego_supply_res_powerplant AS dea
+	FROM	model_draft.ego_dp_supply_res_powerplant AS dea
 	WHERE	rea_flag = 'M1-2';
 
 -- create index GIST (geom)
@@ -381,7 +385,7 @@ GRANT ALL ON TABLE	model_draft.ego_supply_rea_m1_2_mview TO oeuser WITH GRANT OP
 ALTER TABLE		model_draft.ego_supply_rea_m1_2_mview OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_supply_rea_m1_2_mview','ego_dp_rea_m1.sql',' ');
+SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_supply_rea_m1_2_mview','ego_dp_rea_m1.sql',' ');
 
 -- M1-2 rest
 DROP MATERIALIZED VIEW IF EXISTS 	model_draft.ego_supply_rea_m1_2_rest_mview CASCADE;
@@ -394,7 +398,7 @@ CREATE MATERIALIZED VIEW 		model_draft.ego_supply_rea_m1_2_rest_mview AS
 		subst_id,
 		geom,
 		rea_flag
-	FROM	model_draft.ego_supply_res_powerplant AS dea
+	FROM	model_draft.ego_dp_supply_res_powerplant AS dea
 	WHERE	dea.rea_flag = 'M1-2_rest';
 
 -- create index GIST (geom)
@@ -405,7 +409,7 @@ CREATE INDEX ego_supply_rea_m1_2_rest_mview_geom_idx
 ALTER TABLE model_draft.ego_supply_rea_m1_2_rest_mview OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_supply_rea_m1_2_rest_mview','ego_dp_rea_m1.sql',' ');
+SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_supply_rea_m1_2_rest_mview','ego_dp_rea_m1.sql',' ');
 
 
 -- Drop temp

@@ -4,6 +4,7 @@ setup for hv powerflow
 PF HV scenario settings
 PF HV source
 PF HV bus
+PF HV busmap
 PF HV generator
 PF HV line
 PF HV load
@@ -18,7 +19,7 @@ PF HV storage PQ set
 __copyright__ 	= "Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems"
 __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
 __url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
-__author__ 	= "mariusves, IlkaCu, ulfmueller, Ludee" 
+__author__ 	= "mariusves, IlkaCu, ulfmueller, Ludee, s3pp"
 */
 
 --------------------------------------------------------------------
@@ -226,6 +227,50 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_bus IS
                     "Mail": "",
                     "Date":  "26.10.2016",
                     "Comment": "completed json-String" }
+                  ],
+"ToDo": ["add licence"],
+"Licence": ["..."],
+"Instructions for proper use": ["..."]
+}';
+
+-- PF HV busmap
+DROP TABLE IF EXISTS 	model_draft.ego_grid_pf_hv_busmap CASCADE;
+CREATE TABLE model_draft.ego_grid_pf_hv_busmap (
+	scn_name text,
+	bus0 text,
+	bus1 text,
+	path_length numeric,
+	PRIMARY KEY(scn_name, bus0, bus1));
+
+COMMENT ON TABLE  model_draft.ego_grid_pf_hv_busmap IS
+'{
+"Name": "hv powerflow busmap",
+"Source": [{
+                  "Name": "open_eGo data-processing",
+                  "URL":  "https://github.com/openego/data_processing" }],
+"Reference date": "2017
+"Date of collection": ""
+"Original file": "ego_dp_powerflow_hv_setup.sql",
+"Spatial resolution": [""],
+"Description": ["Bus to bus assignment by id to support PyPSA clustering."],
+"Column": [
+                   {"Name": "scn_name",
+                    "Description": "name of scenario",
+                    "Unit": "" },
+                   {"Name": "bus0",
+                    "Description": "source bus id",
+                    "Unit": "" },
+                   {"Name": "bus1",
+                    "Description": "target bus id",
+                    "Unit": "" },
+                   {"Name": "path_length",
+                    "Description": "Length of line between source and target bus.",
+                    "Unit": "" }],
+"Changes":[
+                   {"Name": "s3pp",
+                    "Mail": "",
+                    "Date":  "02.06.2017",
+                    "Comment": "Initial statement."}
                   ],
 "ToDo": ["add licence"],
 "Licence": ["..."],
@@ -927,7 +972,7 @@ COMMENT ON TABLE  model_draft.ego_grid_pf_hv_generator_pq_set IS
                     "Description": "If control=variable this gives the minimum output for each snapshot per unit of p_nom for the OPF",
                     "Unit": "per unit" },
                    {"Name": "p_max_pu",
-                    "Description": "If control=variable this gives the maximum output for each snapshot per unit of p_nom for the OPF, relevant e.g. if for renewables the power output is limited by the weather",
+                    "Description": "If control=variable this gives the maximum output for each snapshot per unit of p_nom for the OPF, relevant e.g. if for renewables the power output is limited by the climate",
                     "Unit": "per unit" }],
 "Changes":[
                    {"Name": "Mario Kropshofer",
@@ -1147,6 +1192,10 @@ ALTER TABLE model_draft.ego_grid_pf_hv_transformer
   OWNER TO oeuser;
 GRANT ALL ON TABLE model_draft.ego_grid_pf_hv_transformer TO oeuser;
 
+ALTER TABLE model_draft.ego_grid_pf_hv_busmap
+  OWNER TO oeuser;
+GRANT ALL ON TABLE model_draft.ego_grid_pf_hv_busmap TO oeuser;
+
 -------------------------------------------------------------------
 ----------------------------- Comments ----------------------------
 -------------------------------------------------------------------
@@ -1224,7 +1273,7 @@ COMMENT ON COLUMN model_draft.ego_grid_pf_hv_generator_pq_set.p_min_pu IS 'Unit:
 Description: If control=variable this gives the minimum output for each snapshot per unit of p_nom for the OPF.
 Status: Input (optional)';
 COMMENT ON COLUMN model_draft.ego_grid_pf_hv_generator_pq_set.p_max_pu IS 'Unit: per unit
-Description: If control=variable this gives the maximum output for each snapshot per unit of p_nom for the OPF, relevant e.g. if for renewables the power output is limited by the weather.
+Description: If control=variable this gives the maximum output for each snapshot per unit of p_nom for the OPF, relevant e.g. if for renewables the power output is limited by the climate.
 Status: Input (optional)';
 COMMENT ON COLUMN model_draft.ego_grid_pf_hv_line.line_id IS 'Unit: n/a
 Description: Unique name
@@ -1368,7 +1417,7 @@ COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage_pq_set.p_min_pu IS 'Unit: p
 Description: If control=variable this gives the minimum output for each snapshot per unit of p_nom for the OPF.
 Status: Input (optional)';
 COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage_pq_set.p_max_pu IS 'Unit: per unit
-Description: If control=variable this gives the maximum output for each snapshot per unit of p_nom for the OPF, relevant e.g. if for renewables the power output is limited by the weather.
+Description: If control=variable this gives the maximum output for each snapshot per unit of p_nom for the OPF, relevant e.g. if for renewables the power output is limited by the climate.
 Status: Input (optional)';
 COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage_pq_set.soc_set IS 'Unit: MWh
 Description: State of charge set points for snapshots in the OPF.
@@ -1465,3 +1514,4 @@ INSERT INTO model_draft.ego_grid_pf_hv_source VALUES (12, 'solar', NULL, NULL);
 INSERT INTO model_draft.ego_grid_pf_hv_source VALUES (13, 'wind', NULL, NULL);
 INSERT INTO model_draft.ego_grid_pf_hv_source VALUES (14, 'geothermal', NULL, NULL);
 INSERT INTO model_draft.ego_grid_pf_hv_source VALUES (15, 'other_non_renewable', NULL, NULL);
+INSERT INTO model_draft.ego_grid_pf_hv_source VALUES (16, 'extendable_storage', NULL, NULL);

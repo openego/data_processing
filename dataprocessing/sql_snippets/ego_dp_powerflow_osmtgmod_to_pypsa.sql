@@ -51,7 +51,7 @@ SELECT
   branch_id AS trafo_id,
   f_bus AS bus0,
   t_bus AS bus1,
-  br_x AS x,
+  br_x/100 AS x,
   rate_a as s_nom,
   tap AS tap_ratio,
   shift AS phase_shift,
@@ -77,12 +77,6 @@ UPDATE model_draft.ego_grid_pf_hv_line a
 				FROM model_draft.ego_grid_pf_hv_bus
 				WHERE bus_id=bus1)*1000)^2 / (100 * 10^6));
 
-UPDATE model_draft.ego_grid_pf_hv_transformer a
-	SET 
-		x = x * (((GREATEST(
-				(SELECT v_nom as v_nom_bus0 FROM model_draft.ego_grid_pf_hv_bus WHERE bus_id = bus0), 
-				(SELECT v_nom as v_nom_bus1 FROM model_draft.ego_grid_pf_hv_bus WHERE bus_id = bus1)))* 1000)^2 / (100 * 10^6));
-
 -- calculate line length (in km) from geoms
 
 UPDATE model_draft.ego_grid_pf_hv_line a
@@ -105,3 +99,69 @@ AND bus_id NOT IN
 	(SELECT bus0 FROM model_draft.ego_grid_pf_hv_transformer WHERE scn_name='Status Quo')
 AND bus_id NOT IN 
 	(SELECT bus1 FROM model_draft.ego_grid_pf_hv_transformer WHERE scn_name='Status Quo'); 
+
+/*
+-- order bus0 and bus1 IDs for easier grouping of parallel lines
+
+UPDATE model_draft.ego_grid_pf_hv_line b
+SET 
+bus0 = a.bus0,
+bus1 = a.bus1
+FROM
+(SELECT 
+	line_id,				
+	CASE 
+	WHEN bus0 < bus1 
+	THEN bus0 
+	ELSE bus1 
+	END as bus0,
+	CASE 
+	WHEN bus0 < bus1 
+	THEN bus1 
+	ELSE bus0 
+	END as bus1
+FROM  model_draft.ego_grid_pf_hv_line
+WHERE scn_name = 'Status Quo'
+ORDER BY line_id) as a
+WHERE b.line_id = a.line_id AND
+scn_name = 'Status Quo';
+
+-- same for transformers:
+
+UPDATE model_draft.ego_grid_pf_hv_transformer b
+SET 
+bus0 = a.bus0,
+bus1 = a.bus1
+FROM
+(SELECT 
+	trafo_id,				
+	CASE 
+	WHEN bus0 < bus1 
+	THEN bus0 
+	ELSE bus1 
+	END as bus0,
+	CASE 
+	WHEN bus0 < bus1 
+	THEN bus1 
+	ELSE bus0 
+	END as bus1
+FROM  model_draft.ego_grid_pf_hv_transformer
+WHERE scn_name = 'Status Quo'
+ORDER BY trafo_id) as a
+WHERE b.trafo_id = a.trafo_id AND
+scn_name = 'Status Quo';
+
+-- duplicate 'status quo' model with parallel lines merged to a single line
+
+INSERT INTO model_draft.ego_grid_pf_hv_line (
+scn_name, line_id, bus0, bus1, x, r, b, s_nom, length, cables, frequency, geom, topo)
+SELECT 
+	'Status Quo grouped' as scn_name, min(line_id), bus0, bus1, sum(x^(-1))^(-1) as x, sum(r^(-1))^(-1) as r, sum(b) as b, 
+	sum(s_nom) as s_nom, avg(length) as length, sum(cables) as cables, 50 as frequency,min(geom) as geom, min(topo) as topo
+FROM model_draft.ego_grid_pf_hv_line
+WHERE scn_name = 'Status Quo'
+GROUP BY bus0,bus1;
+
+DELETE FROM  model_draft.ego_grid_pf_hv_line WHERE scn_name = 'Status Quo';
+UPDATE model_draft.ego_grid_pf_hv_line SET scn_name = 'Status Quo' WHERE scn_name = 'Status Quo grouped';
+*/

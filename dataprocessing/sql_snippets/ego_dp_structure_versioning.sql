@@ -49,53 +49,193 @@ CREATE INDEX ego_dp_ehv_substation_point_idx
  */
 -- metadata
 COMMENT ON TABLE grid.ego_dp_ehv_substation IS '{
-	"title": "eGo dataprocessing - EHV(HV) Substation",
-	"description": "Abstracted substation between extrahigh- and high voltage (Transmission substation)",
-	"language": [ "eng", "ger" ],
-	"reference_date": " ",
-	"sources": [
-		{"name": "eGo dataprocessing", "description": " ", "url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)", "copyright": "© Reiner Lemoine Institut"},
-		{"name": "OpenStreetMap", "description": " ", "url": "http://www.openstreetmap.org/", "license": "Open Database License (ODbL) v1.0", "copyright": "© OpenStreetMap contributors"},
-		{"name": "BKG - Verwaltungsgebiete 1:250.000 (vg250)", "description": " ", "url": "http://www.geodatenzentrum.de/", "license": "Geodatenzugangsgesetz (GeoZG)", "copyright": "© GeoBasis-DE / BKG 2016 (Data changed)"} ],
-	"spatial": [
-		{"extend": "Gemany",
-		"resolution": ""} ],
-	"license": [
-		{"id": "ODbL-1.0",
-		"name": "Open Data Commons Open Database License 1.0",
-		"version": "1.0",
-		"url": "https://opendatacommons.org/licenses/odbl/1.0/",
-		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
-		"copyright": "© NEXT ENERGY"} ],
-	"contributors": [
-		{"name": "lukasol", "email": "", "date":  "20.10.2016", "comment": "Create substations" },
-		{"name": "Ludee", "email": "", "date": "15.01.2017", "comment": "Update metadata"},
-		{"name": "Ludee", "email": "", "date": "21.03.2017", "comment": "Update metadata to 1.1"},
-		{"name": "Ludee", "email": "", "date": "2017-04-06", "comment": "Update metadata to 1.2"} ],
-	"resources": [{
-		"schema": {
-			"fields": [
-				{"name": "version", "description": "version id", "unit": "" },
-				{"name": "subst_id", "description": "unique identifier", "unit": "" },
-				{"name": "subst_name", "description": "name of substation", "unit": "" },
-				{"name": "ags_0", "description": "Geimeindeschlüssel, municipality key", "unit": "" },
-				{"name": "voltage", "description": "(all) voltage levels contained in substation", "unit": "" },
-				{"name": "power_type", "description": "value of osm key power", "unit": "" },
-				{"name": "substation", "description": "value of osm key substation", "unit": "" },
-				{"name": "osm_id", "description": "osm id of substation, begins with prefix n(node) or w(way)", "unit": "" },
-				{"name": "osm_www", "description": "hyperlink to osm source", "unit": "" },
-				{"name": "frequency", "description": "frequency of substation", "unit": "" },
-				{"name": "ref", "description": "reference tag of substation", "unit": "" },
-				{"name": "operator", "description": "operator(s) of substation", "unit": "" },
-				{"name": "dbahn", "description": "states if substation is connected to railway grid and if yes the indicator", "unit": "" },
-				{"name": "status", "description": "states the osm source of substation (1=way, 2=way intersected by 110kV-line, 3=node)", "unit": "" },
-				{"name": "otg_id", "description": "states the id of respective bus in osmtgmod", "unit": "" },
-				{"name": "lat", "description": "latitude of substation", "unit": "" },
-				{"name": "lon", "description": "longitude of substation", "unit": "" },
-				{"name": "point", "description": "point geometry of substation", "unit": "" },
-				{"name": "polygon", "description": "original geometry of substation", "unit": "" },
-				{"name": "geom", "description": "geometry", "unit": "" } ]},
-		"meta_version": "1.2"}] }';
+    "title": "eGo dataprocessing - EHV(HV) Substation",
+    "description": "Abstracted substation between extrahigh- and high voltage (Transmission substation)",
+    "language": [ "eng", "ger" ],
+    "spatial": {
+        "location": "",
+        "extend": "Gemany",
+        "resolution": ""
+    },
+    "temporal": {
+        "reference_date": " ",
+        "start": "",
+        "end": "",
+        "resolution": ""
+    },
+    "sources": [
+        {
+            "name": "eGo dataprocessing",
+            "description": " ",
+            "url": "https://github.com/openego/data_processing",
+            "license": "GNU Affero General Public License Version 3 (AGPL-3.0)",
+            "copyright": "\u00a9 Reiner Lemoine Institut"
+        },
+        {
+            "name": "OpenStreetMap",
+            "description": " ",
+            "url": "http://www.openstreetmap.org/",
+            "license": "Open Database License (ODbL) v1.0",
+            "copyright": "\u00a9 OpenStreetMap contributors"
+        },
+        {
+            "name": "BKG - Verwaltungsgebiete 1:250.000 (vg250)",
+            "description": " ",
+            "url": "http://www.geodatenzentrum.de/",
+            "license": "Geodatenzugangsgesetz (GeoZG)",
+            "copyright": "\u00a9 GeoBasis-DE / BKG 2016 (Data changed)"
+        }
+    ],
+    "license": {
+        "id": "ODbL-1.0",
+        "name": "Open Data Commons Open Database License 1.0",
+        "version": "1.0",
+        "url": "https://opendatacommons.org/licenses/odbl/1.0/",
+        "instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
+        "copyright": "© DLR Institute for Networked Energy Systems"
+    },
+    "contributors": [
+        {
+            "name": "lukasol",
+            "email": "",
+            "date": "20.10.2016",
+            "comment": "Create substations"
+        },
+        {
+            "name": "Ludee",
+            "email": "",
+            "date": "15.01.2017",
+            "comment": "Update metadata"
+        },
+        {
+            "name": "Ludee",
+            "email": "",
+            "date": "21.03.2017",
+            "comment": "Update metadata to 1.1"
+        },
+        {
+            "name": "Ludee",
+            "email": "",
+            "date": "2017-04-06",
+            "comment": "Update metadata to 1.2"
+        },
+        {
+            "name": "KilianZimmerer",
+            "email": "",
+            "date": "2017-6-27",
+            "comment": "Update metadata to v1.3"
+        }
+    ],
+    "resources": [
+        {
+            "name": "grid.ego_dp_ehv_substation",
+            "fromat": "sql",
+            "fields": [
+                {
+                    "name": "version",
+                    "description": "version id",
+                    "unit": ""
+                },
+                {
+                    "name": "subst_id",
+                    "description": "unique identifier",
+                    "unit": ""
+                },
+                {
+                    "name": "subst_name",
+                    "description": "name of substation",
+                    "unit": ""
+                },
+                {
+                    "name": "ags_0",
+                    "description": "Geimeindeschl\u00fcssel, municipality key",
+                    "unit": ""
+                },
+                {
+                    "name": "voltage",
+                    "description": "(all) voltage levels contained in substation",
+                    "unit": ""
+                },
+                {
+                    "name": "power_type",
+                    "description": "value of osm key power",
+                    "unit": ""
+                },
+                {
+                    "name": "substation",
+                    "description": "value of osm key substation",
+                    "unit": ""
+                },
+                {
+                    "name": "osm_id",
+                    "description": "osm id of substation, begins with prefix n(node) or w(way)",
+                    "unit": ""
+                },
+                {
+                    "name": "osm_www",
+                    "description": "hyperlink to osm source",
+                    "unit": ""
+                },
+                {
+                    "name": "frequency",
+                    "description": "frequency of substation",
+                    "unit": ""
+                },
+                {
+                    "name": "ref",
+                    "description": "reference tag of substation",
+                    "unit": ""
+                },
+                {
+                    "name": "operator",
+                    "description": "operator(s) of substation",
+                    "unit": ""
+                },
+                {
+                    "name": "dbahn",
+                    "description": "states if substation is connected to railway grid and if yes the indicator",
+                    "unit": ""
+                },
+                {
+                    "name": "status",
+                    "description": "states the osm source of substation (1=way, 2=way intersected by 110kV-line, 3=node)",
+                    "unit": ""
+                },
+                {
+                    "name": "otg_id",
+                    "description": "states the id of respective bus in osmtgmod",
+                    "unit": ""
+                },
+                {
+                    "name": "lat",
+                    "description": "latitude of substation",
+                    "unit": ""
+                },
+                {
+                    "name": "lon",
+                    "description": "longitude of substation",
+                    "unit": ""
+                },
+                {
+                    "name": "point",
+                    "description": "point geometry of substation",
+                    "unit": ""
+                },
+                {
+                    "name": "polygon",
+                    "description": "original geometry of substation",
+                    "unit": ""
+                },
+                {
+                    "name": "geom",
+                    "description": "geometry",
+                    "unit": ""
+                }
+            ]
+        }
+    ],
+    "metadata_version": "1.3"
+}';
 
 -- select description
 SELECT obj_description('grid.ego_dp_ehv_substation' ::regclass) ::json;
@@ -143,53 +283,193 @@ CREATE INDEX ego_dp_hvmv_substation_geom_idx
  */
 -- metadata
 COMMENT ON TABLE grid.ego_dp_hvmv_substation IS '{
-	"title": "eGo dataprocessing - HVMV Substation",
-	"description": "Abstracted substation between high- and medium voltage (Transition point)",
-	"language": [ "eng", "ger" ],
-	"reference_date": " ",
-	"sources": [
-		{"name": "eGo dataprocessing", "description": " ", "url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)", "copyright": "© Reiner Lemoine Institut"},
-		{"name": "OpenStreetMap", "description": " ", "url": "http://www.openstreetmap.org/", "license": "Open Database License (ODbL) v1.0", "copyright": "© OpenStreetMap contributors"},
-		{"name": "BKG - Verwaltungsgebiete 1:250.000 (vg250)", "description": " ", "url": "http://www.geodatenzentrum.de/", "license": "Geodatenzugangsgesetz (GeoZG)", "copyright": "© GeoBasis-DE / BKG 2016 (Data changed)"} ],
-	"spatial": [
-		{"extend": "Gemany",
-		"resolution": ""} ],
-	"license": [
-		{"id": "ODbL-1.0",
-		"name": "Open Data Commons Open Database License 1.0",
-		"version": "1.0",
-		"url": "https://opendatacommons.org/licenses/odbl/1.0/",
-		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
-		"copyright": "© NEXT ENERGY"} ],
-	"contributors": [
-		{"name": "lukasol", "email": "", "date":  "20.10.2016", "comment": "Create substations" },
-		{"name": "Ludee", "email": "", "date": "15.01.2017", "comment": "Update metadata"},
-		{"name": "Ludee", "email": "", "date": "21.03.2017", "comment": "Update metadata to 1.1"},
-		{"name": "Ludee", "email": "", "date": "2017-04-06", "comment": "Update metadata to 1.2"} ],
-	"resources": [{
-		"schema": {
-			"fields": [
-				{"name": "version", "description": "version id", "unit": "" },
-				{"name": "subst_id", "description": "unique identifier", "unit": "" },
-				{"name": "subst_name", "description": "name of substation", "unit": "" },
-				{"name": "ags_0", "description": "Geimeindeschlüssel, municipality key", "unit": "" },
-				{"name": "voltage", "description": "(all) voltage levels contained in substation", "unit": "" },
-				{"name": "power_type", "description": "value of osm key power", "unit": "" },
-				{"name": "substation", "description": "value of osm key substation", "unit": "" },
-				{"name": "osm_id", "description": "osm id of substation, begins with prefix n(node) or w(way)", "unit": "" },
-				{"name": "osm_www", "description": "hyperlink to osm source", "unit": "" },
-				{"name": "frequency", "description": "frequency of substation", "unit": "" },
-				{"name": "ref", "description": "reference tag of substation", "unit": "" },
-				{"name": "operator", "description": "operator(s) of substation", "unit": "" },
-				{"name": "dbahn", "description": "states if substation is connected to railway grid and if yes the indicator", "unit": "" },
-				{"name": "status", "description": "states the osm source of substation (1=way, 2=way intersected by 110kV-line, 3=node)", "unit": "" },
-				{"name": "otg_id", "description": "states the id of respective bus in osmtgmod", "unit": "" },
-				{"name": "lat", "description": "latitude of substation", "unit": "" },
-				{"name": "lon", "description": "longitude of substation", "unit": "" },
-				{"name": "point", "description": "point geometry of substation", "unit": "" },
-				{"name": "polygon", "description": "original geometry of substation", "unit": "" },
-				{"name": "geom", "description": "geometry", "unit": "" } ]},
-		"meta_version": "1.2"}] }';
+    "title": "eGo dataprocessing - HVMV Substation",
+    "description": "Abstracted substation between high- and medium voltage (Transition point)",
+    "language": [ "eng", "ger" ],
+    "spatial": {
+        "location": "",
+        "extend": "Gemany",
+        "resolution": ""
+    },
+    "temporal": {
+        "reference_date": " ",
+        "start": "",
+        "end": "",
+        "resolution": ""
+    },
+    "sources": [
+        {
+            "name": "eGo dataprocessing",
+            "description": " ",
+            "url": "https://github.com/openego/data_processing",
+            "license": "GNU Affero General Public License Version 3 (AGPL-3.0)",
+            "copyright": "\u00a9 Reiner Lemoine Institut"
+        },
+        {
+            "name": "OpenStreetMap",
+            "description": " ",
+            "url": "http://www.openstreetmap.org/",
+            "license": "Open Database License (ODbL) v1.0",
+            "copyright": "\u00a9 OpenStreetMap contributors"
+        },
+        {
+            "name": "BKG - Verwaltungsgebiete 1:250.000 (vg250)",
+            "description": " ",
+            "url": "http://www.geodatenzentrum.de/",
+            "license": "Geodatenzugangsgesetz (GeoZG)",
+            "copyright": "\u00a9 GeoBasis-DE / BKG 2016 (Data changed)"
+        }
+    ],
+    "license": {
+        "id": "ODbL-1.0",
+        "name": "Open Data Commons Open Database License 1.0",
+        "version": "1.0",
+        "url": "https://opendatacommons.org/licenses/odbl/1.0/",
+        "instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
+        "copyright": "© DLR Institute for Networked Energy Systems"
+    },
+    "contributors": [
+        {
+            "name": "lukasol",
+            "email": "",
+            "date": "20.10.2016",
+            "comment": "Create substations"
+        },
+        {
+            "name": "Ludee",
+            "email": "",
+            "date": "15.01.2017",
+            "comment": "Update metadata"
+        },
+        {
+            "name": "Ludee",
+            "email": "",
+            "date": "21.03.2017",
+            "comment": "Update metadata to 1.1"
+        },
+        {
+            "name": "Ludee",
+            "email": "",
+            "date": "2017-04-06",
+            "comment": "Update metadata to 1.2"
+        },
+        {
+            "name": "KilianZimmerer",
+            "email": "",
+            "date": "2017-6-27",
+            "comment": "Update metadata to v1.3"
+        }
+    ],
+    "resources": [
+        {
+            "name": "grid.ego_dp_hvmv_substation",
+            "fromat": "sql",
+            "fields": [
+                {
+                    "name": "version",
+                    "description": "version id",
+                    "unit": ""
+                },
+                {
+                    "name": "subst_id",
+                    "description": "unique identifier",
+                    "unit": ""
+                },
+                {
+                    "name": "subst_name",
+                    "description": "name of substation",
+                    "unit": ""
+                },
+                {
+                    "name": "ags_0",
+                    "description": "Geimeindeschl\u00fcssel, municipality key",
+                    "unit": ""
+                },
+                {
+                    "name": "voltage",
+                    "description": "(all) voltage levels contained in substation",
+                    "unit": ""
+                },
+                {
+                    "name": "power_type",
+                    "description": "value of osm key power",
+                    "unit": ""
+                },
+                {
+                    "name": "substation",
+                    "description": "value of osm key substation",
+                    "unit": ""
+                },
+                {
+                    "name": "osm_id",
+                    "description": "osm id of substation, begins with prefix n(node) or w(way)",
+                    "unit": ""
+                },
+                {
+                    "name": "osm_www",
+                    "description": "hyperlink to osm source",
+                    "unit": ""
+                },
+                {
+                    "name": "frequency",
+                    "description": "frequency of substation",
+                    "unit": ""
+                },
+                {
+                    "name": "ref",
+                    "description": "reference tag of substation",
+                    "unit": ""
+                },
+                {
+                    "name": "operator",
+                    "description": "operator(s) of substation",
+                    "unit": ""
+                },
+                {
+                    "name": "dbahn",
+                    "description": "states if substation is connected to railway grid and if yes the indicator",
+                    "unit": ""
+                },
+                {
+                    "name": "status",
+                    "description": "states the osm source of substation (1=way, 2=way intersected by 110kV-line, 3=node)",
+                    "unit": ""
+                },
+                {
+                    "name": "otg_id",
+                    "description": "states the id of respective bus in osmtgmod",
+                    "unit": ""
+                },
+                {
+                    "name": "lat",
+                    "description": "latitude of substation",
+                    "unit": ""
+                },
+                {
+                    "name": "lon",
+                    "description": "longitude of substation",
+                    "unit": ""
+                },
+                {
+                    "name": "point",
+                    "description": "point geometry of substation",
+                    "unit": ""
+                },
+                {
+                    "name": "polygon",
+                    "description": "original geometry of substation",
+                    "unit": ""
+                },
+                {
+                    "name": "geom",
+                    "description": "geometry",
+                    "unit": ""
+                }
+            ]
+        }
+    ],
+    "metadata_version": "1.3"
+}';
 
 -- select description
 SELECT obj_description('grid.ego_dp_hvmv_substation' ::regclass) ::json;
@@ -223,38 +503,119 @@ CREATE INDEX ego_dp_mvlv_substation_geom_idx
  */
 -- metadata
 COMMENT ON TABLE grid.ego_dp_mvlv_substation IS '{
-	"title": "eGo dataprocessing - HVMV Substation",
-	"description": "Abstracted substation between medium- and low voltage (Distribution substation)",
-	"language": [ "eng", "ger" ],
-	"reference_date": " ",
-	"sources": [
-		{"name": "eGo dataprocessing", "description": " ", "url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)", "copyright": "© Reiner Lemoine Institut"},
-		{"name": "OpenStreetMap", "description": " ", "url": "http://www.openstreetmap.org/", "license": "Open Database License (ODbL) v1.0", "copyright": "© OpenStreetMap contributors"},
-		{"name": "BKG - Verwaltungsgebiete 1:250.000 (vg250)", "description": " ", "url": "http://www.geodatenzentrum.de/", "license": "Geodatenzugangsgesetz (GeoZG)", "copyright": "© GeoBasis-DE / BKG 2016 (Data changed)"} ],
-	"spatial": [
-		{"extend": "Gemany",
-		"resolution": ""} ],
-	"license": [
-		{"id": "ODbL-1.0",
-		"name": "Open Data Commons Open Database License 1.0",
-		"version": "1.0",
-		"url": "https://opendatacommons.org/licenses/odbl/1.0/",
-		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
-		"copyright": "© Reiner Lemoine Institut"} ],
-	"contributors": [
-		{"name": "jong42", "email": "", "date": "20.10.2016", "comment": "Create table"},
-		{"name": "jong42", "email": "", "date": "27.10.2016", "comment": "Change table names"},
-		{"name": "Ludee", "email": "", "date": "15.01.2017", "comment": "Update metadata"},
-		{"name": "Ludee", "email": "", "date": "21.03.2017", "comment": "Update metadata to 1.1"},
-		{"name": "Ludee", "email": "", "date": "2017-04-06", "comment": "Update metadata to 1.2"} ],
-	"resources": [{
-		"schema": {
-			"fields": [
-				{"name": "version", "description": "version id", "unit": "" },
-				{"name": "subst_id", "description": "unique identifier", "unit": "" },
-				{"name": "mvgd_id", "description": "corresponding hvmv substation", "unit": "" },
-				{"name": "geom", "description": "geometry", "unit": "" } ]},
-		"meta_version": "1.2"}] }';
+    "title": "eGo dataprocessing - HVMV Substation",
+    "description": "Abstracted substation between medium- and low voltage (Distribution substation)",
+    "language": [ "eng", "ger" ],
+    "spatial": {
+        "location": "",
+        "extend": "Gemany",
+        "resolution": ""
+    },
+    "temporal": {
+        "reference_date": " ",
+        "start": "",
+        "end": "",
+        "resolution": ""
+    },
+    "sources": [
+        {
+            "name": "eGo dataprocessing",
+            "description": " ",
+            "url": "https://github.com/openego/data_processing",
+            "license": "GNU Affero General Public License Version 3 (AGPL-3.0)",
+            "copyright": "\u00a9 Reiner Lemoine Institut"
+        },
+        {
+            "name": "OpenStreetMap",
+            "description": " ",
+            "url": "http://www.openstreetmap.org/",
+            "license": "Open Database License (ODbL) v1.0",
+            "copyright": "\u00a9 OpenStreetMap contributors"
+        },
+        {
+            "name": "BKG - Verwaltungsgebiete 1:250.000 (vg250)",
+            "description": " ",
+            "url": "http://www.geodatenzentrum.de/",
+            "license": "Geodatenzugangsgesetz (GeoZG)",
+            "copyright": "\u00a9 GeoBasis-DE / BKG 2016 (Data changed)"
+        }
+    ],
+    "license": {
+        "id": "ODbL-1.0",
+        "name": "Open Data Commons Open Database License 1.0",
+        "version": "1.0",
+        "url": "https://opendatacommons.org/licenses/odbl/1.0/",
+        "instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
+        "copyright": "\u00a9 Reiner Lemoine Institut"
+    },
+    "contributors": [
+        {
+            "name": "jong42",
+            "email": "",
+            "date": "20.10.2016",
+            "comment": "Create table"
+        },
+        {
+            "name": "jong42",
+            "email": "",
+            "date": "27.10.2016",
+            "comment": "Change table names"
+        },
+        {
+            "name": "Ludee",
+            "email": "",
+            "date": "15.01.2017",
+            "comment": "Update metadata"
+        },
+        {
+            "name": "Ludee",
+            "email": "",
+            "date": "21.03.2017",
+            "comment": "Update metadata to 1.1"
+        },
+        {
+            "name": "Ludee",
+            "email": "",
+            "date": "2017-04-06",
+            "comment": "Update metadata to 1.2"
+        },
+        {
+            "name": "KilianZimmerer",
+            "email": "",
+            "date": "2017-6-27",
+            "comment": "Update metadata to v1.3"
+        }
+    ],
+    "resources": [
+        {
+            "name": "grid.ego_dp_mvlv_substation",
+            "fromat": "sql",
+            "fields": [
+                {
+                    "name": "version",
+                    "description": "version id",
+                    "unit": ""
+                },
+                {
+                    "name": "subst_id",
+                    "description": "unique identifier",
+                    "unit": ""
+                },
+                {
+                    "name": "mvgd_id",
+                    "description": "corresponding hvmv substation",
+                    "unit": ""
+                },
+                {
+                    "name": "geom",
+                    "description": "geometry",
+                    "unit": ""
+                }
+            ]
+        }
+    ],
+    "metadata_version": "1.3"
+}';
 
 -- select description
 SELECT obj_description('grid.ego_dp_mvlv_substation' ::regclass) ::json;
@@ -287,36 +648,108 @@ CREATE INDEX ego_dp_ehv_griddistrict_geom_idx
  */
 -- metadata
 COMMENT ON TABLE grid.ego_dp_ehv_griddistrict IS '{
-	"title": "eGo dataprocessing - EHV Transmission grid area",
-	"description": "Catchment area of EHV substation (Transmission substation)",
-	"language": [ "eng", "ger" ],
-	"reference_date": " ",
-	"sources": [
-		{"name": "eGo dataprocessing", "description": " ", "url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)", "copyright": "© Reiner Lemoine Institut"},
-		{"name": "OpenStreetMap", "description": " ", "url": "http://www.openstreetmap.org/", "license": "Open Database License (ODbL) v1.0", "copyright": "© OpenStreetMap contributors"},
-		{"name": "BKG - Verwaltungsgebiete 1:250.000 (vg250)", "description": " ", "url": "http://www.geodatenzentrum.de/", "license": "Geodatenzugangsgesetz (GeoZG)", "copyright": "© GeoBasis-DE / BKG 2016 (Data changed)"} ],
-	"spatial": [
-		{"extend": "Gemany",
-		"resolution": ""} ],
-	"license": [
-		{"id": "ODbL-1.0",
-		"name": "Open Data Commons Open Database License 1.0",
-		"version": "1.0",
-		"url": "https://opendatacommons.org/licenses/odbl/1.0/",
-		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
-		"copyright": "© Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems"} ],
-	"contributors": [
-		{"name": "Ludee", "email": "", "date": "02.09.2016", "comment": "Create table"},
-		{"name": "Ludee", "email": "", "date": "15.01.2017", "comment": "Update metadata"},
-		{"name": "Ludee", "email": "", "date": "21.03.2017", "comment": "Update metadata to 1.1"},
-		{"name": "Ludee", "email": "", "date": "2017-04-06", "comment": "Update metadata to 1.2"} ],
-	"resources": [{
-		"schema": {
-			"fields": [
-				{"name": "version", "description": "version id", "unit": "" },
-				{"name": "subst_id", "description": "unique identifier", "unit": "" },
-				{"name": "geom", "description": "geometry", "unit": "" } ]},
-		"meta_version": "1.2"}] }';
+    "title": "eGo dataprocessing - EHV Transmission grid area",
+    "description": "Catchment area of EHV substation (Transmission substation)",
+    "language": [ "eng", "ger" ],
+    "spatial": {
+        "location": "",
+        "extend": "Gemany",
+        "resolution": ""
+    },
+    "temporal": {
+        "reference_date": " ",
+        "start": "",
+        "end": "",
+        "resolution": ""
+    },
+    "sources": [
+        {
+            "name": "eGo dataprocessing",
+            "description": " ",
+            "url": "https://github.com/openego/data_processing",
+            "license": "GNU Affero General Public License Version 3 (AGPL-3.0)",
+            "copyright": "\u00a9 Reiner Lemoine Institut"
+        },
+        {
+            "name": "OpenStreetMap",
+            "description": " ",
+            "url": "http://www.openstreetmap.org/",
+            "license": "Open Database License (ODbL) v1.0",
+            "copyright": "\u00a9 OpenStreetMap contributors"
+        },
+        {
+            "name": "BKG - Verwaltungsgebiete 1:250.000 (vg250)",
+            "description": " ",
+            "url": "http://www.geodatenzentrum.de/",
+            "license": "Geodatenzugangsgesetz (GeoZG)",
+            "copyright": "\u00a9 GeoBasis-DE / BKG 2016 (Data changed)"
+        }
+    ],
+    "license": {
+        "id": "ODbL-1.0",
+        "name": "Open Data Commons Open Database License 1.0",
+        "version": "1.0",
+        "url": "https://opendatacommons.org/licenses/odbl/1.0/",
+        "instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
+        "copyright": "\u00a9 Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems"
+    },
+    "contributors": [
+        {
+            "name": "Ludee",
+            "email": "",
+            "date": "02.09.2016",
+            "comment": "Create table"
+        },
+        {
+            "name": "Ludee",
+            "email": "",
+            "date": "15.01.2017",
+            "comment": "Update metadata"
+        },
+        {
+            "name": "Ludee",
+            "email": "",
+            "date": "21.03.2017",
+            "comment": "Update metadata to 1.1"
+        },
+        {
+            "name": "Ludee",
+            "email": "",
+            "date": "2017-04-06",
+            "comment": "Update metadata to 1.2"
+        },
+        {
+            "name": "KilianZimmerer",
+            "email": "",
+            "date": "2017-6-27",
+            "comment": "Update metadata to v1.3"
+        }
+    ],
+    "resources": [
+        {
+            "name": "grid.ego_dp_ehv_griddistrict",
+            "fromat": "sql",
+            "fields": [
+                {
+                    "name": "version",
+                    "description": "version id",
+                    "unit": ""
+                },
+                {
+                    "name": "subst_id",
+                    "description": "unique identifier",
+                    "unit": ""
+                },
+                {
+                    "name": "geom",
+                    "description": "geometry",
+                    "unit": ""
+                }
+            ]
+        }
+    ],
+    "metadata_version": "1.3"
+}';
 
 -- select description
 SELECT obj_description('grid.ego_dp_ehv_griddistrict' ::regclass) ::json;
@@ -375,39 +808,123 @@ CREATE INDEX ego_dp_mv_griddistrict_geom_idx
  */
 -- metadata
 COMMENT ON TABLE grid.ego_dp_mv_griddistrict IS '{
-	"title": "eGo dataprocessing - MV Grid district",
-	"description": "Catchment area of HVMV substation (Transition point)",
-	"language": [ "eng", "ger" ],
-	"reference_date": " ",
-	"sources": [
-		{"name": "eGo dataprocessing", "description": " ", "url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)", "copyright": "© Reiner Lemoine Institut"},
-		{"name": "OpenStreetMap", "description": " ", "url": "http://www.openstreetmap.org/", "license": "Open Database License (ODbL) v1.0", "copyright": "© OpenStreetMap contributors"},
-		{"name": "BKG - Verwaltungsgebiete 1:250.000 (vg250)", "description": " ", "url": "http://www.geodatenzentrum.de/", "license": "Geodatenzugangsgesetz (GeoZG)", "copyright": "© GeoBasis-DE / BKG 2016 (Data changed)"} ],
-	"spatial": [
-		{"extend": "Gemany",
-		"resolution": ""} ],
-	"license": [
-		{"id": "ODbL-1.0",
-		"name": "Open Data Commons Open Database License 1.0",
-		"version": "1.0",
-		"url": "https://opendatacommons.org/licenses/odbl/1.0/",
-		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
-		"copyright": "© Reiner Lemoine Institut"} ],
-	"contributors": [
-		{"name": "Ludee", "email": "", "date": "02.09.2016", "comment": "Create table"},
-		{"name": "Ludee", "email": "", "date": "15.01.2017", "comment": "Update metadata"},
-		{"name": "Ludee", "email": "", "date": "21.03.2017", "comment": "Update metadata to 1.1"},
-		{"name": "Ludee", "email": "", "date": "2017-04-06", "comment": "Update metadata to 1.2"} ],
-	"resources": [{
-		"schema": {
-			"fields": [
-				{"name": "version", "description": "version id", "unit": "" },
-				{"name": "subst_id", "description": "unique identifier", "unit": "" },
-				{"name": "subst_sum", "description": "number of substation per MV griddistrict", "unit": "" },
-				{"name": "area_ha", "description": "area in hectar", "unit": "ha" },
-				{"name": "geom_type", "description": "polygon type (polygon, multipolygon)", "unit": "" },
-				{"name": "geom", "description": "geometry", "unit": "" } ]},
-		"meta_version": "1.2"}] }';
+    "title": "eGo dataprocessing - MV Grid district",
+    "description": "Catchment area of HVMV substation (Transition point)",
+    "language": [ "eng", "ger" ],
+    "spatial": {
+        "location": "",
+        "extend": "Gemany",
+        "resolution": ""
+    },
+    "temporal": {
+        "reference_date": " ",
+        "start": "",
+        "end": "",
+        "resolution": ""
+    },
+    "sources": [
+        {
+            "name": "eGo dataprocessing",
+            "description": " ",
+            "url": "https://github.com/openego/data_processing",
+            "license": "GNU Affero General Public License Version 3 (AGPL-3.0)",
+            "copyright": "\u00a9 Reiner Lemoine Institut"
+        },
+        {
+            "name": "OpenStreetMap",
+            "description": " ",
+            "url": "http://www.openstreetmap.org/",
+            "license": "Open Database License (ODbL) v1.0",
+            "copyright": "\u00a9 OpenStreetMap contributors"
+        },
+        {
+            "name": "BKG - Verwaltungsgebiete 1:250.000 (vg250)",
+            "description": " ",
+            "url": "http://www.geodatenzentrum.de/",
+            "license": "Geodatenzugangsgesetz (GeoZG)",
+            "copyright": "\u00a9 GeoBasis-DE / BKG 2016 (Data changed)"
+        }
+    ],
+    "license": {
+        "id": "ODbL-1.0",
+        "name": "Open Data Commons Open Database License 1.0",
+        "version": "1.0",
+        "url": "https://opendatacommons.org/licenses/odbl/1.0/",
+        "instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
+        "copyright": "\u00a9 Reiner Lemoine Institut"
+    },
+    "contributors": [
+        {
+            "name": "Ludee",
+            "email": "",
+            "date": "02.09.2016",
+            "comment": "Create table"
+        },
+        {
+            "name": "Ludee",
+            "email": "",
+            "date": "15.01.2017",
+            "comment": "Update metadata"
+        },
+        {
+            "name": "Ludee",
+            "email": "",
+            "date": "21.03.2017",
+            "comment": "Update metadata to 1.1"
+        },
+        {
+            "name": "Ludee",
+            "email": "",
+            "date": "2017-04-06",
+            "comment": "Update metadata to 1.2"
+        },
+        {
+            "name": "KilianZimmerer",
+            "email": "",
+            "date": "2017-6-27",
+            "comment": "Update metadata to v1.3"
+        }
+    ],
+    "resources": [
+        {
+            "name": "grid.ego_dp_mv_griddistrict",
+            "fromat": "sql",
+            "fields": [
+                {
+                    "name": "version",
+                    "description": "version id",
+                    "unit": ""
+                },
+                {
+                    "name": "subst_id",
+                    "description": "unique identifier",
+                    "unit": ""
+                },
+                {
+                    "name": "subst_sum",
+                    "description": "number of substation per MV griddistrict",
+                    "unit": ""
+                },
+                {
+                    "name": "area_ha",
+                    "description": "area in hectar",
+                    "unit": "ha"
+                },
+                {
+                    "name": "geom_type",
+                    "description": "polygon type (polygon, multipolygon)",
+                    "unit": ""
+                },
+                {
+                    "name": "geom",
+                    "description": "geometry",
+                    "unit": ""
+                }
+            ]
+        }
+    ],
+    "metadata_version": "1.3"
+}';
 
 -- select description
 SELECT obj_description('grid.ego_dp_mv_griddistrict' ::regclass) ::json;
@@ -472,39 +989,123 @@ CREATE INDEX ego_dp_lv_griddistrict_geom_idx
  */
 -- metadata
 COMMENT ON TABLE grid.ego_dp_lv_griddistrict IS '{
-	"title": "eGo dataprocessing - LV Distribution grid area",
-	"description": "Catchment area of MVLV substation (Distribution substation)",
-	"language": [ "eng", "ger" ],
-	"reference_date": " ",
-	"sources": [
-		{"name": "eGo dataprocessing", "description": " ", "url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)", "copyright": "© Reiner Lemoine Institut"},
-		{"name": "OpenStreetMap", "description": " ", "url": "http://www.openstreetmap.org/", "license": "Open Database License (ODbL) v1.0", "copyright": "© OpenStreetMap contributors"},
-		{"name": "BKG - Verwaltungsgebiete 1:250.000 (vg250)", "description": " ", "url": "http://www.geodatenzentrum.de/", "license": "Geodatenzugangsgesetz (GeoZG)", "copyright": "© GeoBasis-DE / BKG 2016 (Data changed)"} ],
-	"spatial": [
-		{"extend": "Gemany",
-		"resolution": ""} ],
-	"license": [
-		{"id": "ODbL-1.0",
-		"name": "Open Data Commons Open Database License 1.0",
-		"version": "1.0",
-		"url": "https://opendatacommons.org/licenses/odbl/1.0/",
-		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
-		"copyright": "© Reiner Lemoine Institut"} ],
-	"contributors": [
-		{"name": "Ludee", "email": "", "date": "02.09.2016", "comment": "Create table"},
-		{"name": "Ludee", "email": "", "date": "15.01.2017", "comment": "Update metadata"},
-		{"name": "Ludee", "email": "", "date": "21.03.2017", "comment": "Update metadata to 1.1"},
-		{"name": "Ludee", "email": "", "date": "2017-04-06", "comment": "Update metadata to 1.2"}],
-	"resources": [{
-		"schema": {
-			"fields": [
-				{"name": "version", "description": "version id", "unit": "" },
-				{"name": "subst_id", "description": "unique identifier", "unit": "" },
-				{"name": "subst_sum", "description": "number of substation per MV griddistrict", "unit": "" },
-				{"name": "area_ha", "description": "area in hectar", "unit": "ha" },
-				{"name": "geom_type", "description": "polygon type (polygon, multipolygon)", "unit": "" },
-				{"name": "geom", "description": "geometry", "unit": "" } ]},
-		"meta_version": "1.2"}] }';
+    "title": "eGo dataprocessing - LV Distribution grid area",
+    "description": "Catchment area of MVLV substation (Distribution substation)",
+    "language": [ "eng", "ger" ],
+    "spatial": {
+        "location": "",
+        "extend": "Gemany",
+        "resolution": ""
+    },
+    "temporal": {
+        "reference_date": " ",
+        "start": "",
+        "end": "",
+        "resolution": ""
+    },
+    "sources": [
+        {
+            "name": "eGo dataprocessing",
+            "description": " ",
+            "url": "https://github.com/openego/data_processing",
+            "license": "GNU Affero General Public License Version 3 (AGPL-3.0)",
+            "copyright": "\u00a9 Reiner Lemoine Institut"
+        },
+        {
+            "name": "OpenStreetMap",
+            "description": " ",
+            "url": "http://www.openstreetmap.org/",
+            "license": "Open Database License (ODbL) v1.0",
+            "copyright": "\u00a9 OpenStreetMap contributors"
+        },
+        {
+            "name": "BKG - Verwaltungsgebiete 1:250.000 (vg250)",
+            "description": " ",
+            "url": "http://www.geodatenzentrum.de/",
+            "license": "Geodatenzugangsgesetz (GeoZG)",
+            "copyright": "\u00a9 GeoBasis-DE / BKG 2016 (Data changed)"
+        }
+    ],
+    "license": {
+        "id": "ODbL-1.0",
+        "name": "Open Data Commons Open Database License 1.0",
+        "version": "1.0",
+        "url": "https://opendatacommons.org/licenses/odbl/1.0/",
+        "instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
+        "copyright": "\u00a9 Reiner Lemoine Institut"
+    },
+    "contributors": [
+        {
+            "name": "Ludee",
+            "email": "",
+            "date": "02.09.2016",
+            "comment": "Create table"
+        },
+        {
+            "name": "Ludee",
+            "email": "",
+            "date": "15.01.2017",
+            "comment": "Update metadata"
+        },
+        {
+            "name": "Ludee",
+            "email": "",
+            "date": "21.03.2017",
+            "comment": "Update metadata to 1.1"
+        },
+        {
+            "name": "Ludee",
+            "email": "",
+            "date": "2017-04-06",
+            "comment": "Update metadata to 1.2"
+        },
+        {
+            "name": "KilianZimmerer",
+            "email": "",
+            "date": "2017-6-27",
+            "comment": "Update metadata to v1.3"
+        }
+    ],
+    "resources": [
+        {
+            "name": "grid.ego_dp_lv_griddistrict",
+            "fromat": "sql",
+            "fields": [
+                {
+                    "name": "version",
+                    "description": "version id",
+                    "unit": ""
+                },
+                {
+                    "name": "subst_id",
+                    "description": "unique identifier",
+                    "unit": ""
+                },
+                {
+                    "name": "subst_sum",
+                    "description": "number of substation per MV griddistrict",
+                    "unit": ""
+                },
+                {
+                    "name": "area_ha",
+                    "description": "area in hectar",
+                    "unit": "ha"
+                },
+                {
+                    "name": "geom_type",
+                    "description": "polygon type (polygon, multipolygon)",
+                    "unit": ""
+                },
+                {
+                    "name": "geom",
+                    "description": "geometry",
+                    "unit": ""
+                }
+            ]
+        }
+    ],
+    "metadata_version": "1.3"
+}';
 
 -- select description
 SELECT obj_description('grid.ego_dp_lv_griddistrict' ::regclass) ::json;
@@ -577,70 +1178,281 @@ CREATE INDEX ego_dp_loadarea_geom_idx
  */
 -- metadata
 COMMENT ON TABLE demand.ego_dp_loadarea IS '{
-	"title": "eGo dataprocessing - Loadarea",
-	"description": "Loadarea with electrical consumption per sector",
-	"language": [ "eng", "ger" ],
-	"reference_date": " ",
-	"sources": [
-		{"name": "eGo dataprocessing", "description": " ", "url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)", "copyright": "© Reiner Lemoine Institut"},
-		{"name": "OpenStreetMap", "description": " ", "url": "http://www.openstreetmap.org/", "license": "Open Database License (ODbL) v1.0", "copyright": "© OpenStreetMap contributors"},
-		{"name": "BKG - Verwaltungsgebiete 1:250.000 (vg250)", "description": " ", "url": "http://www.geodatenzentrum.de/", "license": "Geodatenzugangsgesetz (GeoZG)", "copyright": "© GeoBasis-DE / BKG 2016 (data changed)"},
-		{"name": "Statistisches Bundesamt (Destatis) - Zensus2011", "description": " ", "url": "https://www.destatis.de/DE/Methoden/Zensus_/Zensus.html", "license": "Datenlizenz Deutschland  Namensnennung  Version 2.0", "copyright": "© Statistisches Bundesamt, Wiesbaden, Genesis-Online, 2016; Datenlizenz by-2-0"} ],
-	"spatial": [
-		{"extend": "Gemany",
-		"resolution": " "} ],
-	"license": [
-		{"id": "ODbL-1.0",
-		"name": "Open Data Commons Open Database License 1.0",
-		"version": "1.0",
-		"url": "https://opendatacommons.org/licenses/odbl/1.0/",
-		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
-		"copyright": "© Reiner Lemoine Institut"} ],
-	"contributors": [
-		{"name": "Ludee", "email": " ", "date": "02.10.2016", "comment": "Create loadareas" },
-		{"name": "Ilka Cussmann", "email": " ", "date": "25.10.2016", "comment": "Create metadata" },
-		{"name": "Ludee", "email": " ", "date": "15.01.2017", "comment": "Update metadata"},
-		{"name": "Ludee", "email": " ", "date": "21.03.2017", "comment": "Update metadata to 1.1"},
-		{"name": "Ludee", "email": " ", "date": "2017-03-21", "comment": "Update metadata to 1.2"} ],
-	"resources": [{
-		"schema": {
-			"fields": [
-				{"name": "version", 	"description": "Version id", "unit": "" },
-				{"name": "id", 		"description": "Unique identifier", "unit": "" },
-				{"name": "subst_id", 	"description": "Substation id", "unit": "" },
-				{"name": "area_ha", 	"description": "Area", "unit": "ha" },
-				{"name": "nuts", 	"description": "Nuts id", "unit": "" },
-				{"name": "rs_0", 	"description": "Geimeindeschlüssel, municipality key", "unit": "" },
-				{"name": "ags_0", 	"description": "Geimeindeschlüssel, municipality key", "unit": "" },
-				{"name": "otg_id", 	"description": "States the id of respective bus in osmtgmod", "unit": "" },
-				{"name": "zensus_sum", 		"description": "Population", "unit": "" },
-				{"name": "zensus_count", 	"description": "Number of population rasters", "unit": "" },
-				{"name": "zensus_density", 	"description": "Average population per raster (zensus_sum/zensus_count)", "unit": "" },
-				{"name": "sector_area_residential", 	"description": "Aggregated residential area", "unit": "ha" },
-				{"name": "sector_area_retail", 		"description": "Aggregated retail area", "unit": "ha" },
-				{"name": "sector_area_industrial", 	"description": "Aggregated industrial area", "unit": "ha" },
-				{"name": "sector_area_agricultural", 	"description": "Aggregated agricultural area", "unit": "ha" },
-				{"name": "sector_area_sum", 		"description": "Aggregated sector area", "unit": "ha" },
-				{"name": "sector_share_residential", 	"description": "Percentage of residential area per load area", "unit":"" },
-				{"name": "sector_share_retail", 	"description": "Percentage of retail area per load area", "unit": ""},
-				{"name": "sector_share_industrial", 	"description": "Percentage of industrial area per load area", "unit": ""},
-				{"name": "sector_share_agricultural", 	"description": "Percentage of agricultural area per load area", "unit": "" },
-				{"name": "sector_share_sum", 		"description": "Percentage of sector area per load area", "unit": "" },
-				{"name": "sector_count_residential", 	"description": "Number of residential areas per load area", "unit": "" },
-				{"name": "sector_count_retail", 	"description": "Number of retail areas per load area", "unit": "" },
-				{"name": "sector_count_industrial", 	"description": "Number of industrial areas per load area", "unit": "" },
-				{"name": "sector_count_agricultural", 	"description": "Number of agricultural areas per load area", "unit": "" },
-				{"name": "sector_count_sum", 		"description": "Number of sector areas per load area", "unit": "" },
-				{"name": "sector_consumption_residential", 	"description": "Electricity consumption of residential sector", "unit": "GWh" },
-				{"name": "sector_consumption_retail", 		"description": "Electricity consumption of retail sector", "unit": "GWh" },
-				{"name": "sector_consumption_industrial", 	"description": "Electricity consumption of industrial sector", "unit": "GWh" },
-				{"name": "sector_consumption_agricultural", 	"description": "Electricity consumption of agricultural sector", "unit": "GWh" },
-				{"name": "sector_consumption_sum", 		"description": "Electricity consumption of ALL sectorS", "unit": "GWh" },
-				{"name": "geom_centroid", 	"description": "Centroid (can be outside the polygon)", "unit": "" },
-				{"name": "geom_surfacepoint", 	"description": "Point on surface", "unit": "" },
-				{"name": "geom_centre", 	"description": "Centroid and point on surface when centroid outside the polygon", "unit": "" },
-				{"name": "geom", 		"description": "Geometry", "unit": "" } ]},
-		"meta_version": "1.2"}] }';
+    "title": "eGo dataprocessing - Loadarea",
+    "description": "Loadarea with electrical consumption per sector",
+    "language": [ "eng", "ger" ],
+    "spatial": {
+        "location": "",
+        "extend": "Gemany",
+        "resolution": " "
+    },
+    "temporal": {
+        "reference_date": " ",
+        "start": "",
+        "end": "",
+        "resolution": ""
+    },
+    "sources": [
+        {
+            "name": "eGo dataprocessing",
+            "description": " ",
+            "url": "https://github.com/openego/data_processing",
+            "license": "GNU Affero General Public License Version 3 (AGPL-3.0)",
+            "copyright": "\u00a9 Reiner Lemoine Institut"
+        },
+        {
+            "name": "OpenStreetMap",
+            "description": " ",
+            "url": "http://www.openstreetmap.org/",
+            "license": "Open Database License (ODbL) v1.0",
+            "copyright": "\u00a9 OpenStreetMap contributors"
+        },
+        {
+            "name": "BKG - Verwaltungsgebiete 1:250.000 (vg250)",
+            "description": " ",
+            "url": "http://www.geodatenzentrum.de/",
+            "license": "Geodatenzugangsgesetz (GeoZG)",
+            "copyright": "\u00a9 GeoBasis-DE / BKG 2016 (data changed)"
+        },
+        {
+            "name": "Statistisches Bundesamt (Destatis) - Zensus2011",
+            "description": " ",
+            "url": "https://www.destatis.de/DE/Methoden/Zensus_/Zensus.html",
+            "license": "Datenlizenz Deutschland \u0096 Namensnennung \u0096 Version 2.0",
+            "copyright": "\u00a9 Statistisches Bundesamt, Wiesbaden, Genesis-Online, 2016; Datenlizenz by-2-0"
+        }
+    ],
+    "license": {
+        "id": "ODbL-1.0",
+        "name": "Open Data Commons Open Database License 1.0",
+        "version": "1.0",
+        "url": "https://opendatacommons.org/licenses/odbl/1.0/",
+        "instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
+        "copyright": "\u00a9 Reiner Lemoine Institut"
+    },
+    "contributors": [
+        {
+            "name": "Ludee",
+            "email": " ",
+            "date": "02.10.2016",
+            "comment": "Create loadareas"
+        },
+        {
+            "name": "Ilka Cussmann",
+            "email": " ",
+            "date": "25.10.2016",
+            "comment": "Create metadata"
+        },
+        {
+            "name": "Ludee",
+            "email": " ",
+            "date": "15.01.2017",
+            "comment": "Update metadata"
+        },
+        {
+            "name": "Ludee",
+            "email": " ",
+            "date": "21.03.2017",
+            "comment": "Update metadata to 1.1"
+        },
+        {
+            "name": "Ludee",
+            "email": " ",
+            "date": "2017-03-21",
+            "comment": "Update metadata to 1.2"
+        },
+        {
+            "name": "KilianZimmerer",
+            "email": "",
+            "date": "2017-6-27",
+            "comment": "Update metadata to v1.3"
+        }
+    ],
+    "resources": [
+        {
+            "name": "demand.ego_dp_loadarea",
+            "fromat": "sql",
+            "fields": [
+                {
+                    "name": "version",
+                    "description": "Version id",
+                    "unit": ""
+                },
+                {
+                    "name": "id",
+                    "description": "Unique identifier",
+                    "unit": ""
+                },
+                {
+                    "name": "subst_id",
+                    "description": "Substation id",
+                    "unit": ""
+                },
+                {
+                    "name": "area_ha",
+                    "description": "Area",
+                    "unit": "ha"
+                },
+                {
+                    "name": "nuts",
+                    "description": "Nuts id",
+                    "unit": ""
+                },
+                {
+                    "name": "rs_0",
+                    "description": "Geimeindeschl\u00fcssel, municipality key",
+                    "unit": ""
+                },
+                {
+                    "name": "ags_0",
+                    "description": "Geimeindeschl\u00fcssel, municipality key",
+                    "unit": ""
+                },
+                {
+                    "name": "otg_id",
+                    "description": "States the id of respective bus in osmtgmod",
+                    "unit": ""
+                },
+                {
+                    "name": "zensus_sum",
+                    "description": "Population",
+                    "unit": ""
+                },
+                {
+                    "name": "zensus_count",
+                    "description": "Number of population rasters",
+                    "unit": ""
+                },
+                {
+                    "name": "zensus_density",
+                    "description": "Average population per raster (zensus_sum/zensus_count)",
+                    "unit": ""
+                },
+                {
+                    "name": "sector_area_residential",
+                    "description": "Aggregated residential area",
+                    "unit": "ha"
+                },
+                {
+                    "name": "sector_area_retail",
+                    "description": "Aggregated retail area",
+                    "unit": "ha"
+                },
+                {
+                    "name": "sector_area_industrial",
+                    "description": "Aggregated industrial area",
+                    "unit": "ha"
+                },
+                {
+                    "name": "sector_area_agricultural",
+                    "description": "Aggregated agricultural area",
+                    "unit": "ha"
+                },
+                {
+                    "name": "sector_area_sum",
+                    "description": "Aggregated sector area",
+                    "unit": "ha"
+                },
+                {
+                    "name": "sector_share_residential",
+                    "description": "Percentage of residential area per load area",
+                    "unit": ""
+                },
+                {
+                    "name": "sector_share_retail",
+                    "description": "Percentage of retail area per load area",
+                    "unit": ""
+                },
+                {
+                    "name": "sector_share_industrial",
+                    "description": "Percentage of industrial area per load area",
+                    "unit": ""
+                },
+                {
+                    "name": "sector_share_agricultural",
+                    "description": "Percentage of agricultural area per load area",
+                    "unit": ""
+                },
+                {
+                    "name": "sector_share_sum",
+                    "description": "Percentage of sector area per load area",
+                    "unit": ""
+                },
+                {
+                    "name": "sector_count_residential",
+                    "description": "Number of residential areas per load area",
+                    "unit": ""
+                },
+                {
+                    "name": "sector_count_retail",
+                    "description": "Number of retail areas per load area",
+                    "unit": ""
+                },
+                {
+                    "name": "sector_count_industrial",
+                    "description": "Number of industrial areas per load area",
+                    "unit": ""
+                },
+                {
+                    "name": "sector_count_agricultural",
+                    "description": "Number of agricultural areas per load area",
+                    "unit": ""
+                },
+                {
+                    "name": "sector_count_sum",
+                    "description": "Number of sector areas per load area",
+                    "unit": ""
+                },
+                {
+                    "name": "sector_consumption_residential",
+                    "description": "Electricity consumption of residential sector",
+                    "unit": "GWh"
+                },
+                {
+                    "name": "sector_consumption_retail",
+                    "description": "Electricity consumption of retail sector",
+                    "unit": "GWh"
+                },
+                {
+                    "name": "sector_consumption_industrial",
+                    "description": "Electricity consumption of industrial sector",
+                    "unit": "GWh"
+                },
+                {
+                    "name": "sector_consumption_agricultural",
+                    "description": "Electricity consumption of agricultural sector",
+                    "unit": "GWh"
+                },
+                {
+                    "name": "sector_consumption_sum",
+                    "description": "Electricity consumption of ALL sectorS",
+                    "unit": "GWh"
+                },
+                {
+                    "name": "geom_centroid",
+                    "description": "Centroid (can be outside the polygon)",
+                    "unit": ""
+                },
+                {
+                    "name": "geom_surfacepoint",
+                    "description": "Point on surface",
+                    "unit": ""
+                },
+                {
+                    "name": "geom_centre",
+                    "description": "Centroid and point on surface when centroid outside the polygon",
+                    "unit": ""
+                },
+                {
+                    "name": "geom",
+                    "description": "Geometry",
+                    "unit": ""
+                }
+            ]
+        }
+    ],
+    "metadata_version": "1.3"
+}';
 
 -- select description
 SELECT obj_description('demand.ego_dp_loadarea' ::regclass) ::json;
@@ -706,34 +1518,92 @@ CREATE INDEX ego_dp_conv_powerplant_geom_idx
  */
 -- metadata
 COMMENT ON TABLE supply.ego_dp_conv_powerplant IS '{
-	"title": "eGo dataprocessing - Conventional powerplants",
-	"description": "",
-	"language": [ "eng", "ger" ],
-	"reference_date": " ",
-	"sources": [
-		{"name": "eGo dataprocessing", "description": " ", "url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)", "copyright": "© Reiner Lemoine Institut"},
-		{"name": "OpenStreetMap", "description": " ", "url": "http://www.openstreetmap.org/", "license": "Open Database License (ODbL) v1.0", "copyright": "© OpenStreetMap contributors"},
-		{"name": "BKG - Verwaltungsgebiete 1:250.000 (vg250)", "description": " ", "url": "http://www.geodatenzentrum.de/", "license": "Geodatenzugangsgesetz (GeoZG)", "copyright": "© GeoBasis-DE / BKG 2016 (data changed)"},
-		{"name": "Statistisches Bundesamt (Destatis) - Zensus2011", "description": " ", "url": "https://www.destatis.de/DE/Methoden/Zensus_/Zensus.html", "license": "Datenlizenz Deutschland  Namensnennung  Version 2.0", "copyright": "© Statistisches Bundesamt, Wiesbaden, Genesis-Online, 2016; Datenlizenz by-2-0"} ],
-	"spatial": [
-		{"extend": "Gemany",
-		"resolution": " "} ],
-	"license": [
-		{"id": "ODbL-1.0",
-		"name": "Open Data Commons Open Database License 1.0",
-		"version": "1.0",
-		"url": "https://opendatacommons.org/licenses/odbl/1.0/",
-		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
-		"copyright": "© Reiner Lemoine Institut"} ],
-	"contributors": [
-		{"name": "Ludee", "email": " ", "date": "2017-04-13", "comment": "Create table" } ],
-	"resources": [{
-		"schema": {
-			"fields": [
-				{"name": "version", 	"description": "Version id", "unit": "" },
-				{"name": "id", 		"description": "Unique identifier", "unit": "" }
-				 ]},
-		"meta_version": "1.2"}] }';
+    "title": "eGo dataprocessing - Conventional powerplants",
+    "description": "",
+    "language": [ "eng", "ger" ],
+    "spatial": {
+        "location": "",
+        "extend": "Gemany",
+        "resolution": " "
+    },
+    "temporal": {
+        "reference_date": " ",
+        "start": "",
+        "end": "",
+        "resolution": ""
+    },
+    "sources": [
+        {
+            "name": "eGo dataprocessing",
+            "description": " ",
+            "url": "https://github.com/openego/data_processing",
+            "license": "GNU Affero General Public License Version 3 (AGPL-3.0)",
+            "copyright": "\u00a9 Reiner Lemoine Institut"
+        },
+        {
+            "name": "OpenStreetMap",
+            "description": " ",
+            "url": "http://www.openstreetmap.org/",
+            "license": "Open Database License (ODbL) v1.0",
+            "copyright": "\u00a9 OpenStreetMap contributors"
+        },
+        {
+            "name": "BKG - Verwaltungsgebiete 1:250.000 (vg250)",
+            "description": " ",
+            "url": "http://www.geodatenzentrum.de/",
+            "license": "Geodatenzugangsgesetz (GeoZG)",
+            "copyright": "\u00a9 GeoBasis-DE / BKG 2016 (data changed)"
+        },
+        {
+            "name": "Statistisches Bundesamt (Destatis) - Zensus2011",
+            "description": " ",
+            "url": "https://www.destatis.de/DE/Methoden/Zensus_/Zensus.html",
+            "license": "Datenlizenz Deutschland \u0096 Namensnennung \u0096 Version 2.0",
+            "copyright": "\u00a9 Statistisches Bundesamt, Wiesbaden, Genesis-Online, 2016; Datenlizenz by-2-0"
+        }
+    ],
+    "license": {
+        "id": "ODbL-1.0",
+        "name": "Open Data Commons Open Database License 1.0",
+        "version": "1.0",
+        "url": "https://opendatacommons.org/licenses/odbl/1.0/",
+        "instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
+        "copyright": "\u00a9 Reiner Lemoine Institut"
+    },
+    "contributors": [
+        {
+            "name": "Ludee",
+            "email": " ",
+            "date": "2017-04-13",
+            "comment": "Create table"
+        },
+        {
+            "name": "KilianZimmerer",
+            "email": "",
+            "date": "2017-6-27",
+            "comment": "Update metadata to v1.3"
+        }
+    ],
+    "resources": [
+        {
+            "name": "supply.ego_dp_conv_powerplant",
+            "fromat": "sql",
+            "fields": [
+                {
+                    "name": "version",
+                    "description": "Version id",
+                    "unit": ""
+                },
+                {
+                    "name": "id",
+                    "description": "Unique identifier",
+                    "unit": ""
+                }
+            ]
+        }
+    ],
+    "metadata_version": "1.3"
+}';
 
 -- select description
 SELECT obj_description('supply.ego_dp_conv_powerplant' ::regclass) ::json;
@@ -800,34 +1670,92 @@ CREATE INDEX ego_dp_res_powerplant_rea_geom_new_idx
  */
 -- metadata
 COMMENT ON TABLE supply.ego_dp_res_powerplant IS '{
-	"title": "eGo dataprocessing - Renewable powerlants",
-	"description": "",
-	"language": [ "eng", "ger" ],
-	"reference_date": " ",
-	"sources": [
-		{"name": "eGo dataprocessing", "description": " ", "url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)", "copyright": "© Reiner Lemoine Institut"},
-		{"name": "OpenStreetMap", "description": " ", "url": "http://www.openstreetmap.org/", "license": "Open Database License (ODbL) v1.0", "copyright": "© OpenStreetMap contributors"},
-		{"name": "BKG - Verwaltungsgebiete 1:250.000 (vg250)", "description": " ", "url": "http://www.geodatenzentrum.de/", "license": "Geodatenzugangsgesetz (GeoZG)", "copyright": "© GeoBasis-DE / BKG 2016 (data changed)"},
-		{"name": "Statistisches Bundesamt (Destatis) - Zensus2011", "description": " ", "url": "https://www.destatis.de/DE/Methoden/Zensus_/Zensus.html", "license": "Datenlizenz Deutschland  Namensnennung  Version 2.0", "copyright": "© Statistisches Bundesamt, Wiesbaden, Genesis-Online, 2016; Datenlizenz by-2-0"} ],
-	"spatial": [
-		{"extend": "Gemany",
-		"resolution": " "} ],
-	"license": [
-		{"id": "ODbL-1.0",
-		"name": "Open Data Commons Open Database License 1.0",
-		"version": "1.0",
-		"url": "https://opendatacommons.org/licenses/odbl/1.0/",
-		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
-		"copyright": "© Reiner Lemoine Institut"} ],
-	"contributors": [
-		{"name": "Ludee", "email": " ", "date": "2017-04-13", "comment": "Create table" } ],
-	"resources": [{
-		"schema": {
-			"fields": [
-				{"name": "version", 	"description": "Version id", "unit": "" },
-				{"name": "id", 		"description": "Unique identifier", "unit": "" }
-				 ]},
-		"meta_version": "1.2"}] }';
+    "title": "eGo dataprocessing - Renewable powerlants",
+    "description": "",
+    "language": [ "eng", "ger" ],
+    "spatial": {
+        "location": "",
+        "extend": "Gemany",
+        "resolution": " "
+    },
+    "temporal": {
+        "reference_date": " ",
+        "start": "",
+        "end": "",
+        "resolution": ""
+    },
+    "sources": [
+        {
+            "name": "eGo dataprocessing",
+            "description": " ",
+            "url": "https://github.com/openego/data_processing",
+            "license": "GNU Affero General Public License Version 3 (AGPL-3.0)",
+            "copyright": "\u00a9 Reiner Lemoine Institut"
+        },
+        {
+            "name": "OpenStreetMap",
+            "description": " ",
+            "url": "http://www.openstreetmap.org/",
+            "license": "Open Database License (ODbL) v1.0",
+            "copyright": "\u00a9 OpenStreetMap contributors"
+        },
+        {
+            "name": "BKG - Verwaltungsgebiete 1:250.000 (vg250)",
+            "description": " ",
+            "url": "http://www.geodatenzentrum.de/",
+            "license": "Geodatenzugangsgesetz (GeoZG)",
+            "copyright": "\u00a9 GeoBasis-DE / BKG 2016 (data changed)"
+        },
+        {
+            "name": "Statistisches Bundesamt (Destatis) - Zensus2011",
+            "description": " ",
+            "url": "https://www.destatis.de/DE/Methoden/Zensus_/Zensus.html",
+            "license": "Datenlizenz Deutschland \u0096 Namensnennung \u0096 Version 2.0",
+            "copyright": "\u00a9 Statistisches Bundesamt, Wiesbaden, Genesis-Online, 2016; Datenlizenz by-2-0"
+        }
+    ],
+    "license": {
+        "id": "ODbL-1.0",
+        "name": "Open Data Commons Open Database License 1.0",
+        "version": "1.0",
+        "url": "https://opendatacommons.org/licenses/odbl/1.0/",
+        "instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
+        "copyright": "\u00a9 Reiner Lemoine Institut"
+    },
+    "contributors": [
+        {
+            "name": "Ludee",
+            "email": " ",
+            "date": "2017-04-13",
+            "comment": "Create table"
+        },
+        {
+            "name": "KilianZimmerer",
+            "email": "",
+            "date": "2017-6-27",
+            "comment": "Update metadata to v1.3"
+        }
+    ],
+    "resources": [
+        {
+            "name": "supply.ego_dp_res_powerplant",
+            "fromat": "sql",
+            "fields": [
+                {
+                    "name": "version",
+                    "description": "Version id",
+                    "unit": ""
+                },
+                {
+                    "name": "id",
+                    "description": "Unique identifier",
+                    "unit": ""
+                }
+            ]
+        }
+    ],
+    "metadata_version": "1.3"
+}';
 
 -- select description
 SELECT obj_description('supply.ego_dp_res_powerplant' ::regclass) ::json;
@@ -889,37 +1817,108 @@ CREATE INDEX ego_pf_hv_bus_geom_idx
 */
 -- metadata
 COMMENT ON TABLE grid.ego_pf_hv_bus IS '{
-	"title": "eGo hv powerflow - bus",
-	"description": "Buses relevant for eGo hv powerflow",
-	"language": [ "eng" ],
-	"reference_date": " ",
-	"sources": [
-		{"name": "eGo dataprocessing", "description": " ", "url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)", "copyright": "© Reiner Lemoine Institut"},
-		{"name": "OpenStreetMap", "description": " ", "url": "http://www.openstreetmap.org/", "license": "Open Database License (ODbL) v1.0", "copyright": "© OpenStreetMap contributors"} ],
-	"spatial": [
-		{"extend": "Germany",
-		"resolution": ""} ],
-	"license": [
-		{"id": "ODbL-1.0",
-		"name": "Open Data Commons Open Database License 1.0",
-		"version": "1.0",
-		"url": "https://opendatacommons.org/licenses/odbl/1.0/",
-		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
-		"copyright": "© Flensburg University of Applied Sciences, Center for Sustainable Energy Systems"} ],
-	"contributors": [
-		{"name": "IlkaCu", "email": "", "date": "26.04.2017", "comment": "Create table"}],
-	"resources": [{
-		"schema": {
-			"fields": [
-				{"name": "version", "description": "version id", "unit": "" },
-				{"name": "scn_name", "description": "name of corresponding scenario", "unit": "" },
-				{"name": "bus_id", "description": "unique id for bus, equivalent to id from osmtgmod", "unit": "" },
-				{"name": "v_nom", "description": "nominal voltage","unit": "kV" },
-                   		{"name": "current_type", "description": "current type - AC or DC","unit": "" },
-                   		{"name": "v_mag_pu_min", "description": "Minimum desired voltage, per unit of v_nom","unit": "per unit" },
-                   		{"name": "v_mag_pu_max", "description": "Maximum desired voltage, per unit of v_nom","unit": "per unit" },
-                   		{"name": "geom", "description": "geometry of bus","unit": "..." } ]},
-	"meta_version": "1.2"}] }';
+    "title": "eGo hv powerflow - bus",
+    "description": "Buses relevant for eGo hv powerflow",
+    "language": [ "eng" ],
+    "spatial": {
+        "location": "",
+        "extend": "Germany",
+        "resolution": ""
+    },
+    "temporal": {
+        "reference_date": " ",
+        "start": "",
+        "end": "",
+        "resolution": ""
+    },
+    "sources": [
+        {
+            "name": "eGo dataprocessing",
+            "description": " ",
+            "url": "https://github.com/openego/data_processing",
+            "license": "GNU Affero General Public License Version 3 (AGPL-3.0)",
+            "copyright": "\u00a9 Reiner Lemoine Institut"
+        },
+        {
+            "name": "OpenStreetMap",
+            "description": " ",
+            "url": "http://www.openstreetmap.org/",
+            "license": "Open Database License (ODbL) v1.0",
+            "copyright": "\u00a9 OpenStreetMap contributors"
+        }
+    ],
+    "license": {
+        "id": "ODbL-1.0",
+        "name": "Open Data Commons Open Database License 1.0",
+        "version": "1.0",
+        "url": "https://opendatacommons.org/licenses/odbl/1.0/",
+        "instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
+        "copyright": "\u00a9 Flensburg University of Applied Sciences, Center for Sustainable Energy Systems"
+    },
+    "contributors": [
+        {
+            "name": "IlkaCu",
+            "email": "",
+            "date": "26.04.2017",
+            "comment": "Create table"
+        },
+        {
+            "name": "KilianZimmerer",
+            "email": "",
+            "date": "2017-6-27",
+            "comment": "Update metadata to v1.3"
+        }
+    ],
+    "resources": [
+        {
+            "name": "grid.ego_pf_hv_bus",
+            "fromat": "sql",
+            "fields": [
+                {
+                    "name": "version",
+                    "description": "version id",
+                    "unit": ""
+                },
+                {
+                    "name": "scn_name",
+                    "description": "name of corresponding scenario",
+                    "unit": ""
+                },
+                {
+                    "name": "bus_id",
+                    "description": "unique id for bus, equivalent to id from osmtgmod",
+                    "unit": ""
+                },
+                {
+                    "name": "v_nom",
+                    "description": "nominal voltage",
+                    "unit": "kV"
+                },
+                {
+                    "name": "current_type",
+                    "description": "current type - AC or DC",
+                    "unit": ""
+                },
+                {
+                    "name": "v_mag_pu_min",
+                    "description": "Minimum desired voltage, per unit of v_nom",
+                    "unit": "per unit"
+                },
+                {
+                    "name": "v_mag_pu_max",
+                    "description": "Maximum desired voltage, per unit of v_nom",
+                    "unit": "per unit"
+                },
+                {
+                    "name": "geom",
+                    "description": "geometry of bus",
+                    "unit": "..."
+                }
+            ]
+        }
+    ],
+    "metadata_version": "1.3"
+}';
 
 -- select description
 SELECT obj_description('grid.ego_pf_hv_bus' ::regclass) ::json;
@@ -965,50 +1964,174 @@ ALTER TABLE	grid.ego_pf_hv_generator OWNER TO oeuser;
 
 -- metadata
 COMMENT ON TABLE grid.ego_pf_hv_generator IS '{
-	"title": "eGo hv powerflow - generator",
-	"description": "Generators relevant for eGo hv powerflow",
-	"language": [ "eng" ],
-	"reference_date": " ",
-	"sources": [
-		{"name": "eGo dataprocessing", "description": " ", "url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)", "copyright": "© Reiner Lemoine Institut"},
-		{"name": "OpenStreetMap", "description": " ", "url": "http://www.openstreetmap.org/", "license": "Open Database License (ODbL) v1.0", "copyright": "© OpenStreetMap contributors"}, 
-		{"name": "Open Power System Data (OPSD)", "description": " ", "url": "http://data.open-power-system-data.org/conventional_power_plants/2016-02-08/", "license": "MIT Licence", "copyright": "© 2016 Open Power System Data"},
-		{"name": "EnergyMap", "description": " ", "url": "www.energymap.info", "license": "", "copyright": ""},
-		{"name": "Bundesnetzagentur (BNetzA)", "description": " ", "url": "http://www.bundesnetzagentur.de/DE/Sachgebiete/ElektrizitaetundGas/Unternehmen_Institutionen/Versorgungssicherheit/Erzeugungskapazitaeten/Kraftwerksliste/kraftwerksliste-node.html", "license": "", "copyright": ""} ],
-	"spatial": [
-
-		{"extend": "Germany",
-		"resolution": ""} ],
-	"license": [
-		{"id": "ODbL-1.0",
-		"name": "Open Data Commons Open Database License 1.0",
-		"version": "1.0",
-		"url": "https://opendatacommons.org/licenses/odbl/1.0/",
-		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
-		"copyright": "© Flensburg University of Applied Sciences, Center for Sustainable Energy Systems"} ],
-	"contributors": [
-		{"name": "IlkaCu", "email": "", "date": "26.04.2017", "comment": "Create table"}],
-	"resources": [{
-		"schema": {
-			"fields": [
-				{"name": "version", "description": "version id", "unit": "" },
-				{"name": "scn_name", "description": "name of corresponding scenario", "unit": "" },
-                  		{"name": "generator_id", "description": "ID of corresponding generator", "unit": "" },
-				{"name": "bus", "description": "id of associated bus", "unit": "" },
-                   		{"name": "dispatch", "description": "Controllability of active power dispatch, must be flexible or variable.", "unit": "" },
-                   		{"name": "control","description": "P,Q,V control strategy, must be PQ, PV or Slack.", "unit": "" },
-                   		{"name": "p_nom", "description": "Nominal power", "unit": "MW" },
-                   		{"name": "p_nom_extendable", "description": "Switch to allow capacity p_nom to be extended", "unit": "" },
-                   		{"name": "p_nom_min", "description": "If p_nom is extendable, set its minimum value", "unit": "" },
-                   		{"name": "p_nom_max", "description": "If p_nom is extendable, set its maximum value (e.g. limited by potential)", "unit": "" },
-                   		{"name": "p_min_pu_fixed", "description": "If control=flexible this gives the minimum output per unit of p_nom", "unit": "per unit" },
-                   		{"name": "p_max_pu_fixed", "description": "If control=flexible this gives the maximum output per unit of p_nom, equivalent to a de-rating factor.", "unit": "per unit" },
-                   		{"name": "sign", "description": "power sign", "unit": "" },
-                   		{"name": "source", "description": "prime mover energy carrier", "unit": "" },
-                   		{"name": "marginal_cost", "description": "Marginal cost of production of 1 MWh", "unit": "EUR/MWh" },
-                   		{"name": "capital_cost", "description": "Capital cost of extending p_nom by 1 MW", "unit": "EUR/MW" },
-                   		{"name": "efficiency", "description": "Ratio between primary energy and electrical energy", "unit": "per unit" } ]},
-	"meta_version": "1.2"}] }';
+    "title": "eGo hv powerflow - generator",
+    "description": "Generators relevant for eGo hv powerflow",
+    "language": [ "eng" ],
+    "spatial": {
+        "location": "",
+        "extend": "Germany",
+        "resolution": ""
+    },
+    "temporal": {
+        "reference_date": " ",
+        "start": "",
+        "end": "",
+        "resolution": ""
+    },
+    "sources": [
+        {
+            "name": "eGo dataprocessing",
+            "description": " ",
+            "url": "https://github.com/openego/data_processing",
+            "license": "GNU Affero General Public License Version 3 (AGPL-3.0)",
+            "copyright": "\u00a9 Reiner Lemoine Institut"
+        },
+        {
+            "name": "OpenStreetMap",
+            "description": " ",
+            "url": "http://www.openstreetmap.org/",
+            "license": "Open Database License (ODbL) v1.0",
+            "copyright": "\u00a9 OpenStreetMap contributors"
+        },
+        {
+            "name": "Open Power System Data (OPSD)",
+            "description": " ",
+            "url": "http://data.open-power-system-data.org/conventional_power_plants/2016-02-08/",
+            "license": "MIT Licence",
+            "copyright": "\u00a9 2016 Open Power System Data"
+        },
+        {
+            "name": "EnergyMap",
+            "description": " ",
+            "url": "www.energymap.info",
+            "license": "",
+            "copyright": ""
+        },
+        {
+            "name": "Bundesnetzagentur (BNetzA)",
+            "description": " ",
+            "url": "http://www.bundesnetzagentur.de/DE/Sachgebiete/ElektrizitaetundGas/Unternehmen_Institutionen/Versorgungssicherheit/Erzeugungskapazitaeten/Kraftwerksliste/kraftwerksliste-node.html",
+            "license": "",
+            "copyright": ""
+        }
+    ],
+    "license": {
+        "id": "ODbL-1.0",
+        "name": "Open Data Commons Open Database License 1.0",
+        "version": "1.0",
+        "url": "https://opendatacommons.org/licenses/odbl/1.0/",
+        "instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
+        "copyright": "\u00a9 Flensburg University of Applied Sciences, Center for Sustainable Energy Systems"
+    },
+    "contributors": [
+        {
+            "name": "IlkaCu",
+            "email": "",
+            "date": "26.04.2017",
+            "comment": "Create table"
+        },
+        {
+            "name": "KilianZimmerer",
+            "email": "",
+            "date": "2017-6-27",
+            "comment": "Update metadata to v1.3"
+        }
+    ],
+    "resources": [
+        {
+            "name": "grid.ego_pf_hv_generator",
+            "fromat": "sql",
+            "fields": [
+                {
+                    "name": "version",
+                    "description": "version id",
+                    "unit": ""
+                },
+                {
+                    "name": "scn_name",
+                    "description": "name of corresponding scenario",
+                    "unit": ""
+                },
+                {
+                    "name": "generator_id",
+                    "description": "ID of corresponding generator",
+                    "unit": ""
+                },
+                {
+                    "name": "bus",
+                    "description": "id of associated bus",
+                    "unit": ""
+                },
+                {
+                    "name": "dispatch",
+                    "description": "Controllability of active power dispatch, must be flexible or variable.",
+                    "unit": ""
+                },
+                {
+                    "name": "control",
+                    "description": "P,Q,V control strategy, must be PQ, PV or Slack.",
+                    "unit": ""
+                },
+                {
+                    "name": "p_nom",
+                    "description": "Nominal power",
+                    "unit": "MW"
+                },
+                {
+                    "name": "p_nom_extendable",
+                    "description": "Switch to allow capacity p_nom to be extended",
+                    "unit": ""
+                },
+                {
+                    "name": "p_nom_min",
+                    "description": "If p_nom is extendable, set its minimum value",
+                    "unit": ""
+                },
+                {
+                    "name": "p_nom_max",
+                    "description": "If p_nom is extendable, set its maximum value (e.g. limited by potential)",
+                    "unit": ""
+                },
+                {
+                    "name": "p_min_pu_fixed",
+                    "description": "If control=flexible this gives the minimum output per unit of p_nom",
+                    "unit": "per unit"
+                },
+                {
+                    "name": "p_max_pu_fixed",
+                    "description": "If control=flexible this gives the maximum output per unit of p_nom, equivalent to a de-rating factor.",
+                    "unit": "per unit"
+                },
+                {
+                    "name": "sign",
+                    "description": "power sign",
+                    "unit": ""
+                },
+                {
+                    "name": "source",
+                    "description": "prime mover energy carrier",
+                    "unit": ""
+                },
+                {
+                    "name": "marginal_cost",
+                    "description": "Marginal cost of production of 1 MWh",
+                    "unit": "EUR/MWh"
+                },
+                {
+                    "name": "capital_cost",
+                    "description": "Capital cost of extending p_nom by 1 MW",
+                    "unit": "EUR/MW"
+                },
+                {
+                    "name": "efficiency",
+                    "description": "Ratio between primary energy and electrical energy",
+                    "unit": "per unit"
+                }
+            ]
+        }
+    ],
+    "metadata_version": "1.3"
+}';
 
 -- select description
 SELECT obj_description('grid.ego_pf_hv_generator' ::regclass) ::json;
@@ -1044,38 +2167,108 @@ ALTER TABLE	grid.ego_pf_hv_generator_pq_set OWNER TO oeuser;
 */
 -- metadata
 COMMENT ON TABLE grid.ego_pf_hv_generator_pq_set IS '{
-	"title": "eGo hv powerflow - generator time series",
-	"description": "Time series of generators relevant for eGo hv powerflow",
-	"language": [ "eng" ],
-	"reference_date": " ",
-	"sources": [
-		{"name": "eGo dataprocessing", "description": " ", "url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)", "copyright": "© Europa-Universitaet Flensburg, Center for Sustainable Energy Systems"},
-		{"name": "oemof feedinlib", "description": " ", "url": "https://github.com/oemof/feedinlib", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)", "copyright": "© oemof developing group"}		 ],
-	"spatial": [
-
-		{"extend": "Germany",
-		"resolution": ""} ],
-	"license": [
-		{"id": "ODbL-1.0",
-		"name": "Open Data Commons Open Database License 1.0",
-		"version": "1.0",
-		"url": "https://opendatacommons.org/licenses/odbl/1.0/",
-		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
-		"copyright": "© Europa-Universitaet Flensburg, Center for Sustainable Energy Systems"} ],
-	"contributors": [
-		{"name": "IlkaCu", "email": "", "date": "26.04.2017", "comment": "Create table"}],
-	"resources": [{
-		"schema": {
-			"fields": [
-				{"name": "version", "description": "version id", "unit": "" },
-				{"name": "scn_name", "description": "name of corresponding scenario", "unit": "" },
-                  		{"name": "generator_id", "description": "ID of corresponding generator", "unit": "" },
-                   		{"name": "temp_id", "description": "ID of temporal resolution", "unit": "" },     
-                   		{"name": "p_set", "description": "active power set point (for PF)", "unit": "MW" },     
-                   		{"name": "q_set", "description": "reactive power set point (for PF)", "unit": "MVar" },     
-                   		{"name": "p_min_pu", "description": "If control=variable this gives the minimum output for each snapshot per unit of p_nom for the OPF", "unit": "per unit" },     
-                   		{"name": "p_max_pu", "description": "If control=variable this gives the maximum output for each snapshot per unit of p_nom for the OPF", "unit": "per unit" } ]},
-	"meta_version": "1.2"}] }';
+    "title": "eGo hv powerflow - generator time series",
+    "description": "Time series of generators relevant for eGo hv powerflow",
+    "language": [ "eng" ],
+    "spatial": {
+        "location": "",
+        "extend": "Germany",
+        "resolution": ""
+    },
+    "temporal": {
+        "reference_date": " ",
+        "start": "",
+        "end": "",
+        "resolution": ""
+    },
+    "sources": [
+        {
+            "name": "eGo dataprocessing",
+            "description": " ",
+            "url": "https://github.com/openego/data_processing",
+            "license": "GNU Affero General Public License Version 3 (AGPL-3.0)",
+            "copyright": "\u00a9 Europa-Universitaet Flensburg, Center for Sustainable Energy Systems"
+        },
+        {
+            "name": "oemof feedinlib",
+            "description": " ",
+            "url": "https://github.com/oemof/feedinlib",
+            "license": "GNU Affero General Public License Version 3 (AGPL-3.0)",
+            "copyright": "\u00a9 oemof developing group"
+        }
+    ],
+    "license": {
+        "id": "ODbL-1.0",
+        "name": "Open Data Commons Open Database License 1.0",
+        "version": "1.0",
+        "url": "https://opendatacommons.org/licenses/odbl/1.0/",
+        "instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
+        "copyright": "\u00a9 Europa-Universitaet Flensburg, Center for Sustainable Energy Systems"
+    },
+    "contributors": [
+        {
+            "name": "IlkaCu",
+            "email": "",
+            "date": "26.04.2017",
+            "comment": "Create table"
+        },
+        {
+            "name": "KilianZimmerer",
+            "email": "",
+            "date": "2017-6-27",
+            "comment": "Update metadata to v1.3"
+        }
+    ],
+    "resources": [
+        {
+            "name": "grid.ego_pf_hv_generator_pq_set",
+            "fromat": "sql",
+            "fields": [
+                {
+                    "name": "version",
+                    "description": "version id",
+                    "unit": ""
+                },
+                {
+                    "name": "scn_name",
+                    "description": "name of corresponding scenario",
+                    "unit": ""
+                },
+                {
+                    "name": "generator_id",
+                    "description": "ID of corresponding generator",
+                    "unit": ""
+                },
+                {
+                    "name": "temp_id",
+                    "description": "ID of temporal resolution",
+                    "unit": ""
+                },
+                {
+                    "name": "p_set",
+                    "description": "active power set point (for PF)",
+                    "unit": "MW"
+                },
+                {
+                    "name": "q_set",
+                    "description": "reactive power set point (for PF)",
+                    "unit": "MVar"
+                },
+                {
+                    "name": "p_min_pu",
+                    "description": "If control=variable this gives the minimum output for each snapshot per unit of p_nom for the OPF",
+                    "unit": "per unit"
+                },
+                {
+                    "name": "p_max_pu",
+                    "description": "If control=variable this gives the maximum output for each snapshot per unit of p_nom for the OPF",
+                    "unit": "per unit"
+                }
+            ]
+        }
+    ],
+    "metadata_version": "1.3"
+}';
 
 -- select description
 SELECT obj_description('grid.ego_pf_hv_generator_pq_set' ::regclass) ::json;
@@ -1123,51 +2316,175 @@ ALTER TABLE	grid.ego_pf_hv_line OWNER TO oeuser;
 */
 -- metadata
 COMMENT ON TABLE grid.ego_pf_hv_line IS '{
-	"title": "eGo hv powerflow - lines",
-	"description": "lines in eGo hv powerflow",
-	"language": [ "eng" ],
-	"reference_date": " ",
-	"sources": [
-		{"name": "eGo dataprocessing", "description": " ", "url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)", "copyright": "© Flensburg University of Applied Sciences, Center for Sustainable Energy Systems"},
-		{"name": "OpenStreetMap", "description": " ", "url": "http://www.openstreetmap.org/", "license": "Open Database License (ODbL) v1.0", "copyright": "© OpenStreetMap contributors"}, 
-		{"name": "osmTGmod", "description": " ", "url": "https://github.com/openego/osmTGmod", "license": "Apache License 2.0", "copyright": "© Wuppertal Institut"}		 ],
-	"spatial": [
-
-		{"extend": "Germany",
-		"resolution": ""} ],
-	"license": [
-		{"id": "ODbL-1.0",
-		"name": "Open Data Commons Open Database License 1.0",
-		"version": "1.0",
-		"url": "https://opendatacommons.org/licenses/odbl/1.0/",
-		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
-		"copyright": "© NEXT ENERGY"} ],
-	"contributors": [
-		{"name": "IlkaCu", "email": "", "date": "26.04.2017", "comment": "Create table"}],
-	"resources": [{
-		"schema": {
-			"fields": [
-				{"name": "version", "description": "version id", "unit": "" },
-				{"name": "scn_name", "description": "name of corresponding scenario", "unit": "" },
-                  		{"name": "line_id", "description": "ID of line", "unit": "" },
-                   		{"name": "bus0", "description": "name of first bus to which branch is attached", "unit": "" },
-                   		{"name": "bus1", "description": "name of second bus to which branch is attached", "unit": "" },
-                   		{"name": "x", "description": "Series reactance", "unit": "Ohm" },
-                   		{"name": "r", "description": "Series resistance", "unit": "Ohm" },
-                   		{"name": "g", "description": "Shunt conductivity", "unit": "Siemens" }, 
-                   		{"name": "b", "description": "Shunt susceptance", "unit": "Siemens" }, 
-                   		{"name": "s_nom", "description": "Limit of apparent power which can pass through branch", "unit": "MVA" }, 
-                   		{"name": "s_nom_extendable", "description": "Switch to allow capacity s_nom to be extended", "unit": "" }, 
-                   		{"name": "s_nom_min", "description": "If s_nom is extendable, set its minimum value", "unit": "MVA" }, 
-                   		{"name": "s_nom_max", "description": "If s_nom is extendable in OPF, set its maximum value", "unit": "MVA" }, 
-                   		{"name": "capital_cost", "description": "capital cost of extending s_nom by 1 MVA", "unit": "EUR/MVA" }, 
-                   		{"name": "length", "description": "length of line", "unit": "km" }, 
-                   		{"name": "cables", "description": "...", "unit": "" }, 
-                   		{"name": "frequency", "description": "frequency of line", "unit": "" }, 
-                   		{"name": "terrain_factor", "description": "...", "unit": "" }, 
-                   		{"name": "geom", "description": "geometry that depict the real route of the line", "unit": "" }, 
-                   		{"name": "topo", "description": "topology that depicts a direct connection between both busses", "unit": "..." } ]},
-	"meta_version": "1.2"}] }';
+    "title": "eGo hv powerflow - lines",
+    "description": "lines in eGo hv powerflow",
+    "language": [ "eng" ],
+    "spatial": {
+        "location": "",
+        "extend": "Germany",
+        "resolution": ""
+    },
+    "temporal": {
+        "reference_date": " ",
+        "start": "",
+        "end": "",
+        "resolution": ""
+    },
+    "sources": [
+        {
+            "name": "eGo dataprocessing",
+            "description": " ",
+            "url": "https://github.com/openego/data_processing",
+            "license": "GNU Affero General Public License Version 3 (AGPL-3.0)",
+            "copyright": "\u00a9 Flensburg University of Applied Sciences, Center for Sustainable Energy Systems"
+        },
+        {
+            "name": "OpenStreetMap",
+            "description": " ",
+            "url": "http://www.openstreetmap.org/",
+            "license": "Open Database License (ODbL) v1.0",
+            "copyright": "\u00a9 OpenStreetMap contributors"
+        },
+        {
+            "name": "osmTGmod",
+            "description": " ",
+            "url": "https://github.com/openego/osmTGmod",
+            "license": "Apache License 2.0",
+            "copyright": "\u00a9 Wuppertal Institut"
+        }
+    ],
+    "license": {
+        "id": "ODbL-1.0",
+        "name": "Open Data Commons Open Database License 1.0",
+        "version": "1.0",
+        "url": "https://opendatacommons.org/licenses/odbl/1.0/",
+        "instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
+        "copyright": "© DLR Institute for Networked Energy Systems"
+    },
+    "contributors": [
+        {
+            "name": "IlkaCu",
+            "email": "",
+            "date": "26.04.2017",
+            "comment": "Create table"
+        },
+        {
+            "name": "KilianZimmerer",
+            "email": "",
+            "date": "2017-6-27",
+            "comment": "Update metadata to v1.3"
+        }
+    ],
+    "resources": [
+        {
+            "name": "grid.ego_pf_hv_line",
+            "fromat": "sql",
+            "fields": [
+                {
+                    "name": "version",
+                    "description": "version id",
+                    "unit": ""
+                },
+                {
+                    "name": "scn_name",
+                    "description": "name of corresponding scenario",
+                    "unit": ""
+                },
+                {
+                    "name": "line_id",
+                    "description": "ID of line",
+                    "unit": ""
+                },
+                {
+                    "name": "bus0",
+                    "description": "name of first bus to which branch is attached",
+                    "unit": ""
+                },
+                {
+                    "name": "bus1",
+                    "description": "name of second bus to which branch is attached",
+                    "unit": ""
+                },
+                {
+                    "name": "x",
+                    "description": "Series reactance",
+                    "unit": "Ohm"
+                },
+                {
+                    "name": "r",
+                    "description": "Series resistance",
+                    "unit": "Ohm"
+                },
+                {
+                    "name": "g",
+                    "description": "Shunt conductivity",
+                    "unit": "Siemens"
+                },
+                {
+                    "name": "b",
+                    "description": "Shunt susceptance",
+                    "unit": "Siemens"
+                },
+                {
+                    "name": "s_nom",
+                    "description": "Limit of apparent power which can pass through branch",
+                    "unit": "MVA"
+                },
+                {
+                    "name": "s_nom_extendable",
+                    "description": "Switch to allow capacity s_nom to be extended",
+                    "unit": ""
+                },
+                {
+                    "name": "s_nom_min",
+                    "description": "If s_nom is extendable, set its minimum value",
+                    "unit": "MVA"
+                },
+                {
+                    "name": "s_nom_max",
+                    "description": "If s_nom is extendable in OPF, set its maximum value",
+                    "unit": "MVA"
+                },
+                {
+                    "name": "capital_cost",
+                    "description": "capital cost of extending s_nom by 1 MVA",
+                    "unit": "EUR/MVA"
+                },
+                {
+                    "name": "length",
+                    "description": "length of line",
+                    "unit": "km"
+                },
+                {
+                    "name": "cables",
+                    "description": "...",
+                    "unit": ""
+                },
+                {
+                    "name": "frequency",
+                    "description": "frequency of line",
+                    "unit": ""
+                },
+                {
+                    "name": "terrain_factor",
+                    "description": "...",
+                    "unit": ""
+                },
+                {
+                    "name": "geom",
+                    "description": "geometry that depict the real route of the line",
+                    "unit": ""
+                },
+                {
+                    "name": "topo",
+                    "description": "topology that depicts a direct connection between both busses",
+                    "unit": "..."
+                }
+            ]
+        }
+    ],
+    "metadata_version": "1.3"
+}';
 
 -- select description
 SELECT obj_description('grid.ego_pf_hv_line' ::regclass) ::json;
@@ -1200,44 +2517,154 @@ ALTER TABLE	grid.ego_pf_hv_load OWNER TO oeuser;
 */
 -- metadata
 COMMENT ON TABLE grid.ego_pf_hv_load IS '{
-	"title": "eGo hv powerflow - loads",
-	"description": "loads in eGo hv powerflow",
-	"language": [ "eng" ],
-	"reference_date": " ",
-	"sources": [
-		{"name": "eGo dataprocessing", "description": " ", "url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)", "copyright": "© Flensburg University of Applied Sciences, Center for Sustainable Energy Systems"},
-		{"name": "OpenStreetMap", "description": " ", "url": "http://www.openstreetmap.org/", "license": "Open Database License (ODbL) v1.0", "copyright": "© OpenStreetMap contributors"},  
-		{"name": "Länderarbeitskreis Energiebilanzen", "description": " ", "url": "http://www.lak-energiebilanzen.de/seiten/energiebilanzenLaender.cfm", "license": " ", "copyright": " "},
-		{"name": "Bayerisches Landesamt für Statistik und Datenverarbeitung", "description": " ", "url": "http://www.stmwi.bayern.de/fileadmin/user_upload/stmwivt/Themen/Energie_und_Rohstoffe/Dokumente_und_Cover/Energiebilanz/2014/B-03_bilanzjo_mgh_2014-03-07.pdf", "license": " ", "copyright": " "},
-		{"name": "Hessisches Statistisches Landesamt", "description": " ", "url": "http://www.statistik-hessen.de/publikationen/download/277/index.html", "license": " ", "copyright": " "},
-		{"name": "Statistisches Amt Mecklenburg-Vorpommern", "description": " ", "url": "https://www.destatis.de/GPStatistik/servlets/MCRFileNodeServlet/MVHeft_derivate_00000168/E453_2011_00a.pdf;jsessionid=CD300CD3A06FF85FDEA864FF4D91D880", "license": " ", "copyright": " "},
-		{"name": "Niedersächsisches Ministerium für Umwelt, Energie und Klimaschutz", "description": " ", "url": "http://www.umwelt.niedersachsen.de/energie/daten/co2bilanzen/niedersaechsische-energie--und-co2-bilanzen-2009-6900.html", "license": " ", "copyright": " "},
-		{"name": "Information und Technik Nordrhein-Westfalen", "description": " ", "url": "https://webshop.it.nrw.de/gratis/E449%20201100.pdf", "license": " ", "copyright": " "},
-		{"name": "Statistisches Landesamt Sachsen-Anhalt", "description": " ", "url": "http://www.stala.sachsen-anhalt.de/download/stat_berichte/6E402_j_2011.pdf", "license": " ", "copyright": " "},
-		{"name": "Thüringer Landesamt für Statistik", "description": " ", "url": "http://www.statistik.thueringen.de/webshop/pdf/2011/05402_2011_00.pdf", "license": " ", "copyright": " "}],
-	"spatial": [
-
-		{"extend": "Germany",
-		"resolution": ""} ],
-	"license": [
-		{"id": "ODbL-1.0",
-		"name": "Open Data Commons Open Database License 1.0",
-		"version": "1.0",
-		"url": "https://opendatacommons.org/licenses/odbl/1.0/",
-		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
-		"copyright": "© Flensburg University of Applied Sciences, Center for Sustainable Energy Systems"} ],
-	"contributors": [
-		{"name": "IlkaCu", "email": "", "date": "26.04.2017", "comment": "Create table"}],
-	"resources": [{
-		"schema": {
-			"fields": [
-				{"name": "version", "description": "version id", "unit": "" },
-				{"name": "scn_name", "description": "name of corresponding scenario", "unit": "" },
-                  		{"name": "load_id", "description": "unique id", "unit": "" },                   
-                   		{"name": "bus", "description": "id of associated bus", "unit": "" },
-                   		{"name": "sign", "description": "power sign", "unit": "" },
-                   		{"name": "e_annual", "description": "annual electricity consumption", "unit": "GWh" } ]},
-	"meta_version": "1.2"}] }';
+    "title": "eGo hv powerflow - loads",
+    "description": "loads in eGo hv powerflow",
+    "language": [ "eng" ],
+    "spatial": {
+        "location": "",
+        "extend": "Germany",
+        "resolution": ""
+    },
+    "temporal": {
+        "reference_date": " ",
+        "start": "",
+        "end": "",
+        "resolution": ""
+    },
+    "sources": [
+        {
+            "name": "eGo dataprocessing",
+            "description": " ",
+            "url": "https://github.com/openego/data_processing",
+            "license": "GNU Affero General Public License Version 3 (AGPL-3.0)",
+            "copyright": "\u00a9 Flensburg University of Applied Sciences, Center for Sustainable Energy Systems"
+        },
+        {
+            "name": "OpenStreetMap",
+            "description": " ",
+            "url": "http://www.openstreetmap.org/",
+            "license": "Open Database License (ODbL) v1.0",
+            "copyright": "\u00a9 OpenStreetMap contributors"
+        },
+        {
+            "name": "L\u00e4nderarbeitskreis Energiebilanzen",
+            "description": " ",
+            "url": "http://www.lak-energiebilanzen.de/seiten/energiebilanzenLaender.cfm",
+            "license": " ",
+            "copyright": " "
+        },
+        {
+            "name": "Bayerisches Landesamt f\u00fcr Statistik und Datenverarbeitung",
+            "description": " ",
+            "url": "http://www.stmwi.bayern.de/fileadmin/user_upload/stmwivt/Themen/Energie_und_Rohstoffe/Dokumente_und_Cover/Energiebilanz/2014/B-03_bilanzjo_mgh_2014-03-07.pdf",
+            "license": " ",
+            "copyright": " "
+        },
+        {
+            "name": "Hessisches Statistisches Landesamt",
+            "description": " ",
+            "url": "http://www.statistik-hessen.de/publikationen/download/277/index.html",
+            "license": " ",
+            "copyright": " "
+        },
+        {
+            "name": "Statistisches Amt Mecklenburg-Vorpommern",
+            "description": " ",
+            "url": "https://www.destatis.de/GPStatistik/servlets/MCRFileNodeServlet/MVHeft_derivate_00000168/E453_2011_00a.pdf;jsessionid=CD300CD3A06FF85FDEA864FF4D91D880",
+            "license": " ",
+            "copyright": " "
+        },
+        {
+            "name": "Nieders\u00e4chsisches Ministerium f\u00fcr Umwelt, Energie und Klimaschutz",
+            "description": " ",
+            "url": "http://www.umwelt.niedersachsen.de/energie/daten/co2bilanzen/niedersaechsische-energie--und-co2-bilanzen-2009-6900.html",
+            "license": " ",
+            "copyright": " "
+        },
+        {
+            "name": "Information und Technik Nordrhein-Westfalen",
+            "description": " ",
+            "url": "https://webshop.it.nrw.de/gratis/E449%20201100.pdf",
+            "license": " ",
+            "copyright": " "
+        },
+        {
+            "name": "Statistisches Landesamt Sachsen-Anhalt",
+            "description": " ",
+            "url": "http://www.stala.sachsen-anhalt.de/download/stat_berichte/6E402_j_2011.pdf",
+            "license": " ",
+            "copyright": " "
+        },
+        {
+            "name": "Th\u00fcringer Landesamt f\u00fcr Statistik",
+            "description": " ",
+            "url": "http://www.statistik.thueringen.de/webshop/pdf/2011/05402_2011_00.pdf",
+            "license": " ",
+            "copyright": " "
+        }
+    ],
+    "license": {
+        "id": "ODbL-1.0",
+        "name": "Open Data Commons Open Database License 1.0",
+        "version": "1.0",
+        "url": "https://opendatacommons.org/licenses/odbl/1.0/",
+        "instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
+        "copyright": "\u00a9 Flensburg University of Applied Sciences, Center for Sustainable Energy Systems"
+    },
+    "contributors": [
+        {
+            "name": "IlkaCu",
+            "email": "",
+            "date": "26.04.2017",
+            "comment": "Create table"
+        },
+        {
+            "name": "KilianZimmerer",
+            "email": "",
+            "date": "2017-6-27",
+            "comment": "Update metadata to v1.3"
+        }
+    ],
+    "resources": [
+        {
+            "name": "grid.ego_pf_hv_load",
+            "fromat": "sql",
+            "fields": [
+                {
+                    "name": "version",
+                    "description": "version id",
+                    "unit": ""
+                },
+                {
+                    "name": "scn_name",
+                    "description": "name of corresponding scenario",
+                    "unit": ""
+                },
+                {
+                    "name": "load_id",
+                    "description": "unique id",
+                    "unit": ""
+                },
+                {
+                    "name": "bus",
+                    "description": "id of associated bus",
+                    "unit": ""
+                },
+                {
+                    "name": "sign",
+                    "description": "power sign",
+                    "unit": ""
+                },
+                {
+                    "name": "e_annual",
+                    "description": "annual electricity consumption",
+                    "unit": "GWh"
+                }
+            ]
+        }
+    ],
+    "metadata_version": "1.3"
+}';
 
 -- select description
 SELECT obj_description('grid.ego_pf_hv_load' ::regclass) ::json;
@@ -1270,35 +2697,91 @@ ALTER TABLE	grid.ego_pf_hv_load_pq_set OWNER TO oeuser;
 */
 -- metadata
 COMMENT ON TABLE grid.ego_pf_hv_load_pq_set IS '{
-	"title": "eGo hv powerflow - loads",
-	"description": "loads in eGo hv powerflow",
-	"language": [ "eng" ],
-	"reference_date": " ",
-	"sources": [
-		{"name": "eGo dataprocessing", "description": " ", "url": "https://github.com/openego/data_processing/blob/master/dataprocessing/python_scripts/demand_per_mv_grid_district.py", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)", "copyright": "© Reiner Lemoine Institut"}],
-	"spatial": [
-
-		{"extend": "Germany",
-		"resolution": ""} ],
-	"license": [
-		{"id": "ODbL-1.0",
-		"name": "Open Data Commons Open Database License 1.0",
-		"version": "1.0",
-		"url": "https://opendatacommons.org/licenses/odbl/1.0/",
-		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
-		"copyright": "© Reiner Lemoine Institut"} ],
-	"contributors": [
-		{"name": "IlkaCu", "email": "", "date": "26.04.2017", "comment": "Create table"}],
-	"resources": [{
-		"schema": {
-			"fields": [
-				{"name": "version", "description": "version id", "unit": "" },
-				{"name": "scn_name", "description": "name of corresponding scenario", "unit": "" },
-                  		{"name": "load_id", "description": "unique id", "unit": "" },                   
-                   		{"name": "temp_id", "description": "id of temporal resolution", "unit": "" },
-                   		{"name": "p_set", "description": "active power set point", "unit": "MW" },
-                   		{"name": "q_set","description": "reactive power set point", "unit": "MVar" } ]},
-	"meta_version": "1.2"}] }';
+    "title": "eGo hv powerflow - loads",
+    "description": "loads in eGo hv powerflow",
+    "language": [ "eng" ],
+    "spatial": {
+        "location": "",
+        "extend": "Germany",
+        "resolution": ""
+    },
+    "temporal": {
+        "reference_date": " ",
+        "start": "",
+        "end": "",
+        "resolution": ""
+    },
+    "sources": [
+        {
+            "name": "eGo dataprocessing",
+            "description": " ",
+            "url": "https://github.com/openego/data_processing/blob/master/dataprocessing/python_scripts/demand_per_mv_grid_district.py",
+            "license": "GNU Affero General Public License Version 3 (AGPL-3.0)",
+            "copyright": "\u00a9 Reiner Lemoine Institut"
+        }
+    ],
+    "license": {
+        "id": "ODbL-1.0",
+        "name": "Open Data Commons Open Database License 1.0",
+        "version": "1.0",
+        "url": "https://opendatacommons.org/licenses/odbl/1.0/",
+        "instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
+        "copyright": "\u00a9 Reiner Lemoine Institut"
+    },
+    "contributors": [
+        {
+            "name": "IlkaCu",
+            "email": "",
+            "date": "26.04.2017",
+            "comment": "Create table"
+        },
+        {
+            "name": "KilianZimmerer",
+            "email": "",
+            "date": "2017-6-27",
+            "comment": "Update metadata to v1.3"
+        }
+    ],
+    "resources": [
+        {
+            "name": "grid.ego_pf_hv_load_pq_set",
+            "fromat": "sql",
+            "fields": [
+                {
+                    "name": "version",
+                    "description": "version id",
+                    "unit": ""
+                },
+                {
+                    "name": "scn_name",
+                    "description": "name of corresponding scenario",
+                    "unit": ""
+                },
+                {
+                    "name": "load_id",
+                    "description": "unique id",
+                    "unit": ""
+                },
+                {
+                    "name": "temp_id",
+                    "description": "id of temporal resolution",
+                    "unit": ""
+                },
+                {
+                    "name": "p_set",
+                    "description": "active power set point",
+                    "unit": "MW"
+                },
+                {
+                    "name": "q_set",
+                    "description": "reactive power set point",
+                    "unit": "MVar"
+                }
+            ]
+        }
+    ],
+    "metadata_version": "1.3"
+}';
 
 -- select description
 SELECT obj_description('grid.ego_pf_hv_load_pq_set' ::regclass) ::json;
@@ -1330,34 +2813,86 @@ ALTER TABLE	grid.ego_pf_hv_source OWNER TO oeuser;
 */
 -- metadata
 COMMENT ON TABLE grid.ego_pf_hv_source IS '{
-	"title": "eGo hv powerflow - sources",
-	"description": "sources in eGo hv powerflow",
-	"language": [ "eng" ],
-	"reference_date": " ",
-	"sources": [
-		{"name": "eGo dataprocessing", "description": " ", "url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)", "copyright": "© Flensburg University of Applied Sciences, Center for Sustainable Energy Systems"} ],
-	"spatial": [
-
-		{"extend": "Germany",
-		"resolution": ""} ],
-	"license": [
-		{"id": "ODbL-1.0",
-		"name": "Open Data Commons Open Database License 1.0",
-		"version": "1.0",
-		"url": "https://opendatacommons.org/licenses/odbl/1.0/",
-		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
-		"copyright": "© Flensburg University of Applied Sciences, Center for Sustainable Energy Systems"} ],
-	"contributors": [
-		{"name": "IlkaCu", "email": "", "date": "26.04.2017", "comment": "Create table"}],
-	"resources": [{
-		"schema": {
-			"fields": [
-				{"name": "version", "description": "version id", "unit": "" },
-				{"name": "source_id", "description": "unique source id", "unit": "" },
-                   		{"name": "name", "description": "source name", "unit": "" },                   
-                   		{"name": "co2_emissions", "description": "technology specific CO2 emissions ", "unit": "tonnes/MWh" },
-                  		{"name": "commentary", "description": "...", "unit": "" } ]},
-	"meta_version": "1.2"}] }';
+    "title": "eGo hv powerflow - sources",
+    "description": "sources in eGo hv powerflow",
+    "language": [ "eng" ],
+    "spatial": {
+        "location": "",
+        "extend": "Germany",
+        "resolution": ""
+    },
+    "temporal": {
+        "reference_date": " ",
+        "start": "",
+        "end": "",
+        "resolution": ""
+    },
+    "sources": [
+        {
+            "name": "eGo dataprocessing",
+            "description": " ",
+            "url": "https://github.com/openego/data_processing",
+            "license": "GNU Affero General Public License Version 3 (AGPL-3.0)",
+            "copyright": "\u00a9 Flensburg University of Applied Sciences, Center for Sustainable Energy Systems"
+        }
+    ],
+    "license": {
+        "id": "ODbL-1.0",
+        "name": "Open Data Commons Open Database License 1.0",
+        "version": "1.0",
+        "url": "https://opendatacommons.org/licenses/odbl/1.0/",
+        "instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
+        "copyright": "\u00a9 Flensburg University of Applied Sciences, Center for Sustainable Energy Systems"
+    },
+    "contributors": [
+        {
+            "name": "IlkaCu",
+            "email": "",
+            "date": "26.04.2017",
+            "comment": "Create table"
+        },
+        {
+            "name": "KilianZimmerer",
+            "email": "",
+            "date": "2017-6-27",
+            "comment": "Update metadata to v1.3"
+        }
+    ],
+    "resources": [
+        {
+            "name": "grid.ego_pf_hv_source",
+            "fromat": "sql",
+            "fields": [
+                {
+                    "name": "version",
+                    "description": "version id",
+                    "unit": ""
+                },
+                {
+                    "name": "source_id",
+                    "description": "unique source id",
+                    "unit": ""
+                },
+                {
+                    "name": "name",
+                    "description": "source name",
+                    "unit": ""
+                },
+                {
+                    "name": "co2_emissions",
+                    "description": "technology specific CO2 emissions ",
+                    "unit": "tonnes/MWh"
+                },
+                {
+                    "name": "commentary",
+                    "description": "...",
+                    "unit": ""
+                }
+            ]
+        }
+    ],
+    "metadata_version": "1.3"
+}';
 
 -- select description
 SELECT obj_description('grid.ego_pf_hv_source' ::regclass) ::json;
@@ -1409,55 +2944,197 @@ ALTER TABLE	grid.ego_pf_hv_storage OWNER TO oeuser;
 */
 -- metadata
 COMMENT ON TABLE grid.ego_pf_hv_storage IS '{
-	"title": "eGo hv powerflow - storage",
-	"description": "Storages relevant for eGo hv powerflow",
-	"language": [ "eng" ],
-	"reference_date": " ",
-	"sources": [
-		{"name": "eGo dataprocessing", "description": " ", "url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)", "copyright": "© Reiner Lemoine Institut"},
-		{"name": "OpenStreetMap", "description": " ", "url": "http://www.openstreetmap.org/", "license": "Open Database License (ODbL) v1.0", "copyright": "© OpenStreetMap contributors"}, 
-		{"name": "Open Power System Data (OPSD)", "description": " ", "url": "http://data.open-power-system-data.org/conventional_power_plants/2016-02-08/", "license": "MIT Licence", "copyright": "© 2016 Open Power System Data"},
-		{"name": "Bundesnetzagentur (BNetzA)", "description": " ", "url": "http://www.bundesnetzagentur.de/DE/Sachgebiete/ElektrizitaetundGas/Unternehmen_Institutionen/Versorgungssicherheit/Erzeugungskapazitaeten/Kraftwerksliste/kraftwerksliste-node.html", "license": "", "copyright": ""} ],
-	"spatial": [
-
-		{"extend": "Germany",
-		"resolution": ""} ],
-	"license": [
-		{"id": "ODbL-1.0",
-		"name": "Open Data Commons Open Database License 1.0",
-		"version": "1.0",
-		"url": "https://opendatacommons.org/licenses/odbl/1.0/",
-		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
-		"copyright": "© Europa-Universitaet Flensburg, Center for Sustainable Energy Systems"} ],
-	"contributors": [
-		{"name": "IlkaCu", "email": "", "date": "26.04.2017", "comment": "Create table"}],
-	"resources": [{
-		"schema": {
-			"fields": [
-				{"name": "version", "description": "version id", "unit": "" },
-				{"name": "scn_name", "description": "name of corresponding scenario", "unit": "" },
-                  		{"name": "storage_id", "description": "ID of corresponding storage", "unit": "" },
-				{"name": "bus", "description": "id of associated bus", "unit": "" },
-                   		{"name": "dispatch", "description": "Controllability of active power dispatch, must be flexible or variable.", "unit": "" },
-                   		{"name": "control","description": "P,Q,V control strategy, must be PQ, PV or Slack.", "unit": "" },
-                   		{"name": "p_nom", "description": "Nominal power", "unit": "MW" },
-                   		{"name": "p_nom_extendable", "description": "Switch to allow capacity p_nom to be extended", "unit": "" },
-                   		{"name": "p_nom_min", "description": "If p_nom is extendable, set its minimum value", "unit": "" },
-                   		{"name": "p_nom_max", "description": "If p_nom is extendable, set its maximum value (e.g. limited by potential)", "unit": "" },
-                   		{"name": "p_min_pu_fixed", "description": "If control=flexible this gives the minimum output per unit of p_nom", "unit": "per unit" },
-                   		{"name": "p_max_pu_fixed", "description": "If control=flexible this gives the maximum output per unit of p_nom, equivalent to a de-rating factor.", "unit": "per unit" },
-                   		{"name": "sign", "description": "power sign", "unit": "" },
-                   		{"name": "source", "description": "prime mover energy carrier", "unit": "" },
-                   		{"name": "marginal_cost", "description": "Marginal cost of production of 1 MWh", "unit": "EUR/MWh" },
-                   		{"name": "capital_cost", "description": "Capital cost of extending p_nom by 1 MW", "unit": "EUR/MW" },
-                   		{"name": "efficiency", "description": "Ratio between primary energy and electrical energy", "unit": "per unit" }, 
-				{"name": "soc_initial", "description": "State of charge before the snapshots in the OPF.", "unit": "MWh" },
-                   		{"name": "soc_cyclic", "description": "Switch: if True, then state_of_charge_initial is ignored and the initial state of charge is set to the final state of charge for the group of snapshots in the OPF","unit": "" },
-                   		{"name": "max_hours", "description": "Maximum state of charge capacity in terms of hours at full output capacity p_nom", "unit": "hours" },
-                   		{"name": "efficiency_store", "description": "Efficiency of storage on the way into the storage", "unit": "per unit" },                   
-                   		{"name": "efficiency_dispatch", "description": "Efficiency of storage on the way out of the storage", "unit": "per unit" },
-                   		{"name": "standing_loss", "description": "Losses per hour to state of charge", "unit": "per unit" } ]},
-	"meta_version": "1.2"}] }';
+    "title": "eGo hv powerflow - storage",
+    "description": "Storages relevant for eGo hv powerflow",
+    "language": [ "eng" ],
+    "spatial": {
+        "location": "",
+        "extend": "Germany",
+        "resolution": ""
+    },
+    "temporal": {
+        "reference_date": " ",
+        "start": "",
+        "end": "",
+        "resolution": ""
+    },
+    "sources": [
+        {
+            "name": "eGo dataprocessing",
+            "description": " ",
+            "url": "https://github.com/openego/data_processing",
+            "license": "GNU Affero General Public License Version 3 (AGPL-3.0)",
+            "copyright": "\u00a9 Reiner Lemoine Institut"
+        },
+        {
+            "name": "OpenStreetMap",
+            "description": " ",
+            "url": "http://www.openstreetmap.org/",
+            "license": "Open Database License (ODbL) v1.0",
+            "copyright": "\u00a9 OpenStreetMap contributors"
+        },
+        {
+            "name": "Open Power System Data (OPSD)",
+            "description": " ",
+            "url": "http://data.open-power-system-data.org/conventional_power_plants/2016-02-08/",
+            "license": "MIT Licence",
+            "copyright": "\u00a9 2016 Open Power System Data"
+        },
+        {
+            "name": "Bundesnetzagentur (BNetzA)",
+            "description": " ",
+            "url": "http://www.bundesnetzagentur.de/DE/Sachgebiete/ElektrizitaetundGas/Unternehmen_Institutionen/Versorgungssicherheit/Erzeugungskapazitaeten/Kraftwerksliste/kraftwerksliste-node.html",
+            "license": "",
+            "copyright": ""
+        }
+    ],
+    "license": {
+        "id": "ODbL-1.0",
+        "name": "Open Data Commons Open Database License 1.0",
+        "version": "1.0",
+        "url": "https://opendatacommons.org/licenses/odbl/1.0/",
+        "instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
+        "copyright": "\u00a9 Europa-Universitaet Flensburg, Center for Sustainable Energy Systems"
+    },
+    "contributors": [
+        {
+            "name": "IlkaCu",
+            "email": "",
+            "date": "26.04.2017",
+            "comment": "Create table"
+        },
+        {
+            "name": "KilianZimmerer",
+            "email": "",
+            "date": "2017-6-27",
+            "comment": "Update metadata to v1.3"
+        }
+    ],
+    "resources": [
+        {
+            "name": "grid.ego_pf_hv_storage",
+            "fromat": "sql",
+            "fields": [
+                {
+                    "name": "version",
+                    "description": "version id",
+                    "unit": ""
+                },
+                {
+                    "name": "scn_name",
+                    "description": "name of corresponding scenario",
+                    "unit": ""
+                },
+                {
+                    "name": "storage_id",
+                    "description": "ID of corresponding storage",
+                    "unit": ""
+                },
+                {
+                    "name": "bus",
+                    "description": "id of associated bus",
+                    "unit": ""
+                },
+                {
+                    "name": "dispatch",
+                    "description": "Controllability of active power dispatch, must be flexible or variable.",
+                    "unit": ""
+                },
+                {
+                    "name": "control",
+                    "description": "P,Q,V control strategy, must be PQ, PV or Slack.",
+                    "unit": ""
+                },
+                {
+                    "name": "p_nom",
+                    "description": "Nominal power",
+                    "unit": "MW"
+                },
+                {
+                    "name": "p_nom_extendable",
+                    "description": "Switch to allow capacity p_nom to be extended",
+                    "unit": ""
+                },
+                {
+                    "name": "p_nom_min",
+                    "description": "If p_nom is extendable, set its minimum value",
+                    "unit": ""
+                },
+                {
+                    "name": "p_nom_max",
+                    "description": "If p_nom is extendable, set its maximum value (e.g. limited by potential)",
+                    "unit": ""
+                },
+                {
+                    "name": "p_min_pu_fixed",
+                    "description": "If control=flexible this gives the minimum output per unit of p_nom",
+                    "unit": "per unit"
+                },
+                {
+                    "name": "p_max_pu_fixed",
+                    "description": "If control=flexible this gives the maximum output per unit of p_nom, equivalent to a de-rating factor.",
+                    "unit": "per unit"
+                },
+                {
+                    "name": "sign",
+                    "description": "power sign",
+                    "unit": ""
+                },
+                {
+                    "name": "source",
+                    "description": "prime mover energy carrier",
+                    "unit": ""
+                },
+                {
+                    "name": "marginal_cost",
+                    "description": "Marginal cost of production of 1 MWh",
+                    "unit": "EUR/MWh"
+                },
+                {
+                    "name": "capital_cost",
+                    "description": "Capital cost of extending p_nom by 1 MW",
+                    "unit": "EUR/MW"
+                },
+                {
+                    "name": "efficiency",
+                    "description": "Ratio between primary energy and electrical energy",
+                    "unit": "per unit"
+                },
+                {
+                    "name": "soc_initial",
+                    "description": "State of charge before the snapshots in the OPF.",
+                    "unit": "MWh"
+                },
+                {
+                    "name": "soc_cyclic",
+                    "description": "Switch: if True, then state_of_charge_initial is ignored and the initial state of charge is set to the final state of charge for the group of snapshots in the OPF",
+                    "unit": ""
+                },
+                {
+                    "name": "max_hours",
+                    "description": "Maximum state of charge capacity in terms of hours at full output capacity p_nom",
+                    "unit": "hours"
+                },
+                {
+                    "name": "efficiency_store",
+                    "description": "Efficiency of storage on the way into the storage",
+                    "unit": "per unit"
+                },
+                {
+                    "name": "efficiency_dispatch",
+                    "description": "Efficiency of storage on the way out of the storage",
+                    "unit": "per unit"
+                },
+                {
+                    "name": "standing_loss",
+                    "description": "Losses per hour to state of charge",
+                    "unit": "per unit"
+                }
+            ]
+        }
+    ],
+    "metadata_version": "1.3"
+}';
 
 -- select description
 SELECT obj_description('grid.ego_pf_hv_storage' ::regclass) ::json;
@@ -1494,40 +3171,118 @@ ALTER TABLE	grid.ego_pf_hv_storage_pq_set OWNER TO oeuser;
 */
 -- metadata
 COMMENT ON TABLE grid.ego_pf_hv_storage_pq_set IS '{
-	"title": "eGo hv powerflow - storage time series",
-	"description": "Time series of storages relevant for eGo hv powerflow",
-	"language": [ "eng" ],
-	"reference_date": " ",
-	"sources": [
-		{"name": "eGo dataprocessing", "description": " ", "url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)", "copyright": "© Europa-Universitaet Flensburg, Center for Sustainable Energy Systems"},
-		{"name": "oemof feedinlib", "description": " ", "url": "https://github.com/oemof/feedinlib", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)", "copyright": "© oemof developing group"}		 ],
-	"spatial": [
-
-		{"extend": "Germany",
-		"resolution": ""} ],
-	"license": [
-		{"id": "ODbL-1.0",
-		"name": "Open Data Commons Open Database License 1.0",
-		"version": "1.0",
-		"url": "https://opendatacommons.org/licenses/odbl/1.0/",
-		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
-		"copyright": "© Flensburg University of Applied Sciences, Center for Sustainable Energy Systems"} ],
-	"contributors": [
-		{"name": "IlkaCu", "email": "", "date": "26.04.2017", "comment": "Create table"}],
-	"resources": [{
-		"schema": {
-			"fields": [
-				{"name": "version", "description": "version id", "unit": "" },
-				{"name": "scn_name", "description": "name of corresponding scenario", "unit": "" },
-                  		{"name": "storage_id", "description": "ID of corresponding storage", "unit": "" },
-                   		{"name": "temp_id", "description": "ID of temporal resolution", "unit": "" },     
-                   		{"name": "p_set", "description": "active power set point (for PF)", "unit": "MW" },     
-                   		{"name": "q_set", "description": "reactive power set point (for PF)", "unit": "MVar" },     
-                   		{"name": "p_min_pu", "description": "If control=variable this gives the minimum output for each snapshot per unit of p_nom for the OPF", "unit": "per unit" },     
-                   		{"name": "p_max_pu", "description": "If control=variable this gives the maximum output for each snapshot per unit of p_nom for the OPF", "unit": "per unit" }, 
-				{"name": "soc_set", "description": "State of charge set points for snapshots in the OPF", "unit": "MWh" },
-                   		{"name": "inflow", "description": "Inflow to the state of charge, e.g. due to river inflow in hydro reservoir", "unit": "MW" } ]},
-	"meta_version": "1.2"}] }';
+    "title": "eGo hv powerflow - storage time series",
+    "description": "Time series of storages relevant for eGo hv powerflow",
+    "language": [ "eng" ],
+    "spatial": {
+        "location": "",
+        "extend": "Germany",
+        "resolution": ""
+    },
+    "temporal": {
+        "reference_date": " ",
+        "start": "",
+        "end": "",
+        "resolution": ""
+    },
+    "sources": [
+        {
+            "name": "eGo dataprocessing",
+            "description": " ",
+            "url": "https://github.com/openego/data_processing",
+            "license": "GNU Affero General Public License Version 3 (AGPL-3.0)",
+            "copyright": "\u00a9 Europa-Universitaet Flensburg, Center for Sustainable Energy Systems"
+        },
+        {
+            "name": "oemof feedinlib",
+            "description": " ",
+            "url": "https://github.com/oemof/feedinlib",
+            "license": "GNU Affero General Public License Version 3 (AGPL-3.0)",
+            "copyright": "\u00a9 oemof developing group"
+        }
+    ],
+    "license": {
+        "id": "ODbL-1.0",
+        "name": "Open Data Commons Open Database License 1.0",
+        "version": "1.0",
+        "url": "https://opendatacommons.org/licenses/odbl/1.0/",
+        "instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
+        "copyright": "\u00a9 Flensburg University of Applied Sciences, Center for Sustainable Energy Systems"
+    },
+    "contributors": [
+        {
+            "name": "IlkaCu",
+            "email": "",
+            "date": "26.04.2017",
+            "comment": "Create table"
+        },
+        {
+            "name": "KilianZimmerer",
+            "email": "",
+            "date": "2017-6-27",
+            "comment": "Update metadata to v1.3"
+        }
+    ],
+    "resources": [
+        {
+            "name": "grid.ego_pf_hv_storage_pq_set",
+            "fromat": "sql",
+            "fields": [
+                {
+                    "name": "version",
+                    "description": "version id",
+                    "unit": ""
+                },
+                {
+                    "name": "scn_name",
+                    "description": "name of corresponding scenario",
+                    "unit": ""
+                },
+                {
+                    "name": "storage_id",
+                    "description": "ID of corresponding storage",
+                    "unit": ""
+                },
+                {
+                    "name": "temp_id",
+                    "description": "ID of temporal resolution",
+                    "unit": ""
+                },
+                {
+                    "name": "p_set",
+                    "description": "active power set point (for PF)",
+                    "unit": "MW"
+                },
+                {
+                    "name": "q_set",
+                    "description": "reactive power set point (for PF)",
+                    "unit": "MVar"
+                },
+                {
+                    "name": "p_min_pu",
+                    "description": "If control=variable this gives the minimum output for each snapshot per unit of p_nom for the OPF",
+                    "unit": "per unit"
+                },
+                {
+                    "name": "p_max_pu",
+                    "description": "If control=variable this gives the maximum output for each snapshot per unit of p_nom for the OPF",
+                    "unit": "per unit"
+                },
+                {
+                    "name": "soc_set",
+                    "description": "State of charge set points for snapshots in the OPF",
+                    "unit": "MWh"
+                },
+                {
+                    "name": "inflow",
+                    "description": "Inflow to the state of charge, e.g. due to river inflow in hydro reservoir",
+                    "unit": "MW"
+                }
+            ]
+        }
+    ],
+    "metadata_version": "1.3"
+}';
 
 -- select description
 SELECT obj_description('grid.ego_pf_hv_storage_pq_set' ::regclass) ::json;
@@ -1559,34 +3314,86 @@ ALTER TABLE	grid.ego_pf_hv_temp_resolution OWNER TO oeuser;
 */
 -- metadata
 COMMENT ON TABLE grid.ego_pf_hv_temp_resolution IS '{
-	"title": "eGo hv powerflow - temp_resolution",
-	"description": "Temporal resolution in eGo hv powerflow",
-	"language": [ "eng" ],
-	"reference_date": " ",
-	"sources": [
-		{"name": "eGo dataprocessing", "description": " ", "url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)", "copyright": "© Flensburg University of Applied Sciences, Center for Sustainable Energy Systems"} ],
-	"spatial": [
-
-		{"extend": "",
-		"resolution": ""} ],
-	"license": [
-		{"id": "ODbL-1.0",
-		"name": "Open Data Commons Open Database License 1.0",
-		"version": "1.0",
-		"url": "https://opendatacommons.org/licenses/odbl/1.0/",
-		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
-		"copyright": "© Flensburg University of Applied Sciences, Center for Sustainable Energy Systems"} ],
-	"contributors": [
-		{"name": "IlkaCu", "email": "", "date": "26.04.2017", "comment": "Create table"}],
-	"resources": [{
-		"schema": {
-			"fields": [
-				{"name": "version", "description": "version id", "unit": "" },
-				{"name": "temp_id", "description": "unique id", "unit": "" },
-                   		{"name": "timesteps", "description": "timestep", "unit": "" },
-                   		{"name": "resolution", "description": "temporal resolution", "unit": "" },
-                   		{"name": "start_time", "description": "start time with style: YYYY-MM-DD HH:MM:SS", "unit": "" } ]},
-	"meta_version": "1.2"}] }';
+    "title": "eGo hv powerflow - temp_resolution",
+    "description": "Temporal resolution in eGo hv powerflow",
+    "language": [ "eng" ],
+    "spatial": {
+        "location": "",
+        "extend": "",
+        "resolution": ""
+    },
+    "temporal": {
+        "reference_date": " ",
+        "start": "",
+        "end": "",
+        "resolution": ""
+    },
+    "sources": [
+        {
+            "name": "eGo dataprocessing",
+            "description": " ",
+            "url": "https://github.com/openego/data_processing",
+            "license": "GNU Affero General Public License Version 3 (AGPL-3.0)",
+            "copyright": "\u00a9 Flensburg University of Applied Sciences, Center for Sustainable Energy Systems"
+        }
+    ],
+    "license": {
+        "id": "ODbL-1.0",
+        "name": "Open Data Commons Open Database License 1.0",
+        "version": "1.0",
+        "url": "https://opendatacommons.org/licenses/odbl/1.0/",
+        "instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
+        "copyright": "\u00a9 Flensburg University of Applied Sciences, Center for Sustainable Energy Systems"
+    },
+    "contributors": [
+        {
+            "name": "IlkaCu",
+            "email": "",
+            "date": "26.04.2017",
+            "comment": "Create table"
+        },
+        {
+            "name": "KilianZimmerer",
+            "email": "",
+            "date": "2017-6-27",
+            "comment": "Update metadata to v1.3"
+        }
+    ],
+    "resources": [
+        {
+            "name": "grid.ego_pf_hv_temp_resolution",
+            "fromat": "sql",
+            "fields": [
+                {
+                    "name": "version",
+                    "description": "version id",
+                    "unit": ""
+                },
+                {
+                    "name": "temp_id",
+                    "description": "unique id",
+                    "unit": ""
+                },
+                {
+                    "name": "timesteps",
+                    "description": "timestep",
+                    "unit": ""
+                },
+                {
+                    "name": "resolution",
+                    "description": "temporal resolution",
+                    "unit": ""
+                },
+                {
+                    "name": "start_time",
+                    "description": "start time with style: YYYY-MM-DD HH:MM:SS",
+                    "unit": ""
+                }
+            ]
+        }
+    ],
+    "metadata_version": "1.3"
+}';
 
 -- select description
 SELECT obj_description('grid.ego_pf_hv_temp_resolution' ::regclass) ::json;
@@ -1631,55 +3438,168 @@ ALTER TABLE	grid.ego_pf_hv_transformer OWNER TO oeuser;
 */
 -- metadata
 COMMENT ON TABLE grid.ego_pf_hv_transformer IS '{
-	"title": "eGo hv powerflow - transformer",
-	"description": "transformer in eGo hv powerflow",
-	"language": [ "eng" ],
-	"reference_date": " ",
-	"sources": [
-		{"name": "eGo dataprocessing", "description": " ", "url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)", "copyright": "© Flensburg University of Applied Sciences, Center for Sustainable Energy Systems"},
-		{"name": "OpenStreetMap", "description": " ", "url": "http://www.openstreetmap.org/", "license": "Open Database License (ODbL) v1.0", "copyright": "© OpenStreetMap contributors"}, 
-		{"name": "osmTGmod", "description": " ", "url": "https://github.com/openego/osmTGmod", "license": "Apache License 2.0", "copyright": "© Wuppertal Institut"}		 ],
-	"spatial": [
-
-		{"extend": "Germany",
-		"resolution": ""} ],
-	"license": [
-		{"id": "ODbL-1.0",
-		"name": "Open Data Commons Open Database License 1.0",
-		"version": "1.0",
-		"url": "https://opendatacommons.org/licenses/odbl/1.0/",
-		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
-		"copyright": "© NEXT ENERGY"} ],
-	"contributors": [
-		{"name": "IlkaCu", "email": "", "date": "26.04.2017", "comment": "Create table"}],
-	"resources": [{
-		"schema": {
-			"fields": [
-				{"name": "version", "description": "version id", "unit": "" },
-				{"name": "scn_name", "description": "name of corresponding scenario", "unit": "" },
-                  		{"name": "trafo_id", "description": "ID of line", "unit": "" },
-                   		{"name": "bus0", "description": "name of first bus to which branch is attached", "unit": "" },
-                   		{"name": "bus1", "description": "name of second bus to which branch is attached", "unit": "" },
-                   		{"name": "x", "description": "Series reactance", "unit": "Ohm" },
-                   		{"name": "r", "description": "Series resistance", "unit": "Ohm" },
-                   		{"name": "g", "description": "Shunt conductivity", "unit": "Siemens" }, 
-                   		{"name": "b", "description": "Shunt susceptance", "unit": "Siemens" }, 
-                   		{"name": "s_nom", "description": "Limit of apparent power which can pass through branch", "unit": "MVA" }, 
-                   		{"name": "s_nom_extendable", "description": "Switch to allow capacity s_nom to be extended", "unit": "" }, 
-                   		{"name": "s_nom_min", "description": "If s_nom is extendable, set its minimum value", "unit": "MVA" }, 
-                   		{"name": "s_nom_max", "description": "If s_nom is extendable in OPF, set its maximum value", "unit": "MVA" }, 
-				{"name": "tap_ratio", "description": "Ratio of per unit voltages at each bus", "unit": "" },
-                   		{"name": "phase_shift", "description": "Voltage phase angle shift", "unit": "degrees" },
-                   		{"name": "capital_cost", "description": "capital cost of extending s_nom by 1 MVA", "unit": "EUR/MVA" }, 
-                   		{"name": "geom", "description": "geometry that depict the real route of the line", "unit": "" }, 
-                   		{"name": "topo", "description": "topology that depicts a direct connection between both busses", "unit": "..." } ]},
-	"meta_version": "1.2"}] }';
+    "title": "eGo hv powerflow - transformer",
+    "description": "transformer in eGo hv powerflow",
+    "language": [ "eng" ],
+    "spatial": {
+        "location": "",
+        "extend": "Germany",
+        "resolution": ""
+    },
+    "temporal": {
+        "reference_date": " ",
+        "start": "",
+        "end": "",
+        "resolution": ""
+    },
+    "sources": [
+        {
+            "name": "eGo dataprocessing",
+            "description": " ",
+            "url": "https://github.com/openego/data_processing",
+            "license": "GNU Affero General Public License Version 3 (AGPL-3.0)",
+            "copyright": "\u00a9 Flensburg University of Applied Sciences, Center for Sustainable Energy Systems"
+        },
+        {
+            "name": "OpenStreetMap",
+            "description": " ",
+            "url": "http://www.openstreetmap.org/",
+            "license": "Open Database License (ODbL) v1.0",
+            "copyright": "\u00a9 OpenStreetMap contributors"
+        },
+        {
+            "name": "osmTGmod",
+            "description": " ",
+            "url": "https://github.com/openego/osmTGmod",
+            "license": "Apache License 2.0",
+            "copyright": "\u00a9 Wuppertal Institut"
+        }
+    ],
+    "license": {
+        "id": "ODbL-1.0",
+        "name": "Open Data Commons Open Database License 1.0",
+        "version": "1.0",
+        "url": "https://opendatacommons.org/licenses/odbl/1.0/",
+        "instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
+        "copyright": "© DLR Institute for Networked Energy Systems"
+    },
+    "contributors": [
+        {
+            "name": "IlkaCu",
+            "email": "",
+            "date": "26.04.2017",
+            "comment": "Create table"
+        },
+        {
+            "name": "KilianZimmerer",
+            "email": "",
+            "date": "2017-6-27",
+            "comment": "Update metadata to v1.3"
+        }
+    ],
+    "resources": [
+        {
+            "name": "grid.ego_pf_hv_transformer",
+            "fromat": "sql",
+            "fields": [
+                {
+                    "name": "version",
+                    "description": "version id",
+                    "unit": ""
+                },
+                {
+                    "name": "scn_name",
+                    "description": "name of corresponding scenario",
+                    "unit": ""
+                },
+                {
+                    "name": "trafo_id",
+                    "description": "ID of line",
+                    "unit": ""
+                },
+                {
+                    "name": "bus0",
+                    "description": "name of first bus to which branch is attached",
+                    "unit": ""
+                },
+                {
+                    "name": "bus1",
+                    "description": "name of second bus to which branch is attached",
+                    "unit": ""
+                },
+                {
+                    "name": "x",
+                    "description": "Series reactance",
+                    "unit": "Ohm"
+                },
+                {
+                    "name": "r",
+                    "description": "Series resistance",
+                    "unit": "Ohm"
+                },
+                {
+                    "name": "g",
+                    "description": "Shunt conductivity",
+                    "unit": "Siemens"
+                },
+                {
+                    "name": "b",
+                    "description": "Shunt susceptance",
+                    "unit": "Siemens"
+                },
+                {
+                    "name": "s_nom",
+                    "description": "Limit of apparent power which can pass through branch",
+                    "unit": "MVA"
+                },
+                {
+                    "name": "s_nom_extendable",
+                    "description": "Switch to allow capacity s_nom to be extended",
+                    "unit": ""
+                },
+                {
+                    "name": "s_nom_min",
+                    "description": "If s_nom is extendable, set its minimum value",
+                    "unit": "MVA"
+                },
+                {
+                    "name": "s_nom_max",
+                    "description": "If s_nom is extendable in OPF, set its maximum value",
+                    "unit": "MVA"
+                },
+                {
+                    "name": "tap_ratio",
+                    "description": "Ratio of per unit voltages at each bus",
+                    "unit": ""
+                },
+                {
+                    "name": "phase_shift",
+                    "description": "Voltage phase angle shift",
+                    "unit": "degrees"
+                },
+                {
+                    "name": "capital_cost",
+                    "description": "capital cost of extending s_nom by 1 MVA",
+                    "unit": "EUR/MVA"
+                },
+                {
+                    "name": "geom",
+                    "description": "geometry that depict the real route of the line",
+                    "unit": ""
+                },
+                {
+                    "name": "topo",
+                    "description": "topology that depicts a direct connection between both busses",
+                    "unit": "..."
+                }
+            ]
+        }
+    ],
+    "metadata_version": "1.3"
+}';
 
 -- select description
 SELECT obj_description('grid.ego_pf_hv_transformer' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.2.10','result','grid','ego_pf_hv_transformer','ego_dp_structure_versioning.sql','hv pf transformer');
-
-
-
