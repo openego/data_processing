@@ -1558,6 +1558,12 @@ WHERE ST_Intersects(regions.geom, upt.geom)
 AND generation_subtype = 'wind_onshore'
 And upt.nuts is null;
 
+-- Change geom to SRID 4326
+ALTER TABLE  model_draft.ego_dp_supply_res_powerplant
+  ALTER COLUMN geom TYPE geometry(Point, 4326)
+USING ST_Transform(ST_SetSRID(geom,3035),4326);
+
+
 -- VACUUM FULL ANALYZE model_draft.ego_dp_supply_res_powerplant;
 -- MView for scenarios in dataprocessing/sql_snippets/ego_dp_powerflow_create_pp_mview.sql
 
