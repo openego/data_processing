@@ -1199,6 +1199,7 @@ GRANT ALL ON TABLE model_draft.ego_grid_pf_hv_busmap TO oeuser;
 -------------------------------------------------------------------
 ----------------------------- Comments ----------------------------
 -------------------------------------------------------------------
+/*
 COMMENT ON COLUMN model_draft.ego_grid_pf_hv_bus.bus_id IS 'Unit: n/a
 Description: Unique name
 Status: Input (required)';
@@ -1470,7 +1471,7 @@ Status: Input (optional)';
 COMMENT ON COLUMN model_draft.ego_grid_pf_hv_transformer.capital_cost IS 'Unit: currency/MVA
 Description: Capital cost of extending s_nom by 1 MVA.
 Status: Input (optional)';
-
+*/
 -------------------------------------------------------------------
 ----------------------------- INDEXING ----------------------------
 -------------------------------------------------------------------

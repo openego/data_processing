@@ -1,4 +1,4 @@
-﻿/*
+/*
 SQL Script to create mviews diyplaying power plants by scenario.
 
 __copyright__ = "Europa-Universität Flensburg - ZNES"
@@ -164,9 +164,10 @@ ALTER MATERIALIZED VIEW model_draft.ego_supply_res_powerplant_nep2035_mview
     OWNER TO oeuser;
 
 -- MView for eGo 100
+
 DROP MATERIALIZED VIEW IF EXISTS model_draft.ego_supply_res_powerplant_ego100_mview CASCADE;
 CREATE MATERIALIZED VIEW model_draft.ego_supply_res_powerplant_ego100_mview AS
-	SELECT
+	SELECT DISTINCT ON (id)
 	sub.*
 	FROM  ( 
 		SELECT DISTINCT ON (id)
@@ -183,10 +184,11 @@ CREATE MATERIALIZED VIEW model_draft.ego_supply_res_powerplant_ego100_mview AS
 		 And preversion = 'v0.3.0'
 		 AND electrical_capacity > 0
 		 AND generation_type in ('solar','wind')
+		 AND generation_subtype not in ('wind_offshore')
 		 ORDER BY id	
 		 ) as sub
 	UNION 
-	SELECT
+	SELECT DISTINCT ON (id)
 	sub2.*
 	FROM  ( 
 		SELECT  DISTINCT ON (id)
@@ -207,10 +209,10 @@ CREATE MATERIALIZED VIEW model_draft.ego_supply_res_powerplant_ego100_mview AS
 		 ORDER BY id	
 	) sub2
         UNION 
-	SELECT
+	SELECT DISTINCT ON (id)
 	sub3.*
 	FROM  ( 
-		SELECT  DISTINCT ON (id)
+		SELECT DISTINCT ON (id)
 		  *
 		FROM
 		  model_draft.ego_dp_supply_res_powerplant	
@@ -219,6 +221,7 @@ CREATE MATERIALIZED VIEW model_draft.ego_supply_res_powerplant_ego100_mview AS
 			FROM model_draft.ego_dp_supply_res_powerplant
 			Where scenario in ('NEP 2035')
 			AND generation_type not in ('biomass','gas','reservoir','run_of_river')
+			AND generation_subtype not in ('wind_offshore')
 			AND flag in ('commissioning', 'repowering')
 			Group BY id
 			Order by id)

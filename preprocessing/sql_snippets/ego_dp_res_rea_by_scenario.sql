@@ -15,7 +15,6 @@ Notes:
            Development of new renewable power plants by NEP 2035 scenario data
   Part III:
            Development of new renewable power plants by ego 100% scenario data
-
            
 Documentation:
 --------------
@@ -30,12 +29,8 @@ Documentation:
     'Status Quo'
     'NEP 2035'
     'eGo 100'
-
-
 */
 
-
-  
 --------------------------------------------------------------------------------
 -- Part II
 --          Develop renewable allocation by generation type, voltage level
@@ -44,8 +39,10 @@ Documentation:
 ---
 -- Insert CHP 2035 plants all as gas
 ---
+-- DELETE FROM model_draft.ego_dp_supply_res_powerplant WHERE scenario in('NEP 2035','eGo 100');
+
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_supply_res_powerplant_2035','ego_db_res_rea_by_scenario.sql',' ');  
+SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_small_chp_plant_germany','ego_db_res_rea_by_scenario.sql',' ');  
 
 Insert into model_draft.ego_dp_supply_res_powerplant 
 	SELECT
@@ -72,7 +69,7 @@ Insert into model_draft.ego_dp_supply_res_powerplant
 	  Null as voltage_level_var,
 	  Null as network_node ,
 	  Null as power_plant_id,
-	  Null as source,
+	  'chp_small' as source,
 	  comment,
 	  ST_Transform(geom,3035) as geom,                                   
 	  Null as subst_id,
@@ -101,24 +98,18 @@ Insert into model_draft.ego_dp_supply_res_powerplant
 UPDATE model_draft.ego_dp_supply_res_powerplant as upt
 set nuts = regions.nuts
 from 
-  orig_geo_vg250.vg250_2_lan_nuts_view as regions
+  boundaries.bkg_vg250_2_lan_nuts_view as regions
 WHERE ST_Intersects(regions.geom, upt.geom)
 AND upt.nuts is NULL;
 
 --- Use Buffer 1 km for units at the German Border 
 UPDATE model_draft.ego_dp_supply_res_powerplant as upt
 set nuts = regions.nuts::varchar
-	FROM
-	orig_geo_vg250.vg250_2_lan_nuts_view as regions,
-	(
-	SELECT *
-	FROM 
-	  model_draft.ego_dp_supply_res_powerplant
-	WHERE nuts is Null
-	) as aa
-WHERE ST_Intersects(aa.geom, ST_Buffer(regions.geom,1000))
-AND upt.id = aa.id
-AND upt.nuts IS NULL;
+FROM
+  boundaries.bkg_vg250_2_lan_nuts_view as regions
+WHERE ST_Intersects(upt.geom, ST_Buffer(regions.geom,1000))
+AND upt.nuts IS NULL
+AND generation_subtype not in ('wind_offshore');
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_dp_supply_res_powerplant','ego_db_res_rea_by_scenario.sql',' ');  
@@ -197,7 +188,7 @@ set comment = upt.comment || ', Method ProxToNow Biomass',
 	  ELSE (upt.electrical_capacity/ cap_sum)*scn.capacity*1000    
 	 END 
 FROM
-  orig_scenario_data.nep_2015_scenario_capacities as scn,
+  model_draft.ego_supply_scenario_capacities as scn,
   (SELECT nuts, sum(electrical_capacity) as cap_sum
    FROM model_draft.ego_supply_res_biomass_2035_temp
    WHERE generation_type = 'biomass'
@@ -207,7 +198,7 @@ WHERE scn.nuts = count.nuts
 AND   scn.nuts = upt.nuts 
 AND   upt.nuts = count.nuts
 AND   scn.generation_type = 'biomass' 
-AND   scn.scenario = 'NEP 2035' ;
+AND   scn.scenario_name = 'NEP 2035' ;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 -- SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_dp_supply_res_powerplant','ego_db_res_rea_by_scenario.sql',' ');  
@@ -303,7 +294,7 @@ INSERT INTO model_draft.ego_supply_res_hydro_2035_temp (preversion,id,start_up_d
 generation_subtype, lon, lat, voltage_level, network_node, source, comment, geom, voltage_level_var, subst_id, otg_id,un_id,scenario,flag)
 SELECT
   'v0.3.0'::text as preversion,
-  b.max +row_number() over (ORDER BY gid) as id,       
+  b.max +row_number() over (ORDER BY id) as id,       
   '2034-12-31 00:00:00' as start_up_date,			  
   a.capacity *1000  as electrical_capacity,  	         -- MW -> kW
    a.fuel as generation_type,		 
@@ -322,19 +313,20 @@ SELECT
   'NEP 2035'::text as scenario,
   'repowering'::text as flag				
 FROM
-  model_draft.ego_supply_conv_powerplant a,
+   model_draft.ego_dp_supply_conv_powerplant a,
   (
     SELECT max(id) as max
     FROM 	model_draft.ego_dp_supply_res_powerplant
   ) as b
 WHERE
-fuel in ('reservoir','run_of_river');
+fuel in ('reservoir','run_of_river')
+AND scenario ='Status Quo';
 
 -- set nuts
 UPDATE model_draft.ego_supply_res_hydro_2035_temp as upt
 set nuts = regions.nuts
 from 
-  orig_geo_vg250.vg250_2_lan_nuts_view as regions
+  boundaries.bkg_vg250_2_lan_nuts_view as regions
 WHERE ST_Intersects(regions.geom, upt.geom)
 and UPT.NUTS IS NULL;
 
@@ -342,7 +334,7 @@ and UPT.NUTS IS NULL;
 UPDATE model_draft.ego_supply_res_hydro_2035_temp as upt
 set nuts = regions.nuts
 from 
-  orig_geo_vg250.vg250_2_lan_nuts_view as regions
+  boundaries.bkg_vg250_2_lan_nuts_view as regions
 WHERE ST_Intersects(St_Buffer(upt.geom,100), regions.geom)
 AND upt.nuts  IS NULL
 AND generation_type in ('reservoir','hydro','run_of_river');
@@ -360,7 +352,7 @@ set comment = upt.comment || ', Method ProxToNow Hydro',
 	  ELSE (upt.electrical_capacity/ cap_sum)*scn.capacity*1000    
 	 END 
 FROM
-  orig_scenario_data.nep_2015_scenario_capacities as scn,
+  model_draft.ego_supply_scenario_capacities as scn,
   (SELECT nuts, sum(electrical_capacity) as cap_sum
    FROM model_draft.ego_supply_res_hydro_2035_temp
    WHERE generation_type in ('reservoir','hydro','run_of_river')
@@ -393,9 +385,6 @@ Step 3 add new PV at center of municipality polygon
 Step 4 add volatage level, etc.
 */
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_supply_res_pv_to_region_temp','ego_db_res_rea_by_scenario.sql',' ');  
-
 -- Nep 2035 Photovoltaic
 -- Step 0
 DROP TABLE IF EXISTS 	model_draft.ego_supply_res_pv_to_region_temp CASCADE;
@@ -413,6 +402,9 @@ CREATE TABLE 		model_draft.ego_supply_res_pv_to_region_temp
 
 -- grant (oeuser)
 ALTER TABLE model_draft.ego_supply_res_pv_to_region_temp OWNER TO oeuser;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_supply_res_pv_to_region_temp','ego_db_res_rea_by_scenario.sql',' ');  
 
 INSERT INTO model_draft.ego_supply_res_pv_to_region_temp (re_id,subst_id,otg_id,un_id)
 	SELECT
@@ -462,8 +454,7 @@ AND A.nuts IS NULL;
 -- NEP 2035 Photovoltaic
 -- Step 1
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_supply_res_pv_2035_germany_mun_temp','ego_db_res_rea_by_scenario.sql',' ');  
+
 
 DROP SEQUENCE IF EXISTS model_draft.ego_supply_res_pv_2035_germany_mun_id_seq;
 CREATE SEQUENCE model_draft.ego_supply_res_pv_2035_germany_mun_id_seq START 1;
@@ -484,6 +475,10 @@ CREATE TABLE 		model_draft.ego_supply_res_pv_2035_germany_mun_temp
 
 -- grant (oeuser)
 ALTER TABLE model_draft.ego_supply_res_pv_2035_germany_mun_temp OWNER TO oeuser;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_supply_res_pv_2035_germany_mun_temp','ego_db_res_rea_by_scenario.sql',' ');  
+
 
 Insert into model_draft.ego_supply_res_pv_2035_germany_mun_temp (pv_units,pv_cap_2014,voltage_level,rs,pv_avg_cap)
 SELECT
@@ -515,10 +510,10 @@ SELECT
  scn.nuts  				      -- nuts code federal state
  FROM
     boundaries.bkg_vg250_6_gem_rs_mview A,
-    orig_scenario_data.nep_2015_scenario_capacities scn
+    model_draft.ego_supply_scenario_capacities scn
 WHERE scn.nuts = substring(A.nuts from 1 for 3)
 AND   scn.generation_type = 'solar' 
-AND scn.scenario = 'NEP 2035' 
+AND scn.scenario_name = 'NEP 2035' 
 Group by substring(A.nuts from 1 for 3),rs,scn.capacity,scn.nuts
 Order by rs
 ) as pv_scn_2035,
@@ -555,10 +550,10 @@ SELECT
   scn.generation_type
 FROM
   boundaries.bkg_vg250_6_gem_rs_mview AA,
-  orig_scenario_data.nep_2015_scenario_capacities as scn
+  model_draft.ego_supply_scenario_capacities as scn
 WHERE scn.nuts = substring(AA.nuts from 1 for 3)
 AND  scn.generation_type = 'solar'
-AND scn.scenario = 'NEP 2035' 
+AND scn.scenario_name = 'NEP 2035' 
 group by scn.nuts, substring(AA.rs from 1 for 2), substring(AA.nuts from 1 for 3),
          scn.capacity,scn.generation_type
 ) as scn,
@@ -596,7 +591,7 @@ generation_type, generation_subtype, voltage_level, source, comment,geom, scenar
 	  A.rs,
 	  A.voltage_level,
 	  Case when A.pv_new_units = 0 Then A.pv_add_cap_2035
-	       else  unnest(array_fill(A.pv_avg_cap, Array[A.pv_new_units-1])) END as electrical_capacity ,    -- in kW 
+	       else  unnest(array_fill((A.pv_add_cap_2035/A.pv_new_units), Array[A.pv_new_units])) END as electrical_capacity ,    -- in kW 
 	 ST_Centroid(B.geom) as geom     
 	FROM 
 	  model_draft.ego_supply_res_pv_2035_germany_mun_temp A,
@@ -613,7 +608,7 @@ generation_type, generation_subtype, voltage_level, source, comment,geom, scenar
 UPDATE model_draft.ego_dp_supply_res_powerplant as upt
 set nuts = regions.nuts
 from 
-  orig_geo_vg250.vg250_2_lan_nuts_view as regions
+  boundaries.bkg_vg250_2_lan_nuts_view as regions
 WHERE ST_Intersects(regions.geom, upt.geom)
 AND generation_type = 'solar'
 AND upt.scenario =  'NEP 2035'
@@ -784,8 +779,6 @@ Step 4 add voltage level, etc.
 */
 
 -- Step 1
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_supply_res_wo_2035_germany_mun_temp','ego_db_res_rea_by_scenario.sql',' '); 
 
 DROP SEQUENCE IF EXISTS model_draft.ego_supply_res_wo_2035_germany_mun_id_seq CASCADE;
 CREATE SEQUENCE model_draft.ego_supply_res_wo_2035_germany_mun_id_seq START 1;
@@ -806,6 +799,9 @@ CREATE TABLE 		model_draft.ego_supply_res_wo_2035_germany_mun_temp
 
 -- grant (oeuser)
 ALTER TABLE model_draft.ego_supply_res_wo_2035_germany_mun_temp OWNER TO oeuser;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_supply_res_wo_2035_germany_mun_temp','ego_db_res_rea_by_scenario.sql',' '); 
 
 Insert into model_draft.ego_supply_res_wo_2035_germany_mun_temp (wo_units,wo_cap_2014,voltage_level,rs,wo_avg_cap)
 SELECT
@@ -835,10 +831,10 @@ SELECT
  scn.nuts  				      -- nuts code federal state
  FROM
     boundaries.bkg_vg250_6_gem_rs_mview A,
-    orig_scenario_data.nep_2015_scenario_capacities scn
+    model_draft.ego_supply_scenario_capacities scn
 WHERE scn.nuts = substring(A.nuts from 1 for 3)
 AND   scn.generation_type = 'wind_onshore' 
-AND   scn.scenario ='NEP 2035'
+AND   scn.scenario_name ='NEP 2035'
 AND   scn.state not in ('Deutschland')
 Group by substring(A.nuts from 1 for 3),rs,scn.capacity,scn.nuts
 ) as wo_scn_2035,
@@ -879,10 +875,10 @@ SELECT
   scn.generation_type
 FROM
   boundaries.bkg_vg250_6_gem_rs_mview AA,
-  orig_scenario_data.nep_2015_scenario_capacities as scn
+  model_draft.ego_supply_scenario_capacities as scn
 WHERE scn.nuts = substring(AA.nuts from 1 for 3)
 AND  scn.generation_type = 'wind_onshore'
-AND   scn.scenario ='NEP 2035'
+AND   scn.scenario_name ='NEP 2035'
 group by scn.nuts, substring(AA.rs from 1
  for 2), substring(AA.nuts from 1 for 3),
          scn.capacity,scn.generation_type, scn.state
@@ -896,7 +892,7 @@ Order by scn.state;
 UPDATE model_draft.ego_dp_supply_res_powerplant as upt
 set nuts = regions.nuts
 from 
-  orig_geo_vg250.vg250_2_lan_nuts_view as regions
+  boundaries.bkg_vg250_2_lan_nuts_view as regions
 WHERE ST_Intersects(regions.geom, upt.geom)
 AND generation_subtype = 'wind_onshore'
 AND upt.nuts IS NULL;
@@ -925,7 +921,7 @@ Insert into model_draft.ego_dp_supply_res_powerplant (preversion,id,start_up_dat
 	  A.rs,
 	  A.voltage_level,
 	  Case when A.wo_new_units = 0 Then A.wo_add_cap_2035
-	       else  unnest(array_fill(A.wo_avg_cap, Array[A.wo_new_units-1])) END as electrical_capacity ,    -- in kW 
+	       else  unnest(array_fill((A.wo_add_cap_2035/A.wo_new_units), Array[A.wo_new_units])) END as electrical_capacity ,    -- in kW 
 	 ST_Centroid(B.geom) as geom     
 	FROM 
 	  model_draft.ego_supply_res_wo_2035_germany_mun_temp A,
@@ -942,20 +938,10 @@ Insert into model_draft.ego_dp_supply_res_powerplant (preversion,id,start_up_dat
 UPDATE model_draft.ego_dp_supply_res_powerplant as upt
 set nuts = regions.nuts
 from 
-  orig_geo_vg250.vg250_2_lan_nuts_view as regions
+  boundaries.bkg_vg250_2_lan_nuts_view as regions
 WHERE ST_Intersects(regions.geom, upt.geom)
 AND generation_subtype = 'wind_onshore'
 AND scenario ='NEP 2035';
-
----
--- Delete section
--- Drop temps
-DROP TABLE IF EXISTS model_draft.ego_supply_res_biomass_2035_temp CASCADE;
-DROP TABLE IF EXISTS model_draft.ego_supply_res_pv_to_region_temp CASCADE;
-DROP TABLE IF EXISTS model_draft.ego_supply_res_wo_2035_germany_mun_temp CASCADE;
-DROP TABLE IF EXISTS model_draft.ego_supply_res_hydro_2035_temp CASCADE;
-DROP TABLE IF EXISTS model_draft.ego_supply_res_pv_to_region_temp  CASCADE;
-DROP TABLE IF EXISTS model_draft.ego_supply_res_pv_2035_germany_mun_temp  CASCADE;
 
 -- VACUUM FULL ANALYZE model_draft.ego_dp_supply_res_powerplant;
 	  
@@ -995,7 +981,7 @@ set comment = upt.comment || ', Method ProxToNow Biomass',
 	  ELSE (upt.electrical_capacity/ cap_sum)*scn.capacity*1000    
 	 END 
 FROM
-  orig_scenario_data.nep_2015_scenario_capacities as scn,
+  model_draft.ego_supply_scenario_capacities as scn,
   (SELECT 'DE'::text as nuts, sum(electrical_capacity) as cap_sum
    FROM  model_draft.ego_dp_supply_res_powerplant 
    WHERE generation_type = 'biomass'
@@ -1005,7 +991,7 @@ WHERE scn.nuts = substring(count.nuts from 1 for 2)
 AND   scn.nuts = substring(upt.nuts from 1 for 2)
 AND   substring(upt.nuts from 1 for 2) = substring(count.nuts from 1 for 2)
 AND   scn.generation_type = 'biomass'
-AND   scn.scenario = 'eGo 100' ;
+AND   scn.scenario_name = 'eGo 100' ;
 
 -- create index GIST (geom)
 CREATE INDEX ego_supply_res_biomass_2050_temp_geom_idx
@@ -1094,7 +1080,7 @@ set comment = upt.comment || ', Method ProxToNow Hydro',
 	  ELSE (upt.electrical_capacity/ cap_sum)*scn.capacity*1000    
 	 END 
 FROM
-  orig_scenario_data.nep_2015_scenario_capacities as scn,
+  model_draft.ego_supply_scenario_capacities as scn,
   (SELECT 'DE'::text as nuts,  sum(electrical_capacity) as cap_sum
    FROM model_draft.ego_supply_res_hydro_2050_temp
    WHERE generation_subtype = 'hydro'
@@ -1104,7 +1090,7 @@ AND   scn.nuts = substring(upt.nuts from 1 for 2)
 AND   substring(upt.nuts from 1 for 2) = substring(count.nuts from 1 for 2)
 AND   scn.generation_type = 'run_of_river' 
 AND   upt.generation_subtype = 'hydro'
-AND   scn.scenario = 'eGo 100';
+AND   scn.scenario_name = 'eGo 100';
 
 -- insert data
 Insert into model_draft.ego_dp_supply_res_powerplant
@@ -1124,8 +1110,6 @@ Step 3 add new PV at center of municipality polygon
 Step 4 add volatage level, etc.
 */
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_supply_res_pv_to_region_temp','ego_db_res_rea_by_scenario.sql',' ');  
 
 -- eGo 100 Photovoltaic
 -- Step 0
@@ -1144,6 +1128,9 @@ CREATE TABLE 		model_draft.ego_supply_res_pv_to_region_temp
 
 -- grant (oeuser)
 ALTER TABLE model_draft.ego_supply_res_pv_to_region_temp OWNER TO oeuser;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_supply_res_pv_to_region_temp','ego_db_res_rea_by_scenario.sql',' ');  
 
 INSERT INTO model_draft.ego_supply_res_pv_to_region_temp (re_id,subst_id,otg_id,un_id)
 	SELECT
@@ -1198,9 +1185,6 @@ AND AA.re_id = A.re_id;
 -- Step 1
 ---
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_supply_res_pv_2050_germany_mun_temp','ego_db_res_rea_by_scenario.sql',' ');  
-
 DROP SEQUENCE IF EXISTS model_draft.ego_supply_res_pv_2050_germany_mun_id_seq CASCADE;
 CREATE SEQUENCE model_draft.ego_supply_res_pv_2050_germany_mun_id_seq START 1;
 
@@ -1220,6 +1204,10 @@ CREATE TABLE 		model_draft.ego_supply_res_pv_2050_germany_mun_temp
 
 -- grant (oeuser)
 ALTER TABLE model_draft.ego_supply_res_pv_2050_germany_mun_temp OWNER TO oeuser;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_supply_res_pv_2050_germany_mun_temp','ego_db_res_rea_by_scenario.sql',' ');  
+
 
 Insert into model_draft.ego_supply_res_pv_2050_germany_mun_temp (pv_units,pv_cap_2035,voltage_level,rs,pv_avg_cap)
 SELECT
@@ -1253,10 +1241,10 @@ SELECT
  scn.nuts  				      -- nuts code
  FROM
    boundaries.bkg_vg250_6_gem_rs_mview A,
-    orig_scenario_data.nep_2015_scenario_capacities scn
+    model_draft.ego_supply_scenario_capacities scn
 WHERE scn.nuts = substring(A.nuts from 1 for 2)
 AND   scn.generation_type = 'solar' 
-AND   scn.scenario = 'eGo 100'
+AND   scn.scenario_name = 'eGo 100'
 Group by fs_cap_2050 ,scn.nuts
 ) as pv_scn_2050,
 (
@@ -1284,9 +1272,9 @@ SELECT
   scn.generation_type
 FROM
   boundaries.bkg_vg250_6_gem_rs_mview AA,
-  orig_scenario_data.nep_2015_scenario_capacities as scn
+  model_draft.ego_supply_scenario_capacities as scn
 WHERE scn.generation_type = 'solar'
-AND   scn.scenario = 'eGo 100'
+AND   scn.scenario_name = 'eGo 100'
 group by scn.nuts,  substring(AA.nuts from 1 for 2),
          scn.capacity,scn.generation_type
 ) as scn,
@@ -1297,7 +1285,7 @@ Group by scn.capacity_2050;
 UPDATE model_draft.ego_dp_supply_res_powerplant as upt
 set nuts = regions.nuts
 from 
-  orig_geo_vg250.vg250_2_lan_nuts_view as regions
+  boundaries.bkg_vg250_2_lan_nuts_view as regions
 WHERE ST_Intersects(regions.geom, upt.geom)
 AND generation_type = 'solar'
 AND upt.scenario in (  'Status Quo','NEP 2035')
@@ -1333,7 +1321,7 @@ generation_type, generation_subtype, voltage_level, source, comment,geom, scenar
 	  A.rs,
 	  A.voltage_level,
 	  Case when A.pv_new_units = 0 Then A.pv_add_cap_2050
-	       else  unnest(array_fill(A.pv_avg_cap, Array[A.pv_new_units-1])) END as electrical_capacity ,    -- in kW 
+	       else  unnest(array_fill((A.pv_add_cap_2050/A.pv_new_units), Array[A.pv_new_units])) END as electrical_capacity ,    -- in kW 
 	 ST_Centroid(B.geom) as geom     
 	FROM 
 	  model_draft.ego_supply_res_pv_2050_germany_mun_temp A,
@@ -1350,7 +1338,7 @@ generation_type, generation_subtype, voltage_level, source, comment,geom, scenar
 UPDATE model_draft.ego_dp_supply_res_powerplant as upt
 set nuts = regions.nuts
 from 
-  orig_geo_vg250.vg250_2_lan_nuts_view as regions
+  boundaries.bkg_vg250_2_lan_nuts_view as regions
 WHERE ST_Intersects(regions.geom, upt.geom)
 AND generation_type = 'solar'
 AND upt.nuts is NULL;
@@ -1386,10 +1374,10 @@ From
 (
 Select (scn.capacity*1000 - sum(base.electrical_capacity))/(scn.capacity*1000) as pp
 From
-      orig_scenario_data.nep_2015_scenario_capacities as scn,
+      model_draft.ego_supply_scenario_capacities as scn,
       model_draft.ego_supply_res_woff_2050_temp as base
 Where scn.generation_type = 'wind_offshore' 
-And  scn.scenario = 'eGo 100'
+And  scn.scenario_name = 'eGo 100'
 And  base.generation_subtype = 'wind_offshore'
 Group by scn.capacity
 ) as q1
@@ -1415,8 +1403,6 @@ Step 4 add voltage level, etc.
 */
 
 -- Step 1
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_supply_res_wo_2050_germany_mun_temp','ego_db_res_rea_by_scenario.sql',' '); 
 
 DROP SEQUENCE IF EXISTS model_draft.ego_supply_res_wo_2050_germany_mun_id_seq CASCADE;
 CREATE SEQUENCE model_draft.ego_supply_res_wo_2050_germany_mun_id_seq START 1;
@@ -1437,6 +1423,9 @@ CREATE TABLE 		model_draft.ego_supply_res_wo_2050_germany_mun_temp
 
 -- grant (oeuser)
 ALTER TABLE model_draft.ego_supply_res_wo_2050_germany_mun_temp OWNER TO oeuser;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_supply_res_wo_2050_germany_mun_temp','ego_db_res_rea_by_scenario.sql',' '); 
 
 Insert into model_draft.ego_supply_res_wo_2050_germany_mun_temp (wo_units, wo_cap_2035, voltage_level,rs,wo_avg_cap)
 SELECT
@@ -1467,10 +1456,10 @@ SELECT
  scn.nuts  				      -- nuts code federal state
  FROM
     boundaries.bkg_vg250_6_gem_rs_mview A,
-    orig_scenario_data.nep_2015_scenario_capacities scn
+    model_draft.ego_supply_scenario_capacities scn
 WHERE scn.nuts = substring(A.nuts from 1 for 2)
 AND   scn.generation_type = 'wind_onshore' 
-And   scn.scenario = 'eGo 100'
+And   scn.scenario_name = 'eGo 100'
 Group by substring(A.nuts from 1 for 2),scn.capacity,scn.nuts
 ) as wo_scn_2050,
 (
@@ -1503,10 +1492,10 @@ SELECT
   scn.generation_type
 FROM
   boundaries.bkg_vg250_6_gem_rs_mview AA,
-  orig_scenario_data.nep_2015_scenario_capacities as scn
+  model_draft.ego_supply_scenario_capacities as scn
 WHERE scn.nuts = substring(AA.nuts from 1 for 2)
 AND  scn.generation_type = 'wind_onshore'
-And  scn.scenario = 'eGo 100'
+And  scn.scenario_name = 'eGo 100'
 group by scn.nuts, substring(AA.nuts from 1 for 2),
          scn.capacity,scn.generation_type, scn.state
 ) as scn,
@@ -1518,7 +1507,7 @@ Order by scn.state;
 UPDATE model_draft.ego_dp_supply_res_powerplant as upt
 set nuts = regions.nuts
 from 
-  orig_geo_vg250.vg250_2_lan_nuts_view as regions
+  boundaries.bkg_vg250_2_lan_nuts_view as regions
 WHERE ST_Intersects(regions.geom, upt.geom)
 AND generation_subtype = 'wind_onshore'
 AND upt.nuts is Null;
@@ -1547,7 +1536,7 @@ Insert into model_draft.ego_dp_supply_res_powerplant (preversion,id,start_up_dat
 	  A.rs,
 	  A.voltage_level,
 	  Case when A.wo_new_units = 0 Then A.wo_add_cap_2050
-	       else  unnest(array_fill(A.wo_avg_cap, Array[A.wo_new_units-1])) END as electrical_capacity ,    -- in kW 
+	       else  unnest(array_fill((A.wo_add_cap_2050/A.wo_new_units), Array[A.wo_new_units])) END as electrical_capacity ,    -- in kW 
 	 ST_Centroid(B.geom) as geom     
 	FROM 
 	  model_draft.ego_supply_res_wo_2050_germany_mun_temp A,
@@ -1564,7 +1553,7 @@ Insert into model_draft.ego_dp_supply_res_powerplant (preversion,id,start_up_dat
 UPDATE model_draft.ego_dp_supply_res_powerplant as upt
 set nuts = regions.nuts
 from 
-  orig_geo_vg250.vg250_2_lan_nuts_view as regions
+  boundaries.bkg_vg250_2_lan_nuts_view as regions
 WHERE ST_Intersects(regions.geom, upt.geom)
 AND generation_subtype = 'wind_onshore'
 And upt.nuts is null;
@@ -1572,14 +1561,25 @@ And upt.nuts is null;
 -- Change geom to SRID 4326
 ALTER TABLE  model_draft.ego_dp_supply_res_powerplant
   ALTER COLUMN geom TYPE geometry(Point, 4326)
-    USING ST_Transform(ST_SetSRID(geom,3035),4326);
+USING ST_Transform(ST_SetSRID(geom,3035),4326);
 
--- reset values
-Update model_draft.ego_dp_supply_res_powerplant
-  set   rea_sort = NULL,
-        rea_flag = NULL,
-	rea_geom_line = NULL,
-	rea_geom_new = NULL;
 
 -- VACUUM FULL ANALYZE model_draft.ego_dp_supply_res_powerplant;
 -- MView for scenarios in dataprocessing/sql_snippets/ego_dp_powerflow_create_pp_mview.sql
+
+-- Delete section
+-- Drop temps
+/*
+DROP TABLE IF EXISTS model_draft.ego_supply_res_biomass_2035_temp CASCADE;
+DROP TABLE IF EXISTS model_draft.ego_supply_res_pv_to_region_temp CASCADE;
+DROP TABLE IF EXISTS model_draft.ego_supply_res_wo_2035_germany_mun_temp CASCADE;
+DROP TABLE IF EXISTS model_draft.ego_supply_res_hydro_2035_temp CASCADE;
+DROP TABLE IF EXISTS model_draft.ego_supply_res_pv_to_region_temp  CASCADE;
+DROP TABLE IF EXISTS model_draft.ego_supply_res_pv_2035_germany_mun_temp  CASCADE;
+DROP TABLE IF EXISTS model_draft.ego_supply_res_wo_2050_germany_mun_temp CASCADE; 
+DROP TABLE IF EXISTS model_draft.ego_supply_res_woff_2050_temp CASCADE;
+DROP TABLE IF EXISTS model_draft.ego_supply_res_biomass_2050_temp CASCADE;
+DROP TABLE IF EXISTS model_draft.ego_supply_res_pv_2050_germany_mun_temp CASCADE;
+DROP TABLE IF EXISTS model_draft.ego_supply_res_hydro_2050_temp CASCADE;
+DROP TABLE IF EXISTS model_draft.ego_supply_res_chp_2050_temp CASCADE;
+ */
