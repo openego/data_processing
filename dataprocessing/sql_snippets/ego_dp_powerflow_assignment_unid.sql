@@ -48,6 +48,8 @@ SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_supply_generator','
 
 -- Update power plant tables and add information on unified id of generators
 
+UPDATE model_draft.ego_dp_supply_res_powerplant SET un_id = NULL; 
+
 -- Update un_id from generators_total  
 UPDATE model_draft.ego_dp_supply_conv_powerplant a
 	SET 	un_id = b.un_id 

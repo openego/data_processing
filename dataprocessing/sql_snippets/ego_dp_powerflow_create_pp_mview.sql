@@ -1,4 +1,4 @@
-﻿/*
+/*
 SQL Script to create mviews diyplaying power plants by scenario.
 
 __copyright__ = "Europa-Universität Flensburg - ZNES"
