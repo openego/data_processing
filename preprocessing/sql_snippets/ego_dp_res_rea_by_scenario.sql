@@ -132,13 +132,13 @@ COMMENT ON TABLE model_draft.ego_dp_supply_res_powerplant IS '{
 		"license": "Creative Commons Namensnennung-Keine Bearbeitung 3.0 Deutschland Lizenz", 
 		"copyright": "© Bundesnetzagentur für Elektrizität, Gas, Telekommunikation, Post und Eisenbahnen; Pressestelle"}
 	        ],
-	"license": [
+	"license": 
 		{"id": "ODbL-1.0",
 		"name": "Open Data Commons Open Database License 1.0",
 		"version": "1.0",
 		"url": "https://opendatacommons.org/licenses/odbl/1.0/",
 		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
-		"copyright": "©  ZNES Europa-Universität Flensburg"} ],
+		"copyright": "©  ZNES Europa-Universität Flensburg"} ,
 	"contributors": [
 		{"name": "wolfbunke", "email": " ", 
 		"date": "01.06.2017", "comment": "Create and restructure scripts and table"}],
