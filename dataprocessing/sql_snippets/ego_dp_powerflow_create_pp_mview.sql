@@ -19,7 +19,7 @@ CREATE MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_sq_mview AS
     SELECT *
     FROM model_draft.ego_dp_supply_conv_powerplant
     WHERE scenario = 'Status Quo'
-    AND shutdown IS NULL or shutdown >= 2015
+    AND (shutdown IS NULL or shutdown >= 2015)
     AND capacity > 0 
     AND preversion = 'v0.3.0';
 
@@ -34,7 +34,7 @@ CREATE MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_nep2035_mview AS
     WHERE scenario = 'NEP 2035'
     AND   capacity > 0 
     AND   fuel not in ('hydro', 'run_of_river', 'reservoir')
-    AND shutdown IS NULL or shutdown >= 2034
+    AND   (shutdown IS NULL or shutdown >= 2034)
     AND   preversion = 'v0.3.0';
 
 ALTER MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_nep2035_mview
@@ -89,7 +89,7 @@ CREATE MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_ego100_mview AS
 	WHERE scenario in('NEP 2035')
 	AND fuel = 'pumped_storage'
 	AND capacity > 0
-	AND shutdown IS NULL or shutdown >= 2049
+	AND (shutdown IS NULL or shutdown >= 2049)
 	AND preversion = 'v0.3.0';
 
 ALTER MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_ego100_mview
