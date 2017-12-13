@@ -43,7 +43,8 @@ ALTER MATERIALIZED VIEW supply.ego_dp_conv_powerplant_nep2035_mview
 DROP MATERIALIZED VIEW IF EXISTS  supply.ego_dp_conv_powerplant_ego100_mview CASCADE;
 CREATE MATERIALIZED VIEW supply.ego_dp_conv_powerplant_ego100_mview AS
 	SELECT 
-	  preversion,
+	  version,
+      preversion,
 	  gid,
 	  bnetza_id,
 	  company,
@@ -96,9 +97,9 @@ ALTER MATERIALIZED VIEW supply.ego_dp_conv_powerplant_ego100_mview
     OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','supply','ego_dp_conv_powerplant_sq_mview','ego_dp_powerflow_create_pp_mview.sql',' ');
-SELECT ego_scenario_log('v0.3.0','output','supply','ego_dp_conv_powerplant_nep2035_mview','ego_dp_powerflow_create_pp_mview.sql',' ');
-SELECT ego_scenario_log('v0.3.0','output','supply','ego_dp_conv_powerplant_ego100_mview','ego_dp_powerflow_create_pp_mview.sql',' ');
+SELECT ego_scenario_log('v0.3.0','output','supply','ego_dp_conv_powerplant_sq_mview','ego_dp_versioning_mviews.sql',' ');
+SELECT ego_scenario_log('v0.3.0','output','supply','ego_dp_conv_powerplant_nep2035_mview','ego_dp_versioning_mviews.sql',' ');
+SELECT ego_scenario_log('v0.3.0','output','supply','ego_dp_conv_powerplant_ego100_mview','ego_dp_versioning_mviews.sql',' ');
 
 -- Create View with full dataset per scenario and renewables power plants
 
@@ -241,6 +242,6 @@ ALTER MATERIALIZED VIEW supply.ego_dp_res_powerplant_ego100_mview
     OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','supply','ego_dp_res_powerplant_sq_mview','ego_dp_powerflow_create_pp_mview.sql',' ');
-SELECT ego_scenario_log('v0.3.0','output','supply','ego_dp_res_powerplant_nep2035_mview','ego_dp_powerflow_create_pp_mview.sql',' ');
-SELECT ego_scenario_log('v0.3.0','output','supply','ego_dp_res_powerplant_ego100_mview','ego_dp_powerflow_create_pp_mview.sql',' ');
+SELECT ego_scenario_log('v0.3.0','output','supply','ego_dp_res_powerplant_sq_mview','ego_dp_versioning_mviews.sql',' ');
+SELECT ego_scenario_log('v0.3.0','output','supply','ego_dp_res_powerplant_nep2035_mview','ego_dp_versioning_mviews.sql',' ');
+SELECT ego_scenario_log('v0.3.0','output','supply','ego_dp_res_powerplant_ego100_mview','ego_dp_versioning_mviews.sql',' ');
