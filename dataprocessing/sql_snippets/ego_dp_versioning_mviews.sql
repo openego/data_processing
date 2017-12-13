@@ -135,6 +135,7 @@ CREATE MATERIALIZED VIEW supply.ego_dp_res_powerplant_nep2035_mview AS
 			Order by id)
 		 AND scenario = 'Status Quo'
 		 And preversion = 'v0.3.0'
+		 AND version = 'v0.3.0'
 		 AND electrical_capacity > 0
 		 ORDER BY id	
 		 ) as sub
