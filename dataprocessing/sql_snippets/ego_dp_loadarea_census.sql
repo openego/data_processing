@@ -10,7 +10,7 @@ __author__ 	= "Ludee"
 
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','input','society','destatis_zensus_population_per_ha_mview','ego_dp_loadarea_census.sql',' ');
+SELECT ego_scenario_log('v0.3.0','input','society','destatis_zensus_population_per_ha_mview','ego_dp_loadarea_census.sql',' ');
 
 -- zensus load
 DROP TABLE IF EXISTS  	model_draft.ego_demand_la_zensus CASCADE;
@@ -41,7 +41,7 @@ CREATE INDEX  	ego_demand_la_zensus_geom_idx
 	ON	model_draft.ego_demand_la_zensus USING GIST (geom);
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','input','model_draft','ego_demand_la_osm','ego_dp_loadarea_census.sql',' ');
+SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_demand_la_osm','ego_dp_loadarea_census.sql',' ');
 	
 -- population in osm loads
 UPDATE 	model_draft.ego_demand_la_zensus AS t1
@@ -96,7 +96,7 @@ COMMENT ON TABLE model_draft.ego_demand_la_zensus IS '{
 SELECT obj_description('model_draft.ego_demand_la_zensus' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_demand_la_zensus','ego_dp_loadarea_census.sql',' ');
+SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_demand_la_zensus','ego_dp_loadarea_census.sql',' ');
 
 
 -- cluster from zensus load lattice
@@ -187,7 +187,7 @@ COMMENT ON TABLE model_draft.ego_demand_la_zensus_cluster IS '{
 SELECT obj_description('model_draft.ego_demand_la_zensus_cluster' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_demand_la_zensus_cluster','ego_dp_loadarea_census.sql',' ');
+SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_demand_la_zensus_cluster','ego_dp_loadarea_census.sql',' ');
 
 
 -- zensus stats
@@ -212,4 +212,4 @@ CREATE MATERIALIZED VIEW         	model_draft.ego_society_zensus_per_la_mview AS
 ALTER TABLE	model_draft.ego_society_zensus_per_la_mview OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_society_zensus_per_la_mview','ego_dp_loadarea_census.sql',' ');
+SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_society_zensus_per_la_mview','ego_dp_loadarea_census.sql',' ');

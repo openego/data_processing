@@ -37,7 +37,8 @@ INSERT INTO	model_draft.ego_scenario (version,version_name,release,comment,times
 	('v0.2.7', 'debugbranch', 'FALSE', 'run blocks to debug', '2017-04-06' ),
 	('v0.2.8', 'eastereggs', 'FALSE', 'big and small eggs everywhere', '2017-04-13' ),
 	('v0.2.9', 'maihem', 'FALSE', 'several runs', '2017-05-01' ),
-	('v0.2.10', 'homerun', 'TRUE', 'finish in one run', '2017-05-22' );
+	('v0.2.10', 'homerun', 'TRUE', 'finish in one run', '2017-05-22' )
+	('v0.3.0', 'release v0.3', 'TRUE', ' ', '2017-07-10' );
 
 -- metadata
 COMMENT ON TABLE model_draft.ego_scenario IS '{
@@ -80,7 +81,7 @@ COMMENT ON TABLE model_draft.ego_scenario IS '{
 	"metadata_version": "1.3"}';
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_scenario','ego_dp_structure_scenariolog.sql','Update scenario list');
+SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_scenario','ego_dp_structure_scenariolog.sql','Update scenario list');
 
 
 /* -- logged versions
@@ -165,4 +166,4 @@ COMMENT ON TABLE model_draft.ego_scenario_log IS '{
 	"metadata_version": "1.3"}';
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_scenario_log','ego_dp_structure_scenariolog.sql','Reset scenario log');
+SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_scenario_log','ego_dp_structure_scenariolog.sql','Reset scenario log');

@@ -7,16 +7,16 @@ __url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
 __author__ 	= "IlkaCu" 
 */
 
-DROP SEQUENCE IF EXISTS model_draft.ego_grid_hv_electrical_neighbours_bus_id CASCADE;
-CREATE SEQUENCE model_draft.ego_grid_hv_electrical_neighbours_bus_id;
+DROP SEQUENCE IF EXISTS	 model_draft.ego_grid_hv_electrical_neighbours_bus_id CASCADE;
+CREATE SEQUENCE		 model_draft.ego_grid_hv_electrical_neighbours_bus_id;
 SELECT setval('model_draft.ego_grid_hv_electrical_neighbours_bus_id', (max(bus_id)+1)) FROM model_draft.ego_grid_pf_hv_bus;
 
-DROP SEQUENCE model_draft.ego_grid_hv_electrical_neighbours_line_id CASCADE;
-CREATE SEQUENCE model_draft.ego_grid_hv_electrical_neighbours_line_id;
+DROP SEQUENCE IF EXISTS  model_draft.ego_grid_hv_electrical_neighbours_line_id CASCADE;
+CREATE SEQUENCE		 model_draft.ego_grid_hv_electrical_neighbours_line_id;
 SELECT setval('model_draft.ego_grid_hv_electrical_neighbours_line_id', (max(line_id)+1)) FROM model_draft.ego_grid_pf_hv_line;
 
-DROP SEQUENCE model_draft.ego_grid_hv_electrical_neighbours_transformer_id CASCADE;
-CREATE SEQUENCE model_draft.ego_grid_hv_electrical_neighbours_transformer_id;
+DROP SEQUENCE IF EXISTS  model_draft.ego_grid_hv_electrical_neighbours_transformer_id CASCADE;
+CREATE SEQUENCE 	 model_draft.ego_grid_hv_electrical_neighbours_transformer_id;
 SELECT setval('model_draft.ego_grid_hv_electrical_neighbours_transformer_id', (max(trafo_id)+1)) FROM model_draft.ego_grid_pf_hv_transformer;
 
 
@@ -630,9 +630,9 @@ DELETE FROM model_draft.ego_grid_hv_electrical_neighbours_transformer WHERE x IS
 DELETE FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE v_nom <> 380 AND bus_id NOT IN (SELECT bus0 FROM model_draft.ego_grid_hv_electrical_neighbours_line );
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_grid_hv_electrical_neighbours_transformer','ego_dp_powerflow_electrical_neighbour.sql',' ');
-SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_grid_hv_electrical_neighbours_bus','ego_dp_powerflow_electrical_neighbour.sql',' ');
-SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_grid_hv_electrical_neighbours_line','ego_dp_powerflow_electrical_neighbour.sql',' ');
+SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_grid_hv_electrical_neighbours_transformer','ego_dp_powerflow_electrical_neighbour.sql',' ');
+SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_grid_hv_electrical_neighbours_bus','ego_dp_powerflow_electrical_neighbour.sql',' ');
+SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_grid_hv_electrical_neighbours_line','ego_dp_powerflow_electrical_neighbour.sql',' ');
 
 
 -- Include border crossing lines, transformer and buses for neighbouring states (electrical neighbours) for Status Quo

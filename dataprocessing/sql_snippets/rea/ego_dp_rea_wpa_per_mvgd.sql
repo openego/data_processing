@@ -20,7 +20,7 @@ CREATE TABLE         	model_draft.ego_supply_wpa (
 CONSTRAINT 	ego_supply_wpa_pkey PRIMARY KEY (id));
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','input','supply','vernetzen_wind_potential_area','ego_dp_rea_wpa_per_mvgd.sql',' ');
+SELECT ego_scenario_log('v0.3.0','input','supply','vernetzen_wind_potential_area','ego_dp_rea_wpa_per_mvgd.sql',' ');
 
 -- insert wpa dump
 INSERT INTO     model_draft.ego_supply_wpa (geom)
@@ -37,7 +37,7 @@ CREATE INDEX 	ego_supply_wpa_geom_idx
 ALTER TABLE	model_draft.ego_supply_wpa OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','temp','model_draft','ego_supply_wpa','ego_dp_rea_wpa_per_mvgd.sql',' ');
+SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_supply_wpa','ego_dp_rea_wpa_per_mvgd.sql',' ');
  */
 /* -- validate (geom)
 DROP VIEW IF EXISTS	model_draft.ego_supply_wpa_error_geom_view CASCADE;
@@ -68,8 +68,8 @@ CREATE TABLE         	model_draft.ego_supply_wpa_per_mvgd (
 CONSTRAINT 	ego_supply_wpa_per_mvgd_pkey PRIMARY KEY (id));
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','input','model_draft','ego_grid_mv_griddistrict','ego_dp_rea_wpa_per_mvgd.sql',' ');
-SELECT ego_scenario_log('v0.2.10','input','supply','vernetzen_wind_potential_area','ego_dp_rea_wpa_per_mvgd.sql',' ');
+SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_grid_mv_griddistrict','ego_dp_rea_wpa_per_mvgd.sql',' ');
+SELECT ego_scenario_log('v0.3.0','input','supply','vernetzen_wind_potential_area','ego_dp_rea_wpa_per_mvgd.sql',' ');
 
 -- insert wpa per mv-griddistrict
 WITH	wpa_dump AS (
@@ -114,7 +114,7 @@ COMMENT ON TABLE model_draft.ego_supply_wpa_per_mvgd IS '{
 	"language": [ "eng" ],
 	"reference_date": "",
 	"sources": [
-		{"name": "eGo dataprocessing", "description": "v0.2.10", "url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)", "copyright": " " },
+		{"name": "eGo dataprocessing", "description": "v0.3.0", "url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)", "copyright": " " },
 		{"name": "VerNetzen - Wind potential Area", "description": " ", "url": "http://oep.iks.cs.ovgu.de/dataedit/view/supply/vernetzen_wind_potential_area", "license": "ODbL-1.0", "copyright": "© VerNetzen"} ],
 	"spatial": [
 		{"extend": "Germany",
@@ -134,7 +134,7 @@ COMMENT ON TABLE model_draft.ego_supply_wpa_per_mvgd IS '{
 		{"name": "Ludwig Hülk", "email": "ludwig.huelk@rl-institut.de",
 		"date": "25.12.2016", "comment": "Update to v0.2"},
 		{"name": "Ludwig Hülk", "email": "ludwig.huelk@rl-institut.de",
-		"date": "28.03.2017", "comment": "Update to v0.2.10"}],
+		"date": "28.03.2017", "comment": "Update to v0.3.0"}],
 	"resources": [{
 		"schema": {
 			"fields": [
@@ -148,7 +148,7 @@ COMMENT ON TABLE model_draft.ego_supply_wpa_per_mvgd IS '{
 SELECT obj_description('model_draft.ego_supply_wpa_per_mvgd' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_supply_wpa_per_mvgd','ego_dp_rea_wpa_per_mvgd.sql',' ');
+SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_supply_wpa_per_mvgd','ego_dp_rea_wpa_per_mvgd.sql',' ');
 
 
 -- DROP TABLE IF EXISTS  	model_draft.ego_supply_wpa CASCADE;
