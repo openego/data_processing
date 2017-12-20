@@ -1,4 +1,4 @@
-/*
+﻿/*
 Creates border crossing lines and buses for electrical neighbours
 
 __copyright__ 	= "Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems"
@@ -18,6 +18,11 @@ SELECT setval('model_draft.ego_grid_hv_electrical_neighbours_line_id', (max(line
 DROP SEQUENCE model_draft.ego_grid_hv_electrical_neighbours_transformer_id CASCADE;
 CREATE SEQUENCE model_draft.ego_grid_hv_electrical_neighbours_transformer_id;
 SELECT setval('model_draft.ego_grid_hv_electrical_neighbours_transformer_id', (max(trafo_id)+1)) FROM model_draft.ego_grid_pf_hv_transformer;
+
+
+DROP SEQUENCE model_draft.ego_grid_hv_electrical_neighbours_link_id CASCADE;
+CREATE SEQUENCE model_draft.ego_grid_hv_electrical_neighbours_link_id;
+SELECT setval('model_draft.ego_grid_hv_electrical_neighbours_link_id', (max(link_id)+1)) FROM model_draft.ego_grid_pf_hv_link;
 
 
 --- Create and fill table model_draft.ego_grid_hv_electrical_neighbours_bus
