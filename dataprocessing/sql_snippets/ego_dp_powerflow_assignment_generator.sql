@@ -149,6 +149,9 @@ COMMENT ON TABLE  model_draft.ego_supply_pf_generator_single IS
                     "Unit": "" },                        
                    {"Name": "aggr_id",
                     "Description": "aggregate id",
+                    "Unit": "" },                                                
+                   {"Name": "voltage_level",
+                    "Description": "voltage level to which the power plant is assigned",
                     "Unit": "" }],
 "Changes":[
                    {"Name": "Mario Kropshofer",
