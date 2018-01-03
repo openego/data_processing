@@ -298,9 +298,10 @@ COMMENT ON TABLE grid.ego_pf_hv_result_bus
 -- select description
 SELECT obj_description('grid.ego_pf_hv_result_bus' ::regclass) ::json;
 
+/*
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.3.0','result','grid','ego_pf_hv_result_bus','ego_dp_structure_versioning.sql','hv pf result buses');
-
+*/
 
 
 --DROP TABLE  IF EXISTS grid.ego_pf_hv_result_bus_t;
@@ -322,7 +323,7 @@ ALTER TABLE grid.ego_pf_hv_result_bus_t
 	ADD CONSTRAINT ego_pf_hv_result_bus_t_fkey FOREIGN KEY (result_id) 
 	REFERENCES grid.ego_pf_hv_result_meta(result_id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION;
 -- grant (oeuser)
-ALTER TABLE	grid.ego_pf_hv_result_bus_t_fkey OWNER TO oeuser;
+ALTER TABLE	grid.ego_pf_hv_result_bus_t OWNER TO oeuser;
 	
 COMMENT ON TABLE grid.ego_pf_hv_result_bus_t
   IS E'{
