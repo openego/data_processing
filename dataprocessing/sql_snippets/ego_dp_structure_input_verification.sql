@@ -37,7 +37,7 @@ CREATE TABLE            model_draft.ego_scenario_input (
     path            text,
     metadata_title          text,
     metadata_reference_date text,
-    metadata                text,
+    meta_data               text,
     CONSTRAINT ego_scenario_input_pkey PRIMARY KEY (id));
 
 -- grant (oeuser)
@@ -69,6 +69,7 @@ COMMENT ON TABLE model_draft.ego_scenario_input IS '{
         "copyright": "© Reiner Lemoine Institut"},
     "contributors": [
         {"name": "Ludee", "email": "", "date": "2017-10-26", "comment": "Create table and metadata" },
+        {"name": "Ludee", "email": "", "date": "2018-01-08", "comment": "Rename column metadata to meta_data" },
         {"name": "", "email": "", "date": "", "comment": ""} ],
     "resources": [
         {"name": "model_draft.ego_scenario_input",        
@@ -83,7 +84,7 @@ COMMENT ON TABLE model_draft.ego_scenario_input IS '{
             {"name": "path", "description": "Schema.Table", "unit": "none"},
             {"name": "metadata_title", "description": "Title from metadata", "unit": "none"},
             {"name": "metadata_reference_date", "description": "Reference date from metadata", "unit": "none"},
-            {"name": "metadata", "description": "Full metadat", "unit": "none"} ] } ],
+            {"name": "meta_data", "description": "Full metadat", "unit": "none"} ] } ],
     "metadata_version": "1.3"}';
 
 -- select description
@@ -94,7 +95,7 @@ SELECT ego_scenario_log('v0.3.0','setup','model_draft','ego_scenario_input','ego
 */
 
 -- insert version
-INSERT INTO     model_draft.ego_scenario_input(version,oid,database,table_schema,table_name,path,metadata_title,metadata_reference_date,metadata)
+INSERT INTO     model_draft.ego_scenario_input(version,oid,database,table_schema,table_name,path,metadata_title,metadata_reference_date,meta_data)
     SELECT  'v0.3.0' AS version,
             sub.oid,
             sub.database,
@@ -103,7 +104,7 @@ INSERT INTO     model_draft.ego_scenario_input(version,oid,database,table_schema
             sub.path,
             sub.metadata::json ->>'title' AS metadata_title,
             sub.metadata::json #>>'{temporal,reference_date}' AS metadata_reference_date,
-            sub.metadata
+            sub.metadata AS meta_data
     FROM    (SELECT    st.relid AS oid,
             table_catalog AS database,
             i.table_schema AS table_schema,
