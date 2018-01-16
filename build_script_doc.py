@@ -27,7 +27,7 @@ for subdir, dirs, files in os.walk('.'):
                     print('Fehler in %s - abort!'%path)
                 match = re.match(expr, lines)
                 if match:
-                    outpath = path = os.path.join('docs', fi.replace('.sql','.rst'))
+                    outpath = path = os.path.join('docs', subdir, fi.replace('.sql','.rst'))
                     directory = os.path.dirname(outpath)
                     if not os.path.exists(directory):
                         os.makedirs(directory)
