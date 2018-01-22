@@ -21,11 +21,11 @@ ALTER TABLE model_draft.ego_grid_pf_hv_extension_bus
 
 	
 INSERT INTO model_draft.ego_grid_pf_hv_extension_bus (bus_id, geom, bus_name, project ) 
-	SELECT nextval('model_draft.ego_grid_hv_electrical_neighbours_bus_id'), (SELECT ST_Transform(geom, 4326)), name, 'BBPlG'
+	SELECT nextval('model_draft.ego_grid_hv_extension_bus_id'), (SELECT ST_Transform(geom, 4326)), name, 'BBPlG'
 	FROM 	grid.bnetza_vorhabenpunkte_bbplg;
 	
 INSERT INTO model_draft.ego_grid_pf_hv_extension_bus (bus_id, geom, bus_name, project) 
-	SELECT nextval('model_draft.ego_grid_hv_electrical_neighbours_bus_id'), (SELECT ST_Transform(geom, 4326)), name, 'EnLAG'
+	SELECT nextval('model_draft.ego_grid_hv_extension_bus_id'), (SELECT ST_Transform(geom, 4326)), name, 'EnLAG'
 	FROM 	grid.bnetza_vorhabenpunkte_enlag;
 
 UPDATE model_draft.ego_grid_pf_hv_extension_bus
@@ -53,14 +53,14 @@ UPDATE model_draft.ego_grid_pf_hv_extension_bus a
 
 INSERT INTO model_draft.ego_grid_pf_hv_extension_bus (scn_name, bus_id, geom, current_type, v_nom, bus_name)
 VALUES	('extension_BE_NO_NEP 2035',
-	nextval('model_draft.ego_grid_hv_electrical_neighbours_bus_id'),
+	nextval('model_draft.ego_grid_hv_extension_bus_id'),
 	'0101000020E6100000351DBC74686A24405536F7CC1CFC4E40',
 	'AC',
 	380,
 	'center NO'),
 	
 	('extension_BE_NO_NEP 2035',
-	nextval('model_draft.ego_grid_hv_electrical_neighbours_bus_id'),
+	nextval('model_draft.ego_grid_hv_extension_bus_id'),
 	'0101000020E61000003851291763E8114098865E2D305B4940',
 	'AC',
 	320,
@@ -70,7 +70,7 @@ UPDATE model_draft.ego_grid_pf_hv_extension_bus a
 SET scn_name = CASE WHEN bus_name IN ('Wilster', 'Grenzkorridor IV', 'Oberzier', 'Bundesgrenze (BE)') THEN 'extension_BE_NO_NEP 2035' ELSE scn_name END;
 
 INSERT INTO model_draft.ego_grid_pf_hv_extension_bus (scn_name, bus_id, geom, current_type, v_nom, bus_name, project)
-SELECT 'extension_NEP', nextval('model_draft.ego_grid_hv_electrical_neighbours_bus_id'), geom, current_type, v_nom, bus_name, project FROM model_draft.ego_grid_pf_hv_extension_bus WHERE bus_name = 'Wilster';
+SELECT 'extension_NEP', nextval('model_draft.ego_grid_hv_extension_bus_id'), geom, current_type, v_nom, bus_name, project FROM model_draft.ego_grid_pf_hv_extension_bus WHERE bus_name = 'Wilster';
 
 UPDATE model_draft.ego_grid_pf_hv_extension_bus a 
 SET v_nom = 380
@@ -123,7 +123,7 @@ ALTER TABLE model_draft.ego_grid_pf_hv_extension_line
   OWNER TO postgres;
 
 INSERT INTO model_draft.ego_grid_pf_hv_extension_line (line_id, geom, project, project_id, v_nom, segment, bus0, bus1, cable, length, nova)
-	SELECT nextval('model_draft.ego_grid_hv_electrical_neighbours_line_id'),
+	SELECT nextval('model_draft.ego_grid_hv_extension_line_id'),
 	(SELECT ST_Transform(geom, 4326)), rechtsgrundlage, vorhabennummer,
 	(SELECT SUBSTRING(spannung  FROM '[0-9]+'):: int),
 	(SELECT SUBSTRING(abschnitt  FROM '[0-9]+'):: int),
@@ -142,7 +142,7 @@ UPDATE model_draft.ego_grid_pf_hv_extension_line
 		bus0 = (CASE WHEN bus0 IS NULL THEN (SELECT bus_id FROM model_draft.ego_grid_pf_hv_extension_bus WHERE bus_name = 'Parchim Süd') ELSE bus0 END);
 		
 INSERT INTO model_draft.ego_grid_pf_hv_extension_line (line_id, geom, project, project_id, v_nom, segment, bus0, bus1, cable, length, nova)
-	SELECT nextval('model_draft.ego_grid_hv_electrical_neighbours_line_id'),
+	SELECT nextval('model_draft.ego_grid_hv_extension_line_id'),
 	(SELECT ST_Transform(geom, 4326)), rechtsgrundlage, vorhabennummer,
 	(SELECT SUBSTRING(spannung  FROM '[0-9]+'):: int),
 	(SELECT SUBSTRING(abschnitt  FROM '[0-9]+'):: int),
@@ -257,7 +257,7 @@ ALTER TABLE model_draft.ego_grid_pf_hv_extension_link
 
 INSERT INTO model_draft.ego_grid_pf_hv_extension_link (scn_name, link_id, geom, project, project_id, v_nom, segment, bus0, bus1) 
 SELECT 'extension_NEP',
-	nextval('model_draft.ego_grid_hv_electrical_neighbours_link_id'),
+	nextval('model_draft.ego_grid_hv_extension_link_id'),
 	(SELECT ST_Transform(geom, 4326)),
 	rechtsgrundlage,
 	vorhabennummer,
@@ -270,7 +270,7 @@ WHERE technik = 'DC' AND vorhabennummer NOT IN (30,33);
 
 INSERT INTO model_draft.ego_grid_pf_hv_extension_link (scn_name, link_id, geom, project, project_id, segment, v_nom,  bus0, bus1) 
 SELECT 'extension_BE_NO_NEP 2035',
-	nextval('model_draft.ego_grid_hv_electrical_neighbours_link_id'),
+	nextval('model_draft.ego_grid_hv_extension_link_id'),
 	(SELECT ST_Transform(geom, 4326)),
 	rechtsgrundlage,
 	vorhabennummer,
@@ -295,7 +295,7 @@ WHERE project = 'BBPlG' AND project_id = 33;
 /*---- Insert border crossing links	
 INSERT INTO model_draft.ego_grid_pf_hv_extension_link  (scn_name, link_id, bus0, bus1, geom, length, p_nom)
 VALUES 	('extension_BE_NO_NEP 2035',
-	nextval('model_draft.ego_grid_hv_electrical_neighbours_link_id'),
+	nextval('model_draft.ego_grid_hv_extension_link_id'),
 	(SELECT bus_id FROM model_draft.ego_grid_pf_hv_extension_bus b WHERE b.bus_name = 'Grenzkorridor IV' AND b.scn_name = 'extension_BE_NO_NEP 2035'), 
 	(SELECT bus_id FROM model_draft.ego_grid_pf_hv_extension_bus WHERE geom = '0101000020E6100000351DBC74686A24405536F7CC1CFC4E40' AND scn_name = 'extension_BE_NO_NEP 2035'),
 	ST_Multi('0102000020E610000002000000301DBC74686A24405036F7CC1CFC4E40051BA7078E0B204041ACB82EE7304B40'),
@@ -303,7 +303,7 @@ VALUES 	('extension_BE_NO_NEP 2035',
 	1400),
 
 	('extension_BE_NO_NEP 2035',
-	nextval('model_draft.ego_grid_hv_electrical_neighbours_link_id'),
+	nextval('model_draft.ego_grid_hv_extension_link_id'),
 	(SELECT bus_id FROM model_draft.ego_grid_pf_hv_extension_bus WHERE bus_name = 'Bundesgrenze (BE)' AND scn_name = 'extension_BE_NO_NEP 2035'),
 	(SELECT bus_id FROM model_draft.ego_grid_pf_hv_extension_bus b WHERE b.geom = '0101000020E61000003851291763E8114098865E2D305B4940' AND scn_name = 'extension_BE_NO_NEP 2035'),
 	ST_Multi('0102000020E610000002000000B61FABB9DE7B1840B13DB1ABC95B49403D51291763E8114096865E2D305B4940'),
@@ -324,7 +324,7 @@ UPDATE model_draft.ego_grid_pf_hv_extension_link a
 		marginal_cost = 0;
 
 /*INSERT INTO model_draft.ego_grid_pf_hv_extension_link (link_id, geom, project, project_id, segment, p_nom, bus0, bus1, scn_name, length, v_nom, efficiency, topo)
-	SELECT nextval('model_draft.ego_grid_hv_electrical_neighbours_link_id'), geom, project, project_id, segment, p_nom, bus1, bus0, scn_name, length,  v_nom, efficiency, topo FROM model_draft.ego_grid_pf_hv_extension_link;
+	SELECT nextval('model_draft.ego_grid_hv_extension_link_id'), geom, project, project_id, segment, p_nom, bus1, bus0, scn_name, length,  v_nom, efficiency, topo FROM model_draft.ego_grid_pf_hv_extension_link;
 */
 
 
@@ -365,12 +365,12 @@ ALTER TABLE model_draft.ego_grid_pf_hv_extension_transformer
   OWNER TO postgres;
 
 INSERT INTO model_draft.ego_grid_pf_hv_extension_transformer (scn_name, trafo_id, tap_ratio, phase_shift, bus0, v0)
-SELECT scn_name, nextval('model_draft.ego_grid_hv_electrical_neighbours_transformer_id'),1, 0, bus0, v_nom
+SELECT scn_name, nextval('model_draft.ego_grid_hv_extension_transformer_id'),1, 0, bus0, v_nom
 FROM model_draft.ego_grid_pf_hv_extension_line
 WHERE bus0 NOT IN (SELECT bus1 FROM model_draft.ego_grid_pf_hv_extension_line WHERE scn_name != 'decommissioning_NEP') AND bus0 NOT IN (SELECT bus_id FROM model_draft.ego_grid_pf_hv_extension_bus WHERE project = 'delete');
 		
 INSERT INTO model_draft.ego_grid_pf_hv_extension_transformer (scn_name, trafo_id, tap_ratio, phase_shift, bus0, v0)
-SELECT scn_name, nextval('model_draft.ego_grid_hv_electrical_neighbours_transformer_id'), 1, 0, bus1, v_nom
+SELECT scn_name, nextval('model_draft.ego_grid_hv_extension_transformer_id'), 1, 0, bus1, v_nom
 FROM model_draft.ego_grid_pf_hv_extension_line
 WHERE  bus1 NOT IN (SELECT bus0 FROM model_draft.ego_grid_pf_hv_extension_line WHERE scn_name != 'decommissioning_NEP') AND bus1 NOT IN (SELECT bus_id FROM model_draft.ego_grid_pf_hv_extension_bus WHERE project = 'delete');
 
@@ -380,7 +380,7 @@ FROM model_draft.ego_grid_pf_hv_extension_line b
 WHERE a.bus0 = b.bus1 OR a.bus0 = b.bus0);
 
 INSERT INTO model_draft.ego_grid_pf_hv_extension_transformer (trafo_id, tap_ratio, phase_shift, scn_name, bus0, v0)
-SELECT 	nextval('model_draft.ego_grid_hv_electrical_neighbours_transformer_id'),
+SELECT 	nextval('model_draft.ego_grid_hv_extension_transformer_id'),
 	1, 0,
 	scn_name,
 	bus0,
@@ -390,7 +390,7 @@ WHERE bus0 NOT IN (SELECT bus_id FROM model_draft.ego_grid_pf_hv_bus)
 AND bus0 NOT IN (SELECT bus_id FROM model_draft.ego_grid_pf_hv_extension_bus WHERE geom IN ('0101000020E6100000351DBC74686A24405536F7CC1CFC4E40', '0101000020E61000003851291763E8114098865E2D305B4940'));
 
 INSERT INTO model_draft.ego_grid_pf_hv_extension_transformer (trafo_id, tap_ratio, phase_shift, scn_name, bus0, v0)
-SELECT nextval('model_draft.ego_grid_hv_electrical_neighbours_transformer_id'),
+SELECT nextval('model_draft.ego_grid_hv_extension_transformer_id'),
 	1, 0,
 	scn_name,
 	bus1,
@@ -449,7 +449,7 @@ WHERE (v1 = 220 AND v0=380) OR (v0 = 220 AND v1=380);
 --- Change all transformers with v0=v1 to lines
 
 INSERT INTO model_draft.ego_grid_pf_hv_extension_line (scn_name, line_id, bus0, bus1, geom, topo, v_nom, length, s_nom)
-SELECT  scn_name, nextval('model_draft.ego_grid_hv_electrical_neighbours_line_id'), bus0, bus1, geom, topo, v0, ST_Length(ST_GeographyFromText(ST_AsEWKT(geom)))/1000, s_min
+SELECT  scn_name, nextval('model_draft.ego_grid_hv_extension_line_id'), bus0, bus1, geom, topo, v0, ST_Length(ST_GeographyFromText(ST_AsEWKT(geom)))/1000, s_min
 FROM model_draft.ego_grid_pf_hv_extension_transformer WHERE v0 = v1;
 
 UPDATE model_draft.ego_grid_pf_hv_extension_line 
@@ -888,20 +888,22 @@ WHERE a.nova = '2 von 3' AND a.line_id < b.line_id AND a.line_id < c.line_id;
 
 
 -- Insert stublines to deleted lines
-INSERT INTO model_draft.ego_grid_pf_hv_extension_transformer (trafo_id, bus0, v0)
+INSERT INTO model_draft.ego_grid_pf_hv_extension_transformer (trafo_id, bus0, v0, capital_cost)
 (SELECT DISTINCT ON (bus_id)
-	nextval('model_draft.ego_grid_hv_electrical_neighbours_transformer_id'),  
+	nextval('model_draft.ego_grid_hv_extension_transformer_id'),  
 	bus_id,
-	b.v_nom
+	b.v_nom,
+	(CASE b.v_nom WHEN 110 THEN 5200000/(300*40) WHEN 220 THEN 8500000/(600*40) ELSE 0 END)
 FROM model_draft.ego_grid_pf_hv_bus b, model_draft.ego_grid_pf_hv_extension_line c  
 WHERE c.scn_name = 'decommissioning_NEP' AND ST_Touches(b.geom, c.geom) AND c.v_nom = b.v_nom AND b.scn_name = 'Status Quo');
 	
-INSERT INTO model_draft.ego_grid_pf_hv_extension_transformer (scn_name, trafo_id, bus0, v0)
+INSERT INTO model_draft.ego_grid_pf_hv_extension_transformer (scn_name, trafo_id, bus0, v0, capital_cost)
 (SELECT DISTINCT ON (bus_id)
 	'extension_NEP',
-	 nextval('model_draft.ego_grid_hv_electrical_neighbours_transformer_id'),
+	 nextval('model_draft.ego_grid_hv_extension_transformer_id'),
 	 bus_id,
-	 b.v_nom
+	 b.v_nom,
+	 5200000/(300*40)
 FROM model_draft.ego_grid_pf_hv_bus b
 WHERE (v_nom = 110 AND geom IN ('0101000020E6100000CA0F62BFC4FD214018163EFFE2FA4A40', '0101000020E6100000564589B8733922401DE884E04BFA4A40', '0101000020E61000005FE68585A460224085BB0E304EF44A40')));
 
@@ -972,17 +974,23 @@ UPDATE model_draft.ego_grid_pf_hv_extension_transformer
 SET	s_nom_min = s_nom,
 	s_nom_max = s_nom
 WHERE capital_cost = 0;
+	
+UPDATE model_draft.ego_grid_pf_hv_extension_transformer 
+SET	s_nom_min = 0,
+	s_nom_max = s_nom
+WHERE s_nom_max IS NULL;
 
 --- Change all transformers with v0=v1 to lines
 
 INSERT INTO model_draft.ego_grid_pf_hv_extension_line (line_id, bus0, bus1, geom, topo, v_nom, length, s_nom)
-SELECT  nextval('model_draft.ego_grid_hv_electrical_neighbours_line_id'),
+SELECT  nextval('model_draft.ego_grid_hv_extension_line_id'),
 	bus0,
 	bus1,
 	geom,
 	topo,
 	v0,
-	ST_Length(ST_GeographyFromText(ST_AsEWKT(geom)))/1000, s_min
+	ST_Length(ST_GeographyFromText(ST_AsEWKT(geom)))/1000,
+	s_min
 FROM model_draft.ego_grid_pf_hv_extension_transformer WHERE v0 = v1;
 
 UPDATE model_draft.ego_grid_pf_hv_extension_line 
@@ -1022,7 +1030,7 @@ SELECT 'extension_nep2035_b2', bus_id, v_nom, geom, project FROM model_draft.ego
 INSERT INTO model_draft.ego_grid_pf_hv_extension_bus (scn_name, bus_id, v_nom, geom, bus_name, project)
 	SELECT DISTINCT ON (geom) 
 		'extension_nep2035_b2',
-		nextval('model_draft.ego_grid_hv_electrical_neighbours_bus_id'),
+		nextval('model_draft.ego_grid_hv_extension_bus_id'),
 		380,
 		geom,
 		osm_name,
@@ -1032,7 +1040,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_extension_bus (scn_name, bus_id, v_nom, g
 INSERT INTO model_draft.ego_grid_pf_hv_extension_line (scn_name, line_id, bus0, bus1, v_nom, s_nom, project, nova, cables) 
 	SELECT
 		'extension_nep2035_b2',
-		nextval('model_draft.ego_grid_hv_electrical_neighbours_line_id'),
+		nextval('model_draft.ego_grid_hv_extension_line_id'),
 		CASE WHEN EXISTS (SELECT DISTINCT ON (bus_i) bus_i FROM grid.otg_ehvhv_bus_data WHERE startpunkt = osm_name AND spannung = base_kv) THEN (SELECT MIN(bus_i) FROM grid.otg_ehvhv_bus_data WHERE startpunkt = osm_name AND spannung = base_kv)
 			ELSE (SELECT bus_id FROM model_draft.ego_grid_pf_hv_extension_bus WHERE startpunkt = bus_name AND spannung = v_nom) END,
 		CASE WHEN EXISTS (SELECT DISTINCT ON (bus_i) bus_i FROM grid.otg_ehvhv_bus_data WHERE endpunkt = osm_name AND spannung = base_kv) THEN (SELECT MIN(bus_i) FROM grid.otg_ehvhv_bus_data WHERE endpunkt = osm_name AND spannung = base_kv)
@@ -1101,7 +1109,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_extension_line (scn_name, line_id, s_nom,
 
 INSERT INTO model_draft.ego_grid_pf_hv_extension_link (scn_name , link_id, p_nom, bus0, bus1, topo)
 	SELECT 'extension_nep2035_b2',
-		nextval('model_draft.ego_grid_hv_electrical_neighbours_link_id'),
+		nextval('model_draft.ego_grid_hv_extension_link_id'),
 		700,
 		(SELECT MIN(bus_i) FROM grid.otg_ehvhv_bus_data WHERE osm_name = 'Güstrow' AND base_kv = 380),
 		(SELECT MIN(bus_id) FROM model_draft.ego_grid_pf_hv_bus WHERE geom = '0101000020E6100000781E63B01D002E40A292E70A7AB74E40' AND v_nom = 380 ),
@@ -1120,7 +1128,7 @@ WHERE scn_name = 'extension_nep2035_b2';
 
 /*
 INSERT INTO model_draft.ego_grid_pf_hv_extension_link (link_id, geom, p_nom, bus0, bus1, scn_name, length, efficiency, topo, marginal_cost)
-SELECT	nextval('model_draft.ego_grid_hv_electrical_neighbours_link_id'),
+SELECT	nextval('model_draft.ego_grid_hv_extension_link_id'),
 	geom,
 	p_nom,
 	bus1,
@@ -1135,7 +1143,7 @@ FROM model_draft.ego_grid_pf_hv_extension_link WHERE scn_name = 'extension_nep20
 
 INSERT INTO model_draft.ego_grid_pf_hv_extension_transformer (scn_name, trafo_id, bus1)
 SELECT	scn_name, 
-	nextval('model_draft.ego_grid_hv_electrical_neighbours_transformer_id'),
+	nextval('model_draft.ego_grid_hv_extension_transformer_id'),
 	bus_id
 FROM model_draft.ego_grid_pf_hv_extension_bus WHERE scn_name = 'extension_nep2035_b2'  AND bus_name IN ('Umspannwerk Windpark Iven', 'Elsfleth', 'BASF', 'Station Wanne', 'Amelsbüren', 'Umspannwerk Gurtweil', 'Umspannwerk Stockach', 'Beuren', 'Pasewalk');
 
@@ -1151,7 +1159,7 @@ WHERE scn_name = 'extension_nep2035_b2';
 INSERT INTO model_draft.ego_grid_pf_hv_extension_transformer (scn_name, trafo_id, bus0, v0)
 (SELECT DISTINCT ON (bus_id)
 	'extension_nep2035_b2',
-	 nextval('model_draft.ego_grid_hv_electrical_neighbours_transformer_id'),
+	 nextval('model_draft.ego_grid_hv_extension_transformer_id'),
 	 bus_id,
 	 b.v_nom
 	 FROM model_draft.ego_grid_pf_hv_bus b, model_draft.ego_grid_pf_hv_extension_line c  
@@ -1173,7 +1181,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_extension_transformer (scn_name, trafo_id
 
 
 	'extension_nep2035_b2',
-	 nextval('model_draft.ego_grid_hv_electrical_neighbours_transformer_id'),
+	 nextval('model_draft.ego_grid_hv_extension_transformer_id'),
 	 bus_id,
 	 b.v_nom
 	 FROM grid.ego_pf_hv_bus b, model_draft.ego_grid_pf_hv_extension_line c  
@@ -1237,11 +1245,10 @@ WHERE scn_name = 'extension_nep2035_b2';
 
 
 UPDATE model_draft.ego_grid_pf_hv_extension_transformer a
-SET	capital_cost = (a.s_nom/600 * 8500000)/(40 *s_nom),
+SET	capital_cost = (CASE v0 WHEN 220 THEN 8500000/(600*40) WHEN 110 THEN 5200000/(300*40) ELSE 0 END),
 	s_nom_min = 0,
 	s_nom_max = s_nom
-WHERE scn_name = 'extension_nep2035_b2' AND  bus0 NOT IN (SELECT bus_id FROM model_draft.ego_grid_pf_hv_bus b, model_draft.ego_grid_pf_hv_extension_line c
-								WHERE c.scn_name = 'decommissioning_nep2035_b2' AND ST_Touches(b.geom, c.geom) AND c.v_nom = b.v_nom );
+WHERE scn_name = 'extension_nep2035_b2';
 
 
 UPDATE model_draft.ego_grid_pf_hv_extension_transformer a

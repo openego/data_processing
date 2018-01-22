@@ -1,11 +1,24 @@
-﻿CREATE TABLE model_draft.ego_grid_pf_hv_extension_temp_resolution AS (SELECT * FROM model_draft.ego_grid_pf_hv_temp_resolution);
+﻿
+CREATE TABLE model_draft.scn_nep2035_b2_line
+(
+  scn_name character varying NOT NULL DEFAULT 'Status Quo'::character varying,
+  project character varying,
+  project_id bigint,
+  startpunkt character varying,
+  endpunkt character varying,
+  spannung bigint,
+  s_nom numeric DEFAULT 0,
+  cables bigint,
+  nova character varying,
+  geom geometry(MultiLineString,4326)
+)
+WITH (
+  OIDS=FALSE
+);
 
-DROP TABLE model_draft.ego_grid_pf_hv_extension_source;
+CREATE TABLE model_draft.ego_grid_pf_hv_extension_temp_resolution AS (SELECT * FROM model_draft.ego_grid_pf_hv_temp_resolution);
 
 CREATE TABLE model_draft.ego_grid_pf_hv_extension_source AS (SELECT * FROM model_draft.ego_grid_pf_hv_source);
-
-ALTER TABLE model_draft.ego_grid_pf_hv_extension_source
-ADD COLUMN scn_name character varying; 
 
 CREATE TABLE model_draft.ego_grid_pf_hv_extension_storage
 (
@@ -53,3 +66,20 @@ CREATE TABLE model_draft.ego_grid_pf_hv_extension_storage_pq_set
 WITH (
   OIDS=FALSE
 );
+
+DROP SEQUENCE IF EXISTS model_draft.ego_grid_hv_extension_bus_id CASCADE;
+CREATE SEQUENCE model_draft.ego_grid_hv_extension_bus_id;
+SELECT setval('model_draft.ego_grid_hv_extension_bus_id', (max(bus_id)+1)) FROM model_draft.ego_grid_pf_hv_bus;
+
+DROP SEQUENCE IF EXISTS model_draft.ego_grid_hv_extension_line_id CASCADE;
+CREATE SEQUENCE model_draft.ego_grid_hv_extension_line_id;
+SELECT setval('model_draft.ego_grid_hv_extension_line_id', (max(line_id)+1)) FROM model_draft.ego_grid_pf_hv_line;
+
+DROP SEQUENCE IF EXISTS model_draft.ego_grid_hv_extension_transformer_id CASCADE;
+CREATE SEQUENCE model_draft.ego_grid_hv_extension_transformer_id;
+SELECT setval('model_draft.ego_grid_hv_extension_transformer_id', (max(trafo_id)+1)) FROM model_draft.ego_grid_pf_hv_transformer;
+
+DROP SEQUENCE IF EXISTS model_draft.ego_grid_hv_extension_link_id CASCADE;
+CREATE SEQUENCE model_draft.ego_grid_hv_extension_link_id;
+SELECT setval('model_draft.ego_grid_hv_extension_link_id', 1); 
+
