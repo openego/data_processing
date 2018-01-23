@@ -44,18 +44,18 @@ __license__ = "GNU Affero General Public License Version 3 (AGPL-3.0)"
 __url__ = "https://github.com/openego/data_processing/blob/master/LICENSE"
 __author__ = "s3pp"
 
-
 from feedinlib import powerplants as plants
 from oemof.db import coastdat
 import db
 import pandas as pd
+from results_to_oedb import df_to_db
 
 points = db.Points
 conn = db.conn
-scenario_name = 'eGo 100'
+scenario_name = 'NEP 2035'
 weather_year = 2011
 filename = '2017-08-21_simple_feedin_ego-100-wj2011_all.csv'
-config = 'config.ini'
+config = r'C:\Users\marlo\Anaconda3\envs\renpass\Lib\site-packages\data_processing\preprocessing\python_scripts\renpass_gis\simple_feedin\config.ini'
 correction_offshore = 0.83
 correction_solar = 0.8
 
@@ -121,10 +121,16 @@ def main():
     print('Calculating feedins...')
     #toDo
     # calculate feedins applying correction factors
-    for name, type_of_generation, scenario, geom in points:
-
-        weather = coastdat.get_weather(conn, geom, weather_year)
-
+    count = 0
+    for name, type_of_generation, scenario, geom in points[0:50]:
+        count += 1
+        print(count)
+        try:
+            weather = coastdat.get_weather(conn, geom, weather_year)
+        except IndexError:
+            print('Geometry cannot be handled: %s, %s' % (geom.x, geom.y))
+            continue
+        
         if type_of_generation == 'windoffshore' and scenario == scenario_name:
             feedin = correction_offshore * powerplants[type_of_generation].\
                 feedin(weather=weather, installed_capacity=1)
@@ -140,8 +146,7 @@ def main():
     print('Writing results to %s.' % filename)
     # write results to file
     df = pd.DataFrame(temp)
-    df.to_csv(filename, index=False)
-
+    #df_to_db(df)
     print('Done!')
 
 

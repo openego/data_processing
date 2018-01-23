@@ -83,7 +83,7 @@ def meta_definition(meta, conn):
     """
     meta.reflect(bind=conn, schema='coastdat')
     meta.reflect(bind=conn, schema='model_draft',
-                 only=['ego_weather_measurement_point'])  
+                 only=['ego_weather_measurement_point'])
         
     #meta.reflect(bind=conn, schema='public',
     #             only=['weather_measurement_point'])  # table with given/ own defined points
