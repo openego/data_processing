@@ -146,7 +146,7 @@ def main():
     print('Writing results to %s.' % filename)
     # write results to file
     df = pd.DataFrame(temp)
-    #df_to_db(df)
+    #df_to_db(df, weather_year)
     print('Done!')
 
 

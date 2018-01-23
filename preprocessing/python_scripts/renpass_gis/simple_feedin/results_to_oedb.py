@@ -19,7 +19,7 @@ __author__ = "wolfbunke"
 
 import db
 
-def df_to_db(df):
+def df_to_db(df, weather_year):
     print('Importing feedin to database..')
     # prepare DataFrames
     Points = db.Base.classes.ego_weather_measurement_point
@@ -28,7 +28,8 @@ def df_to_db(df):
     
     # Insert Data to DB
     for k in df.columns:
-        info = {'name': k[1], 'type_of_generation': k[2], 'scenario': k[0], 'feedin': df[k].values}
+        #info = {'name': k[1], 'type_of_generation': k[2], 'scenario': k[0], 'feedin': df[k].values}
+        info = {'w_id': k[1][:k[1].index('_')], 'source': k[2], 'weather_year': weather_year, 'feedin': df[k].values}
         mappings.append(info)
         
     session.bulk_update_mappings(Points, mappings)
