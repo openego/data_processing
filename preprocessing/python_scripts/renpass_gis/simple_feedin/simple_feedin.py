@@ -48,7 +48,7 @@ from feedinlib import powerplants as plants
 from oemof.db import coastdat
 import db
 import pandas as pd
-from results_to_oedb import df_to_db
+from results_to_oedb import df_to_renewable_feedin
 
 points = db.Points
 conn = db.conn
@@ -103,7 +103,9 @@ def to_dictionary(cfg, section):
 def main():
     """
     """
-
+    
+    global points
+    
     cfg = db.readcfg(config)
     temp = {}
     powerplants = {}
@@ -121,8 +123,9 @@ def main():
     print('Calculating feedins...')
     #toDo
     # calculate feedins applying correction factors
+    
     count = 0
-    for name, type_of_generation, scenario, geom in points[0:50]:
+    for name, type_of_generation, scenario, geom in points[:100]:
         count += 1
         print(count)
         try:
@@ -140,13 +143,15 @@ def main():
         elif type_of_generation == 'solar' and scenario == scenario_name:
             feedin = correction_solar * powerplants[type_of_generation].\
                 feedin(weather=weather, peak_power=1)
+        else:
+            continue
         
         temp[(scenario, name, type_of_generation)] = feedin
 
-    print('Writing results to %s.' % filename)
+    #print('Writing results to %s.' % filename)
     # write results to file
     df = pd.DataFrame(temp)
-    #df_to_db(df, weather_year)
+    df_to_renewable_feedin(df, weather_year)
     print('Done!')
 
 

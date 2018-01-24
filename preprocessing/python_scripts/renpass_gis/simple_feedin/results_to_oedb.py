@@ -18,21 +18,51 @@ __url__ = "https://github.com/openego/data_processing/blob/master/LICENSE"
 __author__ = "wolfbunke"
 
 import db
+from sqlalchemy import (Column, Text, Integer, Float, ARRAY)
+from sqlalchemy.ext.declarative import declarative_base
 
-def df_to_db(df, weather_year):
-    print('Importing feedin to database..')
-    # prepare DataFrames
-    Points = db.Base.classes.ego_weather_measurement_point
-    session = db.session
-    mappings = []
+def df_to_renewable_feedin(df, weather_year):
+    print('Creating table ego_renewable_feedin..')    
+    Base = declarative_base()
+    conn = db.conn
     
+    class Ego_renewable_feedin(Base):
+        __tablename__ = 'ego_renewable_feedin'
+        __table_args__ = {'schema': 'model_draft'}
+        
+        w_id = Column(Integer(), primary_key=True)
+        source = Column(Text(), primary_key=True)
+        weather_year = Column(Integer(), primary_key=True)
+        feedin = Column(ARRAY(Float))
+
+    try:
+        Ego_renewable_feedin.__table__.drop(conn)
+    except:
+        pass
+    
+    Base.metadata.create_all(conn) 
+    
+    print('Importing feedin to database..')
+    
+    # prepare DataFrames
+    session = db.session
+    #Points = db.Base.classes.ego_weather_measurement_point
+    mappings = []
+
     # Insert Data to DB
     for k in df.columns:
-        #info = {'name': k[1], 'type_of_generation': k[2], 'scenario': k[0], 'feedin': df[k].values}
-        info = {'w_id': k[1][:k[1].index('_')], 'source': k[2], 'weather_year': weather_year, 'feedin': df[k].values}
+        w_id = k[1][:k[1].index('_')]
+        source = k[2]
+        weather_year = weather_year
+        feedin = df[k].values.tolist()
+        info = Ego_renewable_feedin(w_id=w_id,
+                                    source=source,
+                                    weather_year=weather_year,
+                                    feedin=feedin)
         mappings.append(info)
         
-    session.bulk_update_mappings(Points, mappings)
+    session.bulk_save_objects(mappings)
+    #session.bulk_upgrade_mappings(Points, mappings)
     session.commit()
     
     print('Done!')
