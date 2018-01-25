@@ -193,8 +193,8 @@ UPDATE model_draft.ego_supply_pf_generator_single a
 	SET control= 
 			(CASE 
 			WHEN p_nom < 50 THEN 'PQ'
-			WHEN p_nom > 50 AND source IN (12, 13) THEN 'PQ'-- Wind or solar pp
-			WHEN p_nom > 50 AND source NOT IN (12, 13) THEN 'PV'
+			WHEN p_nom >= 50 AND source IN (12, 13) THEN 'PQ'-- Wind or solar pp
+			WHEN p_nom >= 50 AND source NOT IN (12, 13) THEN 'PV'
 			END);   
 
 
