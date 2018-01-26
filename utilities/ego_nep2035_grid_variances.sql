@@ -164,20 +164,44 @@ UPDATE model_draft.ego_grid_pf_hv_extension_line a
 	SET	length = (CASE WHEN length IS NULL THEN 1.14890133371257 * ST_Length(geom)/1000 ELSE length END); 
 
 UPDATE model_draft.ego_grid_pf_hv_extension_line a
-SET	cables = (CASE 	WHEN (project = 'EnLAG' AND project_id IN (1, 13, 14, 15, 16, 18, 19, 5, 6 )) OR project = 'BBPlG' AND project_id IN (11, 15, 17, 19, 21, 32, 35, 39, 41, 42, 45, 6, 7, 8 ) THEN 6
-			WHEN (project = 'BBPlG' AND project_id IN (14)) THEN 9
-			WHEN (project = 'EnLAG' AND project_id IN (2)) OR (project = 'BBPlG' AND project_id IN (12, 27, 34)) THEN 12
+SET	cables = (CASE 	WHEN (project = 'EnLAG' AND project_id IN (1, 13, 14, 15, 16, 18, 19, 5, 6 )) OR project = 'BBPlG' AND project_id IN (11, 15, 17, 19, 21, 32, 35, 39, 41, 42, 45, 6, 7, 8,14 )
+				THEN 6
+			WHEN (project = 'EnLAG' AND project_id IN (2)) OR (project = 'BBPlG' AND project_id IN (12, 27, 34))
+				THEN 12
 			ELSE 3 END);
 	
 UPDATE model_draft.ego_grid_pf_hv_extension_line
-	SET	x = (CASE WHEN cable = FALSE AND cables != 0 THEN 314.15 *0.8/(1000*cables/3) * length WHEN cable = TRUE AND cables != 0 THEN 0.3 * 0.31415 /(cables/3) END),
-		s_nom = (CASE WHEN cable = FALSE AND cables != 0 THEN 1790 * (cables/3) WHEN cable = TRUE AND cables != 0 THEN 925 * (cables/3) END),
+	SET	x = (CASE 	WHEN cable = FALSE AND cables != 0 THEN 0.9030765/  (cables/3) * length
+				WHEN cable = TRUE AND cables != 0 THEN 0.3 * 0.31415 /(cables/3) END),
+				
+		s_nom = (CASE 	WHEN cable = FALSE AND cables != 0 THEN 2370 * (cables/3)
+				WHEN cable = TRUE AND cables != 0 THEN 925 * (cables/3) END),
 		frequency = 50;
 		
 UPDATE model_draft.ego_grid_pf_hv_extension_line
-SET	x = 0.2535 /  (cables/3) * length,
+SET	x = 0.8956759 /  (cables/3) * length,
 	s_nom = 2685 * (cables/3)
-WHERE (project= 'BBPlG' AND project_id IN (7,8,32)) OR (project= 'EnLAG' AND project_id IN (6,5,1));
+WHERE (project= 'BBPlG' AND project_id IN (24)) OR (project= 'EnLAG' AND project_id IN (15,19,2));
+
+UPDATE model_draft.ego_grid_pf_hv_extension_line
+SET	x = 0.556975 /  (cables/3) * length,
+	s_nom = 2920 * (cables/3)
+WHERE (project= 'BBPlG' AND project_id IN (13,14,15,32,7,8)) OR (project= 'EnLAG' AND project_id IN (1,16,5,6));
+
+UPDATE model_draft.ego_grid_pf_hv_extension_line
+SET	x = 0.9030765 * (cables/3) * length,
+	s_nom = 2370 * (cables/3)
+WHERE (project= 'BBPlG' AND project_id IN (11,12,39,42,46,47)) OR (project= 'EnLAG' AND project_id IN (11));
+
+UPDATE model_draft.ego_grid_pf_hv_extension_line
+SET	x = 0.44528 * length,
+	s_nom = 6055
+WHERE project= 'EnLAG' AND project_id = 14;
+
+UPDATE model_draft.ego_grid_pf_hv_extension_line
+SET	x = 0.4559836* length,
+	s_nom = 4160 * (cables/3)
+WHERE project= 'EnLAG' AND project_id = 18;
 
 UPDATE model_draft.ego_grid_pf_hv_extension_line a
 SET topo = ST_MakeLine((SELECT DISTINCT ON (geom) geom FROM model_draft.ego_grid_pf_hv_extension_bus b WHERE a.bus0 = b.bus_id AND a.scn_name = b.scn_name), (SELECT DISTINCT ON (geom) geom FROM model_draft.ego_grid_pf_hv_extension_bus b WHERE a.bus1 = b.bus_id AND a.scn_name = b.scn_name ));
@@ -441,7 +465,7 @@ SET 	s_nom = (CASE 	WHEN s_min <= 600  THEN 600
 			END);
 			
 UPDATE model_draft.ego_grid_pf_hv_extension_transformer a
-SET	capital_cost = (a.s_nom/600 * 8500000)/(40 *s_nom),
+SET	capital_cost = 825.61,
 	s_nom_min = 0,
 	s_nom_max = s_nom
 WHERE (v1 = 220 AND v0=380) OR (v0 = 220 AND v1=380);
@@ -893,7 +917,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_extension_transformer (trafo_id, bus0, v0
 	nextval('model_draft.ego_grid_hv_extension_transformer_id'),  
 	bus_id,
 	b.v_nom,
-	(CASE b.v_nom WHEN 110 THEN 5200000/(300*40) WHEN 220 THEN 8500000/(600*40) ELSE 0 END)
+	(CASE b.v_nom WHEN 110 THEN 1010.15 WHEN 220 THEN 825.61 ELSE 0 END)
 FROM model_draft.ego_grid_pf_hv_bus b, model_draft.ego_grid_pf_hv_extension_line c  
 WHERE c.scn_name = 'decommissioning_NEP' AND ST_Touches(b.geom, c.geom) AND c.v_nom = b.v_nom AND b.scn_name = 'Status Quo');
 	
@@ -903,9 +927,10 @@ INSERT INTO model_draft.ego_grid_pf_hv_extension_transformer (scn_name, trafo_id
 	 nextval('model_draft.ego_grid_hv_extension_transformer_id'),
 	 bus_id,
 	 b.v_nom,
-	 5200000/(300*40)
+	 1010.15
 FROM model_draft.ego_grid_pf_hv_bus b
-WHERE (v_nom = 110 AND geom IN ('0101000020E6100000CA0F62BFC4FD214018163EFFE2FA4A40', '0101000020E6100000564589B8733922401DE884E04BFA4A40', '0101000020E61000005FE68585A460224085BB0E304EF44A40')));
+WHERE ((v_nom = 110 AND geom IN ('0101000020E6100000CA0F62BFC4FD214018163EFFE2FA4A40', '0101000020E6100000564589B8733922401DE884E04BFA4A40', '0101000020E61000005FE68585A460224085BB0E304EF44A40')) OR (v_nom = 380 AND geom = '0101000020E6100000A034005D509E2A4093C4BC00EC424A40')));
+
 
 UPDATE model_draft.ego_grid_pf_hv_extension_transformer a 
 SET	bus1 = (CASE WHEN bus1 IS NULL THEN (SELECT bus_id FROM model_draft.ego_grid_pf_hv_extension_bus c WHERE a.scn_name = c.scn_name
@@ -1041,16 +1066,16 @@ INSERT INTO model_draft.ego_grid_pf_hv_extension_line (scn_name, line_id, bus0, 
 	SELECT
 		'extension_nep2035_b2',
 		nextval('model_draft.ego_grid_hv_extension_line_id'),
-		CASE WHEN EXISTS (SELECT DISTINCT ON (bus_i) bus_i FROM grid.otg_ehvhv_bus_data WHERE startpunkt = osm_name AND spannung = base_kv) THEN (SELECT MIN(bus_i) FROM grid.otg_ehvhv_bus_data WHERE startpunkt = osm_name AND spannung = base_kv)
-			ELSE (SELECT bus_id FROM model_draft.ego_grid_pf_hv_extension_bus WHERE startpunkt = bus_name AND spannung = v_nom) END,
-		CASE WHEN EXISTS (SELECT DISTINCT ON (bus_i) bus_i FROM grid.otg_ehvhv_bus_data WHERE endpunkt = osm_name AND spannung = base_kv) THEN (SELECT MIN(bus_i) FROM grid.otg_ehvhv_bus_data WHERE endpunkt = osm_name AND spannung = base_kv)
-			ELSE (SELECT MIN(bus_id) FROM model_draft.ego_grid_pf_hv_extension_bus WHERE endpunkt = bus_name AND spannung = v_nom) END,
+		CASE WHEN EXISTS (SELECT DISTINCT ON (bus_i) bus_i FROM grid.otg_ehvhv_bus_data WHERE startpunkt ~ osm_name AND spannung = base_kv) THEN (SELECT MIN(bus_i) FROM grid.otg_ehvhv_bus_data WHERE startpunkt ~ osm_name AND spannung = base_kv)
+			ELSE (SELECT bus_id FROM model_draft.ego_grid_pf_hv_extension_bus WHERE startpunkt ~ bus_name AND spannung = v_nom) END,
+		CASE WHEN EXISTS (SELECT DISTINCT ON (bus_i) bus_i FROM grid.otg_ehvhv_bus_data WHERE endpunkt ~ osm_name AND spannung = base_kv) THEN (SELECT MIN(bus_i) FROM grid.otg_ehvhv_bus_data WHERE endpunkt ~ osm_name AND spannung = base_kv)
+			ELSE (SELECT MIN(bus_id) FROM model_draft.ego_grid_pf_hv_extension_bus WHERE endpunkt ~ bus_name AND spannung = v_nom) END,
 		spannung,
 		s_nom,
 		project,
 		nova,
 		cables
-	FROM grid.scn_nep2035_b2_line WHERE scn_name = 'extension_NEP2035_B2';
+	FROM grid.scn_nep2035_b2_line WHERE scn_name = 'extension_NEP2035_B2' AND project != 'P200';
 
 UPDATE model_draft.ego_grid_pf_hv_extension_line 
 SET 	bus1 = (CASE project	WHEN 'P176' THEN (SELECT MIN(bus_id) FROM model_draft.ego_grid_pf_hv_bus WHERE geom = '0101000020E610000056B7521C607FFB3F0B27630507634740' AND v_nom = 380 ) ---FR
@@ -1085,12 +1110,10 @@ SET	topo = ST_MakeLine((SELECT DISTINCT ON (geom) geom FROM model_draft.ego_grid
 WHERE scn_name = 'extension_nep2035_b2';
 	
 
-UPDATE model_draft.ego_grid_pf_hv_extension_line 
-SET	x = (CASE	WHEN cable = FALSE AND cables!= 0 AND v_nom = 380 THEN 314.15 *0.8/(1000*cables/3) * length 
-			WHEN cable = TRUE AND cables!= 0 AND v_nom = 380 THEN 0.3 * 0.31415 /(cables/3) 
-			WHEN cable = FALSE AND cables!= 0 AND v_nom = 220 THEN 314.15 *1/(1000*cables/3) * length 
-			WHEN cable = TRUE AND cables!= 0 AND v_nom = 220 THEN 314.15 *0.3/(1000*cables/3) * length 
-			 END)	
+UPDATE model_draft.ego_grid_pf_hv_extension_line a
+SET	x = (CASE project	WHEN 'P180' THEN 0.3 * 0.31415 /(cables/3) 
+				WHEN 'P201' THEN 314.15 *1/(1000*cables/3) * length 
+				ELSE 0.903070765 /  (cables/3) * length END)	
 WHERE scn_name = 'extension_nep2035_b2';	
 
 INSERT INTO model_draft.ego_grid_pf_hv_extension_line (scn_name, line_id, s_nom, topo, geom,bus0, bus1, project, v_nom)
@@ -1104,15 +1127,16 @@ INSERT INTO model_draft.ego_grid_pf_hv_extension_line (scn_name, line_id, s_nom,
 		b.bus1,
 		project,
 		(CASE b.s_nom WHEN 260 THEN 110 WHEN 520 THEN 220 WHEN 1040 THEN 220 WHEN 1790 THEN 380 WHEN 3580 THEN 380 WHEN 925 THEN 380 WHEN 1850 THEN 380 END)
-	FROM grid.scn_nep2035_b2_line a, model_draft.ego_grid_pf_hv_line b WHERE a.scn_name = 'decommissioning_NEP2035_B2' AND b.scn_name = 'Status Quo' AND a.geom = b.geom AND a.s_nom = b.s_nom;
+	FROM grid.scn_nep2035_b2_line a, model_draft.ego_grid_pf_hv_line b WHERE a.scn_name = 'decommissioning_NEP2035_B2' 
+	AND b.scn_name = 'Status Quo' AND a.geom = b.geom AND a.s_nom = b.s_nom;
 
 
 INSERT INTO model_draft.ego_grid_pf_hv_extension_link (scn_name , link_id, p_nom, bus0, bus1, topo)
 	SELECT 'extension_nep2035_b2',
 		nextval('model_draft.ego_grid_hv_extension_link_id'),
 		700,
-		(SELECT MIN(bus_i) FROM grid.otg_ehvhv_bus_data WHERE osm_name = 'Güstrow' AND base_kv = 380),
-		(SELECT MIN(bus_id) FROM model_draft.ego_grid_pf_hv_bus WHERE geom = '0101000020E6100000781E63B01D002E40A292E70A7AB74E40' AND v_nom = 380 ),
+		(SELECT bus_i FROM grid.otg_ehvhv_bus_data WHERE osm_name = 'Güstrow' AND base_kv = 380),
+		(SELECT DISTINCT ON (bus_id) bus_id FROM model_draft.ego_grid_pf_hv_bus WHERE geom = '0101000020E6100000781E63B01D002E40A292E70A7AB74E40' AND v_nom = 380 ),
 		ST_MakeLine((SELECT geom FROM model_draft.ego_grid_pf_hv_extension_bus b WHERE bus_name = 'Güstrow' AND v_nom = 380 AND scn_name = 'extension_nep2035_b2'), (SELECT geom FROM model_draft.ego_grid_pf_hv_bus b WHERE geom = '0101000020E6100000781E63B01D002E40A292E70A7AB74E40' AND v_nom = 380 AND 'NEP 2035' = b.scn_name ))
 		;
 
@@ -1122,8 +1146,9 @@ SET 	geom = ST_Multi(topo),
 WHERE scn_name = 'extension_nep2035_b2';
 
 UPDATE model_draft.ego_grid_pf_hv_extension_link a
-SET 	efficiency = 1, ----0.987*0.974^(length/1000),
-	marginal_cost = 0
+SET 	efficiency = 1,
+	marginal_cost = 0,
+	capital_cost = 128.21 * length
 WHERE scn_name = 'extension_nep2035_b2';
 
 /*
@@ -1245,7 +1270,7 @@ WHERE scn_name = 'extension_nep2035_b2';
 
 
 UPDATE model_draft.ego_grid_pf_hv_extension_transformer a
-SET	capital_cost = (CASE v0 WHEN 220 THEN 8500000/(600*40) WHEN 110 THEN 5200000/(300*40) ELSE 0 END),
+SET	capital_cost = (CASE v0 WHEN 220 THEN 825.61 WHEN 110 THEN 1010.15 ELSE 0 END),
 	s_nom_min = 0,
 	s_nom_max = s_nom
 WHERE scn_name = 'extension_nep2035_b2';
@@ -1273,33 +1298,27 @@ SET nova = (CASE WHEN project = 'EnLAG' AND project_id = 14 AND segment = 3 THEN
 		ELSE nova END);
 		
 UPDATE model_draft.ego_grid_pf_hv_extension_line
-SET capital_cost = (CASE WHEN nova = 'Netzverstärkung: Stromkreisauflage/Umbeseilung' AND v_nom = 220 THEN (150000 * length / s_nom)
-			WHEN nova = 'Netzverstärkung: Stromkreisauflage/Umbeseilung' AND v_nom = 380 THEN (200000 * length / s_nom)
-			WHEN nova = 'Netzverstärkung: Neubau in bestehender Trasse' AND v_nom = 380 THEN (1600000 * length * cables / (6*s_nom))
-			WHEN nova = 'Netzausbau: Neubau in neuer Trasse' AND v_nom = 380 THEN (1500000 * length * cables / (6*s_nom))
+SET capital_cost = (CASE WHEN nova = 'Netzverstärkung: Stromkreisauflage/Umbeseilung' AND v_nom = 220 THEN (5.62 * length )
+			WHEN nova = 'Netzverstärkung: Stromkreisauflage/Umbeseilung' AND v_nom = 380 THEN (4.92 * length)
+			WHEN nova = 'Netzverstärkung: Neubau in bestehender Trasse' AND v_nom = 380 THEN (19.67 * length )
+			WHEN nova = 'Netzausbau: Neubau in neuer Trasse' AND v_nom = 380 THEN (18.44 * length )
 		ELSE 0 END);
 				
 UPDATE model_draft.ego_grid_pf_hv_extension_line
 SET capital_cost = 6 * capital_cost
 WHERE cable = TRUE;
 
-UPDATE model_draft.ego_grid_pf_hv_extension_line
-SET capital_cost = capital_cost/40; -- Annuität
-
-
 UPDATE model_draft.ego_grid_pf_hv_extension_link
-SET capital_cost = (CASE WHEN project_id = 1 THEN (1500000* length + 400000)/p_nom
-			WHEN project_id = 2 THEN (200000* length /p_nom + 400000/p_nom)
-			WHEN project_id = 3 THEN (1500000* length /p_nom + 400000/p_nom)
-			WHEN project_id = 30 THEN (1500000* length /p_nom + 400000/p_nom)
-			WHEN project_id = 33 THEN (1500000* length /p_nom + 400000/p_nom)
-			WHEN project_id = 4 THEN (1500000* length /p_nom + 400000/p_nom)
-			WHEN project_id = 5 THEN (1500000* length /p_nom + 400000/p_nom) 
-			WHEN project_id = 29 THEN (1500000* length /p_nom + 400000/p_nom)
-			ELSE 1500000* length /p_nom + 400000/p_nom END);
+SET capital_cost = (CASE WHEN project_id = 1 THEN 128.21 * length
+			WHEN project_id = 2 THEN 17.48 * length
+			WHEN project_id = 3 THEN 128.21 * length
+			WHEN project_id = 30 THEN 128.21 * length
+			WHEN project_id = 33 THEN 27.68 * length 
+			WHEN project_id = 4 THEN 128.21 * length
+			WHEN project_id = 5 THEN 128.21 * length
+			WHEN project_id = 29 THEN 27.68 * length 
+			ELSE capital_cost END);
 			
-UPDATE model_draft.ego_grid_pf_hv_extension_link
-SET capital_cost = capital_cost/40; -- Annuität
 
 UPDATE model_draft.ego_grid_pf_hv_extension_line a
 SET 	s_nom_min = (CASE WHEN EXISTS (SELECT * FROM model_draft.ego_grid_pf_hv_extension_line b WHERE b.scn_name = 'decommissioning_NEP' AND a.project = b.project AND a.project_id = b.project_id) AND a.nova IN ('Netzverstärkung: Stromkreisauflage/Umbeseilung', 'Netzverstärkung: Neubau in bestehender Trasse' )
@@ -1309,9 +1328,13 @@ SET 	s_nom_min = (CASE WHEN EXISTS (SELECT * FROM model_draft.ego_grid_pf_hv_ext
 WHERE scn_name = 'extension_NEP';
 			
 UPDATE model_draft.ego_grid_pf_hv_extension_line a
-SET	s_nom_min = (CASE WHEN EXISTS (SELECT * FROM model_draft.ego_grid_pf_hv_extension_line b WHERE b.scn_name = 'decommissioning_nep2035_b2' AND a.project = b.project) AND a.nova IN ('Netzverstärkung: Stromkreisauflage/Umbeseilung', 'Netzverstärkung: Neubau in bestehender Trasse' )
-		THEN (SELECT MAX(s_nom) FROM model_draft.ego_grid_pf_hv_extension_line b WHERE b.scn_name  = 'decommissioning_nep2035_b2' AND a.project = b.project)
-		ELSE 0 END),
+SET	s_nom_min =  (CASE 	WHEN project IN ('P22', 'P26', 'P113', 'P123', 'P161', 'P172', 'P173', 'P205', 'P211', 'P214', 'P217', 'P219', 'P220')
+					THEN 3580
+				WHEN project IN ('P40', 'P159', 'P206', 'P215', 'P216', 'P218')
+					THEN 1040
+				WHEN project = 'P180' THEN 1850
+
+			ELSE 0 END),
 	s_nom_max = s_nom
 WHERE scn_name = 'extension_nep2035_b2';
 
@@ -1390,11 +1413,10 @@ FROM model_draft.ego_grid_pf_hv_extension_transformer WHERE scn_name = 'extensio
 
 DELETE FROM model_draft.ego_grid_pf_hv_extension_transformer  WHERE x IS NULL;
 
-
 UPDATE model_draft.ego_grid_pf_hv_extension_bus
 SET current_type = 'AC';
 
-
+---SELECT * FROM model_draft.ego_grid_pf_hv_extension_line WHERE s_nom_min > s_nom_max
 DELETE FROM model_draft.ego_grid_pf_hv_extension_line WHERE x is NULL OR x = 0 AND scn_name NOT IN ('decommissioning_NEP', 'decommissioning_nep2035_b2') ;
 
 --- Delete unused buses 
