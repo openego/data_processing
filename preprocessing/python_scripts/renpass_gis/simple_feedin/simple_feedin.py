@@ -48,12 +48,14 @@ from feedinlib import powerplants as plants
 from oemof.db import coastdat
 import db
 import pandas as pd
-from results_to_oedb import df_to_renewable_feedin
+from sqlalchemy import (Column, Text, Integer, Float, ARRAY)
+from sqlalchemy.ext.declarative import declarative_base
 
 points = db.Points
 conn = db.conn
-scenario_name = 'NEP 2035'
+scenario_name = 'Status Quo'
 weather_year = 2011
+weather_scenario_id = 1
 filename = '2017-08-21_simple_feedin_ego-100-wj2011_all.csv'
 config = r'C:\Users\marlo\Anaconda3\envs\renpass\Lib\site-packages\data_processing\preprocessing\python_scripts\renpass_gis\simple_feedin\config.ini'
 correction_offshore = 0.83
@@ -79,6 +81,54 @@ def asnumber(x):
             return float(x)
         except ValueError:
             return x
+        
+def df_to_renewable_feedin(df, weather_year, weather_scenario_id):
+    print('Creating table ego_renewable_feedin..')    
+    Base = declarative_base()
+    
+    class Ego_renewable_feedin(Base):
+        __tablename__ = 'ego_renewable_feedin'
+        __table_args__ = {'schema': 'model_draft'}
+        
+        weather_scenario_id = Column(Integer(), primary_key=True)
+        w_id = Column(Integer(), primary_key=True)
+        source = Column(Text(), primary_key=True)
+        weather_year = Column(Integer(), primary_key=True)
+        feedin = Column(ARRAY(Float))
+
+    try:
+        Ego_renewable_feedin.__table__.drop(conn)
+    except:
+        pass
+    
+    Base.metadata.create_all(conn) 
+    
+    print('Importing feedin to database..')
+    
+    # prepare DataFrames
+    session = db.session
+    #Points = db.Base.classes.ego_weather_measurement_point
+    mappings = []
+
+    # Insert Data to DB
+    for k in df.columns:
+        weather_scenario_id = weather_scenario_id
+        w_id = k[1][:k[1].index('_')]
+        source = k[2]
+        weather_year = weather_year
+        feedin = df[k].values.tolist()
+        info = Ego_renewable_feedin(w_id=w_id,
+                                    weather_scenario_id=weather_scenario_id,
+                                    source=source,
+                                    weather_year=weather_year,
+                                    feedin=feedin)
+        mappings.append(info)
+        
+    session.bulk_save_objects(mappings)
+    #session.bulk_upgrade_mappings(Points, mappings)
+    session.commit()
+    
+    print('Done!')
 
 
 def to_dictionary(cfg, section):
@@ -125,7 +175,7 @@ def main():
     # calculate feedins applying correction factors
     
     count = 0
-    for name, type_of_generation, scenario, geom in points[:100]:
+    for coastdat_id, type_of_generation, geom in points[:100]:
         count += 1
         print(count)
         try:
@@ -134,24 +184,24 @@ def main():
             print('Geometry cannot be handled: %s, %s' % (geom.x, geom.y))
             continue
         
-        if type_of_generation == 'windoffshore' and scenario == scenario_name:
+        if type_of_generation == 'windoffshore':
             feedin = correction_offshore * powerplants[type_of_generation].\
                 feedin(weather=weather, installed_capacity=1)
-        elif type_of_generation == 'windonshore' and scenario == scenario_name:
+        elif type_of_generation == 'windonshore':
             feedin = powerplants[type_of_generation].\
                 feedin(weather=weather, installed_capacity=1)
-        elif type_of_generation == 'solar' and scenario == scenario_name:
+        elif type_of_generation == 'solar':
             feedin = correction_solar * powerplants[type_of_generation].\
                 feedin(weather=weather, peak_power=1)
         else:
             continue
         
-        temp[(scenario, name, type_of_generation)] = feedin
+        temp[(coastdat_id, type_of_generation)] = feedin
 
     #print('Writing results to %s.' % filename)
     # write results to file
     df = pd.DataFrame(temp)
-    df_to_renewable_feedin(df, weather_year)
+    df_to_renewable_feedin(df, weather_year, weather_scenario_id)
     print('Done!')
 
 

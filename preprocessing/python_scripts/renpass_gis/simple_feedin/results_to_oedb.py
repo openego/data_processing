@@ -30,6 +30,7 @@ def df_to_renewable_feedin(df, weather_year):
         __tablename__ = 'ego_renewable_feedin'
         __table_args__ = {'schema': 'model_draft'}
         
+        weather_scenario_id = Column(Integer(), primary_key=True)
         w_id = Column(Integer(), primary_key=True)
         source = Column(Text(), primary_key=True)
         weather_year = Column(Integer(), primary_key=True)

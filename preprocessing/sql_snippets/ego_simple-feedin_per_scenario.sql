@@ -75,113 +75,104 @@ Update model_draft.ego_dp_supply_res_powerplant as C
 From climate.cosmoclmgrid B
 Where ST_Intersects(B.geom,C.geom);
 
-
-CREATE TABLE model_draft.ego_simple_feedin_full
-(
-  hour text NOT NULL,
-  coastdat_id text bigint NOT NULL,
-  sub_id text bigint,
-  generation_type text NOT NULL,
-  feedin text,
-  scenario text NOT NULL,
-  CONSTRAINT ego_simple_feedin_full_pkey PRIMARY KEY (scenario, coastdat_id, sub_id, generation_type, hour)
-)
-WITH (
-  OIDS=FALSE
-);
-ALTER TABLE model_draft.ego_simple_feedin_full
-  OWNER TO oeuser;
-
--- Index: model_draft.ego_simple_feedin_full_idx
--- DROP INDEX model_draft.ego_simple_feedin_full_idx;
-
-CREATE INDEX ego_simple_feedin_full_idx
-  ON model_draft.ego_simple_feedin_full
-  USING btree
-  (scenario COLLATE pg_catalog."default", sub_id COLLATE pg_catalog."default");
---
-/*
-ALTER TABLE  model_draft.ego_simple_feedin_full
-  ALTER COLUMN hour TYPE bigint USING hour::bigint;
-
-ALTER TABLE  model_draft.ego_simple_feedin_full
-  ALTER COLUMN coastdat_id TYPE bigint USING coastdat_id::bigint;
-
-Update model_draft.ego_simple_feedin_full
-    set sub_id = NULL
-    WHERE sub_id ='_NULL_'  
-    
-ALTER TABLE  model_draft.ego_simple_feedin_full
-  ALTER COLUMN sub_id TYPE bigint USING sub_id::bigint;
-  
-ALTER TABLE  model_draft.ego_simple_feedin_full
-  ALTER COLUMN feedin TYPE numeric(23,20) USING feedin::numeric(23,20);
-*/
-
-
--- DROP TABLE model_draft.ego_weather_measurement_point;
+DROP TABLE IF EXISTS model_draft.ego_weather_measurement_point;
 
 CREATE TABLE model_draft.ego_weather_measurement_point
 (
-  name text NOT NULL,
+  coastdat_id bigint NOT NULL,
   type_of_generation text NOT NULL,
-  comment text,
-  source text,
-  scenario text NOT NULL,
-  capacity_scale numeric,
   geom geometry(Point,4326),
-  CONSTRAINT weather_measurement_point_pkey PRIMARY KEY (name, type_of_generation, scenario)
+  CONSTRAINT weather_measurement_point_pkey PRIMARY KEY (coastdat_id, type_of_generation)
 )
 WITH (
   OIDS=FALSE
 );
 ALTER TABLE model_draft.ego_weather_measurement_point
-  OWNER TO oeuser;
+  OWNER TO postgres;
 
--- DROP INDEX model_draft.ego_weather_measurement_point_geom_gist;
-CREATE INDEX ego_weather_measurement_point_geom_gist
-  ON model_draft.ego_weather_measurement_point
-  USING gist
-  (geom);
+-- german points
+INSERT INTO model_draft.ego_weather_measurement_point (coastdat_id, type_of_generation, geom)
+SELECT 
+	coastdat.gid,
+	'solar',
+	ST_Centroid(coastdat.geom)
+FROM coastdat.cosmoclmgrid AS coastdat, 
+	(SELECT ST_Transform(ST_Union(geom), 4326) AS geom
+	FROM boundaries.bkg_vg250_1_sta
+	WHERE reference_date = '2015-01-01') AS ger
+WHERE ST_Intersects(ger.geom, coastdat.geom);
 
-/*
--- Count duplicates
-SELECT 	hour,
-	coastdat_id,
-	sub_id,
-	generation_type, 
-	feedin,
-	count(*) 
-FROM model_draft.ego_simple_feedin_full
-GROUP BY hour,coastdat_id,sub_id,generation_type,feedin
-HAVING ( COUNT(*) > 1 );
-*/
--- 
--- Create weighten feedin curve py types and scenario
-Alter Table model_draft.ego_simple_feedin_full 
-add column weighted_feedin numeric(23,20);
---
-Update model_draft.ego_simple_feedin_full ts
-  set weighted_feedin = ts.feedin * mp.capacity_scale
-FROM 
-  model_draft.ego_weather_measurement_point mp
-WHERE split_part(mp.name, '_', 1)::int = ts.coastdat_id  
-AND split_part(mp.name, '_', 2)::int  = ts.sub_id 
-AND mp.type_of_generation = ts.generation_type
-AND mp.scenario =  ts.scenario
-AND REGEXP_REPLACE(COALESCE(split_part(name, '_', 2), '0'), '[^0-9]*' ,'0')::integer !=0;
 
--- DROP MATERIALIZED VIEW IF EXISTS  model_draft.ego_renpassgis_simple_feedin_mview CASCADE;
-CREATE MATERIALIZED VIEW model_draft.ego_renpassgis_simple_feedin_mview AS
-SELECT
-hour, 
-generation_type,
-scenario,
-sum(weighted_feedin) as total_cap_feedin
-FROM model_draft.ego_simple_feedin_full
-Group by hour, generation_type, scenario
-Order by generation_type, scenario, hour
-;
+INSERT INTO model_draft.ego_weather_measurement_point (coastdat_id, type_of_generation, geom)
+SELECT 
+	coastdat.gid,
+	'windonshore',
+	ST_Centroid(coastdat.geom)
+FROM coastdat.cosmoclmgrid AS coastdat, 
+	(SELECT ST_Transform(ST_Union(geom), 4326) AS geom
+	FROM boundaries.bkg_vg250_1_sta
+	WHERE reference_date = '2015-01-01') AS ger
+WHERE ST_Intersects(ger.geom, coastdat.geom);
 
--- grant (oeuser)
-ALTER TABLE model_draft.ego_renpassgis_simple_feedin_mview OWNER TO oeuser;
+--foreign points
+INSERT INTO model_draft.ego_weather_measurement_point (coastdat_id, type_of_generation, geom)
+SELECT 
+	coastdat.gid,
+	'solar',
+	neighbour.geom
+FROM coastdat.cosmoclmgrid AS coastdat,
+	model_draft.ego_grid_hv_electrical_neighbours_bus AS neighbour
+WHERE ST_Intersects(neighbour.geom, coastdat.geom)
+ON CONFLICT DO NOTHING;
+
+
+INSERT INTO model_draft.ego_weather_measurement_point (coastdat_id, type_of_generation, geom)
+SELECT 
+	coastdat.gid,
+	'windonshore',
+	neighbour.geom
+FROM coastdat.cosmoclmgrid AS coastdat,
+	model_draft.ego_grid_hv_electrical_neighbours_bus AS neighbour
+WHERE ST_Intersects(neighbour.geom, coastdat.geom)
+ON CONFLICT DO NOTHING;
+
+-- offshore points both foreign and germans
+INSERT INTO model_draft.ego_weather_measurement_point (coastdat_id, type_of_generation, geom)
+SELECT 
+	coastdat.gid,
+	'windoffshore',
+	ST_FlipCoordinates(offshore.column1)
+FROM coastdat.cosmoclmgrid AS coastdat,
+	(SELECT * FROM (VALUES (st_SetSrid(st_MakePoint(54.366667, 5.983333), 4326)::geometry(Point, 4326)),
+	(st_SetSrid(st_MakePoint(55.6, 7.59), 4326)::geometry(Point, 4326)),
+	(st_SetSrid(st_MakePoint(54.183333, 5.883333), 4326)::geometry(Point, 4326)),
+	(st_SetSrid(st_MakePoint(58.269992, 6.327633), 4326)::geometry(Point, 4326)),
+	(st_SetSrid(st_MakePoint(49.892, 0.227), 4326)::geometry(Point, 4326)),
+	(st_SetSrid(st_MakePoint(55.9375, 14.993694), 4326)::geometry(Point, 4326)),
+	(st_SetSrid(st_MakePoint(55.000, 17.3333333333), 4326)::geometry(Point, 4326))) AS geom) AS offshore
+WHERE ST_Intersects(ST_FlipCoordinates(offshore.column1), coastdat.geom);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

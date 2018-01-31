@@ -44,8 +44,6 @@ FROM
 	when obj_label LIKE '%%hard_coal%%' THEN 8
 	when obj_label LIKE '%%run_of_river%%' THEN 9
 --	when obj_label LIKE '%%storage_phs%%' THEN 11
-	when obj_label LIKE '%%solar%%' THEN 12
-	when obj_label LIKE '%%wind%%' THEN 13
 	END AS source,
 	bus_label,
 	obj_label,
@@ -63,10 +61,28 @@ FROM
 WHERE SQ.source IS not NULL
 GROUP BY SQ.source, SQ.datetime;
 
+-- map simplefeedin power sources to pf generators
+DROP materialized view if EXISTS model_draft.ren_feedin_by_pf_source;
+CREATE materialized view model_draft.ren_feedin_by_pf_source
+AS
+SELECT
+SQ.source, SQ.step, sum(SQ.feedin) as val
+FROM
+	(SELECT
+	CASE
+	WHEN source LIKE '%%solar%%' THEN 12
+	WHEN source LIKE '%%wind%%' THEN 13
+	END AS source,
+	a.feedin AS feedin,
+	a.step AS step
+	FROM model_draft.ego_renewable_feedin AS tab, unnest(tab.feedin) WITH ORDINALITY a(feedin, step)
+	) AS SQ
+GROUP BY SQ.source, SQ.step
+
 --
 DELETE FROM model_draft.ego_grid_pf_hv_generator_pq_set;
 
--- construct array per aggr_id according to source timeseries
+-- construct array per aggr_id according to source timeseries for conventional
 INSERT into model_draft.ego_grid_pf_hv_generator_pq_set (scn_name, generator_id, temp_id, p_set)
 SELECT
 	'Status Quo' AS scn_name,
@@ -75,6 +91,18 @@ SELECT
 	array_agg(A.fraction_of_installed * B.val ORDER BY B.datetime) AS p_set
 		FROM calc_renpass_gis.pf_pp_by_source_aggr_id A,
 		calc_renpass_gis.pp_feedin_by_pf_source B
+WHERE A.source = B.source
+GROUP BY A.aggr_id;
+
+-- construct array per aggr_id according to simplefeedin timeseries for renewables
+INSERT into model_draft.ego_grid_pf_hv_generator_pq_set (scn_name, generator_id, temp_id, p_set)
+SELECT
+	'Status Quo' AS scn_name,
+	A.aggr_id,
+	1 AS temp_id,
+	array_agg(A.fraction_of_installed * B.val ORDER BY B.step) AS p_set
+		FROM calc_renpass_gis.pf_pp_by_source_aggr_id A,
+		calc_renpass_gis.ren_feedin_by_pf_source B
 WHERE A.source = B.source
 GROUP BY A.aggr_id;
 
@@ -114,8 +142,6 @@ FROM
 	when obj_label LIKE '%%hard_coal%%' THEN 8
 	when obj_label LIKE '%%run_of_river%%' THEN 9
 --	when obj_label LIKE '%%storage_phs%%' THEN 11
-	when obj_label LIKE '%%solar%%' THEN 12
-	when obj_label LIKE '%%wind%%' THEN 13
 	END AS source,
 	bus_label,
 	obj_label,
@@ -142,6 +168,18 @@ SELECT
 	array_agg(A.fraction_of_installed * B.val ORDER BY B.datetime) AS p_set
 		FROM calc_renpass_gis.pf_pp_by_source_aggr_id A,
 		calc_renpass_gis.pp_feedin_by_pf_source B
+WHERE A.source = B.source
+GROUP BY A.aggr_id;
+
+-- construct array per aggr_id according to simplefeedin timeseries for renewables
+INSERT into model_draft.ego_grid_pf_hv_generator_pq_set (scn_name, generator_id, temp_id, p_set)
+SELECT
+	'NEP' AS scn_name,
+	A.aggr_id,
+	1 AS temp_id,
+	array_agg(A.fraction_of_installed * B.val ORDER BY B.step) AS p_set
+		FROM calc_renpass_gis.pf_pp_by_source_aggr_id A,
+		calc_renpass_gis.ren_feedin_by_pf_source B
 WHERE A.source = B.source
 GROUP BY A.aggr_id;
 
