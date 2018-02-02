@@ -17,7 +17,7 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE model_draft.ego_grid_pf_hv_extension_bus
-  OWNER TO postgres;
+  OWNER TO oeuser;
 
 	
 INSERT INTO model_draft.ego_grid_pf_hv_extension_bus (bus_id, geom, bus_name, project ) 
@@ -132,7 +132,7 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE model_draft.ego_grid_pf_hv_extension_line
-  OWNER TO postgres;
+  OWNER TO oeuser;
 
 INSERT INTO model_draft.ego_grid_pf_hv_extension_line (line_id, geom, project, project_id, v_nom, segment, bus0, bus1, cable, length, nova)
 	SELECT nextval('model_draft.ego_grid_hv_extension_line_id'),
@@ -289,7 +289,7 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE model_draft.ego_grid_pf_hv_extension_link
-  OWNER TO postgres;
+  OWNER TO oeuser;
 
 INSERT INTO model_draft.ego_grid_pf_hv_extension_link (scn_name, link_id, geom, project, project_id, v_nom, segment, bus0, bus1) 
 SELECT 'extension_NEP',
@@ -398,7 +398,7 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE model_draft.ego_grid_pf_hv_extension_transformer
-  OWNER TO postgres;
+  OWNER TO oeuser;
 
 INSERT INTO model_draft.ego_grid_pf_hv_extension_transformer (scn_name, trafo_id, tap_ratio, phase_shift, bus1, v0)
 SELECT scn_name, nextval('model_draft.ego_grid_hv_extension_transformer_id'),1, 0, bus0, v_nom
@@ -530,7 +530,7 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE model_draft.ego_grid_pf_hv_extension_load
-  OWNER TO postgres;
+  OWNER TO oeuser;
 
 INSERT INTO model_draft.ego_grid_pf_hv_extension_load (scn_name, load_id, bus, sign)
 
@@ -558,7 +558,7 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE model_draft.ego_grid_pf_hv_extension_load_pq_set
-  OWNER TO postgres;
+  OWNER TO oeuser;
   
 INSERT INTO model_draft.ego_grid_pf_hv_extension_load_pq_set (scn_name, load_id, temp_id, p_set, q_set)
 
@@ -617,7 +617,7 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE model_draft.ego_grid_pf_hv_extension_generator
-  OWNER TO postgres;
+  OWNER TO oeuser;
 
 -- INSERT params of LinearTransformers in model_draft.ego_grid_pf_hv_generator (countries besides Germany)
 -- starting generator_id at 200000, bus_id for neighbouring countries > 2800000 atm
@@ -815,7 +815,7 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE model_draft.ego_grid_pf_hv_extension_generator_pq_set
-  OWNER TO postgres;
+  OWNER TO oeuser;
 
 -- BE_NO_NEP 2035
 Drop MATERIALIZED VIEW IF EXISTS calc_renpass_gis.extension_translate_to_pf;
@@ -923,7 +923,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_extension_line (scn_name, line_id, s_nom,
 		THEN 380 WHEN a.s_nom = 3580 THEN 380 WHEN a.s_nom = 925 THEN 380 WHEN a.s_nom =  1850 THEN 380 END),
 		project,
 		project_id
-	FROM grid.scn_nep2035_b2_line a, model_draft.ego_grid_pf_hv_line b WHERE a.scn_name = 'decommissioning_NEP' AND b.scn_name = 'Status Quo' AND a.geom = b.geom AND a.s_nom = b.s_nom;
+	FROM model_draft.scn_nep2035_b2_line a, model_draft.ego_grid_pf_hv_line b WHERE a.scn_name = 'decommissioning_NEP' AND b.scn_name = 'Status Quo' AND a.geom = b.geom AND a.s_nom = b.s_nom;
 
 
 DELETE FROM model_draft.ego_grid_pf_hv_extension_line a USING model_draft.ego_grid_pf_hv_extension_line b, model_draft.ego_grid_pf_hv_extension_line c 
@@ -1076,13 +1076,6 @@ DELETE FROM model_draft.ego_grid_pf_hv_extension_transformer WHERE scn_name = 'e
 INSERT INTO model_draft.ego_grid_pf_hv_extension_bus (scn_name, bus_id, v_nom, geom, project, bus_name)
 SELECT 'extension_nep2035_b2', bus_id, v_nom, geom, project, bus_name FROM model_draft.ego_grid_pf_hv_extension_bus WHERE scn_name = 'extension_NEP';
 
-
-INSERT INTO model_draft.ego_grid_pf_hv_extension_bus (scn_name, bus_id, v_nom, geom)
-VALUES ( 'extension_nep2035_b2',nextval('model_draft.ego_grid_hv_extension_bus_id'), 380,  '0101000020E610000056B7521C607FFB3F0B27630507634740'),
-( 'extension_nep2035_b2',nextval('model_draft.ego_grid_hv_extension_bus_id'), 380, '0101000020E6100000CC34F5A862612040F35A1E0B14624740');
-
-
-
 INSERT INTO model_draft.ego_grid_pf_hv_extension_bus (scn_name, bus_id, v_nom, geom, bus_name, project)
 	SELECT DISTINCT ON (osm_name) 
 		'extension_nep2035_b2',
@@ -1091,8 +1084,13 @@ INSERT INTO model_draft.ego_grid_pf_hv_extension_bus (scn_name, bus_id, v_nom, g
 		a.geom,
 		osm_name,
 		'B2'
-	FROM grid.otg_ehvhv_bus_data a, grid.scn_nep2035_b2_line b WHERE osm_name =  b.startpunkt OR osm_name = b.endpunkt OR osm_name = 'Güstrow' AND base_kv = 380;
-	
+	FROM grid.otg_ehvhv_bus_data a, model_draft.scn_nep2035_b2_line b WHERE osm_name =  b.startpunkt OR osm_name = b.endpunkt OR osm_name = 'Güstrow' AND base_kv = 380;
+
+INSERT INTO model_draft.ego_grid_pf_hv_extension_bus (scn_name, bus_id, v_nom, geom)
+VALUES ( 'extension_nep2035_b2',nextval('model_draft.ego_grid_hv_extension_bus_id'), 380,  '0101000020E610000056B7521C607FFB3F0B27630507634740'),
+( 'extension_nep2035_b2',nextval('model_draft.ego_grid_hv_extension_bus_id'), 380, '0101000020E6100000CC34F5A862612040F35A1E0B14624740');
+
+
 
 INSERT INTO model_draft.ego_grid_pf_hv_extension_line (scn_name, line_id, bus0, bus1, v_nom, s_nom, project, nova, cables) 
 	SELECT
@@ -1105,7 +1103,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_extension_line (scn_name, line_id, bus0, 
 		project,
 		nova,
 		cables
-	FROM grid.scn_nep2035_b2_line WHERE scn_name = 'extension_NEP2035_B2' AND project NOT IN ('P40', 'P200');
+	FROM model_draft.scn_nep2035_b2_line WHERE scn_name = 'extension_NEP2035_B2' AND project NOT IN ('P40', 'P200');
 
 UPDATE model_draft.ego_grid_pf_hv_extension_line 
 SET 	bus1 = (CASE project	WHEN 'P176' THEN (SELECT MIN(bus_id) FROM model_draft.ego_grid_pf_hv_extension_bus WHERE geom = '0101000020E610000056B7521C607FFB3F0B27630507634740' AND v_nom = 380 ) ---FR
@@ -1158,7 +1156,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_extension_line (scn_name, line_id, s_nom,
 		b.bus1,
 		project,
 		(CASE b.s_nom WHEN 260 THEN 110 WHEN 520 THEN 220 WHEN 1040 THEN 220 WHEN 1790 THEN 380 WHEN 3580 THEN 380 WHEN 925 THEN 380 WHEN 1850 THEN 380 END)
-	FROM grid.scn_nep2035_b2_line a, model_draft.ego_grid_pf_hv_line b WHERE a.scn_name = 'decommissioning_NEP2035_B2' 
+	FROM model_draft.scn_nep2035_b2_line a, model_draft.ego_grid_pf_hv_line b WHERE a.scn_name = 'decommissioning_NEP2035_B2' 
 	AND b.scn_name = 'Status Quo' AND a.geom = b.geom AND a.s_nom = b.s_nom;
 
 
@@ -1232,7 +1230,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_extension_transformer (scn_name, trafo_id
 		b.bus1,
 		project,
 		(CASE b.s_nom WHEN 260 THEN 110 WHEN 520 THEN 220 WHEN 1040 THEN 220 WHEN 1790 THEN 380 WHEN 3580 THEN 380 WHEN 925 THEN 380 WHEN 1850 THEN 380 END)
-	FROM grid.scn_nep2035_b2_line a, model_draft.ego_grid_pf_hv_line b WHERE a.scn_name = 'decommissioning_NEP2035_B2' AND b.scn_name = 'Status Quo' AND a.geom = b.geom AND a.s_nom = b.s_nom;
+	FROM model_draft.scn_nep2035_b2_line a, model_draft.ego_grid_pf_hv_line b WHERE a.scn_name = 'decommissioning_NEP2035_B2' AND b.scn_name = 'Status Quo' AND a.geom = b.geom AND a.s_nom = b.s_nom;
 
 
 	'extension_nep2035_b2',
@@ -1441,7 +1439,7 @@ SELECT 'extension_nep2035_b2',
 	s_nom_max
 FROM model_draft.ego_grid_pf_hv_extension_transformer WHERE scn_name = 'extension_NEP';
 
----DELETE SELECT * FROM model_draft.ego_grid_pf_hv_extension_transformer  WHERE x IS NULL;
+---DELETE FROM model_draft.ego_grid_pf_hv_extension_transformer  WHERE x IS NULL;
 
 UPDATE model_draft.ego_grid_pf_hv_extension_bus
 SET current_type = 'AC';
