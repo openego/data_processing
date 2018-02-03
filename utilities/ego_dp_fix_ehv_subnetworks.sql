@@ -1,4 +1,4 @@
-﻿﻿﻿---- 380kV Berlin 
+﻿---- 380kV Berlin 
 --- line doesn't exist in entso-e, substations are 110kV in osm 
 -- delete 380kV buses nd lines and temporary reconnect one-ports
 DELETE FROM model_draft.ego_grid_pf_hv_busmap WHERE scn_name = 'Status Quo';
@@ -139,12 +139,12 @@ SELECT 	nextval('model_draft.ego_grid_hv_electrical_neighbours_line_id'),
 	50;
 
 INSERT INTO model_draft.ego_grid_pf_hv_line (scn_name, line_id, bus0, bus1, length, topo, geom,  x, r, s_nom, cables, frequency)
-SELECT 'NEP 2035',scn_name, line_id, bus0, bus1, length, topo, geom,  x, r, s_nom, cables, frequency
+SELECT 'NEP 2035', line_id, bus0, bus1, length, topo, geom,  x, r, s_nom, cables, frequency
 FROM model_draft.ego_grid_pf_hv_line
 WHERE scn_name = 'Status Quo' AND s_nom = 1040 AND topo = '0102000020E610000002000000650A175E64FC1B4071A44A690DB0484085E1E2CCE9771C40D1DD7BCF2EA94840';
 
 INSERT INTO model_draft.ego_grid_pf_hv_line (scn_name, line_id, bus0, bus1, length, topo, geom,  x, r, s_nom, cables, frequency)
-SELECT 'eGo 100',scn_name, line_id, bus0, bus1, length, topo, geom,  x, r, s_nom, cables, frequency
+SELECT 'eGo 100', line_id, bus0, bus1, length, topo, geom,  x, r, s_nom, cables, frequency
 FROM model_draft.ego_grid_pf_hv_line
 WHERE scn_name = 'Status Quo' AND s_nom = 1040 AND topo = '0102000020E610000002000000650A175E64FC1B4071A44A690DB0484085E1E2CCE9771C40D1DD7BCF2EA94840';
 	
@@ -157,12 +157,12 @@ SELECT DISTINCT ON (geom)
 FROM grid.otg_ehvhv_bus_data WHERE osm_name IN ('Umspannwerk Siems');
 
 INSERT INTO model_draft.ego_grid_pf_hv_bus (scn_name, bus_id, v_nom, geom)
-SELECT 'NEP 2035', bus_id, geom
+SELECT 'NEP 2035', bus_id, v_nom, geom
 FROM model_draft.ego_grid_pf_hv_bus 
 WHERE scn_name = 'Status Quo' AND geom = '0101000020E6100000D38040358C8525403935408972F44A40' AND v_nom = 220;
 
 INSERT INTO model_draft.ego_grid_pf_hv_bus (scn_name, bus_id, v_nom, geom)
-SELECT 'eGo 100', bus_id, geom
+SELECT 'eGo 100', bus_id, v_nom, geom
 FROM model_draft.ego_grid_pf_hv_bus
 WHERE scn_name = 'Status Quo' AND geom = '0101000020E6100000D38040358C8525403935408972F44A40' AND v_nom = 220;
 	
@@ -217,12 +217,12 @@ VALUES	(nextval('model_draft.ego_grid_hv_electrical_neighbours_bus_id'),
 	380,
 	'0101000020E6100000E1F4899702B52940FA1DD48F97614840');
 	
-INSERT INTO model_draft.ego_grid_pf_hv_bus (bus_id, v_nom, geom)
+INSERT INTO model_draft.ego_grid_pf_hv_bus (scn_name, bus_id, v_nom, geom)
 SELECT 'NEP 2035', bus_id, v_nom, geom
 FROM model_draft.ego_grid_pf_hv_bus
 WHERE scn_name = 'Status Quo' AND geom = '0101000020E6100000E1F4899702B52940FA1DD48F97614840' AND v_nom = 380;
 
-INSERT INTO model_draft.ego_grid_pf_hv_bus (bus_id, v_nom, geom)
+INSERT INTO model_draft.ego_grid_pf_hv_bus (scn_name, bus_id, v_nom, geom)
 SELECT 'eGo 100', bus_id, v_nom, geom
 FROM model_draft.ego_grid_pf_hv_bus
 WHERE scn_name = 'Status Quo' AND geom = '0101000020E6100000E1F4899702B52940FA1DD48F97614840' AND v_nom = 380;
