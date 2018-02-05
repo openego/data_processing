@@ -2148,7 +2148,7 @@ CREATE TABLE grid.ego_pf_hv_generator_pq_set
 (
   version text, 
   scn_name character varying NOT NULL DEFAULT 'Status Quo'::character varying,
-  generator_id character varying(25) NOT NULL,
+  generator_id bigint NOT NULL,
   temp_id integer NOT NULL,
   p_set double precision[],
   q_set double precision[],
