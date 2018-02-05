@@ -1189,6 +1189,10 @@ ALTER TABLE model_draft.ego_grid_pf_hv_line
   OWNER TO oeuser;
 GRANT ALL ON TABLE model_draft.ego_grid_pf_hv_line TO oeuser;
 
+ALTER TABLE model_draft.ego_grid_pf_hv_link
+  OWNER TO oeuser;
+GRANT ALL ON TABLE model_draft.ego_grid_pf_hv_link TO oeuser;
+
 ALTER TABLE model_draft.ego_grid_pf_hv_load
   OWNER TO oeuser;
 GRANT ALL ON TABLE model_draft.ego_grid_pf_hv_load TO oeuser;
