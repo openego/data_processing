@@ -528,6 +528,147 @@ CREATE TABLE model_draft.ego_grid_pf_hv_link
   topo geometry(LineString,4326)
   CONSTRAINT link_data_pkey PRIMARY KEY (link_id, scn_name) ) WITH ( OIDS=FALSE );
   
+-- metadata
+
+COMMENT ON TABLE model_draft.ego_grid_pf_hv_link
+  IS E'{
+    "title": "eGo hv powerflow - links",
+    "description": "links in eGo hv powerflow",
+    "language": [ "eng" ],
+    "spatial": {
+        "resolution": "",
+        "location": "",
+        "extend": "Germany"
+    },
+    "temporal": {
+        "reference_date": " ",
+        "start": "",
+        "end": "",
+        "resolution": ""
+    },
+    "sources": [
+        {
+            "url": "https://github.com/openego/data_processing",
+            "copyright": "\\u00a9 Flensburg University of Applied Sciences, Center for Sustainable Energy Systems",
+            "name": "eGo dataprocessing",
+            "license": "GNU Affero General Public License Version 3 (AGPL-3.0)",
+            "description": " "
+        },
+        {
+            "url": "http://www.openstreetmap.org/",
+            "copyright": "\\u00a9 OpenStreetMap contributors",
+            "name": "OpenStreetMap",
+            "license": "Open Database License (ODbL) v1.0",
+            "description": " "
+        },
+        {
+            "url": "https://www.entsoe.eu/map/Pages/default.aspx",
+            "copyright": "\\u00a9 ENTSO-E",
+            "name": "ENTSO-E",
+            "license": " ",
+            "description": " "
+        }
+
+    ],
+    "license": {
+        "name": "Open Data Commons Open Database License 1.0",
+        "copyright": "\\u00a9 Flensburg University of Applied Sciences, Centre for sustainable Energy Systems",
+        "url": "https://opendatacommons.org/licenses/odbl/1.0/",
+        "instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
+        "version": "1.0",
+        "id": "ODbL-1.0"
+    },
+    "contributors": [
+        {
+            "date": "05.02.2018",
+            "comment": "Create table",
+            "name": "IlkaCu",
+            "email": ""
+        }
+    ],
+    "resources": [
+        {
+            "fields": [
+
+                {
+                    "name": "scn_name",
+                    "unit": "",
+                    "description": "name of corresponding scenario"
+                },
+                {
+                    "name": "link_id",
+                    "unit": "",
+                    "description": "ID of line"
+                },
+                {
+                    "name": "bus0",
+                    "unit": "",
+                    "description": "name of first bus to which branch is attached"
+                },
+                {
+                    "name": "bus1",
+                    "unit": "",
+                    "description": "name of second bus to which branch is attached"
+                },
+                {
+                    "name": "efficiency",
+                    "unit": "",
+                    "description": "efficiency of power transfer from bus0 to bus1"
+                },
+                {
+                    "name": "p_nom",
+                    "unit": "MVA",
+                    "description": "limit of active power which can pass through link"
+                },
+                {
+                    "name": "p_nom_extendable",
+                    "unit": "",
+                    "description": "switch to allow capacity p_nom to be extended in OPF"
+                },
+                {
+                    "name": "p_nom_min",
+                    "unit": "MVA",
+                    "description": "minimum value, if p_nom is extendable"
+                },
+                {
+                    "name": "p_nom_max",
+                    "unit": "MVA",
+                    "description": "maximum value, if p_nom is extendable"
+                },
+                {
+                    "name": "capital_cost",
+                    "unit": "EUR/MVA",
+                    "description": "capital cost of extending s_nom by 1 MVA"
+                },
+                {
+                    "name": "length",
+                    "unit": "km",
+                    "description": "length of line"
+                },
+                {
+                    "name": "terrain_factor",
+                    "unit": "",
+                    "description": "terrain_factor"
+                },
+                {
+                    "name": "geom",
+                    "unit": "",
+                    "description": "geometry that depict the real route of the line"
+                },
+                {
+                    "name": "topo",
+                    "unit": "...",
+                    "description": "topology that depicts a direct connection between both busses"
+                }
+            ],
+            "name": "model_draft.ego_grid_pf_hv_link",
+            "format": "sql"
+        }
+    ],
+    "metadata_version": "1.3"
+}';
+
+  
 -- select description
 SELECT obj_description('model_draft.ego_grid_pf_hv_link' ::regclass) ::json;
 
