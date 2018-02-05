@@ -505,6 +505,35 @@ SELECT obj_description('model_draft.ego_grid_pf_hv_line' ::regclass) ::json;
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_grid_pf_hv_line','ego_dp_powerflow_hv_setup.sql',' ');
 
+-- PF HV link 
+
+DROP TABLE IF EXISTS 	model_draft.ego_grid_pf_hv_link CASCADE;
+
+CREATE TABLE model_draft.ego_grid_pf_hv_link
+(
+  scn_name character varying NOT NULL DEFAULT 'Status Quo'::character varying,
+  link_id bigint NOT NULL,
+  bus0 bigint,
+  bus1 bigint,
+  efficiency double precision DEFAULT 1,
+  marginal_cost double precision DEFAULT 0,
+  p_nom numeric DEFAULT 0,
+  p_nom_extendable boolean DEFAULT false,
+  p_nom_min double precision DEFAULT 0,
+  p_nom_max double precision,
+  capital_cost double precision,
+  length double precision,
+  terrain_factor double precision DEFAULT 1,
+  geom geometry(MultiLineString,4326),
+  topo geometry(LineString,4326)
+  CONSTRAINT link_data_pkey PRIMARY KEY (link_id, scn_name) ) WITH ( OIDS=FALSE );
+  
+-- select description
+SELECT obj_description('model_draft.ego_grid_pf_hv_link' ::regclass) ::json;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_grid_pf_hv_link','ego_dp_powerflow_hv_setup.sql',' ');
+
 
 -- PF HV load
 DROP TABLE IF EXISTS 	model_draft.ego_grid_pf_hv_load CASCADE; 
