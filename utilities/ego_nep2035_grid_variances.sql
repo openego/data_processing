@@ -362,6 +362,11 @@ UPDATE model_draft.ego_grid_pf_hv_extension_link a
 /*INSERT INTO model_draft.ego_grid_pf_hv_extension_link (link_id, geom, project, project_id, segment, p_nom, bus0, bus1, scn_name, length, v_nom, efficiency, topo)
 	SELECT nextval('model_draft.ego_grid_hv_extension_link_id'), geom, project, project_id, segment, p_nom, bus1, bus0, scn_name, length,  v_nom, efficiency, topo FROM model_draft.ego_grid_pf_hv_extension_link;
 */
+--- Delete unused buses 
+DELETE FROM model_draft.ego_grid_pf_hv_extension_bus a WHERE bus_id NOT IN (SELECT bus0 FROM model_draft.ego_grid_pf_hv_extension_line WHERE scn_name = a.scn_name)
+AND bus_id NOT IN (SELECT bus1 FROM model_draft.ego_grid_pf_hv_extension_line WHERE scn_name = a.scn_name)
+AND bus_id NOT IN (SELECT bus0 FROM model_draft.ego_grid_pf_hv_extension_link WHERE scn_name = a.scn_name) AND bus_id NOT IN (SELECT bus1 FROM model_draft.ego_grid_pf_hv_extension_link WHERE scn_name = a.scn_name)
+AND bus_id NOT IN (SELECT bus0 FROM model_draft.ego_grid_pf_hv_extension_transformer WHERE scn_name = a.scn_name) AND bus_id NOT IN (SELECT bus1 FROM model_draft.ego_grid_pf_hv_extension_transformer WHERE scn_name = a.scn_name);
 
 
 -- Table: model_draft.ego_grid_pf_hv_extension_transformer
@@ -387,6 +392,7 @@ CREATE TABLE model_draft.ego_grid_pf_hv_extension_transformer
   capital_cost double precision DEFAULT 0,
   geom geometry(MultiLineString,4326),
   topo geometry(LineString,4326),
+  project character varying,
   v0 double precision DEFAULT 0, --- temp
   v1 double precision DEFAULT 0, --- temp
   s0 double precision DEFAULT 0, --- temp
@@ -400,29 +406,29 @@ WITH (
 ALTER TABLE model_draft.ego_grid_pf_hv_extension_transformer
   OWNER TO postgres;
 
-INSERT INTO model_draft.ego_grid_pf_hv_extension_transformer (scn_name, trafo_id, tap_ratio, phase_shift, bus1, v0)
-SELECT scn_name, nextval('model_draft.ego_grid_hv_extension_transformer_id'),1, 0, bus0, v_nom
-FROM model_draft.ego_grid_pf_hv_extension_line
-WHERE scn_name != 'decommissioning_NEP' AND bus0 NOT IN (SELECT bus1 FROM model_draft.ego_grid_pf_hv_extension_line WHERE scn_name != 'decommissioning_NEP')
-AND bus0 NOT IN (SELECT bus_id FROM model_draft.ego_grid_pf_hv_bus);
+INSERT INTO model_draft.ego_grid_pf_hv_extension_transformer (scn_name, trafo_id, tap_ratio, phase_shift, bus1, v0, project)
+SELECT scn_name, nextval('model_draft.ego_grid_hv_extension_transformer_id'),1, 0, bus_id, v_nom, project
+FROM model_draft.ego_grid_pf_hv_extension_bus
+WHERE scn_name != 'decommissioning_NEP';
 		
-INSERT INTO model_draft.ego_grid_pf_hv_extension_transformer (scn_name, trafo_id, tap_ratio, phase_shift, bus1, v0)
+/*INSERT INTO model_draft.ego_grid_pf_hv_extension_transformer (scn_name, trafo_id, tap_ratio, phase_shift, bus1, v0)
 SELECT scn_name, nextval('model_draft.ego_grid_hv_extension_transformer_id'), 1, 0, bus1, v_nom
 FROM model_draft.ego_grid_pf_hv_extension_line
 WHERE  bus1 NOT IN (SELECT bus0 FROM model_draft.ego_grid_pf_hv_extension_line WHERE scn_name != 'decommissioning_NEP')
-AND bus1 NOT IN (SELECT bus_id FROM model_draft.ego_grid_pf_hv_bus);
+AND bus1 NOT IN (SELECT bus_id FROM model_draft.ego_grid_pf_hv_bus);*/
 
 UPDATE model_draft.ego_grid_pf_hv_extension_transformer a
 SET 	s0 = (SELECT SUM(b.s_nom)
 FROM model_draft.ego_grid_pf_hv_extension_line b
 WHERE a.bus1 = b.bus1 OR a.bus1 = b.bus0);
 
-INSERT INTO model_draft.ego_grid_pf_hv_extension_transformer (trafo_id, tap_ratio, phase_shift, scn_name, bus1, v0)
+INSERT INTO model_draft.ego_grid_pf_hv_extension_transformer (trafo_id, tap_ratio, phase_shift, scn_name, bus1, v0, project)
 SELECT 	nextval('model_draft.ego_grid_hv_extension_transformer_id'),
 	1, 0,
 	scn_name,
 	bus0,
-	v_nom
+	v_nom,
+	project
 FROM model_draft.ego_grid_pf_hv_extension_link
 WHERE bus0 NOT IN (SELECT bus_id FROM model_draft.ego_grid_pf_hv_bus)
 AND bus0 NOT IN (SELECT bus_id FROM model_draft.ego_grid_pf_hv_extension_bus WHERE geom IN ('0101000020E6100000351DBC74686A24405536F7CC1CFC4E40', '0101000020E61000003851291763E8114098865E2D305B4940'))
