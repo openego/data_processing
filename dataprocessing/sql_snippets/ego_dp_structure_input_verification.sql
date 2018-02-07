@@ -3,27 +3,6 @@ Input verification (eGoPP)
 Check the necessary input tables from eGo PreProcessing.
 Return version of input tables.
 
-Input
------
-boundaries.bkg_vg250_1_sta
-boundaries.bkg_vg250_2_lan
-boundaries.bkg_vg250_4_krs
-boundaries.bkg_vg250_6_gem
-openstreetmap.osm_deu_polygon
-openstreetmap.osm_deu_ways
-openstreetmap.osm_deu_nodes
-openstreetmap.osm_deu_line
-society.destatis_zensus_population_per_ha
-economy.destatis_gva_per_district
-demand.ego_demand_federalstate
-supply.vernetzen_wind_potential_area
-model_draft.ego_supply_res_powerplant_sq_mview
-model_draft.ego_supply_conv_powerplant_sq_mview
-
-Output
-------
-model_draft.ego_scenario_input
-
 __copyright__   = "Reiner Lemoine Institut"
 __license__     = "GNU Affero General Public License Version 3 (AGPL-3.0)"
 __url__         = "https://github.com/openego/data_processing/blob/master/LICENSE"

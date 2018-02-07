@@ -1,10 +1,12 @@
 /*
+EHV Substation
+Abstract EHV Substations of the extra high voltage level from OSM.
 This script abstracts substations of the extra high voltage level from openstreetmap data. 
 
-__copyright__ 	= "DLR Institute for Networked Energy Systems"
-__license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
-__url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
-__author__ 	= "lukasol, C. Matke, Ludee"
+__copyright__   = "DLR Institute for Networked Energy Systems"
+__license__     = "GNU Affero General Public License Version 3 (AGPL-3.0)"
+__url__         = "https://github.com/openego/data_processing/blob/master/LICENSE"
+__author__      = "lukasol, C. Matke, Ludee"
 */
 
 
