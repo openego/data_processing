@@ -7,7 +7,7 @@ __KEYS = ['description', 'copyright', 'license', 'url', 'author']
 SPACER = '  '
 
 expr = r"""\/\*\s*
-(?P<description>.*)\s*
+(?P<description>[\s\S]*)
 __copyright__\s*=\s*"(?P<copyright>.*)"\s*
 __license__\s*=\s*"(?P<license>.*)"\s*
 __url__\s*=\s*"(?P<url>.*)"\s*
