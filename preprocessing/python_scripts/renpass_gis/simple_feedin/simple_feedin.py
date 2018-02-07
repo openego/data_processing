@@ -113,8 +113,8 @@ def df_to_renewable_feedin(df, weather_year, weather_scenario_id):
     # Insert Data to DB
     for k in df.columns:
         weather_scenario_id = weather_scenario_id
-        w_id = k[1][:k[1].index('_')]
-        source = k[2]
+        w_id = k[0]
+        source = k[1]
         weather_year = weather_year
         feedin = df[k].values.tolist()
         info = Ego_renewable_feedin(w_id=w_id,
@@ -175,7 +175,7 @@ def main():
     # calculate feedins applying correction factors
     
     count = 0
-    for coastdat_id, type_of_generation, geom in points[:100]:
+    for coastdat_id, type_of_generation, geom in points:
         count += 1
         print(count)
         try:

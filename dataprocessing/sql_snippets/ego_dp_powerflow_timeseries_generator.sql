@@ -24,7 +24,7 @@ FROM
 	FROM model_draft.ego_supply_pf_generator_single
 	WHERE scn_name = 'Status Quo'
 	AND aggr_id IS NOT NULL
-	GROUP BY aggr_id, source) SQ;
+GROUP BY aggr_id, source) SQ;
 
 -- map renpassG!S power sources to pf generators, aggr on fuel types, neglect efficiency classes
 DROP materialized view if EXISTS calc_renpass_gis.pp_feedin_by_pf_source;
@@ -44,6 +44,8 @@ FROM
 	when obj_label LIKE '%%hard_coal%%' THEN 8
 	when obj_label LIKE '%%run_of_river%%' THEN 9
 --	when obj_label LIKE '%%storage_phs%%' THEN 11
+	when obj_label LIKE '%%solar%%' THEN 12
+	when obj_label LIKE '%%wind%%' THEN 13
 	END AS source,
 	bus_label,
 	obj_label,
@@ -54,30 +56,40 @@ FROM
 	-- conds
 	WHERE obj_label LIKE '%%DE%%' -- only Germany
 	AND obj_label not LIKE '%%powerline%%' -- without any powerlines
-	AND scenario_id = 37
+	AND scenario_id = 43
 	 -- take only one flow (input), storage output flow seems to be the right one (?)
 	AND ((obj_label LIKE '%%storage%%' AND type = 'from_bus') or (obj_label not LIKE '%%storage%%' AND type = 'to_bus'))
 ) AS SQ
 WHERE SQ.source IS not NULL
 GROUP BY SQ.source, SQ.datetime;
 
--- map simplefeedin power sources to pf generators
-DROP materialized view if EXISTS model_draft.ren_feedin_by_pf_source;
-CREATE materialized view model_draft.ren_feedin_by_pf_source
+-- get feedin per generator_id from ego_renewable_feedin
+DROP materialized view IF EXISTS model_draft.ren_feedin_by_gen_id;
+CREATE materialized view model_draft.ren_feedin_by_gen_id
 AS
 SELECT
-SQ.source, SQ.step, sum(SQ.feedin) as val
+gen.generator_id, feedin.feedin
 FROM
 	(SELECT
+	aggr_id AS generator_id,
+	w_id,
+	source
+	FROM
+	model_draft.ego_supply_pf_generator_single 
+	WHERE source IN (12, 13)
+	AND scn_name = 'Status Quo'
+	GROUP BY aggr_id, w_id, source) AS gen,
+	(SELECT
+	w_id,
 	CASE
 	WHEN source LIKE '%%solar%%' THEN 12
 	WHEN source LIKE '%%wind%%' THEN 13
 	END AS source,
-	a.feedin AS feedin,
-	a.step AS step
-	FROM model_draft.ego_renewable_feedin AS tab, unnest(tab.feedin) WITH ORDINALITY a(feedin, step)
-	) AS SQ
-GROUP BY SQ.source, SQ.step
+	feedin
+	FROM model_draft.ego_renewable_feedin) AS feedin
+WHERE gen.source = feedin.source
+	AND gen.w_id = feedin.w_id;
+	
 
 --
 DELETE FROM model_draft.ego_grid_pf_hv_generator_pq_set;
@@ -94,18 +106,11 @@ SELECT
 WHERE A.source = B.source
 GROUP BY A.aggr_id;
 
--- construct array per aggr_id according to simplefeedin timeseries for renewables
-INSERT into model_draft.ego_grid_pf_hv_generator_pq_set (scn_name, generator_id, temp_id, p_set)
-SELECT
-	'Status Quo' AS scn_name,
-	A.aggr_id,
-	1 AS temp_id,
-	array_agg(A.fraction_of_installed * B.val ORDER BY B.step) AS p_set
-		FROM calc_renpass_gis.pf_pp_by_source_aggr_id A,
-		calc_renpass_gis.ren_feedin_by_pf_source B
-WHERE A.source = B.source
-GROUP BY A.aggr_id;
-
+-- set p_max_pu as timeseries from ego_renewable_feedin
+UPDATE model_draft.ego_grid_pf_hv_generator_pq_set A
+	SET p_max_pu = feedin.feedin
+		FROM model_draft.ren_feedin_by_gen_id AS feedin
+		WHERE A.generator_id = feedin.generator_id;
 -- NEP 2035
 
 -- aggregate nominal capacity on aggr_id FROM powerflow generators, keeping the source
@@ -142,6 +147,8 @@ FROM
 	when obj_label LIKE '%%hard_coal%%' THEN 8
 	when obj_label LIKE '%%run_of_river%%' THEN 9
 --	when obj_label LIKE '%%storage_phs%%' THEN 11
+	when obj_label LIKE '%%solar%%' THEN 12
+	when obj_label LIKE '%%wind%%' THEN 13
 	END AS source,
 	bus_label,
 	obj_label,
@@ -159,6 +166,33 @@ FROM
 WHERE NEP.source IS not NULL
 GROUP BY NEP.source, NEP.datetime;
 
+-- get feedin per generator_id from ego_renewable_feedin
+DROP materialized view IF EXISTS model_draft.ren_feedin_by_gen_id;
+CREATE materialized view model_draft.ren_feedin_by_gen_id
+AS
+SELECT
+gen.generator_id, feedin.feedin
+FROM
+	(SELECT
+	aggr_id AS generator_id,
+	w_id,
+	source
+	FROM
+	model_draft.ego_supply_pf_generator_single 
+	WHERE source IN (12, 13)
+	AND scn_name = 'NEP 2035'
+	GROUP BY aggr_id, w_id, source) AS gen,
+	(SELECT
+	w_id,
+	CASE
+	WHEN source LIKE '%%solar%%' THEN 12
+	WHEN source LIKE '%%wind%%' THEN 13
+	END AS source,
+	feedin
+	FROM model_draft.ego_renewable_feedin) AS feedin
+WHERE gen.source = feedin.source
+	AND gen.w_id = feedin.w_id;
+
 -- construct array per aggr_id according to source timeseries
 INSERT into model_draft.ego_grid_pf_hv_generator_pq_set (scn_name, generator_id, temp_id, p_set)
 SELECT
@@ -171,17 +205,11 @@ SELECT
 WHERE A.source = B.source
 GROUP BY A.aggr_id;
 
--- construct array per aggr_id according to simplefeedin timeseries for renewables
-INSERT into model_draft.ego_grid_pf_hv_generator_pq_set (scn_name, generator_id, temp_id, p_set)
-SELECT
-	'NEP' AS scn_name,
-	A.aggr_id,
-	1 AS temp_id,
-	array_agg(A.fraction_of_installed * B.val ORDER BY B.step) AS p_set
-		FROM calc_renpass_gis.pf_pp_by_source_aggr_id A,
-		calc_renpass_gis.ren_feedin_by_pf_source B
-WHERE A.source = B.source
-GROUP BY A.aggr_id;
+-- set p_max_pu as timeseries from ego_renewable_feedin
+UPDATE model_draft.ego_grid_pf_hv_generator_pq_set A
+	SET p_max_pu = feedin.feedin
+		FROM model_draft.ren_feedin_by_gen_id AS feedin
+		WHERE A.generator_id = feedin.generator_id;
 
 
 ------------------ NEIGHBOURING COUNTRIES
@@ -456,14 +484,14 @@ INSERT into model_draft.ego_grid_pf_hv_generator
 
 
 -- Copy timeseries data
---DELETE FROM model_draft.ego_grid_pf_hv_generator_pq_set WHERE generator_id > 200000 AND scn_name = 'Status Quo';
+DELETE FROM model_draft.ego_grid_pf_hv_generator_pq_set WHERE generator_id > 200000 AND scn_name = 'Status Quo';
 DELETE FROM model_draft.ego_grid_pf_hv_generator_pq_set WHERE generator_id > 200000 AND scn_name = 'NEP 2035';
 DELETE FROM model_draft.ego_grid_pf_hv_generator_pq_set WHERE generator_id > 200000 AND scn_name = 'eGo 100';
 
 -- CREATE a view containing data for generator_id's > 200000 for each timestep
 -- SELECT * FROM calc_renpass_gis.translate_to_pf limit 1000;
 -- Status Quo
-Drop MATERIALIZED VIEW IF EXISTS calc_renpass_gis.translate_to_pf;
+DROP MATERIALIZED VIEW IF EXISTS calc_renpass_gis.translate_to_pf;
 
 CREATE MATERIALIZED VIEW calc_renpass_gis.translate_to_pf AS
 	SELECT
@@ -496,6 +524,44 @@ CREATE MATERIALIZED VIEW calc_renpass_gis.translate_to_pf AS
 	AND C.scenario_id = 37
 	AND C.type = 'to_bus';
 
+-- create a view assigning a w_id to each foreign bus and the respective feedin
+DROP MATERIALIZED VIEW IF EXISTS model_draft.ren_feedin_foreign;
+CREATE MATERIALIZED VIEW model_draft.ren_feedin_foreign AS
+SELECT
+A.generator_id, B.feedin
+FROM
+	(SELECT
+	feedin.w_id,
+	CASE
+		WHEN feedin.source LIKE '%%solar%%' THEN 12
+		WHEN feedin.source LIKE '%%wind%%' THEN 13
+	END AS source,
+	feedin.feedin
+	FROM 
+	model_draft.ego_renewable_feedin AS feedin
+	) AS B,
+	(SELECT 
+	generators.generator_id,
+	generators.source,
+	buses.w_id
+	FROM
+		(SELECT
+		neighbours.bus_id AS bus_id,
+		weather.gid AS w_id
+		FROM model_draft.ego_grid_hv_electrical_neighbours_bus AS neighbours,
+			coastdat.cosmoclmgrid AS weather
+		WHERE ST_Intersects(weather.geom, neighbours.geom))
+		AS buses,
+	model_draft.ego_grid_pf_hv_generator AS generators
+	WHERE generators.bus = buses.bus_id
+	AND generators.source IN (12, 13)
+	AND generators.generator_id > 200000
+	AND generators.scn_name = 'Status Quo'
+	) AS A
+WHERE A.w_id = B.w_id
+AND A.source = B.source;
+
+
 -- Make an array, INSERT into generator_pq_set
 INSERT into model_draft.ego_grid_pf_hv_generator_pq_set (scn_name, generator_id, temp_id, p_set)
 
@@ -514,6 +580,12 @@ INSERT into model_draft.ego_grid_pf_hv_generator_pq_set (scn_name, generator_id,
 			USING (generator_id)
 		) SQ
 	GROUP BY generator_id;
+
+-- set p_max_pu as timeseries from ego_renewable_feedin
+UPDATE model_draft.ego_grid_pf_hv_generator_pq_set A
+	SET p_max_pu = feedin.feedin
+		FROM model_draft.ren_feedin_foreign AS feedin
+		WHERE A.generator_id = feedin.generator_id;
 
 -- NEP 2035
 
@@ -550,6 +622,43 @@ CREATE MATERIALIZED VIEW calc_renpass_gis.translate_to_pf AS
 	AND C.scenario_id = 38
 	AND C.type = 'to_bus';
 
+-- create a view assigning a w_id to each foreign bus and the respective feedin
+DROP MATERIALIZED VIEW IF EXISTS model_draft.ren_feedin_foreign;
+CREATE MATERIALIZED VIEW model_draft.ren_feedin_foreign AS
+SELECT
+A.generator_id, B.feedin
+FROM
+	(SELECT
+	feedin.w_id,
+	CASE
+		WHEN feedin.source LIKE '%%solar%%' THEN 12
+		WHEN feedin.source LIKE '%%wind%%' THEN 13
+	END AS source,
+	feedin.feedin
+	FROM 
+	model_draft.ego_renewable_feedin AS feedin
+	) AS B,
+	(SELECT 
+	generators.generator_id,
+	generators.source,
+	buses.w_id
+	FROM
+		(SELECT
+		neighbours.bus_id AS bus_id,
+		weather.gid AS w_id
+		FROM model_draft.ego_grid_hv_electrical_neighbours_bus AS neighbours,
+			coastdat.cosmoclmgrid AS weather
+		WHERE ST_Intersects(weather.geom, neighbours.geom))
+		AS buses,
+	model_draft.ego_grid_pf_hv_generator AS generators
+	WHERE generators.bus = buses.bus_id
+	AND generators.source IN (12, 13)
+	AND generators.generator_id > 200000
+	AND generators.scn_name = 'NEP 2035'
+	) AS A
+WHERE A.w_id = B.w_id
+AND A.source = B.source;
+
 -- Make an array, INSERT into generator_pq_set
 INSERT into model_draft.ego_grid_pf_hv_generator_pq_set (scn_name, generator_id, temp_id, p_set)
 
@@ -568,6 +677,11 @@ INSERT into model_draft.ego_grid_pf_hv_generator_pq_set (scn_name, generator_id,
 			USING (generator_id)
 		) NEP
 	GROUP BY generator_id;
+
+UPDATE model_draft.ego_grid_pf_hv_generator_pq_set A
+	SET p_max_pu = feedin.feedin
+		FROM model_draft.ren_feedin_foreign AS feedin
+		WHERE A.generator_id = feedin.generator_id;
 	
 -- eGo 100
 
@@ -604,6 +718,43 @@ CREATE MATERIALIZED VIEW calc_renpass_gis.translate_to_pf AS
 	AND C.scenario_id = 38
 	AND C.type = 'to_bus';
 
+-- create a view assigning a w_id to each foreign bus and the respective feedin
+DROP MATERIALIZED VIEW IF EXISTS model_draft.ren_feedin_foreign;
+CREATE MATERIALIZED VIEW model_draft.ren_feedin_foreign AS
+SELECT
+A.generator_id, B.feedin
+FROM
+	(SELECT
+	feedin.w_id,
+	CASE
+		WHEN feedin.source LIKE '%%solar%%' THEN 12
+		WHEN feedin.source LIKE '%%wind%%' THEN 13
+	END AS source,
+	feedin.feedin
+	FROM 
+	model_draft.ego_renewable_feedin AS feedin
+	) AS B,
+	(SELECT 
+	generators.generator_id,
+	generators.source,
+	buses.w_id
+	FROM
+		(SELECT
+		neighbours.bus_id AS bus_id,
+		weather.gid AS w_id
+		FROM model_draft.ego_grid_hv_electrical_neighbours_bus AS neighbours,
+			coastdat.cosmoclmgrid AS weather
+		WHERE ST_Intersects(weather.geom, neighbours.geom))
+		AS buses,
+	model_draft.ego_grid_pf_hv_generator AS generators
+	WHERE generators.bus = buses.bus_id
+	AND generators.source IN (12, 13)
+	AND generators.generator_id > 200000
+	AND generators.scn_name = 'eGo 100'
+	) AS A
+WHERE A.w_id = B.w_id
+AND A.source = B.source;
+
 -- Make an array, INSERT into generator_pq_set
 INSERT into model_draft.ego_grid_pf_hv_generator_pq_set (scn_name, generator_id, temp_id, p_set)
 
@@ -623,6 +774,11 @@ INSERT into model_draft.ego_grid_pf_hv_generator_pq_set (scn_name, generator_id,
 		) EGO
 	GROUP BY generator_id;
 
+-- set p_max_pu as timeseries from ego_renewable_feedin
+UPDATE model_draft.ego_grid_pf_hv_generator_pq_set A
+	SET p_max_pu = feedin.feedin
+		FROM model_draft.feedin_per_foreign_bus AS feedin
+		WHERE A.generator_id = feedin.generator_id;
 
 -- DELETE
 DELETE FROM model_draft.ego_grid_pf_hv_load WHERE bus IN (

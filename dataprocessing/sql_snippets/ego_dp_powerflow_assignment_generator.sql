@@ -362,8 +362,8 @@ INSERT INTO model_draft.ego_grid_pf_hv_generator (
 		p_min_pu_fixed,
 		p_max_pu_fixed,
 		sign,
-		source )
-	SELECT	scn_name
+		source)
+	SELECT	scn_name,
 		aggr_id,
 		bus,
 		max(dispatch),

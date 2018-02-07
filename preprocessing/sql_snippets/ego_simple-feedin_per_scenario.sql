@@ -141,19 +141,16 @@ INSERT INTO model_draft.ego_weather_measurement_point (coastdat_id, type_of_gene
 SELECT 
 	coastdat.gid,
 	'windoffshore',
-	ST_FlipCoordinates(offshore.column1)
+	offshore.column1
 FROM coastdat.cosmoclmgrid AS coastdat,
 	(SELECT * FROM (VALUES (st_SetSrid(st_MakePoint(54.366667, 5.983333), 4326)::geometry(Point, 4326)),
-	(st_SetSrid(st_MakePoint(55.6, 7.59), 4326)::geometry(Point, 4326)),
-	(st_SetSrid(st_MakePoint(54.183333, 5.883333), 4326)::geometry(Point, 4326)),
-	(st_SetSrid(st_MakePoint(58.269992, 6.327633), 4326)::geometry(Point, 4326)),
-	(st_SetSrid(st_MakePoint(49.892, 0.227), 4326)::geometry(Point, 4326)),
-	(st_SetSrid(st_MakePoint(55.9375, 14.993694), 4326)::geometry(Point, 4326)),
-	(st_SetSrid(st_MakePoint(55.000, 17.3333333333), 4326)::geometry(Point, 4326))) AS geom) AS offshore
-WHERE ST_Intersects(ST_FlipCoordinates(offshore.column1), coastdat.geom);
-
-
-
+	(st_SetSrid(st_MakePoint(7.59, 55.6), 4326)::geometry(Point, 4326)),
+	(st_SetSrid(st_MakePoint(5.883333, 54.183333), 4326)::geometry(Point, 4326)),
+	(st_SetSrid(st_MakePoint(6.327633, 58.269992), 4326)::geometry(Point, 4326)),
+	(st_SetSrid(st_MakePoint(0.227, 49.892), 4326)::geometry(Point, 4326)),
+	(st_SetSrid(st_MakePoint(14.993694, 55.9375), 4326)::geometry(Point, 4326)),
+	(st_SetSrid(st_MakePoint(17.3333333333, 55.000), 4326)::geometry(Point, 4326))) AS a) AS offshore
+WHERE ST_Intersects(offshore.column1, coastdat.geom) order by coastdat.gid;
 
 
 
