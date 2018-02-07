@@ -1,4 +1,5 @@
 ﻿/*
+Start
 
 SQL Script which prepare and insert a conventional power plant data list by scenario
 for the project open_eGo and the tools eTraGo and eDisGo.
@@ -26,6 +27,7 @@ Documentation:
   decommissioning: decommissioning of status quo units by a scenario assumption
   constantly: existing plant for status quo or other scenarios
   
+End
 */
 
 
