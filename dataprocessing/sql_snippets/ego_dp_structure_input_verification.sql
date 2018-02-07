@@ -1,12 +1,35 @@
 /*
-Check the necessary input tables.
+Input verification (eGoPP)
+Check the necessary input tables from eGo PreProcessing.
 Return version of input tables.
+
+Input
+-----
+boundaries.bkg_vg250_1_sta
+boundaries.bkg_vg250_2_lan
+boundaries.bkg_vg250_4_krs
+boundaries.bkg_vg250_6_gem
+openstreetmap.osm_deu_polygon
+openstreetmap.osm_deu_ways
+openstreetmap.osm_deu_nodes
+openstreetmap.osm_deu_line
+society.destatis_zensus_population_per_ha
+economy.destatis_gva_per_district
+demand.ego_demand_federalstate
+supply.vernetzen_wind_potential_area
+model_draft.ego_supply_res_powerplant_sq_mview
+model_draft.ego_supply_conv_powerplant_sq_mview
+
+Output
+------
+model_draft.ego_scenario_input
 
 __copyright__   = "Reiner Lemoine Institut"
 __license__     = "GNU Affero General Public License Version 3 (AGPL-3.0)"
 __url__         = "https://github.com/openego/data_processing/blob/master/LICENSE"
 __author__      = "Ludee"
 */
+
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.3.0','check','boundaries','bkg_vg250_1_sta','ego_dp_structure_input_verification.sql','preprocessing verification');
@@ -28,13 +51,13 @@ SELECT ego_scenario_log('v0.3.0','check','model_draft','ego_supply_conv_powerpla
 -- input tables
 DROP TABLE IF EXISTS    model_draft.ego_scenario_input CASCADE;
 CREATE TABLE            model_draft.ego_scenario_input (
-    id              serial,
-    version         text,
-    oid             oid,
-    database        varchar,
-    table_schema    varchar,
-    table_name      varchar,
-    path            text,
+    id                      serial,
+    version                 text,
+    oid                     oid,
+    database                varchar,
+    table_schema            varchar,
+    table_name              varchar,
+    path                    text,
     metadata_title          text,
     metadata_reference_date text,
     metadata                text,
@@ -46,7 +69,7 @@ ALTER TABLE model_draft.ego_scenario_input OWNER TO oeuser;
 -- metadata template
 COMMENT ON TABLE model_draft.ego_scenario_input IS '{
     "title": "eGoDP input data verification",
-    "description": "Checks input tables and gathers meta infos",
+    "description": "Check input tables and gathers meta infos",
     "language": [ "eng" ],
     "spatial": 
         {"location": "none",
@@ -58,8 +81,7 @@ COMMENT ON TABLE model_draft.ego_scenario_input IS '{
         "end": "none",
         "resolution": "none"},
     "sources": [
-        {"name": "eGo dataprocessing", "description": "", "url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)", "copyright": "© Reiner Lemoine Institut"},
-        {"name": "", "description": "", "url": "", "license": "", "copyright": ""} ],
+        {"name": "none", "description": "", "url": "", "license": "", "copyright": ""} ],
     "license": 
         {"id":  "ODbL-1.0",
         "name": "Open Data Commons Open Database License 1.0",
