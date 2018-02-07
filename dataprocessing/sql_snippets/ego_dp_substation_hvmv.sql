@@ -1,12 +1,15 @@
 /*
+HVMV Substation
+Abstract HVMV Substations of the high voltage level from OSM.
 This script abstracts substations of the high voltage level from openstreetmap data.
 All substations that are relevant transition points between the transmission and distribution grid are identified, irrelevant ones are disregarded.
 
-__copyright__ 	= "DLR Institute for Networked Energy Systems"
-__license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
-__url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
-__author__ 	= "lukasol, C. Matke, Ludee"
+__copyright__   = "DLR Institute for Networked Energy Systems"
+__license__     = "GNU Affero General Public License Version 3 (AGPL-3.0)"
+__url__         = "https://github.com/openego/data_processing/blob/master/LICENSE"
+__author__      = "lukasol, C. Matke, Ludee"
 */
+
 
 -- hvmv substations
 DROP TABLE IF EXISTS 	model_draft.ego_grid_hvmv_substation CASCADE;

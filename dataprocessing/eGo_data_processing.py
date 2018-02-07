@@ -40,18 +40,15 @@ def data_processing():
                      'python_scripts'))
 
     snippets = [
-	## VACUUM FULL
-#	 'ego_dp_vacuum_full.sql',
-	
-	## INPUT DATA CHECK eGoPP
-	'ego_dp_structure_input_verification.sql',          	# Check input tables and versions from eGoPP
-	
-	## SUBSTATION
-     	'ego_dp_substation_hvmv.sql',               		# Abstract HVMV Substations of the high voltage level from OSM
-     	'ego_dp_substation_ehv.sql',             		# Abstract EHV Substations of the extra high voltage level from OSM
-     	'ego_dp_substation_otg.sql',           			# Assign osmTGmod-id to HVMV and EHV substations
-     	'ego_dp_substation_hvmv_voronoi.sql',			# HVMV Voronoi cells based on HVMV substations
-    	'ego_dp_substation_ehv_voronoi.sql',			# EHV Voronoi cells based on EHV substations
+    ## INPUT DATA CHECK (eGoPP)
+    'ego_dp_structure_input_verification.sql',          # Input verification (eGoPP)
+
+    ## SUBSTATION
+    'ego_dp_substation_hvmv.sql',                       # Abstract HVMV Substations of the high voltage level from OSM
+    'ego_dp_substation_ehv.sql',                        # Abstract EHV Substations of the extra high voltage level from OSM
+    'ego_dp_substation_otg.sql',                        # Assign osmTGmod-id to HVMV and EHV substations
+    'ego_dp_substation_hvmv_voronoi.sql',               # HVMV Voronoi cells based on HVMV substations
+    'ego_dp_substation_ehv_voronoi.sql',                # EHV Voronoi cells based on EHV substations
 
 	## GRIDDISTRICT
    	'ego_dp_mv_griddistrict.sql',          			# MV Griddistricts from municipalities and Voronoi cells
