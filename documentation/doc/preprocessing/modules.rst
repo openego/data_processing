@@ -6,7 +6,8 @@ Preprocessing
 
 
 .. toctree::
-   :glob:
+   :titlesonly:
    boundaries/*
    openstreetmap/*
-   ego*
+
+   ego_dp_res_rea_by_scenario
