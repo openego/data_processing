@@ -1,7 +1,6 @@
 /*
 Cut Loadarea with MV Griddistrict
-Identify Loadarea smaller than 100m².
-Exclude Loadarea smaller than 100m².
+Identify and exclude Loadarea smaller than 100m².
 Generate Centre of Loadareas with Centroid and PointOnSurface.
 Calculate population from Census 2011.
 Cut all 4 OSM sectors with MV Griddistricts.
@@ -134,13 +133,12 @@ CREATE INDEX ego_demand_loadarea_smaller100m2_mview_geom_idx
 ALTER TABLE model_draft.ego_demand_loadarea_smaller100m2_mview OWNER TO oeuser;
 
 -- metadata
-COMMENT ON TABLE ego_demand_loadarea_smaller100m2_mview.table IS '{ 
+COMMENT ON MATERIALIZED VIEW ego_demand_loadarea_smaller100m2_mview.table IS '{ 
     "comment": "eGoDP - Temporary table", 
     "version": "v0.3.0" }';
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_demand_loadarea_smaller100m2_mview','ego_dp_loadarea_loadcut_griddistrict.sql',' ');
-
 
 -- Exclude Loadarea smaller than 100m²
 DELETE FROM model_draft.ego_demand_loadarea AS loads
@@ -293,7 +291,7 @@ UPDATE model_draft.ego_demand_loadarea AS t1
     WHERE   t1.id = t2.id;
 
 -- metadata
-COMMENT ON MATERIALIZED VIEW model_draft.ego_osm_sector_per_griddistrict_1_residential IS '{
+COMMENT ON TABLE model_draft.ego_osm_sector_per_griddistrict_1_residential IS '{
     "comment": "eGoDP - Temporary table",
     "version": "v0.3.0" }';
 
@@ -348,7 +346,7 @@ UPDATE model_draft.ego_demand_loadarea AS t1
     WHERE   t1.id = t2.id;
 
 -- metadata
-COMMENT ON MATERIALIZED VIEW model_draft.ego_osm_sector_per_griddistrict_2_retail IS '{
+COMMENT ON TABLE model_draft.ego_osm_sector_per_griddistrict_2_retail IS '{
     "comment": "eGoDP - Temporary table",
     "version": "v0.3.0" }';
 
@@ -446,7 +444,7 @@ UPDATE model_draft.ego_demand_loadarea AS t1
     WHERE   t1.id = t2.id;
 
 -- metadata
-COMMENT ON MATERIALIZED VIEW model_draft.ego_osm_sector_per_griddistrict_3_industrial IS '{
+COMMENT ON TABLE model_draft.ego_osm_sector_per_griddistrict_3_industrial IS '{
     "comment": "eGoDP - Temporary table",
     "version": "v0.3.0" }';
 
@@ -501,7 +499,7 @@ UPDATE model_draft.ego_demand_loadarea AS t1
     WHERE   t1.id = t2.id;
 
 -- metadata
-COMMENT ON MATERIALIZED VIEW model_draft.ego_osm_sector_per_griddistrict_4_agricultural IS '{
+COMMENT ON TABLE model_draft.ego_osm_sector_per_griddistrict_4_agricultural IS '{
     "comment": "eGoDP - Temporary table",
     "version": "v0.3.0" }';
 
