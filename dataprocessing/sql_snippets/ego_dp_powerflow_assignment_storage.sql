@@ -1,5 +1,6 @@
 /*
-Assignment of storage units to the relevant substation in the grid model. 
+Equivalent to the assignment of generators in this script storages are converted and clustered for all three scenarios
+considered in open_eGo. 
 
 __copyright__ 	= "Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems"
 __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
