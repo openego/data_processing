@@ -70,9 +70,9 @@ def data_processing():
     ## LOWVOLTAGE
     'ego_dp_lv_substation.sql',                         # MVLV Substation (ONT)
     'ego_dp_lv_substation_voronoi.sql',                 # MVLV Substation Voronoi
+    'ego_dp_lv_loadcut.sql'                             # LV Loadcut
     'ego_dp_lv_griddistrict.sql',                       # LV Griddistrict
-    'ego_dp_lv_peakload.sql',				# LV OSM areas
-    'ego_dp_lv_consumption_peakload.sql',			# LV Consumption and Peakload
+    'ego_dp_lv_consumption_peakload.sql',               # LV Consumption and Peakload
    
 	## REA
   	 'rea/ego_dp_lattice_500m.sql', 			# lattice (point grid) 500m
