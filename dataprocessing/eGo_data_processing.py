@@ -54,18 +54,18 @@ def data_processing():
     'ego_dp_mv_griddistrict.sql',                       # MV GridDistricts from municipalities and Voronoi cells
     'ego_dp_substation_id_to_generator.sql',            # Assign Substation ID (subst_id) to Generator (Conventional and Renewable)
 
-	## LOADAREA
-	 'ego_dp_loadarea_landuse.sql', 			# OSM landuse sector
-	 'ego_dp_loadarea_industry_consumer.sql', 		# Industry consumer
-	 'ego_dp_loadarea_loads.sql',            		# Loads from OSM landuse
-	 'ego_dp_loadarea_census.sql',   			# Loads from Census
-	 'ego_dp_loadarea_loadmelt.sql',        		# Melt OSM landuse and Zensus loads
-	 'ego_dp_loadarea_loadcut_griddistrict.sql', 		# Cut Loadarea with MV Griddistrict
-	 'ego_dp_loadarea_loadcut_voronoi.sql', 	    	# Cut Loadarea with MV Voronoi cells
-	 'ego_dp_loadarea_consumption.sql',			# Allocate consumption to Loadareas
-	 'ego_dp_loadarea_peakload.sql',			# Peak loads per Loadarea
-	 'ego_dp_loadarea_griddistrict_results.sql',		# Results for MV Griddistrict
-	 'ego_dp_loadarea_statistic.sql',			# Results and statistics for eGoDP
+    ## LOADAREA
+    'ego_dp_loadarea_landuse.sql',                     # OSM landuse sectors
+    'ego_dp_loadarea_industry_consumer.sql', 		# Industry consumer
+    'ego_dp_loadarea_loads.sql',            		# Loads from OSM landuse
+    'ego_dp_loadarea_census.sql',   			# Loads from Census
+    'ego_dp_loadarea_loadmelt.sql',        		# Melt OSM landuse and Zensus loads
+    'ego_dp_loadarea_loadcut_griddistrict.sql', 		# Cut Loadarea with MV Griddistrict
+    'ego_dp_loadarea_loadcut_voronoi.sql', 	    	# Cut Loadarea with MV Voronoi cells
+    'ego_dp_loadarea_consumption.sql',			# Allocate consumption to Loadareas
+    'ego_dp_loadarea_peakload.sql',			# Peak loads per Loadarea
+    'ego_dp_loadarea_griddistrict_results.sql',		# Results for MV Griddistrict
+    'ego_dp_loadarea_statistic.sql',			# Results and statistics for eGoDP
 
 	## LOWVOLTAGE
 	 'ego_dp_lv_substation.sql',				# MVLV Substation inside Loadarea
