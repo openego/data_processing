@@ -1,3 +1,7 @@
+.. image:: https://readthedocs.org/projects/data-processing/badge/?version=latest
+    :target: http://data-processing.readthedocs.io/en/latest/?badge=latest
+    :alt: Documentation Status
+
 # eGo dataprocessing
 (geo)data processing, database setup, data validation
 
