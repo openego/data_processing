@@ -73,7 +73,7 @@ def data_processing():
     'ego_dp_lv_loadcut.sql'                             # LV Loadcut
     'ego_dp_lv_griddistrict.sql',                       # LV Griddistrict
     'ego_dp_lv_consumption_peakload.sql',               # LV Consumption and Peakload
-   
+
 	## REA
   	 'rea/ego_dp_lattice_500m.sql', 			# lattice (point grid) 500m
  	 'rea/ego_dp_lattice_50m.sql', 				# lattice (point grid) 50m
