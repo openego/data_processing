@@ -1,5 +1,8 @@
 /*
-Copy SQ grid to 'NEP 2035' and 'eGo 100' scenario
+The grid model which is used as an input for powerflow calculations and optimization in open_eGo is the same in all 
+three scenarios 'SQ', 'NEP 2035' and 'eGo100'. 
+In the following script the grid model created for the 'SQ' scenario in the previous scripts is duplicated for the remaining
+two future scenarios
 
 __copyright__ 	= "Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems"
 __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
