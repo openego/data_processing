@@ -17,11 +17,11 @@
     <node id="n0" yfiles.foldertype="group">
       <data key="d6">
         <y:TableNode configuration="com.yworks.bpmn.Pool">
-          <y:Geometry height="799.5517578125001" width="2502.98817532342" x="0.0" y="0.4482421874998863"/>
+          <y:Geometry height="800.0" width="2500.0" x="0.0" y="0.0"/>
           <y:Fill color="#3265FF7F" color2="#D4D4D4CC" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" borderDistance="0.0" fontFamily="Dialog" fontSize="36" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="48.103515625" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="l" rotationAngle="270.0" textColor="#000000" verticalTextPosition="bottom" visible="true" width="356.125" x="0.0" y="221.7133789062501">eGo DataProcessing</y:NodeLabel>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="35" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" hasText="false" height="4.0" horizontalTextPosition="center" iconTextGap="4" modelName="custom" rotationAngle="270.0" textColor="#000000" verticalTextPosition="bottom" visible="true" width="4.0" x="53.0" y="407.74072265625017">
+          <y:NodeLabel alignment="center" autoSizePolicy="content" borderDistance="0.0" fontFamily="Dialog" fontSize="36" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="48.103515625" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="l" rotationAngle="270.0" textColor="#000000" verticalTextPosition="bottom" visible="true" width="570.12109375" x="0.0" y="114.939453125">eGo DataProcessing - substation</y:NodeLabel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="35" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" hasText="false" height="4.0" horizontalTextPosition="center" iconTextGap="4" modelName="custom" rotationAngle="270.0" textColor="#000000" verticalTextPosition="bottom" visible="true" width="4.0" x="53.0" y="407.9648437500001">
             <y:LabelModel>
               <y:RowNodeLabelModel offset="3.0"/>
             </y:LabelModel>
@@ -53,18 +53,18 @@
           </y:StyleProperties>
           <y:State autoResize="true" closed="false" closedHeight="80.0" closedWidth="100.0"/>
           <y:Insets bottom="0" bottomF="0.0" left="0" leftF="0.0" right="0" rightF="0.0" top="0" topF="0.0"/>
-          <y:BorderInsets bottom="132" bottomF="132.09765625" left="95" leftF="95.0" right="195" rightF="194.9881753234199" top="55" topF="54.551757812500114"/>
+          <y:BorderInsets bottom="132" bottomF="132.3217773437499" left="94" leftF="93.50591233829005" right="193" rightF="193.49408766171018" top="55" topF="54.775878906250114"/>
           <y:Table autoResizeTable="true" defaultColumnWidth="360.0" defaultMinimumColumnWidth="30.0" defaultMinimumRowHeight="30.0" defaultRowHeight="107.0">
             <y:DefaultColumnInsets bottom="3.0" left="3.0" right="3.0" top="20.0"/>
             <y:DefaultRowInsets bottom="3.0" left="20.0" right="3.0" top="3.0"/>
             <y:Insets bottom="0.0" left="50.0" right="0.0" top="0.0"/>
             <y:Columns>
-              <y:Column id="column_0" minimumWidth="30.0" width="2433.42079251092">
+              <y:Column id="column_0" minimumWidth="30.0" width="2430.4326171875">
                 <y:Insets bottom="3.0" left="3.0" right="3.0" top="20.0"/>
               </y:Column>
             </y:Columns>
             <y:Rows>
-              <y:Row height="779.4814453125003" id="row_0" minimumHeight="30.0">
+              <y:Row height="779.9296875000002" id="row_0" minimumHeight="30.0">
                 <y:Insets bottom="3.0" left="20.0" right="3.0" top="3.0"/>
               </y:Row>
             </y:Rows>
@@ -75,7 +75,7 @@
         <node id="n0::n0">
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Activity.withShadow">
-              <y:Geometry height="75.0" width="200.0" x="1280.0" y="412.5"/>
+              <y:Geometry height="75.0" width="200.0" x="1278.50591233829" y="412.2758789062501"/>
               <y:Fill color="#FFFFFFE6" color2="#038E0359" transparent="false"/>
               <y:BorderStyle color="#123EA2" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="205.46875" x="-2.734375" y="28.1494140625">ego_dp_substation_hvmv_voronoi.sql</y:NodeLabel>
@@ -93,7 +93,7 @@
         <node id="n0::n1">
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
-              <y:Geometry height="55.0" width="35.0" x="1362.5" y="572.5"/>
+              <y:Geometry height="55.0" width="35.0" x="1361.00591233829" y="572.2758789062501"/>
               <y:Fill color="#FFFFFF" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="33.40234375" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="260.16015625" x="-112.580078125" y="59.0">model_draft.ego_grid_hvmv_substation_dummy
@@ -117,7 +117,7 @@ model_draft.ego_grid_hvmv_substation_voronoi<y:LabelModel>
         <node id="n0::n2">
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
-              <y:Geometry height="30.0" width="80.0" x="1490.0" y="345.0"/>
+              <y:Geometry height="30.0" width="80.0" x="1488.50591233829" y="344.7758789062501"/>
               <y:Fill color="#FFFFFFE6" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="33.34375" x="23.328125" y="5.6494140625">6 min<y:LabelModel>
@@ -139,7 +139,7 @@ model_draft.ego_grid_hvmv_substation_voronoi<y:LabelModel>
         <node id="n0::n3">
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
-              <y:Geometry height="55.0" width="35.0" x="1362.5" y="332.5"/>
+              <y:Geometry height="55.0" width="35.0" x="1361.00591233829" y="332.2758789062501"/>
               <y:Fill color="#FFFFFFE6" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="214.12890625" x="-89.564453125" y="-22.701171875">model_draft.ego_grid_hvmv_substation<y:LabelModel>
@@ -162,7 +162,7 @@ model_draft.ego_grid_hvmv_substation_voronoi<y:LabelModel>
         <node id="n0::n4">
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
-              <y:Geometry height="55.0" width="35.0" x="462.5" y="572.5"/>
+              <y:Geometry height="55.0" width="35.0" x="461.00591233829005" y="572.2758789062501"/>
               <y:Fill color="#FFFFFF" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="214.12890625" x="-89.564453125" y="59.0">model_draft.ego_grid_hvmv_substation<y:LabelModel>
@@ -185,7 +185,7 @@ model_draft.ego_grid_hvmv_substation_voronoi<y:LabelModel>
         <node id="n0::n5">
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Activity.withShadow">
-              <y:Geometry height="75.0" width="200.0" x="380.0" y="412.5"/>
+              <y:Geometry height="75.0" width="200.0" x="378.50591233829005" y="412.2758789062501"/>
               <y:Fill color="#FFFFFFE6" color2="#038E0359" transparent="false"/>
               <y:BorderStyle color="#123EA2" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="48.103515625" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="t" textColor="#000000" verticalTextPosition="bottom" visible="true" width="159.4375" x="20.28125" y="4.0">
@@ -205,7 +205,7 @@ ego_dp_substation_hvmv.sql</y:NodeLabel>
         <node id="n0::n6">
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Activity.withShadow">
-              <y:Geometry height="75.0" width="200.0" x="680.0" y="412.5"/>
+              <y:Geometry height="75.0" width="200.0" x="678.50591233829" y="412.2758789062501"/>
               <y:Fill color="#FFFFFFE6" color2="#038E0359" transparent="false"/>
               <y:BorderStyle color="#123EA2" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="48.103515625" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="t" textColor="#000000" verticalTextPosition="bottom" visible="true" width="150.115234375" x="24.9423828125" y="4.0">
@@ -225,7 +225,7 @@ ego_dp_substation_ehv.sql</y:NodeLabel>
         <node id="n0::n7">
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
-              <y:Geometry height="30.0" width="80.0" x="530.0" y="345.0"/>
+              <y:Geometry height="30.0" width="80.0" x="528.50591233829" y="344.7758789062501"/>
               <y:Fill color="#FFFFFFE6" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="40.017578125" x="19.9912109375" y="5.6494140625">32 min<y:LabelModel>
@@ -247,7 +247,7 @@ ego_dp_substation_ehv.sql</y:NodeLabel>
         <node id="n0::n8">
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
-              <y:Geometry height="30.0" width="80.0" x="830.0" y="345.0"/>
+              <y:Geometry height="30.0" width="80.0" x="828.50591233829" y="344.7758789062501"/>
               <y:Fill color="#FFFFFFE6" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="33.34375" x="23.328125" y="5.6494140625">3 min<y:LabelModel>
@@ -269,7 +269,7 @@ ego_dp_substation_ehv.sql</y:NodeLabel>
         <node id="n0::n9">
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
-              <y:Geometry height="55.0" width="35.0" x="462.5" y="332.5"/>
+              <y:Geometry height="55.0" width="35.0" x="461.00591233829005" y="332.2758789062501"/>
               <y:Fill color="#FFFFFFE6" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="77.505859375" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="275.5234375" x="-120.26171875" y="-87.81546365816803">openstreetmap.osm_deu_ways
@@ -296,7 +296,7 @@ political_boundary.bkg_vg250_1_sta_union_mview<y:LabelModel>
         <node id="n0::n10">
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
-              <y:Geometry height="55.0" width="35.0" x="762.5" y="332.5"/>
+              <y:Geometry height="55.0" width="35.0" x="761.00591233829" y="332.2758789062501"/>
               <y:Fill color="#FFFFFFE6" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="77.505859375" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="222.150390625" x="-93.5751953125" y="-87.81546365816803">openstreetmap.osm_deu_ways
@@ -323,7 +323,7 @@ political_bkg_vg250_1_sta_union_mview<y:LabelModel>
         <node id="n0::n11">
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
-              <y:Geometry height="55.0" width="35.0" x="762.5" y="572.5"/>
+              <y:Geometry height="55.0" width="35.0" x="761.00591233829" y="572.2758789062501"/>
               <y:Fill color="#FFFFFF" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="204.806640625" x="-84.9033203125" y="59.0">model_draft.ego_grid_ehv_substation<y:LabelModel>
@@ -346,7 +346,7 @@ political_bkg_vg250_1_sta_union_mview<y:LabelModel>
         <node id="n0::n12">
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Event.withShadow">
-              <y:Geometry height="30.0" width="30.0" x="165.0" y="435.0"/>
+              <y:Geometry height="30.0" width="30.0" x="163.50591233829005" y="434.7758789062501"/>
               <y:Fill color="#FFFFFFE6" color2="#D4D4D4CC" transparent="false"/>
               <y:BorderStyle color="#27AE27" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" hasText="false" height="4.0" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="4.0" x="13.0" y="34.0">
@@ -370,7 +370,7 @@ political_bkg_vg250_1_sta_union_mview<y:LabelModel>
         <node id="n0::n13">
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Activity.withShadow">
-              <y:Geometry height="75.0" width="200.0" x="980.0" y="412.5"/>
+              <y:Geometry height="75.0" width="200.0" x="978.50591233829" y="412.2758789062501"/>
               <y:Fill color="#FFFFFFE6" color2="#038E0359" transparent="false"/>
               <y:BorderStyle color="#123EA2" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="48.103515625" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="t" textColor="#000000" verticalTextPosition="bottom" visible="true" width="147.44921875" x="26.275390625" y="4.0">
@@ -390,7 +390,7 @@ ego_dp_substation_otg.sql</y:NodeLabel>
         <node id="n0::n14">
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
-              <y:Geometry height="30.0" width="80.0" x="1190.0" y="345.0"/>
+              <y:Geometry height="30.0" width="80.0" x="1188.50591233829" y="344.7758789062501"/>
               <y:Fill color="#FFFFFFE6" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="32.681640625" x="23.6591796875" y="5.6494140625">1 sec<y:LabelModel>
@@ -412,7 +412,7 @@ ego_dp_substation_otg.sql</y:NodeLabel>
         <node id="n0::n15">
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
-              <y:Geometry height="55.0" width="35.0" x="1062.5" y="332.5"/>
+              <y:Geometry height="55.0" width="35.0" x="1061.00591233829" y="332.2758789062501"/>
               <y:Fill color="#FFFFFFE6" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="48.103515625" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="214.12890625" x="-89.564453125" y="-58.41311990816803">grid.otg_ehvhv_bus_data
@@ -437,7 +437,7 @@ model_draft.ego_grid_hvmv_substation<y:LabelModel>
         <node id="n0::n16">
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
-              <y:Geometry height="55.0" width="35.0" x="1062.5" y="572.5"/>
+              <y:Geometry height="55.0" width="35.0" x="1061.00591233829" y="572.2758789062501"/>
               <y:Fill color="#FFFFFF" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="33.40234375" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="214.12890625" x="-89.564453125" y="59.0">model_draft.ego_grid_ehv_substation
@@ -461,7 +461,7 @@ model_draft.ego_grid_hvmv_substation<y:LabelModel>
         <node id="n0::n17">
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
-              <y:Geometry height="30.0" width="230.0" x="215.0" y="75.0"/>
+              <y:Geometry height="30.0" width="230.0" x="213.50591233829005" y="74.77587890625011"/>
               <y:Fill color="#FFFF99" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="10" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="28.501953125" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="168.5361328125" x="30.73193359375" y="0.7490234375">Open Database License (ODbL) v1.0
@@ -484,7 +484,7 @@ model_draft.ego_grid_hvmv_substation<y:LabelModel>
         <node id="n0::n18">
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Event.withShadow">
-              <y:Geometry height="30.0" width="30.0" x="1875.0" y="435.0"/>
+              <y:Geometry height="30.0" width="30.0" x="1873.50591233829" y="434.7758789062501"/>
               <y:Fill color="#FFFFFFE6" color2="#D4D4D4CC" transparent="false"/>
               <y:BorderStyle color="#B11F1F" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" hasText="false" height="4.0" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="4.0" x="13.0" y="34.0">
@@ -508,7 +508,7 @@ model_draft.ego_grid_hvmv_substation<y:LabelModel>
         <node id="n0::n19">
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
-              <y:Geometry height="55.0" width="35.0" x="312.5" y="122.5"/>
+              <y:Geometry height="55.0" width="35.0" x="311.00591233829005" y="122.27587890625011"/>
               <y:Fill color="#00CCFF" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="136.75" x="-50.875" y="59.0">openstreetmap.osm_deu<y:LabelModel>
@@ -531,7 +531,7 @@ model_draft.ego_grid_hvmv_substation<y:LabelModel>
         <node id="n0::n20">
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
-              <y:Geometry height="30.0" width="230.0" x="515.0" y="75.0"/>
+              <y:Geometry height="30.0" width="230.0" x="513.50591233829" y="74.77587890625011"/>
               <y:Fill color="#FFFF99" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="10" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="28.501953125" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="210.34765625" x="9.826171875" y="0.7490234375">Geodatenzugangsgesetz (GeoZG)
@@ -554,7 +554,7 @@ model_draft.ego_grid_hvmv_substation<y:LabelModel>
         <node id="n0::n21">
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
-              <y:Geometry height="55.0" width="35.0" x="612.5" y="122.5"/>
+              <y:Geometry height="55.0" width="35.0" x="611.00591233829" y="122.27587890625011"/>
               <y:Fill color="#00CCFF" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="162.783203125" x="-63.8916015625" y="59.0">political_boundary.bkg_vg250<y:LabelModel>
@@ -577,7 +577,7 @@ model_draft.ego_grid_hvmv_substation<y:LabelModel>
         <node id="n0::n22">
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
-              <y:Geometry height="30.0" width="230.0" x="965.0000000000001" y="75.0"/>
+              <y:Geometry height="30.0" width="230.0" x="963.5059123382902" y="74.77587890625011"/>
               <y:Fill color="#FFFF99" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="10" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="28.501953125" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="168.5361328125" x="30.73193359375" y="0.7490234375">Open Database License (ODbL) v1.0
@@ -600,7 +600,7 @@ model_draft.ego_grid_hvmv_substation<y:LabelModel>
         <node id="n0::n23">
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
-              <y:Geometry height="30.0" width="230.0" x="365.0" y="525.0"/>
+              <y:Geometry height="30.0" width="230.0" x="363.50591233829005" y="524.7758789062501"/>
               <y:Fill color="#FFFF99" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="10" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="28.501953125" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="168.5361328125" x="30.73193359375" y="0.7490234375">Open Database License (ODbL) v1.0
@@ -623,7 +623,7 @@ model_draft.ego_grid_hvmv_substation<y:LabelModel>
         <node id="n0::n24">
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
-              <y:Geometry height="30.0" width="230.0" x="665.0" y="525.0"/>
+              <y:Geometry height="30.0" width="230.0" x="663.50591233829" y="524.7758789062501"/>
               <y:Fill color="#FFFF99" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="10" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="28.501953125" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="168.5361328125" x="30.73193359375" y="0.7490234375">Open Database License (ODbL) v1.0
@@ -646,7 +646,7 @@ model_draft.ego_grid_hvmv_substation<y:LabelModel>
         <node id="n0::n25">
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
-              <y:Geometry height="30.0" width="230.0" x="965.0" y="525.0"/>
+              <y:Geometry height="30.0" width="230.0" x="963.50591233829" y="524.7758789062501"/>
               <y:Fill color="#FFFF99" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="10" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="28.501953125" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="168.5361328125" x="30.73193359375" y="0.7490234375">Open Database License (ODbL) v1.0
@@ -669,7 +669,7 @@ model_draft.ego_grid_hvmv_substation<y:LabelModel>
         <node id="n0::n26">
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
-              <y:Geometry height="30.0" width="230.0" x="1265.0" y="525.0"/>
+              <y:Geometry height="30.0" width="230.0" x="1263.50591233829" y="524.7758789062501"/>
               <y:Fill color="#FFFF99" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="10" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="28.501953125" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="168.5361328125" x="30.73193359375" y="0.7490234375">Open Database License (ODbL) v1.0
@@ -692,7 +692,7 @@ model_draft.ego_grid_hvmv_substation<y:LabelModel>
         <node id="n0::n27">
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
-              <y:Geometry height="30.0" width="230.0" x="365.0" y="495.0"/>
+              <y:Geometry height="30.0" width="230.0" x="363.50591233829005" y="494.7758789062501"/>
               <y:Fill color="#FFFF99" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="10" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="28.501953125" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="210.34765625" x="9.826171875" y="0.7490234375">Geodatenzugangsgesetz (GeoZG)
@@ -715,7 +715,7 @@ model_draft.ego_grid_hvmv_substation<y:LabelModel>
         <node id="n0::n28">
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
-              <y:Geometry height="30.0" width="230.0" x="665.0" y="495.0"/>
+              <y:Geometry height="30.0" width="230.0" x="663.50591233829" y="494.7758789062501"/>
               <y:Fill color="#FFFF99" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="10" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="28.501953125" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="210.34765625" x="9.826171875" y="0.7490234375">Geodatenzugangsgesetz (GeoZG)
@@ -738,7 +738,7 @@ model_draft.ego_grid_hvmv_substation<y:LabelModel>
         <node id="n0::n29">
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
-              <y:Geometry height="30.0" width="230.0" x="965.0" y="495.0"/>
+              <y:Geometry height="30.0" width="230.0" x="963.50591233829" y="494.7758789062501"/>
               <y:Fill color="#FFFF99" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="10" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="28.501953125" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="210.34765625" x="9.826171875" y="0.7490234375">Geodatenzugangsgesetz (GeoZG)
@@ -761,7 +761,7 @@ model_draft.ego_grid_hvmv_substation<y:LabelModel>
         <node id="n0::n30">
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
-              <y:Geometry height="30.0" width="230.0" x="1265.0" y="495.0"/>
+              <y:Geometry height="30.0" width="230.0" x="1263.50591233829" y="494.7758789062501"/>
               <y:Fill color="#FFFF99" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="10" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="28.501953125" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="210.34765625" x="9.826171875" y="0.7490234375">Geodatenzugangsgesetz (GeoZG)
@@ -784,7 +784,7 @@ model_draft.ego_grid_hvmv_substation<y:LabelModel>
         <node id="n0::n31">
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
-              <y:Geometry height="55.0" width="35.0" x="1902.5" y="572.5"/>
+              <y:Geometry height="55.0" width="35.0" x="1901.00591233829" y="572.2758789062501"/>
               <y:Fill color="#99CC00" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="33.40234375" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="214.12890625" x="-89.564453125" y="59.0">model_draft.ego_grid_hvmv_substation
@@ -808,7 +808,7 @@ grid.ego_hvmv_substation<y:LabelModel>
         <node id="n0::n32">
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
-              <y:Geometry height="30.0" width="230.0" x="1835.0" y="525.0"/>
+              <y:Geometry height="30.0" width="230.0" x="1833.50591233829" y="524.7758789062501"/>
               <y:Fill color="#FFFF99" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="10" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="28.501953125" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="168.5361328125" x="30.73193359375" y="0.7490234375">Open Database License (ODbL) v1.0
@@ -831,7 +831,7 @@ grid.ego_hvmv_substation<y:LabelModel>
         <node id="n0::n33">
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
-              <y:Geometry height="30.0" width="230.0" x="1835.0" y="495.0"/>
+              <y:Geometry height="30.0" width="230.0" x="1833.50591233829" y="494.7758789062501"/>
               <y:Fill color="#FFFF99" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="10" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="28.501953125" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="210.34765625" x="9.826171875" y="0.7490234375">Geodatenzugangsgesetz (GeoZG)
@@ -854,7 +854,7 @@ grid.ego_hvmv_substation<y:LabelModel>
         <node id="n0::n34">
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Activity.withShadow">
-              <y:Geometry height="75.0" width="200.0" x="1580.0" y="412.5"/>
+              <y:Geometry height="75.0" width="200.0" x="1578.50591233829" y="412.2758789062501"/>
               <y:Fill color="#038E0359" color2="#D4D4D4CC" transparent="false"/>
               <y:BorderStyle color="#123EA2" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="196.146484375" x="1.9267578125" y="28.1494140625">ego_dp_substation_ehv_voronoi.sql</y:NodeLabel>
@@ -873,7 +873,7 @@ grid.ego_hvmv_substation<y:LabelModel>
         <node id="n0::n35">
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
-              <y:Geometry height="55.0" width="35.0" x="1662.5" y="572.5"/>
+              <y:Geometry height="55.0" width="35.0" x="1661.00591233829" y="572.2758789062501"/>
               <y:Fill color="#FFFFFFE6" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="250.837890625" x="-104.60058623751365" y="59.0">model_draft.ego_grid_ehv_substation_voronoi<y:LabelModel>
@@ -896,7 +896,7 @@ grid.ego_hvmv_substation<y:LabelModel>
         <node id="n0::n36">
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
-              <y:Geometry height="30.0" width="80.0" x="1730.0" y="345.0"/>
+              <y:Geometry height="30.0" width="80.0" x="1728.50591233829" y="344.7758789062501"/>
               <y:Fill color="#FFFFFFE6" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="10.673828125" x="34.6630859375" y="5.6494140625">?<y:LabelModel>
@@ -918,7 +918,7 @@ grid.ego_hvmv_substation<y:LabelModel>
         <node id="n0::n37">
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
-              <y:Geometry height="55.0" width="35.0" x="1662.5" y="332.5"/>
+              <y:Geometry height="55.0" width="35.0" x="1661.00591233829" y="332.2758789062501"/>
               <y:Fill color="#FFFFFFE6" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="204.806640625" x="-84.9033203125" y="-22.701171875">model_draft.ego_grid_ehv_substation<y:LabelModel>
@@ -941,7 +941,7 @@ grid.ego_hvmv_substation<y:LabelModel>
         <node id="n0::n38">
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
-              <y:Geometry height="55.0" width="35.0" x="2172.5" y="572.5"/>
+              <y:Geometry height="55.0" width="35.0" x="2171.00591233829" y="572.2758789062501"/>
               <y:Fill color="#99CC00" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="33.40234375" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="204.806640625" x="-84.9033203125" y="59.0">model_draft.ego_grid_ehv_substation
@@ -965,7 +965,7 @@ grid.ego_ehv_substation<y:LabelModel>
         <node id="n0::n39">
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
-              <y:Geometry height="30.0" width="230.0" x="2075.0" y="525.0"/>
+              <y:Geometry height="30.0" width="230.0" x="2073.50591233829" y="524.7758789062501"/>
               <y:Fill color="#FFFF99" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="10" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="28.501953125" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="168.5361328125" x="30.73193359375" y="0.7490234375">Open Database License (ODbL) v1.0
@@ -988,7 +988,7 @@ grid.ego_ehv_substation<y:LabelModel>
         <node id="n0::n40">
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
-              <y:Geometry height="30.0" width="230.0" x="2075.0" y="495.0"/>
+              <y:Geometry height="30.0" width="230.0" x="2073.50591233829" y="494.7758789062501"/>
               <y:Fill color="#FFFF99" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="10" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="28.501953125" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="210.34765625" x="9.826171875" y="0.7490234375">Geodatenzugangsgesetz (GeoZG)
@@ -1011,7 +1011,7 @@ grid.ego_ehv_substation<y:LabelModel>
         <node id="n0::n41">
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
-              <y:Geometry height="30.0" width="230.0" x="1565.0" y="525.0"/>
+              <y:Geometry height="30.0" width="230.0" x="1563.50591233829" y="524.7758789062501"/>
               <y:Fill color="#FFFF99" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="10" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="28.501953125" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="168.5361328125" x="30.73193359375" y="0.7490234375">Open Database License (ODbL) v1.0
@@ -1034,7 +1034,7 @@ grid.ego_ehv_substation<y:LabelModel>
         <node id="n0::n42">
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
-              <y:Geometry height="30.0" width="230.0" x="1565.0" y="495.0"/>
+              <y:Geometry height="30.0" width="230.0" x="1563.50591233829" y="494.7758789062501"/>
               <y:Fill color="#FFFF99" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="10" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="28.501953125" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="210.34765625" x="9.826171875" y="0.7490234375">Geodatenzugangsgesetz (GeoZG)
@@ -1057,7 +1057,7 @@ grid.ego_ehv_substation<y:LabelModel>
         <node id="n0::n43">
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
-              <y:Geometry height="55.0" width="35.0" x="1062.5" y="122.5"/>
+              <y:Geometry height="55.0" width="35.0" x="1061.00591233829" y="122.27587890625011"/>
               <y:Fill color="#00CCFF" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="138.771484375" x="-51.8857421875" y="59.0">grid.otg_ehvhv_bus_data<y:LabelModel>
