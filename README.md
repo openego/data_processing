@@ -1,3 +1,12 @@
+.. image:: https://readthedocs.org/projects/data-processing/badge/?version=feature-docu-wolf
+    :target: http://data-processing.readthedocs.io/en/latest/?badge=feature-docu-wolf
+    :alt: Documentation Status
+
+
+.. image:: https://openegoproject.files.wordpress.com/2017/02/open_ego_logo_breit.png?w=400
+
+
+
 # eGo dataprocessing
 (geo)data processing, database setup, data validation
 
