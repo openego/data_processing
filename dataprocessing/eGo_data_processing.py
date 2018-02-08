@@ -50,9 +50,9 @@ def data_processing():
     'ego_dp_substation_hvmv_voronoi.sql',               # HVMV Voronoi cells based on HVMV substations
     'ego_dp_substation_ehv_voronoi.sql',                # EHV Voronoi cells based on EHV substations
 
-	## GRIDDISTRICT
-   	'ego_dp_mv_griddistrict.sql',          			# MV Griddistricts from municipalities and Voronoi cells
-	'ego_dp_substation_id_to_generator.sql',		# Assign subst_id to pp lists
+    ## GRIDDISTRICT
+    'ego_dp_mv_griddistrict.sql',                       # MV GridDistricts from municipalities and Voronoi cells
+    'ego_dp_substation_id_to_generator.sql',            # Assign Substation ID (subst_id) to Generator (Conventional and Renewable)
 
 	## LOADAREA
 	 'ego_dp_loadarea_landuse.sql', 			# OSM landuse sector

@@ -1,10 +1,13 @@
 /*
-mv griddistrict
+MV GridDistricts
+Generate MV GridDistricts from municipalities and Voronoi cells.
+Each HVMV Substation receives one catchment area.
+Detailed description can be found in Hülk et. al. 2017.
 
-__copyright__ 	= "Reiner Lemoine Institut"
-__license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
-__url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
-__author__ 	= "Ludee"
+__copyright__   = "Reiner Lemoine Institut"
+__license__     = "GNU Affero General Public License Version 3 (AGPL-3.0)"
+__url__         = "https://github.com/openego/data_processing/blob/master/LICENSE"
+__author__      = "Ludee"
 */
 
 ---------- ---------- ----------
