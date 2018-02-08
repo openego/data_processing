@@ -1,7 +1,7 @@
 /*
 Loads from Census 2011
-Include Census 2011 population per ha 
-Identify population in osm loads
+Include Census 2011 population per ha.
+Identify population in OSM loads.
 
 __copyright__   = "Reiner Lemoine Institut"
 __license__     = "GNU Affero General Public License Version 3 (AGPL-3.0)"

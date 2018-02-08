@@ -60,7 +60,7 @@ def data_processing():
     'ego_dp_loadarea_loads.sql',                        # OSM Loads from landuse
     'ego_dp_loadarea_census.sql',                       # Loads from Census 2011
     'ego_dp_loadarea_loadmelt.sql',                     # Melt loads from OSM landuse and Census 2011
-    'ego_dp_loadarea_loadcut_griddistrict.sql', 		# Cut Loadarea with MV Griddistrict
+    'ego_dp_loadarea_loadcut_griddistrict.sql',         # Cut Loadarea with MV Griddistrict
     'ego_dp_loadarea_loadcut_voronoi.sql', 	    	# Cut Loadarea with MV Voronoi cells
     'ego_dp_loadarea_consumption.sql',			# Allocate consumption to Loadareas
     'ego_dp_loadarea_peakload.sql',			# Peak loads per Loadarea

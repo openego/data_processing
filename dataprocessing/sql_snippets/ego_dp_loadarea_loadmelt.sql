@@ -245,4 +245,4 @@ DROP TABLE IF EXISTS                model_draft.ego_demand_load_melt CASCADE;
 DROP MATERIALIZED VIEW IF EXISTS    model_draft.ego_demand_load_melt_error_geom_mview CASCADE;
 DROP MATERIALIZED VIEW IF EXISTS    model_draft.ego_demand_load_melt_error_geom_fix_mview CASCADE;
 DROP MATERIALIZED VIEW IF EXISTS    model_draft.ego_demand_load_melt_error_2_geom_mview CASCADE;
-*/
+ */
