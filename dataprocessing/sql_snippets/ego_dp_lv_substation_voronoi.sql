@@ -5,9 +5,13 @@ Voronoi polygons with Eucldean distance (manhattan distance would be better but 
 __copyright__   = "Reiner Lemoine Institut"
 __license__     = "GNU Affero General Public License Version 3 (AGPL-3.0)"
 __url__         = "https://github.com/openego/data_processing/blob/master/LICENSE"
-__author__      = "jong42, Ludee"
+__author__      = "Ludee, jong42"
 */
 
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_grid_mvlv_substation','ego_dp_lv_substation_voronoi.sql',' ');
+SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_grid_hvmv_substation_dummy','ego_dp_lv_substation_voronoi.sql',' ');
 
 -- add Dummy points to substations (18 Points)
 ALTER TABLE model_draft.ego_grid_mvlv_substation
