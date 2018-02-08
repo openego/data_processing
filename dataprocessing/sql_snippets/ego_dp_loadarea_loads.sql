@@ -1,14 +1,15 @@
 /*
-osm loads 
-Excludes large scale consumer 
-Buffer osm urban sectors with 100m 
-Unbuffer buffer with -100m 
+OSM Loads from landuse
+Excludes large scale consumer.
+Buffer OSM urban sectors with 100m
+Unbuffer buffer with -100m
 
-__copyright__ 	= "Reiner Lemoine Institut"
-__license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
-__url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
-__author__ 	= "Ludee"
+__copyright__   = "Reiner Lemoine Institut"
+__license__     = "GNU Affero General Public License Version 3 (AGPL-3.0)"
+__url__         = "https://github.com/openego/data_processing/blob/master/LICENSE"
+__author__      = "Ludee"
 */
+
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_demand_hv_largescaleconsumer','ego_dp_loadarea_loads.sql',' ');
