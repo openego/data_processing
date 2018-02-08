@@ -38,7 +38,7 @@ for subdir, dirs, files in os.walk('.'):
                         for key in __KEYS:
                             
                             if key == 'description':
-                                out.write(fi+'\n'+'#'.join(['#'*len(fi)]) )
+                                out.write(fi+'\n'+'#'.join(['#'*len(fi)])+'\n\n' )
                                 out.write(result[key].replace('\n\n','\n'))
                             else:
                                 out.write(key+'\n')
