@@ -4,10 +4,13 @@ Welcome to Data processing documentation of open_eGo
 
 
 
-
 .. image:: https://openegoproject.files.wordpress.com/2017/02/open_ego_logo_breit.png?w=400
    :align: right
    :scale: 100%
+
+
+
+
 
 
 .. toctree::
@@ -18,7 +21,7 @@ Welcome to Data processing documentation of open_eGo
    dataprocessing
    preprocessing
    scenario
-   
+
    whatsnew
 
 
