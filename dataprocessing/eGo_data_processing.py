@@ -67,12 +67,12 @@ def data_processing():
     'ego_dp_loadarea_griddistrict_results.sql',         # Results for MV Griddistrict
     'ego_dp_loadarea_statistic.sql',                    # Results and statistics for eGoDP data
 
-	## LOWVOLTAGE
-	 'ego_dp_lv_substation.sql',				# MVLV Substation inside Loadarea
-	 'ego_dp_lv_substation_voronoi.sql',			# MVLV Substation Voronoi
-	 'ego_dp_lv_griddistrict.sql',    			# LV Griddistrict
-	 'ego_dp_lv_peakload.sql',				# LV OSM areas
-	 'ego_dp_lv_consumption_peakload.sql',			# LV Consumption and Peakload
+    ## LOWVOLTAGE
+    'ego_dp_lv_substation.sql',                         # MVLV Substation (ONT)
+    'ego_dp_lv_substation_voronoi.sql',                 # MVLV Substation Voronoi
+    'ego_dp_lv_griddistrict.sql',                       # LV Griddistrict
+    'ego_dp_lv_peakload.sql',				# LV OSM areas
+    'ego_dp_lv_consumption_peakload.sql',			# LV Consumption and Peakload
    
 	## REA
   	 'rea/ego_dp_lattice_500m.sql', 			# lattice (point grid) 500m
