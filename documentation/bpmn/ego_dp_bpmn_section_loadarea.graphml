@@ -123,8 +123,7 @@ osm_deu_polygon_urban_sector_4_agricultural_mview<y:LabelModel>
               <y:Geometry height="55.0" width="35.0" x="1422.5" y="612.2003087310811"/>
               <y:Fill color="#FFFFFF" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
-              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="62.8046875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="327.54296875" x="-146.271484375" y="59.0">social.destatis_zensus_population_per_ha_mview
-model_draft.ego_demand_la_zensus
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="48.103515625" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="327.54296875" x="-146.271484375" y="59.0">model_draft.ego_demand_la_zensus
 model_draft.ego_demand_la_zensus_cluster
 model_draft.zensus_population_per_load_area_stats_mview<y:LabelModel>
                   <y:SmartNodeLabelModel distance="4.0"/>
@@ -352,7 +351,7 @@ political_bkg_vg250_1_sta_union_mview<y:LabelModel>
               <y:Geometry height="55.0" width="35.0" x="1422.5" y="362.2003087310811"/>
               <y:Fill color="#FFFFFFE6" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
-              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="33.40234375" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="230.16015625" x="-97.580078125" y="-37.40234375">social.destatis_zensus_population_per_ha
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="33.40234375" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="270.8359375" x="-117.91796875" y="-37.40234375">social.destatis_zensus_population_per_ha_mview
 model_draft.ego_demand_la_osm<y:LabelModel>
                   <y:SmartNodeLabelModel distance="4.0"/>
                 </y:LabelModel>
@@ -1268,7 +1267,7 @@ political_boundary.bkg_vg250_statistics_mview<y:LabelModel>
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Activity.withShadow">
               <y:Geometry height="75.0" width="200.0" x="2803.230233575282" y="452.2003087310811"/>
-              <y:Fill color="#FFFFFFE6" color2="#D4D4D4CC" transparent="false"/>
+              <y:Fill color="#FFFFFFE6" color2="#038E0359" transparent="false"/>
               <y:BorderStyle color="#123EA2" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="168.8125" x="15.59375" y="28.1494140625">ego_dp_loadarea_peakload.py</y:NodeLabel>
               <y:StyleProperties>
@@ -1288,7 +1287,8 @@ political_boundary.bkg_vg250_statistics_mview<y:LabelModel>
               <y:Geometry height="55.0" width="35.0" x="2885.730233575282" y="362.2003087310811"/>
               <y:Fill color="#FFFFFFE6" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
-              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="194.142578125" x="-79.5712890625" y="-22.701171875">model_draft.ego_demand_loadarea<y:LabelModel>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="33.40234375" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="194.142578125" x="-79.5712890625" y="-37.40234375">model_draft.ego_demand_loadarea
+scenario.ego_slp_parameters<y:LabelModel>
                   <y:SmartNodeLabelModel distance="4.0"/>
                 </y:LabelModel>
                 <y:ModelParameter>
@@ -1311,7 +1311,7 @@ political_boundary.bkg_vg250_statistics_mview<y:LabelModel>
               <y:Geometry height="55.0" width="35.0" x="2885.730233575282" y="612.2003087310811"/>
               <y:Fill color="#FFFFFF" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
-              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="256.19921875" x="-110.599609375" y="59.0">model_draft.ego_demand_loadarea_peak_load<y:LabelModel>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="194.142578125" x="-79.5712890625" y="59.0">model_draft.ego_demand_loadarea<y:LabelModel>
                   <y:SmartNodeLabelModel distance="4.0"/>
                 </y:LabelModel>
                 <y:ModelParameter>
@@ -1334,7 +1334,7 @@ political_boundary.bkg_vg250_statistics_mview<y:LabelModel>
               <y:Geometry height="30.0" width="80.0" x="2963.230233575282" y="374.7003087310811"/>
               <y:Fill color="#FFFFFFE6" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
-              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="27.35546875" x="26.322265625" y="5.6494140625">10 h<y:LabelModel>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="20.681640625" x="29.6591796875" y="5.6494140625">1 h<y:LabelModel>
                   <y:SmartNodeLabelModel distance="4.0"/>
                 </y:LabelModel>
                 <y:ModelParameter>

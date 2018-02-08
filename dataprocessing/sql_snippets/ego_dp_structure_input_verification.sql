@@ -19,6 +19,7 @@ SELECT ego_scenario_log('v0.3.0','check','openstreetmap','osm_deu_polygon','ego_
 SELECT ego_scenario_log('v0.3.0','check','openstreetmap','osm_deu_ways','ego_dp_structure_input_verification.sql','preprocessing verification');
 SELECT ego_scenario_log('v0.3.0','check','openstreetmap','osm_deu_nodes','ego_dp_structure_input_verification.sql','preprocessing verification');
 SELECT ego_scenario_log('v0.3.0','check','openstreetmap','osm_deu_line','ego_dp_structure_input_verification.sql','preprocessing verification');
+SELECT ego_scenario_log('v0.3.0','check','scenario','ego_slp_parameters','ego_dp_structure_input_verification.sql','preprocessing verification');
 SELECT ego_scenario_log('v0.3.0','check','grid','otg_ehvhv_bus_data','ego_dp_structure_input_verification.sql','preprocessing verification');
 SELECT ego_scenario_log('v0.3.0','check','society','destatis_zensus_population_per_ha','ego_dp_structure_input_verification.sql','preprocessing verification');
 SELECT ego_scenario_log('v0.3.0','check','economy','destatis_gva_per_district','ego_dp_structure_input_verification.sql','preprocessing verification');
@@ -123,6 +124,7 @@ INSERT INTO     model_draft.ego_scenario_input(version,oid,database,table_schema
             (table_schema='openstreetmap' AND table_name='osm_deu_ways') OR 
             (table_schema='openstreetmap' AND table_name='osm_deu_nodes') OR
             (table_schema='openstreetmap' AND table_name='osm_deu_line') OR
+            (table_schema='scenario' AND table_name='ego_slp_parameters') OR
             (table_schema='grid' AND table_name='otg_ehvhv_bus_data') OR
             (table_schema='society' AND table_name='destatis_zensus_population_per_ha') OR
             (table_schema='economy' AND table_name='destatis_gva_per_district') OR
