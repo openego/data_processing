@@ -10,7 +10,7 @@ Overview of scripts
 
 .. toctree::
    :titlesonly:
-   :maxdepth: 2
+   :maxdepth: 7
 
    (society/)
    society/ego_pp_destatis_zensus_import
