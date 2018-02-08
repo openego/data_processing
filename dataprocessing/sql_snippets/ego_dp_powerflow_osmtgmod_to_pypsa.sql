@@ -1,5 +1,8 @@
 /*
-osmTGmod2pyPSA
+`osmTGmod <https://github.com/openego/osmTGmod>`_ provides a model of the German EHV and HV grid based on OpenStreetMap.
+This script extracts `bus <grid.otg_ehvhv_bus_data>`_ and `branch data <grid.otg_ehvhv_branch_data>`_ provided by osmTGmod
+and inserts the grid model into the corresponding powerflow tables.
+Additionally some (electrical) properties for transformers are adjusted or added. 
 
 __copyright__ 	= "Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems"
 __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
