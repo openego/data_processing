@@ -55,8 +55,8 @@ def data_processing():
     'ego_dp_substation_id_to_generator.sql',            # Assign Substation ID (subst_id) to Generator (Conventional and Renewable)
 
     ## LOADAREA
-    'ego_dp_loadarea_landuse.sql',                     # OSM landuse sectors
-    'ego_dp_loadarea_industry_consumer.sql', 		# Industry consumer
+    'ego_dp_loadarea_landuse.sql',                      # OSM landuse sectors
+    'ego_dp_loadarea_industry_consumer.sql',            # OSM Industry consumer
     'ego_dp_loadarea_loads.sql',            		# Loads from OSM landuse
     'ego_dp_loadarea_census.sql',   			# Loads from Census
     'ego_dp_loadarea_loadmelt.sql',        		# Melt OSM landuse and Zensus loads

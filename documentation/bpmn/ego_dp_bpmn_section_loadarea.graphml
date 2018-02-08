@@ -1142,7 +1142,7 @@ grid.ego_ehv_substation</y:NodeLabel>
         <node id="n0::n48">
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
-              <y:Geometry height="55.0" width="35.0" x="722.5" y="162.20030873108112"/>
+              <y:Geometry height="55.0" width="35.0" x="747.5" y="182.5"/>
               <y:Fill color="#00CCFF" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.701171875" horizontalTextPosition="center" iconTextGap="4" modelName="sides" modelPosition="n" textColor="#000000" verticalTextPosition="bottom" visible="true" width="190.140625" x="-77.5703125" y="-22.701171875">demand.ego_demand_federalstate</y:NodeLabel>
@@ -1364,6 +1364,29 @@ political_boundary.bkg_vg250_statistics_mview<y:LabelModel>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill" value="#ffffffe6"/>
                 <y:Property class="com.yworks.yfiles.bpmn.view.BPMNTypeEnum" name="com.yworks.bpmn.type" value="ACTIVITY_TYPE"/>
                 <y:Property class="com.yworks.yfiles.bpmn.view.ActivityTypeEnum" name="com.yworks.bpmn.activityType" value="ACTIVITY_TYPE_TASK"/>
+              </y:StyleProperties>
+            </y:GenericNode>
+          </data>
+        </node>
+        <node id="n0::n59">
+          <data key="d6">
+            <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
+              <y:Geometry height="30.0" width="230.0" x="425.0" y="544.7003087310811"/>
+              <y:Fill color="#FFFF99" transparent="false"/>
+              <y:BorderStyle color="#000000" type="line" width="1.0"/>
+              <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="10" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="28.501953125" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="168.5361328125" x="30.73193359375" y="0.7490234375">Open Database License (ODbL) v1.0
+© OpenStreetMap contributors<y:LabelModel>
+                  <y:SmartNodeLabelModel distance="4.0"/>
+                </y:LabelModel>
+                <y:ModelParameter>
+                  <y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/>
+                </y:ModelParameter>
+              </y:NodeLabel>
+              <y:StyleProperties>
+                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.line.color" value="#000000"/>
+                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill2" value="#d4d4d4cc"/>
+                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill" value="#ffffffe6"/>
+                <y:Property class="com.yworks.yfiles.bpmn.view.BPMNTypeEnum" name="com.yworks.bpmn.type" value="ARTIFACT_TYPE_ANNOTATION"/>
               </y:StyleProperties>
             </y:GenericNode>
           </data>
@@ -1984,6 +2007,18 @@ political_boundary.bkg_vg250_statistics_mview<y:LabelModel>
           <y:Arrows source="none" target="delta"/>
           <y:StyleProperties>
             <y:Property class="com.yworks.yfiles.bpmn.view.BPMNTypeEnum" name="com.yworks.bpmn.type" value="CONNECTION_TYPE_SEQUENCE_FLOW"/>
+          </y:StyleProperties>
+        </y:GenericEdge>
+      </data>
+    </edge>
+    <edge id="n0::e52" source="n0::n48" target="n0::n15">
+      <data key="d10">
+        <y:GenericEdge configuration="com.yworks.bpmn.Connection">
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="dashed_dotted" width="1.0"/>
+          <y:Arrows source="none" target="concave"/>
+          <y:StyleProperties>
+            <y:Property class="com.yworks.yfiles.bpmn.view.BPMNTypeEnum" name="com.yworks.bpmn.type" value="CONNECTION_TYPE_DIRECTED_ASSOCIATION"/>
           </y:StyleProperties>
         </y:GenericEdge>
       </data>
