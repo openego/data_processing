@@ -1,5 +1,6 @@
 /*
-SQL Script to create mviews diyplaying power plants by scenario.
+This script creates discrete materialized views (mview) for conventional and renewable power plants per scenario,
+resulting in six different mviews for the three main scenarios considered in open_eGo.
 
 __copyright__ = "Europa-Universität Flensburg - ZNES"
 __license__ = "GNU Affero General Public License Version 3 (AGPL-3.0)"
