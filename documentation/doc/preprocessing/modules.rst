@@ -7,6 +7,8 @@ Preprocessing
 
 .. toctree::
    :titlesonly:
+   :maxdepth: 2
+   
    boundaries/*
    openstreetmap/*
 
