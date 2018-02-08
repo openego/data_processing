@@ -14,9 +14,13 @@ Welcome to Data processing documentation of open_eGo
    :maxdepth: 7
    :titlesonly:
 
+   index
+   getting_started
    dataprocessing
    preprocessing
    scenario
+   
+   whatsnew
 
 
 
