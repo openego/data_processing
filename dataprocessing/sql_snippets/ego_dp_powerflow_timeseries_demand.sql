@@ -1,5 +1,7 @@
 /*
-Insert demand series into pf-schema
+Aggregated load time series for neighbouring countries are based on rennpassG!S results and are added to the corresponding
+`powerflow table <http://oep.iks.cs.ovgu.de/dataedit/view/model_draft/ego_grid_pf_hv_load_pq_set>`_. The load is equivalent
+in all three scenarios. 
 
 __copyright__ 	= "Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems"
 __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
