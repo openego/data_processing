@@ -42,7 +42,7 @@ UPDATE model_draft.ego_grid_lv_griddistrict AS t1
     SET sector_consumption_retail = COALESCE(t2.real_cons,0)
     FROM  (
         WITH    lvgd_sector_area_retail_sum AS (
-                SELECT	lvgd.la_id,
+                SELECT  lvgd.la_id,
             SUM(lvgd.sector_area_retail) AS sum
             FROM    model_draft.ego_grid_lv_griddistrict AS lvgd
             GROUP BY lvgd.la_id)

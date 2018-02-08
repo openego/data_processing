@@ -1,14 +1,15 @@
 /*
-lattice on bbox of Germany with 500m per area
-wpa 	- points inside wind potential area
-la 	- points inside loadarea
-x 	- points inside wind potential area and loadarea
-out	- points outside area
+Prepare 500m lattice
+Lattice on bounding box of Germany with 500m per area:
+wpa - points inside wind potential area
+la  - points inside loadarea
+x   - points inside wind potential area and loadarea
+out - points outside area
 
-__copyright__ 	= "Reiner Lemoine Institut"
-__license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
-__url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
-__author__ 	= "Ludee"
+__copyright__   = "Reiner Lemoine Institut"
+__license__     = "GNU Affero General Public License Version 3 (AGPL-3.0)"
+__url__         = "https://github.com/openego/data_processing/blob/master/LICENSE"
+__author__      = "Ludee"
 */
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
