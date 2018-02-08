@@ -1,0 +1,24 @@
+Release v0.3.0 (December 18, 2017)
+++++++++++++++++++++++++++++++++++
+
+[Description]
+
+
+
+Added features
+--------------
+
+*
+
+
+Bug fixes
+---------
+
+*
+
+
+Other changes
+-------------
+
+* 
+
