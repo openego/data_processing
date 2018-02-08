@@ -96,8 +96,8 @@ ALTER TABLE	model_draft.ego_boundaries_hvmv_subst_per_gem_1_mview OWNER TO oeuse
 
 -- metadata
 COMMENT ON MATERIALIZED VIEW model_draft.ego_boundaries_hvmv_subst_per_gem_1_mview IS '{
-	"comment": "eGoDP - Temporary table",
-	"version": "v0.3.0" }' ;
+    "comment": "eGoDP - Temporary table",
+    "version": "v0.3.0" }';
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_boundaries_hvmv_subst_per_gem_1_mview','ego_dp_mv_griddistrict.sql',' ');
