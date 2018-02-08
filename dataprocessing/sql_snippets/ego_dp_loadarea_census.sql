@@ -106,7 +106,6 @@ COMMENT ON TABLE model_draft.ego_demand_la_zensus_cluster IS '{
     "comment": "eGoDP - Temporary table",
     "version": "v0.3.0" }';
 
-
 -- insert cluster
 INSERT INTO model_draft.ego_demand_la_zensus_cluster(geom)
     SELECT  (ST_DUMP(ST_MULTI(ST_UNION(grid.geom)))).geom ::geometry(Polygon,3035) AS geom
