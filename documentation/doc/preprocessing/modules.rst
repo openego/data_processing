@@ -12,6 +12,7 @@ Overview of scripts
    :titlesonly:
    :maxdepth: 2
 
+   (society/)
    society/ego_pp_destatis_zensus_import
    society/ego_pp_destatis_zensus_metadata
 
