@@ -1,4 +1,4 @@
-/*
+﻿/*
 Information on generators which are assigned to a specific substation are transformed to a data structure which is suitable for PyPSA. This script creates the scenarios
 'Status Quo', 'NEP 2035' and 'eGo 100' in the hv powerflow schema. 
 
@@ -389,6 +389,24 @@ INSERT INTO model_draft.ego_grid_pf_hv_generator (
 UPDATE model_draft.ego_grid_pf_hv_generator 
 	SET dispatch = 'variable' WHERE source IN (9, 12, 13); 
 
-
+CREATE MATERIALIZED VIEW model_draft.ego_supply_aggr_weather_mview 
+AS 
+(WITH w_sub AS (
+ SELECT DISTINCT
+	aggr_id,
+	w_id, 
+	scn_name, 
+	bus
+		FROM
+		model_draft.ego_supply_pf_generator_single
+	) SELECT
+		aggr_id,
+		w_id,
+		scn_name,
+		bus,
+		ROW_NUMBER () OVER (ORDER BY aggr_id) as row_number
+			FROM
+			w_sub);
+			
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_grid_pf_hv_generator','ego_dp_powerflow_assignment_generator.sql',' ');
