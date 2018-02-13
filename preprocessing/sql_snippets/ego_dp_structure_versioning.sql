@@ -2492,6 +2492,183 @@ SELECT obj_description('grid.ego_pf_hv_line' ::regclass) ::json;
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.3.0','result','grid','ego_pf_hv_line','ego_dp_structure_versioning.sql','hv pf lines');
 
+-- powerflow link 
+
+-- PF HV link 
+/*
+DROP TABLE IF EXISTS 	grid.ego_pf_hv_link CASCADE;
+
+CREATE TABLE grid.ego_pf_hv_link
+(
+  version text,
+  scn_name character varying NOT NULL DEFAULT 'Status Quo'::character varying,
+  link_id bigint NOT NULL,
+  bus0 bigint,
+  bus1 bigint,
+  efficiency double precision DEFAULT 1,
+  marginal_cost double precision DEFAULT 0,
+  p_nom numeric DEFAULT 0,
+  p_nom_extendable boolean DEFAULT false,
+  p_nom_min double precision DEFAULT 0,
+  p_nom_max double precision,
+  capital_cost double precision,
+  length double precision,
+  terrain_factor double precision DEFAULT 1,
+  geom geometry(MultiLineString,4326),
+  topo geometry(LineString,4326)
+  CONSTRAINT link_data_pkey PRIMARY KEY (link_id, scn_name) ) WITH ( OIDS=FALSE );
+  
+--FK
+ALTER TABLE grid.ego_pf_hv_link
+	ADD CONSTRAINT ego_pf_hv_link_fkey FOREIGN KEY (version) 
+	REFERENCES model_draft.ego_scenario(version) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+-- grant (oeuser)
+ALTER TABLE	grid.ego_pf_hv_link OWNER TO oeuser;
+
+*/  
+-- metadata
+
+COMMENT ON TABLE grid.ego_pf_hv_link IS '{
+    "title": "eGo hv powerflow - links",
+    "description": "links in eGo hv powerflow",
+    "language": [ "eng" ],
+    "spatial": {
+        "location": "",
+        "extend": "Germany",
+        "resolution": ""
+    },
+    "temporal": {
+        "reference_date": " ",
+        "start": "",
+        "end": "",
+        "resolution": ""
+    },
+    "sources": [
+        {
+            "name": "eGo dataprocessing",
+            "description": " ",
+            "url": "https://github.com/openego/data_processing",
+            "license": "GNU Affero General Public License Version 3 (AGPL-3.0)",
+            "copyright": "\u00a9 Flensburg University of Applied Sciences, Center for Sustainable Energy Systems"
+        },
+        {
+            "name": "OpenStreetMap",
+            "description": " ",
+            "url": "http://www.openstreetmap.org/",
+            "license": "Open Database License (ODbL) v1.0",
+            "copyright": "\u00a9 OpenStreetMap contributors"
+        }
+    ],
+    "license": {
+        "id": "ODbL-1.0",
+        "name": "Open Data Commons Open Database License 1.0",
+        "version": "1.0",
+        "url": "https://opendatacommons.org/licenses/odbl/1.0/",
+        "instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
+        "copyright": "\u00a9 Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems"
+    },
+    "contributors": [
+        {
+            "name": "IlkaCu",
+            "email": "",
+            "date": "08.02.2018",
+            "comment": "Create table"
+        }
+    ],
+    "resources": [
+        {
+            "name": "grid.ego_pf_hv_link",
+            "fromat": "sql",
+            "fields": [
+                {
+                    "name": "version",
+                    "description": "version id",
+                    "unit": ""
+                },
+		{
+                    "name": "scn_name",
+                    "description": "name of corresponding scenario",
+                    "unit": ""
+                },
+                {
+                    "name": "link_id",
+                    "description": "ID of line",
+                    "unit": ""
+                },
+                {
+                    "name": "bus0",
+                    "description": "name of first bus to which branch is attached",
+                    "unit": ""
+                },
+                {
+                    "name": "bus1",
+                    "description": "name of second bus to which branch is attached",
+                    "unit": ""
+                },
+                {
+                    "name": "efficiency",
+                    "description": "efficiency of power transfer from bus0 to bus1",
+                    "unit": ""
+                },
+                {
+                    "name": "p_nom",
+                    "description": "limit of active power which can pass through link",
+                    "unit": "MVA"
+                },
+                {
+                    "name": "p_nom_extendable",
+                    "description": "switch to allow capacity p_nom to be extended in OPF",
+                    "unit": ""
+                },
+                {
+                    "name": "p_nom_min",
+                    "description": "minimum value, if p_nom is extendable",
+                    "unit": "MVA"
+                },
+                {
+                    "name": "p_nom_max",
+                    "description": "maximum value, if p_nom is extendable",
+                    "unit": "MVA"
+                },
+                {
+                    "name": "capital_cost",
+                    "description": "capital cost of extending p_nom by 1 MVA",
+                    "unit": "EUR/MVA"
+                },
+                {
+                    "name": "length",
+                    "description": "length of line",
+                    "unit": "km"
+                },
+                {
+                    "name": "terrain_factor",
+                    "description": "...",
+                    "unit": ""
+                },
+                {
+                    "name": "geom",
+                    "description": "geometry that depict the real route of the line",
+                    "unit": ""
+                },
+                {
+                    "name": "topo",
+                    "description": "topology that depicts a direct connection between both busses",
+                    "unit": "..."
+                }
+            ]
+        }
+    ],
+    "metadata_version": "1.3"
+}';
+
+-- select description
+SELECT obj_description('grid.ego_pf_hv_link' ::regclass) ::json;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.3.0','result','grid','ego_pf_hv_link','ego_dp_structure_versioning.sql','hv pf links');
+
+
 -- powerflow load 
 /*
 DROP TABLE IF EXISTS grid.ego_pf_hv_load CASCADE;
