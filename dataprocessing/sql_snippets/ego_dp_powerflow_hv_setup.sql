@@ -778,46 +778,149 @@ CREATE TABLE 		model_draft.ego_grid_pf_hv_load (
 	CONSTRAINT load_data_pkey PRIMARY KEY (load_id, scn_name) ) WITH ( OIDS=FALSE );
 
 -- metadata
-COMMENT ON TABLE  model_draft.ego_grid_pf_hv_load IS
-'{
-"Name": "Load in hv powerflow",
-"Source": [{
-                  "Name": "open_eGo data-processing",
-                  "URL":  "https://github.com/openego/data_processing" }],
-"Reference date": "...",
-"Date of collection": "...",
-"Original file": "...",
-"Spatial resolution": ["Germany"],
-"Description": ["Loads considered in hv powerflow calculation"],
-"Column": [
-                   {"Name": "scn_name",
-                    "Description": "scenario name",
-                    "Unit": "" },
-                   {"Name": "load_id",
-                    "Description": "unique id",
-                    "Unit": "" },                   
-                   {"Name": "bus",
-                    "Description": "id of associated bus",
-                    "Unit": "" },
-                   {"Name": "sign",
-                    "Description": "power sign",
-                    "Unit": "" },
-                   {"Name": "e_annual",
-                    "Description": "annual electricity consumption",
-                    "Unit": "GWh" }],
-"Changes":[
-                   {"Name": "Mario Kropshofer",
-                    "Mail": "mario.kropshofer2@stud.fh-flensburg.de",
-                    "Date":  "04.10.2016",
-                    "Comment": "..." }, 
-                   {"Name": "Ilka Cussmann",
-                    "Mail": "",
-                    "Date":  "26.10.2016",
-                    "Comment": "completed json-string" }
-                  ],
-"ToDo": ["add licence"],
-"Licence": ["..."],
-"Instructions for proper use": ["..."]
+COMMENT ON TABLE model_draft.ego_grid_pf_hv_load IS '{
+    "title": "eGo hv powerflow - loads",
+    "description": "loads in eGo hv powerflow",
+    "language": [ "eng" ],
+    "spatial": {
+        "location": "",
+        "extend": "Germany",
+        "resolution": ""
+    },
+    "temporal": {
+        "reference_date": " ",
+        "start": "",
+        "end": "",
+        "resolution": ""
+    },
+    "sources": [
+        {
+            "name": "eGo dataprocessing",
+            "description": " ",
+            "url": "https://github.com/openego/data_processing",
+            "license": "GNU Affero General Public License Version 3 (AGPL-3.0)",
+            "copyright": "\u00a9 Flensburg University of Applied Sciences, Center for Sustainable Energy Systems"
+        },
+        {
+            "name": "OpenStreetMap",
+            "description": " ",
+            "url": "http://www.openstreetmap.org/",
+            "license": "Open Database License (ODbL) v1.0",
+            "copyright": "\u00a9 OpenStreetMap contributors"
+        },
+        {
+            "name": "L\u00e4nderarbeitskreis Energiebilanzen",
+            "description": " ",
+            "url": "http://www.lak-energiebilanzen.de/seiten/energiebilanzenLaender.cfm",
+            "license": " ",
+            "copyright": " "
+        },
+        {
+            "name": "Bayerisches Landesamt f\u00fcr Statistik und Datenverarbeitung",
+            "description": " ",
+            "url": "http://www.stmwi.bayern.de/fileadmin/user_upload/stmwivt/Themen/Energie_und_Rohstoffe/Dokumente_und_Cover/Energiebilanz/2014/B-03_bilanzjo_mgh_2014-03-07.pdf",
+            "license": " ",
+            "copyright": " "
+        },
+        {
+            "name": "Hessisches Statistisches Landesamt",
+            "description": " ",
+            "url": "http://www.statistik-hessen.de/publikationen/download/277/index.html",
+            "license": " ",
+            "copyright": " "
+        },
+        {
+            "name": "Statistisches Amt Mecklenburg-Vorpommern",
+            "description": " ",
+            "url": "https://www.destatis.de/GPStatistik/servlets/MCRFileNodeServlet/MVHeft_derivate_00000168/E453_2011_00a.pdf;jsessionid=CD300CD3A06FF85FDEA864FF4D91D880",
+            "license": " ",
+            "copyright": " "
+        },
+        {
+            "name": "Nieders\u00e4chsisches Ministerium f\u00fcr Umwelt, Energie und Klimaschutz",
+            "description": " ",
+            "url": "http://www.umwelt.niedersachsen.de/energie/daten/co2bilanzen/niedersaechsische-energie--und-co2-bilanzen-2009-6900.html",
+            "license": " ",
+            "copyright": " "
+        },
+        {
+            "name": "Information und Technik Nordrhein-Westfalen",
+            "description": " ",
+            "url": "https://webshop.it.nrw.de/gratis/E449%20201100.pdf",
+            "license": " ",
+            "copyright": " "
+        },
+        {
+            "name": "Statistisches Landesamt Sachsen-Anhalt",
+            "description": " ",
+            "url": "http://www.stala.sachsen-anhalt.de/download/stat_berichte/6E402_j_2011.pdf",
+            "license": " ",
+            "copyright": " "
+        },
+        {
+            "name": "Th\u00fcringer Landesamt f\u00fcr Statistik",
+            "description": " ",
+            "url": "http://www.statistik.thueringen.de/webshop/pdf/2011/05402_2011_00.pdf",
+            "license": " ",
+            "copyright": " "
+        }
+    ],
+    "license": {
+        "id": "ODbL-1.0",
+        "name": "Open Data Commons Open Database License 1.0",
+        "version": "1.0",
+        "url": "https://opendatacommons.org/licenses/odbl/1.0/",
+        "instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
+        "copyright": "\u00a9 Flensburg University of Applied Sciences, Center for Sustainable Energy Systems"
+    },
+    "contributors": [
+        {
+            "name": "IlkaCu",
+            "email": "",
+            "date": "26.04.2017",
+            "comment": "Create table"
+        },
+        {
+            "name": "KilianZimmerer",
+            "email": "",
+            "date": "2017-6-27",
+            "comment": "Update metadata to v1.3"
+        }
+    ],
+    "resources": [
+        {
+            "name": "model_draft.ego_grid_pf_hv_load",
+            "fromat": "sql",
+            "fields": [
+                {
+                    "name": "scn_name",
+                    "description": "name of corresponding scenario",
+                    "unit": ""
+                },
+                {
+                    "name": "load_id",
+                    "description": "unique id",
+                    "unit": ""
+                },
+                {
+                    "name": "bus",
+                    "description": "id of associated bus",
+                    "unit": ""
+                },
+                {
+                    "name": "sign",
+                    "description": "power sign",
+                    "unit": ""
+                },
+                {
+                    "name": "e_annual",
+                    "description": "annual electricity consumption",
+                    "unit": "GWh"
+                }
+            ]
+        }
+    ],
+    "metadata_version": "1.3"
 }';
 
 -- select description
