@@ -173,7 +173,7 @@ COMMENT ON TABLE model_draft.ego_grid_pf_hv_source IS '{
     ],
     "resources": [
         {
-            "name": "grid.ego_pf_hv_source",
+            "name": "model_draft.ego_grid_pf_hv_source",
             "fromat": "sql",
             "fields": [
                 {
@@ -222,7 +222,7 @@ CREATE TABLE 		model_draft.ego_grid_pf_hv_bus (
   CONSTRAINT bus_data_pkey PRIMARY KEY (bus_id, scn_name) ) WITH ( OIDS=FALSE );
 
 -- metadata
-COMMENT ON TABLE grid.ego_pf_hv_bus IS '{
+COMMENT ON TABLE model_draft.ego_grid_pf_hv_bus IS '{
     "title": "eGo hv powerflow - bus",
     "description": "Buses relevant for eGo hv powerflow",
     "language": [ "eng" ],
@@ -277,14 +277,9 @@ COMMENT ON TABLE grid.ego_pf_hv_bus IS '{
     ],
     "resources": [
         {
-            "name": "grid.ego_pf_hv_bus",
+            "name": "model_draft.ego_grid_pf_hv_bus",
             "fromat": "sql",
             "fields": [
-                {
-                    "name": "version",
-                    "description": "version id",
-                    "unit": ""
-                },
                 {
                     "name": "scn_name",
                     "description": "name of corresponding scenario",
@@ -401,79 +396,169 @@ CREATE TABLE 		model_draft.ego_grid_pf_hv_generator (
 		REFERENCES model_draft.ego_grid_pf_hv_source (source_id) ) WITH ( OIDS=FALSE );
 
 -- metadata
-COMMENT ON TABLE  model_draft.ego_grid_pf_hv_generator IS
-'{
-"Name": "Generator in hv powerflow",
-"Source": [{
-                  "Name": "open_eGo data-processing",
-                  "URL":  "https://github.com/openego/data_processing" }],
-"Reference date": "...",
-"Date of collection": "...",
-"Original file": "ego_dp_powerflow_hv_setup.sql",
-"Spatial resolution": ["Germany"],
-"Description": ["Generators considered in hv powerflow"],
-"Column": [
-                   {"Name": "scn_name",
-                    "Description": "scenario name",
-                    "Unit": "" },
-                   {"Name": "generator_id",
-                    "Description": "unique id for generators",
-                    "Unit": "" },                   
-                   {"Name": "bus",
-                    "Description": "id of associated bus",
-                    "Unit": "" },
-                   {"Name": "dispatch",
-                    "Description": "Controllability of active power dispatch, must be flexible or variable.",
-                    "Unit": "" },
-                   {"Name": "control",
-                    "Description": "P,Q,V control strategy, must be PQ, PV or Slack.",
-                    "Unit": "" },
-                   {"Name": "p_nom",
-                    "Description": "Nominal power",
-                    "Unit": "MW" },
-                   {"Name": "p_nom_extendable",
-                    "Description": "Switch to allow capacity p_nom to be extended",
-                    "Unit": "" },
-                   {"Name": "p_nom_min",
-                    "Description": "If p_nom is extendable, set its minimum value",
-                    "Unit": "" },
-                   {"Name": "p_nom_max",
-                    "Description": "If p_nom is extendable, set its maximum value (e.g. limited by potential)",
-                    "Unit": "" },
-                   {"Name": "p_min_pu_fixed",
-                    "Description": "If control=flexible this gives the minimum output per unit of p_nom",
-                    "Unit": "per unit" },
-                   {"Name": "p_max_pu_fixed",
-                    "Description": "If control=flexible this gives the maximum output per unit of p_nom, equivalent to a de-rating factor.",
-                    "Unit": "per unit" },
-                   {"Name": "sign",
-                    "Description": "power sign",
-                    "Unit": "" },
-                   {"Name": "source",
-                    "Description": "prime mover energy carrier",
-                    "Unit": "" },
-                   {"Name": "marginal_cost",
-                    "Description": "Marginal cost of production of 1 MWh",
-                    "Unit": "€/MWh" },
-                   {"Name": "capital_cost",
-                    "Description": "Capital cost of extending p_nom by 1 MW",
-                    "Unit": "€/MW" },
-                   {"Name": "efficiency",
-                    "Description": "Ratio between primary energy and electrical energy",
-                    "Unit": "per unit" }],
-"Changes":[
-                   {"Name": "Mario Kropshofer",
-                    "Mail": "mario.kropshofer2@stud.fh-flensburg.de",
-                    "Date":  "04.10.2016",
-                    "Comment": "..." }, 
-                   {"Name": "Ilka Cussmann",
-                    "Mail": "",
-                    "Date":  "26.10.2016",
-                    "Comment": "completed json-string" }
-                  ],
-"ToDo": ["add licence"],
-"Licence": ["..."],
-"Instructions for proper use": ["..."]
+COMMENT ON TABLE model_draft.ego_grid_pf_hv_generator IS '{
+    "title": "eGo hv powerflow - generator",
+    "description": "Generators relevant for eGo hv powerflow",
+    "language": [ "eng" ],
+    "spatial": {
+        "location": "",
+        "extend": "Germany",
+        "resolution": ""
+    },
+    "temporal": {
+        "reference_date": " ",
+        "start": "",
+        "end": "",
+        "resolution": ""
+    },
+    "sources": [
+        {
+            "name": "eGo dataprocessing",
+            "description": " ",
+            "url": "https://github.com/openego/data_processing",
+            "license": "GNU Affero General Public License Version 3 (AGPL-3.0)",
+            "copyright": "\u00a9 Reiner Lemoine Institut"
+        },
+        {
+            "name": "OpenStreetMap",
+            "description": " ",
+            "url": "http://www.openstreetmap.org/",
+            "license": "Open Database License (ODbL) v1.0",
+            "copyright": "\u00a9 OpenStreetMap contributors"
+        },
+        {
+            "name": "Open Power System Data (OPSD)",
+            "description": " ",
+            "url": "http://data.open-power-system-data.org/conventional_power_plants/2016-02-08/",
+            "license": "MIT Licence",
+            "copyright": "\u00a9 2016 Open Power System Data"
+        },
+        {
+            "name": "EnergyMap",
+            "description": " ",
+            "url": "www.energymap.info",
+            "license": "",
+            "copyright": ""
+        },
+        {
+            "name": "Bundesnetzagentur (BNetzA)",
+            "description": " ",
+            "url": "http://www.bundesnetzagentur.de/DE/Sachgebiete/ElektrizitaetundGas/Unternehmen_Institutionen/Versorgungssicherheit/Erzeugungskapazitaeten/Kraftwerksliste/kraftwerksliste-node.html",
+            "license": "",
+            "copyright": ""
+        }
+    ],
+    "license": {
+        "id": "ODbL-1.0",
+        "name": "Open Data Commons Open Database License 1.0",
+        "version": "1.0",
+        "url": "https://opendatacommons.org/licenses/odbl/1.0/",
+        "instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
+        "copyright": "\u00a9 Flensburg University of Applied Sciences, Center for Sustainable Energy Systems"
+    },
+    "contributors": [
+        {
+            "name": "IlkaCu",
+            "email": "",
+            "date": "26.04.2017",
+            "comment": "Create table"
+        },
+        {
+            "name": "KilianZimmerer",
+            "email": "",
+            "date": "2017-6-27",
+            "comment": "Update metadata to v1.3"
+        }
+    ],
+    "resources": [
+        {
+            "name": "model_draft.ego_grid_pf_hv_generator",
+            "fromat": "sql",
+            "fields": [
+                {
+                    "name": "scn_name",
+                    "description": "name of corresponding scenario",
+                    "unit": ""
+                },
+                {
+                    "name": "generator_id",
+                    "description": "ID of corresponding generator",
+                    "unit": ""
+                },
+                {
+                    "name": "bus",
+                    "description": "id of associated bus",
+                    "unit": ""
+                },
+                {
+                    "name": "dispatch",
+                    "description": "Controllability of active power dispatch, must be flexible or variable.",
+                    "unit": ""
+                },
+                {
+                    "name": "control",
+                    "description": "P,Q,V control strategy, must be PQ, PV or Slack.",
+                    "unit": ""
+                },
+                {
+                    "name": "p_nom",
+                    "description": "Nominal power",
+                    "unit": "MW"
+                },
+                {
+                    "name": "p_nom_extendable",
+                    "description": "Switch to allow capacity p_nom to be extended",
+                    "unit": ""
+                },
+                {
+                    "name": "p_nom_min",
+                    "description": "If p_nom is extendable, set its minimum value",
+                    "unit": ""
+                },
+                {
+                    "name": "p_nom_max",
+                    "description": "If p_nom is extendable, set its maximum value (e.g. limited by potential)",
+                    "unit": ""
+                },
+                {
+                    "name": "p_min_pu_fixed",
+                    "description": "If control=flexible this gives the minimum output per unit of p_nom",
+                    "unit": "per unit"
+                },
+                {
+                    "name": "p_max_pu_fixed",
+                    "description": "If control=flexible this gives the maximum output per unit of p_nom, equivalent to a de-rating factor.",
+                    "unit": "per unit"
+                },
+                {
+                    "name": "sign",
+                    "description": "power sign",
+                    "unit": ""
+                },
+                {
+                    "name": "source",
+                    "description": "prime mover energy carrier",
+                    "unit": ""
+                },
+                {
+                    "name": "marginal_cost",
+                    "description": "Marginal cost of production of 1 MWh",
+                    "unit": "EUR/MWh"
+                },
+                {
+                    "name": "capital_cost",
+                    "description": "Capital cost of extending p_nom by 1 MW",
+                    "unit": "EUR/MW"
+                },
+                {
+                    "name": "efficiency",
+                    "description": "Ratio between primary energy and electrical energy",
+                    "unit": "per unit"
+                }
+            ]
+        }
+    ],
+    "metadata_version": "1.3"
 }';
 
 -- select description
@@ -508,89 +593,172 @@ CREATE TABLE 		model_draft.ego_grid_pf_hv_line (
 	CONSTRAINT line_data_pkey PRIMARY KEY (line_id, scn_name) ) WITH ( OIDS=FALSE );
 
 -- metadata
-COMMENT ON TABLE  model_draft.ego_grid_pf_hv_line IS
-'{
-"Name": "Lines in hv powerflow",
-"Source": [{
-                  "Name": "open_eGo data-processing",
-                  "URL":  "https://github.com/openego/data_processing" }],
-"Reference date": "...",
-"Date of collection": "...",
-"Original file": "...",
-"Spatial resolution": ["Germany"],
-"Description": ["Electricity lines considered in hv powerflow calculations"],
-"Column": [
-                   {"Name": "scn_name",
-                    "Description": "scenario name",
-                    "Unit": "" },
-                   {"Name": "line_id",
-                    "Description": "unique identifier",
-                    "Unit": "" },                   
-                   {"Name": "bus0",
-                    "Description": "Name of first bus to which branch is attached",
-                    "Unit": "" },
-                   {"Name": "bus1",
-                    "Description": "Name of second bus to which branch is attached",
-                    "Unit": "" },
-                   {"Name": "x",
-                    "Description": "Series reactance",
-                    "Unit": "Ohm" },
-                   {"Name": "r",
-                    "Description": "Series resistance",
-                    "Unit": "Ohm" },
-                   {"Name": "g",
-                    "Description": "Shunt conductivity",
-                    "Unit": "Siemens" }, 
-                   {"Name": "b",
-                    "Description": "Shunt susceptance",
-                    "Unit": "Siemens" }, 
-                   {"Name": "s_nom",
-                    "Description": "Limit of apparent power which can pass through branch",
-                    "Unit": "MVA" }, 
-                   {"Name": "s_nom_extendable",
-                    "Description": "Switch to allow capacity s_nom to be extended",
-                    "Unit": "" }, 
-                   {"Name": "s_nom_min",
-                    "Description": "If s_nom is extendable, set its minimum value",
-                    "Unit": "MVA" }, 
-                   {"Name": "s_nom_max",
-                    "Description": "If s_nom is extendable in OPF, set its maximum value",
-                    "Unit": "MVA" }, 
-                   {"Name": "capital_cost",
-                    "Description": "Capital cost of extending s_nom by 1 MVA",
-                    "Unit": "€/MVA" }, 
-                   {"Name": "length",
-                    "Description": "Length of line",
-                    "Unit": "km" }, 
-                   {"Name": "cables",
-                    "Description": "...",
-                    "Unit": "" }, 
-                   {"Name": "frequency",
-                    "Description": "Frequency of line",
-                    "Unit": "" }, 
-                   {"Name": "terrain_factor",
-                    "Description": "...",
-                    "Unit": "" }, 
-                   {"Name": "geom",
-                    "Description": "geometry that depict the real route of the line",
-                    "Unit": "" }, 
-                   {"Name": "topo",
-                    "Description": "topology that depicts a direct connection between both busses",
-                    "Unit": "..." }],
-"Changes":[
-                   {"Name": "Mario Kropshofer",
-                    "Mail": "mario.kropshofer2@stud.fh-flensburg.de",
-                    "Date":  "04.10.2016",
-                    "Comment": "..." }, 
-                   {"Name": "Ilka Cussmann",
-                    "Mail": "",
-                    "Date":  "26.10.2016",
-                    "Comment": "completed json-string" }
-                  ],
-"ToDo": ["Add licence"],
-"Licence": ["..."],
-"Instructions for proper use": ["..."]
+COMMENT ON TABLE model_draft.ego_grid_pf_hv_line IS '{
+    "title": "eGo hv powerflow - lines",
+    "description": "lines in eGo hv powerflow",
+    "language": [ "eng" ],
+    "spatial": {
+        "location": "",
+        "extend": "Germany",
+        "resolution": ""
+    },
+    "temporal": {
+        "reference_date": " ",
+        "start": "",
+        "end": "",
+        "resolution": ""
+    },
+    "sources": [
+        {
+            "name": "eGo dataprocessing",
+            "description": " ",
+            "url": "https://github.com/openego/data_processing",
+            "license": "GNU Affero General Public License Version 3 (AGPL-3.0)",
+            "copyright": "\u00a9 Flensburg University of Applied Sciences, Center for Sustainable Energy Systems"
+        },
+        {
+            "name": "OpenStreetMap",
+            "description": " ",
+            "url": "http://www.openstreetmap.org/",
+            "license": "Open Database License (ODbL) v1.0",
+            "copyright": "\u00a9 OpenStreetMap contributors"
+        },
+        {
+            "name": "osmTGmod",
+            "description": " ",
+            "url": "https://github.com/openego/osmTGmod",
+            "license": "Apache License 2.0",
+            "copyright": "\u00a9 Wuppertal Institut"
+        }
+    ],
+    "license": {
+        "id": "ODbL-1.0",
+        "name": "Open Data Commons Open Database License 1.0",
+        "version": "1.0",
+        "url": "https://opendatacommons.org/licenses/odbl/1.0/",
+        "instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
+        "copyright": "© DLR Institute for Networked Energy Systems"
+    },
+    "contributors": [
+        {
+            "name": "IlkaCu",
+            "email": "",
+            "date": "26.04.2017",
+            "comment": "Create table"
+        },
+        {
+            "name": "KilianZimmerer",
+            "email": "",
+            "date": "2017-6-27",
+            "comment": "Update metadata to v1.3"
+        }
+    ],
+    "resources": [
+        {
+            "name": "model_draft.ego_grid_pf_hv_line",
+            "fromat": "sql",
+            "fields": [
+                {
+                    "name": "scn_name",
+                    "description": "name of corresponding scenario",
+                    "unit": ""
+                },
+                {
+                    "name": "line_id",
+                    "description": "ID of line",
+                    "unit": ""
+                },
+                {
+                    "name": "bus0",
+                    "description": "name of first bus to which branch is attached",
+                    "unit": ""
+                },
+                {
+                    "name": "bus1",
+                    "description": "name of second bus to which branch is attached",
+                    "unit": ""
+                },
+                {
+                    "name": "x",
+                    "description": "Series reactance",
+                    "unit": "Ohm"
+                },
+                {
+                    "name": "r",
+                    "description": "Series resistance",
+                    "unit": "Ohm"
+                },
+                {
+                    "name": "g",
+                    "description": "Shunt conductivity",
+                    "unit": "Siemens"
+                },
+                {
+                    "name": "b",
+                    "description": "Shunt susceptance",
+                    "unit": "Siemens"
+                },
+                {
+                    "name": "s_nom",
+                    "description": "Limit of apparent power which can pass through branch",
+                    "unit": "MVA"
+                },
+                {
+                    "name": "s_nom_extendable",
+                    "description": "Switch to allow capacity s_nom to be extended",
+                    "unit": ""
+                },
+                {
+                    "name": "s_nom_min",
+                    "description": "If s_nom is extendable, set its minimum value",
+                    "unit": "MVA"
+                },
+                {
+                    "name": "s_nom_max",
+                    "description": "If s_nom is extendable in OPF, set its maximum value",
+                    "unit": "MVA"
+                },
+                {
+                    "name": "capital_cost",
+                    "description": "capital cost of extending s_nom by 1 MVA",
+                    "unit": "EUR/MVA"
+                },
+                {
+                    "name": "length",
+                    "description": "length of line",
+                    "unit": "km"
+                },
+                {
+                    "name": "cables",
+                    "description": "...",
+                    "unit": ""
+                },
+                {
+                    "name": "frequency",
+                    "description": "frequency of line",
+                    "unit": ""
+                },
+                {
+                    "name": "terrain_factor",
+                    "description": "...",
+                    "unit": ""
+                },
+                {
+                    "name": "geom",
+                    "description": "geometry that depict the real route of the line",
+                    "unit": ""
+                },
+                {
+                    "name": "topo",
+                    "description": "topology that depicts a direct connection between both busses",
+                    "unit": "..."
+                }
+            ]
+        }
+    ],
+    "metadata_version": "1.3"
 }';
+
 
 -- select description
 SELECT obj_description('model_draft.ego_grid_pf_hv_line' ::regclass) ::json;
