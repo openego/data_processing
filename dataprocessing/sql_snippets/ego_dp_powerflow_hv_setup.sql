@@ -530,8 +530,7 @@ CREATE TABLE model_draft.ego_grid_pf_hv_link
   
 -- metadata
 
-COMMENT ON TABLE model_draft.ego_grid_pf_hv_link
-  IS E'{
+COMMENT ON TABLE model_draft.ego_grid_pf_hv_link IS '{
     "title": "eGo hv powerflow - links",
     "description": "links in eGo hv powerflow",
     "language": [ "eng" ],
