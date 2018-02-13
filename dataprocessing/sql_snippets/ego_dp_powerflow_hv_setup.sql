@@ -44,68 +44,121 @@ CREATE TABLE 		model_draft.ego_grid_pf_hv_scenario_settings (
 	CONSTRAINT scenario_settings_pkey PRIMARY KEY (scn_name) ) WITH ( OIDS=FALSE );
 
 -- metadata
-COMMENT ON TABLE  model_draft.ego_grid_pf_hv_scenario_settings IS
-'{
-"Name": "Scenario settings hv powerflow",
-"Source": [{
-                  "Name": "open_eGo data-processing",
-                  "URL":  "https://github.com/openego/data_processing" }],
-"Reference date": "2016",
-"Date of collection": "...",
-"Original file": "ego_dp_powerflow_hv_setup.sql",
-"Spatial resolution": ["Germany"],
-"Description": ["Overview of scenarios for the hv powerflow"],
-"Column": [
-                   {"Name": "scn_name",
-                    "Description": "scenario name",
-                    "Unit": "" },
-                   {"Name": "bus",
-                    "Description": "scenario for bus dataset",
-                    "Unit": "" },                   
-                   {"Name": "bus_v_mag_set",
-                    "Description": "scenario for bus dataset",
-                    "Unit": "" },
-                   {"Name": "generator",
-                    "Description": "scenario for generator dataset",
-                    "Unit": "" },
-                   {"Name": "generator_pq_set",
-                    "Description": "scenario for generator dataset",
-                    "Unit": "" },
-                   {"Name": "line",
-                    "Description": "scenario for line dataset",
-                    "Unit": "" },
-                   {"Name": "load",
-                    "Description": "scenario for load dataset",
-                    "Unit": "" },
-                   {"Name": "load_pq_set",
-                    "Description": "scenario for load dataset",
-                    "Unit": "" },
-                   {"Name": "storage",
-                    "Description": "scenario for storage dataset",
-                    "Unit": "" },
-                   {"Name": "storage_pq_set",
-                    "Description": "scenario for storage dataset",
-                    "Unit": "" },
-                   {"Name": "temp_resolution",
-                    "Description": "scenario for temp_resolution",
-                    "Unit": "" },
-                   {"Name": "transformer",
-                    "Description": "scenario for transformer",
-                    "Unit": "" }],
-"Changes":[
-                   {"Name": "Mario Kropshofer",
-                    "Mail": "mario.kropshofer2@stud.fh-flensburg.de",
-                    "Date":  "04.10.2016",
-                    "Comment": "..." }, 
-
-                   {"Name": "Ilka Cussmann",
-                    "Mail": "",
-                    "Date":  "26.10.2016",
-                    "Comment": "completed json-string" }
-                  ],
-"ToDo": ["add licence"],
-"Licence": ["..."],
-"Instructions for proper use": ["..."]
+COMMENT ON TABLE model_draft.ego_grid_pf_hv_scenario_settings IS '{
+    "title": "Scenario settings hv powerflow",
+    "description": "Overview of scenarios for the hv powerflow",
+    "language": [ "eng" ],
+    "spatial": {
+        "location": "",
+        "extend": "",
+        "resolution": ""
+    },
+    "temporal": {
+        "reference_date": " ",
+        "start": "",
+        "end": "",
+        "resolution": ""
+    },
+    "sources": [
+        {
+            "name": "eGo dataprocessing",
+            "description": " ",
+            "url": "https://github.com/openego/data_processing",
+            "license": "GNU Affero General Public License Version 3 (AGPL-3.0)",
+            "copyright": "\u00a9 Flensburg University of Applied Sciences, Center for Sustainable Energy Systems"
+        }
+    ],
+    "license": {
+        "id": "ODbL-1.0",
+        "name": "Open Data Commons Open Database License 1.0",
+        "version": "1.0",
+        "url": "https://opendatacommons.org/licenses/odbl/1.0/",
+        "instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
+        "copyright": "\u00a9 Flensburg University of Applied Sciences, Center for Sustainable Energy Systems"
+    },
+    "contributors": [
+        {
+            "name": "IlkaCu",
+            "email": "",
+            "date": "26.04.2017",
+            "comment": "Create table"
+        },
+        {
+            "name": "IlkaCu",
+            "email": "",
+            "date": "2018.02.03",
+            "comment": "Update metadata to v1.3"
+        }
+    ],
+    "resources": [
+        {
+            "name": "model_draft.ego_grid_pf_hv_scenario_settings",
+            "fromat": "sql",
+            "fields": [
+                {
+                    "name": "scn_name",
+                    "description": "scenario name",
+                    "unit": ""
+                },
+                {
+                    "name": "bus",
+                    "description": "scenario for bus dataset",
+                    "unit": ""
+                },
+                {
+                    "name": "bus_v_mag_set",
+                    "description": "scenario for bus dataset",
+                    "unit": ""
+                },
+                {
+                    "name": "generator",
+                    "description": "scenario for generator dataset",
+                    "unit": ""
+                },
+		{   
+		    "name": "generator_pq_set",
+                    "description": "scenario for generator dataset",
+                    "unit": "" 
+		},
+                {   
+		    "name": "line",
+                    "description": "scenario for line dataset",
+                    "unit": "" 
+		},
+                {
+		    "name": "load",
+                    "description": "scenario for load dataset",
+                    "unit": "" 
+		},
+                {
+		    "name": "load_pq_set",
+                    "description": "scenario for load dataset",
+                    "unit": "" 
+		},
+                {
+		    "name": "storage",
+                    "description": "scenario for storage dataset",
+                    "unit": "" 
+		},
+                {
+		    "name": "storage_pq_set",
+                    "description": "scenario for storage dataset",
+                    "unit": "" 
+		},
+                {
+		    "name": "temp_resolution",
+                    "description": "scenario for temp_resolution",
+                    "unit": "" 
+		},
+                {
+		    "name": "transformer",
+                    "description": "scenario for transformer",
+                    "unit": "" 
+		}
+            ]
+        }
+    ],
+    "metadata_version": "1.3"
 }';
 
 -- select description
