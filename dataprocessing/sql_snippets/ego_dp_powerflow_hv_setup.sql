@@ -125,44 +125,81 @@ CREATE TABLE 		model_draft.ego_grid_pf_hv_source (
 	CONSTRAINT source_data_pkey PRIMARY KEY (source_id) ) WITH ( OIDS=FALSE );
 
 -- metadata
-COMMENT ON TABLE  model_draft.ego_grid_pf_hv_source IS
-'{
-"Name": "Sources hv powerflow ",
-"Source": [{
-                  "Name": "open_eGo data-processing",
-                  "URL":  "https://github.com/openego/data_processing" }],
-"Reference date": "...",
-"Date of collection": "...",
-"Original file": "ego_dp_powerflow_hv_setup.sql",
-"Spatial resolution": ["Germany"],
-"Description": ["Different generation types/sources considered in hv powerflow"],
-"Column": [
-                   {"Name": "source_id",
-                    "Description": "unique source id",
-                    "Unit": "" },
-                   {"Name": "name",
-                    "Description": "source name",
-                    "Unit": "" },                   
-                   {"Name": "co2_emissions",
-                    "Description": "technology specific CO2 emissions ",
-                    "Unit": "tonnes/MWh" },
-                   {"Name": "commentary",
-                    "Description": "...",
-                    "Unit": "" }],
-"Changes":[
-                   {"Name": "Mario Kropshofer",
-                    "Mail": "mario.kropshofer2@stud.fh-flensburg.de",
-                    "Date":  "04.10.2016",
-                    "Comment": "..." },
-
-                   {"Name": "Ilka Cussmann",
-                    "Mail": "",
-                    "Date":  "26.10.2016",
-                    "Comment": "completed json-string" } 
-                  ],
-"ToDo": ["add licence"],
-"Licence": ["..."],
-"Instructions for proper use": ["..."]
+COMMENT ON TABLE model_draft.ego_grid_pf_hv_source IS '{
+    "title": "eGo hv powerflow - sources",
+    "description": "sources in eGo hv powerflow",
+    "language": [ "eng" ],
+    "spatial": {
+        "location": "",
+        "extend": "Germany",
+        "resolution": ""
+    },
+    "temporal": {
+        "reference_date": " ",
+        "start": "",
+        "end": "",
+        "resolution": ""
+    },
+    "sources": [
+        {
+            "name": "eGo dataprocessing",
+            "description": " ",
+            "url": "https://github.com/openego/data_processing",
+            "license": "GNU Affero General Public License Version 3 (AGPL-3.0)",
+            "copyright": "\u00a9 Flensburg University of Applied Sciences, Center for Sustainable Energy Systems"
+        }
+    ],
+    "license": {
+        "id": "ODbL-1.0",
+        "name": "Open Data Commons Open Database License 1.0",
+        "version": "1.0",
+        "url": "https://opendatacommons.org/licenses/odbl/1.0/",
+        "instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
+        "copyright": "\u00a9 Flensburg University of Applied Sciences, Center for Sustainable Energy Systems"
+    },
+    "contributors": [
+        {
+            "name": "IlkaCu",
+            "email": "",
+            "date": "26.04.2017",
+            "comment": "Create table"
+        },
+        {
+            "name": "KilianZimmerer",
+            "email": "",
+            "date": "2017-6-27",
+            "comment": "Update metadata to v1.3"
+        }
+    ],
+    "resources": [
+        {
+            "name": "grid.ego_pf_hv_source",
+            "fromat": "sql",
+            "fields": [
+                {
+                    "name": "source_id",
+                    "description": "unique source id",
+                    "unit": ""
+                },
+                {
+                    "name": "name",
+                    "description": "source name",
+                    "unit": ""
+                },
+                {
+                    "name": "co2_emissions",
+                    "description": "technology specific CO2 emissions ",
+                    "unit": "tonnes/MWh"
+                },
+                {
+                    "name": "commentary",
+                    "description": "...",
+                    "unit": ""
+                }
+            ]
+        }
+    ],
+    "metadata_version": "1.3"
 }';
 
 -- select description
