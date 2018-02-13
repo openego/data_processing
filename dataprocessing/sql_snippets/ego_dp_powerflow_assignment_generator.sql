@@ -389,6 +389,9 @@ INSERT INTO model_draft.ego_grid_pf_hv_generator (
 UPDATE model_draft.ego_grid_pf_hv_generator 
 	SET dispatch = 'variable' WHERE source IN (9, 12, 13); 
 
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_grid_pf_hv_generator','ego_dp_powerflow_assignment_generator.sql',' ');
+
 CREATE MATERIALIZED VIEW model_draft.ego_supply_aggr_weather_mview 
 AS 
 (WITH w_sub AS (
@@ -409,4 +412,4 @@ AS
 			w_sub);
 			
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_grid_pf_hv_generator','ego_dp_powerflow_assignment_generator.sql',' ');
+SELECT ego_scenario_log('v0.3.0','output','model_draft','model_draft.ego_supply_aggr_weather_mview','ego_dp_powerflow_assignment_generator.sql',' ');
