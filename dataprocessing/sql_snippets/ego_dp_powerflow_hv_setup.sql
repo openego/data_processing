@@ -222,52 +222,108 @@ CREATE TABLE 		model_draft.ego_grid_pf_hv_bus (
   CONSTRAINT bus_data_pkey PRIMARY KEY (bus_id, scn_name) ) WITH ( OIDS=FALSE );
 
 -- metadata
-COMMENT ON TABLE  model_draft.ego_grid_pf_hv_bus IS
-'{
-"Name": "hv powerflow bus",
-"Source": [{
-                  "Name": "open_eGo data-processing",
-                  "URL":  "https://github.com/openego/data_processing" }],
-"Reference date": "...",
-"Date of collection": "...",
-"Original file": "ego_dp_powerflow_hv_setup.sql",
-"Spatial resolution": ["Germany"],
-"Description": ["Bus considered in hv powerflow calculation"],
-"Column": [
-                   {"Name": "scn_name",
-                    "Description": "scenario name",
-                    "Unit": "" },
-                   {"Name": "bus_id",
-                    "Description": " unique id for bus, equivalent to id from osmtgmod",
-                    "Unit": "" },
-                   {"Name": "v_nom",
-                    "Description": "nominal voltage",
-                    "Unit": "kV" },
-                   {"Name": "current_type",
-                    "Description": "current type - AC or DC",
-                    "Unit": "" },
-                   {"Name": "v_mag_pu_min",
-                    "Description": "Minimum desired voltage, per unit of v_nom",
-                    "Unit": "per unit" },
-                   {"Name": "v_mag_pu_max",
-                    "Description": "Maximum desired voltage, per unit of v_nom",
-                    "Unit": "per unit" },
-                   {"Name": "geom",
-                    "Description": "geometry of bus",
-                    "Unit": "..." }],
-"Changes":[
-                   {"Name": "Mario Kropshofer",
-                    "Mail": "mario.kropshofer2@stud.fh-flensburg.de",
-                    "Date":  "04.10.2016",
-                    "Comment": "..." }, 
-                   {"Name": "Ilka Cussmann",
-                    "Mail": "",
-                    "Date":  "26.10.2016",
-                    "Comment": "completed json-String" }
-                  ],
-"ToDo": ["add licence"],
-"Licence": ["..."],
-"Instructions for proper use": ["..."]
+COMMENT ON TABLE grid.ego_pf_hv_bus IS '{
+    "title": "eGo hv powerflow - bus",
+    "description": "Buses relevant for eGo hv powerflow",
+    "language": [ "eng" ],
+    "spatial": {
+        "location": "",
+        "extend": "Germany",
+        "resolution": ""
+    },
+    "temporal": {
+        "reference_date": " ",
+        "start": "",
+        "end": "",
+        "resolution": ""
+    },
+    "sources": [
+        {
+            "name": "eGo dataprocessing",
+            "description": " ",
+            "url": "https://github.com/openego/data_processing",
+            "license": "GNU Affero General Public License Version 3 (AGPL-3.0)",
+            "copyright": "\u00a9 Reiner Lemoine Institut"
+        },
+        {
+            "name": "OpenStreetMap",
+            "description": " ",
+            "url": "http://www.openstreetmap.org/",
+            "license": "Open Database License (ODbL) v1.0",
+            "copyright": "\u00a9 OpenStreetMap contributors"
+        }
+    ],
+    "license": {
+        "id": "ODbL-1.0",
+        "name": "Open Data Commons Open Database License 1.0",
+        "version": "1.0",
+        "url": "https://opendatacommons.org/licenses/odbl/1.0/",
+        "instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
+        "copyright": "\u00a9 Flensburg University of Applied Sciences, Center for Sustainable Energy Systems"
+    },
+    "contributors": [
+        {
+            "name": "IlkaCu",
+            "email": "",
+            "date": "26.04.2017",
+            "comment": "Create table"
+        },
+        {
+            "name": "KilianZimmerer",
+            "email": "",
+            "date": "2017-6-27",
+            "comment": "Update metadata to v1.3"
+        }
+    ],
+    "resources": [
+        {
+            "name": "grid.ego_pf_hv_bus",
+            "fromat": "sql",
+            "fields": [
+                {
+                    "name": "version",
+                    "description": "version id",
+                    "unit": ""
+                },
+                {
+                    "name": "scn_name",
+                    "description": "name of corresponding scenario",
+                    "unit": ""
+                },
+                {
+                    "name": "bus_id",
+                    "description": "unique id for bus, equivalent to id from osmtgmod",
+                    "unit": ""
+                },
+                {
+                    "name": "v_nom",
+                    "description": "nominal voltage",
+                    "unit": "kV"
+                },
+                {
+                    "name": "current_type",
+                    "description": "current type - AC or DC",
+                    "unit": ""
+                },
+                {
+                    "name": "v_mag_pu_min",
+                    "description": "Minimum desired voltage, per unit of v_nom",
+                    "unit": "per unit"
+                },
+                {
+                    "name": "v_mag_pu_max",
+                    "description": "Maximum desired voltage, per unit of v_nom",
+                    "unit": "per unit"
+                },
+                {
+                    "name": "geom",
+                    "description": "geometry of bus",
+                    "unit": "..."
+                }
+            ]
+        }
+    ],
+    "metadata_version": "1.3"
 }';
 
 -- PF HV busmap
