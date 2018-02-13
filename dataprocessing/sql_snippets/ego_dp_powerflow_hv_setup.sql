@@ -567,7 +567,7 @@ COMMENT ON TABLE model_draft.ego_grid_pf_hv_link IS '{
         "version": "1.0",
         "url": "https://opendatacommons.org/licenses/odbl/1.0/",
         "instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
-        "copyright": "© DLR Institute for Networked Energy Systems"
+        "copyright": "\u00a9 Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems"
     },
     "contributors": [
         {
