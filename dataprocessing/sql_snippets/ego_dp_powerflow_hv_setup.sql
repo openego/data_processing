@@ -960,97 +960,192 @@ CREATE TABLE 		model_draft.ego_grid_pf_hv_storage (
 		REFERENCES model_draft.ego_grid_pf_hv_source (source_id) ) WITH ( OIDS=FALSE );
 
 -- metadata
-COMMENT ON TABLE  model_draft.ego_grid_pf_hv_storage IS
-'{
-"Name": "storage in hv powerflow",
-"Source": [{
-                  "Name": "open_eGo data-processing",
-                  "URL":  "https://github.com/openego/data_processing" }],
-"Reference date": "...",
-"Date of collection": "...",
-"Original file": "...",
-"Spatial resolution": ["Germany"],
-"Description": ["storage units considered in hv powerflow calculations"],
-"Column": [
-                   {"Name": "scn_name",
-                    "Description": "scenario name",
-                    "Unit": "" },
-                   {"Name": "storage_id",
-                    "Description": "unique id",
-                    "Unit": "" },
-                   {"Name": "bus",
-                    "Description": "id of associated bus",
-                    "Unit": "" },
-                   {"Name": "dispatch",
-                    "Description": "Controllability of active power dispatch, must be flexible or variable",
-                    "Unit": "" },
-                   {"Name": "control",
-                    "Description": "P,Q,V control strategy for PF, must be PQ, PV or Slack",
-                    "Unit": "" },
-                   {"Name": "p_nom",
-                    "Description": "Nominal power",
-                    "Unit": "MW" },
-                   {"Name": "p_nom_extendable",
-                    "Description": "Switch to allow capacity p_nom to be extended",
-                    "Unit": "" },
-                   {"Name": "p_nom_min",
-                    "Description": "If p_nom is extendable in OPF, set its minimum value",
-                    "Unit": "MW" },
-                   {"Name": "p_nom_max",
-                    "Description": "If p_nom is extendable in OPF, set its maximum value (e.g. limited by potential))",
-                    "Unit": "MW" },
-                   {"Name": "p_min_pu_fixed",
-                    "Description": "If control=flexible this gives the minimum output per unit of p_nom for the OPF.",
-                    "Unit": "per unit" },
-                   {"Name": "p_max_pu_fixed",
-                    "Description": "If control=flexible this gives the maximum output per unit of p_nom for the OPF, equivalent to a de-rating factor",
-                    "Unit": "per unit" },
-                   {"Name": "sign",
-                    "Description": "power sign",
-                    "Unit": "" },
-                   {"Name": "source",
-                    "Description": "Prime mover energy carrier",
-                    "Unit": "" },
-                   {"Name": "marginal_cost",
-                    "Description": "Marginal cost of production of 1 MWh",
-                    "Unit": "€/MWh" },
-                   {"Name": "capital_cost",
-                    "Description": "Capital cost of extending p_nom by 1 MW",
-                    "Unit": "€/MW" },
-                   {"Name": "efficiency",
-                    "Description": "Ratio between primary energy and electrical energy",
-                    "Unit": "per unit" },
-                   {"Name": "soc_initial",
-                    "Description": "State of charge before the snapshots in the OPF.",
-                    "Unit": "MWh" },
-                   {"Name": "soc_cyclic",
-                    "Description": "Switch: if True, then state_of_charge_initial is ignored and the initial state of charge is set to the final state of charge for the group of snapshots in the OPF",
-                    "Unit": "" },
-                   {"Name": "max_hours",
-                    "Description": "Maximum state of charge capacity in terms of hours at full output capacity p_nom",
-                    "Unit": "hours" },
-                   {"Name": "efficiency_store",
-                    "Description": "Efficiency of storage on the way into the storage",
-                    "Unit": "per unit" },                   
-                   {"Name": "efficiency_dispatch",
-                    "Description": "Efficiency of storage on the way out of the storage",
-                    "Unit": "per unit" },
-                   {"Name": "standing_loss",
-                    "Description": "Losses per hour to state of charge",
-                    "Unit": "per unit" }],
-"Changes":[
-                   {"Name": "Mario Kropshofer",
-                    "Mail": "mario.kropshofer2@stud.fh-flensburg.de",
-                    "Date":  "04.10.2016",
-                    "Comment": "..." }, 
-                   {"Name": "Ilka Cussmann",
-                    "Mail": "",
-                    "Date":  "26.10.2016",
-                    "Comment": "Completed json-string" }
-                  ],
-"ToDo": ["add licence"],
-"Licence": ["..."],
-"Instructions for proper use": ["..."]
+COMMENT ON TABLE model_draft.ego_grid_pf_hv_storage IS '{
+    "title": "eGo hv powerflow - storage",
+    "description": "Storages relevant for eGo hv powerflow",
+    "language": [ "eng" ],
+    "spatial": {
+        "location": "",
+        "extend": "Germany",
+        "resolution": ""
+    },
+    "temporal": {
+        "reference_date": " ",
+        "start": "",
+        "end": "",
+        "resolution": ""
+    },
+    "sources": [
+        {
+            "name": "eGo dataprocessing",
+            "description": " ",
+            "url": "https://github.com/openego/data_processing",
+            "license": "GNU Affero General Public License Version 3 (AGPL-3.0)",
+            "copyright": "\u00a9 Reiner Lemoine Institut"
+        },
+        {
+            "name": "OpenStreetMap",
+            "description": " ",
+            "url": "http://www.openstreetmap.org/",
+            "license": "Open Database License (ODbL) v1.0",
+            "copyright": "\u00a9 OpenStreetMap contributors"
+        },
+        {
+            "name": "Open Power System Data (OPSD)",
+            "description": " ",
+            "url": "http://data.open-power-system-data.org/conventional_power_plants/2016-02-08/",
+            "license": "MIT Licence",
+            "copyright": "\u00a9 2016 Open Power System Data"
+        },
+        {
+            "name": "Bundesnetzagentur (BNetzA)",
+            "description": " ",
+            "url": "http://www.bundesnetzagentur.de/DE/Sachgebiete/ElektrizitaetundGas/Unternehmen_Institutionen/Versorgungssicherheit/Erzeugungskapazitaeten/Kraftwerksliste/kraftwerksliste-node.html",
+            "license": "",
+            "copyright": ""
+        }
+    ],
+    "license": {
+        "id": "ODbL-1.0",
+        "name": "Open Data Commons Open Database License 1.0",
+        "version": "1.0",
+        "url": "https://opendatacommons.org/licenses/odbl/1.0/",
+        "instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
+        "copyright": "\u00a9 Europa-Universitaet Flensburg, Center for Sustainable Energy Systems"
+    },
+    "contributors": [
+        {
+            "name": "IlkaCu",
+            "email": "",
+            "date": "26.04.2017",
+            "comment": "Create table"
+        },
+        {
+            "name": "KilianZimmerer",
+            "email": "",
+            "date": "2017-6-27",
+            "comment": "Update metadata to v1.3"
+        }
+    ],
+    "resources": [
+        {
+            "name": "model_draft.ego_grid_pf_hv_storage",
+            "fromat": "sql",
+            "fields": [
+                {
+                    "name": "scn_name",
+                    "description": "name of corresponding scenario",
+                    "unit": ""
+                },
+                {
+                    "name": "storage_id",
+                    "description": "ID of corresponding storage",
+                    "unit": ""
+                },
+                {
+                    "name": "bus",
+                    "description": "id of associated bus",
+                    "unit": ""
+                },
+                {
+                    "name": "dispatch",
+                    "description": "Controllability of active power dispatch, must be flexible or variable.",
+                    "unit": ""
+                },
+                {
+                    "name": "control",
+                    "description": "P,Q,V control strategy, must be PQ, PV or Slack.",
+                    "unit": ""
+                },
+                {
+                    "name": "p_nom",
+                    "description": "Nominal power",
+                    "unit": "MW"
+                },
+                {
+                    "name": "p_nom_extendable",
+                    "description": "Switch to allow capacity p_nom to be extended",
+                    "unit": ""
+                },
+                {
+                    "name": "p_nom_min",
+                    "description": "If p_nom is extendable, set its minimum value",
+                    "unit": ""
+                },
+                {
+                    "name": "p_nom_max",
+                    "description": "If p_nom is extendable, set its maximum value (e.g. limited by potential)",
+                    "unit": ""
+                },
+                {
+                    "name": "p_min_pu_fixed",
+                    "description": "If control=flexible this gives the minimum output per unit of p_nom",
+                    "unit": "per unit"
+                },
+                {
+                    "name": "p_max_pu_fixed",
+                    "description": "If control=flexible this gives the maximum output per unit of p_nom, equivalent to a de-rating factor.",
+                    "unit": "per unit"
+                },
+                {
+                    "name": "sign",
+                    "description": "power sign",
+                    "unit": ""
+                },
+                {
+                    "name": "source",
+                    "description": "prime mover energy carrier",
+                    "unit": ""
+                },
+                {
+                    "name": "marginal_cost",
+                    "description": "Marginal cost of production of 1 MWh",
+                    "unit": "EUR/MWh"
+                },
+                {
+                    "name": "capital_cost",
+                    "description": "Capital cost of extending p_nom by 1 MW",
+                    "unit": "EUR/MW"
+                },
+                {
+                    "name": "efficiency",
+                    "description": "Ratio between primary energy and electrical energy",
+                    "unit": "per unit"
+                },
+                {
+                    "name": "soc_initial",
+                    "description": "State of charge before the snapshots in the OPF.",
+                    "unit": "MWh"
+                },
+                {
+                    "name": "soc_cyclic",
+                    "description": "Switch: if True, then state_of_charge_initial is ignored and the initial state of charge is set to the final state of charge for the group of snapshots in the OPF",
+                    "unit": ""
+                },
+                {
+                    "name": "max_hours",
+                    "description": "Maximum state of charge capacity in terms of hours at full output capacity p_nom",
+                    "unit": "hours"
+                },
+                {
+                    "name": "efficiency_store",
+                    "description": "Efficiency of storage on the way into the storage",
+                    "unit": "per unit"
+                },
+                {
+                    "name": "efficiency_dispatch",
+                    "description": "Efficiency of storage on the way out of the storage",
+                    "unit": "per unit"
+                },
+                {
+                    "name": "standing_loss",
+                    "description": "Losses per hour to state of charge",
+                    "unit": "per unit"
+                }
+            ]
+        }
+    ],
+    "metadata_version": "1.3"
 }';
 
 -- select description
@@ -1074,43 +1169,81 @@ INSERT INTO model_draft.ego_grid_pf_hv_temp_resolution (temp_id, timesteps, reso
 SELECT 1, 8760, 'h', TIMESTAMP '2011-01-01 00:00:00';
 
 -- metadata
-COMMENT ON TABLE  model_draft.ego_grid_pf_hv_temp_resolution IS
-'{
-"Name": "temporal resolution hv powerflow",
-"Source": [{
-                  "Name": "open_eGo data-processing",
-                  "URL":  "https://github.com/openego/data_processing" }],
-"Reference date": "...",
-"Date of collection": "...",
-"Original file": "ego_dp_powerflow_hv_setup.sql",
-"Spatial resolution": ["Germany"],
-"Description": ["Temporal resolution of hv powerflow"],
-"Column": [
-                   {"Name": "temp_id",
-                    "Description": "unique id",
-                    "Unit": "" },
-                   {"Name": "timesteps",
-                    "Description": "timestep",
-                    "Unit": "" },
-                   {"Name": "resolution",
-                    "Description": "temporal resolution",
-                    "Unit": "" },
-                   {"Name": "start_time",
-                    "Description": "start time with style: YYYY-MM-DD HH:MM:SS",
-                    "Unit": "" }],
-"Changes":[
-                   {"Name": "Mario Kropshofer",
-                    "Mail": "mario.kropshofer2@stud.fh-flensburg.de",
-                    "Date":  "04.10.2016",
-                    "Comment": "..." },
-                   {"Name": "Ilka Cussmann",
-                    "Mail": "",
-                    "Date":  "26.10.2016",
-                    "Comment": "completed json-string" }
-                  ],
-"ToDo": ["Add licence"],
-"Licence": ["..."],
-"Instructions for proper use": ["..."]
+COMMENT ON TABLE model_draft.ego_grid_pf_hv_temp_resolution IS '{
+    "title": "eGo hv powerflow - temp_resolution",
+    "description": "Temporal resolution in eGo hv powerflow",
+    "language": [ "eng" ],
+    "spatial": {
+        "location": "",
+        "extend": "",
+        "resolution": ""
+    },
+    "temporal": {
+        "reference_date": " ",
+        "start": "",
+        "end": "",
+        "resolution": ""
+    },
+    "sources": [
+        {
+            "name": "eGo dataprocessing",
+            "description": " ",
+            "url": "https://github.com/openego/data_processing",
+            "license": "GNU Affero General Public License Version 3 (AGPL-3.0)",
+            "copyright": "\u00a9 Flensburg University of Applied Sciences, Center for Sustainable Energy Systems"
+        }
+    ],
+    "license": {
+        "id": "ODbL-1.0",
+        "name": "Open Data Commons Open Database License 1.0",
+        "version": "1.0",
+        "url": "https://opendatacommons.org/licenses/odbl/1.0/",
+        "instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
+        "copyright": "\u00a9 Flensburg University of Applied Sciences, Center for Sustainable Energy Systems"
+    },
+    "contributors": [
+        {
+            "name": "IlkaCu",
+            "email": "",
+            "date": "26.04.2017",
+            "comment": "Create table"
+        },
+        {
+            "name": "KilianZimmerer",
+            "email": "",
+            "date": "2017-6-27",
+            "comment": "Update metadata to v1.3"
+        }
+    ],
+    "resources": [
+        {
+            "name": "model_draft.ego_grid_pf_hv_temp_resolution",
+            "fromat": "sql",
+            "fields": [
+                {
+                    "name": "temp_id",
+                    "description": "unique id",
+                    "unit": ""
+                },
+                {
+                    "name": "timesteps",
+                    "description": "timestep",
+                    "unit": ""
+                },
+                {
+                    "name": "resolution",
+                    "description": "temporal resolution",
+                    "unit": ""
+                },
+                {
+                    "name": "start_time",
+                    "description": "start time with style: YYYY-MM-DD HH:MM:SS",
+                    "unit": ""
+                }
+            ]
+        }
+    ],
+    "metadata_version": "1.3"
 }';
 
 -- select description
@@ -1143,83 +1276,160 @@ CREATE TABLE 		model_draft.ego_grid_pf_hv_transformer (
 	CONSTRAINT transformer_data_pkey PRIMARY KEY (trafo_id, scn_name) ) WITH ( OIDS=FALSE );
 
 -- metadata
-COMMENT ON TABLE  model_draft.ego_grid_pf_hv_transformer IS
-'{
-"Name": "Transformer in hv powerflow",
-"Source": [{
-                  "Name": "open_eGo data-processing",
-                  "URL":  "https://github.com/openego/data_processing" }],
-"Reference date": "...",
-"Date of collection": "...",
-"Original file": "ego_dp_powerflow_hv_setup.sql",
-"Spatial resolution": ["Germany"],
-"Description": ["Transformer converts from one AC voltage level to another"],
-"Column": [
-                   {"Name": "scn_name",
-                    "Description": "scenario name",
-                    "Unit": "" },
-                   {"Name": "trafo_id",
-                    "Description": "unique id",
-                    "Unit": "" },
-                   {"Name": "bus0",
-                    "Description": "Name of first bus to which branch is attached",
-                    "Unit": "" },
-                   {"Name": "bus1",
-                    "Description": "Name of second bus to which branch is attached",
-                    "Unit": "" },
-                   {"Name": "x",
-                    "Description": "Series reactance",
-                    "Unit": "Ohm" },
-                   {"Name": "r",
-                    "Description": "Series resistance",
-                    "Unit": "Ohm" },
-                   {"Name": "g",
-                    "Description": "Shunt conductivity",
-                    "Unit": "Siemens" }, 
-                   {"Name": "b",
-                    "Description": "Shunt susceptance",
-                    "Unit": "Siemens" }, 
-                   {"Name": "s_nom",
-                    "Description": "Limit of apparent power which can pass through branch",
-                    "Unit": "MVA" }, 
-                   {"Name": "s_nom_extendable",
-                    "Description": "Switch to allow capacity s_nom to be extended",
-                    "Unit": "" }, 
-                   {"Name": "s_nom_min",
-                    "Description": "If s_nom is extendable, set its minimum value",
-                    "Unit": "MVA" }, 
-                   {"Name": "s_nom_max",
-                    "Description": "If s_nom is extendable in OPF, set its maximum value",
-                    "Unit": "MVA" }, 
-                   {"Name": "tap_ratio",
-                    "Description": "Ratio of per unit voltages at each bus",
-                    "Unit": "" },
-                   {"Name": "phase_shift",
-                    "Description": "Voltage phase angle shift",
-                    "Unit": "degrees" },
-                   {"Name": "capital_cost",
-                    "Description": "Capital cost of extending s_nom by 1 MVA",
-                    "Unit": "€/MVA" },
-                   {"Name": "geom",
-                    "Description": "geometry",
-                    "Unit": "" },
-                   {"Name": "topo",
-                    "Description": "topology",
-                    "Unit": "" }],
-"Changes":[
-                   {"Name": "Mario Kropshofer",
-                    "Mail": "mario.kropshofer2@stud.fh-flensburg.de",
-                    "Date":  "04.10.2016",
-                    "Comment": "..." }, 
-
-                   {"Name": "Ilka Cussmann",
-                    "Mail": "",
-                    "Date":  "26.10.2016",
-                    "Comment": "completed json-string" }
-                  ],
-"ToDo": ["Add licence"],
-"Licence": ["..."],
-"Instructions for proper use": ["..."]
+COMMENT ON TABLE model_draft.ego_grid_pf_hv_transformer IS '{
+    "title": "eGo hv powerflow - transformer",
+    "description": "transformer in eGo hv powerflow",
+    "language": [ "eng" ],
+    "spatial": {
+        "location": "",
+        "extend": "Germany",
+        "resolution": ""
+    },
+    "temporal": {
+        "reference_date": " ",
+        "start": "",
+        "end": "",
+        "resolution": ""
+    },
+    "sources": [
+        {
+            "name": "eGo dataprocessing",
+            "description": " ",
+            "url": "https://github.com/openego/data_processing",
+            "license": "GNU Affero General Public License Version 3 (AGPL-3.0)",
+            "copyright": "\u00a9 Flensburg University of Applied Sciences, Center for Sustainable Energy Systems"
+        },
+        {
+            "name": "OpenStreetMap",
+            "description": " ",
+            "url": "http://www.openstreetmap.org/",
+            "license": "Open Database License (ODbL) v1.0",
+            "copyright": "\u00a9 OpenStreetMap contributors"
+        },
+        {
+            "name": "osmTGmod",
+            "description": " ",
+            "url": "https://github.com/openego/osmTGmod",
+            "license": "Apache License 2.0",
+            "copyright": "\u00a9 Wuppertal Institut"
+        }
+    ],
+    "license": {
+        "id": "ODbL-1.0",
+        "name": "Open Data Commons Open Database License 1.0",
+        "version": "1.0",
+        "url": "https://opendatacommons.org/licenses/odbl/1.0/",
+        "instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
+        "copyright": "© DLR Institute for Networked Energy Systems"
+    },
+    "contributors": [
+        {
+            "name": "IlkaCu",
+            "email": "",
+            "date": "26.04.2017",
+            "comment": "Create table"
+        },
+        {
+            "name": "KilianZimmerer",
+            "email": "",
+            "date": "2017-6-27",
+            "comment": "Update metadata to v1.3"
+        }
+    ],
+    "resources": [
+        {
+            "name": "model_draft.ego_grid_pf_hv_transformer",
+            "fromat": "sql",
+            "fields": [
+                {
+                    "name": "scn_name",
+                    "description": "name of corresponding scenario",
+                    "unit": ""
+                },
+                {
+                    "name": "trafo_id",
+                    "description": "ID of line",
+                    "unit": ""
+                },
+                {
+                    "name": "bus0",
+                    "description": "name of first bus to which branch is attached",
+                    "unit": ""
+                },
+                {
+                    "name": "bus1",
+                    "description": "name of second bus to which branch is attached",
+                    "unit": ""
+                },
+                {
+                    "name": "x",
+                    "description": "Series reactance",
+                    "unit": "Ohm"
+                },
+                {
+                    "name": "r",
+                    "description": "Series resistance",
+                    "unit": "Ohm"
+                },
+                {
+                    "name": "g",
+                    "description": "Shunt conductivity",
+                    "unit": "Siemens"
+                },
+                {
+                    "name": "b",
+                    "description": "Shunt susceptance",
+                    "unit": "Siemens"
+                },
+                {
+                    "name": "s_nom",
+                    "description": "Limit of apparent power which can pass through branch",
+                    "unit": "MVA"
+                },
+                {
+                    "name": "s_nom_extendable",
+                    "description": "Switch to allow capacity s_nom to be extended",
+                    "unit": ""
+                },
+                {
+                    "name": "s_nom_min",
+                    "description": "If s_nom is extendable, set its minimum value",
+                    "unit": "MVA"
+                },
+                {
+                    "name": "s_nom_max",
+                    "description": "If s_nom is extendable in OPF, set its maximum value",
+                    "unit": "MVA"
+                },
+                {
+                    "name": "tap_ratio",
+                    "description": "Ratio of per unit voltages at each bus",
+                    "unit": ""
+                },
+                {
+                    "name": "phase_shift",
+                    "description": "Voltage phase angle shift",
+                    "unit": "degrees"
+                },
+                {
+                    "name": "capital_cost",
+                    "description": "capital cost of extending s_nom by 1 MVA",
+                    "unit": "EUR/MVA"
+                },
+                {
+                    "name": "geom",
+                    "description": "geometry that depict the real route of the line",
+                    "unit": ""
+                },
+                {
+                    "name": "topo",
+                    "description": "topology that depicts a direct connection between both busses",
+                    "unit": "..."
+                }
+            ]
+        }
+    ],
+    "metadata_version": "1.3"
 }';
 
 -- select description
@@ -1305,52 +1515,103 @@ CREATE TABLE 		model_draft.ego_grid_pf_hv_generator_pq_set (
 		REFERENCES model_draft.ego_grid_pf_hv_temp_resolution (temp_id) ) WITH ( OIDS=FALSE );
 
 -- metadata
-COMMENT ON TABLE  model_draft.ego_grid_pf_hv_generator_pq_set IS
-'{
-"Name": "Generator time series hv powerflow",
-"Source": [{
-                  "Name": "open_eGo data-processing",
-                  "URL":  "https://github.com/openego/data_processing" }],
-"Reference date": "...",
-"Date of collection": "...",
-"Original file": "...",
-"Spatial resolution": ["Germany"],
-"Description": ["Times series for generators considered in hv powerflow"],
-"Column": [
-                   {"Name": "scn_name",
-                    "Description": "scenario name",
-                    "Unit": "" },
-                   {"Name": "generator_id",
-                    "Description": "id of considered generator",
-                    "Unit": "" },                   
-                   {"Name": "temp_id",
-                    "Description": "id of temporal resolution",
-                    "Unit": "" },
-                   {"Name": "p_set",
-                    "Description": "active power set point",
-                    "Unit": "MW" },
-                   {"Name": "q_set",
-                    "Description": "reactive power set point",
-                    "Unit": "MVar" },
-                   {"Name": "p_min_pu",
-                    "Description": "If control=variable this gives the minimum output for each snapshot per unit of p_nom for the OPF",
-                    "Unit": "per unit" },
-                   {"Name": "p_max_pu",
-                    "Description": "If control=variable this gives the maximum output for each snapshot per unit of p_nom for the OPF, relevant e.g. if for renewables the power output is limited by the climate",
-                    "Unit": "per unit" }],
-"Changes":[
-                   {"Name": "Mario Kropshofer",
-                    "Mail": "mario.kropshofer2@stud.fh-flensburg.de",
-                    "Date":  "04.10.2016",
-                    "Comment": "..." }, 
-                   {"Name": "Ilka Cussmann",
-                    "Mail": "",
-                    "Date":  "26.10.2016",
-                    "Comment": "completed json-string" }
-                  ],
-"ToDo": ["Add licence"],
-"Licence": ["..."],
-"Instructions for proper use": ["..."]
+COMMENT ON TABLE model_draft.ego_grid_pf_hv_generator_pq_set IS '{
+    "title": "eGo hv powerflow - generator time series",
+    "description": "Time series of generators relevant for eGo hv powerflow",
+    "language": [ "eng" ],
+    "spatial": {
+        "location": "",
+        "extend": "Germany",
+        "resolution": ""
+    },
+    "temporal": {
+        "reference_date": " ",
+        "start": "",
+        "end": "",
+        "resolution": ""
+    },
+    "sources": [
+        {
+            "name": "eGo dataprocessing",
+            "description": " ",
+            "url": "https://github.com/openego/data_processing",
+            "license": "GNU Affero General Public License Version 3 (AGPL-3.0)",
+            "copyright": "\u00a9 Europa-Universitaet Flensburg, Center for Sustainable Energy Systems"
+        },
+        {
+            "name": "oemof feedinlib",
+            "description": " ",
+            "url": "https://github.com/oemof/feedinlib",
+            "license": "GNU Affero General Public License Version 3 (AGPL-3.0)",
+            "copyright": "\u00a9 oemof developing group"
+        }
+    ],
+    "license": {
+        "id": "ODbL-1.0",
+        "name": "Open Data Commons Open Database License 1.0",
+        "version": "1.0",
+        "url": "https://opendatacommons.org/licenses/odbl/1.0/",
+        "instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
+        "copyright": "\u00a9 Europa-Universitaet Flensburg, Center for Sustainable Energy Systems"
+    },
+    "contributors": [
+        {
+            "name": "IlkaCu",
+            "email": "",
+            "date": "26.04.2017",
+            "comment": "Create table"
+        },
+        {
+            "name": "KilianZimmerer",
+            "email": "",
+            "date": "2017-6-27",
+            "comment": "Update metadata to v1.3"
+        }
+    ],
+    "resources": [
+        {
+            "name": "model_draft.ego_grid_pf_hv_generator_pq_set",
+            "fromat": "sql",
+            "fields": [
+                {
+                    "name": "scn_name",
+                    "description": "name of corresponding scenario",
+                    "unit": ""
+                },
+                {
+                    "name": "generator_id",
+                    "description": "ID of corresponding generator",
+                    "unit": ""
+                },
+                {
+                    "name": "temp_id",
+                    "description": "ID of temporal resolution",
+                    "unit": ""
+                },
+                {
+                    "name": "p_set",
+                    "description": "active power set point (for PF)",
+                    "unit": "MW"
+                },
+                {
+                    "name": "q_set",
+                    "description": "reactive power set point (for PF)",
+                    "unit": "MVar"
+                },
+                {
+                    "name": "p_min_pu",
+                    "description": "If control=variable this gives the minimum output for each snapshot per unit of p_nom for the OPF",
+                    "unit": "per unit"
+                },
+                {
+                    "name": "p_max_pu",
+                    "description": "If control=variable this gives the maximum output for each snapshot per unit of p_nom for the OPF",
+                    "unit": "per unit"
+                }
+            ]
+        }
+    ],
+    "metadata_version": "1.3"
 }';
 
 -- select description
@@ -1373,46 +1634,86 @@ CREATE TABLE 		model_draft.ego_grid_pf_hv_load_pq_set (
 		REFERENCES model_draft.ego_grid_pf_hv_temp_resolution (temp_id) ) WITH ( OIDS=FALSE );
 
 -- metadata
-COMMENT ON TABLE  model_draft.ego_grid_pf_hv_load_pq_set IS
-'{
-"Name": "Load time series hv powerflow",
-"Source": [{
-                  "Name": "open_eGo data-processing",
-                  "URL":  "https://github.com/openego/data_processing" }],
-"Reference date": "...",
-"Date of collection": "...",
-"Original file": "...",
-"Spatial resolution": ["Germany"],
-"Description": ["Times series for loads considered in hv powerflow"],
-"Column": [
-                   {"Name": "scn_name",
-                    "Description": "scenario name",
-                    "Unit": "" },
-                   {"Name": "load_id",
-                    "Description": "unique load id",
-                    "Unit": "" },                   
-                   {"Name": "temp_id",
-                    "Description": "id of temporal resolution",
-                    "Unit": "" },
-                   {"Name": "p_set",
-                    "Description": "active power set point",
-                    "Unit": "MW" },
-                   {"Name": "q_set",
-                    "Description": "reactive power set point",
-                    "Unit": "MVar" }],
-"Changes":[
-                   {"Name": "Mario Kropshofer",
-                    "Mail": "mario.kropshofer2@stud.fh-flensburg.de",
-                    "Date":  "04.10.2016",
-                    "Comment": "..." }, 
-		    {"Name": "Ilka Cussmann",
-                    "Mail": "",
-                    "Date":  "26.10.2016",
-                    "Comment": "completed json-string" }
-                  ],
-"ToDo": ["Add licence"],
-"Licence": ["..."],
-"Instructions for proper use": ["..."]
+COMMENT ON TABLE model_draft.ego_grid_pf_hv_load_pq_set IS '{
+    "title": "eGo hv powerflow - loads",
+    "description": "loads in eGo hv powerflow",
+    "language": [ "eng" ],
+    "spatial": {
+        "location": "",
+        "extend": "Germany",
+        "resolution": ""
+    },
+    "temporal": {
+        "reference_date": " ",
+        "start": "",
+        "end": "",
+        "resolution": ""
+    },
+    "sources": [
+        {
+            "name": "eGo dataprocessing",
+            "description": " ",
+            "url": "https://github.com/openego/data_processing/blob/master/dataprocessing/python_scripts/demand_per_mv_grid_district.py",
+            "license": "GNU Affero General Public License Version 3 (AGPL-3.0)",
+            "copyright": "\u00a9 Reiner Lemoine Institut"
+        }
+    ],
+    "license": {
+        "id": "ODbL-1.0",
+        "name": "Open Data Commons Open Database License 1.0",
+        "version": "1.0",
+        "url": "https://opendatacommons.org/licenses/odbl/1.0/",
+        "instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
+        "copyright": "\u00a9 Reiner Lemoine Institut"
+    },
+    "contributors": [
+        {
+            "name": "IlkaCu",
+            "email": "",
+            "date": "26.04.2017",
+            "comment": "Create table"
+        },
+        {
+            "name": "KilianZimmerer",
+            "email": "",
+            "date": "2017-6-27",
+            "comment": "Update metadata to v1.3"
+        }
+    ],
+    "resources": [
+        {
+            "name": "model_draft.ego_grid_pf_hv_load_pq_set",
+            "fromat": "sql",
+            "fields": [
+                {
+                    "name": "scn_name",
+                    "description": "name of corresponding scenario",
+                    "unit": ""
+                },
+                {
+                    "name": "load_id",
+                    "description": "unique id",
+                    "unit": ""
+                },
+                {
+                    "name": "temp_id",
+                    "description": "id of temporal resolution",
+                    "unit": ""
+                },
+                {
+                    "name": "p_set",
+                    "description": "active power set point",
+                    "unit": "MW"
+                },
+                {
+                    "name": "q_set",
+                    "description": "reactive power set point",
+                    "unit": "MVar"
+                }
+            ]
+        }
+    ],
+    "metadata_version": "1.3"
 }';
 
 -- select description
@@ -1439,58 +1740,113 @@ CREATE TABLE 		model_draft.ego_grid_pf_hv_storage_pq_set (
 		REFERENCES model_draft.ego_grid_pf_hv_temp_resolution (temp_id) ) WITH ( OIDS=FALSE );
 
 -- metadata
-COMMENT ON TABLE  model_draft.ego_grid_pf_hv_storage_pq_set IS
-'{
-"Name": "Storage time series hv powerflow",
-"Source": [{
-                  "Name": "open_eGo data-processing",
-                  "URL":  "https://github.com/openego/data_processing" }],
-"Reference date": "...",
-"Date of collection": "...",
-"Original file": "...",
-"Spatial resolution": ["Germany"],
-"Description": ["Times series for storage units considered in hv powerflow"],
-"Column": [
-                   {"Name": "scn_name",
-                    "Description": "scenario name",
-                    "Unit": "" },
-                   {"Name": "storage_id",
-                    "Description": "unique storage id",
-                    "Unit": "" },
-                   {"Name": "temp_id",
-                    "Description": "id for temporal resolution",
-                    "Unit": "" },
-                   {"Name": "p_set",
-                    "Description": "active power set point",
-                    "Unit": "MW" },
-                   {"Name": "q_set",
-                    "Description": "reactive power set point",
-                    "Unit": "MVar" },
-                   {"Name": "p_min_pu",
-                    "Description": "If control=variable this gives the minimum output for each snapshot per unit of p_nom for the OPF",
-                    "Unit": "per unit" },
-                   {"Name": "p_max_pu",
-                    "Description": "If control=variable this gives the maximum output for each snapshot per unit of p_nom for the OPF",
-                    "Unit": "per unit" },
-                   {"Name": "soc_set",
-                    "Description": "State of charge set points for snapshots in the OPF",
-                    "Unit": "MWh" },
-                   {"Name": "inflow",
-                    "Description": "Inflow to the state of charge, e.g. due to river inflow in hydro reservoir",
-                    "Unit": "MW" }],
-"Changes":[
-                   {"Name": "Mario Kropshofer",
-                    "Mail": "mario.kropshofer2@stud.fh-flensburg.de",
-                    "Date":  "04.10.2016",
-                    "Comment": "..." }, 
-                    {"Name": "Ilka Cussmann",
-                    "Mail": "",
-                    "Date":  "26.10.2016",
-                    "Comment": "completed json-string" }
-                  ],
-"ToDo": ["Add licence"],
-"Licence": ["..."],
-"Instructions for proper use": ["..."]
+COMMENT ON TABLE model_draft.ego_grid_pf_hv_storage_pq_set IS '{
+    "title": "eGo hv powerflow - storage time series",
+    "description": "Time series of storages relevant for eGo hv powerflow",
+    "language": [ "eng" ],
+    "spatial": {
+        "location": "",
+        "extend": "Germany",
+        "resolution": ""
+    },
+    "temporal": {
+        "reference_date": " ",
+        "start": "",
+        "end": "",
+        "resolution": ""
+    },
+    "sources": [
+        {
+            "name": "eGo dataprocessing",
+            "description": " ",
+            "url": "https://github.com/openego/data_processing",
+            "license": "GNU Affero General Public License Version 3 (AGPL-3.0)",
+            "copyright": "\u00a9 Europa-Universitaet Flensburg, Center for Sustainable Energy Systems"
+        },
+        {
+            "name": "oemof feedinlib",
+            "description": " ",
+            "url": "https://github.com/oemof/feedinlib",
+            "license": "GNU Affero General Public License Version 3 (AGPL-3.0)",
+            "copyright": "\u00a9 oemof developing group"
+        }
+    ],
+    "license": {
+        "id": "ODbL-1.0",
+        "name": "Open Data Commons Open Database License 1.0",
+        "version": "1.0",
+        "url": "https://opendatacommons.org/licenses/odbl/1.0/",
+        "instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
+        "copyright": "\u00a9 Flensburg University of Applied Sciences, Center for Sustainable Energy Systems"
+    },
+    "contributors": [
+        {
+            "name": "IlkaCu",
+            "email": "",
+            "date": "26.04.2017",
+            "comment": "Create table"
+        },
+        {
+            "name": "KilianZimmerer",
+            "email": "",
+            "date": "2017-6-27",
+            "comment": "Update metadata to v1.3"
+        }
+    ],
+    "resources": [
+        {
+            "name": "model_draft.ego_grid_pf_hv_storage_pq_set",
+            "fromat": "sql",
+            "fields": [
+                {
+                    "name": "scn_name",
+                    "description": "name of corresponding scenario",
+                    "unit": ""
+                },
+                {
+                    "name": "storage_id",
+                    "description": "ID of corresponding storage",
+                    "unit": ""
+                },
+                {
+                    "name": "temp_id",
+                    "description": "ID of temporal resolution",
+                    "unit": ""
+                },
+                {
+                    "name": "p_set",
+                    "description": "active power set point (for PF)",
+                    "unit": "MW"
+                },
+                {
+                    "name": "q_set",
+                    "description": "reactive power set point (for PF)",
+                    "unit": "MVar"
+                },
+                {
+                    "name": "p_min_pu",
+                    "description": "If control=variable this gives the minimum output for each snapshot per unit of p_nom for the OPF",
+                    "unit": "per unit"
+                },
+                {
+                    "name": "p_max_pu",
+                    "description": "If control=variable this gives the maximum output for each snapshot per unit of p_nom for the OPF",
+                    "unit": "per unit"
+                },
+                {
+                    "name": "soc_set",
+                    "description": "State of charge set points for snapshots in the OPF",
+                    "unit": "MWh"
+                },
+                {
+                    "name": "inflow",
+                    "description": "Inflow to the state of charge, e.g. due to river inflow in hydro reservoir",
+                    "unit": "MW"
+                }
+            ]
+        }
+    ],
+    "metadata_version": "1.3"
 }';
 
 -- select description
@@ -1560,282 +1916,7 @@ ALTER TABLE model_draft.ego_grid_pf_hv_busmap
   OWNER TO oeuser;
 GRANT ALL ON TABLE model_draft.ego_grid_pf_hv_busmap TO oeuser;
 
--------------------------------------------------------------------
------------------------------ Comments ----------------------------
--------------------------------------------------------------------
-/*
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_bus.bus_id IS 'Unit: n/a
-Description: Unique name
-Status: Input (required)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_bus.v_nom IS 'Unit: kV
-Description: Nominal voltage
-Status: Input (optional)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_bus.current_type IS 'Unit: n/a
-Description: Type of current (must be either "AC" or "DC").
-Status: Input (optional)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_bus.v_mag_pu_min IS 'Unit: per unit
-Description: Minimum desired voltage, per unit of v_nom
-Status: Input (optional)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_bus.v_mag_pu_max IS 'Unit: per unit
-Description: Maximum desired voltage, per unit of v_nom
-Status: Input (optional)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_bus_v_mag_set.v_mag_pu_set IS 'Unit: per unit
-Description: Voltage magnitude set point, per unit of v_nom.
-Status: Input (optional)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_generator.generator_id IS 'Unit: n/a
-Description: Unique name
-Status: Input (required)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_generator.bus IS 'Unit: n/a
-Description: name of bus to which generator is attached
-Status: Input (required)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_generator.dispatch IS 'Unit: n/a
-Description: Controllability of active power dispatch, must be flexible or variable.
-Status: Input (optional)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_generator.control IS 'Unit: n/a
-Description: P,Q,V control strategy for PF, must be PQ, PV or Slack.
-Status: Input (optional)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_generator.p_nom IS 'Unit: MW
-Description: Nominal power for limits in OPF
-Status: Input (optional)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_generator.p_nom_extendable IS 'Unit: n/a
-Description: Switch to allow capacity p_nom to be extended in OPF.
-Default: False
-Status: Input (optional)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_generator.p_nom_min IS 'Unit: MW
-Description: If p_nom is extendable in OPF, set its minimum value.
-Status: Input (optional)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_generator.p_nom_max IS 'Unit: MW
-Description: If p_nom is extendable in OPF, set its maximum value (e.g. limited by potential).
-Status: Input (optional)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_generator.p_min_pu_fixed IS 'Unit: per unit
-Description: If control=flexible this gives the minimum output per unit of p_nom for the OPF.
-Status: Input (optional)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_generator.p_max_pu_fixed IS 'Unit: per unit
-Description: If control=flexible this gives the maximum output per unit of p_nom for the OPF, equivalent to a de-rating factor.
-Status: Input (optional)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_generator.sign IS 'Unit: n/a
-Description: power sign
-Status: Input (optional)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_generator.source IS 'Unit: n/a
-Description: Prime mover (e.g. coal, gas, wind, solar); required for CO2 calculation in OPF
-Status: Input (optional)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_generator.marginal_cost IS 'Unit: currency/MWh
-Description: Marginal cost of production of 1 MWh.	
-Status: Input (optional)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_generator.capital_cost IS 'Unit: currency/MW
-Description: Capital cost of extending p_nom by 1 MW.
-Status: Input (optional)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_generator.efficiency IS 'Unit: per unit
-Description: Ratio between primary energy and electrical energy, e.g. takes value 0.4 for gas. This is important for determining CO2 emissions per MWh.
-Status: Input (optional)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_generator_pq_set.p_set IS 'Unit: MW
-Description: active power set point (for PF).
-Status: Input (optional)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_generator_pq_set.q_set IS 'Unit: MVar
-Description: reactive power set point (for PF).
-Status: Input (optional)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_generator_pq_set.p_min_pu IS 'Unit: per unit
-Description: If control=variable this gives the minimum output for each snapshot per unit of p_nom for the OPF.
-Status: Input (optional)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_generator_pq_set.p_max_pu IS 'Unit: per unit
-Description: If control=variable this gives the maximum output for each snapshot per unit of p_nom for the OPF, relevant e.g. if for renewables the power output is limited by the climate.
-Status: Input (optional)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_line.line_id IS 'Unit: n/a
-Description: Unique name
-Status: Input (required)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_line.bus0 IS 'Unit: n/a
-Description: Name of first bus to which branch is attached. 
-Status: Input (required)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_line.bus1 IS 'Unit: n/a
-Description: Name of second bus to which branch is attached.
-Status: Input (required)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_line.x IS 'Unit: Ohm
-Description: series reactance; must be non-zero for AC branch in linear power flow; in non-linear power flow x+jr must be non-zero.
-Status: Input (required)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_line.r IS 'Unit: Ohm
-Description: Series resistance; must be non-zero for DC branch in linear power flow; in non-linear power flow x+jr must be non-zero.
-Status: Input (required)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_line.g IS 'Unit: Siemens
-Description: Shunt conductivity.
-Status: Input (optional)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_line.b IS 'Unit: Siemens
-Description: Shunt susceptance.
-Status: Input (optional)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_line.s_nom IS 'Unit: MVA
-Description: Limit of apparent power which can pass through branch.
-Status: Input (optional)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_line.s_nom_extendable IS 'Unit: n/a
-Description: Switch to allow capacity s_nom to be extended in OPF.
-Default: False
-Status: Input (optional)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_line.s_nom_min IS 'Unit: MVA
-Description: If s_nom is extendable in OPF, set its minimum value.
-Status: Input (optional)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_line.s_nom_max IS 'Unit: MVA
-Description: If s_nom is extendable in OPF, set its maximum value (e.g. limited by potential).
-Status: Input (optional)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_line.capital_cost IS 'Unit: currency/MVA
-Description: Capital cost of extending s_nom by 1 MVA.
-Status: Input (optional)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_line.length IS 'Unit: km
-Description: Length of line, useful for calculating the capital cost.
-Status: Input (optional)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_line.terrain_factor IS 'Unit: per unit
-Description: Terrain factor for increasing capital cost.
-Status: Input (optional)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_load.load_id IS 'Unit: n/a
-Description: Unique name
-Status: Input (required)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_load.bus IS 'Unit: n/a
-Description: Name of bus to which load is attached.
-Status: Input (required)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_load.sign IS 'Unit: n/a
-Description: power sign
-Default: -1
-Status: Input (optional)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_load.e_annual IS 'Unit: MW
-Description: 
-Status: Input (not needd for PyPSA)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_load_pq_set.p_set IS 'Unit: MW
-Description: Active power consumption (positive if the load is consuming power).
-Status: Input (optional)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_load_pq_set.q_set IS 'Unit: MVar
-Description: 	Reactive power consumption (positive if the load is inductive).
-Status: Input (optional)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_source.name IS 'Unit: n/a
-Description: Unique name
-Status: Input (required)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_source.co2_emissions IS 'Unit: tonnes/MWh
-Description: Emissions in CO2-tonnes-equivalent per MWh of primary energy (e.g. has has 0.2 tonnes/MWh_thermal).
-Status: Input (required)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage.storage_id IS 'Unit: n/a
-Description: Unique name
-Status: Input (required)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage.bus IS 'Unit: n/a
-Description: name of bus to which storage is attached
-Status: Input (required)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage.dispatch IS 'Unit: n/a
-Description: Controllability of active power dispatch, must be flexible or variable.
-Status: Input (optional)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage.control IS 'Unit: n/a
-Description: P,Q,V control strategy for PF, must be PQ, PV or Slack.
-Status: Input (optional)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage.p_nom IS 'Unit: MW
-Description: Nominal power for limits in OPF
-Status: Input (optional)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage.p_nom_extendable IS 'Unit: n/a
-Description: Switch to allow capacity p_nom to be extended in OPF.
-Default: False
-Status: Input (optional)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage.p_nom_min IS 'Unit: MW
-Description: If p_nom is extendable in OPF, set its minimum value.
-Status: Input (optional)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage.p_nom_max IS 'Unit: MW
-Description: If p_nom is extendable in OPF, set its maximum value (e.g. limited by potential).
-Status: Input (optional)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage.p_min_pu_fixed IS 'Unit: per unit
-Description: If control=flexible this gives the minimum output per unit of p_nom for the OPF.
-Status: Input (optional)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage.p_max_pu_fixed IS 'Unit: per unit
-Description: If control=flexible this gives the maximum output per unit of p_nom for the OPF, equivalent to a de-rating factor.
-Status: Input (optional)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage.sign IS 'Unit: n/a
-Description: power sign
-Status: Input (optional)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage.source IS 'Unit: n/a
-Description: Prime mover (e.g. coal, gas, wind, solar); required for CO2 calculation in OPF
-Status: Input (optional)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage.marginal_cost IS 'Unit: currency/MWh
-Description: Marginal cost of production of 1 MWh.	
-Status: Input (optional)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage.capital_cost IS 'Unit: currency/MW
-Description: Capital cost of extending p_nom by 1 MW.
-Status: Input (optional)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage.efficiency IS 'Unit: per unit
-Description: Ratio between primary energy and electrical energy, e.g. takes value 0.4 for gas. This is important for determining CO2 emissions per MWh.
-Status: Input (optional)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage.soc_initial IS 'Unit: MWh
-Description: State of charge before the snapshots in the OPF.
-Status: Input (optional)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage.soc_cyclic IS 'Unit: n/a
-Description: Switch: if True, then state_of_charge_initial is ignored and the initial state of charge is set to the final state of charge for the group of snapshots in the OPF.
-Status: Input (optional)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage.max_hours IS 'Unit: hours
-Description: Maximum state of charge capacity in terms of hours at full output capacity p_nom
-Status: Input (optional)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage.efficiency_store IS 'Unit: per unit
-Description: Efficiency of storage on the way into the storage.
-Status: Input (optional)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage.efficiency_dispatch IS 'Unit: per unit
-Description: Efficiency of storage on the way out of the storage.
-Status: Input (optional)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage.standing_loss IS 'Unit: per unit
-Description: Losses per hour to state of charge.
-Status: Input (optional)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage_pq_set.p_set IS 'Unit: MW
-Description: active power set point (for PF).
-Status: Input (optional)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage_pq_set.q_set IS 'Unit: MVar
-Description: reactive power set point (for PF).
-Status: Input (optional)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage_pq_set.p_min_pu IS 'Unit: per unit
-Description: If control=variable this gives the minimum output for each snapshot per unit of p_nom for the OPF.
-Status: Input (optional)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage_pq_set.p_max_pu IS 'Unit: per unit
-Description: If control=variable this gives the maximum output for each snapshot per unit of p_nom for the OPF, relevant e.g. if for renewables the power output is limited by the climate.
-Status: Input (optional)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage_pq_set.soc_set IS 'Unit: MWh
-Description: State of charge set points for snapshots in the OPF.
-Status: Input (optional)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_storage_pq_set.inflow IS 'Unit: MW
-Description: Inflow to the state of charge, e.g. due to river inflow in hydro reservoir.
-Status: Input (optional)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_temp_resolution.resolution IS 'example: h, 15min...';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_temp_resolution.start_time IS 'style: YYYY-MM-DD HH:MM:SS';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_transformer.trafo_id IS 'Unit: n/a
-Description: Unique name
-Status: Input (required)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_transformer.bus0 IS 'Unit: n/a
-Description: Name of first bus to which branch is attached. 
-Status: Input (required)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_transformer.bus1 IS 'Unit: n/a
-Description: Name of second bus to which branch is attached.
-Status: Input (required)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_transformer.x IS 'Unit: Ohm
-Description: eries reactance; must be non-zero for AC branch in linear power flow; in non-linear power flow x+jr must be non-zero.
-Status: Input (required)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_transformer.r IS 'Unit: Ohm
-Description: Series resistance; must be non-zero for DC branch in linear power flow; in non-linear power flow x+jr must be non-zero.
-Status: Input (required)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_transformer.g IS 'Unit: Siemens
-Description: Shunt conductivity.
-Status: Input (optional)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_transformer.b IS 'Unit: Siemens
-Description: Shunt susceptance.
-Status: Input (optional)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_transformer.s_nom IS 'Unit: MVA
-Description: Limit of apparent power which can pass through branch.
-Status: Input (optional)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_transformer.s_nom_extendable IS 'Unit: n/a
-Description: Switch to allow capacity s_nom to be extended in OPF.
-Default: False
-Status: Input (optional)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_transformer.s_nom_min IS 'Unit: MVA
-Description: If s_nom is extendable in OPF, set its minimum value.
-Status: Input (optional)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_transformer.s_nom_max IS 'Unit: MVA
-Description: If s_nom is extendable in OPF, set its maximum value (e.g. limited by potential).
-Status: Input (optional)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_transformer.tap_ratio IS 'Unit: 1
-Description: Ratio of per unit voltages at each bus.
-Status: Input (optional)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_transformer.phase_shift IS 'Unit: Degrees
-Description: Voltage phase angle shift.
-Status: Input (optional)';
-COMMENT ON COLUMN model_draft.ego_grid_pf_hv_transformer.capital_cost IS 'Unit: currency/MVA
-Description: Capital cost of extending s_nom by 1 MVA.
-Status: Input (optional)';
-*/
+
 -------------------------------------------------------------------
 ----------------------------- INDEXING ----------------------------
 -------------------------------------------------------------------
