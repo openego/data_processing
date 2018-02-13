@@ -535,9 +535,9 @@ COMMENT ON TABLE model_draft.ego_grid_pf_hv_link IS '{
     "description": "links in eGo hv powerflow",
     "language": [ "eng" ],
     "spatial": {
-        "resolution": "",
         "location": "",
-        "extend": "Germany"
+        "extend": "Germany",
+        "resolution": ""
     },
     "temporal": {
         "reference_date": " ",
@@ -547,121 +547,112 @@ COMMENT ON TABLE model_draft.ego_grid_pf_hv_link IS '{
     },
     "sources": [
         {
-            "url": "https://github.com/openego/data_processing",
-            "copyright": "\\u00a9 Flensburg University of Applied Sciences, Center for Sustainable Energy Systems",
             "name": "eGo dataprocessing",
+            "description": " ",
+            "url": "https://github.com/openego/data_processing",
             "license": "GNU Affero General Public License Version 3 (AGPL-3.0)",
-            "description": " "
+            "copyright": "\u00a9 Flensburg University of Applied Sciences, Center for Sustainable Energy Systems"
         },
         {
-            "url": "http://www.openstreetmap.org/",
-            "copyright": "\\u00a9 OpenStreetMap contributors",
             "name": "OpenStreetMap",
+            "description": " ",
+            "url": "http://www.openstreetmap.org/",
             "license": "Open Database License (ODbL) v1.0",
-            "description": " "
-        },
-        {
-            "url": "https://www.entsoe.eu/map/Pages/default.aspx",
-            "copyright": "\\u00a9 ENTSO-E",
-            "name": "ENTSO-E",
-            "license": " ",
-            "description": " "
+            "copyright": "\u00a9 OpenStreetMap contributors"
         }
-
     ],
     "license": {
+        "id": "ODbL-1.0",
         "name": "Open Data Commons Open Database License 1.0",
-        "copyright": "\\u00a9 Flensburg University of Applied Sciences, Centre for sustainable Energy Systems",
+        "version": "1.0",
         "url": "https://opendatacommons.org/licenses/odbl/1.0/",
         "instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
-        "version": "1.0",
-        "id": "ODbL-1.0"
+        "copyright": "© DLR Institute for Networked Energy Systems"
     },
     "contributors": [
         {
-            "date": "05.02.2018",
-            "comment": "Create table",
             "name": "IlkaCu",
-            "email": ""
+            "email": "",
+            "date": "08.02.2018",
+            "comment": "Create table"
         }
     ],
     "resources": [
         {
+            "name": "model_draft.ego_grid_pf_hv_link",
+            "fromat": "sql",
             "fields": [
-
                 {
                     "name": "scn_name",
-                    "unit": "",
-                    "description": "name of corresponding scenario"
+                    "description": "name of corresponding scenario",
+                    "unit": ""
                 },
                 {
                     "name": "link_id",
-                    "unit": "",
-                    "description": "ID of line"
+                    "description": "ID of line",
+                    "unit": ""
                 },
                 {
                     "name": "bus0",
-                    "unit": "",
-                    "description": "name of first bus to which branch is attached"
+                    "description": "name of first bus to which branch is attached",
+                    "unit": ""
                 },
                 {
                     "name": "bus1",
-                    "unit": "",
-                    "description": "name of second bus to which branch is attached"
+                    "description": "name of second bus to which branch is attached",
+                    "unit": ""
                 },
                 {
                     "name": "efficiency",
-                    "unit": "",
-                    "description": "efficiency of power transfer from bus0 to bus1"
+                    "description": "efficiency of power transfer from bus0 to bus1",
+                    "unit": ""
                 },
                 {
                     "name": "p_nom",
-                    "unit": "MVA",
-                    "description": "limit of active power which can pass through link"
+                    "description": "limit of active power which can pass through link",
+                    "unit": "MVA"
                 },
                 {
                     "name": "p_nom_extendable",
-                    "unit": "",
-                    "description": "switch to allow capacity p_nom to be extended in OPF"
+                    "description": "switch to allow capacity p_nom to be extended in OPF",
+                    "unit": ""
                 },
                 {
                     "name": "p_nom_min",
-                    "unit": "MVA",
-                    "description": "minimum value, if p_nom is extendable"
+                    "description": "minimum value, if p_nom is extendable",
+                    "unit": "MVA"
                 },
                 {
                     "name": "p_nom_max",
-                    "unit": "MVA",
-                    "description": "maximum value, if p_nom is extendable"
+                    "description": "maximum value, if p_nom is extendable",
+                    "unit": "MVA"
                 },
                 {
                     "name": "capital_cost",
-                    "unit": "EUR/MVA",
-                    "description": "capital cost of extending s_nom by 1 MVA"
+                    "description": "capital cost of extending p_nom by 1 MVA",
+                    "unit": "EUR/MVA"
                 },
                 {
                     "name": "length",
-                    "unit": "km",
-                    "description": "length of line"
+                    "description": "length of line",
+                    "unit": "km"
                 },
                 {
                     "name": "terrain_factor",
-                    "unit": "",
-                    "description": "terrain_factor"
+                    "description": "...",
+                    "unit": ""
                 },
                 {
                     "name": "geom",
-                    "unit": "",
-                    "description": "geometry that depict the real route of the line"
+                    "description": "geometry that depict the real route of the line",
+                    "unit": ""
                 },
                 {
                     "name": "topo",
-                    "unit": "...",
-                    "description": "topology that depicts a direct connection between both busses"
+                    "description": "topology that depicts a direct connection between both busses",
+                    "unit": "..."
                 }
-            ],
-            "name": "model_draft.ego_grid_pf_hv_link",
-            "format": "sql"
+            ]
         }
     ],
     "metadata_version": "1.3"
