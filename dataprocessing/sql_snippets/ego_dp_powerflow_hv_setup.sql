@@ -1551,42 +1551,75 @@ CREATE TABLE model_draft.ego_grid_pf_hv_bus_v_mag_set (
 		REFERENCES model_draft.ego_grid_pf_hv_temp_resolution (temp_id) ) WITH ( OIDS=FALSE );
 
 -- metadata
-COMMENT ON TABLE  model_draft.ego_grid_pf_hv_bus_v_mag_set IS
-'{
-"Name": "...",
-"Source": [{ 	  "Name": "open_eGo data-processing",
-                  "URL":  "https://github.com/openego/data_processing" }],
-"Reference date": "...",
-"Date of collection": "...",
-"Original file": "...",
-"Spatial resolution": ["Germany"],
-"Description": ["..."],
-"Column": [
-                   {"Name": "scn_name",
-                    "Description": "scenario name",
-                    "Unit": "" },
-                   {"Name": "bus_id",
-                    "Description": "unique id of sorresponding bus",
-                    "Unit": "" },
-                   {"Name": "temp_id",
-                    "Description": "id of temporal resolution",
-                    "Unit": "" },
-                   {"Name": "v_mag_pu_set",
-                    "Description": "Voltage magnitude set point, per unit of v_nom",
-                    "Unit": "per unit" }],
-"Changes":[
-                   {"Name": "Mario Kropshofer",
-                    "Mail": "mario.kropshofer2@stud.fh-flensburg.de",
-                    "Date":  "04.10.2016",
-                    "Comment": "..." },
-                   {"Name": "Ilka Cussmann",
-                    "Mail": "",
-                    "Date":  "26.10.2016",
-                    "Comment": "completed json-string" }
-                  ],
-"ToDo": ["Add licence"],
-"Licence": ["..."],
-"Instructions for proper use": ["..."]
+COMMENT ON TABLE model_draft.ego_grid_pf_hv_bus_v_mag_set IS '{
+    "title": "HV powerflow bus_v_mag_set",
+    "description": "Voltage magnitude set point in HV powerflow",
+    "language": [ "eng" ],
+    "spatial": {
+        "location": "",
+        "extend": "",
+        "resolution": ""
+    },
+    "temporal": {
+        "reference_date": " ",
+        "start": "",
+        "end": "",
+        "resolution": ""
+    },
+    "sources": [
+        {
+            "name": "eGo dataprocessing",
+            "description": " ",
+            "url": "https://github.com/openego/data_processing",
+            "license": "GNU Affero General Public License Version 3 (AGPL-3.0)",
+            "copyright": "\u00a9 Flensburg University of Applied Sciences, Center for Sustainable Energy Systems"
+        }
+    ],
+    "license": {
+        "id": "ODbL-1.0",
+        "name": "Open Data Commons Open Database License 1.0",
+        "version": "1.0",
+        "url": "https://opendatacommons.org/licenses/odbl/1.0/",
+        "instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
+        "copyright": "\u00a9 Flensburg University of Applied Sciences, Center for Sustainable Energy Systems"
+    },
+    "contributors": [
+        {
+            "name": "IlkaCu",
+            "email": "",
+            "date": "2018.02.03",
+            "comment": "Update metadata to v1.3"
+        }
+    ],
+    "resources": [
+        {
+            "name": "model_draft.ego_grid_pf_hv_bus_v_mag_set",
+            "fromat": "sql",
+            "fields": [
+                {
+                    "name": "scn_name",
+                    "description": "name of scenario",
+                    "unit": ""
+                },
+                {
+                    "name": "bus_id",
+                    "description": "unique id of corresponding bus",
+                    "unit": ""
+                },
+                {
+                    "name": "temp_id",
+                    "description": "id of temporal resolution",
+                    "unit": ""
+                },
+                {
+                    "name": "v_mag_pu_set",
+                    "description": "Voltage magnitude set point, per unit of v_nom",
+                    "unit": ""
+                }
+            ]
+        }
+    ],
+    "metadata_version": "1.3"
 }';
 
 -- select description
