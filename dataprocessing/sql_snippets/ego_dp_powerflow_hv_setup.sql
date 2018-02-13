@@ -383,39 +383,82 @@ CREATE TABLE model_draft.ego_grid_pf_hv_busmap (
 	path_length numeric,
 	PRIMARY KEY(scn_name, bus0, bus1));
 
-COMMENT ON TABLE  model_draft.ego_grid_pf_hv_busmap IS
-'{
-"Name": "hv powerflow busmap",
-"Source": [{
-                  "Name": "open_eGo data-processing",
-                  "URL":  "https://github.com/openego/data_processing" }],
-"Reference date": "2017
-"Date of collection": ""
-"Original file": "ego_dp_powerflow_hv_setup.sql",
-"Spatial resolution": [""],
-"Description": ["Bus to bus assignment by id to support PyPSA clustering."],
-"Column": [
-                   {"Name": "scn_name",
-                    "Description": "name of scenario",
-                    "Unit": "" },
-                   {"Name": "bus0",
-                    "Description": "source bus id",
-                    "Unit": "" },
-                   {"Name": "bus1",
-                    "Description": "target bus id",
-                    "Unit": "" },
-                   {"Name": "path_length",
-                    "Description": "Length of line between source and target bus.",
-                    "Unit": "" }],
-"Changes":[
-                   {"Name": "s3pp",
-                    "Mail": "",
-                    "Date":  "02.06.2017",
-                    "Comment": "Initial statement."}
-                  ],
-"ToDo": ["add licence"],
-"Licence": ["..."],
-"Instructions for proper use": ["..."]
+-- metadata
+COMMENT ON TABLE model_draft.ego_grid_pf_hv_busmap IS '{
+    "title": "HV powerflow busmap",
+    "description": "Bus to bus assignment by id to support PyPSA clustering",
+    "language": [ "eng" ],
+    "spatial": {
+        "location": "",
+        "extend": "",
+        "resolution": ""
+    },
+    "temporal": {
+        "reference_date": " ",
+        "start": "",
+        "end": "",
+        "resolution": ""
+    },
+    "sources": [
+        {
+            "name": "eGo dataprocessing",
+            "description": " ",
+            "url": "https://github.com/openego/data_processing",
+            "license": "GNU Affero General Public License Version 3 (AGPL-3.0)",
+            "copyright": "\u00a9 Flensburg University of Applied Sciences, Center for Sustainable Energy Systems"
+        }
+    ],
+    "license": {
+        "id": "ODbL-1.0",
+        "name": "Open Data Commons Open Database License 1.0",
+        "version": "1.0",
+        "url": "https://opendatacommons.org/licenses/odbl/1.0/",
+        "instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
+        "copyright": "\u00a9 Flensburg University of Applied Sciences, Center for Sustainable Energy Systems"
+    },
+    "contributors": [
+        {
+            "name": "s3pp",
+            "email": "",
+            "date": "02.06.2017",
+            "comment": "Initial statement"
+        },
+        {
+            "name": "IlkaCu",
+            "email": "",
+            "date": "2018.02.03",
+            "comment": "Update metadata to v1.3"
+        }
+    ],
+    "resources": [
+        {
+            "name": "model_draft.ego_grid_pf_hv_busmap",
+            "fromat": "sql",
+            "fields": [
+                {
+                    "name": "scn_name",
+                    "description": "name of scenario",
+                    "unit": ""
+                },
+                {
+                    "name": "bus0",
+                    "description": "source bus id",
+                    "unit": ""
+                },
+                {
+                    "name": "bus1",
+                    "description": "target bus id",
+                    "unit": ""
+                },
+                {
+                    "name": "path_length",
+                    "description": "Length of line between source and target bus",
+                    "unit": ""
+                }
+            ]
+        }
+    ],
+    "metadata_version": "1.3"
 }';
 
 -- select description
