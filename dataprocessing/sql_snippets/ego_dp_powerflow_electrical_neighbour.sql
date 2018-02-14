@@ -1,4 +1,13 @@
-﻿DROP SEQUENCE IF EXISTS model_draft.ego_grid_hv_electrical_neighbours_bus_id CASCADE;
+/*
+Creates border crossing lines and buses for electrical neighbours
+
+__copyright__ 	= "Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems"
+__license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
+__url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
+__author__ 	= "IlkaCu" 
+*/
+
+DROP SEQUENCE IF EXISTS model_draft.ego_grid_hv_electrical_neighbours_bus_id CASCADE;
 CREATE SEQUENCE model_draft.ego_grid_hv_electrical_neighbours_bus_id;
 SELECT setval('model_draft.ego_grid_hv_electrical_neighbours_bus_id', (MAX(bus_id)+1)) FROM model_draft.ego_grid_pf_hv_bus;
 
