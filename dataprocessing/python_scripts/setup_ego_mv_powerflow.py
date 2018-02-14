@@ -68,7 +68,7 @@ def create_powerflow_schema(engine, schema, tables):
             tools.grant_db_access(conn, schema, table, group)
 
             write_ego_scenario_log(conn=conn,
-                                   version='v0.2.10',
+                                   version='v0.3.0',
                                    io='output',
                                    schema=schema,
                                    table=table,

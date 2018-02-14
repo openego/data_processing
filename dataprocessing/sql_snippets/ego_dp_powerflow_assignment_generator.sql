@@ -1,4 +1,4 @@
-﻿/*
+/*
 Information on generators which are assigned to a specific substation are transformed to a data structure which is suitable for PyPSA. This script creates the scenarios
 'Status Quo', 'NEP 2035' and 'eGo 100' in the hv powerflow schema. 
 
@@ -30,6 +30,7 @@ CREATE TABLE 		model_draft.ego_supply_pf_generator_single (
 	efficiency 	double precision,
 	w_id 		bigint,
 	aggr_id 	bigint,
+	source_name	character varying,
 	CONSTRAINT generator_single_data_pkey PRIMARY KEY (scn_name, generator_id),
 	CONSTRAINT generator_data_source_fk FOREIGN KEY (source)
 		REFERENCES model_draft.ego_grid_pf_hv_source (source_id) MATCH SIMPLE
@@ -39,40 +40,43 @@ CREATE TABLE 		model_draft.ego_supply_pf_generator_single (
 
 -- DELETE FROM model_draft.ego_supply_pf_generator_single WHERE scn_name = 'Status Quo';
 
-INSERT INTO model_draft.ego_supply_pf_generator_single (generator_id)
-	SELECT 	un_id
-	FROM 	model_draft.ego_supply_conv_powerplant_sq_mview
-	WHERE 	a.fuel <> 'pumped_storage'; -- pumped storage units are ignored here and will be listed in storage table 
+INSERT INTO model_draft.ego_supply_pf_generator_single (scn_name, generator_id, bus, p_nom, source_name)
+	SELECT 	'Status Quo', un_id, otg_id, capacity, fuel
+	FROM 	model_draft.ego_supply_conv_powerplant_sq_mview a
+	WHERE 	a.fuel <> 'pumped_storage' AND a.un_id IS NOT NULL AND a.capacity IS NOT NULL; -- pumped storage units are ignored here and will be listed in storage table 
 
-INSERT INTO model_draft.ego_supply_pf_generator_single (generator_id)
-	SELECT 	un_id
-	FROM 	model_draft.ego_supply_res_powerplant_sq_mview;
+INSERT INTO model_draft.ego_supply_pf_generator_single (scn_name, generator_id, bus, p_nom, source_name)
+	SELECT 	'Status Quo', un_id, otg_id, electrical_capacity/1000, generation_type
+	FROM 	model_draft.ego_supply_res_powerplant_sq_mview a
+	WHERE 	a.un_id IS NOT NULL AND a.electrical_capacity IS NOT NULL;
 
 -- NEP 2035 
 
 -- DELETE FROM model_draft.ego_supply_pf_generator_single WHERE scn_name = 'NEP 2035';
 
-INSERT INTO model_draft.ego_supply_pf_generator_single (scn_name, generator_id)
-	SELECT 	'NEP 2035', un_id
-	FROM 	model_draft.ego_supply_conv_powerplant_nep2035_mview
-	WHERE 	a.fuel <> 'pumped_storage'; -- pumped storage units are ignored here and will be listed in storage table 
+INSERT INTO model_draft.ego_supply_pf_generator_single (scn_name, generator_id, bus, p_nom, source_name)
+	SELECT 	'NEP 2035', un_id, otg_id, capacity, fuel
+	FROM 	model_draft.ego_supply_conv_powerplant_nep2035_mview a
+	WHERE 	a.fuel <> 'pumped_storage' AND a.un_id IS NOT NULL AND a.capacity IS NOT NULL; -- pumped storage units are ignored here and will be listed in storage table 
 
-INSERT INTO model_draft.ego_supply_pf_generator_single (scn_name, generator_id)
-	SELECT 	'NEP 2035', un_id
-	FROM 	model_draft.ego_supply_res_powerplant_nep2035_mview;
+INSERT INTO model_draft.ego_supply_pf_generator_single (scn_name, generator_id, bus, p_nom, source_name)
+	SELECT 	'NEP 2035', un_id, otg_id, electrical_capacity/1000, generation_type
+	FROM 	model_draft.ego_supply_res_powerplant_nep2035_mview a
+	WHERE   a.un_id IS NOT NULL AND a.electrical_capacity IS NOT NULL;
 
 -- eGo 100 
 
 -- DELETE FROM model_draft.ego_supply_pf_generator_single WHERE scn_name = 'eGo 100';
 
-INSERT INTO model_draft.ego_supply_pf_generator_single (scn_name, generator_id)
-	SELECT 	'eGo 100', un_id
-	FROM 	model_draft.ego_supply_conv_powerplant_ego100_mview
-	WHERE 	a.fuel <> 'pumped_storage'; -- pumped storage units are ignored here and will be listed in storage table 
+INSERT INTO model_draft.ego_supply_pf_generator_single (scn_name, generator_id, bus, p_nom, source_name)
+	SELECT 	'eGo 100', un_id, otg_id, capacity, fuel
+	FROM 	model_draft.ego_supply_conv_powerplant_ego100_mview a
+	WHERE 	a.fuel <> 'pumped_storage' AND a.un_id IS NOT NULL AND a.capacity IS NOT NULL; -- pumped storage units are ignored here and will be listed in storage table 
 
-INSERT INTO model_draft.ego_supply_pf_generator_single (scn_name, generator_id)
-	SELECT 	'eGo 100', un_id
-	FROM 	model_draft.ego_supply_res_powerplant_ego100_mview;
+INSERT INTO model_draft.ego_supply_pf_generator_single (scn_name, generator_id, bus, p_nom, source_name)
+	SELECT 	'eGo 100', un_id, otg_id, electrical_capacity/1000, generation_type
+	FROM 	model_draft.ego_supply_res_powerplant_ego100_mview a
+	WHERE   a.un_id IS NOT NULL AND a.electrical_capacity IS NOT NULL;
 
 
 -- grant (oeuser)
@@ -164,7 +168,7 @@ COMMENT ON TABLE  model_draft.ego_supply_pf_generator_single IS
 SELECT obj_description('model_draft.ego_supply_pf_generator_single' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_supply_pf_generator_single','ego_dp_powerflow_assignment_generator.sql',' ');
+SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_supply_pf_generator_single','ego_dp_powerflow_assignment_generator.sql',' ');
 
 
 
@@ -172,32 +176,16 @@ SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_supply_pf_generato
 -- Insert generator data into powerflow schema, that contains all generators seperately 
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','input','model_draft','ego_grid_pf_hv_source','ego_dp_powerflow_assignment_generator.sql',' ');
+SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_grid_pf_hv_source','ego_dp_powerflow_assignment_generator.sql',' ');
 
 
-UPDATE model_draft.ego_supply_pf_generator_single a
-	SET 	bus = b.otg_id, 
-		p_nom = b.capacity
-		source = result.source
-		FROM 	(SELECT c.source_id as source, d.fuel as fuel
-				FROM 	model_draft.ego_grid_pf_hv_source c, 
-					model_draft.ego_dp_supply_conv_powerplant d 
-				WHERE	d.fuel = c.name) AS result,		
-			model_draft.ego_dp_supply_conv_powerplant b
-	WHERE 	a.generator_id = b.un_id; 
-
-
-
-UPDATE model_draft.ego_supply_pf_generator_single a
-	SET 	bus = b.otg_id, 
-		p_nom = b.capacity
-		source = result.source
-		FROM 	(SELECT c.source_id as source, d.fuel as fuel
-				FROM 	model_draft.ego_grid_pf_hv_source c, 
-					model_draft.ego_dp_supply_res_powerplant d 
-				WHERE	d.fuel = c.name) AS result,		
-			model_draft.ego_dp_supply_res_powerplant b
-	WHERE 	a.generator_id = b.un_id; 
+UPDATE model_draft.ego_supply_pf_generator_single a 
+	SET source = b.source_id
+	FROM model_draft.ego_grid_pf_hv_source b
+	WHERE a.source_name = b.name; 
+	
+ALTER TABLE model_draft.ego_supply_pf_generator_single
+	DROP COLUMN source_name; 
 
 
 
@@ -205,13 +193,13 @@ UPDATE model_draft.ego_supply_pf_generator_single a
 	SET control= 
 			(CASE 
 			WHEN p_nom < 50 THEN 'PQ'
-			WHEN p_nom > 50 AND source_id IN (12, 13) THEN 'PQ'-- Wind or solar pp
-			WHEN p_nom > 50 AND source_id NOT IN (12, 13) THEN 'PV'
+			WHEN p_nom >= 50 AND source IN (12, 13) THEN 'PQ'-- Wind or solar pp
+			WHEN p_nom >= 50 AND source NOT IN (12, 13) THEN 'PV'
 			END);   
 
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','input','climate','cosmoclmgrid','ego_dp_powerflow_assignment_generator.sql',' ');
+SELECT ego_scenario_log('v0.3.0','input','climate','cosmoclmgrid','ego_dp_powerflow_assignment_generator.sql',' ');
 
 
 -- Identify climate point IDs for each renewables generator
@@ -224,6 +212,25 @@ UPDATE model_draft.ego_supply_pf_generator_single a
 			AND ST_Intersects(result.geom, b.geom) 
 			AND generator_id = result.un_id;
 
+UPDATE model_draft.ego_supply_pf_generator_single a
+	SET w_id = b.gid
+		FROM 	(SELECT c.un_id, c.geom 
+			FROM model_draft.ego_supply_res_powerplant_nep2035_mview c) AS result,
+			climate.cosmoclmgrid b 
+		WHERE 	result.geom && b.geom
+			AND ST_Intersects(result.geom, b.geom) 
+			AND generator_id = result.un_id;
+
+UPDATE model_draft.ego_supply_pf_generator_single a
+	SET w_id = b.gid
+		FROM 	(SELECT c.un_id, c.geom 
+			FROM model_draft.ego_supply_res_powerplant_ego100_mview c) AS result,
+			climate.cosmoclmgrid b 
+		WHERE 	result.geom && b.geom
+			AND ST_Intersects(result.geom, b.geom) 
+			AND generator_id = result.un_id;
+
+
 
 -- Create aggregate IDs in pf_generator_single
 
@@ -232,114 +239,47 @@ DROP SEQUENCE IF EXISTS model_draft.ego_supply_pf_generator_single_aggr_id;
 CREATE SEQUENCE 	model_draft.ego_supply_pf_generator_single_aggr_id INCREMENT 1;
 
 -- grant (oeuser)
-ALTER TABLE		model_draft.ego_supply_pf_generator_single_aggr_id OWNER TO oeuser;
+ALTER SEQUENCE		model_draft.ego_supply_pf_generator_single_aggr_id OWNER TO oeuser;
 
--- SQ
-
--- source = (wind and solar) and p_nom < 50 MW
-UPDATE model_draft.ego_supply_pf_generator_single a
-	SET aggr_id = result.aggr_id
-		FROM 	(SELECT	b.bus, 
-				b.w_id, 
-				b.source ,
-				nextval('model_draft.ego_supply_pf_generator_single_aggr_id') as aggr_id
-			FROM 	model_draft.ego_supply_pf_generator_single b 
-			WHERE 	scn_name='Status Quo' AND p_nom < 50 AND source IN 
-				(SELECT source_id from model_draft.ego_grid_pf_hv_source WHERE name = 'wind' OR name = 'solar') 
-			GROUP BY bus, w_id, source) AS result
-		WHERE 	a.bus = result.bus 
-			AND a.w_id = result.w_id 
-			AND a.source = result.source;
-
--- source <> (wind and solar) and p_nom < 50 MW 
-UPDATE model_draft.ego_supply_pf_generator_single a
-	SET aggr_id = result.aggr_id
-		FROM  	(SELECT	b.bus, 
-				b.source, 
-				nextval('model_draft.ego_supply_pf_generator_single_aggr_id') as aggr_id
-			FROM model_draft.ego_supply_pf_generator_single b 
-			WHERE scn_name='Status Quo' AND p_nom < 50 AND source NOT IN 
-				(SELECT source_id from model_draft.ego_grid_pf_hv_source WHERE name = 'wind' OR name = 'solar')
-			GROUP BY b.bus, b.source) AS result
-		WHERE 	a.bus = result.bus 
-			AND a.source = result.source;
-
--- all sources and p_nom >= 50MW
-UPDATE model_draft.ego_supply_pf_generator_single a
-	SET 	aggr_id = nextval('model_draft.ego_supply_pf_generator_single_aggr_id')
-	WHERE 	scn_name= 'Status Quo' AND a.p_nom >= 50;
-
--- NEP 2035 
+-- Create aggr_id for all scenarios
 
 -- source = (wind and solar) and p_nom < 50 MW
 UPDATE model_draft.ego_supply_pf_generator_single a
 	SET aggr_id = result.aggr_id
 		FROM 	(SELECT	b.bus, 
 				b.w_id, 
-				b.source 
+				b.source,
+				b.scn_name,
 				nextval('model_draft.ego_supply_pf_generator_single_aggr_id') as aggr_id
 			FROM 	model_draft.ego_supply_pf_generator_single b 
-			WHERE 	scn_name='NEP 2035' AND p_nom < 50 AND source IN 
+			WHERE 	p_nom < 50 AND source IN 
 				(SELECT source_id from model_draft.ego_grid_pf_hv_source WHERE name = 'wind' OR name = 'solar') 
-			GROUP BY bus, w_id, source) AS result
+			GROUP BY b.bus, b.w_id, b.source, b.scn_name) AS result
 		WHERE 	a.bus = result.bus 
 			AND a.w_id = result.w_id 
-			AND a.source = result.source;
+			AND a.source = result.source
+			AND a.scn_name = result.scn_name;
 
 -- source <> (wind and solar) and p_nom < 50 MW 
 UPDATE model_draft.ego_supply_pf_generator_single a
 	SET aggr_id = result.aggr_id
 		FROM  	(SELECT	b.bus, 
 				b.source, 
+				b.scn_name,
 				nextval('model_draft.ego_supply_pf_generator_single_aggr_id') as aggr_id
 			FROM model_draft.ego_supply_pf_generator_single b 
-			WHERE scn_name='NEP 2035' AND p_nom < 50 AND source NOT IN 
+			WHERE p_nom < 50 AND source NOT IN 
 				(SELECT source_id from model_draft.ego_grid_pf_hv_source WHERE name = 'wind' OR name = 'solar')
-			GROUP BY b.bus, b.source) AS result
+			GROUP BY b.bus, b.source, b.scn_name) AS result
 		WHERE 	a.bus = result.bus 
-			AND a.source = result.source;
+			AND a.source = result.source
+			AND a.scn_name = result.scn_name;
 
 -- all sources and p_nom >= 50MW
 UPDATE model_draft.ego_supply_pf_generator_single a
 	SET 	aggr_id = nextval('model_draft.ego_supply_pf_generator_single_aggr_id')
-	WHERE 	scn_name= 'NEP 2035' AND a.p_nom >= 50;
+	WHERE 	a.p_nom >= 50;
 
-
-
--- eGo 100
-
--- source = (wind and solar) and p_nom < 50 MW
-UPDATE model_draft.ego_supply_pf_generator_single a
-	SET aggr_id = result.aggr_id
-		FROM 	(SELECT	b.bus, 
-				b.w_id, 
-				b.source 
-				nextval('model_draft.ego_supply_pf_generator_single_aggr_id') as aggr_id
-			FROM 	model_draft.ego_supply_pf_generator_single b 
-			WHERE 	scn_name='eGo 100' AND p_nom < 50 AND source IN 
-				(SELECT source_id from model_draft.ego_grid_pf_hv_source WHERE name = 'wind' OR name = 'solar') 
-			GROUP BY bus, w_id, source) AS result
-		WHERE 	a.bus = result.bus 
-			AND a.w_id = result.w_id 
-			AND a.source = result.source;
-
--- source <> (wind and solar) and p_nom < 50 MW 
-UPDATE model_draft.ego_supply_pf_generator_single a
-	SET aggr_id = result.aggr_id
-		FROM  	(SELECT	b.bus, 
-				b.source, 
-				nextval('model_draft.ego_supply_pf_generator_single_aggr_id') as aggr_id
-			FROM model_draft.ego_supply_pf_generator_single b 
-			WHERE scn_name='eGo 100' AND p_nom < 50 AND source NOT IN 
-				(SELECT source_id from model_draft.ego_grid_pf_hv_source WHERE name = 'wind' OR name = 'solar')
-			GROUP BY b.bus, b.source) AS result
-		WHERE 	a.bus = result.bus 
-			AND a.source = result.source;
-
--- all sources and p_nom >= 50MW
-UPDATE model_draft.ego_supply_pf_generator_single a
-	SET 	aggr_id = nextval('model_draft.ego_supply_pf_generator_single_aggr_id')
-	WHERE 	scn_name= 'eGo 100' AND a.p_nom >= 50;
 
 -- Delete all generators with p_nom=0
 
@@ -363,7 +303,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_generator (
 		p_max_pu_fixed,
 		sign,
 		source )
-	SELECT	scn_name
+	SELECT	scn_name,
 		aggr_id,
 		bus,
 		max(dispatch),
@@ -443,37 +383,12 @@ INSERT INTO model_draft.ego_grid_pf_hv_generator (
 		source
 	FROM 	model_draft.ego_supply_pf_generator_single a
 	WHERE 	a.p_nom >= 50 AND a.aggr_id IS NOT NULL;
+	
+-- set dispatch to 'variable' for wind, PV and run_of_river
 
-/*
--- Add slack generators at buses that are located outside of Germany
+UPDATE model_draft.ego_grid_pf_hv_generator 
+	SET dispatch = 'variable' WHERE source IN (9, 12, 13); 
 
--- create sequence for slack generators
-DROP SEQUENCE IF EXISTS model_draft.ego_grid_pf_hv_slack_gen_seq; 
-CREATE SEQUENCE 	model_draft.ego_grid_pf_hv_slack_gen_seq 
-	INCREMENT 1 
-	MINVALUE 100000 
-	MAXVALUE 9223372036854775807 
-	START 100000 
-	CACHE 1; 
 
--- grant (oeuser)
-ALTER TABLE model_draft.ego_grid_pf_hv_slack_gen_seq OWNER TO oeuser;
-
--- insert slack generators into poswerflow schema
-INSERT INTO model_draft.ego_grid_pf_hv_generator 
-		(generator_id, 
-		bus, 
-		dispatch, 
-		control) 
-	SELECT  nextval('model_draft.ego_grid_pf_hv_slack_gen_seq'), 
-		bus_i, 
-		'flexible', 
-		'Slack' 
-	FROM 	grid.otg_ehvhv_bus_data 
-	WHERE 	cntr_id <> 'DE' 
-		AND result_id = GREATEST(result_id) 
-		AND bus_i IN (SELECT bus_id FROM model_draft.ego_grid_pf_hv_bus) 
-		AND base_kv > 110;
-*/
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_grid_pf_hv_generator','ego_dp_powerflow_assignment_generator.sql',' ');
+SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_grid_pf_hv_generator','ego_dp_powerflow_assignment_generator.sql',' ');

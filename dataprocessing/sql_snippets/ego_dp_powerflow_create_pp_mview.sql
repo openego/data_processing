@@ -17,10 +17,16 @@ __author__ = "wolfbunke"
 
 -- MView for Status Quo
 DROP MATERIALIZED VIEW IF EXISTS  model_draft.ego_supply_conv_powerplant_sq_mview CASCADE;
-CREATE MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_sq_view AS
+CREATE MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_sq_mview AS
     SELECT *
     FROM model_draft.ego_dp_supply_conv_powerplant
-    WHERE scenario = 'Status Quo';
+    WHERE scenario = 'Status Quo'
+    AND (shutdown IS NULL or shutdown >= 2015)
+    AND capacity > 0 
+    AND preversion = 'v0.3.0';
+
+ALTER MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_sq_mview
+    OWNER TO oeuser; 
 
 -- MView for NEP 2035
 DROP MATERIALIZED VIEW IF EXISTS model_draft.ego_supply_conv_powerplant_nep2035_mview CASCADE;
@@ -28,15 +34,19 @@ CREATE MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_nep2035_mview AS
     SELECT *
     FROM  model_draft.ego_dp_supply_conv_powerplant
     WHERE scenario = 'NEP 2035'
-    AND   capacity >= 0 
+    AND   capacity > 0 
     AND   fuel not in ('hydro', 'run_of_river', 'reservoir')
-    ;
+    AND   (shutdown IS NULL or shutdown >= 2034)
+    AND   preversion = 'v0.3.0';
+
+ALTER MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_nep2035_mview
+    OWNER TO oeuser;
 
 -- MView for eGo 100
 DROP MATERIALIZED VIEW IF EXISTS  model_draft.ego_supply_conv_powerplant_ego100_mview CASCADE;
-CREATE MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_ego2050_mview AS
+CREATE MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_ego100_mview AS
 	SELECT 
-	  'tba'::text as version,
+	  preversion,
 	  id,
 	  bnetza_id,
 	  company,
@@ -78,9 +88,19 @@ CREATE MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_ego2050_mview AS
 	  'constantly'::text as flag,
 	  nuts
 	FROM model_draft.ego_dp_supply_conv_powerplant
-	WHERE scenario in('Status Quo','NEP 2035', 'eGo 100')
+	WHERE scenario in('NEP 2035')
 	AND fuel = 'pumped_storage'
-	AND capacity >= 0;
+	AND capacity > 0
+	AND (shutdown IS NULL or shutdown >= 2049)
+	AND preversion = 'v0.3.0';
+
+ALTER MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_ego100_mview
+    OWNER TO oeuser;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_supply_conv_powerplant_sq_mview','ego_dp_powerflow_create_pp_mview.sql',' ');
+SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_supply_conv_powerplant_nep2035_mview','ego_dp_powerflow_create_pp_mview.sql',' ');
+SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_supply_conv_powerplant_ego100_mview','ego_dp_powerflow_create_pp_mview.sql',' ');
 
 
 --------------------------------------------------------------------------------
@@ -93,7 +113,12 @@ DROP MATERIALIZED VIEW IF EXISTS  model_draft.ego_supply_res_powerplant_sq_mview
 CREATE MATERIALIZED VIEW model_draft.ego_supply_res_powerplant_sq_mview AS
     SELECT *
     FROM model_draft.ego_dp_supply_res_powerplant
-    WHERE scenario =  'Status Quo';
+    WHERE scenario =  'Status Quo'
+    AND electrical_capacity > 0
+    AND preversion = 'v0.3.0';
+
+ALTER MATERIALIZED VIEW model_draft.ego_supply_res_powerplant_sq_mview
+    OWNER TO oeuser;
 
 -- MView for NEP 2035
 DROP MATERIALIZED VIEW IF EXISTS model_draft.ego_supply_res_powerplant_nep2035_mview CASCADE;
@@ -112,6 +137,8 @@ CREATE MATERIALIZED VIEW model_draft.ego_supply_res_powerplant_nep2035_mview AS
 			HAVING count(*) > 1
 			Order by id)
 		 AND scenario = 'Status Quo'
+		 And preversion = 'v0.3.0'
+		 AND electrical_capacity > 0
 		 ORDER BY id	
 		 ) as sub
 	UNION 
@@ -125,19 +152,25 @@ CREATE MATERIALIZED VIEW model_draft.ego_supply_res_powerplant_nep2035_mview AS
 		WHERE id in (
 			SELECT id
 			FROM model_draft.ego_dp_supply_res_powerplant
-			Where scenario in ('NEP 2035', 'ego-nep2035')
+			Where scenario in ('NEP 2035')
 			Group BY id
 			Order by id)
-		 AND scenario in ('NEP 2035', 'ego-nep2035')
+		 AND scenario in ('NEP 2035')
+		 And preversion = 'v0.3.0'
+		 AND electrical_capacity > 0
 		 ORDER BY id	
 	) sub2
 	Order by id;
--- 01:56:3626 hours execution time.
+	
+
+ALTER MATERIALIZED VIEW model_draft.ego_supply_res_powerplant_nep2035_mview
+    OWNER TO oeuser;
 
 -- MView for eGo 100
+
 DROP MATERIALIZED VIEW IF EXISTS model_draft.ego_supply_res_powerplant_ego100_mview CASCADE;
 CREATE MATERIALIZED VIEW model_draft.ego_supply_res_powerplant_ego100_mview AS
-	SELECT
+	SELECT DISTINCT ON (id)
 	sub.*
 	FROM  ( 
 		SELECT DISTINCT ON (id)
@@ -151,10 +184,14 @@ CREATE MATERIALIZED VIEW model_draft.ego_supply_res_powerplant_ego100_mview AS
 			HAVING count(*) > 1
 			Order by id)
 		 AND scenario = 'Status Quo'
+		 And preversion = 'v0.3.0'
+		 AND electrical_capacity > 0
+		 AND generation_type in ('solar','wind')
+		 AND generation_subtype not in ('wind_offshore')
 		 ORDER BY id	
 		 ) as sub
 	UNION 
-	SELECT
+	SELECT DISTINCT ON (id)
 	sub2.*
 	FROM  ( 
 		SELECT  DISTINCT ON (id)
@@ -165,32 +202,44 @@ CREATE MATERIALIZED VIEW model_draft.ego_supply_res_powerplant_ego100_mview AS
 			SELECT id
 			FROM model_draft.ego_dp_supply_res_powerplant
 			Where scenario in ('eGo 100')
-			AND generation_subtype not in ('solar','wind_offshore')
 			AND generation_type not in ('gas')
-			AND flag in ('decommissioning')
+			AND flag in ('commissioning', 'repowering')
 			Group BY id
 			Order by id)
 		 AND scenario in ('eGo 100')
+		 And preversion = 'v0.3.0'
+		 AND electrical_capacity > 0
 		 ORDER BY id	
 	) sub2
         UNION 
-	SELECT
+	SELECT DISTINCT ON (id)
 	sub3.*
 	FROM  ( 
-		SELECT  DISTINCT ON (id)
+		SELECT DISTINCT ON (id)
 		  *
 		FROM
 		  model_draft.ego_dp_supply_res_powerplant	
 		WHERE id in (
 			SELECT id
 			FROM model_draft.ego_dp_supply_res_powerplant
-			Where scenario in ('NEP 2035', 'ego-nep2035')
-			AND generation_subtype in ('solar','wind_offshore')
-			AND flag in ('commissioning')
+			Where scenario in ('NEP 2035')
+			AND generation_type not in ('biomass','gas','reservoir','run_of_river')
+			AND generation_subtype not in ('wind_offshore')
+			AND flag in ('commissioning', 'repowering')
 			Group BY id
 			Order by id)
-		 AND scenario in ('NEP 2035', 'ego-nep2035')
+		 AND scenario in ('NEP 2035')
+		 And preversion = 'v0.3.0'
+		 AND electrical_capacity > 0
 		 ORDER BY id	
 	) sub3
 	Order by id;
+	
 
+ALTER MATERIALIZED VIEW model_draft.ego_supply_res_powerplant_ego100_mview
+    OWNER TO oeuser;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_supply_res_powerplant_sq_mview','ego_dp_powerflow_create_pp_mview.sql',' ');
+SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_supply_res_powerplant_nep2035_mview','ego_dp_powerflow_create_pp_mview.sql',' ');
+SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_supply_res_powerplant_ego100_mview','ego_dp_powerflow_create_pp_mview.sql',' ');

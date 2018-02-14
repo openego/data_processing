@@ -1,3 +1,15 @@
+/*
+A description of the module (short but could be more than one line).
+Modules names should have short, all-lowercase names. 
+The module name may have underscores if this improves readability.
+
+__copyright__ 	= "Copyright Reiner Lemoine Institut gGmbH"
+__license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
+__url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
+__author__ 	= "KilianZimmerer"
+__contains__	= "url"
+*/
+
 -- metadata 
 COMMENT ON TABLE demand.ego_demand_federalstate IS '{
     "title": "Electricity consumption per federal state in Germany",
@@ -107,7 +119,7 @@ COMMENT ON TABLE demand.ego_demand_federalstate IS '{
             "email": " "
         },
         {
-            "date": "2017-8-10",
+            "date": "2017-09-12",
             "comment": "Update metadata to v1.3",
             "name": "KilianZimmerer",
             "email": ""

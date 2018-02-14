@@ -1,8 +1,10 @@
 import json
 
+
 def create_metadata_json(name, source, reference_date, date_of_collection,
-                         original_file, spatial_resolution, description, column,
-                         changes, note, license, instruction_for_proper_use):
+                         original_file, spatial_resolution, description,
+                         column, changes, note, license,
+                         instruction_for_proper_use):
     """
     Generate metadata JSON string
 
@@ -55,15 +57,16 @@ def submit_comment(conn, json, schema, table):
         Desired database schema
     table : str
         Desired database table
-
+    
     Returns
     -------
     None
     """
+
     prefix_str = "COMMENT ON TABLE {0}.{1} IS ".format(schema, table)
 
-    check_json_str = "SELECT obj_description('{0}.{1}'::regclass)::json".format(
-        schema, table)
+    check_json_str = "SELECT obj_description('{0}.{1}'::regclass)::json"\
+        .format(schema, table)
 
     conn.execution_options(autocommit=True).execute(prefix_str + json + ";")
 

@@ -53,4 +53,4 @@ UPDATE model_draft.ego_demand_loadarea as t1
 	WHERE t1.id = t2.id;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_demand_loadarea','ego_dp_loadarea_peakload.sql',' ');
+SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_demand_loadarea','ego_dp_loadarea_peakload.sql',' ');
