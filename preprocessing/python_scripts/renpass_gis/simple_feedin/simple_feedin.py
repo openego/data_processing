@@ -42,7 +42,7 @@ TODO
 __copyright__ = "ZNES"
 __license__ = "GNU Affero General Public License Version 3 (AGPL-3.0)"
 __url__ = "https://github.com/openego/data_processing/blob/master/LICENSE"
-__author__ = "s3pp"
+__author__ = "s3pp, MarlonSchlemminger"
 
 from feedinlib import powerplants as plants
 from oemof.db import coastdat
@@ -125,11 +125,13 @@ def df_to_renewable_feedin(df, weather_year, weather_scenario_id):
         mappings.append(info)
         
     session.bulk_save_objects(mappings)
-    #session.bulk_upgrade_mappings(Points, mappings)
     session.commit()
     
     print('Done!')
 
+#This function produces the bug that 8761 instead of 8760 values will be
+#inserted into the feedin column. The last value is always NaN. 
+#Pypsa can handle this because it only takes 8760 values anyways, but be aware of this.
 
 def to_dictionary(cfg, section):
     """ Writes section data of a configuration file to a dictionary
@@ -175,7 +177,7 @@ def main():
     # calculate feedins applying correction factors
     
     count = 0
-    for coastdat_id, type_of_generation, geom in points:
+    for coastdat_id, type_of_generation, geom in points[:5]:
         count += 1
         print(count)
         try:

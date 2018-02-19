@@ -4,7 +4,7 @@ Quick workaround to transfer renpassG!S results into the corresponding powerflow
 __copyright__ 	= "Europa Universitaet Flensburg, Centre for Sustainable Energy Systems"
 __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
 __url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
-__author__ 	= "wolfbunke"
+__author__ 	= "wolfbunke, MarlonSchlemminger"
 
 TODO: storage in storage_pqset #1069
 */
@@ -309,6 +309,9 @@ UPDATE model_draft.ego_grid_pf_hv_generator_pq_set A
 	SET p_max_pu = feedin.feedin
 		FROM model_draft.ren_feedin_by_gen_id AS feedin
 		WHERE A.generator_id = feedin.generator_id;
+
+ALTER MATERIALIZED VIEW model_draft.ren_feedin_by_gen_id
+OWNER TO oeuser; 
 
 
 ------------------ NEIGHBOURING COUNTRIES
