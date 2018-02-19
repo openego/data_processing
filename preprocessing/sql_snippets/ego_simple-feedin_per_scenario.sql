@@ -4,7 +4,7 @@ Setup simple feedin weather measurement point
 __copyright__ 	= "Europa-Universität Flensburg, Centre for Sustainable Energy Systems"
 __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
 __url__ 	    = "https://github.com/openego/data_processing/blob/master/LICENSE"
-__author__ 	    = "wolfbunke"
+__author__ 	    = "wolfbunke, MarlonSchlemminger"
 */
 
 
@@ -88,31 +88,36 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE model_draft.ego_weather_measurement_point
-  OWNER TO postgres;
+  OWNER TO oeuser;
 
 -- german points
 INSERT INTO model_draft.ego_weather_measurement_point (coastdat_id, type_of_generation, geom)
 SELECT 
-	coastdat.gid,
+	single.w_id,
 	'solar',
 	ST_Centroid(coastdat.geom)
 FROM coastdat.cosmoclmgrid AS coastdat, 
-	(SELECT ST_Transform(ST_Union(geom), 4326) AS geom
-	FROM boundaries.bkg_vg250_1_sta
-	WHERE reference_date = '2015-01-01') AS ger
-WHERE ST_Intersects(ger.geom, coastdat.geom);
+	(SELECT DISTINCT(w_id) FROM model_draft.ego_supply_pf_generator_single WHERE source = 12) AS single
+WHERE coastdat.gid = single.w_id;
 
 
 INSERT INTO model_draft.ego_weather_measurement_point (coastdat_id, type_of_generation, geom)
 SELECT 
-	coastdat.gid,
+	single.w_id,
 	'windonshore',
 	ST_Centroid(coastdat.geom)
 FROM coastdat.cosmoclmgrid AS coastdat, 
-	(SELECT ST_Transform(ST_Union(geom), 4326) AS geom
-	FROM boundaries.bkg_vg250_1_sta
-	WHERE reference_date = '2015-01-01') AS ger
-WHERE ST_Intersects(ger.geom, coastdat.geom);
+	(SELECT DISTINCT(w_id) FROM model_draft.ego_supply_pf_generator_single WHERE source = 13) AS single
+WHERE coastdat.gid = single.w_id;
+
+INSERT INTO model_draft.ego_weather_measurement_point (coastdat_id, type_of_generation, geom)
+SELECT 
+	single.w_id,
+	'windoffshore',
+	ST_Centroid(coastdat.geom)
+FROM coastdat.cosmoclmgrid AS coastdat, 
+	(SELECT DISTINCT(w_id) FROM model_draft.ego_supply_pf_generator_single WHERE source = 13) AS single
+WHERE coastdat.gid = single.w_id;
 
 --foreign points
 INSERT INTO model_draft.ego_weather_measurement_point (coastdat_id, type_of_generation, geom)
@@ -136,40 +141,19 @@ FROM coastdat.cosmoclmgrid AS coastdat,
 WHERE ST_Intersects(neighbour.geom, coastdat.geom)
 ON CONFLICT DO NOTHING;
 
--- offshore points both foreign and germans
-INSERT INTO model_draft.ego_weather_measurement_point (coastdat_id, type_of_generation, geom)
-SELECT 
-	coastdat.gid,
-	'windoffshore',
-	offshore.column1
-FROM coastdat.cosmoclmgrid AS coastdat,
-	(SELECT * FROM (VALUES (st_SetSrid(st_MakePoint(54.366667, 5.983333), 4326)::geometry(Point, 4326)),
-	(st_SetSrid(st_MakePoint(7.59, 55.6), 4326)::geometry(Point, 4326)),
-	(st_SetSrid(st_MakePoint(5.883333, 54.183333), 4326)::geometry(Point, 4326)),
-	(st_SetSrid(st_MakePoint(6.327633, 58.269992), 4326)::geometry(Point, 4326)),
-	(st_SetSrid(st_MakePoint(0.227, 49.892), 4326)::geometry(Point, 4326)),
-	(st_SetSrid(st_MakePoint(14.993694, 55.9375), 4326)::geometry(Point, 4326)),
-	(st_SetSrid(st_MakePoint(17.3333333333, 55.000), 4326)::geometry(Point, 4326))) AS a) AS offshore
-WHERE ST_Intersects(offshore.column1, coastdat.geom) order by coastdat.gid;
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+-- INSERT INTO model_draft.ego_weather_measurement_point (coastdat_id, type_of_generation, geom)
+-- SELECT 
+-- 	coastdat.gid,
+-- 	'windoffshore',
+-- 	offshore.column1
+-- FROM coastdat.cosmoclmgrid AS coastdat,
+-- 	(SELECT * FROM (VALUES (st_SetSrid(st_MakePoint(54.366667, 5.983333), 4326)::geometry(Point, 4326)),
+-- 	(st_SetSrid(st_MakePoint(7.59, 55.6), 4326)::geometry(Point, 4326)),
+-- 	(st_SetSrid(st_MakePoint(5.883333, 54.183333), 4326)::geometry(Point, 4326)),
+-- 	(st_SetSrid(st_MakePoint(6.327633, 58.269992), 4326)::geometry(Point, 4326)),
+-- 	(st_SetSrid(st_MakePoint(0.227, 49.892), 4326)::geometry(Point, 4326)),
+-- 	(st_SetSrid(st_MakePoint(14.993694, 55.9375), 4326)::geometry(Point, 4326)),
+-- 	(st_SetSrid(st_MakePoint(17.3333333333, 55.000), 4326)::geometry(Point, 4326))) AS a) AS offshore
+-- WHERE ST_Intersects(offshore.column1, coastdat.geom) order by coastdat.gid;

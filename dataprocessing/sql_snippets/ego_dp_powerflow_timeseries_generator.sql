@@ -205,6 +205,12 @@ SELECT
 WHERE A.source = B.source
 GROUP BY A.aggr_id;
 
+-- set p_max_pu as timeseries from ego_renewable_feedin
+UPDATE model_draft.ego_grid_pf_hv_generator_pq_set A
+	SET p_max_pu = feedin.feedin
+		FROM model_draft.ren_feedin_by_gen_id AS feedin
+		WHERE A.generator_id = feedin.generator_id;
+
 --eGo100
 -- aggregate nominal capacity on aggr_id FROM powerflow generators, keeping the source
 DROP materialized view if EXISTS calc_renpass_gis.pf_pp_by_source_aggr_id;
