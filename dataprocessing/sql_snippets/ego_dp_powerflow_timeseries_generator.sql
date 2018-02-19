@@ -159,7 +159,7 @@ FROM
 	-- conds
 	WHERE obj_label LIKE '%%DE%%' -- only Germany
 	AND obj_label not LIKE '%%powerline%%' -- without any powerlines
-	AND scenario_id = 38
+	AND scenario_id = 41
 	 -- take only one flow (input), storage output flow seems to be the right one (?)
 	AND ((obj_label LIKE '%%storage%%' AND type = 'from_bus') or (obj_label not LIKE '%%storage%%' AND type = 'to_bus'))
 ) AS NEP
@@ -366,7 +366,7 @@ INSERT into model_draft.ego_grid_pf_hv_generator
 	AND A.nominal_value IS not NULL
 	AND A.nominal_value[1] > 0.001
 	AND A.source not LIKE '%%powerline%%'
-	AND A.scenario_id = 37;
+	AND A.scenario_id = 43;
 
 
 -- NEP 2035
@@ -413,7 +413,7 @@ INSERT into model_draft.ego_grid_pf_hv_generator
 	AND A.nominal_value IS not NULL
 	AND A.nominal_value[1] > 0.001
 	AND A.source not LIKE '%%powerline%%'
-	AND A.scenario_id = 38;
+	AND A.scenario_id = 41;
 
 -- eGo 100
 
@@ -459,7 +459,7 @@ INSERT into model_draft.ego_grid_pf_hv_generator
 	AND A.nominal_value IS not NULL
 	AND A.nominal_value[1] > 0.001
 	AND A.source not LIKE '%%powerline%%'
-	AND A.scenario_id = 39;
+	AND A.scenario_id = 40;
 
 	
 
@@ -485,6 +485,8 @@ INSERT into model_draft.ego_grid_pf_hv_generator
 		WHEN source LIKE '%%run_of_river%%' THEN 9
 		WHEN source LIKE '%%solar%%' THEN 12
 		WHEN source LIKE '%%wind%%' THEN 13
+		when source LIKE '%%reservoir%%' THEN 10
+		when source LIKE '%%geothermal%%' THEN 14
         END AS source
 		FROM calc_renpass_gis.renpass_gis_source A join
 		(
@@ -502,7 +504,7 @@ INSERT into model_draft.ego_grid_pf_hv_generator
 		ON (substring(A.source, 1, 2) = B.cntr_id)
 	WHERE substring(A.source, 1, 2) <> 'DE'
 	AND A.nominal_value[1] > 0.001
-	AND A.scenario_id = 37;
+	AND A.scenario_id = 43;
 
 -- NEP 2035
 
@@ -525,6 +527,8 @@ INSERT into model_draft.ego_grid_pf_hv_generator
 		WHEN source LIKE '%%run_of_river%%' THEN 9
 		WHEN source LIKE '%%solar%%' THEN 12
 		WHEN source LIKE '%%wind%%' THEN 13
+		when source LIKE '%%reservoir%%' THEN 10
+		when source LIKE '%%geothermal%%' THEN 14
         END AS source
 		FROM calc_renpass_gis.renpass_gis_source A join
 		(
@@ -542,7 +546,7 @@ INSERT into model_draft.ego_grid_pf_hv_generator
 		ON (substring(A.source, 1, 2) = B.cntr_id)
 	WHERE substring(A.source, 1, 2) <> 'DE'
 	AND A.nominal_value[1] > 0.001
-	AND A.scenario_id = 38;
+	AND A.scenario_id = 41;
 
 -- eGo 100
 
@@ -565,6 +569,8 @@ INSERT into model_draft.ego_grid_pf_hv_generator
 		WHEN source LIKE '%%run_of_river%%' THEN 9
 		WHEN source LIKE '%%solar%%' THEN 12
 		WHEN source LIKE '%%wind%%' THEN 13
+		when source LIKE '%%reservoir%%' THEN 10
+		when source LIKE '%%geothermal%%' THEN 14
         END AS source
 		FROM calc_renpass_gis.renpass_gis_source A join
 		(
@@ -582,7 +588,7 @@ INSERT into model_draft.ego_grid_pf_hv_generator
 		ON (substring(A.source, 1, 2) = B.cntr_id)
 	WHERE substring(A.source, 1, 2) <> 'DE'
 	AND A.nominal_value[1] > 0.001
-	AND A.scenario_id = 39;
+	AND A.scenario_id = 40;
 
 
 -- Copy timeseries data
@@ -611,8 +617,10 @@ CREATE MATERIALIZED VIEW calc_renpass_gis.translate_to_pf AS
 			WHEN A.source =  6  THEN  'biomass'
 			WHEN A.source =  8  THEN  'hard_coal'
 			WHEN A.source =  9  THEN  'run_of_river'
+			WHEN A.source =  10 THEN  'reservoir'
 			WHEN A.source =  12 THEN  'solar'
 			WHEN A.source =  13 THEN  'wind'
+			WHEN A.source =  14 THEN  'geothermal'
 		END AS renpass_gis_source
 			FROM model_draft.ego_grid_pf_hv_generator A join
 			model_draft.ego_grid_hv_electrical_neighbours_bus B
@@ -623,7 +631,7 @@ CREATE MATERIALIZED VIEW calc_renpass_gis.translate_to_pf AS
 		calc_renpass_gis.renpass_gis_results C
 	WHERE
 	(C.obj_label LIKE '%%' || SQ.cntr_id || '%%' || SQ.renpass_gis_source || '%%')
-	AND C.scenario_id = 37
+	AND C.scenario_id = 43
 	AND C.type = 'to_bus';
 
 -- create a view assigning a w_id to each foreign bus and the respective feedin
@@ -709,8 +717,10 @@ CREATE MATERIALIZED VIEW calc_renpass_gis.translate_to_pf AS
 			WHEN A.source =  6  THEN  'biomass'
 			WHEN A.source =  8  THEN  'hard_coal'
 			WHEN A.source =  9  THEN  'run_of_river'
+			WHEN A.source =  10 THEN  'reservoir' 
 			WHEN A.source =  12 THEN  'solar'
 			WHEN A.source =  13 THEN  'wind'
+			WHEN A.source =  14 THEN  'geothermal' 
 		END AS renpass_gis_source
 			FROM model_draft.ego_grid_pf_hv_generator A join
 			model_draft.ego_grid_hv_electrical_neighbours_bus B
@@ -721,7 +731,7 @@ CREATE MATERIALIZED VIEW calc_renpass_gis.translate_to_pf AS
 		calc_renpass_gis.renpass_gis_results C
 	WHERE
 	(C.obj_label LIKE '%%' || NEP.cntr_id || '%%' || NEP.renpass_gis_source || '%%')
-	AND C.scenario_id = 38
+	AND C.scenario_id = 41
 	AND C.type = 'to_bus';
 
 -- create a view assigning a w_id to each foreign bus and the respective feedin
@@ -779,11 +789,6 @@ INSERT into model_draft.ego_grid_pf_hv_generator_pq_set (scn_name, generator_id,
 			USING (generator_id)
 		) NEP
 	GROUP BY generator_id;
-
-UPDATE model_draft.ego_grid_pf_hv_generator_pq_set A
-	SET p_max_pu = feedin.feedin
-		FROM model_draft.ren_feedin_foreign AS feedin
-		WHERE A.generator_id = feedin.generator_id;
 	
 -- eGo 100
 
@@ -805,8 +810,10 @@ CREATE MATERIALIZED VIEW calc_renpass_gis.translate_to_pf AS
 			WHEN A.source =  6  THEN  'biomass'
 			WHEN A.source =  8  THEN  'hard_coal'
 			WHEN A.source =  9  THEN  'run_of_river'
+			WHEN A.source =  10 THEN  'reservoir'
 			WHEN A.source =  12 THEN  'solar'
 			WHEN A.source =  13 THEN  'wind'
+			WHEN A.source =  14 THEN  'geothermal' 
 		END AS renpass_gis_source
 			FROM model_draft.ego_grid_pf_hv_generator A join
 			model_draft.ego_grid_hv_electrical_neighbours_bus B
@@ -817,7 +824,7 @@ CREATE MATERIALIZED VIEW calc_renpass_gis.translate_to_pf AS
 		calc_renpass_gis.renpass_gis_results C
 	WHERE
 	(C.obj_label LIKE '%%' || EGO.cntr_id || '%%' || EGO.renpass_gis_source || '%%')
-	AND C.scenario_id = 38
+	AND C.scenario_id = 41
 	AND C.type = 'to_bus';
 
 -- create a view assigning a w_id to each foreign bus and the respective feedin
@@ -876,11 +883,6 @@ INSERT into model_draft.ego_grid_pf_hv_generator_pq_set (scn_name, generator_id,
 		) EGO
 	GROUP BY generator_id;
 
--- set p_max_pu as timeseries from ego_renewable_feedin
-UPDATE model_draft.ego_grid_pf_hv_generator_pq_set A
-	SET p_max_pu = feedin.feedin
-		FROM model_draft.ren_feedin_foreign AS feedin
-		WHERE A.generator_id = feedin.generator_id;
 
 -- DELETE
 DELETE FROM model_draft.ego_grid_pf_hv_load WHERE bus IN (
@@ -988,4 +990,4 @@ INSERT INTO model_draft.ego_grid_pf_hv_load_pq_set (scn_name, load_id, temp_id, 
 */
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_grid_pf_hv_generator_pq_set','ego_dp_powerflow_timeseries_generator.sql',' ');
+SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_grid_pf_hv_generator_pq_set','ego_dp_powerflow_timeseries_generator.sql',' ');

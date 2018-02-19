@@ -25,7 +25,7 @@ CREATE TABLE model_draft.ego_supply_pf_storage_single
   p_nom_extendable boolean DEFAULT false, -- Unit: n/a...
   p_nom_min double precision DEFAULT 0, -- Unit: MW...
   p_nom_max double precision, -- Unit: MW...
-  p_min_pu_fixed double precision DEFAULT 0, -- Unit: per unit...
+  p_min_pu_fixed double precision DEFAULT -1, -- Unit: per unit...
   p_max_pu_fixed double precision DEFAULT 1, -- Unit: per unit...
   sign double precision DEFAULT 1, -- Unit: n/a...
   source bigint, -- Unit: n/a...
@@ -37,9 +37,10 @@ CREATE TABLE model_draft.ego_supply_pf_storage_single
   max_hours double precision, -- Unit: hours...
   efficiency_store double precision, -- Unit: per unit...
   efficiency_dispatch double precision, -- Unit: per unit...
-  standing_loss double precision,
-  aggr_id integer, -- Unit: per unit...
- CONSTRAINT storage_data_pkey PRIMARY KEY (storage_id, scn_name),
+  standing_loss double precision, -- Unit: per unit...
+  aggr_id integer, 
+  source_name character varying, 
+ CONSTRAINT storage_single_pkey PRIMARY KEY (storage_id, scn_name),
   CONSTRAINT storage_data_source_fkey FOREIGN KEY (source)
       REFERENCES model_draft.ego_grid_pf_hv_source (source_id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION
@@ -141,38 +142,58 @@ COMMENT ON TABLE  model_draft.ego_supply_pf_storage_single IS
 "Instructions for proper use": ["..."]
 }';
 
------------
--- Status Quo
------------
+------------------
+-- SQ 
+------------------
 
-DELETE FROM model_draft.ego_supply_pf_storage_single WHERE scn_name = 'Status Quo';
-	 
-INSERT INTO model_draft.ego_supply_pf_storage_single (scn_name, storage_id)
-	SELECT 'Status Quo', un_id
-	FROM model_draft.ego_supply_generator
-	WHERE conv_id IN 
-		(SELECT a.gid 
-		  FROM model_draft.ego_supply_conv_powerplant_sq_mview a
-		  WHERE a.fuel= 'pumped_storage'
-		); -- only (pumped) storage units are selected and written into pf_storage_single 
+-- DELETE FROM model_draft.ego_supply_pf_storage_single WHERE scn_name = 'Status Quo';
 
--- For pumped storage (this section needs to be extended as soon as other storage technologies are included) 
+INSERT INTO model_draft.ego_supply_pf_storage_single (scn_name, storage_id, bus, p_nom, source_name)
+	SELECT 	'Status Quo', un_id, otg_id, capacity, fuel
+	FROM 	model_draft.ego_supply_conv_powerplant_sq_mview a
+	WHERE 	a.fuel = 'pumped_storage' AND a.un_id IS NOT NULL AND a.capacity IS NOT NULL; -- other storage technologies can be included here
 
-UPDATE model_draft.ego_supply_pf_storage_single a
-	SET bus = b.otg_id, 
-		p_nom = b.capacity, 
-		control = 'PV',  -- For pumped storage units control is set to PV
-		source = result.source
-		FROM 
-			(SELECT c.source_id as source, d.fuel as fuel
-			FROM 	model_draft.ego_grid_pf_hv_source c, 
-				model_draft.ego_supply_conv_powerplant_sq_mview d 
-			WHERE	d.fuel = c.name) 
-			AS 	result,		
-			model_draft.ego_supply_conv_powerplant_sq_mview b
-WHERE a.storage_id = b.un_id and result.fuel = 'pumped_storage' AND result.fuel = b.fuel;
 
-DELETE FROM model_draft.ego_supply_pf_storage_single WHERE p_nom IS NULL; -- Delete those PS units without an entry on the installed capacity
+------------------
+-- NEP 2035
+------------------
+
+-- DELETE FROM model_draft.ego_supply_pf_storage_single WHERE scn_name = 'NEP 2035';
+
+INSERT INTO model_draft.ego_supply_pf_storage_single (scn_name, storage_id, bus, p_nom, source_name)
+	SELECT 	'NEP 2035', un_id, otg_id, capacity, fuel
+	FROM 	model_draft.ego_supply_conv_powerplant_sq_mview a
+	WHERE 	a.fuel = 'pumped_storage' AND a.un_id IS NOT NULL AND a.capacity IS NOT NULL; -- other storage technologies can be included here
+
+
+------------------
+-- eGo 100 
+------------------
+
+-- DELETE FROM model_draft.ego_supply_pf_storage_single WHERE scn_name = 'eGo 100';
+
+INSERT INTO model_draft.ego_supply_pf_storage_single (scn_name, storage_id, bus, p_nom, source_name)
+	SELECT 	'eGo 100', un_id, otg_id, capacity, fuel
+	FROM 	model_draft.ego_supply_conv_powerplant_sq_mview a
+	WHERE 	a.fuel = 'pumped_storage' AND a.un_id IS NOT NULL AND a.capacity IS NOT NULL; -- other storage technologies can be included here
+
+
+-- Update tables for all scenarios
+
+UPDATE model_draft.ego_supply_pf_storage_single a 
+	SET source = b.source_id
+	FROM model_draft.ego_grid_pf_hv_source b
+	WHERE a.source_name = b.name; 
+	
+ALTER TABLE model_draft.ego_supply_pf_storage_single
+	DROP COLUMN source_name; 
+
+
+UPDATE model_draft.ego_supply_pf_storage_single a -- this query might be extended for other storage technologies
+	SET control= 
+			(CASE 
+			WHEN source IN (SELECT source_id FROM model_draft.ego_grid_pf_hv_source WHERE name = 'pumped_storage')  THEN 'PV' 
+			END);   
 
 
 -----------
@@ -183,34 +204,42 @@ DELETE FROM model_draft.ego_supply_pf_storage_single WHERE p_nom IS NULL; -- Del
 DROP SEQUENCE IF EXISTS model_draft.ego_supply_pf_storage_single_aggr_id;
 CREATE SEQUENCE model_draft.ego_supply_pf_storage_single_aggr_id
   INCREMENT 1;
-ALTER TABLE model_draft.ego_supply_pf_storage_single_aggr_id
+
+-- grant (oeuser)
+ALTER SEQUENCE model_draft.ego_supply_pf_storage_single_aggr_id
   OWNER TO oeuser;
 
--- source= pumped_storage and p_nom < 50 MW 
-	
+
+-- Create aggr_id for all scenarios
+
+-- all storage technologies and p_nom < 50 MW 
 UPDATE model_draft.ego_supply_pf_storage_single a
 	SET aggr_id = result.aggr_id
-		FROM 
-			(SELECT b.bus, b.source, nextval('model_draft.ego_supply_pf_storage_single_aggr_id') as aggr_id
+		FROM  	(SELECT	b.bus, 
+				b.source, 
+				b.scn_name,
+				nextval('model_draft.ego_supply_pf_storage_single_aggr_id') as aggr_id
 			FROM model_draft.ego_supply_pf_storage_single b 
-			WHERE p_nom < 50 AND source IN 
-				(SELECT source_id from model_draft.ego_grid_pf_hv_source WHERE name = 'pumped_storage')
-			GROUP BY b.bus, b.source)
-			as result
-	WHERE a.bus = result.bus AND a.source = result.source;
+			WHERE p_nom < 50
+			GROUP BY b.bus, b.source, b.scn_name) AS result
+		WHERE 	a.bus = result.bus 
+			AND a.source = result.source
+			AND a.scn_name = result.scn_name;
 
--- all sources (in the moment this only includes pumped storage) and p_nom >= 50MW
-
+-- all sources and p_nom >= 50MW
 UPDATE model_draft.ego_supply_pf_storage_single a
-	SET aggr_id = nextval('model_draft.ego_supply_pf_storage_single_aggr_id')
-	WHERE a.p_nom >= 50;
+	SET 	aggr_id = nextval('model_draft.ego_supply_pf_storage_single_aggr_id')
+	WHERE 	a.p_nom >= 50;
 
 
------------
+------------------------------------
 -- Accumulate data from pf_storage_single and insert into hv_powerflow schema. 
------------
+------------------------------------
 
--- source = (pumped_storage) and p_nom < 50 MW
+DELETE FROM model_draft.ego_grid_pf_hv_storage WHERE scn_name IN ('Status Quo', 'NEP 2035', 'eGo 100'); 
+
+
+-- all storage technologies and p_nom < 50 MW
 
 INSERT INTO model_draft.ego_grid_pf_hv_storage (
   scn_name,
@@ -236,7 +265,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_storage (
   standing_loss 
 )
 SELECT 
-  'Status Quo',
+  scn_name,
   aggr_id,
   bus,
   max(dispatch),
@@ -258,11 +287,10 @@ SELECT
   0.89, -- efficiency_dispatch according to Acatech2015 
   0.00052 -- standing_loss according to Acatech2015 
 FROM model_draft.ego_supply_pf_storage_single a
-WHERE scn_name = 'Status Quo' AND a.p_nom < 50 AND a.aggr_id IS NOT NULL AND source IN 
-	(SELECT source_id from model_draft.ego_grid_pf_hv_source WHERE name = 'pumped_storage')
-GROUP BY a.aggr_id, a.bus, a.source;
+WHERE a.p_nom < 50 AND a.aggr_id IS NOT NULL 
+GROUP BY a.scn_name, a.aggr_id, a.bus, a.source;
 
--- source = (pumped_storage) and p_nom > 50 MW
+-- all storage_technologies and p_nom > 50 MW
 
 INSERT INTO model_draft.ego_grid_pf_hv_storage (
   scn_name,
@@ -288,7 +316,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_storage (
   standing_loss
 )
 SELECT   
-  'Status Quo',
+  scn_name,
   aggr_id,
   bus,
   dispatch,
@@ -310,69 +338,90 @@ SELECT
   0.89, -- efficiency_dispatch according to Acatech2015 
   0.00052 -- standing_loss according to Acatech2015 
 FROM model_draft.ego_supply_pf_storage_single a
-WHERE scn_name = 'Status Quo' AND a.p_nom >= 50 AND a.aggr_id IS NOT NULL AND source IN 
-(SELECT source_id from model_draft.ego_grid_pf_hv_source WHERE name = 'pumped_storage');
+WHERE a.p_nom >= 50 AND a.aggr_id IS NOT NULL;
 
------------
+
+------------------ NEIGHBOURING COUNTRIES
+DELETE FROM model_draft.ego_grid_pf_hv_storage WHERE storage_id > 200000 AND scn_name = 'Status Quo';
+DELETE FROM model_draft.ego_grid_pf_hv_storage WHERE storage_id > 200000 AND scn_name = 'NEP 2035';
+DELETE FROM model_draft.ego_grid_pf_hv_storage WHERE storage_id > 200000 AND scn_name = 'eGo 100';
+
+-- INSERT params of Storages in model_draft.ego_grid_pf_hv_storage (countries besides Germany)
+-- starting storage_id at 200000
+
+-- Status Quo
+
+INSERT into model_draft.ego_grid_pf_hv_storage (
+  scn_name,
+  storage_id,
+  bus,
+  dispatch,
+  control,
+  p_nom,
+  p_nom_extendable,
+  p_nom_min,
+  p_min_pu_fixed,
+  p_max_pu_fixed,
+  sign,
+  source,
+  marginal_cost,
+  capital_cost,
+  efficiency,
+  soc_initial,
+  soc_cyclic,
+  max_hours,
+  efficiency_store,
+  efficiency_dispatch,
+  standing_loss
+)
+  SELECT
+  'Status Quo' as scn_name,
+  row_number() over () + 200000 as storage_id,
+  B.bus_id as bus,
+  'flexible' AS dispatch,
+  'PV' AS control,
+  nominal_value[1] AS p_nom,
+  FALSE as p_nom_extendable,
+  0 as p_nom_min,
+  -1 as p_min_pu_fixed,
+  1 as p_max_pu_fixed,
+  1 as sign,
+  11 as source,
+  0 as marginal_cost,
+  0 as capital_cost,
+  1 as efficiency,
+  0 as soc_inital,
+  false as soc_cyclic,
+  6 as max_hours,
+  A.inflow_conversion_factor[1] as efficiency_store,
+  A.outflow_conversion_factor[1] as efficiency_dispatch,
+  A.capacity_loss[1] as standing_loss
+
+		FROM calc_renpass_gis.renpass_gis_storage A join
+		(
+		SELECT
+		*
+		FROM
+			(SELECT *,
+			max(v_nom) over (partition by cntr_id) AS max_v_nom
+			FROM
+			model_draft.ego_grid_hv_electrical_neighbours_bus
+			where id <= 27
+			) SQ
+		WHERE SQ.v_nom = SQ.max_v_nom
+		) B
+		ON (substring(A.source, 1, 2) = B.cntr_id)
+	WHERE substring(A.source, 1, 2) <> 'DE'
+	AND A.nominal_value IS not NULL
+	AND A.nominal_value[1] > 0.001
+	AND A.source not LIKE '%%powerline%%'
+	AND A.scenario_id = 43
+	AND A.nominal_capacity IS not NULL;
+
+
 -- NEP 2035
------------
 
-DELETE FROM model_draft.ego_supply_pf_storage_single WHERE scn_name='NEP 2035'; 
-
-INSERT INTO model_draft.ego_supply_pf_storage_single (scn_name, storage_id)
-	SELECT 'NEP 2035', un_id
-	FROM model_draft.ego_supply_generator_nep2035
-	WHERE conv_id IN 
-		(SELECT a.gid 
-		  FROM model_draft.ego_supply_conv_powerplant_nep2035_mview a
-		  WHERE a.fuel= 'pumped_storage'
-		); -- only (pumped) storage units from NEP 2035 scenario are selected and written into pf_storage_single 
-
--- For pumped storage (this section needs to be extended as soon as other storage technologies are included) 
-
-UPDATE model_draft.ego_supply_pf_storage_single a
-	SET bus = b.otg_id, 
-		p_nom = b.capacity, 
-		control = 'PV',  -- For pumped storage units control is set to PV
-		source = result.source
-		FROM 
-			(SELECT c.source_id as source, d.fuel as fuel
-			FROM 	model_draft.ego_grid_pf_hv_source c, 
-				model_draft.ego_supply_conv_powerplant_nep2035_mview d 
-			WHERE	d.fuel = c.name) 
-			AS 	result,		
-			model_draft.ego_supply_conv_powerplant_nep2035_mview b
-WHERE a.storage_id = b.un_id and result.fuel = 'pumped_storage' AND result.fuel = b.fuel;
-
-DELETE FROM model_draft.ego_supply_pf_storage_single WHERE p_nom IS NULL; -- Delete those PS units without an entry on the installed capacity
-
--- source= pumped_storage and p_nom < 50 MW 
-	
-UPDATE model_draft.ego_supply_pf_storage_single a
-	SET aggr_id = result.aggr_id
-		FROM 
-			(SELECT b.bus, b.source, nextval('model_draft.ego_supply_pf_storage_single_aggr_id') as aggr_id
-			FROM model_draft.ego_supply_pf_storage_single b 
-			WHERE p_nom < 50 AND source IN 
-				(SELECT source_id from model_draft.ego_grid_pf_hv_source WHERE name = 'pumped_storage')
-			GROUP BY b.bus, b.source)
-			as result
-	WHERE a.bus = result.bus AND a.source = result.source;
-
--- all sources (in the moment this only includes pumped storage) and p_nom >= 50MW
-
-UPDATE model_draft.ego_supply_pf_storage_single a
-	SET aggr_id = nextval('model_draft.ego_supply_pf_storage_single_aggr_id')
-	WHERE a.p_nom >= 50;
-
-
------------
--- Accumulate data from pf_storage_single and insert into hv_powerflow schema. 
------------
-
--- source = (pumped_storage) and p_nom < 50 MW
-
-INSERT INTO model_draft.ego_grid_pf_hv_storage (
+INSERT into model_draft.ego_grid_pf_hv_storage (
   scn_name,
   storage_id,
   bus,
@@ -385,154 +434,64 @@ INSERT INTO model_draft.ego_grid_pf_hv_storage (
   p_max_pu_fixed,
   sign,
   source,
-  marginal_cost, 
-  capital_cost, 
-  efficiency, 
-  soc_initial, 
-  soc_cyclic, 
-  max_hours, 
-  efficiency_store, 
-  efficiency_dispatch, 
-  standing_loss 
-)
-SELECT 
-  'NEP 2035',
-  aggr_id,
-  bus,
-  max(dispatch),
-  max(control),
-  sum(p_nom),
-  FALSE,
-  min(p_nom_min),
-  min(p_min_pu_fixed),
-  max(p_max_pu_fixed),
-  max(sign),
-  source,
-  0, -- marginal_cost 
-  0, -- capital_cost 0 since PHP are not extendable 
-  1, --  efficiency is set below 
-  0, -- soc_initial 
-  false, -- soc_cyclic 
-  6, -- max_hours as an average for existing German PHP 
-  0.88, -- efficiency_store according to Acatech2015 
-  0.89, -- efficiency_dispatch according to Acatech2015 
-  0.00052 -- standing_loss according to Acatech2015 
-FROM model_draft.ego_supply_pf_storage_single a
-WHERE scn_name = 'NEP 2035' AND a.p_nom < 50 AND a.aggr_id IS NOT NULL AND source IN 
-	(SELECT source_id from model_draft.ego_grid_pf_hv_source WHERE name = 'pumped_storage')
-GROUP BY a.aggr_id, a.bus, a.source;
-
--- source = (pumped_storage) and p_nom > 50 MW
-
-INSERT INTO model_draft.ego_grid_pf_hv_storage (
-  scn_name,
-  storage_id,
-  bus,
-  dispatch,
-  control,
-  p_nom,
-  p_nom_extendable,
-  p_nom_min,
-  p_min_pu_fixed,
-  p_max_pu_fixed,
-  sign,
-  source,
-  marginal_cost, 
-  capital_cost, 
-  efficiency, 
-  soc_initial, 
-  soc_cyclic, 
-  max_hours, 
-  efficiency_store, 
-  efficiency_dispatch, 
+  marginal_cost,
+  capital_cost,
+  efficiency,
+  soc_initial,
+  soc_cyclic,
+  max_hours,
+  efficiency_store,
+  efficiency_dispatch,
   standing_loss
 )
-SELECT   
-  'NEP 2035',
-  aggr_id,
-  bus,
-  dispatch,
-  control,
-  p_nom,
-  p_nom_extendable,
-  p_nom_min,
-  p_min_pu_fixed,
-  p_max_pu_fixed,
-  sign,
-  source,
-  0, -- marginal_cost 
-  0, -- capital_cost 0 since PHP are not extendable 
-  1, --  efficiency is set below 
-  0, -- soc_initial 
-  false, -- soc_cyclic 
-  6, -- max_hours as an average for existing German PHP 
-  0.88, -- efficiency_store according to Acatech2015 
-  0.89, -- efficiency_dispatch according to Acatech2015 
-  0.00052 -- standing_loss according to Acatech2015 
-FROM model_draft.ego_supply_pf_storage_single a
-WHERE scn_name = 'NEP 2035' AND a.p_nom >= 50 AND a.aggr_id IS NOT NULL AND source IN 
-(SELECT source_id from model_draft.ego_grid_pf_hv_source WHERE name = 'pumped_storage');
 
------------
+  SELECT
+  'NEP 2035' as scn_name,
+  row_number() over () + 200000 as storage_id,
+  B.bus_id as bus,
+  'flexible' AS dispatch,
+  'PV' AS control,
+  nominal_value[1] AS p_nom,
+  FALSE as p_nom_extendable,
+  0 as p_nom_min,
+  -1 as p_min_pu_fixed,
+  1 as p_max_pu_fixed,
+  1 as sign,
+  11 as source,
+  0 as marginal_cost,
+  0 as capital_cost,
+  1 as efficiency,
+  0 as soc_inital,
+  false as soc_cyclic,
+  6 as max_hours,
+  A.inflow_conversion_factor[1] as efficiency_store,
+  A.outflow_conversion_factor[1] as efficiency_dispatch,
+  A.capacity_loss[1] as standing_loss
+
+		FROM calc_renpass_gis.renpass_gis_storage A join
+		(
+		SELECT
+		*
+		FROM
+			(SELECT *,
+			max(v_nom) over (partition by cntr_id) AS max_v_nom
+			FROM
+			model_draft.ego_grid_hv_electrical_neighbours_bus
+			where id <= 27
+			) SQ
+		WHERE SQ.v_nom = SQ.max_v_nom
+		) B
+		ON (substring(A.source, 1, 2) = B.cntr_id)
+	WHERE substring(A.source, 1, 2) <> 'DE'
+	AND A.nominal_value IS not NULL
+	AND A.nominal_value[1] > 0.001
+	AND A.source not LIKE '%%powerline%%'
+	AND A.scenario_id = 41
+	AND A.nominal_capacity IS not NULL;
+
 -- eGo 100
------------
 
-DELETE FROM model_draft.ego_supply_pf_storage_single WHERE scn_name='eGo 100'; 
-
-INSERT INTO model_draft.ego_supply_pf_storage_single (scn_name, storage_id)
-	SELECT 'eGo 100', un_id
-	FROM model_draft.ego_supply_generator_ego100
-	WHERE res_id IN 
-		(SELECT a.gid 
-		  FROM model_draft.ego_supply_res_powerplant_ego100_mview a
-		  WHERE a.fuel= 'pumped_storage'
-		); -- only (pumped) storage units from eGo 100 scenario are selected and written into pf_storage_single 
-
--- For pumped storage (this section needs to be extended as soon as other storage technologies are included) 
-
-UPDATE model_draft.ego_supply_pf_storage_single a
-	SET bus = b.otg_id, 
-		p_nom = b.capacity, 
-		control = 'PV',  -- For pumped storage units control is set to PV
-		source = result.source
-		FROM 
-			(SELECT c.source_id as source, d.fuel as fuel
-			FROM 	model_draft.ego_grid_pf_hv_source c, 
-				model_draft.ego_supply_res_powerplant_ego100_mview d 
-			WHERE	d.generation_type = c.name) 
-			AS 	result,		
-			model_draft.ego_supply_res_powerplant_ego100_mview b
-WHERE a.scn_name = 'ego100' AND a.storage_id = b.un_id AND result.generation_type = 'pumped_storage' AND result.generation_type = b.generation_type;
-
-DELETE FROM model_draft.ego_supply_pf_storage_single WHERE p_nom IS NULL; -- Delete those PS units without an entry on the installed capacity
-
--- source= pumped_storage and p_nom < 50 MW 
-	
-UPDATE model_draft.ego_supply_pf_storage_single a
-	SET aggr_id = result.aggr_id
-		FROM 
-			(SELECT b.bus, b.source, nextval('model_draft.ego_supply_pf_storage_single_aggr_id') as aggr_id
-			FROM model_draft.ego_supply_pf_storage_single b 
-			WHERE p_nom < 50 AND source IN 
-				(SELECT source_id from model_draft.ego_grid_pf_hv_source WHERE name = 'pumped_storage')
-			GROUP BY b.bus, b.source)
-			as result
-	WHERE a.bus = result.bus AND a.source = result.source;
-
--- all sources (in the moment this only includes pumped storage) and p_nom >= 50MW
-
-UPDATE model_draft.ego_supply_pf_storage_single a
-	SET aggr_id = nextval('model_draft.ego_supply_pf_storage_single_aggr_id')
-	WHERE a.p_nom >= 50;
-
-
------------
--- Accumulate data from pf_storage_single and insert into hv_powerflow schema. 
------------
-
--- source = (pumped_storage) and p_nom < 50 MW
-
-INSERT INTO model_draft.ego_grid_pf_hv_storage (
+INSERT into model_draft.ego_grid_pf_hv_storage (
   scn_name,
   storage_id,
   bus,
@@ -545,91 +504,62 @@ INSERT INTO model_draft.ego_grid_pf_hv_storage (
   p_max_pu_fixed,
   sign,
   source,
-  marginal_cost, 
-  capital_cost, 
-  efficiency, 
-  soc_initial, 
-  soc_cyclic, 
-  max_hours, 
-  efficiency_store, 
-  efficiency_dispatch, 
-  standing_loss 
-)
-SELECT 
-  'eGo 100',
-  aggr_id,
-  bus,
-  max(dispatch),
-  max(control),
-  sum(p_nom),
-  FALSE,
-  min(p_nom_min),
-  min(p_min_pu_fixed),
-  max(p_max_pu_fixed),
-  max(sign),
-  source,
-  0, -- marginal_cost 
-  0, -- capital_cost 0 since PHP are not extendable 
-  1, --  efficiency is set below 
-  0, -- soc_initial 
-  false, -- soc_cyclic 
-  6, -- max_hours as an average for existing German PHP 
-  0.88, -- efficiency_store according to Acatech2015 
-  0.89, -- efficiency_dispatch according to Acatech2015 
-  0.00052 -- standing_loss according to Acatech2015 
-FROM model_draft.ego_supply_pf_storage_single a
-WHERE scn_name = 'eGo 100' AND a.p_nom < 50 AND a.aggr_id IS NOT NULL AND source IN 
-	(SELECT source_id from model_draft.ego_grid_pf_hv_source WHERE name = 'pumped_storage')
-GROUP BY a.aggr_id, a.bus, a.source;
-
--- source = (pumped_storage) and p_nom > 50 MW
-
-INSERT INTO model_draft.ego_grid_pf_hv_storage (
-  scn_name,
-  storage_id,
-  bus,
-  dispatch,
-  control,
-  p_nom,
-  p_nom_extendable,
-  p_nom_min,
-  p_min_pu_fixed,
-  p_max_pu_fixed,
-  sign,
-  source,
-  marginal_cost, 
-  capital_cost, 
-  efficiency, 
-  soc_initial, 
-  soc_cyclic, 
-  max_hours, 
-  efficiency_store, 
-  efficiency_dispatch, 
+  marginal_cost,
+  capital_cost,
+  efficiency,
+  soc_initial,
+  soc_cyclic,
+  max_hours,
+  efficiency_store,
+  efficiency_dispatch,
   standing_loss
 )
-SELECT   
-  'eGo 100',
-  aggr_id,
-  bus,
-  dispatch,
-  control,
-  p_nom,
-  p_nom_extendable,
-  p_nom_min,
-  p_min_pu_fixed,
-  p_max_pu_fixed,
-  sign,
-  source,
-  0, -- marginal_cost 
-  0, -- capital_cost 0 since PHP are not extendable 
-  1, --  efficiency is set below 
-  0, -- soc_initial 
-  false, -- soc_cyclic 
-  6, -- max_hours as an average for existing German PHP 
-  0.88, -- efficiency_store according to Acatech2015 
-  0.89, -- efficiency_dispatch according to Acatech2015 
-  0.00052 -- standing_loss according to Acatech2015 
-FROM model_draft.ego_supply_pf_storage_single a
-WHERE scn_name = 'eGo 100' AND a.p_nom >= 50 AND a.aggr_id IS NOT NULL AND source IN 
-(SELECT source_id from model_draft.ego_grid_pf_hv_source WHERE name = 'pumped_storage');
+
+  SELECT
+  'eGo 100' as scn_name,
+  row_number() over () + 200000 as storage_id,
+  B.bus_id as bus,
+  'flexible' AS dispatch,
+  'PV' AS control,
+  nominal_value[1] AS p_nom,
+  FALSE as p_nom_extendable,
+  0 as p_nom_min,
+  -1 as p_min_pu_fixed,
+  1 as p_max_pu_fixed,
+  1 as sign,
+  11 as source,
+  0 as marginal_cost,
+  0 as capital_cost,
+  1 as efficiency,
+  0 as soc_inital,
+  false as soc_cyclic,
+  6 as max_hours,
+  A.inflow_conversion_factor[1] as efficiency_store,
+  A.outflow_conversion_factor[1] as efficiency_dispatch,
+  A.capacity_loss[1] as standing_loss
+
+		FROM calc_renpass_gis.renpass_gis_storage A join
+		(
+		SELECT
+		*
+		FROM
+			(SELECT *,
+			max(v_nom) over (partition by cntr_id) AS max_v_nom
+			FROM
+			model_draft.ego_grid_hv_electrical_neighbours_bus
+			where id <= 27
+			) SQ
+		WHERE SQ.v_nom = SQ.max_v_nom
+		) B
+		ON (substring(A.source, 1, 2) = B.cntr_id)
+	WHERE substring(A.source, 1, 2) <> 'DE'
+	AND A.nominal_value IS not NULL
+	AND A.nominal_value[1] > 0.001
+	AND A.source not LIKE '%%powerline%%'
+	AND A.scenario_id = 40
+	AND A.nominal_capacity IS not NULL;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_grid_pf_hv_storage','ego_dp_powerflow_assignment_storage.sql',' ');
+
 
