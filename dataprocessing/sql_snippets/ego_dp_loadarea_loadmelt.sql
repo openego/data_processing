@@ -63,9 +63,10 @@ CREATE TABLE		model_draft.ego_demand_load_collect_buffer100 (
 -- insert buffer
 INSERT INTO	model_draft.ego_demand_load_collect_buffer100 (geom)
 	SELECT	(ST_DUMP(ST_MULTI(ST_UNION(
-			ST_BUFFER(poly.geom, 100)
+			ST_BUFFER(geom, 100)
 		)))).geom ::geometry(Polygon,3035) AS geom
-	FROM	model_draft.ego_demand_load_collect AS poly;
+	FROM	model_draft.ego_demand_load_collect
+    ORDER BY id;
 
 -- index GIST (geom)
 CREATE INDEX	ego_demand_load_collect_buffer100_geom_idx
