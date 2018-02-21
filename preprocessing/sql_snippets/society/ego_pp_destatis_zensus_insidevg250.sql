@@ -16,7 +16,6 @@ __author__      = "Ludee"
 SELECT scenario_log('eGo_PP','PP1','input','society','destatis_zensus_population_per_ha','ego_pp_destatis_zensus_insidevg250.sql','none');
 SELECT scenario_log('eGo_PP','PP1','input','boundaries','bkg_vg250_1_sta_union_mview','ego_pp_destatis_zensus_insidevg250.sql','none');
 
-/*
 -- zensus points with population (includes zensus points outside borders vg250)
 DROP MATERIALIZED VIEW IF EXISTS    society.destatis_zensus_population_per_ha_mview CASCADE;
 CREATE MATERIALIZED VIEW            society.destatis_zensus_population_per_ha_mview AS
@@ -25,7 +24,8 @@ CREATE MATERIALIZED VIEW            society.destatis_zensus_population_per_ha_mv
             a.geom_point,
             a.geom
     FROM    society.destatis_zensus_population_per_ha AS a
-    WHERE   a.population >= 0 ;
+    WHERE   a.population >= 0 
+    ORDER BY a.gid;
 
 -- index
 CREATE UNIQUE INDEX destatis_zensus_population_per_ha_mview_gid_idx
@@ -48,7 +48,6 @@ COMMENT ON MATERIALIZED VIEW society.destatis_zensus_population_per_ha_mview IS 
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
 SELECT scenario_log('eGo_PP','PP1','output','society','destatis_zensus_population_per_ha_mview','ego_pp_destatis_zensus_insidevg250.sql','none');
-*/
 
 
 -- zensus points inside Germany (vg250)
@@ -65,7 +64,8 @@ ALTER TABLE model_draft.destatis_zensus_population_per_ha_inside OWNER TO oeuser
 INSERT INTO model_draft.destatis_zensus_population_per_ha_inside (gid, inside_borders)
     SELECT  gid,
             FALSE
-    FROM    society.destatis_zensus_population_per_ha;
+    FROM    society.destatis_zensus_population_per_ha
+    ORDER BY gid;
 
 -- update "TRUE" if inside borders
 UPDATE model_draft.destatis_zensus_population_per_ha_inside AS t1
@@ -96,7 +96,8 @@ CREATE MATERIALIZED VIEW            model_draft.destatis_zensus_population_per_h
             a.geom
     FROM    society.destatis_zensus_population_per_ha_mview AS a
             JOIN model_draft.destatis_zensus_population_per_ha_inside AS b ON (a.gid = b.gid)
-    WHERE   b.inside_borders = TRUE;
+    WHERE   b.inside_borders = TRUE
+    ORDER BY a.gid;
 
 -- index
 CREATE UNIQUE INDEX destatis_zensus_population_per_ha_invg_mview_gid_idx
@@ -131,7 +132,8 @@ CREATE MATERIALIZED VIEW            model_draft.destatis_zensus_population_per_h
             a.geom
     FROM    society.destatis_zensus_population_per_ha_mview AS a
             JOIN model_draft.destatis_zensus_population_per_ha_inside AS b ON (a.gid = b.gid)
-    WHERE   b.inside_borders = FALSE;
+    WHERE   b.inside_borders = FALSE
+    ORDER BY a.gid;
 
 -- index
 CREATE UNIQUE INDEX destatis_zensus_population_per_ha_outvg_mview_gid_idx
@@ -154,10 +156,6 @@ COMMENT ON MATERIALIZED VIEW model_draft.destatis_zensus_population_per_ha_outvg
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
 SELECT scenario_log('eGo_PP','PP1','output','model_draft','destatis_zensus_population_per_ha_outvg_mview','ego_pp_destatis_zensus_insidevg250.sql','none');
-
-
--- drop
-DROP TABLE IF EXISTS    model_draft.destatis_zensus_population_per_ha_inside CASCADE;
 
 
 /* 

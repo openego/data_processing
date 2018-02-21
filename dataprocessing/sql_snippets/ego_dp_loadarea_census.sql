@@ -10,7 +10,7 @@ __author__ 	= "Ludee"
 
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','input','society','destatis_zensus_population_per_ha_mview','ego_dp_loadarea_census.sql',' ');
+SELECT ego_scenario_log('v0.3.0','input','model_draft','destatis_zensus_population_per_ha_invg_mview','ego_dp_loadarea_census.sql',' ');
 
 -- zensus load
 DROP TABLE IF EXISTS  	model_draft.ego_demand_la_zensus CASCADE;
@@ -25,12 +25,13 @@ CREATE TABLE         	model_draft.ego_demand_la_zensus (
 
 -- insert zensus loads
 INSERT INTO	model_draft.ego_demand_la_zensus (gid,population,inside_la,geom_point,geom)
-	SELECT	zensus.gid ::integer,
-		zensus.population ::integer,
+	SELECT	gid ::integer,
+		population ::integer,
 		'FALSE' ::boolean AS inside_la,
-		zensus.geom_point ::geometry(Point,3035),
-		zensus.geom ::geometry(Polygon,3035)
-	FROM	society.destatis_zensus_population_per_ha_mview AS zensus;
+		geom_point ::geometry(Point,3035),
+		geom ::geometry(Polygon,3035)
+	FROM	model_draft.destatis_zensus_population_per_ha_invg_mview
+    ORDER BY gid;
 
 -- index gist (geom_point)
 CREATE INDEX  	ego_demand_la_zensus_geom_point_idx
@@ -197,6 +198,11 @@ CREATE MATERIALIZED VIEW         	model_draft.ego_society_zensus_per_la_mview AS
 		sum(population), 
 		count(geom) AS census_count
 	FROM	society.destatis_zensus_population_per_ha_mview
+	UNION ALL 
+	SELECT 	'destatis_zensus_population_per_ha_invg_mview' AS name,
+		sum(population), 
+		count(geom) AS census_count
+	FROM	model_draft.destatis_zensus_population_per_ha_invg_mview
 	UNION ALL 
 	SELECT 	'ego_demand_la_zensus' AS name,
 		sum(population), 
