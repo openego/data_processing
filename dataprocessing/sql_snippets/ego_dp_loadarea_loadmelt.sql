@@ -26,13 +26,15 @@ SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_demand_la_zensus_clu
 
 -- insert loads OSM
 INSERT INTO	model_draft.ego_demand_load_collect (geom)
-	SELECT	osm.geom
-	FROM	model_draft.ego_demand_la_osm AS osm;
+	SELECT	geom
+	FROM	model_draft.ego_demand_la_osm
+    ORDER BY gid;
 
 -- insert loads zensus cluster
 INSERT INTO	model_draft.ego_demand_load_collect (geom)
-	SELECT	zensus.geom
-	FROM	model_draft.ego_demand_la_zensus_cluster AS zensus;
+	SELECT	geom
+	FROM	model_draft.ego_demand_la_zensus_cluster
+    ORDER BY cid;
 
 -- index GIST (geom)
 CREATE INDEX	ego_demand_load_collect_geom_idx
@@ -40,6 +42,12 @@ CREATE INDEX	ego_demand_load_collect_geom_idx
 
 -- grant (oeuser)
 ALTER TABLE	model_draft.ego_demand_load_collect OWNER TO oeuser;
+
+-- metadata
+COMMENT ON TABLE model_draft.ego_demand_load_collect IS '{
+    "comment": "eGoDP - Temporary table", 
+    "version": "v0.3.0",
+    "published": "none" }';
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_demand_load_collect','ego_dp_loadarea_loadmelt.sql',' ');
@@ -65,6 +73,12 @@ CREATE INDEX	ego_demand_load_collect_buffer100_geom_idx
     
 -- grant (oeuser)
 ALTER TABLE	model_draft.ego_demand_load_collect_buffer100 OWNER TO oeuser;
+
+-- metadata
+COMMENT ON TABLE model_draft.ego_demand_load_collect_buffer100 IS '{
+    "comment": "eGoDP - Temporary table", 
+    "version": "v0.3.0",
+    "published": "none" }';
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_demand_load_collect_buffer100','ego_dp_loadarea_loadmelt.sql',' ');
@@ -92,6 +106,12 @@ CREATE INDEX	ego_demand_load_melt_geom_idx
     
 -- grant (oeuser)
 ALTER TABLE	model_draft.ego_demand_load_melt OWNER TO oeuser;
+
+-- metadata
+COMMENT ON TABLE model_draft.ego_demand_load_melt IS '{
+    "comment": "eGoDP - Temporary table", 
+    "version": "v0.3.0",
+    "published": "none" }';
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_demand_load_melt','ego_dp_loadarea_loadmelt.sql',' ');
@@ -124,6 +144,12 @@ CREATE INDEX	ego_demand_load_melt_error_geom_mview_geom_idx
 -- grant (oeuser)
 ALTER TABLE	model_draft.ego_demand_load_melt_error_geom_mview OWNER TO oeuser;
 
+-- metadata
+COMMENT ON TABLE model_draft.ego_demand_load_melt_error_geom_mview IS '{
+    "comment": "eGoDP - Temporary table", 
+    "version": "v0.3.0",
+    "published": "none" }';
+
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_demand_load_melt_error_geom_mview','ego_dp_loadarea_loadmelt.sql',' ');
 
@@ -155,6 +181,12 @@ CREATE INDEX	ego_demand_load_melt_error_geom_fix_mview_geom_idx
 	
 -- grant (oeuser)
 ALTER TABLE	model_draft.ego_demand_load_melt_error_geom_fix_mview OWNER TO oeuser;
+
+-- metadata
+COMMENT ON TABLE model_draft.ego_demand_load_melt_error_geom_fix_mview IS '{
+    "comment": "eGoDP - Temporary table", 
+    "version": "v0.3.0",
+    "published": "none" }';
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_demand_load_melt_error_geom_fix_mview','ego_dp_loadarea_loadmelt.sql',' ');
@@ -200,6 +232,12 @@ CREATE INDEX	ego_demand_load_melt_error_2_geom_mview_geom_idx
 	
 -- grant (oeuser)
 ALTER TABLE	model_draft.ego_demand_load_melt_error_2_geom_mview OWNER TO oeuser;
+
+-- metadata
+COMMENT ON TABLE model_draft.ego_demand_load_melt_error_2_geom_mview IS '{
+    "comment": "eGoDP - Temporary table", 
+    "version": "v0.3.0",
+    "published": "none" }';
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_demand_load_melt_error_2_geom_mview','ego_dp_loadarea_loadmelt.sql',' ');

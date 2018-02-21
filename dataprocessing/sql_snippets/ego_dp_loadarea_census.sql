@@ -66,32 +66,9 @@ ALTER TABLE	model_draft.ego_demand_la_zensus OWNER TO oeuser;
 
 -- metadata
 COMMENT ON TABLE model_draft.ego_demand_la_zensus IS '{
-    "Name": "ego zensus loads",
-    "Source":   [{
-	"Name": "open_eGo",
-	"URL": "https://github.com/openego/data_processing"}],
-    "Reference date": "2016",
-    "Date of collection": "02.09.2016",
-    "Original file": ["ego_grid_hvmv_substation"],
-    "Spatial": [{
-	"Resolution": "",
-	"Extend": "Germany" }],
-    "Description": ["osm laods"],
-    "Column":[
-        {"Name": "id", "Description": "Unique identifier", "Unit": " " },
-        {"Name": "area_ha", "Description": "Area", "Unit": "ha" },
-	{"Name": "geom", "Description": "Geometry", "Unit": " " } ],
-    "Changes":	[
-        {"Name": "Ludee", "Mail": "",
-	"Date":  "02.09.2015", "Comment": "Created mview" },
-	{"Name": "Ludee", "Mail": "",
-	"Date":  "17.12.2016", "Comment": "Added metadata" } ],
-    "Notes": [""],
-    "Licence": [{
-	"Name": "", 
-	"URL": "" }],
-    "Instructions for proper use": [" "]
-    }' ;
+    "comment": "eGoDP - Temporary table", 
+    "version": "v0.3.0",
+    "published": "none" }';
 
 -- select description
 SELECT obj_description('model_draft.ego_demand_la_zensus' ::regclass) ::json;
@@ -158,32 +135,9 @@ ALTER TABLE	model_draft.ego_demand_la_zensus_cluster OWNER TO oeuser;
 
 -- metadata
 COMMENT ON TABLE model_draft.ego_demand_la_zensus_cluster IS '{
-    "Name": "ego zensus loads cluster",
-    "Source":   [{
-	"Name": "open_eGo",
-	"URL": "https://github.com/openego/data_processing"}],
-    "Reference date": "2016",
-    "Date of collection": "02.09.2016",
-    "Original file": ["ego_grid_hvmv_substation"],
-    "Spatial": [{
-	"Resolution": "",
-	"Extend": "Germany" }],
-    "Description": ["osm laods"],
-    "Column":[
-        {"Name": "id", "Description": "Unique identifier", "Unit": " " },
-        {"Name": "area_ha", "Description": "Area", "Unit": "ha" },
-	{"Name": "geom", "Description": "Geometry", "Unit": " " } ],
-    "Changes":	[
-        {"Name": "Ludee", "Mail": "",
-	"Date":  "02.09.2015", "Comment": "Created mview" },
-	{"Name": "Ludee", "Mail": "",
-	"Date":  "17.12.2016", "Comment": "Added metadata" } ],
-    "Notes": [""],
-    "Licence": [{
-	"Name": "", 
-	"URL": "" }],
-    "Instructions for proper use": [" "]
-    }' ;
+    "comment": "eGoDP - Temporary table", 
+    "version": "v0.3.0",
+    "published": "none" }';
 
 -- select description
 SELECT obj_description('model_draft.ego_demand_la_zensus_cluster' ::regclass) ::json;
@@ -217,6 +171,12 @@ CREATE MATERIALIZED VIEW         	model_draft.ego_society_zensus_per_la_mview AS
 
 -- grant (oeuser)
 ALTER TABLE	model_draft.ego_society_zensus_per_la_mview OWNER TO oeuser;
+
+-- metadata
+COMMENT ON TABLE model_draft.ego_society_zensus_per_la_mview IS '{
+    "comment": "eGoDP - Temporary table", 
+    "version": "v0.3.0",
+    "published": "none" }';
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_society_zensus_per_la_mview','ego_dp_loadarea_census.sql',' ');
