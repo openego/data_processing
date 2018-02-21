@@ -1,13 +1,21 @@
-"""eGo Data prerocessing (eGoDP)
-This script opens a oedb database connection and executes different parts of eGo.
+"""
+eGo PreProcessing (eGoPP)
+
+This script opens an oedb database connection and executes different parts of eGo.
 Reads python and SQL scripts and gives logging infos during the execution.
 Also see corresponding BPML diagram.
+
+This file is part of project "open_eGo DataProcessing" (https://github.com/openego/data_processing/).
+It's copyrighted by the contributors recorded in the version control history:
+openego/data_processing/preprocessing/eGo_PreProcessing.py
+
+SPDX-License-Identifier: AGPL-3.0-or-later
 """
 
-__copyright__ = "Reiner Lemoine Institut gGmbH"
+__copyright__ = "Reiner Lemoine Institut"
 __license__ = "GNU Affero General Public License Version 3 (AGPL-3.0)"
-__url__ = "https://github.com/openego/data_processing/blob/master/LICENSE"
-__author__ = "gplssm"
+__url__ "https://www.gnu.org/licenses/agpl-3.0.en.html"
+__author__ = "gplssm, Ludee"
 
 import pandas as pd
 import logging
@@ -75,7 +83,7 @@ def preprocessing():
     # close database connection
     conn.close()
 
-    logger.info('Data processing script successfully executed in {:.2f} seconds'.format(
+    logger.info('eGo PreProcessing script successfully executed in {:.2f} seconds'.format(
         time.time() - total_time))
 
 
