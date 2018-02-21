@@ -9,7 +9,7 @@ __url__ 		= "https://github.com/openego/data_processing/blob/master/LICENSE"
 __author__ 		= "wolfbunke"
 
 import pandas as pd
-import numpby as np
+import numpy as np
 
 from dataprocessing.tools.io import oedb_session
 from sqlalchemy.orm import sessionmaker
