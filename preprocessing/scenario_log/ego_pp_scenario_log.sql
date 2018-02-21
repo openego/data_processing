@@ -55,7 +55,7 @@ ALTER TABLE model_draft.scenario_log OWNER TO oeuser;
 COMMENT ON TABLE model_draft.scenario_log IS '{
     "title": "Scenario Log",
     "description": "Versioning and table info",
-    "language": [ "eng", "ger" ],
+    "language": [ "eng" ],
     "sources": [
         {"name": "eGo DataProcessing", "description": "Code", "url": "https://github.com/openego/data_processing", "license": "AGPL-3.0-or-later", "copyright": "eGo DataProcessing © Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems © Europa-Universität Flensburg, Centre for Sustainable Energy Systems © Reiner Lemoine Institut © DLR Institute for Networked Energy Systems"},
         {"name": "eGo DataProcessing", "description": "Documentation", "url": "http://data-processing.readthedocs.io/en/latest/", "license": "CC-BY-4.0", "copyright": "eGo DataProcessing Documentation © Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems © Europa-Universität Flensburg, Centre for Sustainable Energy Systems © Reiner Lemoine Institut © DLR Institute for Networked Energy Systems"}],
@@ -89,17 +89,18 @@ COMMENT ON TABLE model_draft.scenario_log IS '{
         {"name": "model_draft.scenario_log",
         "format": "PostgreSQL",
         "fields": [
-            {"name": "id", "description": "unique identifier", "unit": "none" },
-                {"name": "version", "description": "scenario version", "unit": "none" },
-                {"name": "io", "description": "input or output", "unit": "none" },
-                {"name": "schema_name", "description": "Schema name", "unit": "none" },
-                {"name": "table_name", "description": "Table name", "unit": "none" },
-                {"name": "script_name", "description": "Script name", "unit": "none" },
-                {"name": "entries", "description": "Number of rows", "unit": "none" },
-                {"name": "status", "description": "Current status and comments", "unit": "none" },
-                {"name": "user_name", "description": "Author (session user)", "unit": "none" },
-                {"name": "timestamp", "description": "Timestamp without time zone", "unit": "YYYY-MM-DD HH:MM:SS" },
-                {"name": "meta_data", "description": "Copy of the input metadta", "unit": "none" } ] } ],
+            {"name": "id", "description": "Unique identifier", "unit": "none" },
+            {"name": "project", "description": "Project name", "unit": "none" },
+            {"name": "version", "description": "Scenario version", "unit": "none" },
+            {"name": "io", "description": "Input or output", "unit": "none" },
+            {"name": "schema_name", "description": "Schema name", "unit": "none" },
+            {"name": "table_name", "description": "Table name", "unit": "none" },
+            {"name": "script_name", "description": "Script name", "unit": "none" },
+            {"name": "entries", "description": "Number of rows", "unit": "none" },
+            {"name": "comment", "description": "Current status and comments", "unit": "none" },
+            {"name": "user_name", "description": "Author (session user)", "unit": "none" },
+            {"name": "timestamp", "description": "Timestamp without time zone", "unit": "YYYY-MM-DD HH:MM:SS" },
+            {"name": "meta_data", "description": "Copy of the input metadata", "unit": "none" } ] } ],
     "metadata_version": "1.3"}';
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
