@@ -114,8 +114,9 @@ CREATE TABLE         	model_draft.ego_demand_la_zensus_cluster (
 
 -- insert cluster
 INSERT INTO	model_draft.ego_demand_la_zensus_cluster(geom)
-	SELECT	(ST_DUMP(ST_MULTI(ST_UNION(grid.geom)))).geom ::geometry(Polygon,3035) AS geom
-	FROM    model_draft.ego_demand_la_zensus AS grid;
+	SELECT	(ST_DUMP(ST_MULTI(ST_UNION(geom)))).geom ::geometry(Polygon,3035)
+	FROM    model_draft.ego_demand_la_zensus
+    ORDER BY gid;
 
 -- index gist (geom)
 CREATE INDEX	ego_demand_la_zensus_cluster_geom_idx
