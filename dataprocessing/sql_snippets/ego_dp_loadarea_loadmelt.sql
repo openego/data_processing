@@ -1,9 +1,9 @@
 /*
-combine osm and zensus load cluster
-collect loads
-buffer with 100m
-validate geom
-fix geoms with error
+Combine OSM loads and zensus load cluster.
+Collect loads from 1. ego_demand_la_osm and 2. ego_demand_la_zensus_cluster in table ego_demand_load_collect.
+Buffer collection with 100m and unbuffer with 99 inserted in ego_demand_load_melt.
+The 1m difference has to be added to eliminate the uncertainty of the buffer.
+Then validate the areas and fix invalid geoms with a 1m buffer.
 
 __copyright__ 	= "Reiner Lemoine Institut"
 __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
@@ -70,7 +70,7 @@ ALTER TABLE	model_draft.ego_demand_load_collect_buffer100 OWNER TO oeuser;
 SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_demand_load_collect_buffer100','ego_dp_loadarea_loadmelt.sql',' ');
 
 
--- unbuffer with 100m
+-- unbuffer with 99m
 DROP TABLE IF EXISTS	model_draft.ego_demand_load_melt CASCADE;
 CREATE TABLE		model_draft.ego_demand_load_melt (
 	id SERIAL,
@@ -80,7 +80,7 @@ CREATE TABLE		model_draft.ego_demand_load_melt (
 -- insert buffer
 INSERT INTO	model_draft.ego_demand_load_melt (geom)
 	SELECT	(ST_DUMP(ST_MULTI(ST_UNION(
-			ST_BUFFER(buffer.geom, -100)
+			ST_BUFFER(buffer.geom, -99)
 		)))).geom ::geometry(Polygon,3035) AS geom
 	FROM	model_draft.ego_demand_load_collect_buffer100 AS buffer
 	GROUP BY buffer.id
