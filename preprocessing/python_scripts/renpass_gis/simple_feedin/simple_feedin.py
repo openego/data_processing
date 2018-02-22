@@ -57,7 +57,7 @@ scenario_name = 'Status Quo'
 weather_year = 2011
 weather_scenario_id = 1
 filename = '2017-08-21_simple_feedin_ego-100-wj2011_all.csv'
-config = r'C:\Users\marlo\Anaconda3\envs\renpass\Lib\site-packages\data_processing\preprocessing\python_scripts\renpass_gis\simple_feedin\config.ini'
+config = 'config.ini'
 correction_offshore = 0.83
 correction_solar = 0.8
 
