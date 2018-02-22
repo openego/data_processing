@@ -10,7 +10,7 @@ __author__ 	= "Ludee"
 
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','input','society','destatis_zensus_population_per_ha_mview','ego_dp_loadarea_census.sql',' ');
+SELECT ego_scenario_log('v0.3.0','input','model_draft','destatis_zensus_population_per_ha_invg_mview','ego_dp_loadarea_census.sql',' ');
 
 -- zensus load
 DROP TABLE IF EXISTS  	model_draft.ego_demand_la_zensus CASCADE;
@@ -25,12 +25,13 @@ CREATE TABLE         	model_draft.ego_demand_la_zensus (
 
 -- insert zensus loads
 INSERT INTO	model_draft.ego_demand_la_zensus (gid,population,inside_la,geom_point,geom)
-	SELECT	zensus.gid ::integer,
-		zensus.population ::integer,
+	SELECT	gid ::integer,
+		population ::integer,
 		'FALSE' ::boolean AS inside_la,
-		zensus.geom_point ::geometry(Point,3035),
-		zensus.geom ::geometry(Polygon,3035)
-	FROM	society.destatis_zensus_population_per_ha_mview AS zensus;
+		geom_point ::geometry(Point,3035),
+		geom ::geometry(Polygon,3035)
+	FROM	model_draft.destatis_zensus_population_per_ha_invg_mview
+    ORDER BY gid;
 
 -- index gist (geom_point)
 CREATE INDEX  	ego_demand_la_zensus_geom_point_idx
@@ -65,32 +66,9 @@ ALTER TABLE	model_draft.ego_demand_la_zensus OWNER TO oeuser;
 
 -- metadata
 COMMENT ON TABLE model_draft.ego_demand_la_zensus IS '{
-    "Name": "ego zensus loads",
-    "Source":   [{
-	"Name": "open_eGo",
-	"URL": "https://github.com/openego/data_processing"}],
-    "Reference date": "2016",
-    "Date of collection": "02.09.2016",
-    "Original file": ["ego_grid_hvmv_substation"],
-    "Spatial": [{
-	"Resolution": "",
-	"Extend": "Germany" }],
-    "Description": ["osm laods"],
-    "Column":[
-        {"Name": "id", "Description": "Unique identifier", "Unit": " " },
-        {"Name": "area_ha", "Description": "Area", "Unit": "ha" },
-	{"Name": "geom", "Description": "Geometry", "Unit": " " } ],
-    "Changes":	[
-        {"Name": "Ludee", "Mail": "",
-	"Date":  "02.09.2015", "Comment": "Created mview" },
-	{"Name": "Ludee", "Mail": "",
-	"Date":  "17.12.2016", "Comment": "Added metadata" } ],
-    "Notes": [""],
-    "Licence": [{
-	"Name": "", 
-	"URL": "" }],
-    "Instructions for proper use": [" "]
-    }' ;
+    "comment": "eGoDP - Temporary table", 
+    "version": "v0.3.0",
+    "published": "none" }';
 
 -- select description
 SELECT obj_description('model_draft.ego_demand_la_zensus' ::regclass) ::json;
@@ -113,8 +91,9 @@ CREATE TABLE         	model_draft.ego_demand_la_zensus_cluster (
 
 -- insert cluster
 INSERT INTO	model_draft.ego_demand_la_zensus_cluster(geom)
-	SELECT	(ST_DUMP(ST_MULTI(ST_UNION(grid.geom)))).geom ::geometry(Polygon,3035) AS geom
-	FROM    model_draft.ego_demand_la_zensus AS grid;
+	SELECT	(ST_DUMP(ST_MULTI(ST_UNION(geom)))).geom ::geometry(Polygon,3035)
+	FROM    model_draft.ego_demand_la_zensus
+    ORDER BY gid;
 
 -- index gist (geom)
 CREATE INDEX	ego_demand_la_zensus_cluster_geom_idx
@@ -156,32 +135,9 @@ ALTER TABLE	model_draft.ego_demand_la_zensus_cluster OWNER TO oeuser;
 
 -- metadata
 COMMENT ON TABLE model_draft.ego_demand_la_zensus_cluster IS '{
-    "Name": "ego zensus loads cluster",
-    "Source":   [{
-	"Name": "open_eGo",
-	"URL": "https://github.com/openego/data_processing"}],
-    "Reference date": "2016",
-    "Date of collection": "02.09.2016",
-    "Original file": ["ego_grid_hvmv_substation"],
-    "Spatial": [{
-	"Resolution": "",
-	"Extend": "Germany" }],
-    "Description": ["osm laods"],
-    "Column":[
-        {"Name": "id", "Description": "Unique identifier", "Unit": " " },
-        {"Name": "area_ha", "Description": "Area", "Unit": "ha" },
-	{"Name": "geom", "Description": "Geometry", "Unit": " " } ],
-    "Changes":	[
-        {"Name": "Ludee", "Mail": "",
-	"Date":  "02.09.2015", "Comment": "Created mview" },
-	{"Name": "Ludee", "Mail": "",
-	"Date":  "17.12.2016", "Comment": "Added metadata" } ],
-    "Notes": [""],
-    "Licence": [{
-	"Name": "", 
-	"URL": "" }],
-    "Instructions for proper use": [" "]
-    }' ;
+    "comment": "eGoDP - Temporary table", 
+    "version": "v0.3.0",
+    "published": "none" }';
 
 -- select description
 SELECT obj_description('model_draft.ego_demand_la_zensus_cluster' ::regclass) ::json;
@@ -198,6 +154,11 @@ CREATE MATERIALIZED VIEW         	model_draft.ego_society_zensus_per_la_mview AS
 		count(geom) AS census_count
 	FROM	society.destatis_zensus_population_per_ha_mview
 	UNION ALL 
+	SELECT 	'destatis_zensus_population_per_ha_invg_mview' AS name,
+		sum(population), 
+		count(geom) AS census_count
+	FROM	model_draft.destatis_zensus_population_per_ha_invg_mview
+	UNION ALL 
 	SELECT 	'ego_demand_la_zensus' AS name,
 		sum(population), 
 		count(geom) AS census_count
@@ -210,6 +171,12 @@ CREATE MATERIALIZED VIEW         	model_draft.ego_society_zensus_per_la_mview AS
 
 -- grant (oeuser)
 ALTER TABLE	model_draft.ego_society_zensus_per_la_mview OWNER TO oeuser;
+
+-- metadata
+COMMENT ON TABLE model_draft.ego_society_zensus_per_la_mview IS '{
+    "comment": "eGoDP - Temporary table", 
+    "version": "v0.3.0",
+    "published": "none" }';
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_society_zensus_per_la_mview','ego_dp_loadarea_census.sql',' ');
