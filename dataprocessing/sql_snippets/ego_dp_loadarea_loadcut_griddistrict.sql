@@ -211,8 +211,8 @@ UPDATE model_draft.ego_demand_loadarea AS t1
                     (SUM(b.population)/COUNT(b.geom_point)) ::numeric AS zensus_density
             FROM    model_draft.ego_demand_loadarea AS a,
                     society.destatis_zensus_population_per_ha_mview AS b
-            WHERE   ST_BUFFER(a.geom,5) && b.geom_point AND
-                    ST_CONTAINS(ST_BUFFER(a.geom,5),b.geom_point)
+            WHERE   a.geom && b.geom_point AND
+                    ST_CONTAINS(a.geom,b.geom_point)
             GROUP BY a.id
         )AS t2
     WHERE  	t1.id = t2.id;
