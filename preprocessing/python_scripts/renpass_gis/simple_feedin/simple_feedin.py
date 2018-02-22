@@ -176,10 +176,10 @@ def main():
     #toDo
     # calculate feedins applying correction factors
     
-    count = 0
+    #count = 0
     for coastdat_id, type_of_generation, geom in points:
-        count += 1
-        print(count)
+        #count += 1
+        #print(count)
         try:
             weather = coastdat.get_weather(conn, geom, weather_year)
         except IndexError:
