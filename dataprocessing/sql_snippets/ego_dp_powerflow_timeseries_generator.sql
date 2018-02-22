@@ -789,6 +789,12 @@ INSERT into model_draft.ego_grid_pf_hv_generator_pq_set (scn_name, generator_id,
 			USING (generator_id)
 		) NEP
 	GROUP BY generator_id;
+
+-- set p_max_pu as timeseries from ego_renewable_feedin
+UPDATE model_draft.ego_grid_pf_hv_generator_pq_set A
+	SET p_max_pu = feedin.feedin
+		FROM model_draft.ren_feedin_foreign AS feedin
+		WHERE A.generator_id = feedin.generator_id;
 	
 -- eGo 100
 
@@ -882,6 +888,12 @@ INSERT into model_draft.ego_grid_pf_hv_generator_pq_set (scn_name, generator_id,
 			USING (generator_id)
 		) EGO
 	GROUP BY generator_id;
+
+-- set p_max_pu as timeseries from ego_renewable_feedin
+UPDATE model_draft.ego_grid_pf_hv_generator_pq_set A
+	SET p_max_pu = feedin.feedin
+		FROM model_draft.ren_feedin_foreign AS feedin
+		WHERE A.generator_id = feedin.generator_id;
 
 
 -- DELETE
