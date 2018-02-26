@@ -177,7 +177,7 @@ def main():
     # calculate feedins applying correction factors
     
     #count = 0
-    for coastdat_id, type_of_generation, geom in points:
+    for coastdat_id, type_of_generation, geom in points[1300:]:
         #count += 1
         #print(count)
         try:
