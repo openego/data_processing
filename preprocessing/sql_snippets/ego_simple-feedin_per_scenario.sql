@@ -75,6 +75,33 @@ __author__ 	    = "wolfbunke, MarlonSchlemminger"
 -- From climate.cosmoclmgrid B
 -- Where ST_Intersects(B.geom,C.geom);
 -- 
+
+DROP TABLE IF EXISTS model_draft.ego_neighbours_offshore_point;
+
+CREATE TABLE model_draft.ego_neighbours_offshore_point
+(
+  cntr_id text NOT NULL,
+  coastdat_id bigint, 
+  geom geometry(Point,4326),
+  CONSTRAINT neighbours_offshore_point_pkey PRIMARY KEY (cntr_id)
+);
+
+INSERT INTO model_draft.ego_neighbours_offshore_point (cntr_id, geom)
+VALUES
+('DK', ST_SetSRID(ST_MakePoint(7.59, 55.6), 4326)),
+('NL', ST_SetSRID(ST_MakePoint(5.883333, 54.183333), 4326)),
+('NO', ST_SetSRID(ST_MakePoint(6.327633, 58.269992), 4326)),
+('FR', ST_SetSRID(ST_MakePoint(0.227, 49.892), 4326)),
+('SE', ST_SetSRID(ST_MakePoint(14.993694, 55.9375), 4326)),
+('PL', ST_SetSRID(ST_MakePoint(17.3333333333, 55.000), 4326))
+;
+
+UPDATE model_draft.ego_neighbours_offshore_point a
+	SET coastdat_id = climate.gid
+		FROM climate.cosmoclmgrid AS climate
+		WHERE ST_Intersects(climate.geom, a.geom)
+;
+
 DROP TABLE IF EXISTS model_draft.ego_weather_measurement_point;
 
 CREATE TABLE model_draft.ego_weather_measurement_point
@@ -151,8 +178,6 @@ SELECT
 	'wind_offshore',
 	neighbour.geom
 FROM coastdat.cosmoclmgrid AS coastdat,
-	model_draft.ego_grid_hv_electrical_neighbours_bus AS neighbour
+	model_draft.ego_neighbours_offshore_point AS neighbour
 WHERE ST_Intersects(neighbour.geom, coastdat.geom)
 ON CONFLICT DO NOTHING;
-
-
