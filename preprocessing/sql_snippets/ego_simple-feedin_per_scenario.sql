@@ -87,8 +87,8 @@ CREATE TABLE model_draft.ego_weather_measurement_point
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE model_draft.ego_weather_measurement_point
-  OWNER TO oeuser;
+-- ALTER TABLE model_draft.ego_weather_measurement_point
+--   OWNER TO oeuser;
 
 -- german points
 INSERT INTO model_draft.ego_weather_measurement_point (coastdat_id, type_of_generation, geom)
@@ -106,7 +106,7 @@ WHERE ST_Intersects(ger.geom, coastdat.geom);
 INSERT INTO model_draft.ego_weather_measurement_point (coastdat_id, type_of_generation, geom)
 SELECT 
 	coastdat.gid,
-	'windonshore',
+	'wind_onshore',
 	ST_Centroid(coastdat.geom)
 FROM climate.cosmoclmgrid AS coastdat,
 	(SELECT ST_Transform(ST_Union(geom), 4326) AS geom
@@ -117,12 +117,11 @@ WHERE ST_Intersects(ger.geom, coastdat.geom);
 INSERT INTO model_draft.ego_weather_measurement_point (coastdat_id, type_of_generation, geom)
 SELECT 
 	coastdat.gid,
-	'windoffshore',
+	'wind_offshore',
 	ST_Centroid(coastdat.geom)
 FROM coastdat.cosmoclmgrid AS coastdat, 
 	(SELECT ST_Union(geom) AS geom FROM model_draft.renpass_gis_parameter_region WHERE u_region_id LIKE 'DEow%') AS offshore
-WHERE ST_Intersects(offshore.geom, coastdat.geom)
-AND coastdat.gid NOT IN (SELECT coastdat_id FROM model_draft.ego_weather_measurement_point);
+WHERE ST_Intersects(offshore.geom, coastdat.geom);
 
 --foreign points
 INSERT INTO model_draft.ego_weather_measurement_point (coastdat_id, type_of_generation, geom)
@@ -139,10 +138,21 @@ ON CONFLICT DO NOTHING;
 INSERT INTO model_draft.ego_weather_measurement_point (coastdat_id, type_of_generation, geom)
 SELECT 
 	coastdat.gid,
-	'windonshore',
+	'wind_onshore',
 	neighbour.geom
 FROM coastdat.cosmoclmgrid AS coastdat,
 	model_draft.ego_grid_hv_electrical_neighbours_bus AS neighbour
 WHERE ST_Intersects(neighbour.geom, coastdat.geom)
-AND coastdat.gid NOT IN (SELECT coastdat_id FROM model_draft.ego_weather_measurement_point WHERE type_of_generation = 'windoffshore')
 ON CONFLICT DO NOTHING;
+
+INSERT INTO model_draft.ego_weather_measurement_point (coastdat_id, type_of_generation, geom)
+SELECT 
+	coastdat.gid,
+	'wind_offshore',
+	neighbour.geom
+FROM coastdat.cosmoclmgrid AS coastdat,
+	model_draft.ego_grid_hv_electrical_neighbours_bus AS neighbour
+WHERE ST_Intersects(neighbour.geom, coastdat.geom)
+ON CONFLICT DO NOTHING;
+
+

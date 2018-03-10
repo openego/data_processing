@@ -150,8 +150,8 @@ FROM
 	when obj_label LIKE '%%run_of_river%%' THEN 9
 --	when obj_label LIKE '%%storage_phs%%' THEN 11
 	when obj_label LIKE '%%solar%%' THEN 12
-	WHEN source LIKE '%%wind_onshore%%' THEN 13
-	WHEN source LIKE '%%wind_offshore%%' THEN 17
+	WHEN obj_label LIKE '%%wind_onshore%%' THEN 13
+	WHEN obj_label LIKE '%%wind_offshore%%' THEN 17
 	END AS source,
 	bus_label,
 	obj_label,
@@ -251,8 +251,8 @@ FROM
 	when obj_label LIKE '%%run_of_river%%' THEN 9
 --	when obj_label LIKE '%%storage_phs%%' THEN 11
 	when obj_label LIKE '%%solar%%' THEN 12
-	WHEN source LIKE '%%wind_onshore%%' THEN 13
-	WHEN source LIKE '%%wind_offshore%%' THEN 17
+	WHEN obj_label LIKE '%%wind_onshore%%' THEN 13
+	WHEN obj_label LIKE '%%wind_offshore%%' THEN 17
 	END AS source,
 	bus_label,
 	obj_label,
