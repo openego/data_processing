@@ -655,7 +655,6 @@ FROM
 	CASE
 		WHEN feedin.source LIKE '%%solar%%' THEN 12
 		WHEN feedin.source LIKE '%%wind_onshore%%' THEN 13
-		WHEN feedin.source LIKE '%%wind_offshore%%' THEN 17
 	END AS source,
 	feedin.feedin
 	FROM 
@@ -675,13 +674,12 @@ FROM
 		AS buses,
 	model_draft.ego_grid_pf_hv_generator AS generators
 	WHERE generators.bus = buses.bus_id
-	AND generators.source IN (12, 13, 17)
+	AND generators.source IN (12, 13)
 	AND generators.generator_id > 200000
 	AND generators.scn_name = 'Status Quo'
 	) AS A
 WHERE A.w_id = B.w_id
 AND A.source = B.source;
-
 
 -- Make an array, INSERT into generator_pq_set
 INSERT into model_draft.ego_grid_pf_hv_generator_pq_set (scn_name, generator_id, temp_id, p_set)
@@ -757,7 +755,6 @@ FROM
 	CASE
 		WHEN feedin.source LIKE '%%solar%%' THEN 12
 		WHEN feedin.source LIKE '%%wind_onshore%%' THEN 13
-		WHEN feedin.source LIKE '%%wind_offshore%%' THEN 17
 	END AS source,
 	feedin.feedin
 	FROM 
@@ -777,7 +774,7 @@ FROM
 		AS buses,
 	model_draft.ego_grid_pf_hv_generator AS generators
 	WHERE generators.bus = buses.bus_id
-	AND generators.source IN (12, 13, 17)
+	AND generators.source IN (12, 13)
 	AND generators.generator_id > 200000
 	AND generators.scn_name = 'NEP 2035'
 	) AS A
@@ -858,7 +855,6 @@ FROM
 	CASE
 		WHEN feedin.source LIKE '%%solar%%' THEN 12
 		WHEN feedin.source LIKE '%%wind_onshore%%' THEN 13
-		WHEN feedin.source LIKE '%%wind_offshore%%' THEN 17
 	END AS source,
 	feedin.feedin
 	FROM 
@@ -878,7 +874,7 @@ FROM
 		AS buses,
 	model_draft.ego_grid_pf_hv_generator AS generators
 	WHERE generators.bus = buses.bus_id
-	AND generators.source IN (12, 13, 17)
+	AND generators.source IN (12, 13)
 	AND generators.generator_id > 200000
 	AND generators.scn_name = 'eGo 100'
 	) AS A
@@ -910,6 +906,42 @@ UPDATE model_draft.ego_grid_pf_hv_generator_pq_set A
 		FROM model_draft.ren_feedin_foreign AS feedin
 		WHERE A.generator_id = feedin.generator_id;
 
+-- set p_max_pu for foreign offshore generators
+DROP MATERIALIZED VIEW IF EXISTS model_draft.offshore_feedin_foreign;
+CREATE MATERIALIZED VIEW model_draft.offshore_feedin_foreign AS
+SELECT
+generator_id, scn_name, feedin
+FROM
+	(SELECT generator_id,
+	bus,
+	scn_name
+	FROM model_draft.ego_grid_pf_hv_generator
+	WHERE generator_id > 200000 
+	AND source = 17) 
+	AS gen
+		JOIN 
+		(SELECT bus_id, 
+		cntr_id 
+		FROM model_draft.ego_grid_hv_electrical_neighbours_bus) 
+		AS enb 
+		ON (enb.bus_id = gen.bus)
+			JOIN 
+			(SELECT cntr_id,
+			coastdat_id 
+			FROM model_draft.ego_neighbours_offshore_point)
+			AS nop 
+			ON (nop.cntr_id = enb.cntr_id)
+				JOIN 
+				(SELECT w_id,
+				feedin 
+				FROM model_draft.ego_renewable_feedin)
+				AS erf 
+				ON (erf.w_id = nop.coastdat_id);
+
+UPDATE model_draft.ego_grid_pf_hv_generator_pq_set A
+	SET p_max_pu = feedin.feedin
+		FROM model_draft.offshore_feedin_foreign AS feedin
+		WHERE A.generator_id = feedin.generator_id;
 
 -- DELETE
 DELETE FROM model_draft.ego_grid_pf_hv_load WHERE bus IN (
