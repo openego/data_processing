@@ -102,6 +102,42 @@ UPDATE model_draft.ego_neighbours_offshore_point a
 		WHERE ST_Intersects(climate.geom, a.geom)
 ;
 
+COMMENT ON TABLE model_draft.ego_neighbours_offshore_point IS '{
+	"title": "model_draft.ego_neighbours_offshore_point",
+	"description": "Geometry of offshore windparks of Germanys electrical neighbours",
+	"language": [],
+	"spatial": 
+		{"location": "Electrical neighbours of Germany",
+		"extent": "",
+		"resolution": ""},
+	"temporal": 
+		{"reference_date": "",
+		"start": "",
+		"end": "",
+		"resolution": ""},
+	"sources": [
+		{"name": "FlEnS data", "description": "", "url": "https://github.com/znes/FlEnS/blob/master/open_eGo/modelpowerplants.geojson", "license": "", "copyright": ""} ],
+	"license": 
+		{"id": "",
+		"name": "",
+		"version": "",
+		"url": "",
+		"instruction": "",
+		"copyright": ""},
+	"contributors": [
+		{"name": "Marlon Schlemminger", "email": "marlon@wmkamp46a.de", "date": "13.03.2018", "comment": ""}],
+	"resources": [
+		{"name": "",		
+		"format": "PostgreSQL",
+		"fields": [
+			{"name": "cntr_id", "description": "Country identifier", "unit": ""},
+			{"name": "coastdat_id", "description": "Coasdat2 identifier", "unit": ""},
+			{"name": "geom", "description": "Geometry", "unit": ""} ] } ],
+	"metadata_version": "1.3"}';
+
+-- select description
+SELECT obj_description('model_draft.ego_neighbours_offshore_point' ::regclass) ::json;
+
 DROP TABLE IF EXISTS model_draft.ego_weather_measurement_point;
 
 CREATE TABLE model_draft.ego_weather_measurement_point
@@ -181,3 +217,38 @@ FROM coastdat.cosmoclmgrid AS coastdat,
 	model_draft.ego_neighbours_offshore_point AS neighbour
 WHERE ST_Intersects(neighbour.geom, coastdat.geom)
 ON CONFLICT DO NOTHING;
+
+COMMENT ON TABLE model_draft.ego_weather_measurement_point IS '{
+	"title": "model_draft.ego_weather_measurement_point",
+	"description": "Geometry of weather points for feedin timeseries calculation",
+	"language": [],
+	"spatial": 
+		{"location": "Germany and its electrical neighbours and Baltic Sea/North Sea",
+		"extent": "",
+		"resolution": "Coasdat2 weather cells"},
+	"temporal": 
+		{"reference_date": "",
+		"start": "",
+		"end": "",
+		"resolution": ""},
+	"sources": [
+		{"name": "open_eGo dataprocessing", "description": "", "url": "https://github.com/openego/data_processing", "license": "", "copyright": ""} ],
+	"license": 
+		{"id": "",
+		"name": "",
+		"version": "",
+		"url": "",
+		"instruction": "",
+		"copyright": ""},
+	"contributors": [
+		{"name": "Marlon Schlemminger", "email": "marlon@wmkamp46a.de", "date": "13.03.2018", "comment": ""}],
+	"resources": [
+		{"name": "",		
+		"format": "PostgreSQL",
+		"fields": [
+			{"name": "type_of_generation", "description": "Type of renewable generation", "unit": ""},
+			{"name": "coastdat_id", "description": "Coasdat2 identifier", "unit": ""},
+			{"name": "geom", "description": "Geometry", "unit": ""} ] } ],
+	"metadata_version": "1.3"}';
+
+SELECT obj_description('model_draft.ego_weather_measurement_point' ::regclass) ::json;
