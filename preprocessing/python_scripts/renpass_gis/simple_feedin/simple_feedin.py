@@ -50,6 +50,7 @@ import db
 import pandas as pd
 from sqlalchemy import (Column, Text, Integer, Float, ARRAY)
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import text
 
 points = db.Points
 conn = db.conn
@@ -96,10 +97,12 @@ def df_to_renewable_feedin(df, weather_year, weather_scenario_id):
         weather_year = Column(Integer(), primary_key=True)
         feedin = Column(ARRAY(Float))
 
-    try:
-        Ego_renewable_feedin.__table__.drop(conn)
-    except:
-        pass
+    conn.execute(text("DROP TABLE IF EXISTS model_draft.ego_renewable_feedin CASCADE"))
+    
+#    try:
+#        Ego_renewable_feedin.__table__.drop(conn)
+#    except:
+#        pass
     
     Base.metadata.create_all(conn) 
     
