@@ -146,7 +146,7 @@ SELECT
 	coastdat.gid,
 	'wind_offshore',
 	ST_Centroid(coastdat.geom)
-FROM coastdat.cosmoclmgrid AS coastdat, 
+FROM climate.cosmoclmgrid AS coastdat, 
 	(SELECT ST_Union(geom) AS geom FROM model_draft.renpass_gis_parameter_region WHERE u_region_id LIKE 'DEow%') AS offshore
 WHERE ST_Intersects(offshore.geom, coastdat.geom);
 
@@ -156,7 +156,7 @@ SELECT
 	coastdat.gid,
 	'solar',
 	neighbour.geom
-FROM coastdat.cosmoclmgrid AS coastdat,
+FROM climate.cosmoclmgrid AS coastdat,
 	model_draft.ego_grid_hv_electrical_neighbours_bus AS neighbour
 WHERE ST_Intersects(neighbour.geom, coastdat.geom)
 ON CONFLICT DO NOTHING;
@@ -167,7 +167,7 @@ SELECT
 	coastdat.gid,
 	'wind_onshore',
 	neighbour.geom
-FROM coastdat.cosmoclmgrid AS coastdat,
+FROM climate.cosmoclmgrid AS coastdat,
 	model_draft.ego_grid_hv_electrical_neighbours_bus AS neighbour
 WHERE ST_Intersects(neighbour.geom, coastdat.geom)
 ON CONFLICT DO NOTHING;
@@ -177,7 +177,7 @@ SELECT
 	coastdat.gid,
 	'wind_offshore',
 	neighbour.geom
-FROM coastdat.cosmoclmgrid AS coastdat,
+FROM climate.cosmoclmgrid AS coastdat,
 	model_draft.ego_neighbours_offshore_point AS neighbour
 WHERE ST_Intersects(neighbour.geom, coastdat.geom)
 ON CONFLICT DO NOTHING;
