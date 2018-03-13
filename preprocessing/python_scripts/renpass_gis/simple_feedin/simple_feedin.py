@@ -163,10 +163,10 @@ def main():
     powerplants = {}
 
     # instatiate feedinlib models in dictionary
-    powerplants['windonshore'] = plants.WindPowerPlant(
+    powerplants['wind_onshore'] = plants.WindPowerPlant(
         **to_dictionary(cfg=cfg, section='WindTurbineOnshore'))
 
-    powerplants['windoffshore'] = plants.WindPowerPlant(
+    powerplants['wind_offshore'] = plants.WindPowerPlant(
         **to_dictionary(cfg=cfg, section='WindTurbineOffshore'))
 
     powerplants['solar'] = plants.Photovoltaic(
@@ -186,10 +186,10 @@ def main():
             print('Geometry cannot be handled: %s, %s' % (geom.x, geom.y))
             continue
         
-        if type_of_generation == 'windoffshore':
+        if type_of_generation == 'wind_offshore':
             feedin = correction_offshore * powerplants[type_of_generation].\
                 feedin(weather=weather, installed_capacity=1)
-        elif type_of_generation == 'windonshore':
+        elif type_of_generation == 'wind_onshore':
             feedin = powerplants[type_of_generation].\
                 feedin(weather=weather, installed_capacity=1)
         elif type_of_generation == 'solar':

@@ -178,7 +178,27 @@ SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_supply_pf_generator
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_grid_pf_hv_source','ego_dp_powerflow_assignment_generator.sql',' ');
 
+UPDATE model_draft.ego_supply_pf_generator_single a
+	SET source_name = wind.generation_subtype
+	FROM 	(SELECT un_id, generation_subtype
+		FROM model_draft.ego_supply_res_powerplant_sq_mview
+		WHERE generation_type = 'wind') AS wind
+	WHERE a.generator_id = wind.un_id;
 
+UPDATE model_draft.ego_supply_pf_generator_single a
+	SET source_name = wind.generation_subtype
+	FROM 	(SELECT un_id, generation_subtype
+		FROM model_draft.ego_supply_res_powerplant_nep2035_mview
+		WHERE generation_type = 'wind') AS wind
+	WHERE a.generator_id = wind.un_id;
+
+UPDATE model_draft.ego_supply_pf_generator_single a
+	SET source_name = wind.generation_subtype
+	FROM 	(SELECT un_id, generation_subtype
+		FROM model_draft.ego_supply_res_powerplant_ego100_mview
+		WHERE generation_type = 'wind') AS wind
+	WHERE a.generator_id = wind.un_id;
+	
 UPDATE model_draft.ego_supply_pf_generator_single a 
 	SET source = b.source_id
 	FROM model_draft.ego_grid_pf_hv_source b
@@ -193,8 +213,8 @@ UPDATE model_draft.ego_supply_pf_generator_single a
 	SET control= 
 			(CASE 
 			WHEN p_nom < 50 THEN 'PQ'
-			WHEN p_nom >= 50 AND source IN (12, 13) THEN 'PQ'-- Wind or solar pp
-			WHEN p_nom >= 50 AND source NOT IN (12, 13) THEN 'PV'
+			WHEN p_nom >= 50 AND source IN (SELECT source_id from model_draft.ego_grid_pf_hv_source WHERE name IN('wind_onshore', 'wind_offshore', 'solar')) THEN 'PQ'-- Wind or solar pp
+			WHEN p_nom >= 50 AND source NOT IN (SELECT source_id from model_draft.ego_grid_pf_hv_source WHERE name IN('wind_onshore', 'wind_offshore', 'solar')) THEN 'PV'
 			END);   
 
 
@@ -253,7 +273,7 @@ UPDATE model_draft.ego_supply_pf_generator_single a
 				nextval('model_draft.ego_supply_pf_generator_single_aggr_id') as aggr_id
 			FROM 	model_draft.ego_supply_pf_generator_single b 
 			WHERE 	p_nom < 50 AND source IN 
-				(SELECT source_id from model_draft.ego_grid_pf_hv_source WHERE name = 'wind' OR name = 'solar') 
+				(SELECT source_id from model_draft.ego_grid_pf_hv_source WHERE name IN('wind_onshore', 'wind_offshore', 'solar')) 
 			GROUP BY b.bus, b.w_id, b.source, b.scn_name) AS result
 		WHERE 	a.bus = result.bus 
 			AND a.w_id = result.w_id 
@@ -269,7 +289,7 @@ UPDATE model_draft.ego_supply_pf_generator_single a
 				nextval('model_draft.ego_supply_pf_generator_single_aggr_id') as aggr_id
 			FROM model_draft.ego_supply_pf_generator_single b 
 			WHERE p_nom < 50 AND source NOT IN 
-				(SELECT source_id from model_draft.ego_grid_pf_hv_source WHERE name = 'wind' OR name = 'solar')
+				(SELECT source_id from model_draft.ego_grid_pf_hv_source WHERE name IN('wind_onshore', 'wind_offshore', 'solar'))
 			GROUP BY b.bus, b.source, b.scn_name) AS result
 		WHERE 	a.bus = result.bus 
 			AND a.source = result.source
@@ -279,78 +299,6 @@ UPDATE model_draft.ego_supply_pf_generator_single a
 UPDATE model_draft.ego_supply_pf_generator_single a
 	SET 	aggr_id = nextval('model_draft.ego_supply_pf_generator_single_aggr_id')
 	WHERE 	a.p_nom >= 50;
-
--- NEP 2035 
-
--- source = (wind and solar) and p_nom < 50 MW
-UPDATE model_draft.ego_supply_pf_generator_single a
-	SET aggr_id = result.aggr_id
-		FROM 	(SELECT	b.bus, 
-				b.w_id, 
-				b.source 
-				nextval('model_draft.ego_supply_pf_generator_single_aggr_id') as aggr_id
-			FROM 	model_draft.ego_supply_pf_generator_single b 
-			WHERE 	scn_name='NEP 2035' AND p_nom < 50 AND source IN 
-				(SELECT source_id from model_draft.ego_grid_pf_hv_source WHERE name = 'wind' OR name = 'solar') 
-			GROUP BY bus, w_id, source) AS result
-		WHERE 	a.bus = result.bus 
-			AND a.w_id = result.w_id 
-			AND a.source = result.source;
-
--- source <> (wind and solar) and p_nom < 50 MW 
-UPDATE model_draft.ego_supply_pf_generator_single a
-	SET aggr_id = result.aggr_id
-		FROM  	(SELECT	b.bus, 
-				b.source, 
-				nextval('model_draft.ego_supply_pf_generator_single_aggr_id') as aggr_id
-			FROM model_draft.ego_supply_pf_generator_single b 
-			WHERE scn_name='NEP 2035' AND p_nom < 50 AND source NOT IN 
-				(SELECT source_id from model_draft.ego_grid_pf_hv_source WHERE name = 'wind' OR name = 'solar')
-			GROUP BY b.bus, b.source) AS result
-		WHERE 	a.bus = result.bus 
-			AND a.source = result.source;
-
--- all sources and p_nom >= 50MW
-UPDATE model_draft.ego_supply_pf_generator_single a
-	SET 	aggr_id = nextval('model_draft.ego_supply_pf_generator_single_aggr_id')
-	WHERE 	scn_name= 'NEP 2035' AND a.p_nom >= 50;
-
-
-
--- eGo 100
-
--- source = (wind and solar) and p_nom < 50 MW
-UPDATE model_draft.ego_supply_pf_generator_single a
-	SET aggr_id = result.aggr_id
-		FROM 	(SELECT	b.bus, 
-				b.w_id, 
-				b.source 
-				nextval('model_draft.ego_supply_pf_generator_single_aggr_id') as aggr_id
-			FROM 	model_draft.ego_supply_pf_generator_single b 
-			WHERE 	scn_name='eGo 100' AND p_nom < 50 AND source IN 
-				(SELECT source_id from model_draft.ego_grid_pf_hv_source WHERE name = 'wind' OR name = 'solar') 
-			GROUP BY bus, w_id, source) AS result
-		WHERE 	a.bus = result.bus 
-			AND a.w_id = result.w_id 
-			AND a.source = result.source;
-
--- source <> (wind and solar) and p_nom < 50 MW 
-UPDATE model_draft.ego_supply_pf_generator_single a
-	SET aggr_id = result.aggr_id
-		FROM  	(SELECT	b.bus, 
-				b.source, 
-				nextval('model_draft.ego_supply_pf_generator_single_aggr_id') as aggr_id
-			FROM model_draft.ego_supply_pf_generator_single b 
-			WHERE scn_name='eGo 100' AND p_nom < 50 AND source NOT IN 
-				(SELECT source_id from model_draft.ego_grid_pf_hv_source WHERE name = 'wind' OR name = 'solar')
-			GROUP BY b.bus, b.source) AS result
-		WHERE 	a.bus = result.bus 
-			AND a.source = result.source;
-
--- all sources and p_nom >= 50MW
-UPDATE model_draft.ego_supply_pf_generator_single a
-	SET 	aggr_id = nextval('model_draft.ego_supply_pf_generator_single_aggr_id')
-	WHERE 	scn_name= 'eGo 100' AND a.p_nom >= 50;
 
 -- Delete all generators with p_nom=0
 
@@ -390,7 +338,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_generator (
 	WHERE 	a.p_nom < 50 
 		AND a.aggr_id IS NOT NULL 
 		AND source IN 
-		(SELECT source_id from model_draft.ego_grid_pf_hv_source WHERE name = 'wind' OR name = 'solar')
+		(SELECT source_id from model_draft.ego_grid_pf_hv_source WHERE name IN('wind_onshore', 'wind_offshore', 'solar'))
 	GROUP BY a. scn_name, a.aggr_id, a.bus, a.w_id, a.source;
 
 -- source <> (wind and solar) and p_nom < 50 MW 
@@ -423,7 +371,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_generator (
 	WHERE 	a.p_nom < 50 
 		AND a.aggr_id IS NOT NULL 
 		AND source NOT IN 
-		(SELECT source_id from model_draft.ego_grid_pf_hv_source WHERE name = 'wind' OR name = 'solar')
+		(SELECT source_id from model_draft.ego_grid_pf_hv_source WHERE name IN('wind_onshore', 'wind_offshore', 'solar'))
 	GROUP BY a.scn_name, a.aggr_id, a.bus, a.source;
 
 -- all sources and p_nom >= 50MW
@@ -458,7 +406,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_generator (
 -- set dispatch to 'variable' for wind, PV and run_of_river
 
 UPDATE model_draft.ego_grid_pf_hv_generator 
-	SET dispatch = 'variable' WHERE source IN (9, 12, 13); 
+	SET dispatch = 'variable' WHERE source IN (SELECT source_id from model_draft.ego_grid_pf_hv_source WHERE name IN('wind_onshore', 'wind_offshore', 'solar', 'run_of_river')); 
 
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)

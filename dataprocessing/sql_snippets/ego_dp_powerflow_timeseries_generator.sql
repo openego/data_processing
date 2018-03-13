@@ -45,7 +45,8 @@ FROM
 	when obj_label LIKE '%%run_of_river%%' THEN 9
 --	when obj_label LIKE '%%storage_phs%%' THEN 11
 	when obj_label LIKE '%%solar%%' THEN 12
-	when obj_label LIKE '%%wind%%' THEN 13
+	when obj_label LIKE '%%wind_onshore%%' THEN 13
+	when obj_label LIKE '%%wind_offshore%%' THEN 17
 	END AS source,
 	bus_label,
 	obj_label,
@@ -76,14 +77,15 @@ FROM
 	source
 	FROM
 	model_draft.ego_supply_pf_generator_single 
-	WHERE source IN (12, 13)
+	WHERE source IN (12, 13, 17)
 	AND scn_name = 'Status Quo'
 	GROUP BY aggr_id, w_id, source) AS gen,
 	(SELECT
 	w_id,
 	CASE
 	WHEN source LIKE '%%solar%%' THEN 12
-	WHEN source LIKE '%%wind%%' THEN 13
+	WHEN source LIKE '%%wind_onshore%%' THEN 13
+	WHEN source LIKE '%%wind_offshore%%' THEN 17
 	END AS source,
 	feedin
 	FROM model_draft.ego_renewable_feedin) AS feedin
@@ -148,7 +150,8 @@ FROM
 	when obj_label LIKE '%%run_of_river%%' THEN 9
 --	when obj_label LIKE '%%storage_phs%%' THEN 11
 	when obj_label LIKE '%%solar%%' THEN 12
-	when obj_label LIKE '%%wind%%' THEN 13
+	WHEN obj_label LIKE '%%wind_onshore%%' THEN 13
+	WHEN obj_label LIKE '%%wind_offshore%%' THEN 17
 	END AS source,
 	bus_label,
 	obj_label,
@@ -179,14 +182,15 @@ FROM
 	source
 	FROM
 	model_draft.ego_supply_pf_generator_single 
-	WHERE source IN (12, 13)
+	WHERE source IN (12, 13, 17)
 	AND scn_name = 'NEP 2035'
 	GROUP BY aggr_id, w_id, source) AS gen,
 	(SELECT
 	w_id,
 	CASE
 	WHEN source LIKE '%%solar%%' THEN 12
-	WHEN source LIKE '%%wind%%' THEN 13
+	WHEN source LIKE '%%wind_onshore%%' THEN 13
+	WHEN source LIKE '%%wind_offshore%%' THEN 17
 	END AS source,
 	feedin
 	FROM model_draft.ego_renewable_feedin) AS feedin
@@ -247,7 +251,8 @@ FROM
 	when obj_label LIKE '%%run_of_river%%' THEN 9
 --	when obj_label LIKE '%%storage_phs%%' THEN 11
 	when obj_label LIKE '%%solar%%' THEN 12
-	when obj_label LIKE '%%wind%%' THEN 13
+	WHEN obj_label LIKE '%%wind_onshore%%' THEN 13
+	WHEN obj_label LIKE '%%wind_offshore%%' THEN 17
 	END AS source,
 	bus_label,
 	obj_label,
@@ -278,14 +283,15 @@ FROM
 	source
 	FROM
 	model_draft.ego_supply_pf_generator_single 
-	WHERE source IN (12, 13)
+	WHERE source IN (12, 13, 17)
 	AND scn_name = 'eGo 100'
 	GROUP BY aggr_id, w_id, source) AS gen,
 	(SELECT
 	w_id,
 	CASE
 	WHEN source LIKE '%%solar%%' THEN 12
-	WHEN source LIKE '%%wind%%' THEN 13
+	WHEN source LIKE '%%wind_onshore%%' THEN 13
+	WHEN source LIKE '%%wind_offshore%%' THEN 17
 	END AS source,
 	feedin
 	FROM model_draft.ego_renewable_feedin) AS feedin
@@ -484,7 +490,8 @@ INSERT into model_draft.ego_grid_pf_hv_generator
 	CASE
 		WHEN source LIKE '%%run_of_river%%' THEN 9
 		WHEN source LIKE '%%solar%%' THEN 12
-		WHEN source LIKE '%%wind%%' THEN 13
+		WHEN source LIKE '%%wind_onshore%%' THEN 13
+		WHEN source LIKE '%%wind_offshore%%' THEN 17
 		when source LIKE '%%reservoir%%' THEN 10
 		when source LIKE '%%geothermal%%' THEN 14
         END AS source
@@ -526,7 +533,8 @@ INSERT into model_draft.ego_grid_pf_hv_generator
 	CASE
 		WHEN source LIKE '%%run_of_river%%' THEN 9
 		WHEN source LIKE '%%solar%%' THEN 12
-		WHEN source LIKE '%%wind%%' THEN 13
+		WHEN source LIKE '%%wind_onshore%%' THEN 13
+		WHEN source LIKE '%%wind_offshore%%' THEN 17
 		when source LIKE '%%reservoir%%' THEN 10
 		when source LIKE '%%geothermal%%' THEN 14
         END AS source
@@ -568,7 +576,8 @@ INSERT into model_draft.ego_grid_pf_hv_generator
 	CASE
 		WHEN source LIKE '%%run_of_river%%' THEN 9
 		WHEN source LIKE '%%solar%%' THEN 12
-		WHEN source LIKE '%%wind%%' THEN 13
+		WHEN source LIKE '%%wind_onshore%%' THEN 13
+		WHEN source LIKE '%%wind_offshore%%' THEN 17
 		when source LIKE '%%reservoir%%' THEN 10
 		when source LIKE '%%geothermal%%' THEN 14
         END AS source
@@ -619,8 +628,9 @@ CREATE MATERIALIZED VIEW calc_renpass_gis.translate_to_pf AS
 			WHEN A.source =  9  THEN  'run_of_river'
 			WHEN A.source =  10 THEN  'reservoir'
 			WHEN A.source =  12 THEN  'solar'
-			WHEN A.source =  13 THEN  'wind'
+			WHEN A.source =  13 THEN  'wind_onshore'
 			WHEN A.source =  14 THEN  'geothermal'
+			WHEN A.source =  17 THEN  'wind_offshore'
 		END AS renpass_gis_source
 			FROM model_draft.ego_grid_pf_hv_generator A join
 			model_draft.ego_grid_hv_electrical_neighbours_bus B
@@ -644,7 +654,7 @@ FROM
 	feedin.w_id,
 	CASE
 		WHEN feedin.source LIKE '%%solar%%' THEN 12
-		WHEN feedin.source LIKE '%%wind%%' THEN 13
+		WHEN feedin.source LIKE '%%wind_onshore%%' THEN 13
 	END AS source,
 	feedin.feedin
 	FROM 
@@ -670,7 +680,6 @@ FROM
 	) AS A
 WHERE A.w_id = B.w_id
 AND A.source = B.source;
-
 
 -- Make an array, INSERT into generator_pq_set
 INSERT into model_draft.ego_grid_pf_hv_generator_pq_set (scn_name, generator_id, temp_id, p_set)
@@ -719,8 +728,9 @@ CREATE MATERIALIZED VIEW calc_renpass_gis.translate_to_pf AS
 			WHEN A.source =  9  THEN  'run_of_river'
 			WHEN A.source =  10 THEN  'reservoir' 
 			WHEN A.source =  12 THEN  'solar'
-			WHEN A.source =  13 THEN  'wind'
+			WHEN A.source =  13 THEN  'wind_onshore'
 			WHEN A.source =  14 THEN  'geothermal' 
+			WHEN A.source =  17 THEN  'wind_offshore'
 		END AS renpass_gis_source
 			FROM model_draft.ego_grid_pf_hv_generator A join
 			model_draft.ego_grid_hv_electrical_neighbours_bus B
@@ -744,7 +754,7 @@ FROM
 	feedin.w_id,
 	CASE
 		WHEN feedin.source LIKE '%%solar%%' THEN 12
-		WHEN feedin.source LIKE '%%wind%%' THEN 13
+		WHEN feedin.source LIKE '%%wind_onshore%%' THEN 13
 	END AS source,
 	feedin.feedin
 	FROM 
@@ -818,8 +828,9 @@ CREATE MATERIALIZED VIEW calc_renpass_gis.translate_to_pf AS
 			WHEN A.source =  9  THEN  'run_of_river'
 			WHEN A.source =  10 THEN  'reservoir'
 			WHEN A.source =  12 THEN  'solar'
-			WHEN A.source =  13 THEN  'wind'
+			WHEN A.source =  13 THEN  'wind_onshore'
 			WHEN A.source =  14 THEN  'geothermal' 
+			WHEN A.source =  17 THEN  'wind_offshore'
 		END AS renpass_gis_source
 			FROM model_draft.ego_grid_pf_hv_generator A join
 			model_draft.ego_grid_hv_electrical_neighbours_bus B
@@ -843,7 +854,7 @@ FROM
 	feedin.w_id,
 	CASE
 		WHEN feedin.source LIKE '%%solar%%' THEN 12
-		WHEN feedin.source LIKE '%%wind%%' THEN 13
+		WHEN feedin.source LIKE '%%wind_onshore%%' THEN 13
 	END AS source,
 	feedin.feedin
 	FROM 
@@ -895,6 +906,42 @@ UPDATE model_draft.ego_grid_pf_hv_generator_pq_set A
 		FROM model_draft.ren_feedin_foreign AS feedin
 		WHERE A.generator_id = feedin.generator_id;
 
+-- set p_max_pu for foreign offshore generators
+DROP MATERIALIZED VIEW IF EXISTS model_draft.offshore_feedin_foreign;
+CREATE MATERIALIZED VIEW model_draft.offshore_feedin_foreign AS
+SELECT
+generator_id, scn_name, feedin
+FROM
+	(SELECT generator_id,
+	bus,
+	scn_name
+	FROM model_draft.ego_grid_pf_hv_generator
+	WHERE generator_id > 200000 
+	AND source = 17) 
+	AS gen
+		JOIN 
+		(SELECT bus_id, 
+		cntr_id 
+		FROM model_draft.ego_grid_hv_electrical_neighbours_bus) 
+		AS enb 
+		ON (enb.bus_id = gen.bus)
+			JOIN 
+			(SELECT cntr_id,
+			coastdat_id 
+			FROM model_draft.ego_neighbours_offshore_point)
+			AS nop 
+			ON (nop.cntr_id = enb.cntr_id)
+				JOIN 
+				(SELECT w_id,
+				feedin 
+				FROM model_draft.ego_renewable_feedin)
+				AS erf 
+				ON (erf.w_id = nop.coastdat_id);
+
+UPDATE model_draft.ego_grid_pf_hv_generator_pq_set A
+	SET p_max_pu = feedin.feedin
+		FROM model_draft.offshore_feedin_foreign AS feedin
+		WHERE A.generator_id = feedin.generator_id;
 
 -- DELETE
 DELETE FROM model_draft.ego_grid_pf_hv_load WHERE bus IN (

@@ -1,4 +1,4 @@
-/*
+﻿/*
 setup for hv powerflow
 
 PF HV scenario settings
@@ -2086,7 +2086,8 @@ INSERT INTO model_draft.ego_grid_pf_hv_source VALUES (9, 'run_of_river', NULL, N
 INSERT INTO model_draft.ego_grid_pf_hv_source VALUES (10, 'reservoir', NULL, NULL);
 INSERT INTO model_draft.ego_grid_pf_hv_source VALUES (11, 'pumped_storage', NULL, NULL);
 INSERT INTO model_draft.ego_grid_pf_hv_source VALUES (12, 'solar', NULL, NULL);
-INSERT INTO model_draft.ego_grid_pf_hv_source VALUES (13, 'wind', NULL, NULL);
+INSERT INTO model_draft.ego_grid_pf_hv_source VALUES (13, 'wind_onshore', NULL, NULL);
 INSERT INTO model_draft.ego_grid_pf_hv_source VALUES (14, 'geothermal', NULL, NULL);
 INSERT INTO model_draft.ego_grid_pf_hv_source VALUES (15, 'other_non_renewable', NULL, NULL);
 INSERT INTO model_draft.ego_grid_pf_hv_source VALUES (16, 'extendable_storage', NULL, NULL);
+INSERT INTO model_draft.ego_grid_pf_hv_source VALUES (17, 'wind_offshore', NULL, NULL);

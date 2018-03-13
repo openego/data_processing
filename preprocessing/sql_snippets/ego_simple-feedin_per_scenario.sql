@@ -75,6 +75,33 @@ __author__ 	    = "wolfbunke, MarlonSchlemminger"
 -- From climate.cosmoclmgrid B
 -- Where ST_Intersects(B.geom,C.geom);
 -- 
+
+DROP TABLE IF EXISTS model_draft.ego_neighbours_offshore_point;
+
+CREATE TABLE model_draft.ego_neighbours_offshore_point
+(
+  cntr_id text NOT NULL,
+  coastdat_id bigint, 
+  geom geometry(Point,4326),
+  CONSTRAINT neighbours_offshore_point_pkey PRIMARY KEY (cntr_id)
+);
+
+INSERT INTO model_draft.ego_neighbours_offshore_point (cntr_id, geom)
+VALUES
+('DK', ST_SetSRID(ST_MakePoint(7.59, 55.6), 4326)),
+('NL', ST_SetSRID(ST_MakePoint(5.883333, 54.183333), 4326)),
+('NO', ST_SetSRID(ST_MakePoint(6.327633, 58.269992), 4326)),
+('FR', ST_SetSRID(ST_MakePoint(0.227, 49.892), 4326)),
+('SE', ST_SetSRID(ST_MakePoint(14.993694, 55.9375), 4326)),
+('PL', ST_SetSRID(ST_MakePoint(17.3333333333, 55.000), 4326))
+;
+
+UPDATE model_draft.ego_neighbours_offshore_point a
+	SET coastdat_id = climate.gid
+		FROM climate.cosmoclmgrid AS climate
+		WHERE ST_Intersects(climate.geom, a.geom)
+;
+
 DROP TABLE IF EXISTS model_draft.ego_weather_measurement_point;
 
 CREATE TABLE model_draft.ego_weather_measurement_point
@@ -87,8 +114,8 @@ CREATE TABLE model_draft.ego_weather_measurement_point
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE model_draft.ego_weather_measurement_point
-  OWNER TO oeuser;
+-- ALTER TABLE model_draft.ego_weather_measurement_point
+--   OWNER TO oeuser;
 
 -- german points
 INSERT INTO model_draft.ego_weather_measurement_point (coastdat_id, type_of_generation, geom)
@@ -106,7 +133,7 @@ WHERE ST_Intersects(ger.geom, coastdat.geom);
 INSERT INTO model_draft.ego_weather_measurement_point (coastdat_id, type_of_generation, geom)
 SELECT 
 	coastdat.gid,
-	'windonshore',
+	'wind_onshore',
 	ST_Centroid(coastdat.geom)
 FROM climate.cosmoclmgrid AS coastdat,
 	(SELECT ST_Transform(ST_Union(geom), 4326) AS geom
@@ -117,12 +144,11 @@ WHERE ST_Intersects(ger.geom, coastdat.geom);
 INSERT INTO model_draft.ego_weather_measurement_point (coastdat_id, type_of_generation, geom)
 SELECT 
 	coastdat.gid,
-	'windoffshore',
+	'wind_offshore',
 	ST_Centroid(coastdat.geom)
 FROM coastdat.cosmoclmgrid AS coastdat, 
 	(SELECT ST_Union(geom) AS geom FROM model_draft.renpass_gis_parameter_region WHERE u_region_id LIKE 'DEow%') AS offshore
-WHERE ST_Intersects(offshore.geom, coastdat.geom)
-AND coastdat.gid NOT IN (SELECT coastdat_id FROM model_draft.ego_weather_measurement_point);
+WHERE ST_Intersects(offshore.geom, coastdat.geom);
 
 --foreign points
 INSERT INTO model_draft.ego_weather_measurement_point (coastdat_id, type_of_generation, geom)
@@ -139,10 +165,19 @@ ON CONFLICT DO NOTHING;
 INSERT INTO model_draft.ego_weather_measurement_point (coastdat_id, type_of_generation, geom)
 SELECT 
 	coastdat.gid,
-	'windonshore',
+	'wind_onshore',
 	neighbour.geom
 FROM coastdat.cosmoclmgrid AS coastdat,
 	model_draft.ego_grid_hv_electrical_neighbours_bus AS neighbour
 WHERE ST_Intersects(neighbour.geom, coastdat.geom)
-AND coastdat.gid NOT IN (SELECT coastdat_id FROM model_draft.ego_weather_measurement_point WHERE type_of_generation = 'windoffshore')
+ON CONFLICT DO NOTHING;
+
+INSERT INTO model_draft.ego_weather_measurement_point (coastdat_id, type_of_generation, geom)
+SELECT 
+	coastdat.gid,
+	'wind_offshore',
+	neighbour.geom
+FROM coastdat.cosmoclmgrid AS coastdat,
+	model_draft.ego_neighbours_offshore_point AS neighbour
+WHERE ST_Intersects(neighbour.geom, coastdat.geom)
 ON CONFLICT DO NOTHING;
