@@ -132,9 +132,6 @@ def df_to_renewable_feedin(df, weather_year, weather_scenario_id):
     
     print('Done!')
 
-#This function produces the bug that 8761 instead of 8760 values will be
-#inserted into the feedin column. The last value is always NaN. 
-#Pypsa can handle this because it only takes 8760 values anyways, but be aware of this.
 
 def to_dictionary(cfg, section):
     """ Writes section data of a configuration file to a dictionary
