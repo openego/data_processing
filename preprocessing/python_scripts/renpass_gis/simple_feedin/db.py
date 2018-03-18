@@ -84,6 +84,8 @@ def meta_definition(meta, conn):
     meta.reflect(bind=conn, schema='coastdat')
     meta.reflect(bind=conn, schema='model_draft',
                  only=['ego_weather_measurement_point'])
+    meta.reflect(bind=conn, schema='model_draft',
+                 only=['ego_wind_turbine_data'])
         
     #meta.reflect(bind=conn, schema='public',
     #             only=['weather_measurement_point'])  # table with given/ own defined points
@@ -141,17 +143,21 @@ Located, Scheduled, Typified = other_classes()
 Base.prepare()
 
 # simplify class names
-Datatype, Projection, Spatial, Timeseries, Year, Point =\
+Datatype, Projection, Spatial, Timeseries, Year, Point, Turbine =\
     Base.classes.datatype, Base.classes.projection, Base.classes.spatial,\
     Base.classes.timeseries, Base.classes.year,\
-    Base.classes.ego_weather_measurement_point
+    Base.classes.ego_weather_measurement_point,\
+    Base.classes.ego_wind_turbine_data
    # Base.classes.weather_measurement_point
 
 session = sessionmaker(bind=conn)()
 
 print('Retrieve data...')
-query = session.query(Point.coastdat_id, Point.type_of_generation, Point.geom)
-Points =  [(coastdat_id, type_of_generation, shape.to_shape(geom))
-           for coastdat_id, type_of_generation, geom in query.all()]
+query = session.query(Point.coastdat_id, Point.type_of_generation, Point.wea_type, Point.geom)
+Points =  [(coastdat_id, type_of_generation, wea_type, shape.to_shape(geom))
+           for coastdat_id, type_of_generation, wea_type, geom in query.all()]
 
+query = session.query(Turbine.type_of_generation, Turbine.wea, Turbine.d_rotor, Turbine.h_hub)
+Turbines =  [(type_of_generation, wea, d_rotor, h_hub)
+           for type_of_generation, wea, d_rotor, h_hub in query.all()]
 print('Done!')

@@ -144,6 +144,7 @@ CREATE TABLE model_draft.ego_weather_measurement_point
 (
   coastdat_id bigint NOT NULL,
   type_of_generation text NOT NULL,
+  wea_type text,
   geom geometry(Point,4326),
   CONSTRAINT weather_measurement_point_pkey PRIMARY KEY (coastdat_id, type_of_generation)
 )
@@ -217,6 +218,91 @@ FROM climate.cosmoclmgrid AS coastdat,
 	model_draft.ego_neighbours_offshore_point AS neighbour
 WHERE ST_Intersects(neighbour.geom, coastdat.geom)
 ON CONFLICT DO NOTHING;
+
+-- set wea_type
+UPDATE model_draft.ego_weather_measurement_point
+SET wea_type = wea
+FROM (SELECT gid, wea_manufacturer||' '||wea_type AS wea
+	FROM 
+		(SELECT gid, wea_manufacturer, wea_type, COUNT(*) as cnt,
+		ROW_NUMBER() OVER (PARTITION BY gid ORDER BY COUNT(*) DESC) AS rnk
+		FROM climate.cosmoclmgrid a, model_draft.bnetza_eeg_anlagenstammdaten_wind_classification b
+		WHERE ST_Intersects(a.geom, ST_Transform(b.geom, 4326))
+		AND wea_type <> 'na'
+		AND seelage IS NULL
+		GROUP BY gid, wea_manufacturer, wea_type
+		) as tg
+	WHERE rnk = 1
+	) a
+WHERE coastdat_id = gid
+AND type_of_generation = 'wind_onshore';
+
+UPDATE model_draft.ego_weather_measurement_point
+SET wea_type = wea
+FROM (SELECT gid, wea_manufacturer||' '||wea_type AS wea
+	FROM 
+		(SELECT gid, wea_manufacturer, wea_type, COUNT(*) as cnt,
+		ROW_NUMBER() OVER (PARTITION BY gid ORDER BY COUNT(*) DESC) AS rnk
+		FROM climate.cosmoclmgrid a, model_draft.bnetza_eeg_anlagenstammdaten_wind_classification b
+		WHERE ST_Intersects(a.geom, ST_Transform(b.geom, 4326))
+		AND wea_type <> 'na'
+		AND seelage IS NOT NULL
+		GROUP BY gid, wea_manufacturer, wea_type
+		) as tg
+	WHERE rnk = 1
+	) a
+WHERE coastdat_id = gid
+AND type_of_generation = 'wind_offshore';
+
+DELETE FROM model_draft.ego_weather_measurement_point
+WHERE wea_type IS NULL
+AND type_of_generation IN ('wind_onshore', 'wind_offshore');
+
+-- get data for most used wind turbines
+DROP TABLE IF EXISTS model_draft.ego_wind_turbine_data;
+
+CREATE TABLE model_draft.ego_wind_turbine_data
+(
+  type_of_generation text NOT NULL,
+  wea text NOT NULL,
+  d_rotor double precision NOT NULL,
+  h_hub double precision NOT NULL,
+  CONSTRAINT wind_turbine_data_pkey PRIMARY KEY (type_of_generation, wea)
+  );
+  
+INSERT INTO model_draft.ego_wind_turbine_data (type_of_generation, wea, d_rotor, h_hub)
+	(SELECT 'wind_onshore',
+	wea_manufacturer||' '||wea_type,
+	rotordurchmesser,
+	nabenhöhe
+	FROM 
+		(SELECT wea_manufacturer, wea_type, rotordurchmesser, nabenhöhe, COUNT(*) AS cnt,
+		ROW_NUMBER() OVER (PARTITION BY wea_type ORDER BY COUNT(*) DESC) AS rnk
+		FROM model_draft.bnetza_eeg_anlagenstammdaten_wind_classification
+		WHERE wea_type <> 'na'
+		AND seelage IS NULL
+		GROUP BY wea_manufacturer, wea_type, rotordurchmesser, nabenhöhe
+		) AS tg
+	WHERE rnk = 1
+	AND wea_manufacturer||' '||wea_type IN (SELECT wea_type FROM model_draft.ego_weather_measurement_point)
+	);
+
+INSERT INTO model_draft.ego_wind_turbine_data (type_of_generation, wea, d_rotor, h_hub)
+	(SELECT 'wind_offshore',
+	wea_manufacturer||' '||wea_type,
+	rotordurchmesser,
+	nabenhöhe
+	FROM 
+		(SELECT wea_manufacturer, wea_type, rotordurchmesser, nabenhöhe, COUNT(*) AS cnt,
+		ROW_NUMBER() OVER (PARTITION BY wea_type ORDER BY COUNT(*) DESC) AS rnk
+		FROM model_draft.bnetza_eeg_anlagenstammdaten_wind_classification
+		WHERE wea_type <> 'na'
+		AND seelage IS NOT NULL
+		GROUP BY wea_manufacturer, wea_type, rotordurchmesser, nabenhöhe
+		) AS tg
+	WHERE rnk = 1
+	AND wea_manufacturer||' '||wea_type IN (SELECT wea_type FROM model_draft.ego_weather_measurement_point)
+	);
 
 COMMENT ON TABLE model_draft.ego_weather_measurement_point IS '{
 	"title": "model_draft.ego_weather_measurement_point",

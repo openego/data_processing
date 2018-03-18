@@ -51,6 +51,7 @@ import pandas as pd
 from sqlalchemy import (Column, Text, Integer, Float, ARRAY)
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import text
+import re
 
 points = db.Points
 conn = db.conn
@@ -82,6 +83,64 @@ def asnumber(x):
             return float(x)
         except ValueError:
             return x
+        
+def compatibility_windlib(turbines, default_onshore, default_offshore):
+    
+    for index, row in turbines.iterrows():
+        if row['wea'].split(' ', 1)[0] == 'Adwen/Areva':
+            if row['type_of_generation'] == 'wind_offshore':
+                turbines.iloc[index, 4] = default_offshore
+            elif row['type_of_generation'] == 'wind_onshore':
+                turbines.iloc[index, 4] = default_onshore
+        
+        elif row['wea'].split(' ', 1)[0] == 'Enercon':
+            turbines.iloc[index, 4] = turbines.iloc[index, 1].replace('-', ' ')
+            turbines.iloc[index, 4] = turbines.iloc[index, 4].replace('/', ' ')
+            turbines.iloc[index, 4] = turbines.iloc[index, 4].replace('50', '00')
+        
+        elif row['wea'].split(' ', 1)[0] == 'Eno':
+            turbines.iloc[index, 4] = turbines.iloc[index, 1][4:9]
+            turbines.iloc[index, 4] = turbines.iloc[index, 4][:3] + ' ' +\
+                                        turbines.iloc[index, 4][3:]
+        
+        elif row['wea'].split(' ', 1)[0] == 'GE':
+            if row['type_of_generation'] == 'wind_offshore':
+                turbines.iloc[index, 4] = default_offshore
+            elif row['type_of_generation'] == 'wind_onshore':
+                turbines.iloc[index, 4] = default_onshore
+            
+        elif row['wea'].split(' ', 1)[0] == 'Nordex':
+            turbines.iloc[index, 4] = turbines.iloc[index, 1].replace('AW', 'S')
+            turbines.iloc[index, 4] = turbines.iloc[index, 4][:8] + ' ' +\
+                                        turbines.iloc[index, 4][8:]
+            turbines.iloc[index, 4] = turbines.iloc[index, 4].replace('/', ' ')
+            
+        elif row['wea'].split(' ', 1)[0] == 'Senvion/REpower':
+            turbines.iloc[index, 4] = turbines.iloc[index, 1].replace('Senvion/REpower', 'REPOWER')
+            turbines.iloc[index, 4] = turbines.iloc[index, 4].replace('/', ' ')
+            split = re.split('(\d+)', turbines.iloc[index, 4])
+            if split[0] == 'REPOWER MM':
+                turbines.iloc[index, 4] = split[0]+' '+split[1]+split[2]+split[3]
+            elif split[0] == 'REPOWER S':
+                turbines.iloc[index, 4] = 'REPOWER '+str(float(split[3])/1000)+\
+                                            ' M'+split[1]
+        
+        elif row['wea'].split(' ', 1)[0] == 'Siemens':
+            split = re.split('(\d+)', turbines.iloc[index, 1])
+            turbines.iloc[index, 4] = split[0]+' '+str(float(split[3])/1000)+\
+                                        ' '+split[1]
+        
+        elif row['wea'].split(' ', 1)[0] == 'Vensys':
+            split = re.split('(\d+)', turbines.iloc[index, 1])
+            turbines.iloc[index, 4] = 'Vensys '+split[1]
+            
+        elif row['wea'].split(' ', 1)[0] == 'Vestas':
+            split = re.split('(\d+)', turbines.iloc[index, 1])
+            turbines.iloc[index, 4] = split[0]+' '+split[1]+' '+split[3]
+    
+    turbines['wea_windlib'] = turbines['wea_windlib'].str.upper()
+        
+    return turbines
         
 def df_to_renewable_feedin(df, weather_year, weather_scenario_id):
     print('Creating table ego_renewable_feedin..')    
@@ -132,8 +191,24 @@ def df_to_renewable_feedin(df, weather_year, weather_scenario_id):
     
     print('Done!')
 
-
 def to_dictionary(cfg, section):
+    """ Writes section data of a configuration file to a dictionary
+    Parameters
+    ----------
+    cfg : configparser.ConfigParser
+        Used for configuration file parser language.
+    section : str
+        Section in configuration file.
+    Returns
+    -------
+    dict
+        Dictionary containing section data.
+    """
+
+    return {k: asnumber(v) for k, v in cfg.items(section)}
+
+
+def wind_dict(wea_type, type_of_generation, turbines):
     """ Writes section data of a configuration file to a dictionary
 
     Parameters
@@ -149,8 +224,15 @@ def to_dictionary(cfg, section):
         Dictionary containing section data.
     """
 
-    return {k: asnumber(v) for k, v in cfg.items(section)}
-
+    return {'d_rotor': turbines[(turbines['wea'] == wea_type) &
+                                         (turbines['type_of_generation'] ==
+                                         type_of_generation)].d_rotor.item(),
+             'h_hub': turbines[(turbines['wea'] == wea_type) &\
+                                 (turbines['type_of_generation'] ==\
+                                 type_of_generation)].h_hub.item(),
+             'wind_conv_type': turbines[(turbines['wea'] == wea_type) &\
+                                (turbines['type_of_generation'] ==\
+                                 type_of_generation)].wea_windlib.item()}
 
 def main():
     """
@@ -161,13 +243,12 @@ def main():
     cfg = db.readcfg(config)
     temp = {}
     powerplants = {}
-
+    columns = ['type_of_generation', 'wea', 'd_rotor', 'h_hub']
+    default_offshore = 'SIEMENS SWT 3.6 120'
+    default_onshore = 'ENERCON E 70 2000'
+    turbines = pd.DataFrame(db.Turbines, columns=columns)
+    turbines['wea_windlib'] = ''
     # instatiate feedinlib models in dictionary
-    powerplants['wind_onshore'] = plants.WindPowerPlant(
-        **to_dictionary(cfg=cfg, section='WindTurbineOnshore'))
-
-    powerplants['wind_offshore'] = plants.WindPowerPlant(
-        **to_dictionary(cfg=cfg, section='WindTurbineOffshore'))
 
     powerplants['solar'] = plants.Photovoltaic(
         **to_dictionary(cfg=cfg, section='Photovoltaic'))
@@ -175,11 +256,14 @@ def main():
     print('Calculating feedins...')
     #toDo
     # calculate feedins applying correction factors
-    
-    #count = 0
-    for coastdat_id, type_of_generation, geom in points:
-        #count += 1
-        #print(count)
+    turbines = compatibility_windlib(turbines, default_onshore, default_offshore)
+    count = 0
+    default = 0
+    specific = 0
+    for coastdat_id, type_of_generation, wea_type, geom in points:
+        
+        count += 1
+        print(count)
         try:
             weather = coastdat.get_weather(conn, geom, weather_year)
         except IndexError:
@@ -187,11 +271,31 @@ def main():
             continue
         
         if type_of_generation == 'wind_offshore':
-            feedin = correction_offshore * powerplants[type_of_generation].\
-                feedin(weather=weather, installed_capacity=1)
+            plant = wind_dict(wea_type, type_of_generation, turbines)
+            try:
+                feedin = correction_offshore * plants.WindPowerPlant(**plant).\
+                    feedin(weather=weather, installed_capacity=1)
+                specific += 1
+            except:
+                print(wea_type+' not found.')
+                plant['wind_conv_type'] = default_offshore
+                feedin = correction_offshore * plants.WindPowerPlant(**plant).\
+                    feedin(weather=weather, installed_capacity=1)
+                default += 1
+                    
         elif type_of_generation == 'wind_onshore':
-            feedin = powerplants[type_of_generation].\
-                feedin(weather=weather, installed_capacity=1)
+            plant = wind_dict(wea_type, type_of_generation, turbines)
+            try:
+                feedin = plants.WindPowerPlant(**plant).\
+                    feedin(weather=weather, installed_capacity=1)
+                specific += 1
+            except:
+                print(wea_type+' not found.')
+                plant['wind_conv_type'] = default_onshore
+                feedin = plants.WindPowerPlant(**plant).\
+                    feedin(weather=weather, installed_capacity=1)
+                default += 1
+                    
         elif type_of_generation == 'solar':
             feedin = correction_solar * powerplants[type_of_generation].\
                 feedin(weather=weather, peak_power=1)
@@ -202,6 +306,10 @@ def main():
 
     #print('Writing results to %s.' % filename)
     # write results to file
+    print('specific: ')
+    print(specific)
+    print('default: ')
+    print(default)
     df = pd.DataFrame(temp)
     df_to_renewable_feedin(df, weather_year, weather_scenario_id)
     print('Done!')
