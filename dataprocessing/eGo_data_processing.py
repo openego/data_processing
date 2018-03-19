@@ -104,6 +104,8 @@ def data_processing():
 	'ego_dp_powerflow_assignment_generator.sql',  		# Assign generators to corresponding substation (SQ, NEP2035, eGo100)
 	'ego_dp_powerflow_assignment_load.sql',        		# Assign loads to their corresponding substation (SQ, NEP2035, eGo100)
 	'ego_dp_powerflow_assignment_storage.sql',		# Assign storages to their corresponding substation (SQ, NEP 2035, eGo 100)
+    'ego_dp_powerflow_timeseries_generator.py',     # Transfer renpassG!S results into the corresponding powerflow table
+    'ego_dp_powerflow_timeseries_generator_neighbours.py',      # Tranfer renpassG!S results for neighbours into the corresponding powerflow tables
 	'ego_dp_powerflow_timeseries_generator.sql',		# Transfer renpassG!S results into the corresponding powerflow table
 	'ego_dp_powerflow_griddistrict_demand.py',		# Demand per MV Griddistrict
 	'ego_dp_powerflow_timeseries_demand.sql',		# Insert demand series into corresponding powerflow table (SQ, NEP2035, eGo100)
