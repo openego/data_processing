@@ -18,17 +18,8 @@ from sqlalchemy.ext.automap import automap_base
 
 from egoio.db_tables.model_draft import EgoSupplyPfGeneratorSingle as Generator,\
     EgoGridPfHvGeneratorPqSet as PqSet, EgoGridHvElectricalNeighboursBus
-
-
-SCENARIOMAP = {'Status Quo': 43, 'NEP 2035': 41, 'eGo 100': 40}
-
-SOURCE_TO_FUEL = {
-    1: 'gas', 2: 'lignite', 3: 'mixed_fuels', 4: 'oil',
-    5: 'uranium', 6: 'biomass', 8: 'hard_coal', 9: 'run_of_river', 12: 'solar',
-    13: 'wind', 14: 'geothermal', 15: 'other_non_renewable', 94: 'storage',
-    95: 'load', 96: 'waste', 97: 'reservoir', 98: 'shortage', 99: 'excess'}
-
-TEMPID = 1
+from ego_dp_powerflow_renpass_gis_helper import SOURCE_TO_FUEL, SCENARIOMAP, \
+    TEMPID
 
 # get database connection
 conn = oedb_session(section='test')
