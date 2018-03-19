@@ -14,7 +14,7 @@ import numpy as np
 from dataprocessing.tools.io import oedb_session
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import MetaData, func
-from ego_dp_powerflow_renpass_gis_helper import SOURCE_TO_FUEL, SCENARIOMAP, \
+from ego_dp_powerflow_timeseries_generator_helper import SOURCE_TO_FUEL, SCENARIOMAP, \
     TEMPID, NEIGHBOURSID, _flatten, map_on_partial_string, renpass_gis_orm_classes
 from egoio.db_tables.model_draft import EgoSupplyPfGeneratorSingle as Generator, \
     EgoGridPfHvGeneratorPqSet as PqSet, EgoGridHvElectricalNeighboursBus as Neighbour

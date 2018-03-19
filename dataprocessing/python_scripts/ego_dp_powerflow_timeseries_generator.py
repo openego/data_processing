@@ -18,7 +18,7 @@ from sqlalchemy.ext.automap import automap_base
 
 from egoio.db_tables.model_draft import EgoSupplyPfGeneratorSingle as Generator,\
     EgoGridPfHvGeneratorPqSet as PqSet, EgoGridHvElectricalNeighboursBus
-from ego_dp_powerflow_renpass_gis_helper import SOURCE_TO_FUEL, SCENARIOMAP, \
+from ego_dp_powerflow_timeseries_generator_helper import SOURCE_TO_FUEL, SCENARIOMAP, \
     TEMPID
 
 # get database connection
