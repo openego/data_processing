@@ -665,3 +665,4 @@ INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_na
 	FROM	model_draft.ego_grid_hvmv_substation_ewe_mview; */
 	
 	
+  
