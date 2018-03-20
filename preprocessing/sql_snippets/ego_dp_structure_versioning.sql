@@ -3786,6 +3786,7 @@ SELECT ego_scenario_log('v0.3.0','result','grid','ego_pf_hv_transformer','ego_dp
 /*
 CREATE TABLE grid.ego_line_expansion_costs
 (
+  version text,
   cost_id bigint NOT NULL,
   voltage_level text,
   component text,
@@ -3868,6 +3869,11 @@ COMMENT ON TABLE grid.ego_line_expansion_costs IS '{
         {
             "fields": [
                 {
+                    "name": "version",
+                    "description": "version id",
+                    "unit": ""
+                },
+		{
                     "name": "cost_id",
                     "unit": "",
                     "description": "unique id for costs entries"
