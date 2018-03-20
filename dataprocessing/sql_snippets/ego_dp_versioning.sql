@@ -394,3 +394,16 @@ INSERT INTO grid.ego_pf_hv_transformer
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.3.0','result','grid','ego_pf_hv_transformer','ego_dp_versioning.sql','versioning');
+
+-- hv pf line expansion cost
+
+/* DELETE FROM grid.ego_line_expansion_costs
+	WHERE	version = 'v0.3.0'; */
+	
+INSERT INTO grid.ego_line_expansion_costs
+	SELECT	'v0.3.0',
+		*
+	FROM	model_draft.ego_grid_line_expansion_costs;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.3.0','result','grid','ego_line_expansion_costs','ego_dp_versioning.sql','versioning');
