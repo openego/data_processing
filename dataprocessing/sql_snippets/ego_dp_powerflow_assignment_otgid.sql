@@ -1,5 +1,5 @@
 /*
-Powerplant lists are updated with information on the otg_id of substations which the generators are assigned to.
+Powerplant lists are updated with information on the otg_id of substations and w_id of weather cell which the generators are assigned to.
 
 __copyright__ 	= "Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems"
 __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
@@ -50,6 +50,19 @@ SET otg_id = (CASE 	WHEN ST_Within(model_draft.ego_dp_supply_res_powerplant.geom
 			ELSE otg_id
 			
 END);
+
+
+-- add weather cell id (w_id) 
+
+UPDATE model_draft.ego_dp_supply_res_powerplant
+	SET w_id = NULL; 
+
+UPDATE model_draft.ego_dp_supply_res_powerplant a
+	SET w_id = b.gid
+		FROM 	climate.cosmoclmgrid b 
+		WHERE 	a.rea_geom_new && ST_TRANSFORM(b.geom,3035)
+			AND ST_Intersects(a.rea_geom_new, ST_TRANSFORM(b.geom,3035));
+
 
 
 /*
