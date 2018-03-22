@@ -57,8 +57,8 @@ END);
 UPDATE model_draft.ego_dp_supply_res_powerplant a
 	SET w_id = b.gid
 		FROM 	climate.cosmoclmgrid b 
-		WHERE 	a.rea_geom_new && ST_TRANSFORM(b.geom,4326)
-			AND ST_Intersects(a.rea_geom_new, ST_TRANSFORM(b.geom,4326));
+		WHERE 	a.rea_geom_new && ST_TRANSFORM(b.geom,3035)
+			AND ST_Intersects(a.rea_geom_new, ST_TRANSFORM(b.geom,3035));
 
 
 
