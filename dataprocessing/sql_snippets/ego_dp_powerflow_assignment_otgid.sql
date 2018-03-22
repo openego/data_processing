@@ -54,6 +54,9 @@ END);
 
 -- add weather cell id (w_id) 
 
+UPDATE model_draft.ego_dp_supply_res_powerplant
+	SET w_id = NULL; 
+
 UPDATE model_draft.ego_dp_supply_res_powerplant a
 	SET w_id = b.gid
 		FROM 	climate.cosmoclmgrid b 
