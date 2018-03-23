@@ -30,6 +30,7 @@ CREATE TABLE 		model_draft.ego_supply_pf_generator_single (
 	efficiency 	double precision,
 	w_id 		bigint,
 	aggr_id 	bigint,
+	power_class	bigint,
 	source_name	character varying,
 	CONSTRAINT generator_single_data_pkey PRIMARY KEY (scn_name, generator_id),
 	CONSTRAINT generator_data_source_fk FOREIGN KEY (source)
@@ -250,7 +251,16 @@ UPDATE model_draft.ego_supply_pf_generator_single a
 			AND ST_Intersects(result.geom, b.geom) 
 			AND generator_id = result.un_id;
 
+UPDATE model_draft.ego_supply_pf_generator_single a
+	SET power_class = b.power_class_id
+		FROM model_draft.ego_power_class b
+		WHERE a.p_nom >= b.lower_limit
+		AND a.p_nom < b.upper_limit
+		AND a.source IN (SELECT source_id from model_draft.ego_grid_pf_hv_source WHERE name IN('wind_onshore'));
 
+UPDATE model_draft.ego_supply_pf_generator_single a
+	SET power_class = 0
+	WHERE source IN (SELECT source_id from model_draft.ego_grid_pf_hv_source WHERE name IN('wind_offshore', 'solar'));
 
 -- Create aggregate IDs in pf_generator_single
 
@@ -269,15 +279,17 @@ UPDATE model_draft.ego_supply_pf_generator_single a
 		FROM 	(SELECT	b.bus, 
 				b.w_id, 
 				b.source,
+				b.power_class,
 				b.scn_name,
 				nextval('model_draft.ego_supply_pf_generator_single_aggr_id') as aggr_id
 			FROM 	model_draft.ego_supply_pf_generator_single b 
 			WHERE 	p_nom < 50 AND source IN 
 				(SELECT source_id from model_draft.ego_grid_pf_hv_source WHERE name IN('wind_onshore', 'wind_offshore', 'solar')) 
-			GROUP BY b.bus, b.w_id, b.source, b.scn_name) AS result
+			GROUP BY b.bus, b.w_id, b.source, b.power_class, b.scn_name) AS result
 		WHERE 	a.bus = result.bus 
 			AND a.w_id = result.w_id 
 			AND a.source = result.source
+			AND a.power_class = result.power_class
 			AND a.scn_name = result.scn_name;
 
 -- source <> (wind and solar) and p_nom < 50 MW 
@@ -308,7 +320,7 @@ DELETE FROM model_draft.ego_supply_pf_generator_single WHERE p_nom IS NULL OR p_
 
 DELETE FROM model_draft.ego_grid_pf_hv_generator WHERE scn_name IN ('Status Quo', 'NEP 2035', 'eGo 100'); 
 
--- source = (wind and solar) and p_nom < 50 MW
+-- source = wind_onshore and p_nom < 50 MW
 INSERT INTO model_draft.ego_grid_pf_hv_generator (
 		scn_name, 		
 		generator_id,
@@ -339,7 +351,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_generator (
 		AND a.aggr_id IS NOT NULL 
 		AND source IN 
 		(SELECT source_id from model_draft.ego_grid_pf_hv_source WHERE name IN('wind_onshore', 'wind_offshore', 'solar'))
-	GROUP BY a. scn_name, a.aggr_id, a.bus, a.w_id, a.source;
+	GROUP BY a. scn_name, a.aggr_id, a.bus, a.w_id, a.power_class, a.source;
 
 -- source <> (wind and solar) and p_nom < 50 MW 
 INSERT INTO model_draft.ego_grid_pf_hv_generator (

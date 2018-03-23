@@ -219,7 +219,7 @@ FROM climate.cosmoclmgrid AS coastdat,
 WHERE ST_Intersects(neighbour.geom, coastdat.geom)
 ON CONFLICT DO NOTHING;
 
--- set wea_type
+set wea_type
 UPDATE model_draft.ego_weather_measurement_point
 SET wea_type = wea
 FROM (SELECT gid, wea_manufacturer||' '||wea_type AS wea
@@ -236,6 +236,40 @@ FROM (SELECT gid, wea_manufacturer||' '||wea_type AS wea
 	) a
 WHERE coastdat_id = gid
 AND type_of_generation = 'wind_onshore';
+-- 
+-- UPDATE model_draft.ego_weather_measurement_point
+-- SET wea_type = wea
+-- FROM (SELECT gid, wea_manufacturer||' '||wea_type AS wea
+-- 	FROM 
+-- 		(SELECT gid, wea_manufacturer, wea_type, COUNT(*) as cnt,
+-- 		ROW_NUMBER() OVER (PARTITION BY gid ORDER BY COUNT(*) DESC) AS rnk
+-- 		FROM climate.cosmoclmgrid a, model_draft.bnetza_eeg_anlagenstammdaten_wind_classification b
+-- 		WHERE ST_Intersects(a.geom, ST_Transform(b.geom, 4326))
+-- 		AND wea_type <> 'na'
+-- 		AND seelage IS NOT NULL
+-- 		GROUP BY gid, wea_manufacturer, wea_type
+-- 		) as tg
+-- 	WHERE rnk = 1
+-- 	) a
+-- WHERE coastdat_id = gid
+-- AND type_of_generation = 'wind_offshore';
+
+UPDATE model_draft.ego_weather_measurement_point
+SET wea_type = wea
+FROM (SELECT gid, windanlagenhersteller||' '||anlagentyp AS wea
+	FROM 
+		(SELECT a.gid, windanlagenhersteller, anlagentyp, COUNT(*) as cnt,
+		ROW_NUMBER() OVER (PARTITION BY a.gid ORDER BY COUNT(*) DESC) AS rnk
+		FROM climate.cosmoclmgrid a, app_renpassgis.renewable_energy_map_1 b
+		WHERE ST_Intersects(a.geom, ST_Transform(b.geom, 4326))
+		AND energietraeger = 'Wind Land'
+		AND (stillgelegt <> 'Ja' OR stillgelegt IS NULL)
+		GROUP BY a.gid, windanlagenhersteller, anlagentyp
+		) as tg
+	WHERE rnk = 1
+	) a
+WHERE coastdat_id = gid
+AND type_of_generation = 'wind_onshore';
 
 UPDATE model_draft.ego_weather_measurement_point
 SET wea_type = wea
@@ -243,7 +277,7 @@ FROM (SELECT gid, wea_manufacturer||' '||wea_type AS wea
 	FROM 
 		(SELECT gid, wea_manufacturer, wea_type, COUNT(*) as cnt,
 		ROW_NUMBER() OVER (PARTITION BY gid ORDER BY COUNT(*) DESC) AS rnk
-		FROM climate.cosmoclmgrid a, model_draft.bnetza_eeg_anlagenstammdaten_wind_classification b
+		FROM climate.cosmoclmgrid a, app_renpassgis.renewable_energy_map_1 b
 		WHERE ST_Intersects(a.geom, ST_Transform(b.geom, 4326))
 		AND wea_type <> 'na'
 		AND seelage IS NOT NULL
