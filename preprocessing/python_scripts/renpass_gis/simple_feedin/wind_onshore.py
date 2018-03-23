@@ -355,6 +355,8 @@ def power_class_to_db(power_classes, selected_plants):
         lower_limit = Column(Float())
         upper_limit = Column(Float())
         wea = Column(Text())
+        h_hub = Column(Float())
+        d_rotor = Column(Float())
 
 
     conn.execute(text("DROP TABLE IF EXISTS model_draft.ego_power_class CASCADE"))
@@ -372,17 +374,23 @@ def power_class_to_db(power_classes, selected_plants):
     # Insert Data to DB
     for upper in power_classes:
         wea = selected_plants['type'][selected_plants['power_class'] == upper].item()
+        h_hub = selected_plants['h_hub'][selected_plants['power_class'] == upper].item()
+        d_rotor = selected_plants['d_rotor'][selected_plants['power_class'] == upper].item()
         if power_class_id == len(power_classes):
             info = Ego_power_class(power_class_id=power_class_id,
                                     lower_limit=lower/1000,
                                     upper_limit=1000000000,
-                                    wea=wea)
+                                    wea=wea,
+                                    h_hub=h_hub,
+                                    d_rotor=d_rotor)
             mappings.append(info)
         else:
             info = Ego_power_class(power_class_id=power_class_id,
                                         lower_limit=lower/1000,
                                         upper_limit=upper/1000,
-                                        wea=wea)
+                                        wea=wea,
+                                        h_hub=h_hub,
+                                        d_rotor=d_rotor)
             mappings.append(info)
         
         lower = upper
