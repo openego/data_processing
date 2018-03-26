@@ -22,10 +22,8 @@ Welcome to Data processing documentation of open_eGo
    :hidden:
 
    getting_started
-   dataprocessing
-   preprocessing
-   scenario
    scripts
+   scenario
 
    whatsnew
 
