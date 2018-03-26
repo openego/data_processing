@@ -25,6 +25,7 @@ Welcome to Data processing documentation of open_eGo
    dataprocessing
    preprocessing
    scenario
+   scripts
 
    whatsnew
 
