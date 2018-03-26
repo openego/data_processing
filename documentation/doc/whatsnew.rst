@@ -10,3 +10,4 @@ See what's new as per release!
 
 
 .. include::  whatsnew/v0-3-0.rst
+.. include::  whatsnew/v0-3-1.rst
