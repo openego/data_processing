@@ -1,5 +1,7 @@
 ﻿/*
-Set up status quo data and create standardized table of all scenarios and rectifies incorrect or implausible records in power plant list and adjusts it for further use
+This script set up status quo data and create standardized table of all scenarios 
+and rectifies incorrect or implausible records in power plant list and adjusts 
+it for further use.
 
 __copyright__ 	= "Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems"
 __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"

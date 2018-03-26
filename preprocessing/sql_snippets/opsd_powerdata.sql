@@ -1,5 +1,5 @@
 ﻿/*
-Setup for OPSD power plants list
+Setup for OPSD power plants list.
 
 __copyright__ 	= "Europa-Universität Flensburg, Centre for Sustainable Energy Systems"
 __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"

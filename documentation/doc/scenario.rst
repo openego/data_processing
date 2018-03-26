@@ -64,6 +64,7 @@ eGo 100
 Methodology
 ***********
 
+.. inclued:: methodology.rst
 
 
 **********
