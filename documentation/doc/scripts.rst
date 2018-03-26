@@ -9,7 +9,9 @@ Data processing
 
 SQL-Scripts
 -----------
-[add file name and Links to doc/dataprocessing/"name"]
+
+.. include:: /dataprocessing/modules.rst
+
 
 Python-Scripts
 --------------
@@ -20,7 +22,8 @@ Preprocessing
 
 SQL-Scripts
 -----------
-[add file name and Links to doc/dataprocessing/"name"]
+
+.. include:: /preprocessing/modules.rst
 
 Python-Scripts
 --------------
