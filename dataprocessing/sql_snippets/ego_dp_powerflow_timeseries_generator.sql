@@ -372,7 +372,8 @@ INSERT into model_draft.ego_grid_pf_hv_generator
 			max(v_nom) over (partition by cntr_id) AS max_v_nom
 			FROM
 			model_draft.ego_grid_hv_electrical_neighbours_bus
-			where id <= 27
+			where central_bus = TRUE 
+
 			) SQ
 		WHERE SQ.v_nom = SQ.max_v_nom
 		) B
@@ -419,7 +420,8 @@ INSERT into model_draft.ego_grid_pf_hv_generator
 			max(v_nom) over (partition by cntr_id) AS max_v_nom
 			FROM
 			model_draft.ego_grid_hv_electrical_neighbours_bus
-			where id <= 27
+			where central_bus = TRUE
+
 			) SQ
 		WHERE SQ.v_nom = SQ.max_v_nom
 		) B
@@ -465,7 +467,7 @@ INSERT into model_draft.ego_grid_pf_hv_generator
 			max(v_nom) over (partition by cntr_id) AS max_v_nom
 			FROM
 			model_draft.ego_grid_hv_electrical_neighbours_bus
-			where id <= 27
+			where central_bus = TRUE
 			) SQ
 		WHERE SQ.v_nom = SQ.max_v_nom
 		) B
@@ -513,7 +515,8 @@ INSERT into model_draft.ego_grid_pf_hv_generator
 			max(v_nom) over (partition by cntr_id) AS max_v_nom
 			FROM
 			model_draft.ego_grid_hv_electrical_neighbours_bus
-			where id <= 27
+			where central_bus = TRUE
+
 			) SQ
 		WHERE SQ.v_nom = SQ.max_v_nom
 		) B
@@ -556,7 +559,7 @@ INSERT into model_draft.ego_grid_pf_hv_generator
 			max(v_nom) over (partition by cntr_id) AS max_v_nom
 			FROM 
 			model_draft.ego_grid_hv_electrical_neighbours_bus
-			where id <= 27
+			where central_bus = TRUE
 			) SQ
 		WHERE SQ.v_nom = SQ.max_v_nom
 		) B
@@ -599,7 +602,7 @@ INSERT into model_draft.ego_grid_pf_hv_generator
 			max(v_nom) over (partition by cntr_id) AS max_v_nom
 			FROM 
 			model_draft.ego_grid_hv_electrical_neighbours_bus
-			where id <= 27
+			where central_bus = TRUE
 			) SQ
 		WHERE SQ.v_nom = SQ.max_v_nom
 		) B
@@ -958,7 +961,8 @@ UPDATE model_draft.ego_grid_pf_hv_generator_pq_set A
 -- DELETE
 DELETE FROM model_draft.ego_grid_pf_hv_load WHERE bus IN (
 SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus
-WHERE id <= 27);
+WHERE central_bus = TRUE);
+
 
 -- INSERT neigbouring states in load table
 -- Status Quo
@@ -977,9 +981,9 @@ INSERT into model_draft.ego_grid_pf_hv_load (scn_name, load_id, bus, sign)
 					FROM model_draft.ego_grid_pf_hv_load
 					WHERE scn_name = 'Status Quo') AS load_id
 		from model_draft.ego_grid_hv_electrical_neighbours_bus
-		where id <= 27
-		) SQ
-	WHERE v_nom = max_v_nom;
+		where central_bus = TRUE) SQ
+
+		WHERE v_nom = max_v_nom;
 
 -- NEP 2035
 
@@ -998,8 +1002,8 @@ INSERT into model_draft.ego_grid_pf_hv_load (scn_name, load_id, bus, sign)
 					FROM model_draft.ego_grid_pf_hv_load
 					WHERE scn_name = 'NEP 2035') AS load_id
 		from model_draft.ego_grid_hv_electrical_neighbours_bus
-		where id <= 27
-		) NEP
+		where central_bus = TRUE) NEP
+
 	WHERE v_nom = max_v_nom;
 
 
@@ -1020,7 +1024,7 @@ INSERT into model_draft.ego_grid_pf_hv_load (scn_name, load_id, bus, sign)
 					FROM model_draft.ego_grid_pf_hv_load
 					WHERE scn_name = 'eGo 100') AS load_id
 		from model_draft.ego_grid_hv_electrical_neighbours_bus
-		where id <= 27
+		where central_bus = TRUE
 		) EGO
 	WHERE v_nom = max_v_nom;
 

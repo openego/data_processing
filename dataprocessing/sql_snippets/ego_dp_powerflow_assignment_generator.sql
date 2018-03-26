@@ -32,6 +32,7 @@ CREATE TABLE 		model_draft.ego_supply_pf_generator_single (
 	aggr_id 	bigint,
 	power_class	bigint,
 	source_name	character varying,
+	voltage_level 	smallint, 
 	CONSTRAINT generator_single_data_pkey PRIMARY KEY (scn_name, generator_id),
 	CONSTRAINT generator_data_source_fk FOREIGN KEY (source)
 		REFERENCES model_draft.ego_grid_pf_hv_source (source_id) MATCH SIMPLE
@@ -41,13 +42,13 @@ CREATE TABLE 		model_draft.ego_supply_pf_generator_single (
 
 -- DELETE FROM model_draft.ego_supply_pf_generator_single WHERE scn_name = 'Status Quo';
 
-INSERT INTO model_draft.ego_supply_pf_generator_single (scn_name, generator_id, bus, p_nom, source_name)
-	SELECT 	'Status Quo', un_id, otg_id, capacity, fuel
+INSERT INTO model_draft.ego_supply_pf_generator_single (scn_name, generator_id, bus, p_nom, source_name, voltage_level)
+	SELECT 	'Status Quo', un_id, otg_id, capacity, fuel, voltage_level
 	FROM 	model_draft.ego_supply_conv_powerplant_sq_mview a
 	WHERE 	a.fuel <> 'pumped_storage' AND a.un_id IS NOT NULL AND a.capacity IS NOT NULL; -- pumped storage units are ignored here and will be listed in storage table 
 
-INSERT INTO model_draft.ego_supply_pf_generator_single (scn_name, generator_id, bus, p_nom, source_name)
-	SELECT 	'Status Quo', un_id, otg_id, electrical_capacity/1000, generation_type
+INSERT INTO model_draft.ego_supply_pf_generator_single (scn_name, generator_id, bus, p_nom, source_name, voltage_level, w_id)
+	SELECT 	'Status Quo', un_id, otg_id, electrical_capacity/1000, generation_type, voltage_level, w_id
 	FROM 	model_draft.ego_supply_res_powerplant_sq_mview a
 	WHERE 	a.un_id IS NOT NULL AND a.electrical_capacity IS NOT NULL;
 
@@ -55,13 +56,13 @@ INSERT INTO model_draft.ego_supply_pf_generator_single (scn_name, generator_id, 
 
 -- DELETE FROM model_draft.ego_supply_pf_generator_single WHERE scn_name = 'NEP 2035';
 
-INSERT INTO model_draft.ego_supply_pf_generator_single (scn_name, generator_id, bus, p_nom, source_name)
-	SELECT 	'NEP 2035', un_id, otg_id, capacity, fuel
+INSERT INTO model_draft.ego_supply_pf_generator_single (scn_name, generator_id, bus, p_nom, source_name, voltage_level)
+	SELECT 	'NEP 2035', un_id, otg_id, capacity, fuel, voltage_level
 	FROM 	model_draft.ego_supply_conv_powerplant_nep2035_mview a
 	WHERE 	a.fuel <> 'pumped_storage' AND a.un_id IS NOT NULL AND a.capacity IS NOT NULL; -- pumped storage units are ignored here and will be listed in storage table 
 
-INSERT INTO model_draft.ego_supply_pf_generator_single (scn_name, generator_id, bus, p_nom, source_name)
-	SELECT 	'NEP 2035', un_id, otg_id, electrical_capacity/1000, generation_type
+INSERT INTO model_draft.ego_supply_pf_generator_single (scn_name, generator_id, bus, p_nom, source_name, voltage_level, w_id)
+	SELECT 	'NEP 2035', un_id, otg_id, electrical_capacity/1000, generation_type, voltage_level, w_id
 	FROM 	model_draft.ego_supply_res_powerplant_nep2035_mview a
 	WHERE   a.un_id IS NOT NULL AND a.electrical_capacity IS NOT NULL;
 
@@ -69,13 +70,13 @@ INSERT INTO model_draft.ego_supply_pf_generator_single (scn_name, generator_id, 
 
 -- DELETE FROM model_draft.ego_supply_pf_generator_single WHERE scn_name = 'eGo 100';
 
-INSERT INTO model_draft.ego_supply_pf_generator_single (scn_name, generator_id, bus, p_nom, source_name)
-	SELECT 	'eGo 100', un_id, otg_id, capacity, fuel
+INSERT INTO model_draft.ego_supply_pf_generator_single (scn_name, generator_id, bus, p_nom, source_name, voltage_level)
+	SELECT 	'eGo 100', un_id, otg_id, capacity, fuel, voltage_level
 	FROM 	model_draft.ego_supply_conv_powerplant_ego100_mview a
 	WHERE 	a.fuel <> 'pumped_storage' AND a.un_id IS NOT NULL AND a.capacity IS NOT NULL; -- pumped storage units are ignored here and will be listed in storage table 
 
-INSERT INTO model_draft.ego_supply_pf_generator_single (scn_name, generator_id, bus, p_nom, source_name)
-	SELECT 	'eGo 100', un_id, otg_id, electrical_capacity/1000, generation_type
+INSERT INTO model_draft.ego_supply_pf_generator_single (scn_name, generator_id, bus, p_nom, source_name, voltage_level, w_id)
+	SELECT 	'eGo 100', un_id, otg_id, electrical_capacity/1000, generation_type, voltage_level, w_id
 	FROM 	model_draft.ego_supply_res_powerplant_ego100_mview a
 	WHERE   a.un_id IS NOT NULL AND a.electrical_capacity IS NOT NULL;
 
@@ -149,6 +150,9 @@ COMMENT ON TABLE  model_draft.ego_supply_pf_generator_single IS
                     "Unit": "" },                        
                    {"Name": "aggr_id",
                     "Description": "aggregate id",
+                    "Unit": "" },                                                
+                   {"Name": "voltage_level",
+                    "Description": "voltage level to which the power plant is assigned",
                     "Unit": "" }],
 "Changes":[
                    {"Name": "Mario Kropshofer",
@@ -221,35 +225,6 @@ UPDATE model_draft.ego_supply_pf_generator_single a
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.3.0','input','climate','cosmoclmgrid','ego_dp_powerflow_assignment_generator.sql',' ');
-
-
--- Identify climate point IDs for each renewables generator
-UPDATE model_draft.ego_supply_pf_generator_single a
-	SET w_id = b.gid
-		FROM 	(SELECT c.un_id, c.geom 
-			FROM model_draft.ego_supply_res_powerplant_sq_mview c) AS result,
-			climate.cosmoclmgrid b 
-		WHERE 	result.geom && b.geom
-			AND ST_Intersects(result.geom, b.geom) 
-			AND generator_id = result.un_id;
-
-UPDATE model_draft.ego_supply_pf_generator_single a
-	SET w_id = b.gid
-		FROM 	(SELECT c.un_id, c.geom 
-			FROM model_draft.ego_supply_res_powerplant_nep2035_mview c) AS result,
-			climate.cosmoclmgrid b 
-		WHERE 	result.geom && b.geom
-			AND ST_Intersects(result.geom, b.geom) 
-			AND generator_id = result.un_id;
-
-UPDATE model_draft.ego_supply_pf_generator_single a
-	SET w_id = b.gid
-		FROM 	(SELECT c.un_id, c.geom 
-			FROM model_draft.ego_supply_res_powerplant_ego100_mview c) AS result,
-			climate.cosmoclmgrid b 
-		WHERE 	result.geom && b.geom
-			AND ST_Intersects(result.geom, b.geom) 
-			AND generator_id = result.un_id;
 
 UPDATE model_draft.ego_supply_pf_generator_single a
 	SET power_class = b.power_class_id

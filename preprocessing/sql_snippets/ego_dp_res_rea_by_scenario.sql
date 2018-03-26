@@ -1382,7 +1382,7 @@ CREATE TABLE 		model_draft.ego_supply_res_woff_2050_temp AS
 	  model_draft.ego_dp_supply_res_powerplant
 	WHERE
 	generation_subtype = 'wind_offshore'
-	AND scenario in ('Status Quo','NEP 2035');
+	AND scenario in ('NEP 2035');
 
 -- create index GIST (geom)
 CREATE INDEX ego_supply_res_woff_2050_temp_geom_idx
