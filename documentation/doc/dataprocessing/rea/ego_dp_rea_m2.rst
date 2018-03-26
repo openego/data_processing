@@ -3,9 +3,9 @@
 ego_dp_rea_m2.sql
 #################
 
-Skript to allocate decentralized renewable power plants (dea)
-Methods base on technology and voltage level
-Uses different lattice from setup_ego_wpa_per_grid_district.sql
+M2 wind farms
+Allocates "wind" turbines with voltage level 4 to WPA as wind farms.
+The rest could not be allocated, consider in M3.
 
 
 copyright

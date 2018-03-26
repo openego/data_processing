@@ -3,9 +3,11 @@
 ego_dp_rea_setup.sql
 ####################
 
-Skript to allocate decentralized renewable power plants (dea)
-Methods base on technology and voltage level
-Uses different lattice from setup_ego_wpa_per_grid_district.sql
+Setup tables for REA
+Skript to allocate decentralized renewable power plants (dea).
+Methods base on technology and voltage level.
+Allocate DEA outside of Germany to next HVMV Substation.
+Generate OSM farmyards.
 
 
 copyright

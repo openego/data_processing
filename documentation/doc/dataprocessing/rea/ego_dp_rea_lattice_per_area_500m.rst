@@ -3,11 +3,12 @@
 ego_dp_rea_lattice_per_area_500m.sql
 ####################################
 
-lattice on bbox of Germany with 500m per area
-wpa 	- points inside wind potential area
-la 	- points inside loadarea
-x 	- points inside wind potential area and loadarea
-out	- points outside area
+Prepare 500m lattice
+Lattice on bounding box of Germany with 500m per area:
+wpa - points inside wind potential area
+la  - points inside loadarea
+x   - points inside wind potential area and loadarea
+out - points outside area
 
 
 copyright

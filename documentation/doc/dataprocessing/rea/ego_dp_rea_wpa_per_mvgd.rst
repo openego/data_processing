@@ -3,9 +3,8 @@
 ego_dp_rea_wpa_per_mvgd.sql
 ###########################
 
-wind potential area per mv-griddistrict
-wpa dump
-wpa per mv-griddistrict
+Wind potential area (WPA) per MV-Griddistrict
+Cut WPA with MV-Griddistrict and make valid geometries.
 
 
 copyright

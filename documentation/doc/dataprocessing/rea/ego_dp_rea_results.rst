@@ -3,9 +3,7 @@
 ego_dp_rea_results.sql
 ######################
 
-Skript to allocate decentralized renewable power plants (dea)
-Methods base on technology and voltage level
-Uses different lattice from setup_ego_wpa_per_grid_district.sql
+Results and statistics for REA
 
 
 copyright

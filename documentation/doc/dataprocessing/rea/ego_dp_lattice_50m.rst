@@ -3,8 +3,8 @@
 ego_dp_lattice_50m.sql
 ######################
 
-lattice (regular point grid) with 50m
-lattice on bbox of Germany
+Lattice (regular point grid) with 50m
+Lattice on bounding box of Germany.
 
 
 copyright

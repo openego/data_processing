@@ -3,8 +3,9 @@
 ego_dp_rea_lattice_per_area_50m.sql
 ###################################
 
-lattice on bbox of loadarea with 50m per area
-la 	- points inside loadarea
+Prepare 500m lattice
+Lattice on bounding box of Germany with 50m per area:
+la  - points inside loadarea
 
 
 copyright

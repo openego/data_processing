@@ -3,9 +3,9 @@
 ego_dp_rea_m1.sql
 #################
 
-Skript to allocate decentralized renewable power plants (dea)
-Methods base on technology and voltage level
-Uses different lattice from setup_ego_wpa_per_grid_district.sql
+M1 biomass and solar to OSM agricultural
+Allocates "biomass" & (renewable) "gas" to OSM agricultural areas.
+The rest could not be allocated, consider in M4.
 
 
 copyright
