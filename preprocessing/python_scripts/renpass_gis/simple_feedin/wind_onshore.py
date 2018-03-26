@@ -2,7 +2,7 @@
 """
 Created on Wed Mar 14 14:30:54 2018
 
-__author__ = "MarlonSchlemminger"
+__author__ = "MarlonSchlemminger, s3pp"
 """
 
 import pandas as pd
@@ -25,6 +25,7 @@ meta = MetaData()
 config = 'config.ini'
 correction_offshore = 0.83
 correction_solar = 0.8
+correction_onshore = 0.6
 weather_year = 2011
 weather_scenario_id = 1
 
@@ -171,6 +172,19 @@ def collect_energymap_data():
 
 
 def df_to_renewable_feedin(df, weather_year, weather_scenario_id):
+    """
+    Transfers the calculated feedin timeseries into the database table 
+    ego_renewable_feedin. 
+    
+    Parameters
+    df : DataFrame with feedin timeseries
+    weather_year : weather year of weather data
+    weather_scenario_id : weather scenario id
+    ----------
+    
+    Returns
+    -------
+    """
     print('Creating table ego_renewable_feedin..')    
     Base = declarative_base()
     
@@ -343,6 +357,17 @@ def get_plant_per_class(windgenerator, power_classes):
     return selected_plants
 
 def power_class_to_db(power_classes, selected_plants):
+    """
+    Inserts the power classes used for the timeseries calculation into the 
+    database table ego_power_class
+    
+    Parameters
+    ----------
+    
+    Returns
+    -------
+    windgenerator : DataFrame of all wind generators in energy_map
+    """
     
     print('Creating table power_class..')    
     Base = declarative_base()
@@ -491,7 +516,7 @@ def main():
             power_class = 1
             for index, row in selected_plants.iterrows():
                 plant = wind_dict(row)
-                feedin = plants.WindPowerPlant(**plant).\
+                feedin = correction_onshore * plants.WindPowerPlant(**plant).\
                     feedin(weather=weather, installed_capacity=1)
                 temp[(coastdat_id, type_of_generation, power_class)] = feedin.values
                 power_class += 1

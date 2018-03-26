@@ -668,6 +668,7 @@ FROM
 	feedin.feedin
 	FROM 
 	model_draft.ego_renewable_feedin AS feedin
+	WHERE power_class IN (0, 4)
 	) AS B,
 	(SELECT 
 	generators.generator_id,
@@ -768,6 +769,7 @@ FROM
 	feedin.feedin
 	FROM 
 	model_draft.ego_renewable_feedin AS feedin
+	WHERE power_class IN (0, 4)
 	) AS B,
 	(SELECT 
 	generators.generator_id,
@@ -868,6 +870,7 @@ FROM
 	feedin.feedin
 	FROM 
 	model_draft.ego_renewable_feedin AS feedin
+	WHERE power_class IN (0, 4)
 	) AS B,
 	(SELECT 
 	generators.generator_id,
