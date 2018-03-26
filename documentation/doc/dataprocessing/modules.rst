@@ -1,6 +1,6 @@
-===============
-Data Processing
-===============
+===========================
+Data Processing SQL-Scripts
+===========================
 
 
 Overview of scripts
@@ -13,7 +13,7 @@ dataprocessing/sql_snippets/ scripts
 .. toctree::
    :titlesonly:
    :maxdepth: 7
-   
+
    ego_dp_loadarea_census
    ego_dp_loadarea_consumption
    ego_dp_loadarea_griddistrict_results
