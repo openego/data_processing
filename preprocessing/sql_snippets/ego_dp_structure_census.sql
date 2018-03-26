@@ -1,6 +1,6 @@
 /*
 census 2011 population per ha 
-Extract points with population (>0) from census in mview
+Extract points with population ( > 0) from census in mview
 
 __copyright__ 	= "Reiner Lemoine Institut"
 __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"

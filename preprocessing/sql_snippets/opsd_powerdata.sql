@@ -1,5 +1,6 @@
 ﻿/*
-Setup for OPSD power plants list.
+
+Create ego_conventional_powerplant based on OPSD beta Version of 2015/16
 
 __copyright__ 	= "Europa-Universität Flensburg, Centre for Sustainable Energy Systems"
 __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
@@ -8,7 +9,8 @@ __author__ 	    = "wolfbunke"
 */
 
 
--- OPSD powerplants based on beta version 
+--------------------------------------------------------------------------------
+
 
 -- Table: supply.ego_conventional_powerplant
 -- DROP supply.ego_conventional_powerplant;
