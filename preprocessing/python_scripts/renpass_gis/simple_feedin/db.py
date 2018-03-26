@@ -144,7 +144,7 @@ Base.prepare()
 Datatype, Projection, Spatial, Timeseries, Year, Point=\
     Base.classes.datatype, Base.classes.projection, Base.classes.spatial,\
     Base.classes.timeseries, Base.classes.year,\
-    Base.classes.ego_weather_measurement_point,\
+    Base.classes.ego_weather_measurement_point
    # Base.classes.weather_measurement_point
 
 session = sessionmaker(bind=conn)()
