@@ -10,7 +10,7 @@ SQL-Scripts
 -----------
 
 .. toctree::
-   :maxdepth: 7
+   :maxdepth: 1
    :titlesonly:
 
    Dataprocessing <dataprocessing/modules>
@@ -28,7 +28,7 @@ Preprocessing
 SQL-Scripts
 -----------
 .. toctree::
-   :maxdepth: 7
+   :maxdepth: 1
    :titlesonly:
 
    Preprocessing <preprocessing/modules>
