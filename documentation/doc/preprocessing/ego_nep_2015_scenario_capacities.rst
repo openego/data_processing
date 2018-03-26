@@ -3,7 +3,9 @@
 ego_nep_2015_scenario_capacities.sql
 ####################################
 
-Setup for scenario capacities NEP 2015 
+Create and setup the table model_draft.ego_nep_2015_scenario_capacities for 
+electrical scenario capacities of the Netzentwicklungsplan 2015, erster Entwurf 
+per federal state in Germany. 
 
 
 

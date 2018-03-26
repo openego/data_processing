@@ -7,30 +7,25 @@ SQL Script that prepare and insert single renewable power plant data by a given
 scenario in order to create a high resulution allocation renewable energy expansion.
 
 For the project open_eGo and the tools eTraGo, eDisGo and eGo the scenarios are
-named 'Status Quo' (2015), 'NEP 2035', 'eGo 100'. Learn more about the scenario here [link]
+named 'Status Quo' (2015), 'NEP 2035', 'eGo 100'. Learn more about the scenario here 
+`scenarios here <http://data-processing.readthedocs.io/en/master/scenario.html>`_.
 
 This script is divided into two parts:
 
-Part I:
-				 Development of new renewable power plants by NEP 2035 scenario data
-Part II:
-				 Development of new renewable power plants by ego 100% scenario data
+Part I
+******
+- Development of new renewable power plants by NEP 2035 scenario data
+
+Part II
+*******
+- Development of new renewable power plants by ego 100% scenario data
+
 
 Methodology
 -----------
 Both parts of the script work more or less with the same Methodology of an expansion
-and allocation of renewable energy plants.
-
-Renewable allocation
---------------------
-
-Documentation
--------------
-flags:
-repowering : old unit get an update of this electrical_capacity (plus or minus)
-commissioning: New unit by a scenario assumption
-decommissioning: decommissioning of status quo units by a scenario assumption
-constantly: existing plant of status quo or other scenarios
+and allocation of renewable energy plants. A full documentation of the used 
+Methodology of the Renewable allocation `can be found here <http://data-processing.readthedocs.io/en/master/methodology.html>`_.
 
 
 
