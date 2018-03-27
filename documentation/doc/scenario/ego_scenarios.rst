@@ -1,36 +1,41 @@
 ==================
-Scenario framework
+open_eGo Scenarios
 ==================
 
+For the project open_eGo been three scenarios choosen in order to
 
 
 
-******************
-open_eGo Scenarios
-******************
 
-
-
-Import Scenario data as CSV
-.. csv-table:: Overview of eGo Scenarios
-   :file: https://raw.githubusercontent.com/openego/....
-   :delim: ;
-   :header-rows: 1
-   :widths: 5, 1, 1, 5
-   :stub-columns: 0
+**********
+Status Quo
+**********
 
 
 
 
 
+********
+NEP 2035
+********
+
+[NEP2015]
+
+
+Scenario definition of renpassG!S
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. include:: https://raw.githubusercontent.com/znes/FlEnS/master/open_eGo/NEP_2035/README.rst
 
 
 
-***********
-Methodology
-***********
 
-.. inclued:: methodology.rst
+********
+eGo 100
+********
+
+
+
 
 
 **********
