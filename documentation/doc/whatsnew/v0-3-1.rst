@@ -20,4 +20,5 @@ Bug fixes
 Other changes
 -------------
 
-*
+* change use of geom (original) to rea_geom_new
+* ...
