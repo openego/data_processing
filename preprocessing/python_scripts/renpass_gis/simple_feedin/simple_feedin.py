@@ -131,11 +131,11 @@ def collect_energymap_data():
     -------
     windgenerator : DataFrame of all wind generators in energy_map
     """
-    meta.reflect(bind=conn,schema='app_renpassgis',only=['renewable_energy_map_1'])
+    meta.reflect(bind=conn,schema='model_draft',only=['ego_supply_renewable_bneta_full_attribute'])
     Base = automap_base(metadata=meta)
     Base.prepare()
     
-    SQL_data = Base.classes.renewable_energy_map_1
+    SQL_data = Base.classes.ego_supply_renewable_bneta_full_attribute
 
     plants = session.query(SQL_data).\
                         filter(and_(SQL_data.energietraeger == 'Wind Land',or_\
