@@ -74,14 +74,16 @@ FROM
 	(SELECT
 	aggr_id AS generator_id,
 	w_id,
+	power_class,
 	source
 	FROM
 	model_draft.ego_supply_pf_generator_single 
 	WHERE source IN (12, 13, 17)
 	AND scn_name = 'Status Quo'
-	GROUP BY aggr_id, w_id, source) AS gen,
+	GROUP BY aggr_id, w_id, power_class, source) AS gen,
 	(SELECT
 	w_id,
+	power_class,
 	CASE
 	WHEN source LIKE '%%solar%%' THEN 12
 	WHEN source LIKE '%%wind_onshore%%' THEN 13
@@ -90,7 +92,8 @@ FROM
 	feedin
 	FROM model_draft.ego_renewable_feedin) AS feedin
 WHERE gen.source = feedin.source
-	AND gen.w_id = feedin.w_id;
+AND gen.w_id = feedin.w_id
+AND gen.power_class = feedin.power_class;
 	
 
 --
@@ -179,14 +182,16 @@ FROM
 	(SELECT
 	aggr_id AS generator_id,
 	w_id,
+	power_class,
 	source
 	FROM
 	model_draft.ego_supply_pf_generator_single 
 	WHERE source IN (12, 13, 17)
 	AND scn_name = 'NEP 2035'
-	GROUP BY aggr_id, w_id, source) AS gen,
+	GROUP BY aggr_id, w_id, power_class, source) AS gen,
 	(SELECT
 	w_id,
+	power_class,
 	CASE
 	WHEN source LIKE '%%solar%%' THEN 12
 	WHEN source LIKE '%%wind_onshore%%' THEN 13
@@ -195,7 +200,8 @@ FROM
 	feedin
 	FROM model_draft.ego_renewable_feedin) AS feedin
 WHERE gen.source = feedin.source
-	AND gen.w_id = feedin.w_id;
+AND gen.w_id = feedin.w_id
+AND gen.power_class = feedin.power_class;
 
 -- construct array per aggr_id according to source timeseries
 INSERT into model_draft.ego_grid_pf_hv_generator_pq_set (scn_name, generator_id, temp_id, p_set)
@@ -280,14 +286,16 @@ FROM
 	(SELECT
 	aggr_id AS generator_id,
 	w_id,
+	power_class,
 	source
 	FROM
 	model_draft.ego_supply_pf_generator_single 
 	WHERE source IN (12, 13, 17)
 	AND scn_name = 'eGo 100'
-	GROUP BY aggr_id, w_id, source) AS gen,
+	GROUP BY aggr_id, w_id, power_class, source) AS gen,
 	(SELECT
 	w_id,
+	power_class,
 	CASE
 	WHEN source LIKE '%%solar%%' THEN 12
 	WHEN source LIKE '%%wind_onshore%%' THEN 13
@@ -296,7 +304,8 @@ FROM
 	feedin
 	FROM model_draft.ego_renewable_feedin) AS feedin
 WHERE gen.source = feedin.source
-	AND gen.w_id = feedin.w_id;
+AND gen.w_id = feedin.w_id
+AND gen.power_class = feedin.power_class;
 
 -- construct array per aggr_id according to source timeseries
 INSERT into model_draft.ego_grid_pf_hv_generator_pq_set (scn_name, generator_id, temp_id, p_set)
@@ -662,6 +671,7 @@ FROM
 	feedin.feedin
 	FROM 
 	model_draft.ego_renewable_feedin AS feedin
+	WHERE power_class IN (0, 4)
 	) AS B,
 	(SELECT 
 	generators.generator_id,
@@ -762,6 +772,7 @@ FROM
 	feedin.feedin
 	FROM 
 	model_draft.ego_renewable_feedin AS feedin
+	WHERE power_class IN (0, 4)
 	) AS B,
 	(SELECT 
 	generators.generator_id,
@@ -862,6 +873,7 @@ FROM
 	feedin.feedin
 	FROM 
 	model_draft.ego_renewable_feedin AS feedin
+	WHERE power_class IN (0, 4)
 	) AS B,
 	(SELECT 
 	generators.generator_id,

@@ -1,6 +1,5 @@
 ﻿/*
 Setup simple feedin weather measurement point
-
 __copyright__ 	= "Europa-Universität Flensburg, Centre for Sustainable Energy Systems"
 __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
 __url__ 	    = "https://github.com/openego/data_processing/blob/master/LICENSE"
@@ -76,7 +75,7 @@ __author__ 	    = "wolfbunke, MarlonSchlemminger"
 -- Where ST_Intersects(B.geom,C.geom);
 -- 
 
-DROP TABLE IF EXISTS model_draft.ego_neighbours_offshore_point;
+DROP TABLE IF EXISTS model_draft.ego_neighbours_offshore_point CASCADE;
 
 CREATE TABLE model_draft.ego_neighbours_offshore_point
 (
@@ -150,8 +149,8 @@ CREATE TABLE model_draft.ego_weather_measurement_point
 WITH (
   OIDS=FALSE
 );
--- ALTER TABLE model_draft.ego_weather_measurement_point
---   OWNER TO oeuser;
+ALTER TABLE model_draft.ego_weather_measurement_point
+  OWNER TO oeuser;
 
 -- german points
 INSERT INTO model_draft.ego_weather_measurement_point (coastdat_id, type_of_generation, geom)

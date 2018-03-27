@@ -141,7 +141,7 @@ Located, Scheduled, Typified = other_classes()
 Base.prepare()
 
 # simplify class names
-Datatype, Projection, Spatial, Timeseries, Year, Point =\
+Datatype, Projection, Spatial, Timeseries, Year, Point=\
     Base.classes.datatype, Base.classes.projection, Base.classes.spatial,\
     Base.classes.timeseries, Base.classes.year,\
     Base.classes.ego_weather_measurement_point
