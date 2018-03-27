@@ -1,11 +1,18 @@
 =============
-Methodologies 
+Methodologies
 =============
 
 [Intro]
 
 
 
-.. Renewable allocation
-.. include:: renewables.rst
 
+
+
+
+.. toctree::
+  :maxdepth: 1
+  :titlesonly:
+
+  Methodologies and Assumptions for Renewables  <renewables>
+  Methodologies and Assumptions for Load <load>

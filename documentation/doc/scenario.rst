@@ -23,6 +23,15 @@ Import Scenario data as CSV
 
 
 
+.. toctree::
+  :maxdepth: 1
+  :titlesonly:
+
+  open_eGo Scenario definition <scenario/ego_scenarios>
+
+
+
+
 
 
 
@@ -30,7 +39,14 @@ Import Scenario data as CSV
 Methodology
 ***********
 
-.. inclued:: methodology.rst
+.. toctree::
+  :maxdepth: 1
+  :titlesonly:
+
+  Methodology <scenario/methodology>
+
+
+
 
 
 **********
