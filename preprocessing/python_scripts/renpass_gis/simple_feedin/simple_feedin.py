@@ -131,7 +131,7 @@ def collect_energymap_data():
     -------
     windgenerator : DataFrame of all wind generators in energy_map
     """
-    meta.reflect(bind=conn,schema='model_draft',only=['ego_supply_renewable_bneta_full_attribute'])
+    meta.reflect(bind=conn,schema='model_draft',only=['ego_supply_renewable_bnetza_full_attribute'])
     Base = automap_base(metadata=meta)
     Base.prepare()
     
