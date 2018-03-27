@@ -102,7 +102,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'open_eGo Data Processing'
-copyright = u'2015-2017, open_eGo-Team'
+copyright = u'2015-2018, open_eGo-Team'
 author = u'open_eGo-Team'
 
 
