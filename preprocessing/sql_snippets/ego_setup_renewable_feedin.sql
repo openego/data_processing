@@ -12,7 +12,10 @@
 		"end": "",
 		"resolution": ""},
 	"sources": [
-		{"name": "open_eGo preprocessing", "description": "", "url": "https://github.com/openego/data_processing/tree/master/preprocessing", "license": "", "copyright": ""} ],
+		{"name": "open_eGo preprocessing", 
+		"description": "", 
+		"url": "https://github.com/openego/data_processing/tree/master/preprocessing", 
+		"license": "", "copyright": ""} ],
 	"license": 
 		{"id": "",
 		"name": "",
