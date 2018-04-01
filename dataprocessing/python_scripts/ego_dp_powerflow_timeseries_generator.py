@@ -12,31 +12,23 @@ import pandas as pd
 import numpy as np
 
 from dataprocessing.tools.io import oedb_session
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy import MetaData, func
+from sqlalchemy.orm import sessionmaker, relationship
+from sqlalchemy import MetaData, func, and_, case
 from sqlalchemy.ext.automap import automap_base
 
 from egoio.db_tables.model_draft import EgoSupplyPfGeneratorSingle as Generator,\
     EgoGridPfHvGeneratorPqSet as PqSet, EgoGridHvElectricalNeighboursBus
+
 from ego_dp_powerflow_timeseries_generator_helper import SOURCE_TO_FUEL, SCENARIOMAP, \
-    TEMPID
+    TEMPID, missing_orm_classes
 
 # get database connection
 conn = oedb_session(section='test')
-
 Session = sessionmaker(bind=conn)
 session = Session()
 
-meta = MetaData()
-meta.bind = conn
-meta.reflect(bind=conn, schema='calc_renpass_gis',
-             only=['renpass_gis_results'])
+PowerClass, Feedin, *_, Results = missing_orm_classes(session)
 
-# map to classes
-Base = automap_base(metadata=meta)
-Base.prepare()
-
-Results = Base.classes.renpass_gis_results
 
 ###############################################################################
 
@@ -48,14 +40,15 @@ def _norm(x):
 session.query(PqSet).delete()
 session.commit()
 
+# p_set
 for scn_name, scn_nr in SCENARIOMAP.items():
 
     # dataframe from model_draft.pf_generator_single
     # with aggr_id, source, p_nom
-    filters = (Generator.scn_name == scn_name, Generator.aggr_id != None)
+    filters = (Generator.scn_name == scn_name, Generator.aggr_id != None)  # comma seperated in fiter() are internally joined using and_
     fields = [Generator.aggr_id, Generator.source,
               func.sum(Generator.p_nom).label('summed_p_nom')]
-    grouper = Generator.aggr_id, Generator.source
+    grouper = Generator.aggr_id, Generator.source,
     query = session.query(*fields).filter(*filters).group_by(*grouper)
 
     generators = pd.read_sql(query.statement, query.session.bind)
@@ -65,7 +58,7 @@ for scn_name, scn_nr in SCENARIOMAP.items():
         generators.groupby('source')['summed_p_nom'].apply(_norm)
 
     # dataframe from calc_renpass_gis.renpass_gis_results
-    # optimization results to buses
+    # optimal dispacth results directed towards buses
     # with obj_label, datetime, val
     filters = (Results.obj_label.like('%DE%'),
                ~Results.obj_label.like('%powerline%'),
@@ -119,3 +112,27 @@ for scn_name, scn_nr in SCENARIOMAP.items():
     for i in pqsets.to_dict(orient='records'):
         session.add(PqSet(**i))
     session.commit()
+
+
+# p_max_pu
+for scn_name, scn_nr in SCENARIOMAP.items():
+
+
+    sources = ['wind_onshore', 'wind_offshore', 'solar']
+    sources_dict = {v:k for k, v in SOURCE_TO_FUEL.items() if v in sources}
+    casestr = case(sources_dict, value=Feedin.source, else_=None)
+
+    filters = (Generator.scn_name == scn_name, Generator.aggr_id != None)
+    fields = [Generator.aggr_id, Generator.source, Generator.w_id, Generator.power_class,
+              func.sum(Generator.p_nom).label('summed_p_nom')]
+    grouper = Generator.aggr_id, Generator.source, Generator.w_id, Generator.power_class
+
+    t = session.query(*fields).join(Generator.feedin).group_by(*grouper).subquery()
+
+    query = session.query(t, Feedin.feedin).filter(t.c.w_id == Feedin.w_id,
+        t.c.power_class == Feedin.power_class, t.c.source == casestr)
+
+    generators = pd.read_sql(query.statement, query.session.bind)
+
+    #func = lambda x: sum(np.asarray.......
+    generators.groupby(['aggr_id', 'source'], as_index=False).apply(func)
