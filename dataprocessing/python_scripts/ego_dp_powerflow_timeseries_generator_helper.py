@@ -10,8 +10,10 @@ import pandas as pd
 
 from dataprocessing.tools.io import oedb_session
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy import MetaData
+from sqlalchemy import MetaData, Column, Integer, Float, Text, text
 from sqlalchemy.ext.automap import automap_base
+from sqlalchemy.dialects.postgresql import ARRAY, DOUBLE_PRECISION
+
 
 NEIGHBOURSID = 200000
 
@@ -26,8 +28,9 @@ SOURCE_TO_FUEL = {
 
 TEMPID = 1
 
-def renpass_gis_orm_classes(session):
-    """
+def missing_orm_classes(session):
+    """ Not yet implemented in ego.io
+
     Parameters
     ----------
     session : sqlalchemy.orm.session.Session
@@ -47,12 +50,37 @@ def renpass_gis_orm_classes(session):
 
     # map to classes
     Base = automap_base(metadata=meta)
+
+	# ormclasses not part of egoio yet
+    class EgoPowerClass(Base):
+        __tablename__ = 'ego_power_class'
+        __table_args__ = {'schema': 'model_draft'}
+
+        power_class_id = Column(Integer, primary_key=True, server_default=text("nextval('model_draft.ego_power_class_power_class_id_seq'::regclass)"))
+        lower_limit = Column(Float(53))
+        upper_limit = Column(Float(53))
+        wea = Column(Text)
+        h_hub = Column(Float(53))
+        d_rotor = Column(Float(53))
+
+
+    class EgoRenewableFeedin(Base):
+        __tablename__ = 'ego_renewable_feedin'
+        __table_args__ = {'schema': 'model_draft'}
+
+        weather_scenario_id = Column(Integer, primary_key=True, nullable=False)
+        w_id = Column(Integer, primary_key=True, nullable=False)
+        source = Column(Text, primary_key=True, nullable=False)
+        weather_year = Column(Integer, primary_key=True, nullable=False)
+        power_class = Column(Integer, primary_key=True, nullable=False)
+        feedin = Column(ARRAY(DOUBLE_PRECISION(precision=53)))
+
     Base.prepare()
 
     Transformer, Source, Results = Base.classes.renpass_gis_linear_transformer, \
         Base.classes.renpass_gis_source, Base.classes.renpass_gis_results
 
-    return Transformer, Source, Results
+    return EgoPowerClass, EgoRenewableFeedin, Transformer, Source, Results
 
 def _flatten(x):
     if isinstance(x, list):
