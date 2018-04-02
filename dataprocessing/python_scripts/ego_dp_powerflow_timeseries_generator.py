@@ -1,6 +1,6 @@
 """
-Assign German timeseries data from hidden renpassG!S schema to high voltage
-powerflow.
+This script writes optimized dispatch timeseries data based on renpassG!S results
+and renewable feedin timeseries based on simple feedin to the corresponding hv powerflow.
 """
 
 __copyright__ 	= "ZNES Flensburg"
@@ -17,7 +17,7 @@ from sqlalchemy import MetaData, func, and_, case
 from sqlalchemy.ext.automap import automap_base
 
 from egoio.db_tables.model_draft import EgoSupplyPfGeneratorSingle as Generator,\
-    EgoGridPfHvGeneratorPqSet as PqSet, EgoGridHvElectricalNeighboursBus
+    EgoGridPfHvGeneratorPqSet as PqSet
 
 from ego_dp_powerflow_timeseries_generator_helper import SOURCE_TO_FUEL, SCENARIOMAP, \
     TEMPID, missing_orm_classes
@@ -117,9 +117,8 @@ for scn_name, scn_nr in SCENARIOMAP.items():
 # p_max_pu
 for scn_name, scn_nr in SCENARIOMAP.items():
 
-
     sources = ['wind_onshore', 'wind_offshore', 'solar']
-    sources_dict = {v:k for k, v in SOURCE_TO_FUEL.items() if v in sources}
+    sources_dict = {v: k for k, v in SOURCE_TO_FUEL.items() if v in sources}
     casestr = case(sources_dict, value=Feedin.source, else_=None)
 
     filters = (Generator.scn_name == scn_name, Generator.aggr_id != None)
@@ -148,7 +147,11 @@ for scn_name, scn_nr in SCENARIOMAP.items():
         # return averaged feedin
         return np.sum(weighted_feedins, axis=1)
 
-    p_max_pu = generators.groupby(['aggr_id', 'source'], as_index=False).\
+    p_max_pu = generators.groupby(['aggr_id'], as_index=False).\
         apply(weighted_average_feedin)
 
-    pqsets = session.query(PqSet).filter(PqSet.scn_name == scn_name).all()
+    for i in session.query(PqSet).filter(PqSet.scn_name == scn_name).all():
+        if i.generator_id in p_max_pu:
+            i.p_max_pu = p_max_pu[i.generator_id]
+
+    session.commit()
