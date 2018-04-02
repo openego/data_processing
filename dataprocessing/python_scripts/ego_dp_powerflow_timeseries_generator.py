@@ -127,12 +127,26 @@ for scn_name, scn_nr in SCENARIOMAP.items():
               func.sum(Generator.p_nom).label('summed_p_nom')]
     grouper = Generator.aggr_id, Generator.source, Generator.w_id, Generator.power_class
 
-    t = session.query(*fields).join(Generator.feedin).group_by(*grouper).subquery()
+    t = session.query(*fields).group_by(*grouper).filter(*filters).subquery()
 
     query = session.query(t, Feedin.feedin).filter(t.c.w_id == Feedin.w_id,
         t.c.power_class == Feedin.power_class, t.c.source == casestr)
 
     generators = pd.read_sql(query.statement, query.session.bind)
 
-    #func = lambda x: sum(np.asarray.......
-    generators.groupby(['aggr_id', 'source'], as_index=False).apply(func)
+    def weighted_average_feedin(x):
+
+        # 1darray weights for number of feedins
+        weights = np.array(_norm(x['summed_p_nom']))
+
+        # ndarray of shape (timesteps, number of feedins)
+        feedins = np.array(x['feedin'].tolist()).T
+
+        # ndarray of shape (timesteps, number of feedins)
+        weighted_feedins = np.multiply(weights, feedins)
+
+        # return averaged feedin
+        return np.mean(weighted_feedins, axis=1)
+
+    p_max_pu = generators.groupby(['aggr_id', 'source'], as_index=False).\
+        apply(weighted_average_feedin)
