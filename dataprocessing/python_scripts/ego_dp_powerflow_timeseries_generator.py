@@ -44,7 +44,7 @@ session.commit()
 for scn_name, scn_nr in SCENARIOMAP.items():
 
     # dataframe from model_draft.pf_generator_single
-    # with aggr_id, source, p_nom
+    # with aggr_id (unique combination of bus, scn_name, source), source, p_nom
     filters = (Generator.scn_name == scn_name, Generator.aggr_id != None)  # comma seperated in fiter() are internally joined using and_
     fields = [Generator.aggr_id, Generator.source,
               func.sum(Generator.p_nom).label('summed_p_nom')]
