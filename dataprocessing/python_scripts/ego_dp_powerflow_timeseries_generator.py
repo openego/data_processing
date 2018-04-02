@@ -150,3 +150,5 @@ for scn_name, scn_nr in SCENARIOMAP.items():
 
     p_max_pu = generators.groupby(['aggr_id', 'source'], as_index=False).\
         apply(weighted_average_feedin)
+
+    pqsets = session.query(PqSet).filter(PqSet.scn_name == scn_name).all()
