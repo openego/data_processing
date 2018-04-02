@@ -146,7 +146,7 @@ for scn_name, scn_nr in SCENARIOMAP.items():
         weighted_feedins = np.multiply(weights, feedins)
 
         # return averaged feedin
-        return np.mean(weighted_feedins, axis=1)
+        return np.sum(weighted_feedins, axis=1)
 
     p_max_pu = generators.groupby(['aggr_id', 'source'], as_index=False).\
         apply(weighted_average_feedin)
