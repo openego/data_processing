@@ -55,6 +55,8 @@ extensions = [
     'sphinx.ext.napoleon', #enable Napoleon Sphinx v>1.3
 #    'sphinx_paramlinks',#to have links to the types of the parameters of the functions
      'numpydoc',
+     'sphinxcontrib.httpdomain',   # for restfull API
+     'sphinxcontrib.autohttp.flask',
      'sphinx.ext.extlinks' # enables external links with a key
 ]
 
@@ -82,8 +84,25 @@ extlinks = {'pandas':('http://pandas.pydata.org/pandas-docs/stable/api.html#%s',
                       'Shapely object')
 }
 
+# test oedb implementation
+def rstjinja(app, docname, source):
+    """
+    Render our pages as a jinja template for fancy templating goodness.
+    """
+    # Make sure we're outputting HTML
+    if app.builder.format != 'html':
+        return
+    src = source[0]
+    rendered = app.builder.templates.render_string(
+        src, app.config.html_context
+    )
+    source[0] = rendered
 
+def setup(app):
+    app.connect("source-read", rstjinja)
 
+# add  https
+httpexample_scheme = 'https'
 
 
 # Add any paths that contain templates here, relative to this directory.
