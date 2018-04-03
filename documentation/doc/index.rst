@@ -22,6 +22,7 @@ Welcome to Data processing documentation of open_eGo
    :hidden:
 
    getting_started
+   openego
    scripts
    scenario
 
