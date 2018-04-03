@@ -65,5 +65,6 @@ the tools eTraGo and eDisGo in order to calcualte  the overall economic optimum.
 .. only:: html
 
     .. raw:: html
-    <p>The text on this website is published under <a href="https://creativecommons.org/licenses/by/4.0/">CC-BY 4.0</a>.</p>
-    <p><a href="http://www.bmwi.de/Navigation/EN/Home/home.html"><img src="https://i0.wp.com/reiner-lemoine-institut.de/wp-content/uploads/2016/07/BMWi_Logo_Englisch_KLEIN.jpg" alt="Supported by BMWi" /></a></p>
+
+            <p>The text on this website is published under <a href="https://creativecommons.org/licenses/by/4.0/">CC-BY 4.0</a>.</p>
+            <p><a href="http://www.bmwi.de/Navigation/EN/Home/home.html"><img src="https://i0.wp.com/reiner-lemoine-institut.de/wp-content/uploads/2016/07/BMWi_Logo_Englisch_KLEIN.jpg" alt="Supported by BMWi" /></a></p>
