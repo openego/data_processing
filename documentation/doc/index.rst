@@ -11,11 +11,6 @@ Welcome to Data processing documentation of open_eGo
 
 
 
-
-
-
-
-
 .. toctree::
    :maxdepth: 7
    :titlesonly:

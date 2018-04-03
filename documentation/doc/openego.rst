@@ -55,8 +55,9 @@ options for transmission grids based on PyPSA. `Learn more here.  <http://etrago
 
 eGo
 ***
+
 The python package eGo is a toolbox and application which connects and integrates
- the tools eTraGo and eDisGo in order to calcualte  the overall economic optimum.
+the tools eTraGo and eDisGo in order to calcualte  the overall economic optimum.
 `Learn more here.  <http://openego.readthedocs.io/en/dev/welcome.html>`_
 
 
