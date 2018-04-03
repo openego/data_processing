@@ -13,6 +13,12 @@ Status Quo
 
 
 
+.. include:: https://raw.githubusercontent.com/znes/FlEnS/dev/open_eGo/SQ/README.rst
+
+.. raw:: rst
+   :file: https://raw.githubusercontent.com/znes/FlEnS/dev/open_eGo/SQ/README.rst
+
+
 
 
 ********
