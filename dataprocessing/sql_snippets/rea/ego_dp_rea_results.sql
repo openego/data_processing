@@ -230,7 +230,7 @@ SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_supply_rea_per_meth
 -- Hotfix to fill empty rea_geom_new cells in table 
 
 Update table model_draft_ego_dp_supply_res_powerplant
-   set rea_geom_new = geom,
+   set rea_geom_new = ST_Transform(geom,3035),
    comment = comment || 'add original geom to rea_geom_new' 
 Where rea_geom_new is null;
 
