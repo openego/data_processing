@@ -1,5 +1,16 @@
-﻿/*
-Information on generators which are assigned to a specific substation are transformed to a data structure which is suitable for PyPSA. This script creates the scenarios
+/*
+Generators which were assigned to a specific substation prior to this script need to be transformed to a data structure
+suitable for powerflow calculation with tool developed and used in the open_eGo project. The following script transforms 
+data from the powerplant mviews and adds some parameters according to the characteristics of the generators. 
+To reduce the data volumn in the final table structure (see ego_dp_powerflow_hv_setup.sql) the generators are clustered 
+according to their source, installed capacity, weather point and substation they are assigned to. Here a new and unique 
+aggregate-ID (aggr_id) is assigned. 
+In an interims stage all generators are converted to a format suitable for powerflow flow calculation seperately. This data
+can be accessed in table `model_draft.ego_supply_pf_generator_single <http://oep.iks.cs.ovgu.de/dataedit/view/model_draft/ego_supply_pf_generator_single>`_.
+
+
+Information on generators which are assigned to a specific substation are transformed to a data structure which is suitable
+for PyPSA. This script creates the scenarios
 'Status Quo', 'NEP 2035' and 'eGo 100' in the hv powerflow schema. 
 
 __copyright__ 	= "Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems"
@@ -226,6 +237,8 @@ UPDATE model_draft.ego_supply_pf_generator_single a
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.3.0','input','climate','cosmoclmgrid','ego_dp_powerflow_assignment_generator.sql',' ');
 
+
+-- Identify climate point IDs for each renewables generator
 UPDATE model_draft.ego_supply_pf_generator_single a
 	SET power_class = b.power_class_id
 		FROM model_draft.ego_power_class b
@@ -286,6 +299,7 @@ UPDATE model_draft.ego_supply_pf_generator_single a
 UPDATE model_draft.ego_supply_pf_generator_single a
 	SET 	aggr_id = nextval('model_draft.ego_supply_pf_generator_single_aggr_id')
 	WHERE 	a.p_nom >= 50;
+
 
 -- Delete all generators with p_nom=0
 

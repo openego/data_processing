@@ -1,8 +1,13 @@
 /*
-LOPF data -
-Setting marginal_cost ( operating cost + fuel cost + CO2 crt cost ) 
-in model_draft.ego_grid_pf_hv_generator according to renpass_gis, NEP 2014 scenario.
-In addition p_max_pu is set for all generators with variable dispatch based on p_max_pu = p_set / p_nom .
+Missing parameters necessary for calculating a linear optimal power flow (LOPF) are added to the existing data. This
+includes marginal costs per technology, which is composed of specific operating cost, fuel costs and CO2 costs 
+according to renpass_gis, NEP 2014 scenario. 
+In addition p_max_pu is set for all generators with variable dispatch based on p_max_pu = p_set / p_nom.
+
+A further section of the script is used to insert extendable battery and hydrogen storages to all substations in the 
+grid model. These have a initial installed capacity p_nom=0, which can be extended when executing an optimization 
+(by calculating a LOPF). 
+
 __copyright__ 	= "Europa-Universität Flensburg, Centre for Sustainable Energy Systems"
 __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
 __url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"

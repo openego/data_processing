@@ -1,11 +1,12 @@
 /*
-hvmv substation voronoi
-voronoi polygons with eucldean distance / manhattan distance would be better but not available in sql
+HVMV Substation Voronoi
+Voronoi polygons with eucldean distance on HVMV Substation.
+Manhattan distance would be better but not available in sql.
 
-__copyright__ 	= "Reiner Lemoine Institut"
-__license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
-__url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
-__author__ 	= "Ludee"
+__copyright__   = "Reiner Lemoine Institut"
+__license__     = "GNU Affero General Public License Version 3 (AGPL-3.0)"
+__url__         = "https://github.com/openego/data_processing/blob/master/LICENSE"
+__author__      = "Ludee"
 */
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)

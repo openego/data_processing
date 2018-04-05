@@ -1,5 +1,6 @@
 /*
-Check the necessary input tables.
+Input verification (eGoPP)
+Check the necessary input tables from eGo PreProcessing.
 Return version of input tables.
 
 __copyright__   = "Reiner Lemoine Institut"
@@ -7,6 +8,7 @@ __license__     = "GNU Affero General Public License Version 3 (AGPL-3.0)"
 __url__         = "https://github.com/openego/data_processing/blob/master/LICENSE"
 __author__      = "Ludee"
 */
+
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.3.0','check','boundaries','bkg_vg250_1_sta','ego_dp_structure_input_verification.sql','preprocessing verification');
@@ -17,6 +19,8 @@ SELECT ego_scenario_log('v0.3.0','check','openstreetmap','osm_deu_polygon','ego_
 SELECT ego_scenario_log('v0.3.0','check','openstreetmap','osm_deu_ways','ego_dp_structure_input_verification.sql','preprocessing verification');
 SELECT ego_scenario_log('v0.3.0','check','openstreetmap','osm_deu_nodes','ego_dp_structure_input_verification.sql','preprocessing verification');
 SELECT ego_scenario_log('v0.3.0','check','openstreetmap','osm_deu_line','ego_dp_structure_input_verification.sql','preprocessing verification');
+SELECT ego_scenario_log('v0.3.0','check','scenario','ego_slp_parameters','ego_dp_structure_input_verification.sql','preprocessing verification');
+SELECT ego_scenario_log('v0.3.0','check','grid','otg_ehvhv_bus_data','ego_dp_structure_input_verification.sql','preprocessing verification');
 SELECT ego_scenario_log('v0.3.0','check','society','destatis_zensus_population_per_ha','ego_dp_structure_input_verification.sql','preprocessing verification');
 SELECT ego_scenario_log('v0.3.0','check','economy','destatis_gva_per_district','ego_dp_structure_input_verification.sql','preprocessing verification');
 SELECT ego_scenario_log('v0.3.0','check','demand','ego_demand_federalstate','ego_dp_structure_input_verification.sql','preprocessing verification');
@@ -28,13 +32,13 @@ SELECT ego_scenario_log('v0.3.0','check','model_draft','ego_supply_conv_powerpla
 -- input tables
 DROP TABLE IF EXISTS    model_draft.ego_scenario_input CASCADE;
 CREATE TABLE            model_draft.ego_scenario_input (
-    id              serial,
-    version         text,
-    oid             oid,
-    database        varchar,
-    table_schema    varchar,
-    table_name      varchar,
-    path            text,
+    id                      serial,
+    version                 text,
+    oid                     oid,
+    database                varchar,
+    table_schema            varchar,
+    table_name              varchar,
+    path                    text,
     metadata_title          text,
     metadata_reference_date text,
     meta_data               text,
@@ -46,7 +50,7 @@ ALTER TABLE model_draft.ego_scenario_input OWNER TO oeuser;
 -- metadata template
 COMMENT ON TABLE model_draft.ego_scenario_input IS '{
     "title": "eGoDP input data verification",
-    "description": "Checks input tables and gathers meta infos",
+    "description": "Check input tables and gathers meta infos",
     "language": [ "eng" ],
     "spatial": 
         {"location": "none",
@@ -58,8 +62,7 @@ COMMENT ON TABLE model_draft.ego_scenario_input IS '{
         "end": "none",
         "resolution": "none"},
     "sources": [
-        {"name": "eGo dataprocessing", "description": "", "url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)", "copyright": "© Reiner Lemoine Institut"},
-        {"name": "", "description": "", "url": "", "license": "", "copyright": ""} ],
+        {"name": "none", "description": "", "url": "", "license": "", "copyright": ""} ],
     "license": 
         {"id":  "ODbL-1.0",
         "name": "Open Data Commons Open Database License 1.0",
@@ -122,6 +125,8 @@ INSERT INTO     model_draft.ego_scenario_input(version,oid,database,table_schema
             (table_schema='openstreetmap' AND table_name='osm_deu_ways') OR 
             (table_schema='openstreetmap' AND table_name='osm_deu_nodes') OR
             (table_schema='openstreetmap' AND table_name='osm_deu_line') OR
+            (table_schema='scenario' AND table_name='ego_slp_parameters') OR
+            (table_schema='grid' AND table_name='otg_ehvhv_bus_data') OR
             (table_schema='society' AND table_name='destatis_zensus_population_per_ha') OR
             (table_schema='economy' AND table_name='destatis_gva_per_district') OR
             (table_schema='demand' AND table_name='ego_demand_federalstate') OR

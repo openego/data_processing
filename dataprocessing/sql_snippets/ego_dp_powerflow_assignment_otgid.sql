@@ -1,5 +1,8 @@
 /*
-Powerplant lists are updated with information on the otg_id of substations and w_id of weather cell which the generators are assigned to.
+This scripts updates tables containing `renewable power plants <http://oep.iks.cs.ovgu.de/dataedit/view/model_draft/ego_dp_supply_res_powerplant>`_ and `conventional power plants <http://oep.iks.cs.ovgu.de/dataedit/view/model_draft/ego_dp_supply_conv_powerplant>`_ with information on the otg_id of substations which the generator is assigned to. 
+The otg_id and subst_id of the substations are matched in tables containing information on `HV/MV substations <http://oep.iks.cs.ovgu.de/dataedit/view/model_draft/ego_grid_hvmv_substation>`_ and `EHV substations <http://oep.iks.cs.ovgu.de/dataedit/view/model_draft/ego_grid_ehv_substation>`_.  
+
+Additionally the otg_id of offshore wind turbines is updated manually. The geometry of offshore wind power plants is matched with polygons representing a catchment area per relevant offshore grid connection point.  
 
 __copyright__ 	= "Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems"
 __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
@@ -32,6 +35,7 @@ UPDATE model_draft.ego_dp_supply_conv_powerplant a
 	WHERE 	a.subst_id = b.subst_id AND voltage_level < 3;
 	
 -- Update otg_id of offshore windturbines manually 
+
 
 UPDATE model_draft.ego_dp_supply_res_powerplant
 
