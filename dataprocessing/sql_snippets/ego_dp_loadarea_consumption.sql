@@ -8,11 +8,11 @@ __author__      = "IlkaCu, Ludee"
 */
 
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','input','model_draft','ego_demand_per_district','ego_dp_loadarea_consumption.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','input','model_draft','ego_demand_per_district','ego_dp_loadarea_consumption.sql',' ');
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','input','model_draft','ego_demand_loadarea','ego_dp_loadarea_consumption.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','input','model_draft','ego_demand_loadarea','ego_dp_loadarea_consumption.sql',' ');
 
 -- landuse area per district 
 ALTER TABLE model_draft.ego_demand_per_district
@@ -98,8 +98,8 @@ UPDATE model_draft.ego_demand_loadarea a
     WHERE sub.id = a.id;
 
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','input','demand','ego_demand_federalstate','ego_dp_loadarea_consumption.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','input','demand','ego_demand_federalstate','ego_dp_loadarea_consumption.sql',' ');
 
 -- sector consumption of residential per loadarea
 UPDATE model_draft.ego_demand_loadarea a
@@ -202,5 +202,5 @@ COMMENT ON TABLE  model_draft.ego_demand_loadarea IS
 -- select description
 SELECT obj_description('model_draft.ego_demand_loadarea' ::regclass) ::json;
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','output','model_draft','ego_demand_loadarea','ego_dp_loadarea_consumption.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_demand_loadarea','ego_dp_loadarea_consumption.sql',' ');

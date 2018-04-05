@@ -11,14 +11,14 @@ __url__         = "https://github.com/openego/data_processing/blob/master/LICENS
 __author__      = "Ludee"
 */
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','input','model_draft','ego_grid_hvmv_substation','ego_dp_loadarea_statistic.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','input','model_draft','ego_grid_hvmv_substation','ego_dp_loadarea_statistic.sql',' ');
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','input','model_draft','ego_grid_mv_griddistrict','ego_dp_loadarea_statistic.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','input','model_draft','ego_grid_mv_griddistrict','ego_dp_loadarea_statistic.sql',' ');
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','input','model_draft','ego_demand_loadarea','ego_dp_loadarea_statistic.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','input','model_draft','ego_demand_loadarea','ego_dp_loadarea_statistic.sql',' ');
 
 /*
 -- Results and statistics for substation, Loadarea, MV Griddistricts and Consumption
@@ -175,8 +175,8 @@ COMMENT ON TABLE model_draft.ego_data_processing_results IS '{
     "comment": "eGoDP - Temporary table", 
     "version": "v0.4.0" }';
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','output','model_draft','ego_data_processing_results','ego_dp_loadarea_statistic.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_data_processing_results','ego_dp_loadarea_statistic.sql',' ');
 
 
 
@@ -418,8 +418,8 @@ UPDATE model_draft.ego_grid_mv_griddistrict AS t1
 UPDATE model_draft.ego_grid_mv_griddistrict AS t1
     SET consumption_per_area = consumption *1000000 / area_ha;
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','output','model_draft','ego_grid_mv_griddistrict','ego_dp_loadarea_statistic.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_grid_mv_griddistrict','ego_dp_loadarea_statistic.sql',' ');
 
 /*
 -- test
@@ -430,8 +430,8 @@ SELECT  SUM(la.sector_consumption_sum)
 FROM    model_draft.ego_demand_loadarea AS la;
 */
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_grid_mv_griddistrict','ego_paper_result.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.2.5','output','model_draft','ego_grid_mv_griddistrict','ego_paper_result.sql',' ');
 
 -- Calculate statistics for BKG vg250 
 DROP MATERIALIZED VIEW IF EXISTS    boundaries.bkg_vg250_statistics_mview CASCADE;
@@ -478,8 +478,8 @@ COMMENT ON MATERIALIZED VIEW model_draft.bkg_vg250_statistics_mview IS '{
     "comment": "eGoDP - Temporary table",
     "version": "v0.4.0" }';
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','output','boundaries','bkg_vg250_statistics_mview','ego_dp_loadarea_statistic.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','output','boundaries','bkg_vg250_statistics_mview','ego_dp_loadarea_statistic.sql',' ');
 
 
 -- drid district

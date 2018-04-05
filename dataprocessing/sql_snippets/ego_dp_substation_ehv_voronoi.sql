@@ -14,8 +14,8 @@ __author__      = "IlkaCu, Ludee"
 -- VORONOI with  220 and 380 kV substations
 ----------------------------------------------------------
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','input','model_draft','ego_grid_ehv_substation','ego_dp_substation_ehv_voronoi.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','input','model_draft','ego_grid_ehv_substation','ego_dp_substation_ehv_voronoi.sql',' ');
 
 -- Add Dummy points 
 INSERT INTO model_draft.ego_grid_ehv_substation (subst_name, point, subst_id, otg_id, lon, lat, polygon, osm_id, osm_www, status)
@@ -117,5 +117,5 @@ COMMENT ON TABLE  model_draft.ego_grid_ehv_substation_voronoi IS '{
 	"comment": "eGoDP - Temporary table",
 	"version": "v0.4.0" }' ;
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','output','model_draft','ego_grid_ehv_substation_voronoi','ego_dp_substation_ehv_voronoi.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_grid_ehv_substation_voronoi','ego_dp_substation_ehv_voronoi.sql',' ');

@@ -19,8 +19,8 @@ CREATE TABLE            model_draft.ego_lattice_500m (
     geom geometry(Point,3035),
 CONSTRAINT ego_lattice_500m_pkey PRIMARY KEY (id));
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','input','boundaries','bkg_vg250_1_sta_union_mview','ego_dp_lattice_500m.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','input','boundaries','bkg_vg250_1_sta_union_mview','ego_dp_lattice_500m.sql',' ');
 
 -- lattice on bbox of Germany with 500m
 INSERT INTO     model_draft.ego_lattice_500m (geom_box)
@@ -54,5 +54,5 @@ COMMENT ON TABLE model_draft.ego_lattice_500m IS '{
     "comment": "eGoDP - Temporary table",
     "version": "v0.4.0" }';
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','output','model_draft','ego_lattice_500m','ego_dp_lattice_500m.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_lattice_500m','ego_dp_lattice_500m.sql',' ');

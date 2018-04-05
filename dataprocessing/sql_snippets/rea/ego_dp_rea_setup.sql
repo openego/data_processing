@@ -16,8 +16,8 @@ __author__      = "Ludee"
 SELECT  COUNT(*)
 FROM    model_draft.ego_grid_mv_griddistrict;
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','input','model_draft','ego_dp_supply_res_powerplant','ego_dp_rea_setup.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','input','model_draft','ego_dp_supply_res_powerplant','ego_dp_rea_setup.sql',' ');
 
 ALTER TABLE model_draft.ego_dp_supply_res_powerplant
     DROP COLUMN IF EXISTS   la_id CASCADE,
@@ -33,8 +33,8 @@ ALTER TABLE model_draft.ego_dp_supply_res_powerplant
     DROP COLUMN IF EXISTS   rea_geom_new CASCADE,
     ADD COLUMN              rea_geom_new geometry(Point,3035);
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','input','model_draft','ego_grid_mv_griddistrict','ego_dp_rea_setup.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','input','model_draft','ego_grid_mv_griddistrict','ego_dp_rea_setup.sql',' ');
 
 -- subst_id from mv-griddistrict
 UPDATE model_draft.ego_dp_supply_res_powerplant AS t1
@@ -69,8 +69,8 @@ UPDATE model_draft.ego_dp_supply_res_powerplant
         rea_geom_line = NULL
     WHERE generation_subtype = 'wind_offshore';
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','output','model_draft','ego_dp_supply_res_powerplant','ego_dp_rea_setup.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_dp_supply_res_powerplant','ego_dp_rea_setup.sql',' ');
 
 
 /*
@@ -106,12 +106,12 @@ COMMENT ON MATERIALIZED VIEW model_draft.ego_dp_supply_res_powerplant_out_mview 
     "comment": "eGoDP - Temporary table",
     "version": "v0.4.0" }';
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','temp','model_draft','ego_dp_supply_res_powerplant_out_mview','ego_dp_rea_setup.sql','First check if RES are outside Germany');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','temp','model_draft','ego_dp_supply_res_powerplant_out_mview','ego_dp_rea_setup.sql','First check if RES are outside Germany');
 
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','input','model_draft','ego_grid_hvmv_substation','ego_dp_rea_setup.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','input','model_draft','ego_grid_hvmv_substation','ego_dp_rea_setup.sql',' ');
 
 -- new geom, DEA to next substation
 DROP TABLE IF EXISTS    model_draft.ego_dp_supply_res_powerplant_out_nn CASCADE;
@@ -137,8 +137,8 @@ COMMENT ON TABLE model_draft.ego_dp_supply_res_powerplant_out_nn IS '{
     "comment": "eGoDP - Temporary table",
     "version": "v0.4.0" }';
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','temp','model_draft','ego_dp_supply_res_powerplant_out_nn','ego_dp_rea_setup.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','temp','model_draft','ego_dp_supply_res_powerplant_out_nn','ego_dp_rea_setup.sql',' ');
 
 -- new subst_id and rea_geom_new with line
 UPDATE model_draft.ego_dp_supply_res_powerplant AS t1
@@ -184,8 +184,8 @@ COMMENT ON MATERIALIZED VIEW model_draft.ego_dp_supply_res_powerplant_out_mview 
     "comment": "eGoDP - Temporary table",
     "version": "v0.4.0" }';
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','temp','model_draft','ego_dp_supply_res_powerplant_out_mview','ego_dp_rea_setup.sql','Second check if RES outside Germany');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','temp','model_draft','ego_dp_supply_res_powerplant_out_mview','ego_dp_rea_setup.sql','Second check if RES outside Germany');
 
 -- drop
 DROP TABLE IF EXISTS model_draft.ego_dp_supply_res_powerplant_out_nn CASCADE;
@@ -197,8 +197,8 @@ Prepare a special OSM layer with farmyards per grid districts.
 In Germany a lot of farmyard builings are used for renewable energy production with solar and biomass.
 */
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','input','model_draft','ego_osm_sector_per_griddistrict_4_agricultural','ego_dp_rea_setup.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','input','model_draft','ego_osm_sector_per_griddistrict_4_agricultural','ego_dp_rea_setup.sql',' ');
 
 ALTER TABLE model_draft.ego_osm_sector_per_griddistrict_4_agricultural
     DROP COLUMN IF EXISTS   subst_id,
@@ -223,5 +223,5 @@ UPDATE model_draft.ego_osm_sector_per_griddistrict_4_agricultural AS t1
 UPDATE model_draft.ego_osm_sector_per_griddistrict_4_agricultural
     SET area_ha = ST_AREA(geom)/10000;
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','output','model_draft','ego_osm_sector_per_griddistrict_4_agricultural','ego_dp_rea_setup.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_osm_sector_per_griddistrict_4_agricultural','ego_dp_rea_setup.sql',' ');

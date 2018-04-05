@@ -20,11 +20,11 @@ CREATE TABLE		model_draft.ego_demand_load_collect (
 	geom geometry(Polygon,3035),
 	CONSTRAINT ego_demand_load_collect_pkey PRIMARY KEY (id));
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','input','model_draft','ego_demand_la_osm','ego_dp_loadarea_loadmelt.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','input','model_draft','ego_demand_la_osm','ego_dp_loadarea_loadmelt.sql',' ');
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','input','model_draft','ego_demand_la_zensus_cluster','ego_dp_loadarea_loadmelt.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','input','model_draft','ego_demand_la_zensus_cluster','ego_dp_loadarea_loadmelt.sql',' ');
 
 -- insert loads OSM
 INSERT INTO	model_draft.ego_demand_load_collect (geom)
@@ -51,8 +51,8 @@ COMMENT ON TABLE model_draft.ego_demand_load_collect IS '{
     "version": "v0.4.0",
     "published": "none" }';
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','temp','model_draft','ego_demand_load_collect','ego_dp_loadarea_loadmelt.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','temp','model_draft','ego_demand_load_collect','ego_dp_loadarea_loadmelt.sql',' ');
 
 
 -- buffer with 100m
@@ -83,8 +83,8 @@ COMMENT ON TABLE model_draft.ego_demand_load_collect_buffer100 IS '{
     "version": "v0.4.0",
     "published": "none" }';
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','temp','model_draft','ego_demand_load_collect_buffer100','ego_dp_loadarea_loadmelt.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','temp','model_draft','ego_demand_load_collect_buffer100','ego_dp_loadarea_loadmelt.sql',' ');
 
 
 -- unbuffer with 99m
@@ -116,8 +116,8 @@ COMMENT ON TABLE model_draft.ego_demand_load_melt IS '{
     "version": "v0.4.0",
     "published": "none" }';
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','temp','model_draft','ego_demand_load_melt','ego_dp_loadarea_loadmelt.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','temp','model_draft','ego_demand_load_melt','ego_dp_loadarea_loadmelt.sql',' ');
 
 
 -- Validate the melted geometries
@@ -153,8 +153,8 @@ COMMENT ON TABLE model_draft.ego_demand_load_melt_error_geom_mview IS '{
     "version": "v0.4.0",
     "published": "none" }';
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','temp','model_draft','ego_demand_load_melt_error_geom_mview','ego_dp_loadarea_loadmelt.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','temp','model_draft','ego_demand_load_melt_error_geom_mview','ego_dp_loadarea_loadmelt.sql',' ');
 
 
 -- Fix geometries with error
@@ -191,8 +191,8 @@ COMMENT ON TABLE model_draft.ego_demand_load_melt_error_geom_fix_mview IS '{
     "version": "v0.4.0",
     "published": "none" }';
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','temp','model_draft','ego_demand_load_melt_error_geom_fix_mview','ego_dp_loadarea_loadmelt.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','temp','model_draft','ego_demand_load_melt_error_geom_fix_mview','ego_dp_loadarea_loadmelt.sql',' ');
 
 
 -- update fixed geoms
@@ -205,8 +205,8 @@ UPDATE model_draft.ego_demand_load_melt AS t1
         ) AS t2
     WHERE   t1.id = t2.id;
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','output','model_draft','ego_demand_load_melt','ego_dp_loadarea_loadmelt.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_demand_load_melt','ego_dp_loadarea_loadmelt.sql',' ');
 
 
 -- Check again for errors.
@@ -242,8 +242,8 @@ COMMENT ON TABLE model_draft.ego_demand_load_melt_error_2_geom_mview IS '{
     "version": "v0.4.0",
     "published": "none" }';
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','temp','model_draft','ego_demand_load_melt_error_2_geom_mview','ego_dp_loadarea_loadmelt.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','temp','model_draft','ego_demand_load_melt_error_2_geom_mview','ego_dp_loadarea_loadmelt.sql',' ');
 
 
 /* -- drop temp

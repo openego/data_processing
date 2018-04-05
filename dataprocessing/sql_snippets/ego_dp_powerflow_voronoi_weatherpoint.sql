@@ -7,8 +7,8 @@ __url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
 __author__ 	= "IlkaCu, Ludee" 
 */
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','input','calc_renpass_gis','parameter_solar_feedin','ego_dp_powerflow_voronoi_climatepoint.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','input','calc_renpass_gis','parameter_solar_feedin','ego_dp_powerflow_voronoi_climatepoint.sql',' ');
 
 -- Add Dummy points 
 INSERT INTO calc_renpass_gis.parameter_solar_feedin (year, geom)
@@ -133,5 +133,5 @@ COMMENT ON TABLE  model_draft.renpassgis_economy_climatepoint_voronoi IS
 "Instructions for proper use": ["..."]
 }';
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','output','model_draft','renpassgis_economy_climatepoint_voronoi','ego_dp_powerflow_voronoi_climatepoint.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','renpassgis_economy_climatepoint_voronoi','ego_dp_powerflow_voronoi_climatepoint.sql',' ');
