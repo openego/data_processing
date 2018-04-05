@@ -83,7 +83,7 @@ def meta_definition(meta, conn):
     """
     meta.reflect(bind=conn, schema='coastdat')
     meta.reflect(bind=conn, schema='model_draft',
-                 only=['ego_weather_measurement_point'])  
+                 only=['ego_weather_measurement_point'])
         
     #meta.reflect(bind=conn, schema='public',
     #             only=['weather_measurement_point'])  # table with given/ own defined points
@@ -141,7 +141,7 @@ Located, Scheduled, Typified = other_classes()
 Base.prepare()
 
 # simplify class names
-Datatype, Projection, Spatial, Timeseries, Year, Point =\
+Datatype, Projection, Spatial, Timeseries, Year, Point=\
     Base.classes.datatype, Base.classes.projection, Base.classes.spatial,\
     Base.classes.timeseries, Base.classes.year,\
     Base.classes.ego_weather_measurement_point
@@ -150,8 +150,8 @@ Datatype, Projection, Spatial, Timeseries, Year, Point =\
 session = sessionmaker(bind=conn)()
 
 print('Retrieve data...')
-query = session.query(Point.name, Point.type_of_generation, Point.scenario, Point.geom)
-Points =  [(name, type_of_generation, scenario, shape.to_shape(geom))
-           for name, type_of_generation, scenario, geom in query.all()]
+query = session.query(Point.coastdat_id, Point.type_of_generation, Point.geom)
+Points =  [(coastdat_id, type_of_generation, shape.to_shape(geom))
+           for coastdat_id, type_of_generation, geom in query.all()]
 
 print('Done!')

@@ -2148,7 +2148,7 @@ CREATE TABLE grid.ego_pf_hv_generator_pq_set
 (
   version text, 
   scn_name character varying NOT NULL DEFAULT 'Status Quo'::character varying,
-  generator_id character varying(25) NOT NULL,
+  generator_id bigint NOT NULL,
   temp_id integer NOT NULL,
   p_set double precision[],
   q_set double precision[],
@@ -2491,6 +2491,184 @@ SELECT obj_description('grid.ego_pf_hv_line' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.3.0','result','grid','ego_pf_hv_line','ego_dp_structure_versioning.sql','hv pf lines');
+
+
+-- powerflow link 
+
+-- PF HV link 
+/*
+DROP TABLE IF EXISTS 	grid.ego_pf_hv_link CASCADE;
+
+CREATE TABLE grid.ego_pf_hv_link
+(
+  version text,
+  scn_name character varying NOT NULL DEFAULT 'Status Quo'::character varying,
+  link_id bigint NOT NULL,
+  bus0 bigint,
+  bus1 bigint,
+  efficiency double precision DEFAULT 1,
+  marginal_cost double precision DEFAULT 0,
+  p_nom numeric DEFAULT 0,
+  p_nom_extendable boolean DEFAULT false,
+  p_nom_min double precision DEFAULT 0,
+  p_nom_max double precision,
+  capital_cost double precision,
+  length double precision,
+  terrain_factor double precision DEFAULT 1,
+  geom geometry(MultiLineString,4326),
+  topo geometry(LineString,4326)
+  CONSTRAINT link_data_pkey PRIMARY KEY (link_id, scn_name) ) WITH ( OIDS=FALSE );
+  
+--FK
+ALTER TABLE grid.ego_pf_hv_link
+	ADD CONSTRAINT ego_pf_hv_link_fkey FOREIGN KEY (version) 
+	REFERENCES model_draft.ego_scenario(version) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+-- grant (oeuser)
+ALTER TABLE	grid.ego_pf_hv_link OWNER TO oeuser;
+
+*/  
+-- metadata
+
+COMMENT ON TABLE grid.ego_pf_hv_link IS '{
+    "title": "eGo hv powerflow - links",
+    "description": "links in eGo hv powerflow",
+    "language": [ "eng" ],
+    "spatial": {
+        "location": "",
+        "extend": "Germany",
+        "resolution": ""
+    },
+    "temporal": {
+        "reference_date": " ",
+        "start": "",
+        "end": "",
+        "resolution": ""
+    },
+    "sources": [
+        {
+            "name": "eGo dataprocessing",
+            "description": " ",
+            "url": "https://github.com/openego/data_processing",
+            "license": "GNU Affero General Public License Version 3 (AGPL-3.0)",
+            "copyright": "\u00a9 Flensburg University of Applied Sciences, Center for Sustainable Energy Systems"
+        },
+        {
+            "name": "OpenStreetMap",
+            "description": " ",
+            "url": "http://www.openstreetmap.org/",
+            "license": "Open Database License (ODbL) v1.0",
+            "copyright": "\u00a9 OpenStreetMap contributors"
+        }
+    ],
+    "license": {
+        "id": "ODbL-1.0",
+        "name": "Open Data Commons Open Database License 1.0",
+        "version": "1.0",
+        "url": "https://opendatacommons.org/licenses/odbl/1.0/",
+        "instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
+        "copyright": "\u00a9 Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems"
+    },
+    "contributors": [
+        {
+            "name": "IlkaCu",
+            "email": "",
+            "date": "08.02.2018",
+            "comment": "Create table"
+        }
+    ],
+    "resources": [
+        {
+            "name": "grid.ego_pf_hv_link",
+            "fromat": "sql",
+            "fields": [
+                {
+                    "name": "version",
+                    "description": "version id",
+                    "unit": ""
+                },
+		{
+                    "name": "scn_name",
+                    "description": "name of corresponding scenario",
+                    "unit": ""
+                },
+                {
+                    "name": "link_id",
+                    "description": "ID of line",
+                    "unit": ""
+                },
+                {
+                    "name": "bus0",
+                    "description": "name of first bus to which branch is attached",
+                    "unit": ""
+                },
+                {
+                    "name": "bus1",
+                    "description": "name of second bus to which branch is attached",
+                    "unit": ""
+                },
+                {
+                    "name": "efficiency",
+                    "description": "efficiency of power transfer from bus0 to bus1",
+                    "unit": ""
+                },
+                {
+                    "name": "p_nom",
+                    "description": "limit of active power which can pass through link",
+                    "unit": "MVA"
+                },
+                {
+                    "name": "p_nom_extendable",
+                    "description": "switch to allow capacity p_nom to be extended in OPF",
+                    "unit": ""
+                },
+                {
+                    "name": "p_nom_min",
+                    "description": "minimum value, if p_nom is extendable",
+                    "unit": "MVA"
+                },
+                {
+                    "name": "p_nom_max",
+                    "description": "maximum value, if p_nom is extendable",
+                    "unit": "MVA"
+                },
+                {
+                    "name": "capital_cost",
+                    "description": "capital cost of extending p_nom by 1 MVA",
+                    "unit": "EUR/MVA"
+                },
+                {
+                    "name": "length",
+                    "description": "length of line",
+                    "unit": "km"
+                },
+                {
+                    "name": "terrain_factor",
+                    "description": "...",
+                    "unit": ""
+                },
+                {
+                    "name": "geom",
+                    "description": "geometry that depict the real route of the line",
+                    "unit": ""
+                },
+                {
+                    "name": "topo",
+                    "description": "topology that depicts a direct connection between both busses",
+                    "unit": "..."
+                }
+            ]
+        }
+    ],
+    "metadata_version": "1.3"
+}';
+
+-- select description
+SELECT obj_description('grid.ego_pf_hv_link' ::regclass) ::json;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.3.0','result','grid','ego_pf_hv_link','ego_dp_structure_versioning.sql','hv pf links');
+
 
 -- powerflow load 
 /*
@@ -3603,3 +3781,143 @@ SELECT obj_description('grid.ego_pf_hv_transformer' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.3.0','result','grid','ego_pf_hv_transformer','ego_dp_structure_versioning.sql','hv pf transformer');
+
+-- line expansion costs 
+/*
+CREATE TABLE grid.ego_line_expansion_costs
+(
+  version text,
+  cost_id bigint NOT NULL,
+  voltage_level text,
+  component text,
+  measure text,
+  investment_cost double precision,
+  unit text,
+  comment text,
+  source text,
+  capital_costs_pypsa double precision,
+  CONSTRAINT ego_line_expansion_costs_pkey PRIMARY KEY (cost_id)
+);
+
+--FK
+ALTER TABLE grid.ego_line_expansion_costs
+	ADD CONSTRAINT ego_line_expansion_costs_fkey FOREIGN KEY (version) 
+	REFERENCES model_draft.ego_scenario(version) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+-- grant (oeuser)
+ALTER TABLE	grid.ego_line_expansion_costs OWNER TO oeuser;
+
+*/
+
+-- metadata
+
+COMMENT ON TABLE grid.ego_line_expansion_costs IS '{
+    "title": "eGo power line expansion costs",
+    "description": "Assumption of power line expansion costs for eGo hv powerflow",
+    "language": [ "eng" ],
+    "spatial": {
+        "resolution": "",
+        "location": "",
+        "extend": "Germany"
+    },
+    "temporal": {
+        "reference_date": " ",
+        "start": "",
+        "end": "",
+        "resolution": ""
+    },
+    "sources": [
+        {
+            "url": "https://github.com/openego/data_processing",
+            "copyright": "\\u00a9 ZNES Europ-Universität Flensburg",
+            "name": "eGo dataprocessing",
+            "license": "GNU Affero General Public License Version 3 (AGPL-3.0)",
+            "description": " "
+        },
+        {
+            "url": "https://www.netzentwicklungsplan.de/sites/default/files/paragraphs-files/kostenschaetzungen_nep_2025_1_entwurf.pdf",
+            "copyright": "\\u00a9 50Hertz Transmission GmbH, Amprion GmbH, TenneT TSO GmbH, TransnetBW GmbH",
+            "name": "Netzentwicklungsplan 2015 erster Entwurf",
+            "license": "unknown",
+            "description": " "
+        },
+        {
+            "url": "https://shop.dena.de/sortiment/detail/produkt/dena-verteilnetzstudie-ausbau-und-innovationsbedarf-der-stromverteilnetze-in-deutschland-bis-2030/",
+            "copyright": "\\u00a9 Dena",
+            "name": "dena-Verteilnetzstudie: Ausbau- und Innovationsbedarf der Stromverteilnetze in Deutschland bis 2030",
+            "license": "unknown",
+            "description": " "
+        }
+    ],
+    "license": {
+        "name": "Open Data Commons Open Database License 1.0",
+        "copyright": "\\u00a9 Europa-Universität, Center for Sustainable Energy Systems",
+        "url": "https://opendatacommons.org/licenses/odbl/1.0/",
+        "instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
+        "version": "1.0",
+        "id": "ODbL-1.0"
+    },
+    "contributors": [
+        {
+            "date": "2018-01-31",
+            "comment": "Create table",
+            "name": "wolf_bunke",
+            "email": ""
+        }
+    ],
+    "resources": [
+        {
+            "fields": [
+                {
+                    "name": "version",
+                    "description": "version id",
+                    "unit": ""
+                },
+		{
+                    "name": "cost_id",
+                    "unit": "",
+                    "description": "unique id for costs entries"
+                },
+                {
+                    "name": "voltage_level",
+                    "unit": "kV",
+                    "description": "Power voltage level of component"
+                },
+                {
+                    "name": "component",
+                    "unit": " ",
+                    "description": "Name of component"
+                },
+                {
+                    "name": "measure",
+                    "unit": " ",
+                    "description": "measure "
+                },
+				{
+                    "name": "investment_cost",
+                    "unit": "see column unit",
+                    "description": "investment cost of component"
+                },
+				{
+                    "name": "comment",
+                    "unit": "",
+                    "description": "Comment"
+                },
+                {
+                    "name": "source",
+                    "unit": "",
+                    "description": "short name of data source"
+                }
+            ],
+            "name": "grid.ego_line_expansion_costs",
+            "format": "sql"
+        }
+    ],
+    "metadata_version": "1.3"
+}';#
+
+-- select description
+SELECT obj_description('grid.ego_line_expansion_costs' ::regclass) ::json;
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.3.0','result','grid','ego_line_expansion_costs','ego_dp_structure_versioning.sql','hv pf line expansion costs');

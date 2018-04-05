@@ -63,8 +63,8 @@ os.environ['PATH'] += r';C://Program Files/PostgreSQL/9.4\bin'
 # http://www.postgresql.org/docs/current/static/libpq-envars.html
 os.environ['PGHOST'] = 'localhost'
 os.environ['PGPORT'] = '5432'
-os.environ['PGUSER'] = 'ludwig_huelk'
-os.environ['PGPASSWORD'] = 'Ls85@12Be'
+os.environ['PGUSER'] = ''
+os.environ['PGPASSWORD'] = ''
 os.environ['PGDATABASE'] = 'oedb'
 
 # logger

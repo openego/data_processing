@@ -766,9 +766,35 @@ INSERT INTO model_draft.ego_dp_supply_res_powerplant  (preversion,id, start_up_d
     '380', NULL, NULL, NULL,'NEP 2035','commissioning'
   FROM model_draft.ego_dp_supply_res_powerplant;
 
----
---   Wind Onshore
---   Use of "easy" Prox2Now Method like Photovoltaic
+-- Insert SQ
+DROP TABLE IF EXISTS 	model_draft.ego_supply_res_woff_2035_temp CASCADE;
+CREATE TABLE 		model_draft.ego_supply_res_woff_2035_temp AS
+	SELECT * 
+	FROM 
+	  model_draft.ego_dp_supply_res_powerplant
+	WHERE
+	generation_subtype = 'wind_offshore'
+	AND scenario in ('Status Quo');
+-- create index GIST (geom)
+CREATE INDEX ego_supply_res_woff_2035_temp_geom_idx
+	ON model_draft.ego_supply_res_woff_2035_temp USING gist (geom);
+-- grant (oeuser)
+ALTER TABLE model_draft.ego_supply_res_woff_2035_temp OWNER TO oeuser;
+-- Update 
+UPDATE model_draft.ego_supply_res_woff_2035_temp 
+set source   = 'Status Quo',
+    scenario = 'NEP 2035',
+    preversion  = 'v0.3.0'::text;
+-- Insert SQ as NEP
+Insert into model_draft.ego_dp_supply_res_powerplant
+	SELECT *
+	FROM model_draft.ego_supply_res_woff_2035_temp
+	WHERE scenario =  'NEP 2035';
+
+
+--- 
+--   Wind Onshore 
+--   Use of "easy" Prox2Now Method like Photovoltaic 
 /*
 Step 0 Get Nuts id per Unit
 Step 1 capacity per municipality -> Pro2Now
@@ -1184,6 +1210,7 @@ AND AA.re_id = A.re_id;
 -- ego 100 Photovoltaic
 -- Step 1
 ---
+ 
 
 DROP SEQUENCE IF EXISTS model_draft.ego_supply_res_pv_2050_germany_mun_id_seq CASCADE;
 CREATE SEQUENCE model_draft.ego_supply_res_pv_2050_germany_mun_id_seq START 1;
@@ -1354,7 +1381,7 @@ CREATE TABLE 		model_draft.ego_supply_res_woff_2050_temp AS
 	  model_draft.ego_dp_supply_res_powerplant
 	WHERE
 	generation_subtype = 'wind_offshore'
-	AND scenario in ('Status Quo','NEP 2035');
+	AND scenario in ('NEP 2035');
 
 -- create index GIST (geom)
 CREATE INDEX ego_supply_res_woff_2050_temp_geom_idx
@@ -1582,4 +1609,6 @@ DROP TABLE IF EXISTS model_draft.ego_supply_res_biomass_2050_temp CASCADE;
 DROP TABLE IF EXISTS model_draft.ego_supply_res_pv_2050_germany_mun_temp CASCADE;
 DROP TABLE IF EXISTS model_draft.ego_supply_res_hydro_2050_temp CASCADE;
 DROP TABLE IF EXISTS model_draft.ego_supply_res_chp_2050_temp CASCADE;
+DROP TABLE IF EXISTS model_draft.ego_supply_res_woff_2035_temp CASCADE;
+
  */

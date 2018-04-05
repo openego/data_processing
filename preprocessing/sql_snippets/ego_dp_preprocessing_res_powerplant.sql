@@ -55,6 +55,7 @@ CREATE TABLE model_draft.ego_dp_supply_res_powerplant
   scenario character varying NOT NULL,
   flag character varying,
   nuts character varying,
+  w_id bigint, 
   CONSTRAINT ego_dp_supply_res_powerplant_pkey PRIMARY KEY (preversion,id,scenario)
 )
 WITH (
@@ -158,7 +159,8 @@ COMMENT ON TABLE model_draft.ego_dp_supply_res_powerplant IS '{
 				{"name": "rea_geom_new", "description": "Geometry of new position", "unit": "" },				
 				{"name": "scenario", "description": "Name of scenario", "unit": "" },
 				{"name": "flag", "description": "Flag of scenario changes of an power plant unit (repowering, decommission or commissioning).", "unit": "" },
-				{"name": "nuts", "description": "NUTS ID).", "unit": "" } ] } ],		
+				{"name": "nuts", "description": "NUTS ID", "unit": "" },
+				{"name": "w_id", "description": "ID of corresponding weather cell", "unit": "" } ] } ],		
 	"metadata_version": "1.3"}';
 
 -- select description
@@ -285,11 +287,11 @@ UPDATE model_draft.ego_dp_supply_res_powerplant
 		WHEN eeg_id LIKE '%%BALTIC%%' 
 		THEN (SELECT geom from model_draft.ego_dp_supply_res_powerplant where id = 1561137)
 		WHEN eeg_id LIKE '%%RIFFE%%' 
-		THEN ST_SetSRID(ST_MakePoint(6.48, 53.69),3035)
+		THEN ST_Transform(ST_SetSRID(ST_MakePoint(6.48, 53.69),4326), 3035)
 		WHEN eeg_id LIKE '%%ALPHAVENTUE%%' 
-		THEN ST_SetSRID(ST_MakePoint(6.598333, 54.008333),3035)
+		THEN ST_Transform(ST_SetSRID(ST_MakePoint(6.598333, 54.008333),4326), 3035)
 		WHEN eeg_id LIKE '%%BAOEE%%' 
-		THEN ST_SetSRID(ST_MakePoint(5.975, 54.358333),3035)
+		THEN ST_Transform(ST_SetSRID(ST_MakePoint(5.975, 54.358333),4326), 3035) 
 		END)
 	WHERE postcode = '00000' OR postcode = 'keine' or postcode = 'O04WF' AND generation_subtype = 'wind_offshore';
 

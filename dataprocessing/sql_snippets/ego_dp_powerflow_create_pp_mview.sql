@@ -9,9 +9,11 @@ __author__ = "wolfbunke"
 
 */
 
+
 --------------------------------------------------------------------------------
 -- Part IV 
 --          Create Views by scenario
+--	    Scenarios: ego 100%
 --------------------------------------------------------------------------------
 
 -- MView for Status Quo
@@ -160,6 +162,7 @@ CREATE MATERIALIZED VIEW model_draft.ego_supply_res_powerplant_nep2035_mview AS
 		 ORDER BY id	
 	) sub2
 	Order by id;
+	
 
 ALTER MATERIALIZED VIEW model_draft.ego_supply_res_powerplant_nep2035_mview
     OWNER TO oeuser;
@@ -232,6 +235,7 @@ CREATE MATERIALIZED VIEW model_draft.ego_supply_res_powerplant_ego100_mview AS
 		 ORDER BY id	
 	) sub3
 	Order by id;
+	
 
 ALTER MATERIALIZED VIEW model_draft.ego_supply_res_powerplant_ego100_mview
     OWNER TO oeuser;

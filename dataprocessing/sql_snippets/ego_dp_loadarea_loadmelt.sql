@@ -13,6 +13,12 @@ __url__         = "https://github.com/openego/data_processing/blob/master/LICENS
 __author__      = "Ludee"
 */
 
+-- collect loads
+DROP TABLE IF EXISTS	model_draft.ego_demand_load_collect CASCADE;
+CREATE TABLE		model_draft.ego_demand_load_collect (
+	id SERIAL,
+	geom geometry(Polygon,3035),
+	CONSTRAINT ego_demand_load_collect_pkey PRIMARY KEY (id));
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_demand_la_osm','ego_dp_loadarea_loadmelt.sql',' ');
@@ -20,12 +26,17 @@ SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_demand_la_osm','ego_
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_demand_la_zensus_cluster','ego_dp_loadarea_loadmelt.sql',' ');
 
--- collect loads
-DROP TABLE IF EXISTS    model_draft.ego_demand_load_collect CASCADE;
-CREATE TABLE            model_draft.ego_demand_load_collect (
-    id SERIAL,
-    geom geometry(Polygon,3035),
-    CONSTRAINT ego_demand_load_collect_pkey PRIMARY KEY (id));
+-- insert loads OSM
+INSERT INTO	model_draft.ego_demand_load_collect (geom)
+	SELECT	geom
+	FROM	model_draft.ego_demand_la_osm
+    ORDER BY gid;
+
+-- insert loads zensus cluster
+INSERT INTO	model_draft.ego_demand_load_collect (geom)
+	SELECT	geom
+	FROM	model_draft.ego_demand_la_zensus_cluster
+    ORDER BY cid;
 
 -- index GIST (geom)
 CREATE INDEX ego_demand_load_collect_geom_idx
@@ -36,29 +47,28 @@ ALTER TABLE model_draft.ego_demand_load_collect OWNER TO oeuser;
 
 -- metadata
 COMMENT ON TABLE model_draft.ego_demand_load_collect IS '{
-    "comment": "eGoDP - Temporary table",
-    "version": "v0.3.0" }';
-
--- insert loads OSM
-INSERT INTO model_draft.ego_demand_load_collect (geom)
-    SELECT  osm.geom
-    FROM    model_draft.ego_demand_la_osm AS osm;
-
--- insert loads zensus cluster
-INSERT INTO model_draft.ego_demand_load_collect (geom)
-    SELECT  zensus.geom
-    FROM    model_draft.ego_demand_la_zensus_cluster AS zensus;
+    "comment": "eGoDP - Temporary table", 
+    "version": "v0.3.0",
+    "published": "none" }';
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_demand_load_collect','ego_dp_loadarea_loadmelt.sql',' ');
 
 
--- Buffer collected loads with with 100m
-DROP TABLE IF EXISTS    model_draft.ego_demand_load_collect_buffer100 CASCADE;
-CREATE TABLE            model_draft.ego_demand_load_collect_buffer100 (
-    id SERIAL,
-    geom geometry(Polygon,3035),
-    CONSTRAINT ego_demand_load_collect_buffer100_pkey PRIMARY KEY (id));
+-- buffer with 100m
+DROP TABLE IF EXISTS	model_draft.ego_demand_load_collect_buffer100 CASCADE;
+CREATE TABLE		model_draft.ego_demand_load_collect_buffer100 (
+	id SERIAL,
+	geom geometry(Polygon,3035),
+	CONSTRAINT ego_demand_load_collect_buffer100_pkey PRIMARY KEY (id));
+
+-- insert buffer
+INSERT INTO	model_draft.ego_demand_load_collect_buffer100 (geom)
+	SELECT	(ST_DUMP(ST_MULTI(ST_UNION(
+			ST_BUFFER(geom, 100)
+		)))).geom ::geometry(Polygon,3035) AS geom
+	FROM	model_draft.ego_demand_load_collect
+    ORDER BY id;
 
 -- index GIST (geom)
 CREATE INDEX ego_demand_load_collect_buffer100_geom_idx
@@ -69,26 +79,29 @@ ALTER TABLE model_draft.ego_demand_load_collect_buffer100 OWNER TO oeuser;
 
 -- metadata
 COMMENT ON TABLE model_draft.ego_demand_load_collect_buffer100 IS '{
-    "comment": "eGoDP - Temporary table",
-    "version": "v0.3.0" }';
-
--- insert buffer
-INSERT INTO model_draft.ego_demand_load_collect_buffer100 (geom)
-    SELECT  (ST_DUMP(ST_MULTI(ST_UNION(
-            ST_BUFFER(poly.geom, 100)
-            )))).geom ::geometry(Polygon,3035) AS geom
-    FROM    model_draft.ego_demand_load_collect AS poly;
+    "comment": "eGoDP - Temporary table", 
+    "version": "v0.3.0",
+    "published": "none" }';
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_demand_load_collect_buffer100','ego_dp_loadarea_loadmelt.sql',' ');
 
 
--- Unbuffer the collection with 100m
-DROP TABLE IF EXISTS    model_draft.ego_demand_load_melt CASCADE;
-CREATE TABLE            model_draft.ego_demand_load_melt (
-    id SERIAL,
-    geom geometry(Polygon,3035),
-    CONSTRAINT ego_demand_load_melt_pkey PRIMARY KEY (id));
+-- unbuffer with 99m
+DROP TABLE IF EXISTS	model_draft.ego_demand_load_melt CASCADE;
+CREATE TABLE		model_draft.ego_demand_load_melt (
+	id SERIAL,
+	geom geometry(Polygon,3035),
+	CONSTRAINT ego_demand_load_melt_pkey PRIMARY KEY (id));
+
+-- insert buffer
+INSERT INTO	model_draft.ego_demand_load_melt (geom)
+	SELECT	(ST_DUMP(ST_MULTI(ST_UNION(
+			ST_BUFFER(buffer.geom, -99)
+		)))).geom ::geometry(Polygon,3035) AS geom
+	FROM	model_draft.ego_demand_load_collect_buffer100 AS buffer
+	GROUP BY buffer.id
+	ORDER BY buffer.id;
 
 -- index GIST (geom)
 CREATE INDEX ego_demand_load_melt_geom_idx
@@ -99,17 +112,9 @@ ALTER TABLE model_draft.ego_demand_load_melt OWNER TO oeuser;
 
 -- metadata
 COMMENT ON TABLE model_draft.ego_demand_load_melt IS '{
-    "comment": "eGoDP - Temporary table",
-    "version": "v0.3.0" }';
-
--- insert buffer
-INSERT INTO model_draft.ego_demand_load_melt (geom)
-    SELECT  (ST_DUMP(ST_MULTI(ST_UNION(
-            ST_BUFFER(buffer.geom, -100)
-            )))).geom ::geometry(Polygon,3035) AS geom
-    FROM    model_draft.ego_demand_load_collect_buffer100 AS buffer
-    GROUP BY buffer.id
-    ORDER BY buffer.id;
+    "comment": "eGoDP - Temporary table", 
+    "version": "v0.3.0",
+    "published": "none" }';
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_demand_load_melt','ego_dp_loadarea_loadmelt.sql',' ');
@@ -143,9 +148,10 @@ CREATE INDEX ego_demand_load_melt_error_geom_mview_geom_idx
 ALTER TABLE model_draft.ego_demand_load_melt_error_geom_mview OWNER TO oeuser;
 
 -- metadata
-COMMENT ON MATERIALIZED VIEW model_draft.ego_demand_load_melt_error_geom_mview IS '{
-    "comment": "eGoDP - Temporary table",
-    "version": "v0.3.0" }';
+COMMENT ON TABLE model_draft.ego_demand_load_melt_error_geom_mview IS '{
+    "comment": "eGoDP - Temporary table", 
+    "version": "v0.3.0",
+    "published": "none" }';
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_demand_load_melt_error_geom_mview','ego_dp_loadarea_loadmelt.sql',' ');
@@ -180,9 +186,10 @@ CREATE INDEX ego_demand_load_melt_error_geom_fix_mview_geom_idx
 ALTER TABLE model_draft.ego_demand_load_melt_error_geom_fix_mview OWNER TO oeuser;
 
 -- metadata
-COMMENT ON MATERIALIZED VIEW model_draft.ego_demand_load_melt_error_geom_fix_mview IS '{
-    "comment": "eGoDP - Temporary table",
-    "version": "v0.3.0" }';
+COMMENT ON TABLE model_draft.ego_demand_load_melt_error_geom_fix_mview IS '{
+    "comment": "eGoDP - Temporary table", 
+    "version": "v0.3.0",
+    "published": "none" }';
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_demand_load_melt_error_geom_fix_mview','ego_dp_loadarea_loadmelt.sql',' ');
@@ -230,9 +237,10 @@ CREATE INDEX ego_demand_load_melt_error_2_geom_mview_geom_idx
 ALTER TABLE model_draft.ego_demand_load_melt_error_2_geom_mview OWNER TO oeuser;
 
 -- metadata
-COMMENT ON MATERIALIZED VIEW model_draft.ego_demand_load_melt_error_2_geom_mview IS '{
-    "comment": "eGoDP - Temporary table",
-    "version": "v0.3.0" }';
+COMMENT ON TABLE model_draft.ego_demand_load_melt_error_2_geom_mview IS '{
+    "comment": "eGoDP - Temporary table", 
+    "version": "v0.3.0",
+    "published": "none" }';
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_demand_load_melt_error_2_geom_mview','ego_dp_loadarea_loadmelt.sql',' ');

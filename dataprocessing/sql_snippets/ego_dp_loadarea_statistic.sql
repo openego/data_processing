@@ -180,89 +180,105 @@ SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_data_processing_res
 
 
 
--- MV Griddistrict types
-
+/* -- mv-griddistrict types
+DROP TABLE IF EXISTS 	model_draft.ego_data_processing_results_mvgd CASCADE;
+CREATE TABLE		model_draft.ego_data_processing_results_mvgd AS
+	SELECT	subst_id,
+		'0' ::integer AS type1,
+		'0' ::integer AS type1_cnt,
+		'0' ::integer AS type2,
+		'0' ::integer AS type2_cnt,
+		'0' ::integer AS type3,
+		'0' ::integer AS type3_cnt,
+		'0' ::char(1) AS "group",
+		'0' ::integer AS gem,
+		'0' ::integer AS gem_clean,
+		'0' ::integer AS la_count,
+		'0' ::decimal(10,1) AS area_ha,	
+		'0' ::decimal(10,1) AS la_area,
+		'0' ::decimal(10,1) AS free_area,
+		'0' ::decimal(4,1) AS area_share,
+		'0' ::numeric AS consumption,
+		'0' ::numeric AS consumption_per_area,
+		geom,
+		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
+	FROM	model_draft.ego_grid_mv_griddistrict AS gd;
+ */
 -- Type1
-UPDATE model_draft.ego_grid_mv_griddistrict AS t1
-    SET type1 = t2.type1
-    FROM (
-        SELECT  gd.subst_id,
-                COUNT(ST_PointOnSurface(typ.geom))::integer AS type1
-        FROM    model_draft.ego_grid_mv_griddistrict_type1 AS typ,
-                model_draft.ego_grid_mv_griddistrict AS gd
-        WHERE   gd.geom && typ.geom AND
-                ST_CONTAINS(gd.geom,ST_PointOnSurface(typ.geom))
-        GROUP BY gd.subst_id
-        )AS t2
-    WHERE   t1.subst_id = t2.subst_id;
+UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
+SET  	type1 = t2.type1
+FROM	(SELECT	gd.subst_id,
+		COUNT(ST_PointOnSurface(typ.geom))::integer AS type1
+	FROM	model_draft.ego_grid_mv_griddistrict_type1 AS typ,
+		model_draft.ego_grid_mv_griddistrict AS gd
+	WHERE	gd.geom && typ.geom AND
+		ST_CONTAINS(gd.geom,ST_PointOnSurface(typ.geom))
+	GROUP BY gd.subst_id
+	)AS t2
+WHERE  	t1.subst_id = t2.subst_id;
 
-UPDATE model_draft.ego_grid_mv_griddistrict AS t1
-    SET type1_cnt = t2.type_cnt
-    FROM (
-        SELECT  gd.subst_id,
-                COUNT(ST_PointOnSurface(typ.geom))::integer AS type_cnt
-        FROM    model_draft.ego_boundaries_hvmv_subst_per_gem_1_mview AS typ,
-                model_draft.ego_grid_mv_griddistrict AS gd
-        WHERE   gd.geom && typ.geom AND
-                ST_CONTAINS(gd.geom,ST_PointOnSurface(typ.geom))
-        GROUP BY gd.subst_id
-        )AS t2
-    WHERE   t1.subst_id = t2.subst_id;
+UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
+SET  	type1_cnt = t2.type_cnt
+FROM	(SELECT	gd.subst_id,
+		COUNT(ST_PointOnSurface(typ.geom))::integer AS type_cnt
+	FROM	model_draft.ego_boundaries_hvmv_subst_per_gem_1_mview AS typ,
+		model_draft.ego_grid_mv_griddistrict AS gd
+	WHERE	gd.geom && typ.geom AND
+		ST_CONTAINS(gd.geom,ST_PointOnSurface(typ.geom))
+	GROUP BY gd.subst_id
+	)AS t2
+WHERE  	t1.subst_id = t2.subst_id;
 
 -- Type2
-UPDATE model_draft.ego_grid_mv_griddistrict AS t1
-    SET type2 = t2.type2
-    FROM (
-        SELECT  gd.subst_id,
-                COUNT(ST_PointOnSurface(typ.geom))::integer AS type2
-        FROM    model_draft.ego_grid_mv_griddistrict_type2 AS typ,
-                model_draft.ego_grid_mv_griddistrict AS gd
-        WHERE   gd.geom && typ.geom AND
-                ST_CONTAINS(gd.geom,ST_PointOnSurface(typ.geom))
-        GROUP BY gd.subst_id
-        )AS t2
-    WHERE   t1.subst_id = t2.subst_id;
+UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
+SET  	type2 = t2.type2
+FROM	(SELECT	gd.subst_id,
+		COUNT(ST_PointOnSurface(typ.geom))::integer AS type2
+	FROM	model_draft.ego_grid_mv_griddistrict_type2 AS typ,
+		model_draft.ego_grid_mv_griddistrict AS gd
+	WHERE	gd.geom && typ.geom AND
+		ST_CONTAINS(gd.geom,ST_PointOnSurface(typ.geom))
+	GROUP BY gd.subst_id
+	)AS t2
+WHERE  	t1.subst_id = t2.subst_id;
 
-UPDATE model_draft.ego_grid_mv_griddistrict AS t1
-    SET type2_cnt = t2.type_cnt
-    FROM (
-        SELECT  gd.subst_id,
-                COUNT(ST_PointOnSurface(typ.geom))::integer AS type_cnt
-        FROM    model_draft.ego_grid_hvmv_substation_voronoi_cut AS typ,
-                model_draft.ego_grid_mv_griddistrict AS gd
-        WHERE   gd.geom && typ.geom AND
-                ST_CONTAINS(gd.geom,ST_PointOnSurface(typ.geom))
-        GROUP BY gd.subst_id
-        )AS t2
-    WHERE   t1.subst_id = t2.subst_id;
+UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
+SET  	type2_cnt = t2.type_cnt
+FROM	(SELECT	gd.subst_id,
+		COUNT(ST_PointOnSurface(typ.geom))::integer AS type_cnt
+	FROM	model_draft.ego_grid_hvmv_substation_voronoi_cut AS typ,
+		model_draft.ego_grid_mv_griddistrict AS gd
+	WHERE	gd.geom && typ.geom AND
+		ST_CONTAINS(gd.geom,ST_PointOnSurface(typ.geom))
+	GROUP BY gd.subst_id
+	)AS t2
+WHERE  	t1.subst_id = t2.subst_id;
 
 
 -- Type3
-UPDATE model_draft.ego_grid_mv_griddistrict AS t1
-    SET type3 = t2.type3
-    FROM (
-        SELECT  gd.subst_id,
-                COUNT(ST_PointOnSurface(typ.geom))::integer AS type3
-        FROM    model_draft.ego_grid_mv_griddistrict_type3 AS typ,
-                model_draft.ego_grid_mv_griddistrict AS gd
-        WHERE   gd.geom && typ.geom AND
-                ST_CONTAINS(gd.geom,ST_PointOnSurface(typ.geom))
-        GROUP BY gd.subst_id
-        )AS t2
-    WHERE   t1.subst_id = t2.subst_id;
+UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
+SET  	type3 = t2.type3
+FROM	(SELECT	gd.subst_id,
+		COUNT(ST_PointOnSurface(typ.geom))::integer AS type3
+	FROM	model_draft.ego_grid_mv_griddistrict_type3 AS typ,
+		model_draft.ego_grid_mv_griddistrict AS gd
+	WHERE	gd.geom && typ.geom AND
+		ST_CONTAINS(gd.geom,ST_PointOnSurface(typ.geom))
+	GROUP BY gd.subst_id
+	)AS t2
+WHERE  	t1.subst_id = t2.subst_id;
 
-UPDATE model_draft.ego_grid_mv_griddistrict AS t1
-    SET type3_cnt = t2.type_cnt
-    FROM (
-        SELECT  gd.subst_id,
-                COUNT(ST_PointOnSurface(typ.geom))::integer AS type_cnt
-        FROM    model_draft.ego_boundaries_hvmv_subst_per_gem_3_mview AS typ,
-                model_draft.ego_grid_mv_griddistrict AS gd
-        WHERE   gd.geom && typ.geom AND
-                ST_CONTAINS(gd.geom,ST_PointOnSurface(typ.geom))
-        GROUP BY gd.subst_id
-        )AS t2
-    WHERE   t1.subst_id = t2.subst_id;
+UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
+SET  	type3_cnt = t2.type_cnt
+FROM	(SELECT	gd.subst_id,
+		COUNT(ST_PointOnSurface(typ.geom))::integer AS type_cnt
+	FROM	model_draft.ego_boundaries_hvmv_subst_per_gem_3_mview AS typ,
+		model_draft.ego_grid_mv_griddistrict AS gd
+	WHERE	gd.geom && typ.geom AND
+		ST_CONTAINS(gd.geom,ST_PointOnSurface(typ.geom))
+	GROUP BY gd.subst_id
+	)AS t2
+WHERE  	t1.subst_id = t2.subst_id;
 
 
 -- Group
@@ -335,54 +351,50 @@ UPDATE model_draft.ego_grid_mv_griddistrict AS t1
     WHERE   t1.subst_id = t2.subst_id;
 
 -- LA Count
-UPDATE model_draft.ego_grid_mv_griddistrict AS t1
-    SET la_count = t2.la_count
-    FROM (
-        SELECT  gd.subst_id,
-                COUNT(ST_PointOnSurface(la.geom))::integer AS la_count
-        FROM    model_draft.ego_demand_loadarea AS la,
-                model_draft.ego_grid_mv_griddistrict AS gd
-        WHERE   gd.geom && la.geom AND
-                ST_CONTAINS(gd.geom,ST_PointOnSurface(la.geom))
-        GROUP BY gd.subst_id
-        )AS t2
-    WHERE   t1.subst_id = t2.subst_id;
+UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
+SET  	la_count = t2.la_count
+FROM	(SELECT	gd.subst_id,
+		COUNT(ST_PointOnSurface(la.geom))::integer AS la_count
+	FROM	model_draft.ego_demand_loadarea AS la,
+		model_draft.ego_grid_mv_griddistrict AS gd
+	WHERE	gd.geom && la.geom AND
+		ST_CONTAINS(gd.geom,ST_PointOnSurface(la.geom))
+	GROUP BY gd.subst_id
+	)AS t2
+WHERE  	t1.subst_id = t2.subst_id;
 
 -- LA Area 3606
-UPDATE model_draft.ego_grid_mv_griddistrict AS t1
-    SET la_area = t2.la_area
-    FROM (
-        SELECT  gd.subst_id,
-                SUM(ST_AREA(la.geom)/10000) ::decimal(10,3) AS la_area
-        FROM    model_draft.ego_demand_loadarea AS la,
-                model_draft.ego_grid_mv_griddistrict AS gd
-        WHERE   gd.geom && la.geom AND
-                ST_CONTAINS(gd.geom,ST_PointOnSurface(la.geom))
-        GROUP BY gd.subst_id
-        )AS t2
-    WHERE   t1.subst_id = t2.subst_id;
+UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
+SET  	la_area = t2.la_area
+FROM	(SELECT	gd.subst_id,
+		SUM(ST_AREA(la.geom)/10000) ::decimal(10,3) AS la_area
+	FROM	model_draft.ego_demand_loadarea AS la,
+		model_draft.ego_grid_mv_griddistrict AS gd
+	WHERE	gd.geom && la.geom AND
+		ST_CONTAINS(gd.geom,ST_PointOnSurface(la.geom))
+	GROUP BY gd.subst_id
+	)AS t2
+WHERE  	t1.subst_id = t2.subst_id;
 
 -- not LA Area (free_area)
-UPDATE model_draft.ego_grid_mv_griddistrict AS t1
-    SET free_area = t2.free_area
-    FROM (
-        SELECT  gd.subst_id,
-                SUM(gd.area_ha)-SUM(gd.la_area) AS free_area
-        FROM    model_draft.ego_grid_mv_griddistrict as gd
-        GROUP BY gd.subst_id
-        )AS t2
-    WHERE   t1.subst_id = t2.subst_id;
+UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
+SET  	free_area = t2.free_area
+FROM	(SELECT	gd.subst_id,
+		SUM(gd.area_ha)-SUM(gd.la_area) AS free_area
+	FROM	model_draft.ego_grid_mv_griddistrict as gd
+	GROUP BY gd.subst_id
+	)AS t2
+WHERE  	t1.subst_id = t2.subst_id;
 
 -- not LA Area (free_area)
-UPDATE model_draft.ego_grid_mv_griddistrict AS t1
-    SET area_share = t2.area_share
-    FROM (
-        SELECT  gd.subst_id,
-                SUM(gd.la_area)/SUM(gd.area_ha)*100 AS area_share
-        FROM    model_draft.ego_grid_mv_griddistrict as gd
-        GROUP BY gd.subst_id
-        )AS t2
-    WHERE   t1.subst_id = t2.subst_id;
+UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
+SET  	area_share = t2.area_share
+FROM	(SELECT	gd.subst_id,
+		SUM(gd.la_area)/SUM(gd.area_ha)*100 AS area_share
+	FROM	model_draft.ego_grid_mv_griddistrict as gd
+	GROUP BY gd.subst_id
+	)AS t2
+WHERE  	t1.subst_id = t2.subst_id;
 
 /*
 SELECT  MAX(area_share) AS max,
@@ -411,13 +423,15 @@ SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_grid_mv_griddistric
 
 /*
 -- test
-SELECT  SUM(mvgd.consumption)
-FROM    model_draft.ego_grid_mv_griddistrict AS mvgd
+SELECT	SUM(mvgd.consumption)
+	FROM	model_draft.ego_grid_mv_griddistrict AS mvgd
 UNION ALL
 SELECT  SUM(la.sector_consumption_sum)
 FROM    model_draft.ego_demand_loadarea AS la;
 */
 
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_grid_mv_griddistrict','ego_paper_result.sql',' ');
 
 -- Calculate statistics for BKG vg250 
 DROP MATERIALIZED VIEW IF EXISTS    boundaries.bkg_vg250_statistics_mview CASCADE;
@@ -685,3 +699,5 @@ INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_na
 		'OK' AS status,
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
 	FROM	model_draft.ego_grid_hvmv_substation_ewe_mview; */
+	
+  

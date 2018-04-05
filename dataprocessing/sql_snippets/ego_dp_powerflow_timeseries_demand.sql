@@ -41,7 +41,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_load_pq_set (scn_name, load_id, temp_id, 
 			join model_draft.ego_grid_hv_electrical_neighbours_bus B
 			ON (B.cntr_id = substring(A.obj_label, 1, 2))
 		WHERE A.obj_label LIKE '%%load%%'
-		AND B.id < 27
+		AND B.central_bus = TRUE
 		AND A.type = 'from_bus'
 		AND A.scenario_id = 37
 		) SQ
