@@ -1,5 +1,7 @@
 /*
-All generators (conventional and renewable) are listed in a central table and a unified id (un_id) is assigned. 
+
+All generators from the `conventional <http://oep.iks.cs.ovgu.de/dataedit/view/model_draft/ego_dp_supply_conv_powerplant>`_ and `renewable <http://oep.iks.cs.ovgu.de/dataedit/view/model_draft/ego_dp_supply_res_powerplant>`_ power plant list are brought together in a `central generator list <http://oep.iks.cs.ovgu.de/dataedit/view/model_draft/ego_supply_generator>`_.
+A unified id (un_id) is assigned to those generators listed. Information on the un_id is then added to the conventional and renewable power plant lists.  
 
 __copyright__ 	= "Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems"
 __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"

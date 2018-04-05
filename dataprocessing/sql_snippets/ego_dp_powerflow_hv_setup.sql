@@ -1,20 +1,22 @@
-﻿/*
-setup for hv powerflow
+/*
+This script creates all tables which are needed for hv-powerflow calculations. The characteristics of those tables
+follow the structure of PyPSA's input data. 
 
-PF HV scenario settings
-PF HV source
-PF HV bus
-PF HV busmap
-PF HV generator
-PF HV line
-PF HV load
-PF HV storage
-PF HV temp resolution
-PF HV transformer
-PF HV mag set
-PF HV generator PQ set		
-PF HV load PQ set		
-PF HV storage PQ set		
+The following tables are created: 
+`model_draft.ego_grid_pf_hv_scenario_settings <http://oep.iks.cs.ovgu.de/dataedit/view/model_draft/ego_grid_pf_hv_scenario_settings>`_
+`model_draft.ego_grid_pf_hv_source <http://oep.iks.cs.ovgu.de/dataedit/view/model_draft/ego_grid_pf_hv_source>`_
+`model_draft.ego_grid_pf_hv_bus <http://oep.iks.cs.ovgu.de/dataedit/view/model_draft/ego_grid_pf_hv_bus>`_
+`model_draft.ego_grid_pf_hv_busmap <http://oep.iks.cs.ovgu.de/dataedit/view/model_draft/ego_grid_pf_hv_busmap>`_
+`model_draft.ego_grid_pf_hv_generator <http://oep.iks.cs.ovgu.de/dataedit/view/model_draft/ego_grid_pf_hv_generator>`_
+`model_draft.ego_grid_pf_hv_line <http://oep.iks.cs.ovgu.de/dataedit/view/model_draft/ego_grid_pf_hv_line>`_
+`model_draft.ego_grid_pf_hv_load <http://oep.iks.cs.ovgu.de/dataedit/view/model_draft/ego_grid_pf_hv_load>`_
+`model_draft.ego_grid_pf_hv_storage <http://oep.iks.cs.ovgu.de/dataedit/view/model_draft/ego_grid_pf_hv_storage>`_
+`model_draft.ego_grid_pf_hv_temp_resolution <http://oep.iks.cs.ovgu.de/dataedit/view/model_draft/ego_grid_pf_hv_temp_resolution>`_
+`model_draft.ego_grid_pf_hv_transformer <http://oep.iks.cs.ovgu.de/dataedit/view/model_draft/ego_grid_pf_hv_transformer>`_
+`model_draft.ego_grid_pf_hv_bus_v_mag_set <http://oep.iks.cs.ovgu.de/dataedit/view/model_draft/ego_grid_pf_hv_bus_v_mag_set>`_
+`model_draft.ego_grid_pf_hv_generator_pq_set <http://oep.iks.cs.ovgu.de/dataedit/view/model_draft/ego_grid_pf_hv_generator_pq_set>`_
+`model_draft.ego_grid_pf_hv_load_pq_set <http://oep.iks.cs.ovgu.de/dataedit/view/model_draft/ego_grid_pf_hv_load_pq_set>`_	
+`model_draft.ego_grid_pf_hv_storage_pq_set <http://oep.iks.cs.ovgu.de/dataedit/view/model_draft/ego_grid_pf_hv_storage_pq_set>`_		
 
 __copyright__ 	= "Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems"
 __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"

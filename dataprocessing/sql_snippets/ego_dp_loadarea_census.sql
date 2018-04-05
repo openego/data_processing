@@ -1,11 +1,12 @@
 /*
-census 2011 population per ha 
-Identify population in osm loads
+Loads from Census 2011
+Include Census 2011 population per ha.
+Identify population in OSM loads.
 
-__copyright__ 	= "Reiner Lemoine Institut"
-__license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
-__url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
-__author__ 	= "Ludee"
+__copyright__   = "Reiner Lemoine Institut"
+__license__     = "GNU Affero General Public License Version 3 (AGPL-3.0)"
+__url__         = "https://github.com/openego/data_processing/blob/master/LICENSE"
+__author__      = "Ludee"
 */
 
 
@@ -62,7 +63,7 @@ DELETE FROM	model_draft.ego_demand_la_zensus AS lp
 	WHERE	lp.inside_la IS TRUE;
 
 -- grant (oeuser)
-ALTER TABLE	model_draft.ego_demand_la_zensus OWNER TO oeuser;	
+ALTER TABLE model_draft.ego_demand_la_zensus OWNER TO oeuser;
 
 -- metadata
 COMMENT ON TABLE model_draft.ego_demand_la_zensus IS '{
@@ -96,42 +97,19 @@ INSERT INTO	model_draft.ego_demand_la_zensus_cluster(geom)
     ORDER BY gid;
 
 -- index gist (geom)
-CREATE INDEX	ego_demand_la_zensus_cluster_geom_idx
-	ON 	model_draft.ego_demand_la_zensus_cluster USING GIST (geom);
-
--- cluster data
-UPDATE 	model_draft.ego_demand_la_zensus_cluster AS t1
-	SET  	zensus_sum = t2.zensus_sum,
-		area_ha = t2.area_ha,
-		geom_buffer = t2.geom_buffer,
-		geom_centroid = t2.geom_centroid,
-		geom_surfacepoint = t2.geom_surfacepoint
-	FROM    (
-		SELECT	cl.cid AS cid,
-			SUM(lp.population) AS zensus_sum,
-			COUNT(lp.geom) AS area_ha,
-			ST_BUFFER(cl.geom, 100) AS geom_buffer,
-			ST_Centroid(cl.geom) AS geom_centroid,
-			ST_PointOnSurface(cl.geom) AS geom_surfacepoint
-		FROM	model_draft.ego_demand_la_zensus AS lp,
-			model_draft.ego_demand_la_zensus_cluster AS cl
-		WHERE  	cl.geom && lp.geom AND
-			ST_CONTAINS(cl.geom,lp.geom)
-		GROUP BY	cl.cid
-		ORDER BY	cl.cid
-		) AS t2
-	WHERE  	t1.cid = t2.cid;
+CREATE INDEX ego_demand_la_zensus_cluster_geom_idx
+    ON model_draft.ego_demand_la_zensus_cluster USING GIST (geom);
 
 -- index gist (geom_centroid)
-CREATE INDEX	ego_demand_la_zensus_cluster_geom_centroid_idx
-	ON	model_draft.ego_demand_la_zensus_cluster USING GIST (geom_centroid);
+CREATE INDEX ego_demand_la_zensus_cluster_geom_centroid_idx
+    ON model_draft.ego_demand_la_zensus_cluster USING GIST (geom_centroid);
 
 -- index gist (geom_surfacepoint)
-CREATE INDEX	ego_demand_la_zensus_cluster_geom_surfacepoint_idx
-	ON	model_draft.ego_demand_la_zensus_cluster USING GIST (geom_surfacepoint);
+CREATE INDEX ego_demand_la_zensus_cluster_geom_surfacepoint_idx
+    ON model_draft.ego_demand_la_zensus_cluster USING GIST (geom_surfacepoint);
 
 -- grant (oeuser)
-ALTER TABLE	model_draft.ego_demand_la_zensus_cluster OWNER TO oeuser;
+ALTER TABLE model_draft.ego_demand_la_zensus_cluster OWNER TO oeuser;
 
 -- metadata
 COMMENT ON TABLE model_draft.ego_demand_la_zensus_cluster IS '{
@@ -139,8 +117,33 @@ COMMENT ON TABLE model_draft.ego_demand_la_zensus_cluster IS '{
     "version": "v0.3.0",
     "published": "none" }';
 
--- select description
-SELECT obj_description('model_draft.ego_demand_la_zensus_cluster' ::regclass) ::json;
+-- insert cluster
+INSERT INTO model_draft.ego_demand_la_zensus_cluster(geom)
+    SELECT  (ST_DUMP(ST_MULTI(ST_UNION(grid.geom)))).geom ::geometry(Polygon,3035) AS geom
+    FROM    model_draft.ego_demand_la_zensus AS grid;
+
+-- cluster data
+UPDATE model_draft.ego_demand_la_zensus_cluster AS t1
+    SET zensus_sum = t2.zensus_sum,
+        area_ha = t2.area_ha,
+        geom_buffer = t2.geom_buffer,
+        geom_centroid = t2.geom_centroid,
+        geom_surfacepoint = t2.geom_surfacepoint
+    FROM    (
+        SELECT  cl.cid AS cid,
+                SUM(lp.population) AS zensus_sum,
+                COUNT(lp.geom) AS area_ha,
+                ST_BUFFER(cl.geom, 100) AS geom_buffer,
+                ST_Centroid(cl.geom) AS geom_centroid,
+                ST_PointOnSurface(cl.geom) AS geom_surfacepoint
+        FROM    model_draft.ego_demand_la_zensus AS lp,
+                model_draft.ego_demand_la_zensus_cluster AS cl
+        WHERE   cl.geom && lp.geom AND
+                ST_CONTAINS(cl.geom,lp.geom)
+        GROUP BY cl.cid
+        ORDER BY cl.cid
+        ) AS t2
+    WHERE   t1.cid = t2.cid;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_demand_la_zensus_cluster','ego_dp_loadarea_census.sql',' ');
@@ -170,7 +173,7 @@ CREATE MATERIALIZED VIEW         	model_draft.ego_society_zensus_per_la_mview AS
 	FROM	model_draft.ego_demand_la_zensus_cluster;
 
 -- grant (oeuser)
-ALTER TABLE	model_draft.ego_society_zensus_per_la_mview OWNER TO oeuser;
+ALTER TABLE model_draft.ego_society_zensus_per_la_mview OWNER TO oeuser;
 
 -- metadata
 COMMENT ON TABLE model_draft.ego_society_zensus_per_la_mview IS '{

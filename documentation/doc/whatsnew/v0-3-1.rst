@@ -1,0 +1,24 @@
+Release v0.3.1 (April XX, 2018)
++++++++++++++++++++++++++++++++
+
+[Description]
+
+
+
+Added features
+--------------
+
+*
+
+
+Bug fixes
+---------
+
+*
+
+
+Other changes
+-------------
+
+* change use of geom (original) to rea_geom_new
+* ...

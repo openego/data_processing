@@ -1,31 +1,14 @@
 ﻿/*
-
 SQL Script which prepare and insert a conventional power plant data list by scenario
-for the project open_eGo and the tools eTraGo and eDisGo.
+for the project open_eGo and the tools eTraGo and eDisGo. And insert  Power plants by 
+NEP 2035 scenario data set.
+
 
 __copyright__ = "Europa-Universität Flensburg - ZNES"
 __license__ = "GNU Affero General Public License Version 3 (AGPL-3.0)"
 __url__ = "https://github.com/openego/data_processing/blob/master/LICENSE"
 __author__ = "wolfbunke"
 
-    
- 
-Notes:
-------
-   
-  Part II:
-            Power plants by NEP 2035 scenario data
-  Part III:
-            Power plants by eGo 100 scenario data
-
-Documentation:
---------------
- flags:
-  repowering : old unit get an update of this electrical_capacity (plus or minus)
-  commissioning: New unit by a scenario assumption     
-  decommissioning: decommissioning of status quo units by a scenario assumption
-  constantly: existing plant for status quo or other scenarios
-  
 */
 
 

@@ -1,16 +1,15 @@
 ﻿/*
 SQL Script to create mviews displaying power plants by scenario.
 
-__copyright__ = "Europa-Universität Flensburg - ZNES"
-__license__ = "GNU Affero General Public License Version 3 (AGPL-3.0)"
-__url__ = "https://github.com/openego/data_processing/blob/master/LICENSE"
-__author__ = "wolfbunke"
+ToDo
+----
+- create and add docu meta string
 
 
-toDo:
- - alter supply table add preversion
- - CREATE json doc-string
-
+__copyright__   = "Europa-Universität Flensburg - ZNES"
+__license__     = "GNU Affero General Public License Version 3 (AGPL-3.0)"
+__url__         = "https://github.com/openego/data_processing/blob/master/LICENSE"
+__author__      = "wolfbunke"
 */
 
 

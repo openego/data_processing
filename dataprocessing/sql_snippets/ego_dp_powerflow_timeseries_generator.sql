@@ -1,5 +1,7 @@
-﻿/*
-Quick workaround to transfer renpassG!S results into the corresponding powerflow table.
+/*
+This is a quick workaround to transfer `renpassG!S results <calc_renpass_gis.renpass_gis_results>`_ on generator time series
+into the corresponding powerflow table. It adds time series (p_set) for generators in Germany and the neighbouring countries to the
+`respective table <http://oep.iks.cs.ovgu.de/dataedit/view/model_draft/ego_grid_pf_hv_generator_pq_set>`_
 
 __copyright__ 	= "Europa Universitaet Flensburg, Centre for Sustainable Energy Systems"
 __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"

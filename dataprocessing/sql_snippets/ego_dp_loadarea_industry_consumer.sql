@@ -1,11 +1,15 @@
 /*
-osm industry 
+OSM Industry consumer
+Calculate specific electricity consumption per million Euro GVA for each federal state.
+Calculate the electricity consumption for each industry polygon.
+Identify corresponding bus for large scale consumer (lsc) with the help of ehv-voronoi.
 
-__copyright__ 	= "Reiner Lemoine Institut"
-__license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
-__url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
-__author__ 	= "IlkaCu, Ludee"
+__copyright__   = "Reiner Lemoine Institut"
+__license__     = "GNU Affero General Public License Version 3 (AGPL-3.0)"
+__url__         = "https://github.com/openego/data_processing/blob/master/LICENSE"
+__author__      = "IlkaCu, Ludee"
 */
+
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.3.0','input','demand','ego_demand_federalstate','ego_dp_loadarea_industry_consumer.sql',' ');
@@ -16,19 +20,19 @@ SELECT ego_scenario_log('v0.3.0','input','economy','destatis_gva_per_district','
 -- Calculate specific electricity consumption per million Euro GVA for each federal state
 DROP TABLE IF EXISTS model_draft.ego_demand_per_gva CASCADE;
 CREATE TABLE model_draft.ego_demand_per_gva AS 
-	(SELECT	a.eu_code, 
-		a.federal_states, 
-		a.elec_consumption_industry/b.gva_industry AS elec_consumption_industry, 
-		a.elec_consumption_tertiary_sector/b.gva_tertiary_sector AS elec_consumption_tertiary_sector 
-	FROM  	demand.ego_demand_federalstate a,  -- ego_demand_federalstate
-		economy.destatis_gva_per_district b -- destatis_gva_per_district
-	WHERE a.eu_code = b.eu_code 
-	ORDER BY eu_code ); 
+    (SELECT a.eu_code, 
+            a.federal_states, 
+            a.elec_consumption_industry/b.gva_industry AS elec_consumption_industry, 
+            a.elec_consumption_tertiary_sector/b.gva_tertiary_sector AS elec_consumption_tertiary_sector 
+    FROM    demand.ego_demand_federalstate a,   -- ego_demand_federalstate
+        economy.destatis_gva_per_district b     -- destatis_gva_per_district
+    WHERE a.eu_code = b.eu_code 
+    ORDER BY eu_code ); 
 
 -- PK
 ALTER TABLE model_draft.ego_demand_per_gva
-	ADD PRIMARY KEY (eu_code),
-	OWNER TO oeuser;
+    ADD PRIMARY KEY (eu_code),
+    OWNER TO oeuser;
 
 -- metadata
 COMMENT ON TABLE  model_draft.ego_demand_per_gva IS
@@ -60,7 +64,7 @@ COMMENT ON TABLE  model_draft.ego_demand_per_gva IS
                     "Mail": "mario.kropshofer2@stud.fh-flensburg.de",
                     "Date":  "05.10.2016",
                     "Comment": "..." }, 
-	  	   {"Name": "Ilka Cussmann",
+                {"Name": "Ilka Cussmann",
                     "Mail": "",
                     "Date":  "25.10.2016",
                     "Comment": "Completed json-String" }
