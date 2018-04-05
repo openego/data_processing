@@ -16,7 +16,20 @@ The following tables are created:
 `model_draft.ego_grid_pf_hv_bus_v_mag_set <http://oep.iks.cs.ovgu.de/dataedit/view/model_draft/ego_grid_pf_hv_bus_v_mag_set>`_
 `model_draft.ego_grid_pf_hv_generator_pq_set <http://oep.iks.cs.ovgu.de/dataedit/view/model_draft/ego_grid_pf_hv_generator_pq_set>`_
 `model_draft.ego_grid_pf_hv_load_pq_set <http://oep.iks.cs.ovgu.de/dataedit/view/model_draft/ego_grid_pf_hv_load_pq_set>`_	
-`model_draft.ego_grid_pf_hv_storage_pq_set <http://oep.iks.cs.ovgu.de/dataedit/view/model_draft/ego_grid_pf_hv_storage_pq_set>`_		
+`model_draft.ego_grid_pf_hv_storage_pq_set <http://oep.iks.cs.ovgu.de/dataedit/view/model_draft/ego_grid_pf_hv_storage_pq_set>`_	
+`model_draft.ego_grid_pf_hv_results_bus <http://oep.iks.cs.ovgu.de/dataedit/view/model_draft/ego_grid_pf_hv_results_bus>`_
+`model_draft.ego_grid_pf_hv_results_bus_t <http://oep.iks.cs.ovgu.de/dataedit/view/model_draft/ego_grid_pf_hv_results_bus_t>`_
+`model_draft.ego_grid_pf_hv_results_generator <http://oep.iks.cs.ovgu.de/dataedit/view/model_draft/ego_grid_pf_hv_results_generator>`_
+`model_draft.ego_grid_pf_hv_results_generator_t <http://oep.iks.cs.ovgu.de/dataedit/view/model_draft/ego_grid_pf_hv_results_generator_t>`_
+`model_draft.ego_grid_pf_hv_results_line <http://oep.iks.cs.ovgu.de/dataedit/view/model_draft/ego_grid_pf_hv_results_line>`_
+`model_draft.ego_grid_pf_hv_results_line_t <http://oep.iks.cs.ovgu.de/dataedit/view/model_draft/ego_grid_pf_hv_results_line_t>`_
+`model_draft.ego_grid_pf_hv_results_load <http://oep.iks.cs.ovgu.de/dataedit/view/model_draft/ego_grid_pf_hv_results_load>`_
+`model_draft.ego_grid_pf_hv_results_load_t <http://oep.iks.cs.ovgu.de/dataedit/view/model_draft/ego_grid_pf_hv_results_load_t>`_
+`model_draft.ego_grid_pf_hv_results_meta <http://oep.iks.cs.ovgu.de/dataedit/view/model_draft/ego_grid_pf_hv_results_meta>`_
+`model_draft.ego_grid_pf_hv_results_storage <http://oep.iks.cs.ovgu.de/dataedit/view/model_draft/ego_grid_pf_hv_results_storage>`_
+`model_draft.ego_grid_pf_hv_results_storage_t <http://oep.iks.cs.ovgu.de/dataedit/view/model_draft/ego_grid_pf_hv_results_storage_t>`_
+`model_draft.ego_grid_pf_hv_results_transformer <http://oep.iks.cs.ovgu.de/dataedit/view/model_draft/ego_grid_pf_hv_results_transformer>`_
+`model_draft.ego_grid_pf_hv_results_transformer <http://oep.iks.cs.ovgu.de/dataedit/view/model_draft/ego_grid_pf_hv_results_transformer>`_
 
 __copyright__ 	= "Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems"
 __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
@@ -2145,7 +2158,6 @@ SELECT obj_description('model_draft.ego_grid_pf_hv_storage_pq_set' ::regclass) :
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_grid_pf_hv_storage_pq_set','ego_dp_powerflow_hv_setup.sql',' ');
-
 
 -------------------------------------------------------------------
 --------------------------- Grant rights --------------------------
