@@ -11,7 +11,7 @@ __author__      = "Ludee"
 
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_dp_supply_res_powerplant','ego_dp_rea_m5.sql',' ');
+SELECT ego_scenario_log('v0.4.0','input','model_draft','ego_dp_supply_res_powerplant','ego_dp_rea_m5.sql',' ');
 
 -- MView M5 DEA 
 DROP MATERIALIZED VIEW IF EXISTS 	model_draft.ego_supply_rea_m5_a_mview CASCADE;
@@ -40,7 +40,7 @@ CREATE INDEX ego_supply_rea_m5_a_mview_geom_idx
 ALTER TABLE model_draft.ego_supply_rea_m5_a_mview OWNER TO oeuser;  
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_supply_rea_m5_a_mview','ego_dp_rea_m5.sql',' ');
+SELECT ego_scenario_log('v0.4.0','output','model_draft','ego_supply_rea_m5_a_mview','ego_dp_rea_m5.sql',' ');
 
 
 -- rea_flag M5
@@ -73,7 +73,7 @@ CREATE INDEX ego_supply_rea_m5_dea_temp_geom_idx
 	ON model_draft.ego_supply_rea_m5_dea_temp USING gist (geom);
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_supply_rea_m5_dea_temp','ego_dp_rea_m5.sql',' ');
+SELECT ego_scenario_log('v0.4.0','temp','model_draft','ego_supply_rea_m5_dea_temp','ego_dp_rea_m5.sql',' ');
 
 DROP TABLE IF EXISTS 	model_draft.ego_supply_rea_m5_grid_la_temp CASCADE;
 CREATE TABLE 		model_draft.ego_supply_rea_m5_grid_la_temp (
@@ -89,7 +89,7 @@ CREATE INDEX ego_supply_rea_m5_grid_la_temp_geom_idx
 	ON model_draft.ego_supply_rea_m5_grid_la_temp USING gist (geom);
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_supply_rea_m5_grid_la_temp','ego_dp_rea_m5.sql',' ');
+SELECT ego_scenario_log('v0.4.0','temp','model_draft','ego_supply_rea_m5_grid_la_temp','ego_dp_rea_m5.sql',' ');
 
 DROP TABLE IF EXISTS 	model_draft.ego_supply_rea_m5_jnt_temp CASCADE;
 CREATE TABLE 		model_draft.ego_supply_rea_m5_jnt_temp (
@@ -103,7 +103,7 @@ CREATE INDEX ego_supply_rea_m5_jnt_temp_geom_idx
 	ON model_draft.ego_supply_rea_m5_jnt_temp USING gist (geom);
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_supply_rea_m5_jnt_temp','ego_dp_rea_m5.sql',' ');
+SELECT ego_scenario_log('v0.4.0','temp','model_draft','ego_supply_rea_m5_jnt_temp','ego_dp_rea_m5.sql',' ');
 
 
 -- loop for grid_district
@@ -174,7 +174,7 @@ CREATE INDEX ego_supply_rea_m5_mview_rea_geom_new_idx
 ALTER TABLE model_draft.ego_supply_rea_m5_mview OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_supply_rea_m5_mview','ego_dp_rea_m5.sql',' ');
+SELECT ego_scenario_log('v0.4.0','output','model_draft','ego_supply_rea_m5_mview','ego_dp_rea_m5.sql',' ');
 
 
 -- M5 rest
@@ -199,7 +199,7 @@ CREATE INDEX ego_supply_rea_m5_rest_mview_geom_idx
 ALTER TABLE model_draft.ego_supply_rea_m5_rest_mview OWNER TO oeuser;  
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_supply_rea_m5_rest_mview','ego_dp_rea_m5.sql','Should be 0!');
+SELECT ego_scenario_log('v0.4.0','output','model_draft','ego_supply_rea_m5_rest_mview','ego_dp_rea_m5.sql','Should be 0!');
 
 
 -- update la_id from loadarea

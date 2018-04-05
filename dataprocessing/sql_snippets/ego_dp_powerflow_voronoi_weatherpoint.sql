@@ -8,7 +8,7 @@ __author__ 	= "IlkaCu, Ludee"
 */
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','input','calc_renpass_gis','parameter_solar_feedin','ego_dp_powerflow_voronoi_climatepoint.sql',' ');
+SELECT ego_scenario_log('v0.4.0','input','calc_renpass_gis','parameter_solar_feedin','ego_dp_powerflow_voronoi_climatepoint.sql',' ');
 
 -- Add Dummy points 
 INSERT INTO calc_renpass_gis.parameter_solar_feedin (year, geom)
@@ -134,4 +134,4 @@ COMMENT ON TABLE  model_draft.renpassgis_economy_climatepoint_voronoi IS
 }';
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','model_draft','renpassgis_economy_climatepoint_voronoi','ego_dp_powerflow_voronoi_climatepoint.sql',' ');
+SELECT ego_scenario_log('v0.4.0','output','model_draft','renpassgis_economy_climatepoint_voronoi','ego_dp_powerflow_voronoi_climatepoint.sql',' ');

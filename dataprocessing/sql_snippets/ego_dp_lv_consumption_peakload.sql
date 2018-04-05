@@ -14,8 +14,8 @@ __author__      = "gplssm"
 -- Consumption
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_demand_loadarea','ego_dp_lv_consumption_peakload.sql',' ');
-SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_grid_lv_griddistrict','ego_dp_lv_consumption_peakload.sql',' ');
+SELECT ego_scenario_log('v0.4.0','input','model_draft','ego_demand_loadarea','ego_dp_lv_consumption_peakload.sql',' ');
+SELECT ego_scenario_log('v0.4.0','input','model_draft','ego_grid_lv_griddistrict','ego_dp_lv_consumption_peakload.sql',' ');
 
 -- Residential
 UPDATE model_draft.ego_grid_lv_griddistrict AS t1
@@ -109,7 +109,7 @@ UPDATE model_draft.ego_grid_lv_griddistrict
 -- Peakload
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','input','scenario','ego_slp_parameters','ego_dp_lv_consumption_peakload.sql',' ');
+SELECT ego_scenario_log('v0.4.0','input','scenario','ego_slp_parameters','ego_dp_lv_consumption_peakload.sql',' ');
 
 -- Residential
 UPDATE model_draft.ego_grid_lv_griddistrict as t1
@@ -163,4 +163,4 @@ UPDATE model_draft.ego_grid_lv_griddistrict as t1
     WHERE t1.mvlv_subst_id = t2.mvlv_subst_id;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_grid_lv_griddistrict','ego_dp_lv_consumption_peakload.sql',' ');
+SELECT ego_scenario_log('v0.4.0','output','model_draft','ego_grid_lv_griddistrict','ego_dp_lv_consumption_peakload.sql',' ');

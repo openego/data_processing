@@ -11,7 +11,7 @@ __author__      = "Ludee"
 
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','input','model_draft','destatis_zensus_population_per_ha_invg_mview','ego_dp_loadarea_census.sql',' ');
+SELECT ego_scenario_log('v0.4.0','input','model_draft','destatis_zensus_population_per_ha_invg_mview','ego_dp_loadarea_census.sql',' ');
 
 -- zensus load
 DROP TABLE IF EXISTS  	model_draft.ego_demand_la_zensus CASCADE;
@@ -43,7 +43,7 @@ CREATE INDEX  	ego_demand_la_zensus_geom_idx
 	ON	model_draft.ego_demand_la_zensus USING GIST (geom);
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_demand_la_osm','ego_dp_loadarea_census.sql',' ');
+SELECT ego_scenario_log('v0.4.0','input','model_draft','ego_demand_la_osm','ego_dp_loadarea_census.sql',' ');
 	
 -- population in osm loads
 UPDATE 	model_draft.ego_demand_la_zensus AS t1
@@ -68,14 +68,14 @@ ALTER TABLE model_draft.ego_demand_la_zensus OWNER TO oeuser;
 -- metadata
 COMMENT ON TABLE model_draft.ego_demand_la_zensus IS '{
     "comment": "eGoDP - Temporary table", 
-    "version": "v0.3.0",
+    "version": "v0.4.0",
     "published": "none" }';
 
 -- select description
 SELECT obj_description('model_draft.ego_demand_la_zensus' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_demand_la_zensus','ego_dp_loadarea_census.sql',' ');
+SELECT ego_scenario_log('v0.4.0','output','model_draft','ego_demand_la_zensus','ego_dp_loadarea_census.sql',' ');
 
 
 -- cluster from zensus load lattice
@@ -114,7 +114,7 @@ ALTER TABLE model_draft.ego_demand_la_zensus_cluster OWNER TO oeuser;
 -- metadata
 COMMENT ON TABLE model_draft.ego_demand_la_zensus_cluster IS '{
     "comment": "eGoDP - Temporary table", 
-    "version": "v0.3.0",
+    "version": "v0.4.0",
     "published": "none" }';
 
 -- insert cluster
@@ -146,7 +146,7 @@ UPDATE model_draft.ego_demand_la_zensus_cluster AS t1
     WHERE   t1.cid = t2.cid;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_demand_la_zensus_cluster','ego_dp_loadarea_census.sql',' ');
+SELECT ego_scenario_log('v0.4.0','output','model_draft','ego_demand_la_zensus_cluster','ego_dp_loadarea_census.sql',' ');
 
 
 -- zensus stats
@@ -178,8 +178,8 @@ ALTER TABLE model_draft.ego_society_zensus_per_la_mview OWNER TO oeuser;
 -- metadata
 COMMENT ON TABLE model_draft.ego_society_zensus_per_la_mview IS '{
     "comment": "eGoDP - Temporary table", 
-    "version": "v0.3.0",
+    "version": "v0.4.0",
     "published": "none" }';
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_society_zensus_per_la_mview','ego_dp_loadarea_census.sql',' ');
+SELECT ego_scenario_log('v0.4.0','output','model_draft','ego_society_zensus_per_la_mview','ego_dp_loadarea_census.sql',' ');

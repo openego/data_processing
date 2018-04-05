@@ -9,8 +9,8 @@ __author__      = "gplssm, Ludee"
 */
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_demand_loadarea','ego_dp_loadarea_peakload.sql',' ');
-SELECT ego_scenario_log('v0.3.0','input','scenario','ego_slp_parameters','ego_dp_loadarea_peakload.sql',' ');
+SELECT ego_scenario_log('v0.4.0','input','model_draft','ego_demand_loadarea','ego_dp_loadarea_peakload.sql',' ');
+SELECT ego_scenario_log('v0.4.0','input','scenario','ego_slp_parameters','ego_dp_loadarea_peakload.sql',' ');
 
 -- residential
 UPDATE model_draft.ego_demand_loadarea as t1
@@ -61,4 +61,4 @@ UPDATE model_draft.ego_demand_loadarea as t1
     WHERE t1.id = t2.id;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_demand_loadarea','ego_dp_loadarea_peakload.sql',' ');
+SELECT ego_scenario_log('v0.4.0','output','model_draft','ego_demand_loadarea','ego_dp_loadarea_peakload.sql',' ');

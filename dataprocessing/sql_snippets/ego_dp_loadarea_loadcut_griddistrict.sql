@@ -66,13 +66,13 @@ ALTER TABLE model_draft.ego_demand_loadarea OWNER TO oeuser;
 -- metadata
 COMMENT ON TABLE model_draft.ego_demand_loadarea IS '{ 
     "comment": "eGoDP - Temporary table", 
-    "version": "v0.3.0" }';
+    "version": "v0.4.0" }';
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_demand_load_melt','ego_dp_loadarea_loadcut_griddistrict.sql',' ');
+SELECT ego_scenario_log('v0.4.0','input','model_draft','ego_demand_load_melt','ego_dp_loadarea_loadcut_griddistrict.sql',' ');
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_grid_mv_griddistrict','ego_dp_loadarea_loadcut_griddistrict.sql',' ');
+SELECT ego_scenario_log('v0.4.0','input','model_draft','ego_grid_mv_griddistrict','ego_dp_loadarea_loadcut_griddistrict.sql',' ');
 
 -- insert cutted load melt
 INSERT INTO     model_draft.ego_demand_loadarea (geom)
@@ -113,7 +113,7 @@ UPDATE 	model_draft.ego_demand_loadarea AS t1
 -- metadata
 COMMENT ON TABLE model_draft.ego_demand_loadarea IS '{
     "comment": "eGoDP - Versioning table", 
-    "version": "v0.3.0",
+    "version": "v0.4.0",
     "published": "demand.ego_dp_loadarea" }';
 
 -- Identify Loadarea smaller than 100m²
@@ -139,18 +139,18 @@ ALTER TABLE model_draft.ego_demand_loadarea_smaller100m2_mview OWNER TO oeuser;
 -- metadata
 COMMENT ON MATERIALIZED VIEW model_draft.ego_demand_loadarea_smaller100m2_mview IS '{
     "comment": "eGoDP - Temporary table", 
-    "version": "v0.3.0",
+    "version": "v0.4.0",
     "published": "none" }';
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_demand_loadarea_smaller100m2_mview','ego_dp_loadarea_loadcut_griddistrict.sql',' ');
+SELECT ego_scenario_log('v0.4.0','temp','model_draft','ego_demand_loadarea_smaller100m2_mview','ego_dp_loadarea_loadcut_griddistrict.sql',' ');
 
 -- Exclude Loadarea smaller than 100m²
 DELETE FROM model_draft.ego_demand_loadarea AS loads
     WHERE loads.area_ha < 0.001;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_demand_loadarea','ego_dp_loadarea_loadcut_griddistrict.sql',' ');
+SELECT ego_scenario_log('v0.4.0','output','model_draft','ego_demand_loadarea','ego_dp_loadarea_loadcut_griddistrict.sql',' ');
 
 
 -- Generate Centre of Loadareas with Centroid and PointOnSurface
@@ -205,7 +205,7 @@ WHERE   NOT ST_CONTAINS(loads.geom,loads.geom_centre); */
 
 -- Calculate population from Census 2011
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','input','society','destatis_zensus_population_per_ha_mview','ego_dp_loadarea_loadcut_griddistrict.sql',' ');
+SELECT ego_scenario_log('v0.4.0','input','society','destatis_zensus_population_per_ha_mview','ego_dp_loadarea_loadcut_griddistrict.sql',' ');
 
 -- zensus 2011 population
 UPDATE model_draft.ego_demand_loadarea AS t1
@@ -227,7 +227,7 @@ UPDATE model_draft.ego_demand_loadarea AS t1
 
 /*
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','input','economy','ioer_urban_share_industrial_centroid','ego_dp_loadarea_loadcut_griddistrict.sql',' ');
+SELECT ego_scenario_log('v0.4.0','input','economy','ioer_urban_share_industrial_centroid','ego_dp_loadarea_loadcut_griddistrict.sql',' ');
 
 -- ioer industry share
 UPDATE model_draft.ego_demand_loadarea AS t1
@@ -257,7 +257,7 @@ CREATE TABLE            model_draft.ego_osm_sector_per_griddistrict_1_residentia
     CONSTRAINT urban_sector_per_grid_district_1_residential_pkey PRIMARY KEY (id));
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','input','openstreetmap','osm_deu_polygon_urban_sector_1_residential_mview','ego_dp_loadarea_loadcut_griddistrict.sql',' ');
+SELECT ego_scenario_log('v0.4.0','input','openstreetmap','osm_deu_polygon_urban_sector_1_residential_mview','ego_dp_loadarea_loadcut_griddistrict.sql',' ');
 
 -- intersect sector with mv-griddistrict
 INSERT INTO     model_draft.ego_osm_sector_per_griddistrict_1_residential (geom)
@@ -298,11 +298,11 @@ UPDATE model_draft.ego_demand_loadarea AS t1
 -- metadata
 COMMENT ON TABLE model_draft.ego_osm_sector_per_griddistrict_1_residential IS '{
     "comment": "eGoDP - Temporary table", 
-    "version": "v0.3.0",
+    "version": "v0.4.0",
     "published": "none" }';
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_osm_sector_per_griddistrict_1_residential','ego_dp_loadarea_loadcut_griddistrict.sql',' ');
+SELECT ego_scenario_log('v0.4.0','output','model_draft','ego_osm_sector_per_griddistrict_1_residential','ego_dp_loadarea_loadcut_griddistrict.sql',' ');
 
 
 -- 2. Retail sector
@@ -313,7 +313,7 @@ CREATE TABLE            model_draft.ego_osm_sector_per_griddistrict_2_retail (
     CONSTRAINT urban_sector_per_grid_district_2_retail_pkey PRIMARY KEY (id));
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','input','openstreetmap','osm_deu_polygon_urban_sector_2_retail_mview','ego_dp_loadarea_loadcut_griddistrict.sql',' ');
+SELECT ego_scenario_log('v0.4.0','input','openstreetmap','osm_deu_polygon_urban_sector_2_retail_mview','ego_dp_loadarea_loadcut_griddistrict.sql',' ');
 
 -- intersect sector with mv-griddistrict
 INSERT INTO     model_draft.ego_osm_sector_per_griddistrict_2_retail (geom)
@@ -354,15 +354,15 @@ UPDATE model_draft.ego_demand_loadarea AS t1
 -- metadata
 COMMENT ON TABLE model_draft.ego_osm_sector_per_griddistrict_2_retail IS '{
     "comment": "eGoDP - Temporary table", 
-    "version": "v0.3.0",
+    "version": "v0.4.0",
     "published": "none" }';
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_osm_sector_per_griddistrict_2_retail','ego_dp_loadarea_loadcut_griddistrict.sql',' ');
+SELECT ego_scenario_log('v0.4.0','output','model_draft','ego_osm_sector_per_griddistrict_2_retail','ego_dp_loadarea_loadcut_griddistrict.sql',' ');
 
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','input','openstreetmap','osm_deu_polygon_urban','ego_dp_loadarea_loadcut_griddistrict.sql',' ');
+SELECT ego_scenario_log('v0.4.0','input','openstreetmap','osm_deu_polygon_urban','ego_dp_loadarea_loadcut_griddistrict.sql',' ');
 
 
 -- filter Industrial without largescale
@@ -387,11 +387,11 @@ ALTER TABLE openstreetmap.osm_deu_polygon_urban_sector_3_industrial_nolargescale
 -- metadata
 COMMENT ON MATERIALIZED VIEW model_draft.osm_deu_polygon_urban_sector_3_industrial_nolargescale_mview IS '{
     "comment": "eGoDP - Temporary table", 
-    "version": "v0.3.0",
+    "version": "v0.4.0",
     "published": "none" }';
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','openstreetmap','osm_deu_polygon_urban_sector_3_industrial_nolargescale_mview','setup_osm_landuse.sql',' ');
+SELECT ego_scenario_log('v0.4.0','output','openstreetmap','osm_deu_polygon_urban_sector_3_industrial_nolargescale_mview','setup_osm_landuse.sql',' ');
 
 
 /* -- check
@@ -455,11 +455,11 @@ UPDATE model_draft.ego_demand_loadarea AS t1
 -- metadata
 COMMENT ON TABLE model_draft.ego_osm_sector_per_griddistrict_3_industrial IS '{
     "comment": "eGoDP - Temporary table", 
-    "version": "v0.3.0",
+    "version": "v0.4.0",
     "published": "none" }';
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_osm_sector_per_griddistrict_3_industrial','ego_dp_loadarea_loadcut_griddistrict.sql',' ');
+SELECT ego_scenario_log('v0.4.0','output','model_draft','ego_osm_sector_per_griddistrict_3_industrial','ego_dp_loadarea_loadcut_griddistrict.sql',' ');
 
 
 -- 4. agricultural sector
@@ -470,7 +470,7 @@ CREATE TABLE            model_draft.ego_osm_sector_per_griddistrict_4_agricultur
     CONSTRAINT 	urban_sector_per_grid_district_4_agricultural_pkey PRIMARY KEY (id));
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','input','openstreetmap','osm_deu_polygon_urban_sector_4_agricultural_mview','ego_dp_loadarea_loadcut_griddistrict.sql',' ');
+SELECT ego_scenario_log('v0.4.0','input','openstreetmap','osm_deu_polygon_urban_sector_4_agricultural_mview','ego_dp_loadarea_loadcut_griddistrict.sql',' ');
 
 -- intersect sector with mv-griddistrict
 INSERT INTO model_draft.ego_osm_sector_per_griddistrict_4_agricultural (geom)
@@ -511,11 +511,11 @@ UPDATE model_draft.ego_demand_loadarea AS t1
 -- metadata
 COMMENT ON TABLE model_draft.ego_osm_sector_per_griddistrict_4_agricultural IS '{
     "comment": "eGoDP - Temporary table", 
-    "version": "v0.3.0",
+    "version": "v0.4.0",
     "published": "none" }';
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_osm_sector_per_griddistrict_4_agricultural','ego_dp_loadarea_loadcut_griddistrict.sql',' ');
+SELECT ego_scenario_log('v0.4.0','output','model_draft','ego_osm_sector_per_griddistrict_4_agricultural','ego_dp_loadarea_loadcut_griddistrict.sql',' ');
 
 
 -- sector stats
@@ -543,7 +543,7 @@ UPDATE model_draft.ego_demand_loadarea AS t1
 
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_boundaries_bkg_vg250_6_gem_clean','ego_dp_loadarea_loadcut_griddistrict.sql',' ');
+SELECT ego_scenario_log('v0.4.0','input','model_draft','ego_boundaries_bkg_vg250_6_gem_clean','ego_dp_loadarea_loadcut_griddistrict.sql',' ');
 
 
 -- Calculate statistics like NUTS and AGS code
@@ -600,7 +600,7 @@ UPDATE model_draft.ego_demand_loadarea AS t1
     WHERE   t1.id = t2.id;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_demand_loadarea','ego_dp_loadarea_loadcut_griddistrict.sql',' ');
+SELECT ego_scenario_log('v0.4.0','output','model_draft','ego_demand_loadarea','ego_dp_loadarea_loadcut_griddistrict.sql',' ');
 
 
 -- Check for Loadareas without AGS code
@@ -625,11 +625,11 @@ ALTER TABLE model_draft.ego_demand_loadarea_error_noags_mview OWNER TO oeuser;
 -- metadata
 COMMENT ON MATERIALIZED VIEW model_draft.ego_demand_loadarea_error_noags_mview IS '{ 
     "comment": "eGoDP - Temporary table", 
-    "version": "v0.3.0",
+    "version": "v0.4.0",
     "published": "none" }';
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_demand_loadarea_error_noags_mview','ego_dp_loadarea_loadcut_griddistrict.sql',' ');
+SELECT ego_scenario_log('v0.4.0','temp','model_draft','ego_demand_loadarea_error_noags_mview','ego_dp_loadarea_loadcut_griddistrict.sql',' ');
 
 
 /* 
@@ -664,7 +664,7 @@ CREATE INDEX ego_demand_loadarea_ta_geom_idx
 ALTER TABLE model_draft.ego_demand_loadarea_ta OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_demand_loadarea_ta','ego_dp_loadarea_loadcut_griddistrict.sql',' ');
+SELECT ego_scenario_log('v0.4.0','temp','model_draft','ego_demand_loadarea_ta','ego_dp_loadarea_loadcut_griddistrict.sql',' ');
 */ 
  
 /* 
@@ -694,5 +694,5 @@ CREATE INDEX  	ego_demand_loadarea_spf_geom_centre_idx
 ALTER TABLE model_draft.ego_demand_loadarea_spf OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_demand_loadarea_spf','ego_dp_loadarea_loadcut_griddistrict.sql',' ');
+SELECT ego_scenario_log('v0.4.0','temp','model_draft','ego_demand_loadarea_spf','ego_dp_loadarea_loadcut_griddistrict.sql',' ');
 */ 

@@ -19,7 +19,7 @@ CREATE TABLE            model_draft.ego_lattice_50m (
 CONSTRAINT 	ego_lattice_50m_pkey PRIMARY KEY (id));
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','input','boundaries','bkg_vg250_1_sta_union_mview','ego_dp_lattice_50m.sql',' ');
+SELECT ego_scenario_log('v0.4.0','input','boundaries','bkg_vg250_1_sta_union_mview','ego_dp_lattice_50m.sql',' ');
 
 -- insert lattice
 INSERT INTO     model_draft.ego_lattice_50m (geom_box)
@@ -51,7 +51,7 @@ ALTER TABLE model_draft.ego_lattice_50m OWNER TO oeuser;
 -- metadata
 COMMENT ON TABLE model_draft.ego_lattice_50m IS '{
     "comment": "eGoDP - Temporary table",
-    "version": "v0.3.0" }';
+    "version": "v0.4.0" }';
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_lattice_50m','ego_dp_lattice_50m.sql',' ');
+SELECT ego_scenario_log('v0.4.0','output','model_draft','ego_lattice_50m','ego_dp_lattice_50m.sql',' ');
