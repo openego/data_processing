@@ -1,5 +1,7 @@
 /*
-All generators (conventional and renewable) are listed in a central table and a unified id (un_id) is assigned. 
+
+All generators from the `conventional <http://oep.iks.cs.ovgu.de/dataedit/view/model_draft/ego_dp_supply_conv_powerplant>`_ and `renewable <http://oep.iks.cs.ovgu.de/dataedit/view/model_draft/ego_dp_supply_res_powerplant>`_ power plant list are brought together in a `central generator list <http://oep.iks.cs.ovgu.de/dataedit/view/model_draft/ego_supply_generator>`_.
+A unified id (un_id) is assigned to those generators listed. Information on the un_id is then added to the conventional and renewable power plant lists.  
 
 __copyright__ 	= "Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems"
 __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
@@ -42,9 +44,13 @@ CREATE INDEX 	ego_supply_generator_idx
 	ON 	model_draft.ego_supply_generator USING gist (geom);
 
 
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_supply_generator','ego_dp_powerflow_assignment_unid.sql',' ');
 	
 
 -- Update power plant tables and add information on unified id of generators
+
+UPDATE model_draft.ego_dp_supply_res_powerplant SET un_id = NULL; 
 
 -- Update un_id from generators_total  
 UPDATE model_draft.ego_dp_supply_conv_powerplant a
@@ -54,10 +60,18 @@ UPDATE model_draft.ego_dp_supply_conv_powerplant a
 
 
 -- Update un_id from generators_total 
-UPDATE model_draft.ego_supply_dp_res_powerplant a
+UPDATE model_draft.ego_dp_supply_res_powerplant a
 	SET 	un_id = b.un_id 
 	FROM 	model_draft.ego_supply_generator b
 	WHERE 	a.id = b.re_id; 
+
+
+
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_dp_supply_res_powerplant','ego_dp_powerflow_assignment_unid.sql',' ');
+SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_dp_supply_conv_powerplant','ego_dp_powerflow_assignment_unid.sql',' ');
+
+
 
 
 

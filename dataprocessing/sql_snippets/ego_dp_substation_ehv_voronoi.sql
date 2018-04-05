@@ -1,18 +1,21 @@
 /*
-Executes a voronoi algorithmn based on EHV substations. 
+EHV Substation Voronoi
+Voronoi polygons with eucldean distance on EHV Substation.
+Manhattan distance would be better but not available in sql.
 
-__copyright__ 	= "Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems"
-__license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
-__url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
-__author__ 	= "IlkaCu, Ludee" 
+__copyright__   = "Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems"
+__license__     = "GNU Affero General Public License Version 3 (AGPL-3.0)"
+__url__         = "https://github.com/openego/data_processing/blob/master/LICENSE"
+__author__      = "IlkaCu, Ludee" 
 */
+
 
 ----------------------------------------------------------
 -- VORONOI with  220 and 380 kV substations
 ----------------------------------------------------------
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','input','model_draft','ego_grid_ehv_substation','ego_dp_substation_ehv_voronoi.sql',' ');
+SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_grid_ehv_substation','ego_dp_substation_ehv_voronoi.sql',' ');
 
 -- Add Dummy points 
 INSERT INTO model_draft.ego_grid_ehv_substation (subst_name, point, subst_id, otg_id, lon, lat, polygon, osm_id, osm_www, status)
@@ -112,7 +115,7 @@ ALTER TABLE model_draft.ego_grid_ehv_substation_voronoi OWNER TO oeuser;
 -- metadata
 COMMENT ON TABLE  model_draft.ego_grid_ehv_substation_voronoi IS '{
 	"comment": "eGoDP - Temporary table",
-	"version": "v0.2.10" }' ;
+	"version": "v0.3.0" }' ;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_grid_ehv_substation_voronoi','ego_dp_substation_ehv_voronoi.sql',' ');
+SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_grid_ehv_substation_voronoi','ego_dp_substation_ehv_voronoi.sql',' ');

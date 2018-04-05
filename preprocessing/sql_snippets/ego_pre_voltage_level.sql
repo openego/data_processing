@@ -114,3 +114,14 @@ UPDATE model_draft.ego_dp_supply_conv_powerplant
 UPDATE model_draft.ego_dp_supply_conv_powerplant
 	SET voltage_level=7
 	WHERE capacity < 0.1 /*voltage_level =7 when capacity lower than 0.1*/;
+
+-- make sure that the same powerplants are assigned to the same voltage_level in the NEP 2035 scenario as in the SQ
+
+UPDATE model_draft.ego_dp_supply_conv_powerplant a
+	SET voltage_level=b.voltage_level 
+	FROM 
+		( SELECT bnetza_id, voltage_level 
+		  FROM model_draft.ego_dp_supply_conv_powerplant 
+		  WHERE scenario = 'Status Quo') AS b 
+	WHERE a.bnetza_id = b.bnetza_id AND scenario = 'NEP 2035' AND a.bnetza_id IS NOT NULL; 
+

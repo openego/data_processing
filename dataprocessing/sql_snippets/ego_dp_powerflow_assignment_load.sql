@@ -1,5 +1,7 @@
 /*
-Assignment of loads to the relevant bus in the grid model based on grid districts or voronoi cells according to the grid level of the loads considered. 
+Similar to generators in the previous script the data on loads are converted and clustered to fit the data structure
+needed for powerflow calculations. The electricity demand of small scale consumer and industrial large scale consumer is
+considered. 
 
 __copyright__ 	= "Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems"
 __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
@@ -192,7 +194,7 @@ WHERE a.bus IS NOT NULL
 GROUP BY a.bus;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_grid_pf_hv_load','ego_dp_powerflow_assignment_load.sql',' ');
+SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_grid_pf_hv_load','ego_dp_powerflow_assignment_load.sql',' ');
 
 
 
@@ -219,4 +221,4 @@ FROM model_draft.ego_grid_pf_hv_load a
 WHERE scn_name= 'Status Quo'; 
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_grid_pf_hv_load','ego_dp_powerflow_assignment_load_nep2035.sql',' ');
+SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_grid_pf_hv_load','ego_dp_powerflow_assignment_load_nep2035.sql',' ');

@@ -1,18 +1,14 @@
-﻿/*
-Skript to allocate decentralized renewable power plants (dea)
-Methods base on technology and voltage level
-Uses different lattice from setup_ego_wpa_per_grid_district.sql
+/*
+M2 wind farms
+Allocates "wind" turbines with voltage level 4 to WPA as wind farms.
+The rest could not be allocated, consider in M3.
 
-__copyright__ 	= "Reiner Lemoine Institut"
-__license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
-__url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
-__author__ 	= "Ludee"
+__copyright__   = "Reiner Lemoine Institut"
+__license__     = "GNU Affero General Public License Version 3 (AGPL-3.0)"
+__url__         = "https://github.com/openego/data_processing/blob/master/LICENSE"
+__author__      = "Ludee"
 */
 
-/* 3. M2
-Move "wind" with "4" to WPA as wind farms.
-The rest could not be allocated, consider in M4.
-*/
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_dp_supply_res_powerplant','ego_dp_rea_m2.sql',' ');

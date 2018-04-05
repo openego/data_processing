@@ -1,7 +1,8 @@
-﻿/*
+/*
 Skript to allocate decentralized renewable power plants (dea)
 Methods base on technology and voltage level
 Uses different lattice from setup_ego_wpa_per_grid_district.sql
+This script includes a hotfix to fill all empty cells of column rea_geom_new with the original geometry from column geom. 
 
 __copyright__ 	= "Reiner Lemoine Institut"
 __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
@@ -224,3 +225,23 @@ ALTER TABLE	model_draft.ego_supply_rea_per_method
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_supply_rea_per_method','ego_dp_rea_results.sql',' ');
+
+
+-- Hotfix to fill empty rea_geom_new cells in table 
+
+Update table model_draft_ego_dp_supply_res_powerplant
+   set rea_geom_new = ST_Transform(geom,3035),
+   comment = comment || 'add original geom to rea_geom_new' 
+Where rea_geom_new is null;
+
+-- Add index on rea_geom_new
+
+DROP INDEX model_draft.ego_dp_supply_res_powerplant_geom_new_idx;
+
+CREATE INDEX ego_dp_supply_res_powerplant_geom_new_idx
+  ON model_draft.ego_dp_supply_res_powerplant
+  USING gist
+  (rea_geom_new);
+  
+-- ego scenario log (version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_dp_supply_res_powerplant','ego_dp_rea_results.sql',' ');

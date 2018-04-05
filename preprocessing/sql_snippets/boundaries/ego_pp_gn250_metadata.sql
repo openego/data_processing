@@ -10,7 +10,7 @@ __author__ 	= "Ludee"
 
 
 -- metadata
-COMMENT ON TABLE political_boundary.bkg_gn250_p IS '{
+COMMENT ON TABLE boundaries.bkg_gn250_p IS '{
 	"title": "BKG - Geographische Namen 1:250 000 - GN250 - Darstellung als Punktgeometrie (Point)",
 	"description": "Die Geographischen Namen beinhalten Namen der Objektbereiche Siedlung, Verkehr, Vegetation, Gewässer, Relief und Gebiete. Der Datensatz GN250 orientiert sich am Maßstab 1:250 000 und umfasst ca. 134.000 Einträge. Die Lage der Objekte wird jeweils als Punktgeometrie über eine einzelne Koordinate (Punktgeometrie) und über kleinste umschreibende Rechtecke (Bounding Boxes) beschrieben.",
 	"language": [ "ger" ],
@@ -50,7 +50,7 @@ COMMENT ON TABLE political_boundary.bkg_gn250_p IS '{
 		{"name": "Ludee", "email": "", "date": "2017-07-03", "comment": "Create table"},
 		{"name": "Ludee", "email": "", "date": "2017-07-03", "comment": "Add metadata v1.3"} ],
 	"resources": [
-		{"name": "political_boundary.bkg_gn250_p",		
+		{"name": "boundaries.bkg_gn250_p",		
 		"format": "PostgreSQL",
 		"fields": [
 			{"name": "reference_date", "description": "Reference date", "unit": "none"},
@@ -95,7 +95,7 @@ COMMENT ON TABLE political_boundary.bkg_gn250_p IS '{
 
 
 -- metadata
-COMMENT ON TABLE political_boundary.bkg_gn250_b IS '{
+COMMENT ON TABLE boundaries.bkg_gn250_b IS '{
 	"title": "BKG - Geographische Namen 1:250 000 - GN250 - Darstellung als Bounding-Boxes (Polygon)",
 	"description": "Die Geographischen Namen beinhalten Namen der Objektbereiche Siedlung, Verkehr, Vegetation, Gewässer, Relief und Gebiete. Der Datensatz GN250 orientiert sich am Maßstab 1:250 000 und umfasst ca. 134.000 Einträge. Die Lage der Objekte wird jeweils als Punktgeometrie über eine einzelne Koordinate (Punktgeometrie) und über kleinste umschreibende Rechtecke (Bounding Boxes) beschrieben.",
 	"language": [ "ger" ],
@@ -135,7 +135,7 @@ COMMENT ON TABLE political_boundary.bkg_gn250_b IS '{
 		{"name": "Ludee", "email": "", "date": "2017-07-03", "comment": "Create table"},
 		{"name": "Ludee", "email": "", "date": "2017-07-03", "comment": "Add metadata v1.3"} ],
 	"resources": [
-		{"name": "political_boundary.bkg_gn250_b",		
+		{"name": "boundaries.bkg_gn250_b",		
 		"format": "PostgreSQL",
 		"fields": [
 			{"name": "reference_date", "description": "Reference date", "unit": "none"},
@@ -180,5 +180,5 @@ COMMENT ON TABLE political_boundary.bkg_gn250_b IS '{
 
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','output','political_boundary','bkg_gn250_p','ego_pp_gn250_metadata.sql','metadata');
-SELECT ego_scenario_log('v0.2.10','output','political_boundary','bkg_gn250_b','ego_pp_gn250_metadata.sql','metadata');
+SELECT ego_scenario_log('v0.2.10','output','boundaries','bkg_gn250_p','ego_pp_gn250_metadata.sql','metadata');
+SELECT ego_scenario_log('v0.2.10','output','boundaries','bkg_gn250_b','ego_pp_gn250_metadata.sql','metadata');

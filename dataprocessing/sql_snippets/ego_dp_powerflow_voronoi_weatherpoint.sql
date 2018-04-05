@@ -1,5 +1,5 @@
 /*
-voronoi with weatherpoints
+voronoi with climatepoints
 
 __copyright__ 	= "Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems"
 __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
@@ -8,7 +8,7 @@ __author__ 	= "IlkaCu, Ludee"
 */
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','input','calc_renpass_gis','parameter_solar_feedin','ego_dp_powerflow_voronoi_weatherpoint.sql',' ');
+SELECT ego_scenario_log('v0.3.0','input','calc_renpass_gis','parameter_solar_feedin','ego_dp_powerflow_voronoi_climatepoint.sql',' ');
 
 -- Add Dummy points 
 INSERT INTO calc_renpass_gis.parameter_solar_feedin (year, geom)
@@ -16,8 +16,8 @@ INSERT INTO calc_renpass_gis.parameter_solar_feedin (year, geom)
 	FROM 	model_draft.ego_grid_hvmv_substation_dummy;
 
 
--- Execute voronoi algorithm with weather points
-DROP TABLE IF EXISTS model_draft.renpassgis_economic_weatherpoint_voronoi CASCADE;
+-- Execute voronoi algorithm with climate points
+DROP TABLE IF EXISTS model_draft.renpassgis_economy_climatepoint_voronoi CASCADE;
 WITH 
     -- Sample set of points to work with
     Sample AS (SELECT   ST_SetSRID(ST_Union(pts.geom), 0) AS geom
@@ -47,7 +47,7 @@ WITH
         ) c
     )
 SELECT ST_SetSRID((ST_Dump(ST_Polygonize(ST_Node(ST_LineMerge(ST_Union(v, (SELECT ST_ExteriorRing(ST_ConvexHull(ST_Union(ST_Union(ST_Buffer(edge,20),ct)))) FROM Edges))))))).geom, 2180) geom
-INTO model_draft.renpassgis_economic_weatherpoint_voronoi		  -- INPUT 2/2
+INTO model_draft.renpassgis_economy_climatepoint_voronoi		  -- INPUT 2/2
 FROM (
     SELECT  -- Create voronoi edges and reduce to a multilinestring
         ST_LineMerge(ST_Union(ST_MakeLine(
@@ -70,39 +70,39 @@ FROM (
     ) z;
 
 -- index GIST (geom)
-CREATE INDEX	voronoi_weatherpoint_geom_idx
-	ON	model_draft.renpassgis_economic_weatherpoint_voronoi USING GIST (geom);
+CREATE INDEX	voronoi_climatepoint_geom_idx
+	ON	model_draft.renpassgis_economy_climatepoint_voronoi USING GIST (geom);
 
 -- set id and SRID
-ALTER TABLE model_draft.renpassgis_economic_weatherpoint_voronoi
+ALTER TABLE model_draft.renpassgis_economy_climatepoint_voronoi
 	ADD COLUMN id integer,
 	ALTER COLUMN geom TYPE geometry(POLYGON,4326) USING ST_SETSRID(geom,4326);
 
-UPDATE model_draft.renpassgis_economic_weatherpoint_voronoi a
+UPDATE model_draft.renpassgis_economy_climatepoint_voronoi a
 	SET id = b.gid
 	FROM calc_renpass_gis.parameter_solar_feedin b
 	WHERE ST_Intersects(a.geom, b.geom) =TRUE; 
 
 -- Delete Dummy-points
-DELETE FROM model_draft.renpassgis_economic_weatherpoint_voronoi 
+DELETE FROM model_draft.renpassgis_economy_climatepoint_voronoi 
 	WHERE id IN (SELECT gid FROM calc_renpass_gis.parameter_solar_feedin WHERE year = 9999);
 
-DELETE FROM model_draft.renpassgis_economic_weatherpoint_voronoi 
+DELETE FROM model_draft.renpassgis_economy_climatepoint_voronoi 
 	WHERE id IS NULL; 
 
 DELETE FROM calc_renpass_gis.parameter_solar_feedin WHERE year=9999;
 
 -- Set PK and FK 
-ALTER TABLE model_draft.renpassgis_economic_weatherpoint_voronoi
+ALTER TABLE model_draft.renpassgis_economy_climatepoint_voronoi
 	ADD PRIMARY KEY (id);
 
 -- grant (oeuser)
-ALTER TABLE model_draft.renpassgis_economic_weatherpoint_voronoi OWNER TO oeuser;
+ALTER TABLE model_draft.renpassgis_economy_climatepoint_voronoi OWNER TO oeuser;
 
 -- metadata
-COMMENT ON TABLE  model_draft.renpassgis_economic_weatherpoint_voronoi IS
+COMMENT ON TABLE  model_draft.renpassgis_economy_climatepoint_voronoi IS
 '{
-"Name": "Voronoi weatherpoints",
+"Name": "Voronoi climatepoints",
 "Source": [{
                   "Name": "open_eGo data-processing",
                   "URL":  "https://github.com/openego/data_processing" }],
@@ -110,7 +110,7 @@ COMMENT ON TABLE  model_draft.renpassgis_economic_weatherpoint_voronoi IS
 "Date of collection": "...",
 "Original file": "...",
 "Spatial resolution": ["Germany"],
-"Description": ["Voronoi cells calculated on the basis of weatherpoints from renpassGIS"],
+"Description": ["Voronoi cells calculated on the basis of climatepoints from renpassGIS"],
 "Column": [
                    {"Name": "geom",
                     "Description": "geometry",
@@ -134,4 +134,4 @@ COMMENT ON TABLE  model_draft.renpassgis_economic_weatherpoint_voronoi IS
 }';
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','output','model_draft','renpassgis_economic_weatherpoint_voronoi','ego_dp_powerflow_voronoi_weatherpoint.sql',' ');
+SELECT ego_scenario_log('v0.3.0','output','model_draft','renpassgis_economy_climatepoint_voronoi','ego_dp_powerflow_voronoi_climatepoint.sql',' ');

@@ -1,8 +1,12 @@
 /*
-LOPF data -
-Setting marginal_cost ( operating cost + fuel cost + CO2 crt cost ) 
-in model_draft.ego_grid_pf_hv_generator according to renpass_gis, NEP 2014 scenario.
-In addition p_max_pu is set for all generators with variable dispatch based on p_max_pu = p_set / p_nom .
+Missing parameters necessary for calculating a linear optimal power flow (LOPF) are added to the existing data. This
+includes marginal costs per technology, which is composed of specific operating cost, fuel costs and CO2 costs 
+according to renpass_gis, NEP 2014 scenario. 
+In addition p_max_pu is set for all generators with variable dispatch based on p_max_pu = p_set / p_nom.
+
+A further section of the script is used to insert extendable battery and hydrogen storages to all substations in the 
+grid model. These have a initial installed capacity p_nom=0, which can be extended when executing an optimization 
+(by calculating a LOPF). 
 
 __copyright__ 	= "Europa-Universität Flensburg, Centre for Sustainable Energy Systems"
 __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
@@ -41,13 +45,33 @@ when 5 THEN (4.9781 + 0.5)  -- uranium / uranium
 when 6 THEN (27.5112 + 3.9) -- biomass / biomass
 when 7 THEN (39.9344 + 2.0) -- eeg_gas / gas
 when 8 THEN (20.7914 + 4.0) -- coal / hard_coal
-when 15 THEN (39.5156 + 1.5) -- other_non_renewable / other_non_renewable -- assumption:same price as oil!
+when 15 THEN (67.3643 + 1.5) -- other_non_renewable / other_non_renewable -- assumption:same price as oil!
 ELSE 0                      -- run_of_river/reservoir/pumped_storage/solar/wind/geothermal
 END)
 where scn_name = 'NEP 2035';
 
+
+UPDATE model_draft.ego_grid_pf_hv_generator
+SET marginal_cost =        -- operating costs + fuel costs + CO2 crt cost
+(
+CASE source                 -- source / renpass_gis ZNES eHighway 2050
+when 1 THEN (54.0533 + 2.0) -- gas / gas
+--when 2 THEN (13.2412 + 4.4)  -- lignite / lignite
+--when 3 THEN (16.9297 + 23.0) -- waste / waste
+--when 4 THEN (67.3643 + 1.5) -- oil / oil
+---when 5 THEN (4.9781 + 0.5)  -- uranium / uranium
+when 6 THEN (27.7348 + 3.9) -- biomass / biomass
+when 7 THEN (54.0533 + 2.0) -- eeg_gas / gas
+--when 8 THEN (20.7914 + 4.0) -- coal / hard_coal
+when 15 THEN (67.3643 + 1.5) -- other_non_renewable / other_non_renewable -- assumption:same price as oil!
+ELSE 0                      -- run_of_river/reservoir/pumped_storage/solar/wind/geothermal
+END)
+where scn_name = 'eGo 100';
+
+
+
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_grid_pf_hv_generator','ego_dp_powerflow_lopf_data.sql',' ');
+SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_grid_pf_hv_generator','ego_dp_powerflow_lopf_data.sql',' ');
 
 -- set p_max_pu
 
@@ -74,7 +98,7 @@ FROM (
 	GROUP BY T2.generator_id
 ) T3 WHERE T3.generator_id = Y.generator_id;
 
---DELETE * FROM model_draft.ego_grid_pf_hv_storage;
+DELETE FROM model_draft.ego_grid_pf_hv_storage WHERE scn_name IN ('Status Quo', 'NEP 2035', 'eGo 100') AND source = 16;
 
 -- Insert battery storages to all substations (Status Quo)
 INSERT INTO model_draft.ego_grid_pf_hv_storage
@@ -103,7 +127,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_storage
 )
 SELECT 
   'Status Quo',
-  nextval('orig_geo_powerplants.pf_storage_single_aggr_id') as aggr_id,
+  nextval('model_draft.ego_supply_pf_storage_single_aggr_id') as aggr_id,
   model_draft.ego_grid_hvmv_substation.otg_id,  -- assign storage to substation
   'flexible', 	-- set storage to be flexible
   'PQ',  -- PQ control
@@ -153,7 +177,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_storage
 )
 SELECT 
   'NEP 2035',
-  nextval('orig_geo_powerplants.pf_storage_single_aggr_id') as aggr_id,
+  nextval('model_draft.ego_supply_pf_storage_single_aggr_id') as aggr_id,
   model_draft.ego_grid_hvmv_substation.otg_id,  -- assign storage to substation
   'flexible', 	-- set storage to be flexible
   'PQ',  -- PQ control
@@ -204,7 +228,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_storage
 )
 SELECT 
   'eGo 100',
-  nextval('orig_geo_powerplants.pf_storage_single_aggr_id') as aggr_id,
+  nextval('model_draft.ego_supply_pf_storage_single_aggr_id') as aggr_id,
   model_draft.ego_grid_hvmv_substation.otg_id,  -- assign storage to substation
  'flexible', 	-- set storage to be flexible
   'PQ',  -- PQ control
@@ -254,7 +278,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_storage
 )
 SELECT 
   'Status Quo',
-  nextval('orig_geo_powerplants.pf_storage_single_aggr_id') as aggr_id,
+  nextval('model_draft.ego_supply_pf_storage_single_aggr_id') as aggr_id,
   model_draft.ego_grid_hvmv_substation.otg_id,  -- assign storage to substation
   'flexible', 	-- set storage to be flexible
   'PQ',  -- PQ control
@@ -309,7 +333,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_storage
 )
 SELECT 
   'NEP 2035',
-  nextval('orig_geo_powerplants.pf_storage_single_aggr_id') as aggr_id,
+  nextval('model_draft.ego_supply_pf_storage_single_aggr_id') as aggr_id,
   model_draft.ego_grid_hvmv_substation.otg_id,  -- assign storage to substation
   'flexible', 	-- set storage to be flexible
   'PQ',  -- PQ control
@@ -364,7 +388,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_storage
 )
 SELECT 
   'eGo 100',
-  nextval('orig_geo_powerplants.pf_storage_single_aggr_id') as aggr_id,
+  nextval('model_draft.ego_supply_pf_storage_single_aggr_id') as aggr_id,
   model_draft.ego_grid_hvmv_substation.otg_id,  -- assign storage to substation
   'flexible', 	-- set storage to be flexible
   'PQ',  -- PQ control
@@ -393,7 +417,7 @@ WHERE model_draft.ego_grid_hvmv_substation.subst_id IN (
 				AND ST_CONTAINS(salt.geom,model_draft.ego_grid_hvmv_substation.point));
 				
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_grid_pf_hv_storage','ego_dp_powerflow_lopf_data.sql',' ');				
+SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_grid_pf_hv_storage','ego_dp_powerflow_lopf_data.sql',' ');				
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','output','model_draft','ego_grid_pf_hv_generator_pq_set','ego_dp_powerflow_lopf_data.sql',' ');
+SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_grid_pf_hv_generator_pq_set','ego_dp_powerflow_lopf_data.sql',' ');
