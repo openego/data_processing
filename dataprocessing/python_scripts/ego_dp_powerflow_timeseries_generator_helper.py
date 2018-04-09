@@ -19,12 +19,32 @@ NEIGHBOURSID = 200000
 
 SCENARIOMAP = {'Status Quo': 43, 'NEP 2035': 41, 'eGo 100': 40}
 
-SOURCE_TO_FUEL = {
-    1: 'gas', 2: 'lignite', 3: 'mixed_fuels', 4: 'oil',
-    5: 'uranium', 6: 'biomass', 8: 'hard_coal', 9: 'run_of_river', 10: 'reservoir',
-    12: 'solar', 13: 'wind_onshore', 14: 'geothermal', 15: 'other_non_renewable',
-    16: 'wind_offshore', 94: 'storage', 95: 'load', 96: 'waste',
-    97: 'reservoir', 98: 'shortage', 99: 'excess'}
+# list of available fuel types in eGo scenarios
+FUEL_TO_SOURCE = {
+    'gas': 1,
+    'lignite': 2,
+    'waste': 3,
+    'mixed_fuels': 3,
+    'oil': 4,
+    'uranium': 5,
+    'biomass': 6,
+    'chp': 7,  # is this correct?
+    'hard_coal': 8,
+    'run_of_river': 9,
+    'reservoir': 10,
+    'solar': 12,
+    'wind_onshore': 13,
+    'geothermal': 14,
+    'wind_offshore': 17,
+    'storage_redox_flow': 99,
+    'storage_pumped_hydro': 99,
+    'storage_lithium_ion': 99,
+    'storage_hydrogen': 99,
+    'storage_phs': 99,
+    'storage_a_caes': 99,
+    'load': 99,
+    'shortage': 99,
+    'excess': 99}
 
 TEMPID = 1
 
@@ -81,6 +101,7 @@ def missing_orm_classes(session):
         Base.classes.renpass_gis_source, Base.classes.renpass_gis_results
 
     return EgoPowerClass, EgoRenewableFeedin, Transformer, Source, Results
+
 
 def _flatten(x):
     if isinstance(x, list):
