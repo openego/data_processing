@@ -1,25 +1,23 @@
-"""
-This script writes optimized dispatch timeseries data based on renpassG!S results
-and renewable feedin timeseries based on simple feedin to the corresponding hv powerflow.
+""" This script assign optimized dispatch timeseries data based on renpassG!S
+results to high-voltage powerflow generators.
 """
 
-__copyright__ 	= "ZNES Flensburg"
-__license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
-__url__ 		= "https://github.com/openego/data_processing/blob/master/LICENSE"
-__author__ 		= "wolfbunke"
+__copyright__ = "ZNES Flensburg"
+__license__ = "GNU Affero General Public License Version 3 (AGPL-3.0)"
+__url__ = "https://github.com/openego/data_processing/blob/master/LICENSE"
+__author__ = "wolfbunke"
 
 import pandas as pd
 import numpy as np
+import logging
 
 from dataprocessing.tools.io import oedb_session
-from sqlalchemy.orm import sessionmaker, relationship
-from sqlalchemy import MetaData, func, and_, case
-from sqlalchemy.ext.automap import automap_base
+from dataprocessing.python_scripts.functions.ego_scenario_log import write_ego_scenario_log
+from sqlalchemy.orm import sessionmaker
 
-from egoio.db_tables.model_draft import EgoSupplyPfGeneratorSingle as Generator,\
+from egoio.db_tables.model_draft import EgoGridPfHvGenerator as Generator, \
     EgoGridPfHvGeneratorPqSet as PqSet
-
-from ego_dp_powerflow_timeseries_generator_helper import SOURCE_TO_FUEL, SCENARIOMAP, \
+from ego_dp_powerflow_timeseries_generator_helper import FUEL_TO_SOURCE, SCENARIOMAP, \
     TEMPID, missing_orm_classes
 
 # get database connection
@@ -29,9 +27,7 @@ session = Session()
 
 PowerClass, Feedin, *_, Results = missing_orm_classes(session)
 
-
 ###############################################################################
-
 
 def _norm(x):
     return x / x.sum()
@@ -43,23 +39,18 @@ session.commit()
 # p_set
 for scn_name, scn_nr in SCENARIOMAP.items():
 
-    # dataframe from model_draft.pf_generator_single
-    # with aggr_id (unique combination of bus, scn_name, source), source, p_nom
-    filters = (Generator.scn_name == scn_name, Generator.aggr_id != None)  # comma seperated in fiter() are internally joined using and_
-    fields = [Generator.aggr_id, Generator.source,
-              func.sum(Generator.p_nom).label('summed_p_nom')]
-    grouper = Generator.aggr_id, Generator.source,
-    query = session.query(*fields).filter(*filters).group_by(*grouper)
-
+    # model_draft.ego_grid_pf_hv_generator -> pd.DataFrame
+    query = session.query(Generator).filter(Generator.scn_name == scn_name)
     generators = pd.read_sql(query.statement, query.session.bind)
 
-    # create fraction of nominal power to total nominal power for each source
-    generators['fraction_of_total_p_nom'] = \
-        generators.groupby('source')['summed_p_nom'].apply(_norm)
+    assert set(generators['source'].isnull()) == {False}, "Source field empty in generators table."
 
-    # dataframe from calc_renpass_gis.renpass_gis_results
-    # optimal dispacth results directed towards buses
-    # with obj_label, datetime, val
+    # create fraction of nominal power to total nominal power for each source
+    generators['p_nom_fraction'] = generators.groupby('source')['p_nom'].\
+        apply(_norm)
+
+    # calc_renpass_gis.renpass_gis_results -> pd.DataFrame
+    # contains inflows to buses in Germany excluding powerlines
     filters = (Results.obj_label.like('%DE%'),
                ~Results.obj_label.like('%powerline%'),
                Results.type == 'to_bus',
@@ -71,87 +62,52 @@ for scn_name, scn_nr in SCENARIOMAP.items():
 
     # map obj_label to corresponding source
     results['source'] = None
-    for k, v in SOURCE_TO_FUEL.items():
-        idx = results['obj_label'].str.contains(v)
-        results.loc[idx, 'source'] = k
+    for k, v in FUEL_TO_SOURCE.items():
+        idx = results['obj_label'].str.contains(k)
+        results.loc[idx, 'source'] = v
 
     # aggregate by source and datetime
+    # in this step generation from mixed fuels and waste is summed up
+    # assuming these sources have identical input parameters
     results = results.groupby(['source', 'datetime'], as_index=False).sum()
 
-    # power generation timeseries for each source in list format
+    # timeseries for each component in list format
+    # contains excess, shortage, load, mixed fuels
     results_s = results.groupby('source')['val'].apply(np.array)
 
     # map corresponding timeseries with each generator multiplied by fraction
     # of nominal power
     generators['p_set'] = generators['source'].map(results_s) * \
-        generators['fraction_of_total_p_nom']
+        generators['p_nom_fraction']
 
-    # generators without p_set
-    ix = generators['p_set'].isnull()
-    print('Generators with sources {} have no p_sets assigned!'.format(
-        generators[ix]['source'].unique()))
-    generators.loc[ix, 'p_set'] = None
+    # inform the user about possible discrepancies
+    # dataprocessing has no logging
+    for i, k in FUEL_TO_SOURCE.items():
+        if k not in generators['source'].values:
+            logging.info("%s: %s: Object label %s is not matched in powerflow." % (
+                __file__, scn_name, i))
 
-    # add columns
-    empty = ['q_set', 'p_min_pu', 'p_max_pu']
+    for k in generators.source.unique():
+        if k not in results_s.index:
+            logging.info("%s: %s: Source %s is not matched in renpass_gis." % (
+                __file__, scn_name, int(k)))
 
-    pqsets = pd.concat(
-        [generators[['aggr_id', 'p_set']],
-         pd.DataFrame(columns=empty)])
+    # test for missing values for debugging
+    assert set(generators['p_set'].isnull()) == {False}, "P_set field empty in generators table."
 
-    pqsets.loc[:, empty] = None
+    # OR just get rid of generators with missing p_set
+    generators = generators[~generators['p_set'].isnull()].copy()
 
-    # add scenario name and temporal id
-    pqsets['scn_name'] = scn_name
-    pqsets['temp_id'] = TEMPID
+    # remove solar and wind
+    sources = [v for k, v in FUEL_TO_SOURCE.items() if k in
+               ['wind_offshore', 'wind_onshore', 'solar']]
 
-    # rename column aggr_id to generator_id
-    pqsets.rename(columns={'aggr_id': 'generator_id'}, inplace=True)
+    ix = generators['source'].isin(sources)
+    generators = generators[~ix].copy()
 
-    # write to db
-    for i in pqsets.to_dict(orient='records'):
+    generators['temp_id'] = TEMPID
+    fields = ['generator_id', 'p_set', 'scn_name', 'temp_id']
+    for i in generators[fields].to_dict(orient='records'):
         session.add(PqSet(**i))
-    session.commit()
-
-
-# p_max_pu
-for scn_name, scn_nr in SCENARIOMAP.items():
-
-    sources = ['wind_onshore', 'wind_offshore', 'solar']
-    sources_dict = {v: k for k, v in SOURCE_TO_FUEL.items() if v in sources}
-    casestr = case(sources_dict, value=Feedin.source, else_=None)
-
-    filters = (Generator.scn_name == scn_name, Generator.aggr_id != None)
-    fields = [Generator.aggr_id, Generator.source, Generator.w_id, Generator.power_class,
-              func.sum(Generator.p_nom).label('summed_p_nom')]
-    grouper = Generator.aggr_id, Generator.source, Generator.w_id, Generator.power_class
-
-    t = session.query(*fields).group_by(*grouper).filter(*filters).subquery()
-
-    query = session.query(t, Feedin.feedin).filter(t.c.w_id == Feedin.w_id,
-        t.c.power_class == Feedin.power_class, t.c.source == casestr)
-
-    generators = pd.read_sql(query.statement, query.session.bind)
-
-    def weighted_average_feedin(x):
-
-        # 1darray weights for number of feedins
-        weights = np.array(_norm(x['summed_p_nom']))
-
-        # ndarray of shape (timesteps, number of feedins)
-        feedins = np.array(x['feedin'].tolist()).T
-
-        # ndarray of shape (timesteps, number of feedins)
-        weighted_feedins = np.multiply(weights, feedins)
-
-        # return averaged feedin
-        return np.sum(weighted_feedins, axis=1)
-
-    p_max_pu = generators.groupby(['aggr_id'], as_index=False).\
-        apply(weighted_average_feedin)
-
-    for i in session.query(PqSet).filter(PqSet.scn_name == scn_name).all():
-        if i.generator_id in p_max_pu:
-            i.p_max_pu = p_max_pu[i.generator_id]
 
     session.commit()
