@@ -20,7 +20,7 @@ NEIGHBOURSID = 200000
 SCENARIOMAP = {'Status Quo': 43, 'NEP 2035': 41, 'eGo 100': 40}
 
 # list of available fuel types in eGo scenarios
-FUEL_TO_SOURCE = {
+OBJ_LABEL_TO_SOURCE = {
     'gas': 1,
     'lignite': 2,
     'waste': 3,

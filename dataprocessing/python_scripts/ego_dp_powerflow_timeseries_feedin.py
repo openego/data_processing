@@ -8,7 +8,7 @@ from dataprocessing.python_scripts.functions.ego_scenario_log \
 
 from egoio.db_tables.model_draft import EgoSupplyPfGeneratorSingle \
     as GeneratorSingle, EgoGridPfHvGeneratorPqSet as PqSet
-from ego_dp_powerflow_timeseries_generator_helper import FUEL_TO_SOURCE, SCENARIOMAP, \
+from ego_dp_powerflow_timeseries_generator_helper import OBJ_LABEL_TO_SOURCE, SCENARIOMAP, \
     TEMPID, missing_orm_classes
 
 # get database connection
@@ -23,7 +23,7 @@ logged = 0
 for scn_name, scn_nr in SCENARIOMAP.items():
 
     sources = ['wind_onshore', 'wind_offshore', 'solar']
-    sources_dict = {k: v for k, v in FUEL_TO_SOURCE.items() if k in sources}
+    sources_dict = {k: v for k, v in OBJ_LABEL_TO_SOURCE.items() if k in sources}
     casestr = case(sources_dict, value=Feedin.source, else_=None)
 
     # construct subquery from PfGeneratorSingle with unique aggr_id, source,

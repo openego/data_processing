@@ -17,7 +17,7 @@ from sqlalchemy.orm import sessionmaker
 
 from egoio.db_tables.model_draft import EgoGridPfHvGenerator as Generator, \
     EgoGridPfHvGeneratorPqSet as PqSet
-from ego_dp_powerflow_timeseries_generator_helper import FUEL_TO_SOURCE, SCENARIOMAP, \
+from ego_dp_powerflow_timeseries_generator_helper import OBJ_LABEL_TO_SOURCE, SCENARIOMAP, \
     TEMPID, missing_orm_classes
 
 # get database connection
@@ -62,7 +62,7 @@ for scn_name, scn_nr in SCENARIOMAP.items():
 
     # map obj_label to corresponding source
     results['source'] = None
-    for k, v in FUEL_TO_SOURCE.items():
+    for k, v in OBJ_LABEL_TO_SOURCE.items():
         idx = results['obj_label'].str.contains(k)
         results.loc[idx, 'source'] = v
 
@@ -82,7 +82,7 @@ for scn_name, scn_nr in SCENARIOMAP.items():
 
     # inform the user about possible discrepancies
     # dataprocessing has no logging
-    for i, k in FUEL_TO_SOURCE.items():
+    for i, k in OBJ_LABEL_TO_SOURCE.items():
         if k not in generators['source'].values:
             logging.info("%s: %s: Object label %s is not matched in powerflow." % (
                 __file__, scn_name, i))
@@ -99,7 +99,7 @@ for scn_name, scn_nr in SCENARIOMAP.items():
     generators = generators[~generators['p_set'].isnull()].copy()
 
     # remove solar and wind
-    sources = [v for k, v in FUEL_TO_SOURCE.items() if k in
+    sources = [v for k, v in OBJ_LABEL_TO_SOURCE.items() if k in
                ['wind_offshore', 'wind_onshore', 'solar']]
 
     ix = generators['source'].isin(sources)

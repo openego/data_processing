@@ -14,7 +14,7 @@ import numpy as np
 from dataprocessing.tools.io import oedb_session
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import MetaData, func
-from ego_dp_powerflow_timeseries_generator_helper import SOURCE_TO_FUEL, SCENARIOMAP, \
+from ego_dp_powerflow_timeseries_generator_helper import OBJ_LABEL_TO_SOURCE, SCENARIOMAP, \
     TEMPID, NEIGHBOURSID, _flatten, map_on_partial_string, renpass_gis_orm_classes
 from egoio.db_tables.model_draft import EgoSupplyPfGeneratorSingle as Generator, \
     EgoGridPfHvGeneratorPqSet as PqSet, EgoGridHvElectricalNeighboursBus as Neighbour
@@ -83,7 +83,7 @@ for scn_name, scn_nr in SCENARIOMAP.items():
 
     # map from obj label string -> source
     generators['source'] = map_on_partial_string(
-        generators['label'], SOURCE_TO_FUEL)
+        generators['label'], OBJ_LABEL_TO_SOURCE)
 
     generators['cntr_id'] = generators['label'].str[:2]
 
@@ -111,7 +111,7 @@ for scn_name, scn_nr in SCENARIOMAP.items():
 
     # map from obj label string -> source
     results['source'] = map_on_partial_string(
-        results['obj_label'], SOURCE_TO_FUEL).astype(int)
+        results['obj_label'], OBJ_LABEL_TO_SOURCE).astype(int)
 
     results['cntr_id'] = results['obj_label'].str[:2]
     results['bus'] = results['cntr_id'].map(neighbours['bus_id'])
