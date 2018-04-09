@@ -29,14 +29,14 @@ SELECT scenario_log('eGo_DP', 'v0.4.0','input','model_draft','ego_demand_la_zens
 -- insert loads OSM
 INSERT INTO	model_draft.ego_demand_load_collect (geom)
 	SELECT	geom
-	FROM	model_draft.ego_demand_la_osm
-    ORDER BY gid;
+	FROM	model_draft.ego_demand_la_osm;
+--    ORDER BY gid;
 
 -- insert loads zensus cluster
 INSERT INTO	model_draft.ego_demand_load_collect (geom)
 	SELECT	geom
-	FROM	model_draft.ego_demand_la_zensus_cluster
-    ORDER BY cid;
+	FROM	model_draft.ego_demand_la_zensus_cluster;
+--    ORDER BY cid;
 
 -- index GIST (geom)
 CREATE INDEX ego_demand_load_collect_geom_idx
@@ -67,8 +67,8 @@ INSERT INTO	model_draft.ego_demand_load_collect_buffer100 (geom)
 	SELECT	(ST_DUMP(ST_MULTI(ST_UNION(
 			ST_BUFFER(geom, 100)
 		)))).geom ::geometry(Polygon,3035) AS geom
-	FROM	model_draft.ego_demand_load_collect
-    ORDER BY id;
+	FROM	model_draft.ego_demand_load_collect;
+--    ORDER BY id;
 
 -- index GIST (geom)
 CREATE INDEX ego_demand_load_collect_buffer100_geom_idx

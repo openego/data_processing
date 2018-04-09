@@ -41,24 +41,24 @@ def data_processing():
 
     snippets = [
     ## INPUT DATA CHECK (eGoPP)
-    'ego_dp_structure_input_verification.sql',          # Input verification (eGoPP)
+#    'ego_dp_structure_input_verification.sql',          # Input verification (eGoPP)
 
     ## SUBSTATION
-    'ego_dp_substation_hvmv.sql',                       # Abstract HVMV Substations of the high voltage level from OSM
-    'ego_dp_substation_ehv.sql',                        # Abstract EHV Substations of the extra high voltage level from OSM
-    'ego_dp_substation_otg.sql',                        # Assign osmTGmod-id to HVMV and EHV substations
-    'ego_dp_substation_hvmv_voronoi.sql',               # HVMV Voronoi cells based on HVMV substations
-    'ego_dp_substation_ehv_voronoi.sql',                # EHV Voronoi cells based on EHV substations
+#    'ego_dp_substation_hvmv.sql',                       # Abstract HVMV Substations of the high voltage level from OSM
+#    'ego_dp_substation_ehv.sql',                        # Abstract EHV Substations of the extra high voltage level from OSM
+#    'ego_dp_substation_otg.sql',                        # Assign osmTGmod-id to HVMV and EHV substations
+#    'ego_dp_substation_hvmv_voronoi.sql',               # HVMV Voronoi cells based on HVMV substations
+#    'ego_dp_substation_ehv_voronoi.sql',                # EHV Voronoi cells based on EHV substations
 
     ## GRIDDISTRICT
-    'ego_dp_mv_griddistrict.sql',                       # MV GridDistricts from municipalities and Voronoi cells
-    'ego_dp_substation_id_to_generator.sql',            # Assign Substation ID (subst_id) to Generator (Conventional and Renewable)
+#    'ego_dp_mv_griddistrict.sql',                       # MV GridDistricts from municipalities and Voronoi cells
+#    'ego_dp_substation_id_to_generator.sql',            # Assign Substation ID (subst_id) to Generator (Conventional and Renewable)
 
     ## LOADAREA
-    'ego_dp_loadarea_landuse.sql',                      # OSM landuse sectors
-    'ego_dp_loadarea_industry_consumer.sql',            # OSM Industry consumer
-    'ego_dp_loadarea_loads.sql',                        # OSM Loads from landuse
-    'ego_dp_loadarea_census.sql',                       # Loads from Census 2011
+#    'ego_dp_loadarea_landuse.sql',                      # OSM landuse sectors
+#    'ego_dp_loadarea_industry_consumer.sql',            # OSM Industry consumer
+#    'ego_dp_loadarea_loads.sql',                        # OSM Loads from landuse
+#    'ego_dp_loadarea_census.sql',                       # Loads from Census 2011
     'ego_dp_loadarea_loadmelt.sql',                     # Melt loads from OSM landuse and Census 2011
     'ego_dp_loadarea_loadcut_griddistrict.sql',         # Cut Loadarea with MV Griddistrict
     'ego_dp_loadarea_loadcut_voronoi.sql',              # Cut Loadarea with MV Voronoi cells

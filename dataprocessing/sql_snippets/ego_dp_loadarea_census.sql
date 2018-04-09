@@ -43,7 +43,7 @@ CREATE INDEX  	ego_demand_la_zensus_geom_idx
 	ON	model_draft.ego_demand_la_zensus USING GIST (geom);
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('eGo_DP', 'v0.4.0','input','model_draft','ego_demand_la_osm','ego_dp_loadarea_census.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.0','input','model_draft','ego_demand_la_osm','ego_dp_loadarea_census.sql',' ');
 	
 -- population in osm loads
 UPDATE 	model_draft.ego_demand_la_zensus AS t1
@@ -93,8 +93,8 @@ CREATE TABLE         	model_draft.ego_demand_la_zensus_cluster (
 -- insert cluster
 INSERT INTO	model_draft.ego_demand_la_zensus_cluster(geom)
 	SELECT	(ST_DUMP(ST_MULTI(ST_UNION(geom)))).geom ::geometry(Polygon,3035)
-	FROM    model_draft.ego_demand_la_zensus
-    ORDER BY gid;
+	FROM    model_draft.ego_demand_la_zensus;
+--    ORDER BY gid;
 
 -- index gist (geom)
 CREATE INDEX ego_demand_la_zensus_cluster_geom_idx
@@ -173,10 +173,10 @@ CREATE MATERIALIZED VIEW         	model_draft.ego_society_zensus_per_la_mview AS
 	FROM	model_draft.ego_demand_la_zensus_cluster;
 
 -- grant (oeuser)
-ALTER TABLE model_draft.ego_society_zensus_per_la_mview OWNER TO oeuser;
+ALTER MATERIALIZED VIEW model_draft.ego_society_zensus_per_la_mview OWNER TO oeuser;
 
 -- metadata
-COMMENT ON TABLE model_draft.ego_society_zensus_per_la_mview IS '{
+COMMENT ON MATERIALIZED VIEW model_draft.ego_society_zensus_per_la_mview IS '{
     "comment": "eGoDP - Temporary table", 
     "version": "v0.4.0",
     "published": "none" }';

@@ -39,7 +39,7 @@ CREATE MATERIALIZED VIEW		model_draft.osm_deu_polygon_urban_buffer100_mview AS
 			ST_BUFFER(geom, 100)
 		)))).geom ::geometry(Polygon,3035) AS geom
 	FROM	openstreetmap.osm_deu_polygon_urban
-    ORDER BY gid;
+    ORDER BY id;
 
 -- index (id)
 CREATE UNIQUE INDEX  	osm_deu_polygon_urban_buffer100_mview_gid_idx
@@ -50,10 +50,10 @@ CREATE INDEX  	osm_deu_polygon_urban_buffer100_mview_geom_idx
 	ON	model_draft.osm_deu_polygon_urban_buffer100_mview USING GIST (geom);
     
 -- grant (oeuser)
-ALTER TABLE	model_draft.osm_deu_polygon_urban_buffer100_mview OWNER TO oeuser;
+ALTER MATERIALIZED VIEW	model_draft.osm_deu_polygon_urban_buffer100_mview OWNER TO oeuser;
 
 -- metadata
-COMMENT ON TABLE model_draft.osm_deu_polygon_urban_buffer100_mview IS '{
+COMMENT ON MATERIALIZED VIEW model_draft.osm_deu_polygon_urban_buffer100_mview IS '{
     "comment": "eGoDP - Temporary table", 
     "version": "v0.4.0",
     "published": "none" }';
@@ -78,7 +78,7 @@ INSERT INTO     model_draft.ego_demand_la_osm(area_ha,geom)
                         ST_BUFFER(osm.geom, -100)
                     )))).geom ::geometry(Polygon,3035) AS geom
             FROM    model_draft.osm_deu_polygon_urban_buffer100_mview AS osm
-            ORDER BY gid
+--            ORDER BY id
             ) AS buffer;
 
 -- index GIST (geom)
