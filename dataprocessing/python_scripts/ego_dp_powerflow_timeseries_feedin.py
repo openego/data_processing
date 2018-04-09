@@ -19,13 +19,15 @@ session = Session()
 PowerClass, Feedin, *_, Results = missing_orm_classes(session)
 
 # p_max_pu
+logged = 0
 for scn_name, scn_nr in SCENARIOMAP.items():
 
     sources = ['wind_onshore', 'wind_offshore', 'solar']
     sources_dict = {k: v for k, v in FUEL_TO_SOURCE.items() if k in sources}
     casestr = case(sources_dict, value=Feedin.source, else_=None)
 
-    # construct subquery with unique aggr_id, source, w_id, power_class
+    # construct subquery from PfGeneratorSingle with unique aggr_id, source,
+    # w_id, power_class
     filters = (GeneratorSingle.scn_name == scn_name, GeneratorSingle.aggr_id != None)
     fields = [GeneratorSingle.aggr_id, GeneratorSingle.source,
               GeneratorSingle.w_id, GeneratorSingle.power_class]
@@ -52,10 +54,12 @@ for scn_name, scn_nr in SCENARIOMAP.items():
 
     session.commit()
 
-    write_ego_scenario_log(conn=conn,
-                           version='v0.3.0',
-                           io='input',
-                           schema='model_draft',
-                           table=PqSet.__tablename__,
-                           script=__file__,
-                           entries=len(generators))
+    logged += len(generators)
+
+write_ego_scenario_log(conn=conn,
+                        version='v0.3.0',
+                        io='input',
+                        schema='model_draft',
+                        table=PqSet.__tablename__,
+                        script=__file__,
+                        entries=logged)
