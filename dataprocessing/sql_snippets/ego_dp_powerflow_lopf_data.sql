@@ -1,4 +1,4 @@
-/*
+﻿/*
 Missing parameters necessary for calculating a linear optimal power flow (LOPF) are added to the existing data. This
 includes marginal costs per technology, which is composed of specific operating cost, fuel costs and CO2 costs 
 according to renpass_gis, NEP 2014 scenario. 
@@ -96,7 +96,8 @@ FROM (
 			) AS T1
 		) AS T2 
 	GROUP BY T2.generator_id
-) T3 WHERE T3.generator_id = Y.generator_id;
+) T3 WHERE T3.generator_id = Y.generator_id
+AND Y.p_max_pu IS NULL;
 
 DELETE FROM model_draft.ego_grid_pf_hv_storage WHERE scn_name IN ('Status Quo', 'NEP 2035', 'eGo 100') AND source = 16;
 
