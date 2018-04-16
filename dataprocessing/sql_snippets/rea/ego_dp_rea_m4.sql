@@ -130,7 +130,7 @@ BEGIN
 		INSERT INTO model_draft.ego_supply_rea_m4_grid_wpa_temp
 			SELECT 	row_number() over (ORDER BY RANDOM())as rea_sorted,
 				wpa.*
-			FROM 	model_draft.ego_lattice_500m_out_mview AS wpa
+			FROM 	model_draft.ego_lattice_500m_wpa_mview AS wpa
 			WHERE 	wpa.subst_id =' || gd || ';
 
 		INSERT INTO model_draft.ego_supply_rea_m4_jnt_temp
