@@ -1,25 +1,11 @@
-﻿
-DROP TABLE IF EXISTS  model_draft.scn_nep2035_b2_line ;
-CREATE TABLE model_draft.scn_nep2035_b2_line
-(
-  scn_name character varying NOT NULL DEFAULT 'Status Quo'::character varying,
-  project character varying,
-  project_id bigint,
-  startpunkt character varying,
-  endpunkt character varying,
-  spannung bigint,
-  s_nom numeric DEFAULT 0,
-  cables bigint,
-  nova character varying,
-  geom geometry(MultiLineString,4326)
-)
-WITH (
-  OIDS=FALSE
-);
-ALTER TABLE model_draft.scn_nep2035_b2_line
-  OWNER TO oeuser;
-  
-COPY model_draft.scn_nep2035_b2_line FROM '/home/clara/GitHub/data_processing/documentation/scn_nep2035_b2.csv' DELIMITER ',' CSV HEADER;
+/*
+In a postprocessing this script includes grid variations to the grid model. 
+
+__copyright__ 	= "Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems"
+__license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
+__url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
+__author__ 	= "ClaraBüttner, IlkaCu" 
+*/
 
 DROP TABLE IF EXISTS  model_draft.ego_grid_pf_hv_extension_temp_resolution;
 CREATE TABLE model_draft.ego_grid_pf_hv_extension_temp_resolution AS (SELECT * FROM model_draft.ego_grid_pf_hv_temp_resolution);
