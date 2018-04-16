@@ -1,5 +1,5 @@
 /*
-In a postprocessing this script includes grid variations to the grid model. 
+In a postprocessing this script adds grid variations to the grid model. 
 
 __copyright__ 	= "Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems"
 __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
