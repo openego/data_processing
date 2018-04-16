@@ -4,7 +4,7 @@ In a postprocessing this script adds grid variations to the grid model.
 __copyright__ 	= "Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems"
 __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
 __url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
-__author__ 	= "ClaraBüttner, IlkaCu" 
+__author__ 	= "ClaraBuettner, IlkaCu" 
 */
 
 DROP TABLE IF EXISTS  model_draft.ego_grid_pf_hv_extension_temp_resolution;
