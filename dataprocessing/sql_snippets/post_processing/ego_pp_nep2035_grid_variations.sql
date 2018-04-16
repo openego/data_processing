@@ -17,7 +17,7 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE model_draft.scn_nep2035_b2_line
-  OWNER TO postgres;
+  OWNER TO oeuser;
   
 COPY model_draft.scn_nep2035_b2_line FROM '/home/clara/GitHub/data_processing/documentation/scn_nep2035_b2.csv' DELIMITER ',' CSV HEADER;
 
@@ -27,7 +27,7 @@ CREATE TABLE model_draft.ego_grid_pf_hv_extension_temp_resolution AS (SELECT * F
 DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_extension_source ;
 CREATE TABLE model_draft.ego_grid_pf_hv_extension_source AS (SELECT * FROM model_draft.ego_grid_pf_hv_source);
 ALTER TABLE model_draft.ego_grid_pf_hv_extension_source
-  OWNER TO postgres;
+  OWNER TO oeuser;
 
 DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_extension_storage;
 CREATE TABLE model_draft.ego_grid_pf_hv_extension_storage
@@ -60,7 +60,7 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE model_draft.ego_grid_pf_hv_extension_storage
-  OWNER TO postgres;
+  OWNER TO oeuser;
 
 DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_extension_storage_pq_set;
 CREATE TABLE model_draft.ego_grid_pf_hv_extension_storage_pq_set
@@ -80,7 +80,7 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE model_draft.ego_grid_pf_hv_extension_storage_pq_set
-  OWNER TO postgres;
+  OWNER TO oeuser;
   
 DROP SEQUENCE IF EXISTS model_draft.ego_grid_hv_extension_bus_id CASCADE;
 CREATE SEQUENCE model_draft.ego_grid_hv_extension_bus_id;
@@ -124,7 +124,7 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE model_draft.ego_grid_pf_hv_extension_bus
-  OWNER TO postgres;
+  OWNER TO oeuser;
 
 --- Insert buses from input-table ---	
 INSERT INTO model_draft.ego_grid_pf_hv_extension_bus (bus_id, geom, bus_name, project ) 
@@ -237,7 +237,7 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE model_draft.ego_grid_pf_hv_extension_line
-  OWNER TO postgres;
+  OWNER TO oeuser;
 
 --- Insert AC-lines from input table ---
 INSERT INTO model_draft.ego_grid_pf_hv_extension_line (line_id, geom, project, project_id, v_nom, segment, bus0, bus1, cable, length, nova)
@@ -399,7 +399,7 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE model_draft.ego_grid_pf_hv_extension_link
-  OWNER TO postgres;
+  OWNER TO oeuser;
 
 --- Insert links from input table ---
 INSERT INTO model_draft.ego_grid_pf_hv_extension_link (scn_name, link_id, geom, project, project_id, v_nom, segment, bus0, bus1) 
@@ -499,7 +499,7 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE model_draft.ego_grid_pf_hv_extension_transformer
-  OWNER TO postgres;
+  OWNER TO oeuser;
   
 --- Insert trafo to each overlay-bus ---
 INSERT INTO model_draft.ego_grid_pf_hv_extension_transformer (scn_name, trafo_id, tap_ratio, phase_shift, bus1, v1, project)
@@ -589,7 +589,7 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE model_draft.ego_grid_pf_hv_extension_load
-  OWNER TO postgres;
+  OWNER TO oeuser;
 
 --- Insert loads to the middle of belgium and norway
 INSERT INTO model_draft.ego_grid_pf_hv_extension_load (scn_name, load_id, bus, sign)
@@ -616,7 +616,7 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE model_draft.ego_grid_pf_hv_extension_load_pq_set
-  OWNER TO postgres;
+  OWNER TO oeuser;
 
 --- Insert load timeseries from opsd_hourly_timeseries ---
 INSERT INTO model_draft.ego_grid_pf_hv_extension_load_pq_set (scn_name, load_id, temp_id, p_set, q_set)
@@ -674,7 +674,7 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE model_draft.ego_grid_pf_hv_extension_generator
-  OWNER TO postgres;
+  OWNER TO oeuser;
 
 -- INSERT params of LinearTransformers in model_draft.ego_grid_pf_hv_generator (countries besides Germany)
 -- starting generator_id at 200000, bus_id for neighbouring countries > 2800000 atm
@@ -872,7 +872,7 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE model_draft.ego_grid_pf_hv_extension_generator_pq_set
-  OWNER TO postgres;
+  OWNER TO oeuser;
 
 -- BE_NO_NEP 2035
 Drop MATERIALIZED VIEW IF EXISTS calc_renpass_gis.extension_translate_to_pf;
