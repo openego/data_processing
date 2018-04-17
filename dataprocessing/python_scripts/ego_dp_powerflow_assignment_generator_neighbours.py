@@ -1,5 +1,5 @@
-""" Transfer renpassG!S scenario definition of LinearTransformers and Sources
-to eGo powerflow generator table.
+""" Transfer scenario definition as defined in FlEnS open_eGo scenarios
+of LinearTransformers and Sources to eGo powerflow generator table.
 """
 
 __copyright__ 	= "ZNES Flensburg"
@@ -10,10 +10,11 @@ __author__ 		= "wolfbunke"
 import pandas as pd
 
 from dataprocessing.tools.io import oedb_session
+from dataprocessing.python_scripts.functions.ego_scenario_log import write_ego_scenario_log
 from sqlalchemy.orm import sessionmaker
 from ego_dp_powerflow_timeseries_generator_helper import OBJ_LABEL_TO_SOURCE, SCENARIOMAP, \
     TEMPID, NEIGHBOURSID, _flatten, map_on_partial_string, missing_orm_classes
-from egoio.db_tables.model_draft import EgoSupplyPfGeneratorSingle as Generator, \
+from egoio.db_tables.model_draft import EgoGridPfHvGenerator as Generator, \
     EgoGridHvElectricalNeighboursBus as Neighbour
 
 conn = oedb_session(section='test')
@@ -38,6 +39,7 @@ neighbours = neighbours.loc[ix, :]
 neighbours.set_index('cntr_id', inplace=True)
 
 # for each scenario
+logged = 0
 for scn_name, scn_nr in SCENARIOMAP.items():
 
     # get renpass_gis scenario data on linear transformers. Parameters are
@@ -108,3 +110,11 @@ for scn_name, scn_nr in SCENARIOMAP.items():
         session.add(Generator(**i))
 
     session.commit()
+
+write_ego_scenario_log(conn=conn,
+                       version='v0.4.0',
+                       io='input',
+                       schema='model_draft',
+                       table=Generator.__tablename__,
+                       script=__file__,
+                       entries=logged)
