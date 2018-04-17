@@ -1,25 +1,17 @@
-/*
-This is a quick workaround to transfer `renpassG!S results <calc_renpass_gis.renpass_gis_results>`_ on generator time series
-into the corresponding powerflow table. It adds time series (p_set) for generators in Germany and the neighbouring countries to the
-`respective table <http://oep.iks.cs.ovgu.de/dataedit/view/model_draft/ego_grid_pf_hv_generator_pq_set>`_
+/* Create entries in hv load for all neighbouring countries and scenarios
 
 __copyright__ 	= "Europa Universitaet Flensburg, Centre for Sustainable Energy Systems"
 __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
 __url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
 __author__ 	= "wolfbunke, MarlonSchlemminger"
-
-TODO: storage in storage_pqset #1069
 */
-
 
 -- DELETE
 DELETE FROM model_draft.ego_grid_pf_hv_load WHERE bus IN (
 SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus
 WHERE central_bus = TRUE);
 
-
--- INSERT neigbouring states in load table
--- Status Quo
+-- Status quo
 INSERT into model_draft.ego_grid_pf_hv_load (scn_name, load_id, bus, sign)
 
 	SELECT
@@ -39,8 +31,7 @@ INSERT into model_draft.ego_grid_pf_hv_load (scn_name, load_id, bus, sign)
 
 		WHERE v_nom = max_v_nom;
 
--- NEP 2035
-
+-- NEP2035
 INSERT into model_draft.ego_grid_pf_hv_load (scn_name, load_id, bus, sign)
 
 	SELECT
@@ -61,8 +52,7 @@ INSERT into model_draft.ego_grid_pf_hv_load (scn_name, load_id, bus, sign)
 	WHERE v_nom = max_v_nom;
 
 
--- eGo 100
-
+-- eGo100
 INSERT into model_draft.ego_grid_pf_hv_load (scn_name, load_id, bus, sign)
 
 	SELECT
@@ -81,42 +71,6 @@ INSERT into model_draft.ego_grid_pf_hv_load (scn_name, load_id, bus, sign)
 		where central_bus = TRUE
 		) EGO
 	WHERE v_nom = max_v_nom;
-
-
-
-
-
-
-
--- Demand timeseries
-
--- NEP 2035
-/* Handled in  ego_dp_powerflow_load_timeseries_NEP2035.sql
-
-INSERT INTO model_draft.ego_grid_pf_hv_load_pq_set (scn_name, load_id, temp_id, p_set)
-
-	SELECT
-	'NEP 2035' AS scn_name,
-	C.load_id AS load_id,
-	1 AS temp_id,
-	array_agg(SQ.val ORDER BY SQ.datetime) AS p_set
-	FROM
-		(
-		SELECT *,
-		max(B.v_nom) over (partition by B.cntr_id) AS max_v_nom
-			FROM calc_renpass_gis.renpass_gis_results A
-			join model_draft.ego_grid_hv_electrical_neighbours_bus B
-			ON (B.cntr_id = substring(A.obj_label, 1, 2))
-		WHERE A.obj_label LIKE '%%load%%'
-		AND B.id <= 27
-		AND A.type = 'from_bus'
-		AND A.scenario_id = 38
-		) SQ
-		JOIN model_draft.ego_grid_pf_hv_load C on (C.bus = SQ.bus_id)
-	WHERE SQ.v_nom = SQ.max_v_nom
-	AND C.scn_name = 'NEP 2035'
-	GROUP BY C.load_id;
-*/
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
 SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_grid_pf_hv_generator_pq_set','ego_dp_powerflow_timeseries_generator.sql',' ');
