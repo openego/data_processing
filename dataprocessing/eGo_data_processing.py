@@ -98,6 +98,7 @@ def data_processing():
 #    'ego_dp_powerflow_fix_ehv_subnetworks.sql',                    # Fix topological errors in eHV grid
 #    'ego_dp_powerflow_grid_future_scenarios.sql',                  # Copy grid to future scenarios
 #    'ego_dp_powerflow_assignment_generator.sql',                   # Assign generators to corresponding substation (SQ, NEP2035, eGo100)
+#    'ego_dp_powerflow_assignment_generator_neighbours.py',         # Create generators for neighbouring countries (SQ, NEP2035, eGo100)
 #    'ego_dp_powerflow_assignment_load.sql',                        # Assign loads to their corresponding substation (SQ, NEP2035, eGo100)
 #    'ego_dp_powerflow_assignment_storage.sql',                     # Assign storages to their corresponding substation (SQ, NEP 2035, eGo 100)
 #    'ego_dp_powerflow_timeseries_generator.sql',                   # Transfer renpassG!S results into the corresponding powerflow table
