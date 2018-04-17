@@ -36,7 +36,8 @@ def _norm(x):
 session.query(PqSet).delete()
 session.commit()
 
-# p_set
+# Assigning p_set for each scenario
+logged = 0
 for scn_name, scn_nr in SCENARIOMAP.items():
 
     # model_draft.ego_grid_pf_hv_generator -> pd.DataFrame
@@ -111,3 +112,13 @@ for scn_name, scn_nr in SCENARIOMAP.items():
         session.add(PqSet(**i))
 
     session.commit()
+
+    logged += len(generators)
+
+write_ego_scenario_log(conn=conn,
+                       version='v0.4.0',
+                       io='input',
+                       schema='model_draft',
+                       table=PqSet.__tablename__,
+                       script=__file__,
+                       entries=logged)

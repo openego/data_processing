@@ -66,7 +66,7 @@ for scn_name, scn_nr in SCENARIOMAP.items():
     logged += len(generators)
 
 write_ego_scenario_log(conn=conn,
-                        version='v0.3.0',
+                        version='v0.4.0',
                         io='input',
                         schema='model_draft',
                         table=PqSet.__tablename__,
