@@ -1,6 +1,5 @@
-"""
-Assign German timeseries data from hidden renpassG!S schema to high voltage
-powerflow.
+""" Assigns dispatch optimization results from renpassG!S to corresponding
+hv powerflow generators for neighbouring countries
 """
 
 __copyright__ 	= "ZNES Flensburg"
@@ -16,8 +15,8 @@ from sqlalchemy.orm import sessionmaker
 from dataprocessing.python_scripts.functions.ego_scenario_log import write_ego_scenario_log
 from ego_dp_powerflow_timeseries_generator_helper import OBJ_LABEL_TO_SOURCE, SCENARIOMAP, \
     TEMPID, NEIGHBOURSID, map_on_partial_string, missing_orm_classes
-from egoio.db_tables.model_draft import EgoSupplyPfGeneratorSingle as Generator, \
-    EgoGridPfHvGeneratorPqSet as PqSet
+from egoio.db_tables.model_draft import EgoGridPfHvGenerator as Generator, \
+    EgoGridPfHvGeneratorPqSet as PqSet, EgoGridHvElectricalNeighboursBus as Neighbour
 
 conn = oedb_session(section='test')
 Session = sessionmaker(bind=conn)
@@ -31,6 +30,15 @@ session.query(PqSet).filter(PqSet.generator_id >= NEIGHBOURSID).\
 ###############################################################################
 
 PowerClass, Feedin, *_, Results = missing_orm_classes(session)
+
+# get DataFrame each row representing one electrical neighbour by applying
+# filter on id and v_nom, not affected by scenario name
+query = session.query(Neighbour)
+neighbours = pd.read_sql(query.statement, query.session.bind)
+
+ix = (neighbours['id'] <= 27) & (neighbours['v_nom'] == 380)
+neighbours = neighbours.loc[ix, :]
+neighbours.set_index('cntr_id', inplace=True)
 
 logged = 0
 for scn_name, scn_nr in SCENARIOMAP.items():
@@ -55,6 +63,9 @@ for scn_name, scn_nr in SCENARIOMAP.items():
     results['source'] = map_on_partial_string(
         results['obj_label'],
         {k: i for i, k in OBJ_LABEL_TO_SOURCE.items()})
+
+    results['cntr_id'] = results['obj_label'].str[:2]
+    results['bus'] = results['cntr_id'].map(neighbours['bus_id'])
 
     # create Series with bus_id, source and power generation / actual value
     # in list format
