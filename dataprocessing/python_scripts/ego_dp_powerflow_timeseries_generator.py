@@ -81,17 +81,18 @@ for scn_name, scn_nr in SCENARIOMAP.items():
     generators['p_set'] = generators['source'].map(results_s) * \
         generators['p_nom_fraction']
 
+    # https://github.com/znes/FlEnS/issues/3
     # inform the user about possible discrepancies
     # dataprocessing has no logging
-    for i, k in OBJ_LABEL_TO_SOURCE.items():
-        if k not in generators['source'].values:
-            logging.info("%s: %s: Object label %s is not matched in powerflow." % (
-                __file__, scn_name, i))
+    #for i, k in OBJ_LABEL_TO_SOURCE.items():
+    #    if k not in generators['source'].values:
+    #        logging.info("%s: %s: Object label %s is not matched in powerflow." % (
+    #            __file__, scn_name, i))
 
-    for k in generators.source.unique():
-        if k not in results_s.index:
-            logging.info("%s: %s: Source %s is not matched in renpass_gis." % (
-                __file__, scn_name, int(k)))
+    #for k in generators.source.unique():
+    #    if k not in results_s.index:
+    #        logging.info("%s: %s: Source %s is not matched in renpass_gis." % (
+    #            __file__, scn_name, int(k)))
 
     # test for missing values for debugging
     assert set(generators['p_set'].isnull()) == {False}, "P_set field empty in generators table."
