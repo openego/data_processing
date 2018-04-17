@@ -110,6 +110,10 @@ def data_processing():
     ## VERSIONING
 #   	'ego_dp_versioning.sql',				# Versioning
 #	'ego_dp_versioning_mviews.sql' ,			# Versioning of mviews
+
+	## POST-PROCESSING
+#	'post_processing/ego_pp_nep2035_grid_variations.sql'	# Create extension_tables and insert NEP-data
+
     
 	## VACUUM FULL
 #	 'ego_dp_vacuum_full.sql'
