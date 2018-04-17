@@ -1,3 +1,12 @@
+""" This script assigns feedin timeseries data generated with feedinlib
+to high-voltage powerflow generators.
+"""
+
+__copyright__ = "ZNES Flensburg"
+__license__ = "GNU Affero General Public License Version 3 (AGPL-3.0)"
+__url__ = "https://github.com/openego/data_processing/blob/master/LICENSE"
+__author__ = "wolfbunke"
+
 import pandas as pd
 
 from dataprocessing.tools.io import oedb_session
