@@ -145,10 +145,10 @@ CREATE INDEX ego_demand_load_melt_error_geom_mview_geom_idx
     ON model_draft.ego_demand_load_melt_error_geom_mview USING GIST (geom);
 
 -- grant (oeuser)
-ALTER TABLE model_draft.ego_demand_load_melt_error_geom_mview OWNER TO oeuser;
+ALTER MATERIALIZED VIEW model_draft.ego_demand_load_melt_error_geom_mview OWNER TO oeuser;
 
 -- metadata
-COMMENT ON TABLE model_draft.ego_demand_load_melt_error_geom_mview IS '{
+COMMENT ON MATERIALIZED VIEW model_draft.ego_demand_load_melt_error_geom_mview IS '{
     "comment": "eGoDP - Temporary table", 
     "version": "v0.4.0",
     "published": "none" }';
@@ -183,10 +183,10 @@ CREATE INDEX ego_demand_load_melt_error_geom_fix_mview_geom_idx
     ON model_draft.ego_demand_load_melt_error_geom_fix_mview USING GIST (geom);
 
 -- grant (oeuser)
-ALTER TABLE model_draft.ego_demand_load_melt_error_geom_fix_mview OWNER TO oeuser;
+ALTER MATERIALIZED VIEW model_draft.ego_demand_load_melt_error_geom_fix_mview OWNER TO oeuser;
 
 -- metadata
-COMMENT ON TABLE model_draft.ego_demand_load_melt_error_geom_fix_mview IS '{
+COMMENT ON MATERIALIZED VIEW model_draft.ego_demand_load_melt_error_geom_fix_mview IS '{
     "comment": "eGoDP - Temporary table", 
     "version": "v0.4.0",
     "published": "none" }';
@@ -234,10 +234,10 @@ CREATE INDEX ego_demand_load_melt_error_2_geom_mview_geom_idx
     ON model_draft.ego_demand_load_melt_error_2_geom_mview USING GIST (geom);
 
 -- grant (oeuser)
-ALTER TABLE model_draft.ego_demand_load_melt_error_2_geom_mview OWNER TO oeuser;
+ALTER MATERIALIZED VIEW model_draft.ego_demand_load_melt_error_2_geom_mview OWNER TO oeuser;
 
 -- metadata
-COMMENT ON TABLE model_draft.ego_demand_load_melt_error_2_geom_mview IS '{
+COMMENT ON MATERIALIZED VIEW model_draft.ego_demand_load_melt_error_2_geom_mview IS '{
     "comment": "eGoDP - Temporary table", 
     "version": "v0.4.0",
     "published": "none" }';

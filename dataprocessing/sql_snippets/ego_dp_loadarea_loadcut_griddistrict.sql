@@ -382,10 +382,10 @@ CREATE INDEX    osm_deu_polygon_urban_sector_3_industrial_nolargescale_mview_geo
     ON openstreetmap.osm_deu_polygon_urban_sector_3_industrial_nolargescale_mview USING GIST (geom);
 
 -- grant (oeuser)
-ALTER TABLE openstreetmap.osm_deu_polygon_urban_sector_3_industrial_nolargescale_mview OWNER TO oeuser;
+ALTER MATERIALIZED VIEW openstreetmap.osm_deu_polygon_urban_sector_3_industrial_nolargescale_mview OWNER TO oeuser;
 
 -- metadata
-COMMENT ON MATERIALIZED VIEW model_draft.osm_deu_polygon_urban_sector_3_industrial_nolargescale_mview IS '{
+COMMENT ON MATERIALIZED VIEW openstreetmap.osm_deu_polygon_urban_sector_3_industrial_nolargescale_mview IS '{
     "comment": "eGoDP - Temporary table", 
     "version": "v0.4.0",
     "published": "none" }';

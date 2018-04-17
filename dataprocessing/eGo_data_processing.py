@@ -59,18 +59,18 @@ def data_processing():
 #    'ego_dp_loadarea_industry_consumer.sql',            # OSM Industry consumer
 #    'ego_dp_loadarea_loads.sql',                        # OSM Loads from landuse
 #    'ego_dp_loadarea_census.sql',                       # Loads from Census 2011
-    'ego_dp_loadarea_loadmelt.sql',                     # Melt loads from OSM landuse and Census 2011
-    'ego_dp_loadarea_loadcut_griddistrict.sql',         # Cut Loadarea with MV Griddistrict
-    'ego_dp_loadarea_loadcut_voronoi.sql',              # Cut Loadarea with MV Voronoi cells
-    'ego_dp_loadarea_consumption.sql',                  # Allocate consumption to Loadareas
-    'ego_dp_loadarea_peakload.sql',                     # Peak loads per Loadarea
-    'ego_dp_loadarea_griddistrict_results.sql',         # Results for MV Griddistrict
-    'ego_dp_loadarea_statistic.sql',                    # Results and statistics for eGoDP data
+#    'ego_dp_loadarea_loadmelt.sql',                     # Melt loads from OSM landuse and Census 2011
+#    'ego_dp_loadarea_loadcut_griddistrict.sql',         # Cut Loadarea with MV Griddistrict
+#    'ego_dp_loadarea_loadcut_voronoi.sql',              # Cut Loadarea with MV Voronoi cells
+#   'ego_dp_loadarea_consumption.sql',                  # Allocate consumption to Loadareas
+#    'ego_dp_loadarea_peakload.sql',                     # Peak loads per Loadarea
+#    'ego_dp_loadarea_griddistrict_results.sql',         # Results for MV Griddistrict
+#    'ego_dp_loadarea_statistic.sql',                    # Results and statistics for eGoDP data
 
     ## LOWVOLTAGE
-    'ego_dp_lv_substation.sql',                         # MVLV Substation (ONT)
-    'ego_dp_lv_substation_voronoi.sql',                 # MVLV Substation Voronoi
-    'ego_dp_lv_loadcut.sql'                             # LV Loadcut
+#    'ego_dp_lv_substation.sql',                         # MVLV Substation (ONT)
+#   'ego_dp_lv_substation_voronoi.sql',                 # MVLV Substation Voronoi
+    'ego_dp_lv_loadcut.sql',                             # LV Loadcut
     'ego_dp_lv_griddistrict.sql',                       # LV Griddistrict
     'ego_dp_lv_consumption_peakload.sql',               # LV Consumption and Peakload
 
@@ -116,7 +116,7 @@ def data_processing():
     ]
 
     # get database connection
-    conn = io.oedb_session(section='oedb')
+    conn = io.oedb_session(section='ssh_ilka')
 
     # iterate over list of sql- and python-snippets and execute them
     for snippet in snippets:

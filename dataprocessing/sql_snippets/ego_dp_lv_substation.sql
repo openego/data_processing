@@ -64,7 +64,7 @@ SELECT scenario_log('eGo_DP', 'v0.4.0','temp','model_draft','ego_lattice_360m_lv
 
 
 -- Create MVLV Substation from lattice centroid
-DROP TABLE IF EXISTS    model_draft.ego_grid_mvlv_substation;
+DROP TABLE IF EXISTS    model_draft.ego_grid_mvlv_substation CASCADE;
 CREATE TABLE            model_draft.ego_grid_mvlv_substation (
     mvlv_subst_id   serial NOT NULL,
     la_id           integer,
@@ -121,7 +121,7 @@ SELECT scenario_log('eGo_DP', 'v0.4.0','temp','model_draft','ego_grid_mvlv_subst
 
 -- Lege Buffer um ONT-Standorte und ermittle die Teile der Lastgebiete, die sich nicht innerhalb dieser Buffer befinden
 -- LV Griddistrict rest
-DROP TABLE IF EXISTS    model_draft.ego_grid_lv_loadarea_rest; 
+DROP TABLE IF EXISTS    model_draft.ego_grid_lv_loadarea_rest CASCADE; 
 CREATE TABLE            model_draft.ego_grid_lv_loadarea_rest (
     id          serial NOT NULL,
     la_id       integer,

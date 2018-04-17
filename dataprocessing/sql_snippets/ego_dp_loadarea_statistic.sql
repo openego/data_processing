@@ -474,7 +474,7 @@ CREATE MATERIALIZED VIEW            boundaries.bkg_vg250_statistics_mview AS
 ALTER TABLE boundaries.bkg_vg250_statistics_mview OWNER TO oeuser;
 
 -- metadata
-COMMENT ON MATERIALIZED VIEW model_draft.bkg_vg250_statistics_mview IS '{
+COMMENT ON MATERIALIZED VIEW boundaries.bkg_vg250_statistics_mview IS '{
     "comment": "eGoDP - Temporary table",
     "version": "v0.4.0" }';
 

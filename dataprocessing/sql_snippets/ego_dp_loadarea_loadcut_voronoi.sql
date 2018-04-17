@@ -62,7 +62,7 @@ CREATE TABLE            model_draft.ego_demand_loadarea_voi (
 ALTER TABLE model_draft.ego_demand_loadarea_voi OWNER TO oeuser;
 
 -- metadata
-COMMENT ON TABLE ego_demand_loadarea_voi.table IS '{ 
+COMMENT ON TABLE model_draft.ego_demand_loadarea_voi IS '{ 
     "comment": "eGoDP - Temporary table", 
     "version": "v0.4.0" }';
 
@@ -119,7 +119,7 @@ CREATE INDEX ego_demand_loadarea_voi_smaller100m2_mview_geom_idx
 ALTER TABLE model_draft.ego_demand_loadarea_voi_smaller100m2_mview OWNER TO oeuser;
 
 -- metadata
-COMMENT ON MATERIALIZED VIEW ego_demand_loadarea_voi_smaller100m2_mview.table IS '{ 
+COMMENT ON MATERIALIZED VIEW model_draft.ego_demand_loadarea_voi_smaller100m2_mview IS '{ 
     "comment": "eGoDP - Temporary table", 
     "version": "v0.4.0" }';
 
