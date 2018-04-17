@@ -18,7 +18,7 @@ from sqlalchemy.orm import sessionmaker
 from egoio.db_tables.model_draft import EgoGridPfHvGenerator as Generator, \
     EgoGridPfHvGeneratorPqSet as PqSet
 from ego_dp_powerflow_timeseries_generator_helper import OBJ_LABEL_TO_SOURCE, SCENARIOMAP, \
-    TEMPID, missing_orm_classes
+    TEMPID, missing_orm_classes, NEIGHBOURSID
 
 # get database connection
 conn = oedb_session(section='test')
@@ -41,7 +41,8 @@ logged = 0
 for scn_name, scn_nr in SCENARIOMAP.items():
 
     # model_draft.ego_grid_pf_hv_generator -> pd.DataFrame
-    query = session.query(Generator).filter(Generator.scn_name == scn_name)
+    query = session.query(Generator).filter(
+        Generator.scn_name == scn_name, Generator.generator_id < NEIGHBOURSID)
     generators = pd.read_sql(query.statement, query.session.bind)
 
     assert set(generators['source'].isnull()) == {False}, "Source field empty in generators table."

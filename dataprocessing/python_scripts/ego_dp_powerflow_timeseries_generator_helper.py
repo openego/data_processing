@@ -1,4 +1,4 @@
-""" Helper functions and variables to handle renpass_gis tables.
+""" Helper functions and constants to handle renpass_gis tables.
 """
 
 __copyright__ 	= "ZNES Flensburg"
