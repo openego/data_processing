@@ -76,6 +76,9 @@ for scn_name, scn_nr in SCENARIOMAP.items():
     # be renamed
     generators.rename(columns={'source': 'renpass_gis_source'}, inplace=True)
 
+    # rename nominal_value to p_nom
+    generators.rename(columns={'nominal_value': 'p_nom'}, inplace=True)
+
     # map from obj label string -> source
     generators['source'] = map_on_partial_string(
         generators['label'], {i: k for k, i in OBJ_LABEL_TO_SOURCE.items()})
@@ -103,7 +106,8 @@ for scn_name, scn_nr in SCENARIOMAP.items():
 
     # prepare DataFrames to be exported
     generator_ex = generators[
-        ['scn_name', 'generator_id', 'bus', 'dispatch', 'control', 'source']]
+        ['scn_name', 'generator_id', 'bus', 'dispatch', 'control', 'source',
+         'p_nom']]
 
     # write to db
     for i in generator_ex.to_dict(orient='records'):
