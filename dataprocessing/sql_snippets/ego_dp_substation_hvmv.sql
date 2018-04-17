@@ -1,12 +1,15 @@
 /*
+HVMV Substation
+Abstract HVMV Substations of the high voltage level from OSM.
 This script abstracts substations of the high voltage level from openstreetmap data.
 All substations that are relevant transition points between the transmission and distribution grid are identified, irrelevant ones are disregarded.
 
-__copyright__ 	= "DLR Institute for Networked Energy Systems"
-__license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
-__url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
-__author__ 	= "lukasol, C. Matke, Ludee"
+__copyright__   = "DLR Institute for Networked Energy Systems"
+__license__     = "GNU Affero General Public License Version 3 (AGPL-3.0)"
+__url__         = "https://github.com/openego/data_processing/blob/master/LICENSE"
+__author__      = "lukasol, C. Matke, Ludee"
 */
+
 
 -- hvmv substations
 DROP TABLE IF EXISTS 	model_draft.ego_grid_hvmv_substation CASCADE;
@@ -32,11 +35,11 @@ CREATE TABLE 		model_draft.ego_grid_hvmv_substation (
 ALTER TABLE model_draft.ego_grid_hvmv_substation OWNER TO oeuser;
 
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','input','openstreetmap','osm_deu_ways','ego_dp_substation_hvmv.sql',' ');
-SELECT ego_scenario_log('v0.3.0','input','openstreetmap','osm_deu_polygon','ego_dp_substation_hvmv.sql',' ');
-SELECT ego_scenario_log('v0.3.0','input','openstreetmap','osm_deu_nodes','ego_dp_substation_hvmv.sql',' ');
-SELECT ego_scenario_log('v0.3.0','input','openstreetmap','osm_deu_line','ego_dp_substation_hvmv.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.3.0','input','openstreetmap','osm_deu_ways','ego_dp_substation_hvmv.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.3.0','input','openstreetmap','osm_deu_polygon','ego_dp_substation_hvmv.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.3.0','input','openstreetmap','osm_deu_nodes','ego_dp_substation_hvmv.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.3.0','input','openstreetmap','osm_deu_line','ego_dp_substation_hvmv.sql',' ');
 
 
 --> WAY: create view of way substations:
@@ -54,8 +57,8 @@ CREATE VIEW 		model_draft.way_substations AS
 ALTER VIEW model_draft.way_substations OWNER TO oeuser;
 
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','temp','model_draft','way_substations','ego_dp_substation_hvmv.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.3.0','temp','model_draft','way_substations','ego_dp_substation_hvmv.sql',' ');
 
 
 --> WAY: create view of way substations with 110kV:
@@ -70,8 +73,8 @@ CREATE VIEW 		model_draft.way_substations_with_110kV AS
 ALTER VIEW model_draft.way_substations_with_110kV OWNER TO oeuser;
 
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','temp','model_draft','way_substations_with_110kV','ego_dp_substation_hvmv.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.3.0','temp','model_draft','way_substations_with_110kV','ego_dp_substation_hvmv.sql',' ');
 
 
 --> WAY: create view of substations without 110kV
@@ -87,8 +90,8 @@ CREATE VIEW 		model_draft.way_substations_without_110kV AS
 ALTER VIEW model_draft.way_substations_without_110kV OWNER TO oeuser;
 
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','temp','model_draft','way_substations_without_110kV','ego_dp_substation_hvmv.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.3.0','temp','model_draft','way_substations_without_110kV','ego_dp_substation_hvmv.sql',' ');
 
 
 --> NODE: create view of 110kV node substations:
@@ -105,8 +108,8 @@ CREATE VIEW 		model_draft.node_substations_with_110kV AS
 ALTER VIEW model_draft.node_substations_with_110kV OWNER TO oeuser;
 
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','temp','model_draft','node_substations_with_110kV','ego_dp_substation_hvmv.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.3.0','temp','model_draft','node_substations_with_110kV','ego_dp_substation_hvmv.sql',' ');
 
 
 --> LINES 110kV: create view of 110kV lines
@@ -123,8 +126,8 @@ CREATE VIEW 		model_draft.way_lines_110kV AS
 ALTER VIEW model_draft.way_lines_110kV OWNER TO oeuser;
 
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','temp','model_draft','way_lines_110kV','ego_dp_substation_hvmv.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.3.0','temp','model_draft','way_lines_110kV','ego_dp_substation_hvmv.sql',' ');
 
 
 -- INTERSECTION: create view from substations without 110kV tag that contain 110kV line
@@ -139,8 +142,8 @@ CREATE VIEW 		model_draft.way_substations_without_110kV_intersected_by_110kV_lin
 ALTER VIEW model_draft.way_substations_without_110kV_intersected_by_110kV_line OWNER TO oeuser;
 
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','temp','model_draft','way_substations_without_110kV_intersected_by_110kV_line','ego_dp_substation_hvmv.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.3.0','temp','model_draft','way_substations_without_110kV_intersected_by_110kV_line','ego_dp_substation_hvmv.sql',' ');
 
 
 -- 
@@ -168,8 +171,8 @@ CREATE VIEW 		model_draft.substation_110kV AS
 ALTER VIEW model_draft.substation_110kV OWNER TO oeuser;
 
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','temp','model_draft','substation_110kV','ego_dp_substation_hvmv.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.3.0','temp','model_draft','substation_110kV','ego_dp_substation_hvmv.sql',' ');
 
 
 -- create view summary_total that contains substations without any filter
@@ -202,8 +205,8 @@ CREATE VIEW 		model_draft.summary_total AS
 ALTER VIEW model_draft.summary_total OWNER TO oeuser;
 
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','temp','model_draft','summary_total','ego_dp_substation_hvmv.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.3.0','temp','model_draft','summary_total','ego_dp_substation_hvmv.sql',' ');
 
 	
 -- create view that filters irrelevant tags
@@ -220,8 +223,8 @@ CREATE INDEX summary_gix ON model_draft.summary USING GIST (polygon);
 ALTER MATERIALIZED VIEW model_draft.summary OWNER TO oeuser;
 
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','temp','model_draft','summary','ego_dp_substation_hvmv.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.3.0','temp','model_draft','summary','ego_dp_substation_hvmv.sql',' ');
 
 
 -- eliminate substation that are not within VG250
@@ -236,9 +239,9 @@ CREATE VIEW 		model_draft.summary_de AS
 ALTER VIEW model_draft.summary_de OWNER TO oeuser;
 
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','input','boundaries','bkg_vg250_1_sta_union_mview','ego_dp_substation_hvmv.sql',' ');
-SELECT ego_scenario_log('v0.3.0','temp','model_draft','summary_de','ego_dp_substation_hvmv.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.3.0','input','boundaries','bkg_vg250_1_sta_union_mview','ego_dp_substation_hvmv.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.3.0','temp','model_draft','summary_de','ego_dp_substation_hvmv.sql',' ');
 
 
 -- create view with buffer of 75m around polygons
@@ -251,8 +254,8 @@ CREATE MATERIALIZED VIEW 		model_draft.buffer_75 AS
 ALTER MATERIALIZED VIEW model_draft.buffer_75 OWNER TO oeuser;
 
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','temp','model_draft','buffer_75','ego_dp_substation_hvmv.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.3.0','temp','model_draft','buffer_75','ego_dp_substation_hvmv.sql',' ');
 
 
 -- create second view with same data to compare
@@ -264,8 +267,8 @@ CREATE MATERIALIZED VIEW 		model_draft.buffer_75_a AS
 -- grant (oeuser)
 ALTER MATERIALIZED VIEW model_draft.buffer_75_a OWNER TO oeuser;
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','temp','model_draft','buffer_75_a','ego_dp_substation_hvmv.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.3.0','temp','model_draft','buffer_75_a','ego_dp_substation_hvmv.sql',' ');
 
 
 -- create view to eliminate smaller substations where buffers intersect
@@ -283,8 +286,8 @@ CREATE MATERIALIZED VIEW 		model_draft.substations_to_drop AS
 ALTER MATERIALIZED VIEW model_draft.substations_to_drop OWNER TO oeuser;
 
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','temp','model_draft','substations_to_drop','ego_dp_substation_hvmv.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.3.0','temp','model_draft','substations_to_drop','ego_dp_substation_hvmv.sql',' ');
 
 
 -- filter those substations and create final_result
@@ -298,8 +301,8 @@ CREATE VIEW 		model_draft.final_result AS
 ALTER VIEW model_draft.final_result OWNER TO oeuser;
 
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','temp','model_draft','final_result','ego_dp_substation_hvmv.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.3.0','temp','model_draft','final_result','ego_dp_substation_hvmv.sql',' ');
 
 
 -- insert results
@@ -307,8 +310,8 @@ INSERT INTO model_draft.ego_grid_hvmv_substation (lon, lat, point, polygon, volt
 	SELECT lon, lat, point, polygon, voltage, power_type, substation, osm_id, osm_www, frequency, subst_name, ref, operator, dbahn, status
 	FROM model_draft.final_result;
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_grid_hvmv_substation','ego_dp_substation_hvmv.sql',' '); 
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.3.0','output','model_draft','ego_grid_hvmv_substation','ego_dp_substation_hvmv.sql',' '); 
 
 
 -- drop

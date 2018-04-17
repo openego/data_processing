@@ -1,5 +1,8 @@
 ﻿/*
-Rectifies incorrect or implausible records in power plant list and adjusts it for further use
+This script rectifies incorrect or implausible records in power plant list of the BNetzA
+and adjusts it for further use. The results ends up in table model_draft.ego_dp_supply_conv_powerplant
+and supply.ego_dp_conv_powerplant. 
+
 
 __copyright__ 	= "Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems"
 __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"

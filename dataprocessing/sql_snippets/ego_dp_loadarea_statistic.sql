@@ -1,152 +1,182 @@
 /*
-loadareas per mv-griddistrict
-insert cutted load melt
-exclude smaller 100m2
+Results and statistics for eGoDP data
+Substation, Loadarea, MV Griddistricts and Consumption.
+MV Griddistrict types.
+Municipality (Gemeinden).
+Calculate statistics for BKG vg250.
 
-__copyright__ 	= "Reiner Lemoine Institut"
-__license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
-__url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
-__author__ 	= "Ludee"
+__copyright__   = "Reiner Lemoine Institut"
+__license__     = "GNU Affero General Public License Version 3 (AGPL-3.0)"
+__url__         = "https://github.com/openego/data_processing/blob/master/LICENSE"
+__author__      = "Ludee"
 */
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_grid_hvmv_substation','ego_dp_loadarea_statistic.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','input','model_draft','ego_grid_hvmv_substation','ego_dp_loadarea_statistic.sql',' ');
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_grid_mv_griddistrict','ego_dp_loadarea_statistic.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','input','model_draft','ego_grid_mv_griddistrict','ego_dp_loadarea_statistic.sql',' ');
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_demand_loadarea','ego_dp_loadarea_statistic.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','input','model_draft','ego_demand_loadarea','ego_dp_loadarea_statistic.sql',' ');
 
+/*
+-- Results and statistics for substation, Loadarea, MV Griddistricts and Consumption
+DROP TABLE IF EXISTS    model_draft.ego_data_processing_results CASCADE;
+CREATE TABLE            model_draft.ego_data_processing_results (
+    id          SERIAL,
+    version     text,
+    schema_name text,
+    table_name  text,
+    description text,
+    result      integer,
+    unit        text,
+    timestamp   timestamp,
+    CONSTRAINT ego_data_processing_results_pkey PRIMARY KEY (id));
+*/
 
--- results and statistics for substation, load area, MV grid districts and consumption
-DROP TABLE IF EXISTS 	model_draft.ego_data_processing_results CASCADE;
-CREATE TABLE 		model_draft.ego_data_processing_results (
-	id SERIAL,
-	schema_name text,
-	table_name text,
-	description text,
-	result integer,
-	unit text,
-	timestamp timestamp,
-	CONSTRAINT ego_data_processing_results_pkey PRIMARY KEY (id));
-
-INSERT INTO model_draft.ego_data_processing_results (schema_name,table_name,description,result,unit,timestamp)
-	-- Count SUB
-	SELECT	'model_draft',
-		'ego_grid_hvmv_substation',
-		'Number of substations',
-		COUNT(subst_id) ::integer AS result,
-		' ' ::text AS unit,
-		NOW() AT TIME ZONE 'Europe/Berlin'
-	FROM	model_draft.ego_grid_hvmv_substation
-	UNION ALL
-	-- Count MVGD
-	SELECT	'model_draft',
-		'ego_grid_mv_griddistrict',
-		'Number of grid districts',
-		COUNT(subst_id) ::integer AS result,
-		' ' ::text AS unit,
-		NOW() AT TIME ZONE 'Europe/Berlin'
-	FROM	model_draft.ego_grid_mv_griddistrict
-
-	UNION ALL
-	-- Area vg250.gem
-	SELECT	'boundaries',
-		'bkg_vg250_6_gem',
-		'Gemeinde area',
-		SUM(ST_AREA(ST_TRANSFORM(geom,3025))/10000) ::integer AS result,
-		'ha' ::text AS unit,
-		NOW() AT TIME ZONE 'Europe/Berlin'
-	FROM	boundaries.bkg_vg250_6_gem
-	UNION ALL	
-	-- Area vg250.gem_clean
-	SELECT	'model_draft',
-		'ego_boundaries_bkg_vg250_6_gem_clean',
-		'Processed gemeinde area',
-		SUM(ST_AREA(ST_TRANSFORM(geom,3025))/10000) ::integer AS result,
-		'ha' ::text AS unit,
-		NOW() AT TIME ZONE 'Europe/Berlin'
-	FROM	model_draft.ego_boundaries_bkg_vg250_6_gem_clean
-	UNION ALL
-	-- Area GD
-	SELECT	'model_draft',
-		'ego_grid_mv_griddistrict',
-		'Grid District area',
-		SUM(ST_AREA(geom)/10000) ::integer AS result,
-		'ha' ::text AS unit,
-		NOW() AT TIME ZONE 'Europe/Berlin'
-	FROM	model_draft.ego_grid_mv_griddistrict
-	UNION ALL
-	-- Min area GD calc
-	SELECT	'model_draft',
-		'ego_grid_mv_griddistrict',
-		'Minmal GD area',
-		MIN(ST_AREA(geom)/10000) ::decimal(10,1) AS result,
-		'ha' ::text AS unit,
-		NOW() AT TIME ZONE 'Europe/Berlin'
-	FROM	model_draft.ego_grid_mv_griddistrict
-	UNION ALL
-	-- Min area GD area
-	SELECT	'model_draft',
-		'ego_grid_mv_griddistrict',
-		'Minmal GD area',
-		MIN(area_ha) ::decimal(10,1) AS result,
-		'ha' ::text AS unit,
-		NOW() AT TIME ZONE 'Europe/Berlin'
-	FROM	model_draft.ego_grid_mv_griddistrict
-	UNION ALL
-	-- Max area GD
-	SELECT	'model_draft',
-		'ego_grid_mv_griddistrict',
-		'Maximal GD area',
-		MAX(ST_AREA(geom)/10000) ::decimal(10,1) AS result,
-		'ha' ::text AS unit,
-		NOW() AT TIME ZONE 'Europe/Berlin'
-	FROM	model_draft.ego_grid_mv_griddistrict
-	UNION ALL
-	-- Count LA
-	SELECT	'model_draft',
-		'ego_demand_loadarea',
-		'Number of Load Areas',
-		COUNT(id) ::integer AS result,
-		' ' ::text AS unit,
-		NOW() AT TIME ZONE 'Europe/Berlin'
-	FROM	model_draft.ego_demand_loadarea
-	UNION ALL
-	-- Area LA
-	SELECT	'model_draft',
-		'ego_demand_loadarea',
-		'Load Areas area',
-		SUM(ST_AREA(geom)/10000) ::decimal(10,1) AS result,
-		'ha' ::text AS unit,
-		NOW() AT TIME ZONE 'Europe/Berlin'
-	FROM	model_draft.ego_demand_loadarea
-
-	UNION ALL
-	-- Min area LA
-	SELECT	'model_draft',
-		'ego_demand_loadarea',
-		'Minmal LA area',
-		MIN(ST_AREA(geom)/10000) ::decimal(10,3) AS result,
-		'ha' ::text AS unit,
-		NOW() AT TIME ZONE 'Europe/Berlin'
-	FROM	model_draft.ego_demand_loadarea
-	UNION ALL
-	-- Max area LA
-	SELECT	'model_draft',
-		'ego_demand_loadarea',
-		'Maximal LA area',
-		MAX(ST_AREA(geom)/10000) ::decimal(10,3) AS result,
-		'ha' ::text AS unit,
-		NOW() AT TIME ZONE 'Europe/Berlin'
-	FROM	model_draft.ego_demand_loadarea;
+INSERT INTO model_draft.ego_data_processing_results (version,schema_name,table_name,description,result,unit,timestamp)
+    -- Count SUB
+    SELECT  'v0.4.0',
+            'model_draft',
+            'ego_grid_hvmv_substation',
+            'Number of substations',
+            COUNT(subst_id) ::integer AS result,
+            ' ' ::text AS unit,
+            NOW() AT TIME ZONE 'Europe/Berlin'
+    FROM    model_draft.ego_grid_hvmv_substation
+    UNION ALL
+    
+    -- Count MVGD
+    SELECT  'v0.4.0',
+            'model_draft',
+            'ego_grid_mv_griddistrict',
+            'Number of grid districts',
+            COUNT(subst_id) ::integer AS result,
+            ' ' ::text AS unit,
+            NOW() AT TIME ZONE 'Europe/Berlin'
+    FROM    model_draft.ego_grid_mv_griddistrict
+    UNION ALL
+    
+    -- Area vg250.gem
+    SELECT  'v0.4.0',
+            'boundaries',
+            'bkg_vg250_6_gem',
+            'Gemeinde area',
+            SUM(ST_AREA(ST_TRANSFORM(geom,3025))/10000) ::integer AS result,
+            'ha' ::text AS unit,
+            NOW() AT TIME ZONE 'Europe/Berlin'
+    FROM    boundaries.bkg_vg250_6_gem
+    UNION ALL
+    
+    -- Area vg250.gem_clean
+    SELECT  'v0.4.0',
+            'model_draft',
+            'ego_boundaries_bkg_vg250_6_gem_clean',
+            'Processed gemeinde area',
+            SUM(ST_AREA(ST_TRANSFORM(geom,3025))/10000) ::integer AS result,
+            'ha' ::text AS unit,
+            NOW() AT TIME ZONE 'Europe/Berlin'
+    FROM    model_draft.ego_boundaries_bkg_vg250_6_gem_clean
+    UNION ALL
+    
+    -- Area GD
+    SELECT  'v0.4.0',
+            'model_draft',
+            'ego_grid_mv_griddistrict',
+            'Grid District area',
+            SUM(ST_AREA(geom)/10000) ::integer AS result,
+            'ha' ::text AS unit,
+            NOW() AT TIME ZONE 'Europe/Berlin'
+    FROM    model_draft.ego_grid_mv_griddistrict
+    UNION ALL
+    
+    -- Min area GD calc
+    SELECT  'v0.4.0',
+            'model_draft',
+            'ego_grid_mv_griddistrict',
+            'Minmal GD area calculated',
+            MIN(ST_AREA(geom)/10000) ::decimal(10,1) AS result,
+            'ha' ::text AS unit,
+            NOW() AT TIME ZONE 'Europe/Berlin'
+    FROM    model_draft.ego_grid_mv_griddistrict
+    UNION ALL
+    
+    -- Min area GD area
+    SELECT  'v0.4.0',
+            'model_draft',
+            'ego_grid_mv_griddistrict',
+            'Minmal GD area from table',
+            MIN(area_ha) ::decimal(10,1) AS result,
+            'ha' ::text AS unit,
+            NOW() AT TIME ZONE 'Europe/Berlin'
+    FROM    model_draft.ego_grid_mv_griddistrict
+    UNION ALL
+    
+    -- Max area GD
+    SELECT  'v0.4.0',
+            'model_draft',
+            'ego_grid_mv_griddistrict',
+            'Maximal GD area',
+            MAX(ST_AREA(geom)/10000) ::decimal(10,1) AS result,
+            'ha' ::text AS unit,
+            NOW() AT TIME ZONE 'Europe/Berlin'
+    FROM    model_draft.ego_grid_mv_griddistrict
+    UNION ALL
+    
+    -- Count LA
+    SELECT  'v0.4.0',
+            'model_draft',
+            'ego_demand_loadarea',
+            'Number of Load Areas',
+            COUNT(id) ::integer AS result,
+            ' ' ::text AS unit,
+            NOW() AT TIME ZONE 'Europe/Berlin'
+    FROM    model_draft.ego_demand_loadarea
+    UNION ALL
+    
+    -- Area LA
+    SELECT  'v0.4.0',
+            'model_draft',
+            'ego_demand_loadarea',
+            'Load Areas area',
+            SUM(ST_AREA(geom)/10000) ::decimal(10,1) AS result,
+            'ha' ::text AS unit,
+            NOW() AT TIME ZONE 'Europe/Berlin'
+    FROM    model_draft.ego_demand_loadarea
+    UNION ALL
+    
+    -- Min area LA
+    SELECT  'v0.4.0',
+            'model_draft',
+            'ego_demand_loadarea',
+            'Minmal LA area',
+            MIN(ST_AREA(geom)/10000) ::decimal(10,3) AS result,
+            'ha' ::text AS unit,
+            NOW() AT TIME ZONE 'Europe/Berlin'
+    FROM    model_draft.ego_demand_loadarea
+    UNION ALL
+    
+    -- Max area LA
+    SELECT  'v0.4.0',
+            'model_draft',
+            'ego_demand_loadarea',
+            'Maximal LA area',
+            MAX(ST_AREA(geom)/10000) ::decimal(10,3) AS result,
+            'ha' ::text AS unit,
+            NOW() AT TIME ZONE 'Europe/Berlin'
+    FROM    model_draft.ego_demand_loadarea;
 
 -- Set grants and owner
 ALTER TABLE model_draft.ego_data_processing_results OWNER TO oeuser;
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_data_processing_results','ego_dp_loadarea_statistic.sql',' ');
+-- metadata
+COMMENT ON TABLE model_draft.ego_data_processing_results IS '{ 
+    "comment": "eGoDP - Temporary table", 
+    "version": "v0.4.0" }';
+
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_data_processing_results','ego_dp_loadarea_statistic.sql',' ');
 
 
 
@@ -252,65 +282,73 @@ WHERE  	t1.subst_id = t2.subst_id;
 
 
 -- Group
-UPDATE 	model_draft.ego_grid_mv_griddistrict
-SET  	"group" = (SELECT	
-		CASE
-			WHEN	type1 = '1' AND type2 = '0' AND type3 = '1' THEN 'A' -- ländlich
-			WHEN	type1 = '0' AND type2 = '1' AND type3 = '1' THEN 'B'
-			WHEN	type1 = '1' AND type2 = '0' AND type3 = '0' THEN 'C'
-			WHEN	type1 = '0' AND type2 = '1' AND type3 = '0' THEN 'D' -- städtisch
-		END);
+UPDATE model_draft.ego_grid_mv_griddistrict
+    SET "group" = (SELECT
+        CASE
+            WHEN type1 = '1' AND type2 = '0' AND type3 = '1' THEN 'A' -- ländlich
+            WHEN type1 = '0' AND type2 = '1' AND type3 = '1' THEN 'B'
+            WHEN type1 = '1' AND type2 = '0' AND type3 = '0' THEN 'C'
+            WHEN type1 = '0' AND type2 = '1' AND type3 = '0' THEN 'D' -- städtisch
+        END);
 
 
 DROP MATERIALIZED VIEW IF EXISTS boundaries.bkg_vg250_6_gem_pts;
 CREATE MATERIALIZED VIEW boundaries.bkg_vg250_6_gem_pts AS
-SELECT	id,
-	ags_0,
-	ST_PointOnSurface(geom) AS geom
-FROM	boundaries.bkg_vg250_6_gem;
+    SELECT  id,
+            ags_0,
+            ST_PointOnSurface(geom) AS geom
+    FROM    boundaries.bkg_vg250_6_gem;
 
--- Gemeinden
-UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
-SET  	gem = t2.gem
-FROM	(SELECT	gd.subst_id,
-		COUNT(ST_PointOnSurface(gem.geom))::integer AS gem
-	FROM	boundaries.bkg_vg250_6_gem AS gem,
-		model_draft.ego_grid_mv_griddistrict AS gd
-	WHERE	gd.geom && ST_TRANSFORM(gem.geom,3035) AND
-		ST_CONTAINS(gd.geom,ST_PointOnSurface(ST_TRANSFORM(gem.geom,3035)))
-	GROUP BY gd.subst_id
-	)AS t2
-WHERE  	t1.subst_id = t2.subst_id;
 
-/* -- bkg_vg250_6_gem_clean_pts
+-- Municipality (Gemeinden)
+UPDATE model_draft.ego_grid_mv_griddistrict AS t1
+    SET gem = t2.gem
+    FROM (
+        SELECT  gd.subst_id,
+                COUNT(ST_PointOnSurface(gem.geom))::integer AS gem
+        FROM    boundaries.bkg_vg250_6_gem AS gem,
+                model_draft.ego_grid_mv_griddistrict AS gd
+        WHERE   gd.geom && ST_TRANSFORM(gem.geom,3035) AND
+                ST_CONTAINS(gd.geom,ST_PointOnSurface(ST_TRANSFORM(gem.geom,3035)))
+        GROUP BY gd.subst_id
+        )AS t2
+    WHERE   t1.subst_id = t2.subst_id;
+
+
+/*
+-- bkg_vg250_6_gem_clean_pts
 DROP MATERIALIZED VIEW IF EXISTS model_draft.ego_boundaries_bkg_vg250_6_gem_clean_pts;
 CREATE MATERIALIZED VIEW model_draft.ego_boundaries_bkg_vg250_6_gem_clean_pts AS
-SELECT	id,
-	ags_0,
-	ST_PointOnSurface(geom) AS geom
-FROM	model_draft.ego_boundaries_bkg_vg250_6_gem_clean; */
+    SELECT  id,
+            ags_0,
+            ST_PointOnSurface(geom) AS geom
+    FROM    model_draft.ego_boundaries_bkg_vg250_6_gem_clean;
+*/
+
 
 -- Gemeinde Parts
-UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
-SET  	gem_clean = t2.gem_clean
-FROM	(SELECT	gd.subst_id,
-		COUNT(ST_PointOnSurface(gem.geom))::integer AS gem_clean
-	FROM	model_draft.ego_boundaries_bkg_vg250_6_gem_clean AS gem,
-		model_draft.ego_grid_mv_griddistrict AS gd
-	WHERE	gd.geom && gem.geom AND
-		ST_CONTAINS(gd.geom,ST_PointOnSurface(gem.geom))
-	GROUP BY gd.subst_id
-	)AS t2
-WHERE  	t1.subst_id = t2.subst_id;
+UPDATE model_draft.ego_grid_mv_griddistrict AS t1
+    SET gem_clean = t2.gem_clean
+    FROM (
+        SELECT  gd.subst_id,
+                COUNT(ST_PointOnSurface(gem.geom))::integer AS gem_clean
+        FROM    model_draft.ego_boundaries_bkg_vg250_6_gem_clean AS gem,
+                model_draft.ego_grid_mv_griddistrict AS gd
+        WHERE   gd.geom && gem.geom AND
+                ST_CONTAINS(gd.geom,ST_PointOnSurface(gem.geom))
+        GROUP BY gd.subst_id
+        )AS t2
+    WHERE   t1.subst_id = t2.subst_id;
 
 -- GD Area 3610
-UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
-SET  	area_ha = t2.area_ha
-FROM	(SELECT	gd.subst_id,
-		ST_AREA(gd.geom)/10000 AS area_ha
-	FROM	model_draft.ego_grid_mv_griddistrict AS gd
-	)AS t2
-WHERE  	t1.subst_id = t2.subst_id;
+UPDATE model_draft.ego_grid_mv_griddistrict AS t1
+    SET area_ha = t2.area_ha
+    FROM (
+        SELECT  gd.subst_id,
+                ST_AREA(gd.geom)/10000 AS area_ha
+        FROM    model_draft.ego_grid_mv_griddistrict AS gd
+        )AS t2
+    WHERE   t1.subst_id = t2.subst_id;
 
 -- LA Count
 UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
@@ -358,91 +396,90 @@ FROM	(SELECT	gd.subst_id,
 	)AS t2
 WHERE  	t1.subst_id = t2.subst_id;
 
-SELECT	MAX(area_share) AS max,
-	MIN(area_share) AS min
-FROM	model_draft.ego_grid_mv_griddistrict ;
-
+/*
+SELECT  MAX(area_share) AS max,
+        MIN(area_share) AS min
+FROM    model_draft.ego_grid_mv_griddistrict ;
+*/
 
 -- Consumption
-UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
-	SET  	consumption = t2.consumption
-	FROM	(SELECT	gd.subst_id,
-			SUM(la.sector_consumption_sum)::numeric AS consumption
-		FROM	model_draft.ego_demand_loadarea AS la,
-			model_draft.ego_grid_mv_griddistrict AS gd
-		WHERE	gd.subst_id = la.subst_id
-		GROUP BY gd.subst_id
-		)AS t2
-	WHERE  	t1.subst_id = t2.subst_id;
-	
-UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
-	SET  	consumption_per_area = consumption *1000000 / area_ha;
+UPDATE model_draft.ego_grid_mv_griddistrict AS t1
+    SET consumption = t2.consumption
+    FROM (
+        SELECT  gd.subst_id,
+                SUM(la.sector_consumption_sum)::numeric AS consumption
+        FROM    model_draft.ego_demand_loadarea AS la,
+                model_draft.ego_grid_mv_griddistrict AS gd
+        WHERE   gd.subst_id = la.subst_id
+        GROUP BY gd.subst_id
+        )AS t2
+    WHERE   t1.subst_id = t2.subst_id;
 
+UPDATE model_draft.ego_grid_mv_griddistrict AS t1
+    SET consumption_per_area = consumption *1000000 / area_ha;
+
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_grid_mv_griddistrict','ego_dp_loadarea_statistic.sql',' ');
+
+/*
 -- test
 SELECT	SUM(mvgd.consumption)
 	FROM	model_draft.ego_grid_mv_griddistrict AS mvgd
 UNION ALL
-SELECT	SUM(la.sector_consumption_sum)
-	FROM	model_draft.ego_demand_loadarea AS la;
-	
-/* UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
-	SET  	consumption_per_area = t2.consumption_per_area
-	FROM	(SELECT	gd.subst_id,
-			SUM(la.sector_consumption_sum)::integer AS consumption
-		FROM	model_draft.ego_grid_mv_griddistrict AS mvgd
-		WHERE	gd.subst_id = la.subst_id
-		GROUP BY gd.subst_id
-		)AS t2
-	WHERE  	t1.subst_id = t2.subst_id; */
+SELECT  SUM(la.sector_consumption_sum)
+FROM    model_draft.ego_demand_loadarea AS la;
+*/
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.5','output','model_draft','ego_grid_mv_griddistrict','ego_paper_result.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.2.5','output','model_draft','ego_grid_mv_griddistrict','ego_paper_result.sql',' ');
 
-	
-
--- Calculate statistics for BKG-vg250 
-DROP MATERIALIZED VIEW IF EXISTS 	boundaries.bkg_vg250_statistics_mview CASCADE;
-CREATE MATERIALIZED VIEW		boundaries.bkg_vg250_statistics_mview AS 
--- Calculate areas
-SELECT	'1' ::integer AS id,
-	'1_sta' ::text AS table,
-	'vg' ::text AS descript_nameion,
-	SUM(vg.area_ha) ::integer AS area_sum_ha
-FROM	boundaries.bkg_vg250_1_sta_mview AS vg
-UNION ALL
-SELECT	'3' ::integer AS id,
-	'1_sta' ::text AS table,
-	'deu' ::text AS descript_nameion,
-	SUM(vg.area_ha) ::integer AS area_sum_ha
-FROM	boundaries.bkg_vg250_1_sta_mview AS vg
-WHERE	bez='Bundesrepublik'
-UNION ALL
-SELECT	'4' ::integer AS id,
-	'1_sta' ::text AS table,
-	'NOT deu' ::text AS descript_nameion,
-	SUM(vg.area_ha) ::integer AS area_sum_ha
-FROM	boundaries.bkg_vg250_1_sta_mview AS vg
-WHERE	bez='--'
-UNION ALL
-SELECT	'5' ::integer AS id,
-	'1_sta' ::text AS table,
-	'land' ::text AS descript_nameion,
-	SUM(vg.area_ha) ::integer AS area_sum_ha
-FROM	boundaries.bkg_vg250_1_sta_mview AS vg
-WHERE	gf='3' OR gf='4'
-UNION ALL
-SELECT	'6' ::integer AS id,
-	'1_sta' ::text AS table,
-	'water' ::text AS descript_nameion,
-	SUM(vg.area_ha) ::integer AS area_sum_ha
-FROM	boundaries.bkg_vg250_1_sta_mview AS vg
-WHERE	gf='1' OR gf='2';
+-- Calculate statistics for BKG vg250 
+DROP MATERIALIZED VIEW IF EXISTS    boundaries.bkg_vg250_statistics_mview CASCADE;
+CREATE MATERIALIZED VIEW            boundaries.bkg_vg250_statistics_mview AS 
+    SELECT  '1' ::integer AS id,
+            '1_sta' ::text AS table,
+            'vg' ::text AS descript_nameion,
+            SUM(vg.area_ha) ::integer AS area_sum_ha
+    FROM    boundaries.bkg_vg250_1_sta_mview AS vg
+    UNION ALL
+    SELECT  '3' ::integer AS id,
+            '1_sta' ::text AS table,
+            'deu' ::text AS descript_nameion,
+            SUM(vg.area_ha) ::integer AS area_sum_ha
+    FROM    boundaries.bkg_vg250_1_sta_mview AS vg
+    WHERE   bez='Bundesrepublik'
+    UNION ALL
+    SELECT  '4' ::integer AS id,
+            '1_sta' ::text AS table,
+            'NOT deu' ::text AS descript_nameion,
+            SUM(vg.area_ha) ::integer AS area_sum_ha
+    FROM    boundaries.bkg_vg250_1_sta_mview AS vg
+    WHERE   bez='--'
+    UNION ALL
+    SELECT  '5' ::integer AS id,
+            '1_sta' ::text AS table,
+            'land' ::text AS descript_nameion,
+            SUM(vg.area_ha) ::integer AS area_sum_ha
+    FROM    boundaries.bkg_vg250_1_sta_mview AS vg
+    WHERE   gf='3' OR gf='4'
+    UNION ALL
+    SELECT  '6' ::integer AS id,
+            '1_sta' ::text AS table,
+            'water' ::text AS descript_nameion,
+            SUM(vg.area_ha) ::integer AS area_sum_ha
+    FROM    boundaries.bkg_vg250_1_sta_mview AS vg
+    WHERE   gf='1' OR gf='2';
 
 -- grant (oeuser)
 ALTER TABLE boundaries.bkg_vg250_statistics_mview OWNER TO oeuser;
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','boundaries','bkg_vg250_statistics_mview','ego_dp_loadarea_statistic.sql',' ');
+-- metadata
+COMMENT ON MATERIALIZED VIEW boundaries.bkg_vg250_statistics_mview IS '{
+    "comment": "eGoDP - Temporary table",
+    "version": "v0.4.0" }';
+
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','output','boundaries','bkg_vg250_statistics_mview','ego_dp_loadarea_statistic.sql',' ');
 
 
 -- drid district
@@ -584,7 +621,6 @@ delta_L_>500 = 0,5578099543666 tkm
 delta_L_<500 = 1,9783239737815 tkm
 */
 
-
 /* 
 -- simplytry
 DROP TABLE IF EXISTS model_draft.ego_grid_mv_griddistrict_simple;
@@ -664,4 +700,4 @@ INSERT INTO	scenario.eGo_data_processing_clean_run (version,schema_name,table_na
 		NOW() AT TIME ZONE 'Europe/Berlin' AS timestamp
 	FROM	model_draft.ego_grid_hvmv_substation_ewe_mview; */
 	
-	
+  

@@ -1,152 +1,146 @@
 /*
-consumption per loadarea
+Allocate consumption to Loadareas
 
-__copyright__ 	= "Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems"
-__license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
-__url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
-__author__ 	= "IlkaCu, Ludee" 
+__copyright__   = "Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems"
+__license__     = "GNU Affero General Public License Version 3 (AGPL-3.0)"
+__url__         = "https://github.com/openego/data_processing/blob/master/LICENSE"
+__author__      = "IlkaCu, Ludee" 
 */
 
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_demand_per_district','ego_dp_loadarea_consumption.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','input','model_draft','ego_demand_per_district','ego_dp_loadarea_consumption.sql',' ');
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_demand_loadarea','ego_dp_loadarea_consumption.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','input','model_draft','ego_demand_loadarea','ego_dp_loadarea_consumption.sql',' ');
 
 -- landuse area per district 
 ALTER TABLE model_draft.ego_demand_per_district
-	DROP COLUMN IF EXISTS 	area_retail CASCADE,
-	ADD COLUMN area_retail double precision,
-	DROP COLUMN IF EXISTS 	area_agriculture CASCADE,
- 	ADD COLUMN area_agriculture double precision,
-	DROP COLUMN IF EXISTS 	area_tertiary_sector CASCADE,
- 	ADD COLUMN area_tertiary_sector double precision;
+    DROP COLUMN IF EXISTS area_retail CASCADE,
+    ADD COLUMN area_retail double precision,
+    DROP COLUMN IF EXISTS area_agriculture CASCADE,
+    ADD COLUMN area_agriculture double precision,
+    DROP COLUMN IF EXISTS area_tertiary_sector CASCADE,
+    ADD COLUMN area_tertiary_sector double precision;
  
 -- retail area per district
 UPDATE model_draft.ego_demand_per_district a
-	SET area_retail = result.sum
-	FROM
-	( 
-		SELECT 
-		sum(coalesce(sector_area_retail,0)), 
-		substr(nuts,1,5) 
-		FROM model_draft.ego_demand_loadarea
-		GROUP BY substr(nuts,1,5)
-	) as result
-	WHERE result.substr = substr(a.eu_code,1,5);
+    SET area_retail = result.sum
+    FROM ( 
+        SELECT 
+        sum(coalesce(sector_area_retail,0)), 
+        substr(nuts,1,5) 
+        FROM model_draft.ego_demand_loadarea
+        GROUP BY substr(nuts,1,5)
+    ) as result
+    WHERE result.substr = substr(a.eu_code,1,5);
 
 -- agricultural area per district
 UPDATE model_draft.ego_demand_per_district a
-	SET area_agriculture = result.sum
-	FROM
-	( 
-		SELECT 
-		sum(coalesce(sector_area_agricultural,0)), 
-		substr(nuts,1,5) 
-		FROM model_draft.ego_demand_loadarea
-		GROUP BY substr(nuts,1,5)
-	) as result
-	WHERE result.substr = substr(a.eu_code,1,5);
+    SET area_agriculture = result.sum
+    FROM ( 
+        SELECT 
+        sum(coalesce(sector_area_agricultural,0)), 
+        substr(nuts,1,5) 
+        FROM model_draft.ego_demand_loadarea
+        GROUP BY substr(nuts,1,5)
+    ) as result
+    WHERE result.substr = substr(a.eu_code,1,5);
 
 -- area of tertiary sector by adding agricultural and retail area up
 UPDATE model_draft.ego_demand_per_district 
-	SET area_tertiary_sector = coalesce(area_retail,0) + coalesce(area_agriculture,0);
+    SET area_tertiary_sector = coalesce(area_retail,0) + coalesce(area_agriculture,0);
 
 
 -- sector consumption of industry per loadarea
 UPDATE model_draft.ego_demand_loadarea a
-	SET   sector_consumption_industrial = sub.result 
-	FROM
-	(
-		SELECT
-		c.id,
-		b.elec_consumption_industry/nullif(b.area_industry,0) * c.sector_area_industrial as result
-		FROM
-		model_draft.ego_demand_per_district b,
-		model_draft.ego_demand_loadarea c
-		WHERE
-		c.nuts = b.eu_code
-	) AS sub
-	WHERE sub.id = a.id;
+    SET   sector_consumption_industrial = sub.result 
+    FROM (
+        SELECT
+            c.id,
+            b.elec_consumption_industry/nullif(b.area_industry,0) * c.sector_area_industrial as result
+        FROM
+            model_draft.ego_demand_per_district b,
+            model_draft.ego_demand_loadarea c
+        WHERE
+            c.nuts = b.eu_code
+    ) AS sub
+    WHERE sub.id = a.id;
 
 -- sector consumption of retail per loadarea
 UPDATE model_draft.ego_demand_loadarea a
-	SET   sector_consumption_retail = sub.result 
-	FROM
-	(
-		SELECT
-		c.id,
-		b.elec_consumption_tertiary_sector/nullif(b.area_tertiary_sector,0) * c.sector_area_retail as result
-		FROM
-		model_draft.ego_demand_per_district b,
-		model_draft.ego_demand_loadarea c
-		WHERE
-		c.nuts = b.eu_code
-	) AS sub
-	WHERE sub.id = a.id;
+    SET   sector_consumption_retail = sub.result 
+    FROM (
+        SELECT
+            c.id,
+            b.elec_consumption_tertiary_sector/nullif(b.area_tertiary_sector,0) * c.sector_area_retail as result
+        FROM
+            model_draft.ego_demand_per_district b,
+            model_draft.ego_demand_loadarea c
+        WHERE
+            c.nuts = b.eu_code
+    ) AS sub
+    WHERE sub.id = a.id;
 
 -- sector consumption of agriculture per loadarea
 UPDATE model_draft.ego_demand_loadarea a
-	SET   sector_consumption_agricultural = sub.result 
-	FROM
-	(
-		SELECT
-		c.id,
-		b.elec_consumption_tertiary_sector/nullif(b.area_tertiary_sector,0) * c.sector_area_agricultural as result
-		FROM
-		model_draft.ego_demand_per_district b,
-		model_draft.ego_demand_loadarea c
-		WHERE
-		c.nuts = b.eu_code
-	) AS sub
-	WHERE sub.id = a.id;
+    SET   sector_consumption_agricultural = sub.result 
+    FROM (
+        SELECT
+            c.id,
+            b.elec_consumption_tertiary_sector/nullif(b.area_tertiary_sector,0) * c.sector_area_agricultural as result
+        FROM
+            model_draft.ego_demand_per_district b,
+            model_draft.ego_demand_loadarea c
+        WHERE
+            c.nuts = b.eu_code
+    ) AS sub
+    WHERE sub.id = a.id;
 
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','input','demand','ego_demand_federalstate','ego_dp_loadarea_consumption.sql',' ');
-	
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','input','demand','ego_demand_federalstate','ego_dp_loadarea_consumption.sql',' ');
+
 -- sector consumption of residential per loadarea
 UPDATE model_draft.ego_demand_loadarea a
-	SET   sector_consumption_residential = sub.result 
-	FROM
-	(
-		SELECT
-		c.id,
-		b.elec_consumption_households_per_person * c.zensus_sum as result
-		FROM 
-		demand.ego_demand_federalstate b,
-		model_draft.ego_demand_loadarea c
-		WHERE
-		substring(c.nuts,1,3) = substring(b.eu_code, 1,3)
-
-	) AS sub
-	WHERE sub.id = a.id;
+    SET   sector_consumption_residential = sub.result 
+    FROM (
+        SELECT
+            c.id,
+            b.elec_consumption_households_per_person * c.zensus_sum as result
+        FROM 
+            demand.ego_demand_federalstate b,
+            model_draft.ego_demand_loadarea c
+        WHERE
+            substring(c.nuts,1,3) = substring(b.eu_code, 1,3)
+    ) AS sub
+    WHERE sub.id = a.id;
 
 /* -- geometry in consumption table -> SELF UPDATE?
 UPDATE model_draft.ego_demand_loadarea a
-	SET geom = b.geom
-	FROM model_draft.ego_demand_loadarea b
-	WHERE a.id = b.id; */
+    SET geom = b.geom
+    FROM model_draft.ego_demand_loadarea b
+    WHERE a.id = b.id;
+*/
 
 -- sector sum
-UPDATE 	model_draft.ego_demand_loadarea AS t1
-	SET  	sector_consumption_sum = t2.sector_consumption_sum
-	FROM    (
-		SELECT	id,
-			coalesce(load.sector_consumption_residential,0) + 
-				coalesce(load.sector_consumption_retail,0) + 
-				coalesce(load.sector_consumption_industrial,0) + 
-				coalesce(load.sector_consumption_agricultural,0) AS sector_consumption_sum			
-		FROM	model_draft.ego_demand_loadarea AS load
-		) AS t2
-	WHERE  	t1.id = t2.id;
+UPDATE model_draft.ego_demand_loadarea AS t1
+    SET sector_consumption_sum = t2.sector_consumption_sum
+    FROM (
+        SELECT  id,
+            coalesce(load.sector_consumption_residential,0) + 
+                coalesce(load.sector_consumption_retail,0) + 
+                coalesce(load.sector_consumption_industrial,0) + 
+                coalesce(load.sector_consumption_agricultural,0) AS sector_consumption_sum
+        FROM    model_draft.ego_demand_loadarea AS load
+        ) AS t2
+    WHERE   t1.id = t2.id;
 
 -- corresponding otg_id
 UPDATE model_draft.ego_demand_loadarea a
-	SET 	otg_id = b.otg_id
-	FROM 	model_draft.ego_grid_hvmv_substation b
-	WHERE 	a.subst_id = b.subst_id; 
+    SET     otg_id = b.otg_id
+    FROM    model_draft.ego_grid_hvmv_substation b
+    WHERE   a.subst_id = b.subst_id; 
 
 -- metadata
 COMMENT ON TABLE  model_draft.ego_demand_loadarea IS
@@ -208,5 +202,5 @@ COMMENT ON TABLE  model_draft.ego_demand_loadarea IS
 -- select description
 SELECT obj_description('model_draft.ego_demand_loadarea' ::regclass) ::json;
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_demand_loadarea','ego_dp_loadarea_consumption.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_demand_loadarea','ego_dp_loadarea_consumption.sql',' ');

@@ -1,5 +1,7 @@
 /*
-Insert demand series into pf-schema
+Aggregated load time series for neighbouring countries are based on rennpassG!S results and are added to the corresponding
+`powerflow table <http://oep.iks.cs.ovgu.de/dataedit/view/model_draft/ego_grid_pf_hv_load_pq_set>`_. The load is equivalent
+in all three scenarios. 
 
 __copyright__ 	= "Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems"
 __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
@@ -39,7 +41,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_load_pq_set (scn_name, load_id, temp_id, 
 			join model_draft.ego_grid_hv_electrical_neighbours_bus B
 			ON (B.cntr_id = substring(A.obj_label, 1, 2))
 		WHERE A.obj_label LIKE '%%load%%'
-		AND B.id < 27
+		AND B.central_bus = TRUE
 		AND A.type = 'from_bus'
 		AND A.scenario_id = 37
 		) SQ
@@ -48,8 +50,8 @@ INSERT INTO model_draft.ego_grid_pf_hv_load_pq_set (scn_name, load_id, temp_id, 
 	AND C.scn_name = 'Status Quo'
 	GROUP BY C.load_id;
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_grid_pf_hv_load_pq_set','ego_dp_powerflow_timeseries_demand.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_grid_pf_hv_load_pq_set','ego_dp_powerflow_timeseries_demand.sql',' ');
 
 
 ---------------
@@ -76,5 +78,5 @@ SELECT 'eGo 100', a.load_id, a.temp_id, a.p_set, a.q_set
 FROM model_draft.ego_grid_pf_hv_load_pq_set a
 WHERE scn_name= 'Status Quo';
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_grid_pf_hv_load_pq_set','ego_dp_powerflow_load_timeseries_NEP2035.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_grid_pf_hv_load_pq_set','ego_dp_powerflow_load_timeseries_NEP2035.sql',' ');

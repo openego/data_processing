@@ -1,18 +1,19 @@
 /*
-lattice on bbox of Germany with 500m per area
-wpa 	- points inside wind potential area
-la 	- points inside loadarea
-x 	- points inside wind potential area and loadarea
-out	- points outside area
+Prepare 500m lattice
+Lattice on bounding box of Germany with 500m per area:
+wpa - points inside wind potential area
+la  - points inside loadarea
+x   - points inside wind potential area and loadarea
+out - points outside area
 
-__copyright__ 	= "Reiner Lemoine Institut"
-__license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
-__url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
-__author__ 	= "Ludee"
+__copyright__   = "Reiner Lemoine Institut"
+__license__     = "GNU Affero General Public License Version 3 (AGPL-3.0)"
+__url__         = "https://github.com/openego/data_processing/blob/master/LICENSE"
+__author__      = "Ludee"
 */
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_grid_mv_griddistrict','ego_dp_rea_lattice_per_area_500m.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','input','model_draft','ego_grid_mv_griddistrict','ego_dp_rea_lattice_per_area_500m.sql',' ');
 
 -- substation id from mv-griddistrict
 UPDATE 	model_draft.ego_lattice_500m AS t1
@@ -33,8 +34,8 @@ UPDATE 	model_draft.ego_lattice_500m AS t1
 	WHERE	subst_id IS NULL;
 
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_supply_wpa_per_mvgd','ego_dp_rea_lattice_per_area_500m.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','input','model_draft','ego_supply_wpa_per_mvgd','ego_dp_rea_lattice_per_area_500m.sql',' ');
 	
 -- area type for wind potential area (wpa)
 UPDATE 	model_draft.ego_lattice_500m AS t1
@@ -49,8 +50,8 @@ UPDATE 	model_draft.ego_lattice_500m AS t1
 		) AS t2
 	WHERE  	t1.id = t2.id;
 	
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_demand_loadarea','ego_dp_rea_lattice_per_area_500m.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','input','model_draft','ego_demand_loadarea','ego_dp_rea_lattice_per_area_500m.sql',' ');
 
 -- area type for loadarea (la)
 UPDATE 	model_draft.ego_lattice_500m AS t1
@@ -80,8 +81,8 @@ UPDATE 	model_draft.ego_lattice_500m AS t1
 		) AS t2
 	WHERE  	t1.id = t2.id;
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_lattice_500m','ego_dp_rea_lattice_per_area_500m.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_lattice_500m','ego_dp_rea_lattice_per_area_500m.sql',' ');
 
 
 -- mview points inside wpa
@@ -101,8 +102,8 @@ ALTER TABLE model_draft.ego_lattice_500m_wpa_mview OWNER TO oeuser;
 -- metadata
 SELECT copy_comment_mview('model_draft.ego_lattice_500m','model_draft.ego_lattice_500m_wpa_mview');
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_lattice_500m_wpa_mview','ego_dp_rea_lattice_per_area_500m.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_lattice_500m_wpa_mview','ego_dp_rea_lattice_per_area_500m.sql',' ');
 
 
 -- mview points inside la
@@ -122,8 +123,8 @@ ALTER TABLE model_draft.ego_lattice_500m_la_mview OWNER TO oeuser;
 -- metadata
 SELECT copy_comment_mview('model_draft.ego_lattice_500m','model_draft.ego_lattice_500m_la_mview');
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_lattice_500m_la_mview','ego_dp_rea_lattice_per_area_500m.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','temp','model_draft','ego_lattice_500m_la_mview','ego_dp_rea_lattice_per_area_500m.sql',' ');
 
 
 -- mview points inside wpa and la
@@ -143,8 +144,8 @@ ALTER TABLE model_draft.ego_lattice_500m_x_mview OWNER TO oeuser;
 -- metadata
 SELECT copy_comment_mview('model_draft.ego_lattice_500m','model_draft.ego_lattice_500m_x_mview');
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_lattice_500m_x_mview','ego_dp_rea_lattice_per_area_500m.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','temp','model_draft','ego_lattice_500m_x_mview','ego_dp_rea_lattice_per_area_500m.sql',' ');
 
 
 -- mview points outside area
@@ -164,5 +165,5 @@ ALTER TABLE model_draft.ego_lattice_500m_out_mview OWNER TO oeuser;
 -- metadata
 SELECT copy_comment_mview('model_draft.ego_lattice_500m','model_draft.ego_lattice_500m_out_mview');
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_lattice_500m_out_mview','ego_dp_rea_lattice_per_area_500m.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','temp','model_draft','ego_lattice_500m_out_mview','ego_dp_rea_lattice_per_area_500m.sql',' ');

@@ -1,15 +1,16 @@
 /*
-hvmv substation voronoi
-voronoi polygons with eucldean distance / manhattan distance would be better but not available in sql
+HVMV Substation Voronoi
+Voronoi polygons with eucldean distance on HVMV Substation.
+Manhattan distance would be better but not available in sql.
 
-__copyright__ 	= "Reiner Lemoine Institut"
-__license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
-__url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
-__author__ 	= "Ludee"
+__copyright__   = "Reiner Lemoine Institut"
+__license__     = "GNU Affero General Public License Version 3 (AGPL-3.0)"
+__url__         = "https://github.com/openego/data_processing/blob/master/LICENSE"
+__author__      = "Ludee"
 */
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_grid_hvmv_substation','ego_dp_substation_hvmv_voronoi.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','input','model_draft','ego_grid_hvmv_substation','ego_dp_substation_hvmv_voronoi.sql',' ');
 
 -- set id as subst_id - move to get_substation.sql
 ALTER TABLE	model_draft.ego_grid_hvmv_substation
@@ -27,8 +28,8 @@ UPDATE 	model_draft.ego_grid_hvmv_substation t1
 CREATE INDEX	ego_grid_hvmv_substation_geom_idx
 	ON	model_draft.ego_grid_hvmv_substation USING GIST (geom);
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_boundaries_bkg_vg250_6_gem_clean','ego_dp_substation_hvmv_voronoi.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','input','model_draft','ego_boundaries_bkg_vg250_6_gem_clean','ego_dp_substation_hvmv_voronoi.sql',' ');
 
 -- Gemeindeschlüssel
 UPDATE 	model_draft.ego_grid_hvmv_substation AS t1
@@ -43,8 +44,8 @@ UPDATE 	model_draft.ego_grid_hvmv_substation AS t1
 		) AS t2
 	WHERE  	t1.subst_id = t2.subst_id;
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_grid_hvmv_substation','ego_dp_substation_hvmv_voronoi.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_grid_hvmv_substation','ego_dp_substation_hvmv_voronoi.sql',' ');
 
 
 -- create dummy points for voronoi calculation
@@ -86,13 +87,13 @@ ALTER TABLE	model_draft.ego_grid_hvmv_substation_dummy OWNER TO oeuser;
 -- metadata
 COMMENT ON TABLE model_draft.ego_grid_hvmv_substation_dummy IS '{
 	"comment": "eGoDP - Temporary table",
-	"version": "v0.3.0" }' ;
+	"version": "v0.4.0" }' ;
 
 -- select description
 SELECT obj_description('model_draft.ego_grid_hvmv_substation_dummy' ::regclass) ::json;
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_grid_hvmv_substation_dummy','ego_dp_substation_hvmv_voronoi.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_grid_hvmv_substation_dummy','ego_dp_substation_hvmv_voronoi.sql',' ');
 
 
 -- voronoi polygons with eucldean distance
@@ -164,10 +165,10 @@ DELETE FROM model_draft.ego_grid_hvmv_substation_voronoi WHERE subst_id IS NULL;
 -- metadata
 COMMENT ON TABLE model_draft.ego_grid_hvmv_substation_voronoi IS '{
 	"comment": "eGoDP - Temporary table",
-	"version": "v0.3.0" }' ;
+	"version": "v0.4.0" }' ;
 
 -- select description
 SELECT obj_description('model_draft.ego_grid_hvmv_substation_voronoi' ::regclass) ::json;
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_grid_hvmv_substation_voronoi','ego_dp_substation_hvmv_voronoi.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_grid_hvmv_substation_voronoi','ego_dp_substation_hvmv_voronoi.sql',' ');

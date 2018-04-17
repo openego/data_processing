@@ -1,8 +1,13 @@
-/*
-LOPF data -
-Setting marginal_cost ( operating cost + fuel cost + CO2 crt cost ) 
-in model_draft.ego_grid_pf_hv_generator according to renpass_gis, NEP 2014 scenario.
-In addition p_max_pu is set for all generators with variable dispatch based on p_max_pu = p_set / p_nom .
+﻿/*
+Missing parameters necessary for calculating a linear optimal power flow (LOPF) are added to the existing data. This
+includes marginal costs per technology, which is composed of specific operating cost, fuel costs and CO2 costs 
+according to renpass_gis, NEP 2014 scenario. 
+In addition p_max_pu is set for all generators with variable dispatch based on p_max_pu = p_set / p_nom.
+
+A further section of the script is used to insert extendable battery and hydrogen storages to all substations in the 
+grid model. These have a initial installed capacity p_nom=0, which can be extended when executing an optimization 
+(by calculating a LOPF). 
+
 __copyright__ 	= "Europa-Universität Flensburg, Centre for Sustainable Energy Systems"
 __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
 __url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
@@ -65,8 +70,8 @@ where scn_name = 'eGo 100';
 
 
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_grid_pf_hv_generator','ego_dp_powerflow_lopf_data.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_grid_pf_hv_generator','ego_dp_powerflow_lopf_data.sql',' ');
 
 -- set p_max_pu
 
@@ -91,7 +96,8 @@ FROM (
 			) AS T1
 		) AS T2 
 	GROUP BY T2.generator_id
-) T3 WHERE T3.generator_id = Y.generator_id;
+) T3 WHERE T3.generator_id = Y.generator_id
+AND Y.p_max_pu IS NULL;
 
 DELETE FROM model_draft.ego_grid_pf_hv_storage WHERE scn_name IN ('Status Quo', 'NEP 2035', 'eGo 100') AND source = 16;
 
@@ -411,8 +417,8 @@ WHERE model_draft.ego_grid_hvmv_substation.subst_id IN (
 				WHERE salt.geom && model_draft.ego_grid_hvmv_substation.point
 				AND ST_CONTAINS(salt.geom,model_draft.ego_grid_hvmv_substation.point));
 				
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_grid_pf_hv_storage','ego_dp_powerflow_lopf_data.sql',' ');				
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_grid_pf_hv_storage','ego_dp_powerflow_lopf_data.sql',' ');				
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_grid_pf_hv_generator_pq_set','ego_dp_powerflow_lopf_data.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_grid_pf_hv_generator_pq_set','ego_dp_powerflow_lopf_data.sql',' ');

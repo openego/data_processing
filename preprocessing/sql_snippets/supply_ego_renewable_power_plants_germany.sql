@@ -1,5 +1,5 @@
 ﻿/*
-Setup for renewables power plants list
+Setup for renewables power plants list of raw data of the status quo in Germany.
 
 __copyright__ 	= "Europa-Universität Flensburg, Centre for Sustainable Energy Systems"
 __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"

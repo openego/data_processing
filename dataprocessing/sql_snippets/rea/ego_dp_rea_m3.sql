@@ -1,22 +1,18 @@
 /*
-Skript to allocate decentralized renewable power plants (dea)
-Methods base on technology and voltage level
-Uses different lattice from setup_ego_wpa_per_grid_district.sql
-
-__copyright__ 	= "Reiner Lemoine Institut"
-__license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
-__url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
-__author__ 	= "Ludee"
-*/
-
-/* 4. M3 
-Move "wind" with "5" & "6" to wpa_grid.
+M3 wind turbines to WPA
+Allocates "wind" turbines with voltage levels "5" & "6" to WPA.
 Also considers rest of M2.
 The rest could not be allocated, consider in M4.
-*/ 
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_dp_supply_res_powerplant','ego_dp_rea_m3.sql',' ');
+__copyright__   = "Reiner Lemoine Institut"
+__license__     = "GNU Affero General Public License Version 3 (AGPL-3.0)"
+__url__         = "https://github.com/openego/data_processing/blob/master/LICENSE"
+__author__      = "Ludee"
+*/
+
+
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','input','model_draft','ego_dp_supply_res_powerplant','ego_dp_rea_m3.sql',' ');
 
 -- MView M3
 DROP MATERIALIZED VIEW IF EXISTS 	model_draft.ego_supply_rea_m3_a_mview CASCADE;
@@ -44,8 +40,8 @@ CREATE INDEX ego_supply_rea_m3_a_mview_geom_idx
 -- grant (oeuser)
 ALTER TABLE model_draft.ego_supply_rea_m3_a_mview OWNER TO oeuser;  
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_supply_rea_m3_a_mview','ego_dp_rea_m3.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','temp','model_draft','ego_supply_rea_m3_a_mview','ego_dp_rea_m3.sql',' ');
 
 
 -- rea_flag M3
@@ -76,8 +72,8 @@ CREATE TABLE 		model_draft.ego_supply_rea_m3_dea_temp (
 CREATE INDEX ego_supply_rea_m3_dea_temp_geom_idx
   ON model_draft.ego_supply_rea_m3_dea_temp USING gist (geom);
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_supply_rea_m3_dea_temp','ego_dp_rea_m3.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','temp','model_draft','ego_supply_rea_m3_dea_temp','ego_dp_rea_m3.sql',' ');
 
 DROP TABLE IF EXISTS 	model_draft.ego_supply_rea_m3_grid_wpa_temp CASCADE;
 CREATE TABLE 		model_draft.ego_supply_rea_m3_grid_wpa_temp (
@@ -91,8 +87,8 @@ CREATE TABLE 		model_draft.ego_supply_rea_m3_grid_wpa_temp (
 CREATE INDEX ego_supply_rea_m3_grid_wpa_temp_geom_idx
   ON model_draft.ego_supply_rea_m3_grid_wpa_temp USING gist (geom);
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_supply_rea_m3_grid_wpa_temp','ego_dp_rea_m3.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','temp','model_draft','ego_supply_rea_m3_grid_wpa_temp','ego_dp_rea_m3.sql',' ');
 
 DROP TABLE IF EXISTS 	model_draft.ego_supply_rea_m3_jnt_temp CASCADE;
 CREATE TABLE 		model_draft.ego_supply_rea_m3_jnt_temp (
@@ -105,8 +101,8 @@ CREATE TABLE 		model_draft.ego_supply_rea_m3_jnt_temp (
 CREATE INDEX ego_supply_rea_m3_jnt_temp_geom_idx
   ON model_draft.ego_supply_rea_m3_jnt_temp USING gist (geom);
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_supply_rea_m3_jnt_temp','ego_dp_rea_m3.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','temp','model_draft','ego_supply_rea_m3_jnt_temp','ego_dp_rea_m3.sql',' ');
 
 
 -- loop for grid_district
@@ -179,8 +175,8 @@ CREATE INDEX ego_supply_rea_m3_mview_rea_geom_new_idx
 -- grant (oeuser)
 ALTER TABLE model_draft.ego_supply_rea_m3_mview OWNER TO oeuser;
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_supply_rea_m3_mview','ego_dp_rea_m3.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_supply_rea_m3_mview','ego_dp_rea_m3.sql',' ');
 
 
 -- M3 rest
@@ -204,8 +200,8 @@ CREATE INDEX ego_supply_rea_m3_rest_mview_geom_idx
 -- grant (oeuser)
 ALTER TABLE model_draft.ego_supply_rea_m3_rest_mview OWNER TO oeuser;  
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_supply_rea_m3_rest_mview','ego_dp_rea_m3.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_supply_rea_m3_rest_mview','ego_dp_rea_m3.sql',' ');
 
 
 -- Drop temp

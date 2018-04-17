@@ -1,23 +1,19 @@
 /*
-Skript to allocate decentralized renewable power plants (dea)
-Methods base on technology and voltage level
-Uses different lattice from setup_ego_wpa_per_grid_district.sql
-
-__copyright__ 	= "Reiner Lemoine Institut"
-__license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
-__url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
-__author__ 	= "Ludee"
-*/
-
-/* 5. M4
-Move "wind" with "5" & "6" to wpa_grid.
+M4 other and rest
+Allocates "wind" with voltage levels "5" & "6" to WPA.
 "solar ground" & "wind" ohne voltage & Rest M1-1 & Rest M1-2 & Rest M3.
 Also considers rest of M1-1, M1-2 and M3.
 There should be no rest!
-*/ 
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_dp_supply_res_powerplant','ego_dp_rea_m4.sql',' ');
+__copyright__   = "Reiner Lemoine Institut"
+__license__     = "GNU Affero General Public License Version 3 (AGPL-3.0)"
+__url__         = "https://github.com/openego/data_processing/blob/master/LICENSE"
+__author__      = "Ludee"
+*/
+
+
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','input','model_draft','ego_dp_supply_res_powerplant','ego_dp_rea_m4.sql',' ');
 
 -- MView M4
 DROP MATERIALIZED VIEW IF EXISTS 	model_draft.ego_supply_rea_m4_a_mview CASCADE;
@@ -48,8 +44,8 @@ CREATE INDEX ego_supply_rea_m4_a_mview_geom_idx
 -- grant (oeuser)
 ALTER TABLE model_draft.ego_supply_rea_m4_a_mview OWNER TO oeuser;
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_supply_rea_m4_a_mview','ego_dp_rea_m4.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','temp','model_draft','ego_supply_rea_m4_a_mview','ego_dp_rea_m4.sql',' ');
 
 
 -- rea_flag M4
@@ -83,8 +79,8 @@ CREATE TABLE 		model_draft.ego_supply_rea_m4_dea_temp (
 CREATE INDEX ego_supply_rea_m4_dea_temp_geom_idx
 	ON model_draft.ego_supply_rea_m4_dea_temp USING gist (geom);
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_supply_rea_m4_dea_temp','ego_dp_rea_m4.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','temp','model_draft','ego_supply_rea_m4_dea_temp','ego_dp_rea_m4.sql',' ');
 
 DROP TABLE IF EXISTS 	model_draft.ego_supply_rea_m4_grid_wpa_temp CASCADE;
 CREATE TABLE 		model_draft.ego_supply_rea_m4_grid_wpa_temp (
@@ -99,8 +95,8 @@ CREATE TABLE 		model_draft.ego_supply_rea_m4_grid_wpa_temp (
 CREATE INDEX ego_supply_rea_m4_grid_wpa_temp_geom_idx
 	ON model_draft.ego_supply_rea_m4_grid_wpa_temp USING gist (geom);
   
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_supply_rea_m4_grid_wpa_temp','ego_dp_rea_m4.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','temp','model_draft','ego_supply_rea_m4_grid_wpa_temp','ego_dp_rea_m4.sql',' ');
 
 DROP TABLE IF EXISTS 	model_draft.ego_supply_rea_m4_jnt_temp CASCADE;
 CREATE TABLE 		model_draft.ego_supply_rea_m4_jnt_temp (
@@ -113,8 +109,8 @@ CREATE TABLE 		model_draft.ego_supply_rea_m4_jnt_temp (
 CREATE INDEX ego_supply_rea_m4_jnt_temp_geom_idx
 	ON model_draft.ego_supply_rea_m4_jnt_temp USING gist (geom);
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_supply_rea_m4_jnt_temp','ego_dp_rea_m4.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','temp','model_draft','ego_supply_rea_m4_jnt_temp','ego_dp_rea_m4.sql',' ');
 
 
 -- loop for grid_district
@@ -134,7 +130,7 @@ BEGIN
 		INSERT INTO model_draft.ego_supply_rea_m4_grid_wpa_temp
 			SELECT 	row_number() over (ORDER BY RANDOM())as rea_sorted,
 				wpa.*
-			FROM 	model_draft.ego_lattice_500m_out_mview AS wpa
+			FROM 	model_draft.ego_lattice_500m_wpa_mview AS wpa
 			WHERE 	wpa.subst_id =' || gd || ';
 
 		INSERT INTO model_draft.ego_supply_rea_m4_jnt_temp
@@ -184,8 +180,8 @@ CREATE INDEX ego_supply_rea_m4_mview_rea_geom_new_idx
 -- grant (oeuser)
 ALTER TABLE model_draft.ego_supply_rea_m4_mview OWNER TO oeuser;
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_supply_rea_m4_mview','ego_dp_rea_m4.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_supply_rea_m4_mview','ego_dp_rea_m4.sql',' ');
 
 
 -- M4 rest
@@ -209,8 +205,8 @@ CREATE INDEX ego_supply_rea_m4_rest_mview_geom_idx
 -- grant (oeuser)
 ALTER TABLE model_draft.ego_supply_rea_m4_rest_mview OWNER TO oeuser;  
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_supply_rea_m4_rest_mview','ego_dp_rea_m4.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_supply_rea_m4_rest_mview','ego_dp_rea_m4.sql',' ');
 
 
 -- Drop temp

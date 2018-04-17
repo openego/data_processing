@@ -3,7 +3,7 @@ import os
 
 setup(
     name='dataprocessing',
-    version='0.1-pre',
+    version='0.3.0',
     packages=find_packages(),
     package_data={
         'dataprocessing': [os.path.join('sql_snippets','*.sql')]
@@ -21,6 +21,11 @@ setup(
         'ego.io >=0.0.1rc4, <= 0.0.2',
         'geoalchemy2'
     ],
+    extras_require={
+        'docs': [
+            'sphinx >= 1.4',
+            'sphinx_rtd_theme',
+'sphinxcontrib-httpdomain']},
     entry_points={
         'console_scripts': [
             'ego_data_processing = dataprocessing.eGo_data_processing:data_processing', ]}
