@@ -13,90 +13,32 @@ import numpy as np
 
 from dataprocessing.tools.io import oedb_session
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy import MetaData, func
+from dataprocessing.python_scripts.functions.ego_scenario_log import write_ego_scenario_log
 from ego_dp_powerflow_timeseries_generator_helper import OBJ_LABEL_TO_SOURCE, SCENARIOMAP, \
-    TEMPID, NEIGHBOURSID, _flatten, map_on_partial_string, renpass_gis_orm_classes
+    TEMPID, NEIGHBOURSID, map_on_partial_string, missing_orm_classes
 from egoio.db_tables.model_draft import EgoSupplyPfGeneratorSingle as Generator, \
-    EgoGridPfHvGeneratorPqSet as PqSet, EgoGridHvElectricalNeighboursBus as Neighbour
+    EgoGridPfHvGeneratorPqSet as PqSet
 
 conn = oedb_session(section='test')
 Session = sessionmaker(bind=conn)
 session = Session()
 
 # obligatory delete statement based on NEIGHBOURSID
-session.query(Generator).filter(Generator.generator_id >= NEIGHBOURSID).\
-    delete(synchronize_session='fetch')
-
 session.query(PqSet).filter(PqSet.generator_id >= NEIGHBOURSID).\
     delete(synchronize_session='fetch')
 
 
 ###############################################################################
 
-Transformer, Source, Results = renpass_gis_orm_classes(session)
+PowerClass, Feedin, *_, Results = missing_orm_classes(session)
 
-# get DataFrame each row representing one electrical neighbour by applying
-# filter on id and v_nom, not affected by scenario name
-query = session.query(Neighbour)
-neighbours = pd.read_sql(query.statement, query.session.bind)
-
-ix = (neighbours['id'] <= 27) & (neighbours['v_nom'] == 380)
-neighbours = neighbours.loc[ix, :]
-neighbours.set_index('cntr_id', inplace=True)
-
-
+logged = 0
 for scn_name, scn_nr in SCENARIOMAP.items():
 
-    # get renpass_gis scenario data on linear transformers. Parameters are
-    # defined on those edges directed from the component to the bus.
-    filters = [Transformer.scenario_id == scn_nr,
-               ~Transformer.source.like('%powerline%'),
-               Transformer.label == Transformer.source]  # direction
-
-    query = session.query(Transformer).filter(*filters)
-    transformers = pd.read_sql(query.statement, query.session.bind)
-    transformers['type'] = 'linear transformer'
-
-    # get data on sources
-    filters = [Source.scenario_id == scn_nr, ~Source.label.like('GL%')]
-    query = session.query(Source).filter(*filters)
-    sources = pd.read_sql(query.statement, query.session.bind)
-    sources['type'] = 'source'
-
-    # sources and transformers, distinct in renpass_gis, are both seen as
-    # generators and can be handled together
-    generators = pd.concat([sources, transformers], ignore_index=True)
-
-    # parameters in renpass_gis are not necessarily scalars and stored in lists
-    # lists of len one are flattened
-    generators = generators.applymap(_flatten)
-
-    # 0 does not equal zero. In case a class with zero nominal value
-    # should be defined for the purpose of scenario definition very small values
-    # are used in the scenario files.
-    ix = generators['nominal_value'] < 1e-7
-    generators = generators.loc[~ix, :]
-
-    # source in the context of eGo has a different meaning. The column has to
-    # be renamed
-    generators.rename(columns={'source': 'renpass_gis_source'}, inplace=True)
-
-    # map from obj label string -> source
-    generators['source'] = map_on_partial_string(
-        generators['label'], OBJ_LABEL_TO_SOURCE)
-
-    generators['cntr_id'] = generators['label'].str[:2]
-
-    # exclude Germany
-    generators = generators.loc[generators['cntr_id'] != 'DE', :]
-
-    # assign bus_ids according to neighbours DataFrame
-    generators['bus'] = generators['cntr_id'].map(neighbours['bus_id'])
-
-    # set control, and dispatch parameter
-    generators['control'] = 'PV'
-    generators['dispatch'] = generators['type'].map(
-        {'linear transformer': 'flexible', 'source': 'variable'})
+    # model_draft.ego_grid_pf_hv_generator -> pd.DataFrame
+    query = session.query(Generator).filter(
+        Generator.scn_name == scn_name, Generator.generator_id >= NEIGHBOURSID)
+    generators = pd.read_sql(query.statement, query.session.bind)
 
     # get corresponding optimization results from renpass_gis
     # obj_label, datetime, val
@@ -111,10 +53,8 @@ for scn_name, scn_nr in SCENARIOMAP.items():
 
     # map from obj label string -> source
     results['source'] = map_on_partial_string(
-        results['obj_label'], OBJ_LABEL_TO_SOURCE).astype(int)
-
-    results['cntr_id'] = results['obj_label'].str[:2]
-    results['bus'] = results['cntr_id'].map(neighbours['bus_id'])
+        results['obj_label'],
+        {k: i for i, k in OBJ_LABEL_TO_SOURCE.items()})
 
     # create Series with bus_id, source and power generation / actual value
     # in list format
@@ -131,17 +71,20 @@ for scn_name, scn_nr in SCENARIOMAP.items():
     generators['scn_name'] = scn_name
     generators['temp_id'] = TEMPID
 
-    generators['generator_id'] = generators.index + NEIGHBOURSID
-
-    # prepare DataFrames to be exported
-    generator_ex = generators[['scn_name', 'generator_id', 'bus', 'dispatch', 'control']]
     pqsets = generators[['scn_name', 'generator_id', 'temp_id', 'p_set']]
 
-    # write to db
-    for i in generator_ex.to_dict(orient='records'):
-        session.add(Generator(**i))
-
+    # export to db
     for i in pqsets.to_dict(orient='records'):
         session.add(PqSet(**i))
 
     session.commit()
+
+    logged += len(pqsets)
+
+write_ego_scenario_log(conn=conn,
+                       version='v0.4.0',
+                       io='input',
+                       schema='model_draft',
+                       table=PqSet.__tablename__,
+                       script=__file__,
+                       entries=logged)
