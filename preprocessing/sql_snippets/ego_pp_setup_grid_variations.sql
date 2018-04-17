@@ -8,8 +8,8 @@ __author__ 	= "ClaraBuettner, IlkaCu"
 */
 
 
-DROP TABLE IF EXISTS  model_draft.scn_nep2035_b2_line ;
-CREATE TABLE model_draft.scn_nep2035_b2_line
+DROP TABLE IF EXISTS  model_draft.ego_grid_nep2035_b2_line ;
+CREATE TABLE model_draft.ego_grid_nep2035_b2_line
 (
   scn_name character varying NOT NULL DEFAULT 'Status Quo'::character varying,
   project character varying,
@@ -25,7 +25,7 @@ CREATE TABLE model_draft.scn_nep2035_b2_line
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE model_draft.scn_nep2035_b2_line
+ALTER TABLE model_draft.ego_grid_nep2035_b2_line
   OWNER TO oeuser;
   
-COPY model_draft.scn_nep2035_b2_line FROM '/GitHub/data_processing/documentation/scn_nep2035_b2.csv' DELIMITER ',' CSV HEADER;
+COPY model_draft.ego_grid_nep2035_b2_line FROM '/GitHub/data_processing/documentation/scn_nep2035_b2.csv' DELIMITER ',' CSV HEADER;
