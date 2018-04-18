@@ -244,7 +244,7 @@ SELECT obj_description('supply.ego_renewable_feedin' ::regclass) ::json;
 
 ---
 COMMENT ON TABLE supply.ego_power_class IS '{
-	"title": "eGo renewable power classes of wind and solar",
+	"title": "eGo renewable power classes of wind",
 	"description": "Power classes used for feedin timeseries",
 	"language": ["eng"],
 	"spatial": 
