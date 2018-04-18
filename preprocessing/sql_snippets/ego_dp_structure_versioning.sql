@@ -3932,9 +3932,12 @@ Create table supply.ego_renewable_feedin as
       *
   FROM model_draft.ego_renewable_feedin;
 
+ALTER TABLE supply.ego_renewable_feedin 
+  ADD CONSTRAINT ego_renewable_feedin_pkey PRIMARY KEY (version, weather_scenario_id,w_id,source,weather_year );
+
 ALTER TABLE supply.ego_renewable_feedin
   OWNER TO oeuser;
-  
+
 GRANT ALL ON TABLE supply.ego_renewable_feedin TO oeuser;
 
 --
@@ -3944,8 +3947,11 @@ Create table supply.ego_power_class as
       *
   FROM model_draft.ego_power_class;
 
+ALTER TABLE supply.ego_power_class 
+  ADD CONSTRAINT ego_power_class_pkey PRIMARY KEY (version, power_class_id);
+  
 ALTER TABLE supply.ego_power_class
   OWNER TO oeuser;
-  
+
 GRANT ALL ON TABLE supply.ego_power_class TO oeuser;
 */
