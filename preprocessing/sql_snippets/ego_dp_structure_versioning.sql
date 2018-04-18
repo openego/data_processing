@@ -3921,3 +3921,31 @@ SELECT obj_description('grid.ego_line_expansion_costs' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.3.0','result','grid','ego_line_expansion_costs','ego_dp_structure_versioning.sql','hv pf line expansion costs');
+
+--- Add versioning of input
+-- supply.ego_renewable_feedin
+-- supply.ego_power_class
+/*
+Create table supply.ego_renewable_feedin as
+  SELECT 
+      'v0.3.0'::text as version,
+      *
+  FROM model_draft.ego_renewable_feedin;
+
+ALTER TABLE supply.ego_renewable_feedin
+  OWNER TO oeuser;
+  
+GRANT ALL ON TABLE supply.ego_renewable_feedin TO oeuser;
+
+--
+Create table supply.ego_power_class as
+  SELECT 
+      'v0.3.0'::text as version,
+      *
+  FROM model_draft.ego_power_class;
+
+ALTER TABLE supply.ego_power_class
+  OWNER TO oeuser;
+  
+GRANT ALL ON TABLE supply.ego_power_class TO oeuser;
+*/
