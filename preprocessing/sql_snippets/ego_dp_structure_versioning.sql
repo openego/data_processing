@@ -3926,32 +3926,36 @@ SELECT ego_scenario_log('v0.3.0','result','grid','ego_line_expansion_costs','ego
 -- supply.ego_renewable_feedin
 -- supply.ego_power_class
 /*
-Create table supply.ego_renewable_feedin as
-  SELECT 
-      'v0.3.0'::text as version,
-      *
-  FROM model_draft.ego_renewable_feedin;
-
-ALTER TABLE supply.ego_renewable_feedin 
-  ADD CONSTRAINT ego_renewable_feedin_pkey PRIMARY KEY (version, weather_scenario_id,w_id,source,weather_year );
+CREATE TABLE supply.ego_renewable_feedin
+(
+  version text NOT NULL,
+  weather_scenario_id integer NOT NULL,
+  w_id integer NOT NULL,
+  source text NOT NULL,
+  weather_year integer NOT NULL,
+  feedin double precision[],
+  CONSTRAINT ego_renewable_feedin_pkey PRIMARY KEY (version, weather_scenario_id, w_id, source, weather_year)
+);
 
 ALTER TABLE supply.ego_renewable_feedin
   OWNER TO oeuser;
-
 GRANT ALL ON TABLE supply.ego_renewable_feedin TO oeuser;
 
 --
-Create table supply.ego_power_class as
-  SELECT 
-      'v0.3.0'::text as version,
-      *
-  FROM model_draft.ego_power_class;
+CREATE TABLE supply.ego_power_class
+(
+  version text NOT NULL,
+  power_class_id integer NOT NULL,
+  lower_limit double precision,
+  upper_limit double precision,
+  wea text,
+  h_hub double precision,
+  d_rotor double precision,
+  CONSTRAINT ego_power_class_pkey PRIMARY KEY (version, power_class_id)
+);
 
-ALTER TABLE supply.ego_power_class 
-  ADD CONSTRAINT ego_power_class_pkey PRIMARY KEY (version, power_class_id);
-  
 ALTER TABLE supply.ego_power_class
   OWNER TO oeuser;
-
 GRANT ALL ON TABLE supply.ego_power_class TO oeuser;
+
 */
