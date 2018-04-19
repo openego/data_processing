@@ -1,6 +1,7 @@
 /*
 This script creates and fills a table with information on the NEP 2035 B2 scenario. 
-
+This is used in  dataprocessing/sql_snippets/ego_pp_nep2035_grid_variations.sql. 
+Data has been manually copied from the Netzentwicklungsplan 2015.
 __copyright__ 	= "Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems"
 __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
 __url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
