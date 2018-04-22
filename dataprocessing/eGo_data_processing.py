@@ -4,7 +4,7 @@ Reads python and SQL scripts and gives logging infos during the execution.
 Also see corresponding BPML diagram.
 """
 
-__copyright__ = "Reiner Lemoine Institut"
+__copyright__ = "Reiner Lemoine Institut gGmbH"
 __license__ = "GNU Affero General Public License Version 3 (AGPL-3.0)"
 __url__ = "https://github.com/openego/data_processing/blob/master/LICENSE"
 __author__ = "gplssm, Ludee"
@@ -89,23 +89,29 @@ def data_processing():
 #    'rea/ego_dp_rea_results.sql',                       # Results and statistics
 
 	## POWERFLOW
-#	'ego_dp_powerflow_assignment_otgid.sql',		# assign otg_id to pp lists
-#	'ego_dp_powerflow_assignment_unid.sql',			# create a unified_id over all pp (res and conv) 
-#	'ego_dp_powerflow_create_pp_mview.sql',			# create mviews to display power plants per scenario
-#	'ego_dp_powerflow_hv_setup.sql',			# Set schema/tables for EHV/HV powerflow calculations up
-#	'ego_dp_powerflow_osmtgmod_to_pypsa.sql',		# Include data from osmTGmod into EHV/HV powerflow schema
-#	'ego_dp_powerflow_electrical_neighbour.sql',		# Create border crossing lines and buses in neighbouring countries
-#	'ego_dp_powerflow_fix_ehv_subnetworks.sql',		# Fix topological errors in eHV grid
-#	'ego_dp_powerflow_grid_future_scenarios.sql',		# Copy grid to future scenarios
-#	'ego_dp_powerflow_assignment_generator.sql',  		# Assign generators to corresponding substation (SQ, NEP2035, eGo100)
-#	'ego_dp_powerflow_assignment_load.sql',        		# Assign loads to their corresponding substation (SQ, NEP2035, eGo100)
-#	'ego_dp_powerflow_assignment_storage.sql',		# Assign storages to their corresponding substation (SQ, NEP 2035, eGo 100)
-#	'ego_dp_powerflow_timeseries_generator.sql',		# Transfer renpassG!S results into the corresponding powerflow table
-#	'ego_dp_powerflow_griddistrict_demand.py',		# Demand per MV Griddistrict
-#	'ego_dp_powerflow_timeseries_demand.sql',		# Insert demand series into corresponding powerflow table (SQ, NEP2035, eGo100)
-#	'ego_dp_powerflow_lopf_data.sql',			# Set marginal costs for generators and storages
+#    'ego_dp_powerflow_assignment_otgid.sql',                       # assign otg_id to pp lists
+#    'ego_dp_powerflow_assignment_unid.sql',                        # create a unified_id over all pp (res and conv)
+#    'ego_dp_powerflow_create_pp_mview.sql',                        # create mviews to display power plants per scenario
+#    'ego_dp_powerflow_hv_setup.sql',                               # Set schema/tables for EHV/HV powerflow calculations up
+#    'ego_dp_powerflow_osmtgmod_to_pypsa.sql',                      # Include data from osmTGmod into EHV/HV powerflow schema
+#    'ego_dp_powerflow_electrical_neighbour.sql',                   # Create border crossing lines and buses in neighbouring countries
+#    'ego_dp_powerflow_fix_ehv_subnetworks.sql',                    # Fix topological errors in eHV grid
+#    'ego_dp_powerflow_grid_future_scenarios.sql',                  # Copy grid to future scenarios
+#    'ego_dp_powerflow_assignment_generator.sql',                   # Assign generators to corresponding substation (SQ, NEP2035, eGo100)
+#    'ego_dp_powerflow_create_generator_neighbours.py',             # Create generators for neighbouring countries (SQ, NEP2035, eGo100)
+#    'ego_dp_powerflow_assignment_load.sql',                        # Assign loads to their corresponding substation (SQ, NEP2035, eGo100)
+#    'ego_dp_powerflow_create_load_neighbours.sql',                 # Create loads for neighouring countries (SQ, NEP2035, eGo100)
+#    'ego_dp_powerflow_assignment_storage.sql',                     # Assign storages to their corresponding substation (SQ, NEP 2035, eGo 100)
+#    'ego_dp_powerflow_timeseries_generator_de_p_set.py'            # Assign p_sets for Germany based on renpassG!S optimization results (SQ, NEP 2035, eGo 100)
+#    'ego_dp_powerflow_timeseries_generator_other_p_set.py'         # Assign p_sets for neighbouring countries based on renpassG!S optimization results (SQ, NEP 2035, eGo 100)
+#    'ego_dp_powerflow_timeseries_generator_de_p_max_pu.py'         # Assign p_max_pu based on feedin timeseries data (Germany) (SQ, NEP 2035, eGo 100)
+#    'ego_dp_powerflow_timeseries_generator_other_p_max_pu.py'      # Assign p_max_pu based on feedin timeseries data (Neighbouring Countries) (SQ, NEP 2035, eGo 100)
+#    'ego_dp_powerflow_timeseries_generator_offshore_p_max_pu.py'   # Assign p_max_pu based on feedin timeseries data (Neighbouring countries Offshore) (SQ, NEP 2035, eGo 100)
+#    'ego_dp_powerflow_griddistrict_demand.py',                     # Demand per MV Griddistrict
+#    'ego_dp_powerflow_timeseries_demand.sql',                      # Insert demand series into corresponding powerflow table (SQ, NEP2035, eGo100)
+#    'ego_dp_powerflow_lopf_data.sql',                              # Set marginal costs for generators and storages
 
-	
+
     ## VERSIONING
 #   	'ego_dp_versioning.sql',				# Versioning
 #	'ego_dp_versioning_mviews.sql' ,			# Versioning of mviews
@@ -113,7 +119,7 @@ def data_processing():
 	## POST-PROCESSING
 #	'ego_pp_nep2035_grid_variations.sql'			# Create extension_tables and insert NEP-data
 
-    
+
 	## VACUUM FULL
 #	 'ego_dp_vacuum_full.sql'
     ]
