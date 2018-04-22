@@ -104,7 +104,9 @@ def data_processing():
 #    'ego_dp_powerflow_assignment_storage.sql',                     # Assign storages to their corresponding substation (SQ, NEP 2035, eGo 100)
 #    'ego_dp_powerflow_timeseries_generator_de_p_set.py'            # Assign p_sets for Germany based on renpassG!S optimization results (SQ, NEP 2035, eGo 100)
 #    'ego_dp_powerflow_timeseries_generator_other_p_set.py'         # Assign p_sets for neighbouring countries based on renpassG!S optimization results (SQ, NEP 2035, eGo 100)
-#    'ego_dp_powerflow_timeseries_generator_p_max_pu.py'            # Assign p_max_pu based on feedin timeseries data (SQ, NEP 2035, eGo 100)
+#    'ego_dp_powerflow_timeseries_generator_de_p_max_pu.py'         # Assign p_max_pu based on feedin timeseries data (Germany) (SQ, NEP 2035, eGo 100)
+#    'ego_dp_powerflow_timeseries_generator_other_p_max_pu.py'      # Assign p_max_pu based on feedin timeseries data (Neighbouring Countries) (SQ, NEP 2035, eGo 100)
+#    'ego_dp_powerflow_timeseries_generator_offshore_p_max_pu.py'   # Assign p_max_pu based on feedin timeseries data (Neighbouring countries Offshore) (SQ, NEP 2035, eGo 100)
 #    'ego_dp_powerflow_griddistrict_demand.py',                     # Demand per MV Griddistrict
 #    'ego_dp_powerflow_timeseries_demand.sql',                      # Insert demand series into corresponding powerflow table (SQ, NEP2035, eGo100)
 #    'ego_dp_powerflow_lopf_data.sql',                              # Set marginal costs for generators and storages
