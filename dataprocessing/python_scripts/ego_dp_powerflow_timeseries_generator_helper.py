@@ -1,16 +1,15 @@
 """ Helper functions and constants to handle renpass_gis tables.
 """
 
-__copyright__ 	= "ZNES Flensburg"
-__license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
-__url__ 		= "https://github.com/openego/data_processing/blob/master/LICENSE"
-__author__ 		= "wolfbunke"
+__copyright__ = "ZNES Flensburg"
+__license__ = "GNU Affero General Public License Version 3 (AGPL-3.0)"
+__url__ = "https://github.com/openego/data_processing/blob/master/LICENSE"
+__author__ = "wolfbunke"
 
 import pandas as pd
 
-from dataprocessing.tools.io import oedb_session
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy import MetaData, Column, Integer, Float, Text, text
+from geoalchemy2.types import Geometry
+from sqlalchemy import MetaData, Column, Integer, Float, Text, text, BigInteger
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.dialects.postgresql import ARRAY, DOUBLE_PRECISION
 
@@ -48,6 +47,7 @@ OBJ_LABEL_TO_SOURCE = {
 
 TEMPID = 1
 
+
 def missing_orm_classes(session):
     """ Not yet implemented in ego.io
 
@@ -64,14 +64,14 @@ def missing_orm_classes(session):
 
     meta = MetaData()
     meta.reflect(bind=session.bind, schema='calc_renpass_gis',
-                only=['renpass_gis_linear_transformer',
-                      'renpass_gis_source',
-                      'renpass_gis_results'])
+                 only=['renpass_gis_linear_transformer',
+                       'renpass_gis_source',
+                       'renpass_gis_results'])
 
     # map to classes
     Base = automap_base(metadata=meta)
 
-	# ormclasses not part of egoio yet
+    # ormclasses not part of egoio yet
     class EgoPowerClass(Base):
         __tablename__ = 'ego_power_class'
         __table_args__ = {'schema': 'model_draft'}
@@ -82,7 +82,6 @@ def missing_orm_classes(session):
         wea = Column(Text)
         h_hub = Column(Float(53))
         d_rotor = Column(Float(53))
-
 
     class EgoRenewableFeedin(Base):
         __tablename__ = 'ego_renewable_feedin'
@@ -95,12 +94,20 @@ def missing_orm_classes(session):
         power_class = Column(Integer, primary_key=True, nullable=False)
         feedin = Column(ARRAY(DOUBLE_PRECISION(precision=53)))
 
+    class EgoNeighboursOffshorePoint(Base):
+        __tablename__ = 'ego_neighbours_offshore_point'
+        __table_args__ = {'schema': 'model_draft'}
+
+        cntr_id = Column(Text, primary_key=True)
+        coastdat_id = Column(BigInteger)
+        geom = Column(Geometry('POINT', 4326))
+
     Base.prepare()
 
     Transformer, Source, Results = Base.classes.renpass_gis_linear_transformer, \
         Base.classes.renpass_gis_source, Base.classes.renpass_gis_results
 
-    return EgoPowerClass, EgoRenewableFeedin, Transformer, Source, Results
+    return EgoNeighboursOffshorePoint, EgoPowerClass, EgoRenewableFeedin, Transformer, Source, Results
 
 
 def _flatten(x):
