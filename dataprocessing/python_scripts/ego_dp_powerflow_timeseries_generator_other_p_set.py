@@ -1,5 +1,6 @@
-""" Assigns dispatch optimization results from renpassG!S to corresponding
-hv powerflow generators for neighbouring countries
+"""
+Assigns dispatch optimization results from renpassG!S to generators connected
+to neighbouring countries in high-voltage powerflow tables.
 """
 
 __copyright__ 	= "ZNES Flensburg"
@@ -13,8 +14,9 @@ import numpy as np
 from dataprocessing.tools.io import oedb_session
 from sqlalchemy.orm import sessionmaker
 from dataprocessing.python_scripts.functions.ego_scenario_log import write_ego_scenario_log
-from ego_dp_powerflow_timeseries_generator_helper import OBJ_LABEL_TO_SOURCE, SCENARIOMAP, \
-    TEMPID, NEIGHBOURSID, map_on_partial_string, missing_orm_classes
+from ego_dp_powerflow_timeseries_generator_helper import \
+    OBJ_LABEL_TO_SOURCE, SCENARIOMAP, TEMPID, NEIGHBOURSID, \
+    map_on_partial_string, missing_orm_classes
 from egoio.db_tables.model_draft import EgoGridPfHvGenerator as Generator, \
     EgoGridPfHvGeneratorPqSet as PqSet, EgoGridHvElectricalNeighboursBus as Neighbour
 

@@ -1,5 +1,6 @@
-""" This script assign optimized dispatch timeseries data based on renpassG!S
-results to high-voltage powerflow generators.
+"""
+This script assign optimized dispatch timeseries data based on renpassG!S
+results to generators in the high-voltage powerflow tables.
 """
 
 __copyright__ = "ZNES Flensburg"
@@ -25,7 +26,7 @@ conn = oedb_session(section='test')
 Session = sessionmaker(bind=conn)
 session = Session()
 
-PowerClass, Feedin, *_, Results = missing_orm_classes(session)
+_, PowerClass, Feedin, *_, Results = missing_orm_classes(session)
 
 ###############################################################################
 
@@ -109,6 +110,8 @@ for scn_name, scn_nr in SCENARIOMAP.items():
     generators = generators[~ix].copy()
 
     generators['temp_id'] = TEMPID
+
+    # write PqSets to the database
     fields = ['generator_id', 'p_set', 'scn_name', 'temp_id']
     for i in generators[fields].to_dict(orient='records'):
         session.add(PqSet(**i))
