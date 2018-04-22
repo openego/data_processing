@@ -29,7 +29,7 @@ session.query(PqSet).filter(PqSet.generator_id >= NEIGHBOURSID).\
 
 ###############################################################################
 
-PowerClass, Feedin, *_, Results = missing_orm_classes(session)
+_, PowerClass, Feedin, *_, Results = missing_orm_classes(session)
 
 # get DataFrame each row representing one electrical neighbour by applying
 # filter on id and v_nom, not affected by scenario name
@@ -77,6 +77,13 @@ for scn_name, scn_nr in SCENARIOMAP.items():
 
     # include timeseries data in generators DataFrame
     generators = generators.join(results_s, on=['bus', 'source'])
+
+    # remove solar and wind
+    sources = [v for k, v in OBJ_LABEL_TO_SOURCE.items() if k in
+               ['wind_offshore', 'wind_onshore', 'solar']]
+
+    ix = generators['source'].isin(sources)
+    generators = generators[~ix].copy()
 
     # set scenario name, temporal id
     generators['scn_name'] = scn_name
