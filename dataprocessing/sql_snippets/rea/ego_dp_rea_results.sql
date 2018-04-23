@@ -229,14 +229,14 @@ SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_supply_rea_pe
 
 -- Hotfix to fill empty rea_geom_new cells in table 
 
-Update table model_draft_ego_dp_supply_res_powerplant
+UPDATE model_draft.ego_dp_supply_res_powerplant
    set rea_geom_new = ST_Transform(geom,3035),
    comment = comment || 'add original geom to rea_geom_new' 
 Where rea_geom_new is null;
 
 -- Add index on rea_geom_new
 
-DROP INDEX model_draft.ego_dp_supply_res_powerplant_geom_new_idx;
+DROP INDEX IF EXISTS model_draft.ego_dp_supply_res_powerplant_geom_new_idx;
 
 CREATE INDEX ego_dp_supply_res_powerplant_geom_new_idx
   ON model_draft.ego_dp_supply_res_powerplant

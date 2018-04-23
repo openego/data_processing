@@ -75,23 +75,23 @@ def data_processing():
 #    'ego_dp_lv_consumption_peakload.sql',               # LV Consumption and Peakload
 
     ## REA
-    'rea/ego_dp_lattice_500m.sql',                      # Lattice (point grid) 500m
-    'rea/ego_dp_lattice_50m.sql',                       # Lattice (point grid) 50m
-    'rea/ego_dp_rea_wpa_per_mvgd.sql',                  # Wind potential area (WPA)
-    'rea/ego_dp_rea_lattice_per_area_500m.sql',         # Prepare 500m lattice
-    'rea/ego_dp_rea_lattice_per_area_50m.sql',          # Prepare 50m lattice
-    'rea/ego_dp_rea_setup.sql',                         # Setup tables for REA
-    'rea/ego_dp_rea_m1.sql',                            # M1 biomass and solar to OSM agricultural
-    'rea/ego_dp_rea_m2.sql',                            # M2 wind farms
-    'rea/ego_dp_rea_m3.sql',                            # M3 wind turbines to WPA
-    'rea/ego_dp_rea_m4.sql',                            # M4 other and rest
-#   'rea/ego_dp_rea_m5.sql',                            # M5 LV to Loadarea
-#    'rea/ego_dp_rea_results.sql',                       # Results and statistics
+#    'rea/ego_dp_lattice_500m.sql',                      # Lattice (point grid) 500m
+#    'rea/ego_dp_lattice_50m.sql',                       # Lattice (point grid) 50m
+#    'rea/ego_dp_rea_wpa_per_mvgd.sql',                  # Wind potential area (WPA)
+#    'rea/ego_dp_rea_lattice_per_area_500m.sql',         # Prepare 500m lattice
+#    'rea/ego_dp_rea_lattice_per_area_50m.sql',          # Prepare 50m lattice
+#    'rea/ego_dp_rea_setup.sql',                         # Setup tables for REA
+#    'rea/ego_dp_rea_m1.sql',                            # M1 biomass and solar to OSM agricultural
+#    'rea/ego_dp_rea_m2.sql',                            # M2 wind farms
+#    'rea/ego_dp_rea_m3.sql',                            # M3 wind turbines to WPA
+#    'rea/ego_dp_rea_m4.sql',                            # M4 other and rest
+#     'rea/ego_dp_rea_m5.sql',                            # M5 LV to Loadarea
+#     'rea/ego_dp_rea_results.sql',                       # Results and statistics
 
 	## POWERFLOW
-#	'ego_dp_powerflow_assignment_otgid.sql',		# assign otg_id to pp lists
+# 	'ego_dp_powerflow_assignment_otgid.sql',		# assign otg_id to pp lists
 #	'ego_dp_powerflow_assignment_unid.sql',			# create a unified_id over all pp (res and conv) 
-#	'ego_dp_powerflow_create_pp_mview.sql',			# create mviews to display power plants per scenario
+	'ego_dp_powerflow_create_pp_mview.sql',			# create mviews to display power plants per scenario
 #	'ego_dp_powerflow_hv_setup.sql',			# Set schema/tables for EHV/HV powerflow calculations up
 #	'ego_dp_powerflow_osmtgmod_to_pypsa.sql',		# Include data from osmTGmod into EHV/HV powerflow schema
 #	'ego_dp_powerflow_electrical_neighbour.sql',		# Create border crossing lines and buses in neighbouring countries
