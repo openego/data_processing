@@ -13,7 +13,7 @@ __author__ = "wolfbunke"
 --------------------------------------------------------------------------------
 -- Part IV 
 --          Create Views by scenario
---	    Scenarios: ego 100%
+--	    Scenarios: eGo100
 --------------------------------------------------------------------------------
 
 -- MView for Status Quo
@@ -43,7 +43,7 @@ CREATE MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_nep2035_mview AS
 ALTER MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_nep2035_mview
     OWNER TO oeuser;
 
--- MView for eGo 100
+-- MView for eGo100
 DROP MATERIALIZED VIEW IF EXISTS  model_draft.ego_supply_conv_powerplant_ego100_mview CASCADE;
 CREATE MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_ego100_mview AS
 	SELECT 
