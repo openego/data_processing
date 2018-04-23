@@ -7,6 +7,17 @@ For the project open_eGo been three scenarios choosen in order to
 
 
 
+.. only:: html
+
+
+    .. raw:: html
+
+        <script src="https://embed.github.com/view/geojson/znes/FlEnS/blob/features/ego-timeseries/open_eGo/modelregions.geojson"></script>
+
+
+
+
+
 **********
 Status Quo
 **********
