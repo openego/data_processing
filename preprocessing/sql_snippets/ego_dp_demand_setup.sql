@@ -110,7 +110,7 @@ COMMENT ON TABLE demand.ego_demand_federalstate
             "copyright": "© Statistisches Bundesamt, Wiesbaden 2014",
             "name": "Ergebnisse des Zensus am 9. Mai 2011",
             "license": " ",
-            "description": "Als Download bieten wir Ihnen auf dieser Seite zusätzlich zur Zensusdatenbank CSV- und teilweise Excel-Tabellen mit umfassenden Personen-, Haushalts- und Familien- sowie Gebäude- und Wohnungs­merkmalen. Die Ergebnisse liegen auf Bundes-, Länder-, 			Kreis- und Gemeinde­ebene vor. Außerdem sind einzelne Ergebnisse für Gitterzellen verfügbar."
+            "description": " "
         }
     ],
     "license": {

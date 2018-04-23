@@ -16,8 +16,8 @@ __author__      = "Ludee"
 */
 
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_grid_mv_griddistrict','ego_dp_loadarea_griddistrict_results.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','input','model_draft','ego_grid_mv_griddistrict','ego_dp_loadarea_griddistrict_results.sql',' ');
 
 -- Area of MV Griddistrict
 UPDATE model_draft.ego_grid_mv_griddistrict AS t1
@@ -30,8 +30,8 @@ UPDATE model_draft.ego_grid_mv_griddistrict AS t1
     WHERE   t1.subst_id = t2.subst_id;
 
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','input', 'boundaries','bkg_vg250_6_gem','ego_dp_loadarea_griddistrict_results.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','input', 'boundaries','bkg_vg250_6_gem','ego_dp_loadarea_griddistrict_results.sql',' ');
 
 -- Municipality (Gemeinden)
 UPDATE model_draft.ego_grid_mv_griddistrict AS t1
@@ -48,8 +48,8 @@ UPDATE model_draft.ego_grid_mv_griddistrict AS t1
     WHERE   t1.subst_id = t2.subst_id;
 
     
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_boundaries_bkg_vg250_6_gem_clean','ego_dp_loadarea_griddistrict_results.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','input','model_draft','ego_boundaries_bkg_vg250_6_gem_clean','ego_dp_loadarea_griddistrict_results.sql',' ');
 
 -- Municipality parts (Gemeinde-Einzelteile)
 UPDATE model_draft.ego_grid_mv_griddistrict AS t1
@@ -66,8 +66,8 @@ UPDATE model_draft.ego_grid_mv_griddistrict AS t1
     WHERE   t1.subst_id = t2.subst_id;
 
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_grid_mv_griddistrict_type1','ego_dp_loadarea_griddistrict_results.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','input','model_draft','ego_grid_mv_griddistrict_type1','ego_dp_loadarea_griddistrict_results.sql',' ');
 
 -- Municipality types - Type1
 UPDATE model_draft.ego_grid_mv_griddistrict AS t1
@@ -84,8 +84,8 @@ UPDATE model_draft.ego_grid_mv_griddistrict AS t1
     WHERE   t1.subst_id = t2.subst_id;
 
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_boundaries_hvmv_subst_per_gem_1_mview','ego_dp_loadarea_griddistrict_results.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','input','model_draft','ego_boundaries_hvmv_subst_per_gem_1_mview','ego_dp_loadarea_griddistrict_results.sql',' ');
 
 UPDATE model_draft.ego_grid_mv_griddistrict AS t1
     SET type1_cnt = t2.type_cnt
@@ -100,8 +100,8 @@ UPDATE model_draft.ego_grid_mv_griddistrict AS t1
         )AS t2
     WHERE   t1.subst_id = t2.subst_id;
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_grid_mv_griddistrict_type2','ego_dp_loadarea_griddistrict_results.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','input','model_draft','ego_grid_mv_griddistrict_type2','ego_dp_loadarea_griddistrict_results.sql',' ');
 
 -- Municipality types - Type2
 UPDATE model_draft.ego_grid_mv_griddistrict AS t1
@@ -117,8 +117,8 @@ UPDATE model_draft.ego_grid_mv_griddistrict AS t1
         )AS t2
     WHERE   t1.subst_id = t2.subst_id;
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_grid_hvmv_substation_voronoi_cut','ego_dp_loadarea_griddistrict_results.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','input','model_draft','ego_grid_hvmv_substation_voronoi_cut','ego_dp_loadarea_griddistrict_results.sql',' ');
 
 UPDATE model_draft.ego_grid_mv_griddistrict AS t1
     SET type2_cnt = t2.type_cnt
@@ -133,8 +133,8 @@ UPDATE model_draft.ego_grid_mv_griddistrict AS t1
         )AS t2
     WHERE   t1.subst_id = t2.subst_id;
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_grid_mv_griddistrict_type3','ego_dp_loadarea_griddistrict_results.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','input','model_draft','ego_grid_mv_griddistrict_type3','ego_dp_loadarea_griddistrict_results.sql',' ');
 
 -- Municipality types - Type3
 UPDATE model_draft.ego_grid_mv_griddistrict AS t1
@@ -150,8 +150,8 @@ UPDATE model_draft.ego_grid_mv_griddistrict AS t1
         )AS t2
     WHERE   t1.subst_id = t2.subst_id;
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_boundaries_hvmv_subst_per_gem_3_mview','ego_dp_loadarea_griddistrict_results.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','input','model_draft','ego_boundaries_hvmv_subst_per_gem_3_mview','ego_dp_loadarea_griddistrict_results.sql',' ');
 
 UPDATE model_draft.ego_grid_mv_griddistrict AS t1
     SET type3_cnt = t2.type_cnt
@@ -177,8 +177,8 @@ UPDATE model_draft.ego_grid_mv_griddistrict
         END);
 
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','input','society','destatis_zensus_population_per_ha_mview','ego_dp_loadarea_griddistrict_results.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','input','society','destatis_zensus_population_per_ha_mview','ego_dp_loadarea_griddistrict_results.sql',' ');
 
 -- Population results
 UPDATE model_draft.ego_grid_mv_griddistrict AS t1
@@ -201,8 +201,8 @@ UPDATE model_draft.ego_grid_mv_griddistrict AS t1
     WHERE   t1.subst_id = t2.subst_id;
 
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_demand_loadarea','ego_dp_loadarea_griddistrict_results.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','input','model_draft','ego_demand_loadarea','ego_dp_loadarea_griddistrict_results.sql',' ');
 
 -- Loadarea results - count
 UPDATE model_draft.ego_grid_mv_griddistrict AS t1
@@ -277,8 +277,8 @@ UPDATE model_draft.ego_grid_mv_griddistrict AS t1
 UPDATE model_draft.ego_grid_mv_griddistrict AS t1
     SET consumption_per_area = consumption *1000000 / area_ha;
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_grid_mv_griddistrict','ego_dp_loadarea_griddistrict_results.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_grid_mv_griddistrict','ego_dp_loadarea_griddistrict_results.sql',' ');
 
 
 /* -- test

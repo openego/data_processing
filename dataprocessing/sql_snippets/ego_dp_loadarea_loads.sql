@@ -11,18 +11,18 @@ __author__      = "Ludee"
 */
 
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_demand_hv_largescaleconsumer','ego_dp_loadarea_loads.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','input','model_draft','ego_demand_hv_largescaleconsumer','ego_dp_loadarea_loads.sql',' ');
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','input','openstreetmap','osm_deu_polygon_urban','ego_dp_loadarea_loads.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','input','openstreetmap','osm_deu_polygon_urban','ego_dp_loadarea_loads.sql',' ');
 
 -- exclude large scale consumer
 DELETE FROM openstreetmap.osm_deu_polygon_urban
 	WHERE gid IN (SELECT polygon_id FROM model_draft.ego_demand_hv_largescaleconsumer);
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','openstreetmap','osm_deu_polygon_urban','ego_dp_loadarea_loads.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','output','openstreetmap','osm_deu_polygon_urban','ego_dp_loadarea_loads.sql',' ');
 
 -- sequence
 DROP SEQUENCE IF EXISTS 	model_draft.osm_deu_polygon_urban_buffer100_mview_id CASCADE;
@@ -39,7 +39,7 @@ CREATE MATERIALIZED VIEW		model_draft.osm_deu_polygon_urban_buffer100_mview AS
 			ST_BUFFER(geom, 100)
 		)))).geom ::geometry(Polygon,3035) AS geom
 	FROM	openstreetmap.osm_deu_polygon_urban
-    ORDER BY gid;
+    ORDER BY id;
 
 -- index (id)
 CREATE UNIQUE INDEX  	osm_deu_polygon_urban_buffer100_mview_gid_idx
@@ -50,16 +50,16 @@ CREATE INDEX  	osm_deu_polygon_urban_buffer100_mview_geom_idx
 	ON	model_draft.osm_deu_polygon_urban_buffer100_mview USING GIST (geom);
     
 -- grant (oeuser)
-ALTER TABLE	model_draft.osm_deu_polygon_urban_buffer100_mview OWNER TO oeuser;
+ALTER MATERIALIZED VIEW	model_draft.osm_deu_polygon_urban_buffer100_mview OWNER TO oeuser;
 
 -- metadata
-COMMENT ON TABLE model_draft.osm_deu_polygon_urban_buffer100_mview IS '{
+COMMENT ON MATERIALIZED VIEW model_draft.osm_deu_polygon_urban_buffer100_mview IS '{
     "comment": "eGoDP - Temporary table", 
-    "version": "v0.3.0",
+    "version": "v0.4.0",
     "published": "none" }';
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','temp','model_draft','osm_deu_polygon_urban_buffer100_mview','ego_dp_loadarea_loads.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','temp','model_draft','osm_deu_polygon_urban_buffer100_mview','ego_dp_loadarea_loads.sql',' ');
 
 
 -- unbuffer with 100m
@@ -78,7 +78,7 @@ INSERT INTO     model_draft.ego_demand_la_osm(area_ha,geom)
                         ST_BUFFER(osm.geom, -100)
                     )))).geom ::geometry(Polygon,3035) AS geom
             FROM    model_draft.osm_deu_polygon_urban_buffer100_mview AS osm
-            ORDER BY gid
+--            ORDER BY id
             ) AS buffer;
 
 -- index GIST (geom)
@@ -91,14 +91,14 @@ ALTER TABLE	model_draft.ego_demand_la_osm OWNER TO oeuser;
 -- metadata
 COMMENT ON TABLE model_draft.ego_demand_la_osm IS '{
     "comment": "eGoDP - Temporary table", 
-    "version": "v0.3.0",
+    "version": "v0.4.0",
     "published": "none" }';
 
 -- select description
 SELECT obj_description('model_draft.ego_demand_la_osm' ::regclass) ::json;
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','ouput','model_draft','ego_demand_la_osm','ego_dp_loadarea_loads.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','ouput','model_draft','ego_demand_la_osm','ego_dp_loadarea_loads.sql',' ');
 
 
 -- DROP MATERIALIZED VIEW IF EXISTS model_draft.osm_deu_polygon_urban_buffer100_mview CASCADE;
