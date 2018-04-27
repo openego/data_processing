@@ -897,8 +897,8 @@ CREATE TABLE model_draft.ego_grid_pf_hv_link
   length double precision,
   terrain_factor double precision DEFAULT 1,
   geom geometry(MultiLineString,4326),
-  topo geometry(LineString,4326)
-  CONSTRAINT link_data_pkey PRIMARY KEY (link_id, scn_name) ) WITH ( OIDS=FALSE );
+  topo geometry(LineString,4326),
+  CONSTRAINT hv_link_data_pkey PRIMARY KEY (link_id, scn_name) ) WITH ( OIDS=FALSE );
   
 -- metadata
 
@@ -1115,9 +1115,9 @@ COMMENT ON TABLE model_draft.ego_grid_pf_hv_load IS '{
             "copyright": " "
         },
         {
-            "name": "Information und Technik Nordrhein-Westfalen",
+            "name": "Statistische Berichte Energiebilanz und CO2-Bilanz in Nordrhein-Westfalen 2011",
             "description": " ",
-            "url": "https://webshop.it.nrw.de/gratis/E449%20201100.pdf",
+            "url": "https://webshop.it.nrw.de",
             "license": " ",
             "copyright": " "
         },
