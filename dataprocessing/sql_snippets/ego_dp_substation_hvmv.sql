@@ -34,6 +34,10 @@ CREATE TABLE 		model_draft.ego_grid_hvmv_substation (
 -- grant (oeuser)
 ALTER TABLE model_draft.ego_grid_hvmv_substation OWNER TO oeuser;
 
+COMMENT ON TABLE model_draft.ego_grid_hvmv_substation
+    IS '{
+    "comment": "eGoDP - Temporary table",
+    "version": "v0.4.0" }';
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
 SELECT scenario_log('eGo_DP', 'v0.3.0','input','openstreetmap','osm_deu_ways','ego_dp_substation_hvmv.sql',' ');
