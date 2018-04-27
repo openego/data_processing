@@ -70,9 +70,9 @@ def data_processing():
     ## LOWVOLTAGE
 #    'ego_dp_lv_substation.sql',                         # MVLV Substation (ONT)
 #   'ego_dp_lv_substation_voronoi.sql',                 # MVLV Substation Voronoi
-    'ego_dp_lv_loadcut.sql',                             # LV Loadcut
-    'ego_dp_lv_griddistrict.sql',                       # LV Griddistrict
-    'ego_dp_lv_consumption_peakload.sql',               # LV Consumption and Peakload
+#    'ego_dp_lv_loadcut.sql',                             # LV Loadcut
+#    'ego_dp_lv_griddistrict.sql',                       # LV Griddistrict
+#    'ego_dp_lv_consumption_peakload.sql',               # LV Consumption and Peakload
 
     ## REA
 #    'rea/ego_dp_lattice_500m.sql',                      # Lattice (point grid) 500m
@@ -85,13 +85,13 @@ def data_processing():
 #    'rea/ego_dp_rea_m2.sql',                            # M2 wind farms
 #    'rea/ego_dp_rea_m3.sql',                            # M3 wind turbines to WPA
 #    'rea/ego_dp_rea_m4.sql',                            # M4 other and rest
-#   'rea/ego_dp_rea_m5.sql',                            # M5 LV to Loadarea
-#    'rea/ego_dp_rea_results.sql',                       # Results and statistics
+#     'rea/ego_dp_rea_m5.sql',                            # M5 LV to Loadarea
+#     'rea/ego_dp_rea_results.sql',                       # Results and statistics
 
 	## POWERFLOW
-#	'ego_dp_powerflow_assignment_otgid.sql',		# assign otg_id to pp lists
+# 	'ego_dp_powerflow_assignment_otgid.sql',		# assign otg_id to pp lists
 #	'ego_dp_powerflow_assignment_unid.sql',			# create a unified_id over all pp (res and conv) 
-#	'ego_dp_powerflow_create_pp_mview.sql',			# create mviews to display power plants per scenario
+	'ego_dp_powerflow_create_pp_mview.sql',			# create mviews to display power plants per scenario
 #	'ego_dp_powerflow_hv_setup.sql',			# Set schema/tables for EHV/HV powerflow calculations up
 #	'ego_dp_powerflow_osmtgmod_to_pypsa.sql',		# Include data from osmTGmod into EHV/HV powerflow schema
 #	'ego_dp_powerflow_electrical_neighbour.sql',		# Create border crossing lines and buses in neighbouring countries
@@ -111,7 +111,7 @@ def data_processing():
 #	'ego_dp_versioning_mviews.sql' ,			# Versioning of mviews
 
 	## POST-PROCESSING
-#	'post_processing/ego_pp_nep2035_grid_variations.sql'	# Create extension_tables and insert NEP-data
+#	'ego_pp_nep2035_grid_variations.sql'			# Create extension_tables and insert NEP-data
 
     
 	## VACUUM FULL

@@ -53,37 +53,37 @@ COMMENT ON TABLE grid.ego_dp_ehv_substation IS '{
     "description": "Abstracted substation between extrahigh- and high voltage (Transmission substation)",
     "language": [ "eng", "ger" ],
     "spatial": {
-        "location": "",
-        "extend": "Gemany",
-        "resolution": ""
+        "location": "none",
+        "extend": "Germany",
+        "resolution": "vektor"
     },
     "temporal": {
-        "reference_date": " ",
-        "start": "",
-        "end": "",
-        "resolution": ""
+        "reference_date": "none",
+        "start": "none",
+        "end": "none",
+        "resolution": "none"
     },
     "sources": [
         {
             "name": "eGo dataprocessing",
-            "description": " ",
+            "description": "open_eGo dataprocessing code",
             "url": "https://github.com/openego/data_processing",
             "license": "GNU Affero General Public License Version 3 (AGPL-3.0)",
-            "copyright": "\u00a9 Reiner Lemoine Institut"
+            "copyright": "eGo dataprocessing © Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems © Europa-Universität Flensburg, Centre for Sustainable Energy Systems © Reiner Lemoine Institut © DLR Institute for Networked Energy Systems"
         },
         {
             "name": "OpenStreetMap",
-            "description": " ",
+            "description": "OpenStreetMap (OSM) is a collaborative project to create a free editable map of the world.",
             "url": "http://www.openstreetmap.org/",
-            "license": "Open Database License (ODbL) v1.0",
-            "copyright": "\u00a9 OpenStreetMap contributors"
+            "license": "Open Database License v1.0 (ODbL-1.0)",
+            "copyright": "© OpenStreetMap contributors"
         },
         {
             "name": "BKG - Verwaltungsgebiete 1:250.000 (vg250)",
-            "description": " ",
+            "description": "Dienstleistungszentrum des Bundes für Geoinformation und Geodäsie",
             "url": "http://www.geodatenzentrum.de/",
             "license": "Geodatenzugangsgesetz (GeoZG)",
-            "copyright": "\u00a9 GeoBasis-DE / BKG 2016 (Data changed)"
+            "copyright": "© GeoBasis-DE / BKG 2016 (data changed)"
         }
     ],
     "license": {
@@ -97,33 +97,39 @@ COMMENT ON TABLE grid.ego_dp_ehv_substation IS '{
     "contributors": [
         {
             "name": "lukasol",
-            "email": "",
+            "email": "none",
             "date": "20.10.2016",
             "comment": "Create substations"
         },
         {
             "name": "Ludee",
-            "email": "",
+            "email": "none",
             "date": "15.01.2017",
             "comment": "Update metadata"
         },
         {
             "name": "Ludee",
-            "email": "",
+            "email": "none",
             "date": "21.03.2017",
             "comment": "Update metadata to 1.1"
         },
         {
             "name": "Ludee",
-            "email": "",
+            "email": "none",
             "date": "2017-04-06",
             "comment": "Update metadata to 1.2"
         },
         {
             "name": "KilianZimmerer",
-            "email": "",
-            "date": "2017-6-27",
+            "email": "none",
+            "date": "2017-06-27",
             "comment": "Update metadata to v1.3"
+        },
+        {
+            "name": "Ludee",
+            "email": "none",
+            "date": "2018-04-26",
+            "comment": "Review and update licenses"
         }
     ],
     "resources": [
@@ -241,7 +247,7 @@ COMMENT ON TABLE grid.ego_dp_ehv_substation IS '{
 SELECT obj_description('grid.ego_dp_ehv_substation' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','result','grid','ego_dp_ehv_substation','ego_dp_structure_versioning.sql','ehv substation');
+SELECT scenario_log('eGo_DP', 'v0.4.0','result','grid','ego_dp_ehv_substation','ego_dp_structure_versioning.sql','ehv substation');
 
 /* 
 -- HVMV substation
@@ -287,37 +293,37 @@ COMMENT ON TABLE grid.ego_dp_hvmv_substation IS '{
     "description": "Abstracted substation between high- and medium voltage (Transition point)",
     "language": [ "eng", "ger" ],
     "spatial": {
-        "location": "",
-        "extend": "Gemany",
-        "resolution": ""
+        "location": "none",
+        "extend": "Germany",
+        "resolution": "vektor"
     },
     "temporal": {
-        "reference_date": " ",
-        "start": "",
-        "end": "",
-        "resolution": ""
+        "reference_date": "none",
+        "start": "none",
+        "end": "none",
+        "resolution": "none"
     },
     "sources": [
         {
             "name": "eGo dataprocessing",
-            "description": " ",
+            "description": "open_eGo dataprocessing code",
             "url": "https://github.com/openego/data_processing",
             "license": "GNU Affero General Public License Version 3 (AGPL-3.0)",
-            "copyright": "\u00a9 Reiner Lemoine Institut"
+            "copyright": "eGo dataprocessing © Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems © Europa-Universität Flensburg, Centre for Sustainable Energy Systems © Reiner Lemoine Institut © DLR Institute for Networked Energy Systems"
         },
         {
             "name": "OpenStreetMap",
-            "description": " ",
+            "description": "OpenStreetMap (OSM) is a collaborative project to create a free editable map of the world.",
             "url": "http://www.openstreetmap.org/",
-            "license": "Open Database License (ODbL) v1.0",
-            "copyright": "\u00a9 OpenStreetMap contributors"
+            "license": "Open Database License v1.0 (ODbL-1.0)",
+            "copyright": "© OpenStreetMap contributors"
         },
         {
             "name": "BKG - Verwaltungsgebiete 1:250.000 (vg250)",
-            "description": " ",
+            "description": "Dienstleistungszentrum des Bundes für Geoinformation und Geodäsie",
             "url": "http://www.geodatenzentrum.de/",
             "license": "Geodatenzugangsgesetz (GeoZG)",
-            "copyright": "\u00a9 GeoBasis-DE / BKG 2016 (Data changed)"
+            "copyright": "© GeoBasis-DE / BKG 2016 (data changed)"
         }
     ],
     "license": {
@@ -331,33 +337,39 @@ COMMENT ON TABLE grid.ego_dp_hvmv_substation IS '{
     "contributors": [
         {
             "name": "lukasol",
-            "email": "",
+            "email": "none",
             "date": "20.10.2016",
             "comment": "Create substations"
         },
         {
             "name": "Ludee",
-            "email": "",
+            "email": "none",
             "date": "15.01.2017",
             "comment": "Update metadata"
         },
         {
             "name": "Ludee",
-            "email": "",
+            "email": "none",
             "date": "21.03.2017",
             "comment": "Update metadata to 1.1"
         },
         {
             "name": "Ludee",
-            "email": "",
+            "email": "none",
             "date": "2017-04-06",
             "comment": "Update metadata to 1.2"
         },
         {
             "name": "KilianZimmerer",
-            "email": "",
-            "date": "2017-6-27",
+            "email": "none",
+            "date": "2017-06-27",
             "comment": "Update metadata to v1.3"
+        },
+        {
+            "name": "Ludee",
+            "email": "none",
+            "date": "2018-04-26",
+            "comment": "Review and update licenses"
         }
     ],
     "resources": [
@@ -475,7 +487,7 @@ COMMENT ON TABLE grid.ego_dp_hvmv_substation IS '{
 SELECT obj_description('grid.ego_dp_hvmv_substation' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','result','grid','ego_dp_hvmv_substation','ego_dp_structure_versioning.sql','hvmv substation');
+SELECT scenario_log('eGo_DP', 'v0.4.0','result','grid','ego_dp_hvmv_substation','ego_dp_structure_versioning.sql','hvmv substation');
 
 /* 
 -- MVLV substation
@@ -507,37 +519,37 @@ COMMENT ON TABLE grid.ego_dp_mvlv_substation IS '{
     "description": "Abstracted substation between medium- and low voltage (Distribution substation)",
     "language": [ "eng", "ger" ],
     "spatial": {
-        "location": "",
-        "extend": "Gemany",
-        "resolution": ""
+        "location": "none",
+        "extend": "Germany",
+        "resolution": "vektor"
     },
     "temporal": {
-        "reference_date": " ",
-        "start": "",
-        "end": "",
-        "resolution": ""
+        "reference_date": "none",
+        "start": "none",
+        "end": "none",
+        "resolution": "none"
     },
     "sources": [
         {
             "name": "eGo dataprocessing",
-            "description": " ",
+            "description": "open_eGo dataprocessing code",
             "url": "https://github.com/openego/data_processing",
             "license": "GNU Affero General Public License Version 3 (AGPL-3.0)",
-            "copyright": "\u00a9 Reiner Lemoine Institut"
+            "copyright": "eGo dataprocessing © Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems © Europa-Universität Flensburg, Centre for Sustainable Energy Systems © Reiner Lemoine Institut © DLR Institute for Networked Energy Systems"
         },
         {
             "name": "OpenStreetMap",
-            "description": " ",
+            "description": "OpenStreetMap (OSM) is a collaborative project to create a free editable map of the world.",
             "url": "http://www.openstreetmap.org/",
-            "license": "Open Database License (ODbL) v1.0",
-            "copyright": "\u00a9 OpenStreetMap contributors"
+            "license": "Open Database License v1.0 (ODbL-1.0)",
+            "copyright": "© OpenStreetMap contributors"
         },
         {
             "name": "BKG - Verwaltungsgebiete 1:250.000 (vg250)",
-            "description": " ",
+            "description": "Dienstleistungszentrum des Bundes für Geoinformation und Geodäsie",
             "url": "http://www.geodatenzentrum.de/",
             "license": "Geodatenzugangsgesetz (GeoZG)",
-            "copyright": "\u00a9 GeoBasis-DE / BKG 2016 (Data changed)"
+            "copyright": "© GeoBasis-DE / BKG 2016 (data changed)"
         }
     ],
     "license": {
@@ -546,44 +558,50 @@ COMMENT ON TABLE grid.ego_dp_mvlv_substation IS '{
         "version": "1.0",
         "url": "https://opendatacommons.org/licenses/odbl/1.0/",
         "instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
-        "copyright": "\u00a9 Reiner Lemoine Institut"
+        "copyright": "© Reiner Lemoine Institut"
     },
     "contributors": [
         {
             "name": "jong42",
-            "email": "",
+            "email": "none",
             "date": "20.10.2016",
             "comment": "Create table"
         },
         {
             "name": "jong42",
-            "email": "",
+            "email": "none",
             "date": "27.10.2016",
             "comment": "Change table names"
         },
         {
             "name": "Ludee",
-            "email": "",
+            "email": "none",
             "date": "15.01.2017",
             "comment": "Update metadata"
         },
         {
             "name": "Ludee",
-            "email": "",
+            "email": "none",
             "date": "21.03.2017",
             "comment": "Update metadata to 1.1"
         },
         {
             "name": "Ludee",
-            "email": "",
+            "email": "none",
             "date": "2017-04-06",
             "comment": "Update metadata to 1.2"
         },
         {
             "name": "KilianZimmerer",
-            "email": "",
-            "date": "2017-6-27",
+            "email": "none",
+            "date": "2017-06-27",
             "comment": "Update metadata to v1.3"
+        },
+        {
+            "name": "Ludee",
+            "email": "none",
+            "date": "2018-04-26",
+            "comment": "Review and update licenses"
         }
     ],
     "resources": [
@@ -621,7 +639,7 @@ COMMENT ON TABLE grid.ego_dp_mvlv_substation IS '{
 SELECT obj_description('grid.ego_dp_mvlv_substation' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','result','grid','ego_dp_mvlv_substation','ego_dp_structure_versioning.sql','mvlv substation');
+SELECT scenario_log('eGo_DP', 'v0.4.0','result','grid','ego_dp_mvlv_substation','ego_dp_structure_versioning.sql','mvlv substation');
 
 
 -- GRIDDISTRICTS (EHV, HVMV, MVLV)
@@ -652,37 +670,37 @@ COMMENT ON TABLE grid.ego_dp_ehv_griddistrict IS '{
     "description": "Catchment area of EHV substation (Transmission substation)",
     "language": [ "eng", "ger" ],
     "spatial": {
-        "location": "",
-        "extend": "Gemany",
-        "resolution": ""
+        "location": "none",
+        "extend": "Germany",
+        "resolution": "vektor"
     },
     "temporal": {
-        "reference_date": " ",
-        "start": "",
-        "end": "",
-        "resolution": ""
+        "reference_date": "none",
+        "start": "none",
+        "end": "none",
+        "resolution": "none"
     },
     "sources": [
         {
             "name": "eGo dataprocessing",
-            "description": " ",
+            "description": "open_eGo dataprocessing code",
             "url": "https://github.com/openego/data_processing",
             "license": "GNU Affero General Public License Version 3 (AGPL-3.0)",
-            "copyright": "\u00a9 Reiner Lemoine Institut"
+            "copyright": "eGo dataprocessing © Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems © Europa-Universität Flensburg, Centre for Sustainable Energy Systems © Reiner Lemoine Institut © DLR Institute for Networked Energy Systems"
         },
         {
             "name": "OpenStreetMap",
-            "description": " ",
+            "description": "OpenStreetMap (OSM) is a collaborative project to create a free editable map of the world.",
             "url": "http://www.openstreetmap.org/",
-            "license": "Open Database License (ODbL) v1.0",
-            "copyright": "\u00a9 OpenStreetMap contributors"
+            "license": "Open Database License v1.0 (ODbL-1.0)",
+            "copyright": "© OpenStreetMap contributors"
         },
         {
             "name": "BKG - Verwaltungsgebiete 1:250.000 (vg250)",
-            "description": " ",
+            "description": "Dienstleistungszentrum des Bundes für Geoinformation und Geodäsie",
             "url": "http://www.geodatenzentrum.de/",
             "license": "Geodatenzugangsgesetz (GeoZG)",
-            "copyright": "\u00a9 GeoBasis-DE / BKG 2016 (Data changed)"
+            "copyright": "© GeoBasis-DE / BKG 2016 (data changed)"
         }
     ],
     "license": {
@@ -691,38 +709,44 @@ COMMENT ON TABLE grid.ego_dp_ehv_griddistrict IS '{
         "version": "1.0",
         "url": "https://opendatacommons.org/licenses/odbl/1.0/",
         "instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
-        "copyright": "\u00a9 Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems"
+        "copyright": "© Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems"
     },
     "contributors": [
         {
             "name": "Ludee",
-            "email": "",
+            "email": "none",
             "date": "02.09.2016",
             "comment": "Create table"
         },
         {
             "name": "Ludee",
-            "email": "",
+            "email": "none",
             "date": "15.01.2017",
             "comment": "Update metadata"
         },
         {
             "name": "Ludee",
-            "email": "",
+            "email": "none",
             "date": "21.03.2017",
             "comment": "Update metadata to 1.1"
         },
         {
             "name": "Ludee",
-            "email": "",
+            "email": "none",
             "date": "2017-04-06",
             "comment": "Update metadata to 1.2"
         },
         {
             "name": "KilianZimmerer",
-            "email": "",
-            "date": "2017-6-27",
+            "email": "none",
+            "date": "2017-06-27",
             "comment": "Update metadata to v1.3"
+        },
+        {
+            "name": "Ludee",
+            "email": "none",
+            "date": "2018-04-26",
+            "comment": "Review and update licenses"
         }
     ],
     "resources": [
@@ -755,7 +779,7 @@ COMMENT ON TABLE grid.ego_dp_ehv_griddistrict IS '{
 SELECT obj_description('grid.ego_dp_ehv_griddistrict' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','result','grid','ego_dp_ehv_griddistrict','ego_dp_structure_versioning.sql','ehv griddistrict');
+SELECT scenario_log('eGo_DP', 'v0.4.0','result','grid','ego_dp_ehv_griddistrict','ego_dp_structure_versioning.sql','ehv griddistrict');
 
 /* 
 -- MV griddistrict
@@ -812,37 +836,37 @@ COMMENT ON TABLE grid.ego_dp_mv_griddistrict IS '{
     "description": "Catchment area of HVMV substation (Transition point)",
     "language": [ "eng", "ger" ],
     "spatial": {
-        "location": "",
-        "extend": "Gemany",
-        "resolution": ""
+        "location": "none",
+        "extend": "Germany",
+        "resolution": "vektor"
     },
     "temporal": {
-        "reference_date": " ",
-        "start": "",
-        "end": "",
-        "resolution": ""
+        "reference_date": "none",
+        "start": "none",
+        "end": "none",
+        "resolution": "none"
     },
     "sources": [
         {
             "name": "eGo dataprocessing",
-            "description": " ",
+            "description": "open_eGo dataprocessing code",
             "url": "https://github.com/openego/data_processing",
             "license": "GNU Affero General Public License Version 3 (AGPL-3.0)",
-            "copyright": "\u00a9 Reiner Lemoine Institut"
+            "copyright": "eGo dataprocessing © Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems © Europa-Universität Flensburg, Centre for Sustainable Energy Systems © Reiner Lemoine Institut © DLR Institute for Networked Energy Systems"
         },
         {
             "name": "OpenStreetMap",
-            "description": " ",
+            "description": "OpenStreetMap (OSM) is a collaborative project to create a free editable map of the world.",
             "url": "http://www.openstreetmap.org/",
-            "license": "Open Database License (ODbL) v1.0",
-            "copyright": "\u00a9 OpenStreetMap contributors"
+            "license": "Open Database License v1.0 (ODbL-1.0)",
+            "copyright": "© OpenStreetMap contributors"
         },
         {
             "name": "BKG - Verwaltungsgebiete 1:250.000 (vg250)",
-            "description": " ",
+            "description": "Dienstleistungszentrum des Bundes für Geoinformation und Geodäsie",
             "url": "http://www.geodatenzentrum.de/",
             "license": "Geodatenzugangsgesetz (GeoZG)",
-            "copyright": "\u00a9 GeoBasis-DE / BKG 2016 (Data changed)"
+            "copyright": "© GeoBasis-DE / BKG 2016 (data changed)"
         }
     ],
     "license": {
@@ -851,38 +875,44 @@ COMMENT ON TABLE grid.ego_dp_mv_griddistrict IS '{
         "version": "1.0",
         "url": "https://opendatacommons.org/licenses/odbl/1.0/",
         "instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
-        "copyright": "\u00a9 Reiner Lemoine Institut"
+        "copyright": "© Reiner Lemoine Institut"
     },
     "contributors": [
         {
             "name": "Ludee",
-            "email": "",
+            "email": "none",
             "date": "02.09.2016",
             "comment": "Create table"
         },
         {
             "name": "Ludee",
-            "email": "",
+            "email": "none",
             "date": "15.01.2017",
             "comment": "Update metadata"
         },
         {
             "name": "Ludee",
-            "email": "",
+            "email": "none",
             "date": "21.03.2017",
             "comment": "Update metadata to 1.1"
         },
         {
             "name": "Ludee",
-            "email": "",
+            "email": "none",
             "date": "2017-04-06",
             "comment": "Update metadata to 1.2"
         },
         {
             "name": "KilianZimmerer",
-            "email": "",
-            "date": "2017-6-27",
+            "email": "none",
+            "date": "2017-06-27",
             "comment": "Update metadata to v1.3"
+        },
+        {
+            "name": "Ludee",
+            "email": "none",
+            "date": "2018-04-26",
+            "comment": "Review and update licenses"
         }
     ],
     "resources": [
@@ -930,7 +960,7 @@ COMMENT ON TABLE grid.ego_dp_mv_griddistrict IS '{
 SELECT obj_description('grid.ego_dp_mv_griddistrict' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','result','grid','ego_dp_mv_griddistrict','ego_dp_structure_versioning.sql','mv griddistrict');
+SELECT scenario_log('eGo_DP', 'v0.4.0','result','grid','ego_dp_mv_griddistrict','ego_dp_structure_versioning.sql','mv griddistrict');
 
 /* 
 -- LV griddistrict
@@ -993,37 +1023,37 @@ COMMENT ON TABLE grid.ego_dp_lv_griddistrict IS '{
     "description": "Catchment area of MVLV substation (Distribution substation)",
     "language": [ "eng", "ger" ],
     "spatial": {
-        "location": "",
-        "extend": "Gemany",
-        "resolution": ""
+        "location": "none",
+        "extend": "Germany",
+        "resolution": "vektor"
     },
     "temporal": {
-        "reference_date": " ",
-        "start": "",
-        "end": "",
-        "resolution": ""
+        "reference_date": "none",
+        "start": "none",
+        "end": "none",
+        "resolution": "none"
     },
     "sources": [
         {
             "name": "eGo dataprocessing",
-            "description": " ",
+            "description": "open_eGo dataprocessing code",
             "url": "https://github.com/openego/data_processing",
             "license": "GNU Affero General Public License Version 3 (AGPL-3.0)",
-            "copyright": "\u00a9 Reiner Lemoine Institut"
+            "copyright": "eGo dataprocessing © Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems © Europa-Universität Flensburg, Centre for Sustainable Energy Systems © Reiner Lemoine Institut © DLR Institute for Networked Energy Systems"
         },
         {
             "name": "OpenStreetMap",
-            "description": " ",
+            "description": "OpenStreetMap (OSM) is a collaborative project to create a free editable map of the world.",
             "url": "http://www.openstreetmap.org/",
-            "license": "Open Database License (ODbL) v1.0",
-            "copyright": "\u00a9 OpenStreetMap contributors"
+            "license": "Open Database License v1.0 (ODbL-1.0)",
+            "copyright": "© OpenStreetMap contributors"
         },
         {
             "name": "BKG - Verwaltungsgebiete 1:250.000 (vg250)",
-            "description": " ",
+            "description": "Dienstleistungszentrum des Bundes für Geoinformation und Geodäsie",
             "url": "http://www.geodatenzentrum.de/",
             "license": "Geodatenzugangsgesetz (GeoZG)",
-            "copyright": "\u00a9 GeoBasis-DE / BKG 2016 (Data changed)"
+            "copyright": "© GeoBasis-DE / BKG 2016 (data changed)"
         }
     ],
     "license": {
@@ -1032,38 +1062,44 @@ COMMENT ON TABLE grid.ego_dp_lv_griddistrict IS '{
         "version": "1.0",
         "url": "https://opendatacommons.org/licenses/odbl/1.0/",
         "instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
-        "copyright": "\u00a9 Reiner Lemoine Institut"
+        "copyright": "© Reiner Lemoine Institut"
     },
     "contributors": [
         {
             "name": "Ludee",
-            "email": "",
+            "email": "none",
             "date": "02.09.2016",
             "comment": "Create table"
         },
         {
             "name": "Ludee",
-            "email": "",
+            "email": "none",
             "date": "15.01.2017",
             "comment": "Update metadata"
         },
         {
             "name": "Ludee",
-            "email": "",
+            "email": "none",
             "date": "21.03.2017",
             "comment": "Update metadata to 1.1"
         },
         {
             "name": "Ludee",
-            "email": "",
+            "email": "none",
             "date": "2017-04-06",
             "comment": "Update metadata to 1.2"
         },
         {
             "name": "KilianZimmerer",
-            "email": "",
-            "date": "2017-6-27",
+            "email": "none",
+            "date": "2017-06-27",
             "comment": "Update metadata to v1.3"
+        },
+        {
+            "name": "Ludee",
+            "email": "none",
+            "date": "2018-04-26",
+            "comment": "Review and update licenses"
         }
     ],
     "resources": [
@@ -1111,7 +1147,7 @@ COMMENT ON TABLE grid.ego_dp_lv_griddistrict IS '{
 SELECT obj_description('grid.ego_dp_lv_griddistrict' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','result','grid','ego_dp_lv_griddistrict','ego_dp_structure_versioning.sql','lv griddistrict');
+SELECT scenario_log('eGo_DP', 'v0.4.0','result','grid','ego_dp_lv_griddistrict','ego_dp_structure_versioning.sql','lv griddistrict');
 
 
 -- DEMAND
@@ -1182,44 +1218,44 @@ COMMENT ON TABLE demand.ego_dp_loadarea IS '{
     "description": "Loadarea with electrical consumption per sector",
     "language": [ "eng", "ger" ],
     "spatial": {
-        "location": "",
-        "extend": "Gemany",
-        "resolution": " "
+        "location": "none",
+        "extend": "Germany",
+        "resolution": "vektor"
     },
     "temporal": {
-        "reference_date": " ",
-        "start": "",
-        "end": "",
-        "resolution": ""
+        "reference_date": "none",
+        "start": "none",
+        "end": "none",
+        "resolution": "none"
     },
     "sources": [
         {
             "name": "eGo dataprocessing",
-            "description": " ",
+            "description": "open_eGo dataprocessing code",
             "url": "https://github.com/openego/data_processing",
             "license": "GNU Affero General Public License Version 3 (AGPL-3.0)",
-            "copyright": "\u00a9 Reiner Lemoine Institut"
+            "copyright": "eGo dataprocessing © Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems © Europa-Universität Flensburg, Centre for Sustainable Energy Systems © Reiner Lemoine Institut © DLR Institute for Networked Energy Systems"
         },
         {
             "name": "OpenStreetMap",
-            "description": " ",
+            "description": "OpenStreetMap (OSM) is a collaborative project to create a free editable map of the world.",
             "url": "http://www.openstreetmap.org/",
-            "license": "Open Database License (ODbL) v1.0",
-            "copyright": "\u00a9 OpenStreetMap contributors"
+            "license": "Open Database License v1.0 (ODbL-1.0)",
+            "copyright": "© OpenStreetMap contributors"
         },
         {
             "name": "BKG - Verwaltungsgebiete 1:250.000 (vg250)",
-            "description": " ",
+            "description": "Dienstleistungszentrum des Bundes für Geoinformation und Geodäsie",
             "url": "http://www.geodatenzentrum.de/",
             "license": "Geodatenzugangsgesetz (GeoZG)",
-            "copyright": "\u00a9 GeoBasis-DE / BKG 2016 (data changed)"
+            "copyright": "© GeoBasis-DE / BKG 2016 (data changed)"
         },
         {
             "name": "Statistisches Bundesamt (Destatis) - Zensus2011",
-            "description": " ",
+            "description": "National census in Germany in 2011 - population per hectar",
             "url": "https://www.destatis.de/DE/Methoden/Zensus_/Zensus.html",
-            "license": "Datenlizenz Deutschland \u0096 Namensnennung \u0096 Version 2.0",
-            "copyright": "\u00a9 Statistisches Bundesamt, Wiesbaden, Genesis-Online, 2016; Datenlizenz by-2-0"
+            "license": "Datenlizenz Deutschland - Namensnennung - Version 2.0 (dl-de/by-2-0)",
+            "copyright": "© Statistisches Bundesamt, Wiesbaden, Genesis-Online, 2016; Datenlizenz by-2-0"
         }
     ],
     "license": {
@@ -1228,44 +1264,50 @@ COMMENT ON TABLE demand.ego_dp_loadarea IS '{
         "version": "1.0",
         "url": "https://opendatacommons.org/licenses/odbl/1.0/",
         "instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
-        "copyright": "\u00a9 Reiner Lemoine Institut"
+        "copyright": "© Reiner Lemoine Institut"
     },
     "contributors": [
         {
             "name": "Ludee",
-            "email": " ",
+            "email": "none",
             "date": "02.10.2016",
             "comment": "Create loadareas"
         },
         {
             "name": "Ilka Cussmann",
-            "email": " ",
+            "email": "none",
             "date": "25.10.2016",
             "comment": "Create metadata"
         },
         {
             "name": "Ludee",
-            "email": " ",
+            "email": "none",
             "date": "15.01.2017",
             "comment": "Update metadata"
         },
         {
             "name": "Ludee",
-            "email": " ",
+            "email": "none",
             "date": "21.03.2017",
             "comment": "Update metadata to 1.1"
         },
         {
             "name": "Ludee",
-            "email": " ",
+            "email": "none",
             "date": "2017-03-21",
             "comment": "Update metadata to 1.2"
         },
         {
             "name": "KilianZimmerer",
-            "email": "",
-            "date": "2017-6-27",
+            "email": "none",
+            "date": "2017-06-27",
             "comment": "Update metadata to v1.3"
+        },
+        {
+            "name": "Ludee",
+            "email": "none",
+            "date": "2018-04-26",
+            "comment": "Review and update licenses"
         }
     ],
     "resources": [
@@ -1458,7 +1500,7 @@ COMMENT ON TABLE demand.ego_dp_loadarea IS '{
 SELECT obj_description('demand.ego_dp_loadarea' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','result','demand','ego_dp_loadarea','ego_dp_structure_versioning.sql','loadarea');
+SELECT scenario_log('eGo_DP', 'v0.4.0','result','demand','ego_dp_loadarea','ego_dp_structure_versioning.sql','loadarea');
 
 
 -- GENERATOR  (con, res)
@@ -1522,44 +1564,51 @@ COMMENT ON TABLE supply.ego_dp_conv_powerplant IS '{
     "description": "",
     "language": [ "eng", "ger" ],
     "spatial": {
-        "location": "",
-        "extend": "Gemany",
-        "resolution": " "
+        "location": "none",
+        "extend": "Germany",
+        "resolution": "vektor"
     },
     "temporal": {
-        "reference_date": " ",
-        "start": "",
-        "end": "",
-        "resolution": ""
+        "reference_date": "none",
+        "start": "none",
+        "end": "none",
+        "resolution": "none"
     },
     "sources": [
         {
             "name": "eGo dataprocessing",
-            "description": " ",
+            "description": "open_eGo dataprocessing code",
             "url": "https://github.com/openego/data_processing",
             "license": "GNU Affero General Public License Version 3 (AGPL-3.0)",
-            "copyright": "\u00a9 Reiner Lemoine Institut"
+            "copyright": "eGo dataprocessing © Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems © Europa-Universität Flensburg, Centre for Sustainable Energy Systems © Reiner Lemoine Institut © DLR Institute for Networked Energy Systems"
         },
         {
             "name": "OpenStreetMap",
-            "description": " ",
+            "description": "OpenStreetMap (OSM) is a collaborative project to create a free editable map of the world.",
             "url": "http://www.openstreetmap.org/",
-            "license": "Open Database License (ODbL) v1.0",
-            "copyright": "\u00a9 OpenStreetMap contributors"
+            "license": "Open Database License v1.0 (ODbL-1.0)",
+            "copyright": "© OpenStreetMap contributors"
         },
         {
             "name": "BKG - Verwaltungsgebiete 1:250.000 (vg250)",
-            "description": " ",
+            "description": "Dienstleistungszentrum des Bundes für Geoinformation und Geodäsie",
             "url": "http://www.geodatenzentrum.de/",
             "license": "Geodatenzugangsgesetz (GeoZG)",
-            "copyright": "\u00a9 GeoBasis-DE / BKG 2016 (data changed)"
+            "copyright": "© GeoBasis-DE / BKG 2016 (data changed)"
         },
         {
             "name": "Statistisches Bundesamt (Destatis) - Zensus2011",
-            "description": " ",
+            "description": "National census in Germany in 2011 - population per hectar",
             "url": "https://www.destatis.de/DE/Methoden/Zensus_/Zensus.html",
-            "license": "Datenlizenz Deutschland \u0096 Namensnennung \u0096 Version 2.0",
-            "copyright": "\u00a9 Statistisches Bundesamt, Wiesbaden, Genesis-Online, 2016; Datenlizenz by-2-0"
+            "license": "Datenlizenz Deutschland - Namensnennung - Version 2.0 (dl-de/by-2-0)",
+            "copyright": "© Statistisches Bundesamt, Wiesbaden, Genesis-Online, 2016; Datenlizenz by-2-0"
+        },
+        {
+            "name": "Kraftwerksliste der Bundesnetzagentur (BNetzA)",
+            "description": "In der Kraftwerksliste der Bundesnetzagentur sind Bestandskraftwerke in Deutschland mit einer elektrischen Netto-Nennleistung von mindestens 10 MW einzeln aufgeführt.",
+            "url": "http://www.bundesnetzagentur.de/DE/Sachgebiete/ElektrizitaetundGas/Unternehmen_Institutionen/Versorgungssicherheit/Erzeugungskapazitaeten/Kraftwerksliste/kraftwerksliste-node.html",
+            "license": "Creative Commons Attribution 4.0 (CC-BY-4.0)",
+            "copyright": "© Bundesnetzagentur 2018"
         }
     ],
     "license": {
@@ -1568,20 +1617,26 @@ COMMENT ON TABLE supply.ego_dp_conv_powerplant IS '{
         "version": "1.0",
         "url": "https://opendatacommons.org/licenses/odbl/1.0/",
         "instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
-        "copyright": "\u00a9 Reiner Lemoine Institut"
+        "copyright": "© Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems"
     },
     "contributors": [
         {
             "name": "Ludee",
-            "email": " ",
+            "email": "none",
             "date": "2017-04-13",
             "comment": "Create table"
         },
         {
             "name": "KilianZimmerer",
-            "email": "",
-            "date": "2017-6-27",
+            "email": "none",
+            "date": "2017-06-27",
             "comment": "Update metadata to v1.3"
+        },
+        {
+            "name": "Ludee",
+            "email": "none",
+            "date": "2018-04-26",
+            "comment": "Review and update licenses"
         }
     ],
     "resources": [
@@ -1609,7 +1664,7 @@ COMMENT ON TABLE supply.ego_dp_conv_powerplant IS '{
 SELECT obj_description('supply.ego_dp_conv_powerplant' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','result','supply','ego_dp_conv_powerplant','ego_dp_structure_versioning.sql','conventional powerplants');
+SELECT scenario_log('eGo_DP', 'v0.4.0','result','supply','ego_dp_conv_powerplant','ego_dp_structure_versioning.sql','conventional powerplants');
 
 /* 
 -- renewable powerlants
@@ -1674,66 +1729,79 @@ COMMENT ON TABLE supply.ego_dp_res_powerplant IS '{
     "description": "",
     "language": [ "eng", "ger" ],
     "spatial": {
-        "location": "",
-        "extend": "Gemany",
-        "resolution": " "
+        "location": "none",
+        "extend": "Germany",
+        "resolution": "vektor"
     },
     "temporal": {
-        "reference_date": " ",
-        "start": "",
-        "end": "",
-        "resolution": ""
+        "reference_date": "none",
+        "start": "none",
+        "end": "none",
+        "resolution": "none"
     },
     "sources": [
         {
             "name": "eGo dataprocessing",
-            "description": " ",
+            "description": "open_eGo dataprocessing code",
             "url": "https://github.com/openego/data_processing",
             "license": "GNU Affero General Public License Version 3 (AGPL-3.0)",
-            "copyright": "\u00a9 Reiner Lemoine Institut"
+            "copyright": "eGo dataprocessing © Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems © Europa-Universität Flensburg, Centre for Sustainable Energy Systems © Reiner Lemoine Institut © DLR Institute for Networked Energy Systems"
         },
         {
             "name": "OpenStreetMap",
-            "description": " ",
+            "description": "OpenStreetMap (OSM) is a collaborative project to create a free editable map of the world.",
             "url": "http://www.openstreetmap.org/",
-            "license": "Open Database License (ODbL) v1.0",
-            "copyright": "\u00a9 OpenStreetMap contributors"
+            "license": "Open Database License v1.0 (ODbL-1.0)",
+            "copyright": "© OpenStreetMap contributors"
         },
         {
             "name": "BKG - Verwaltungsgebiete 1:250.000 (vg250)",
-            "description": " ",
+            "description": "Dienstleistungszentrum des Bundes für Geoinformation und Geodäsie",
             "url": "http://www.geodatenzentrum.de/",
             "license": "Geodatenzugangsgesetz (GeoZG)",
-            "copyright": "\u00a9 GeoBasis-DE / BKG 2016 (data changed)"
+            "copyright": "© GeoBasis-DE / BKG 2016 (data changed)"
         },
         {
             "name": "Statistisches Bundesamt (Destatis) - Zensus2011",
-            "description": " ",
+            "description": "National census in Germany in 2011 - population per hectar",
             "url": "https://www.destatis.de/DE/Methoden/Zensus_/Zensus.html",
-            "license": "Datenlizenz Deutschland \u0096 Namensnennung \u0096 Version 2.0",
-            "copyright": "\u00a9 Statistisches Bundesamt, Wiesbaden, Genesis-Online, 2016; Datenlizenz by-2-0"
-        }
+            "license": "Datenlizenz Deutschland - Namensnennung - Version 2.0 (dl-de/by-2-0)",
+            "copyright": "© Statistisches Bundesamt, Wiesbaden, Genesis-Online, 2016; Datenlizenz by-2-0"
+        },
+        {
+            "name": "EnergyMap",
+            "description": "none",
+            "url": "www.energymap.info",
+            "license": "none",
+            "copyright": "none"
+        },
     ],
     "license": {
-        "id": "ODbL-1.0",
-        "name": "Open Data Commons Open Database License 1.0",
-        "version": "1.0",
-        "url": "https://opendatacommons.org/licenses/odbl/1.0/",
-        "instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
-        "copyright": "\u00a9 Reiner Lemoine Institut"
+        "id": "none",
+        "name": "none",
+        "version": "none",
+        "url": "none",
+        "instruction": "none",
+        "copyright": "none"
     },
     "contributors": [
         {
             "name": "Ludee",
-            "email": " ",
+            "email": "none",
             "date": "2017-04-13",
             "comment": "Create table"
         },
         {
             "name": "KilianZimmerer",
-            "email": "",
-            "date": "2017-6-27",
+            "email": "none",
+            "date": "2017-06-27",
             "comment": "Update metadata to v1.3"
+        },
+        {
+            "name": "Ludee",
+            "email": "none",
+            "date": "2018-04-26",
+            "comment": "Review and update licenses"
         }
     ],
     "resources": [
@@ -1761,7 +1829,7 @@ COMMENT ON TABLE supply.ego_dp_res_powerplant IS '{
 SELECT obj_description('supply.ego_dp_res_powerplant' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','result','supply','ego_dp_res_powerplant','ego_dp_structure_versioning.sql','conventional powerplants');
+SELECT scenario_log('eGo_DP', 'v0.4.0','result','supply','ego_dp_res_powerplant','ego_dp_structure_versioning.sql','conventional powerplants');
 
 
 /* 
@@ -1778,7 +1846,7 @@ CREATE TABLE 		model_draft.ego_scenario_overview (
 ALTER TABLE	model_draft.ego_scenario_overview OWNER TO oeuser;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','result','model_draft','ego_scenario_overview','ego_dp_structure_versioning.sql','overview');
+SELECT scenario_log('eGo_DP', 'v0.4.0','result','model_draft','ego_scenario_overview','ego_dp_structure_versioning.sql','overview');
  */
 
 ----------------------
@@ -1819,32 +1887,32 @@ CREATE INDEX ego_pf_hv_bus_geom_idx
 COMMENT ON TABLE grid.ego_pf_hv_bus IS '{
     "title": "eGo hv powerflow - bus",
     "description": "Buses relevant for eGo hv powerflow",
-    "language": [ "eng" ],
+    "language": [ "eng", "ger" ],
     "spatial": {
-        "location": "",
+        "location": "none",
         "extend": "Germany",
-        "resolution": ""
+        "resolution": "vektor"
     },
     "temporal": {
-        "reference_date": " ",
-        "start": "",
-        "end": "",
-        "resolution": ""
+        "reference_date": "none",
+        "start": "none",
+        "end": "none",
+        "resolution": "none"
     },
     "sources": [
         {
             "name": "eGo dataprocessing",
-            "description": " ",
+            "description": "open_eGo dataprocessing code",
             "url": "https://github.com/openego/data_processing",
             "license": "GNU Affero General Public License Version 3 (AGPL-3.0)",
-            "copyright": "\u00a9 Reiner Lemoine Institut"
+            "copyright": "eGo dataprocessing © Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems © Europa-Universität Flensburg, Centre for Sustainable Energy Systems © Reiner Lemoine Institut © DLR Institute for Networked Energy Systems"
         },
         {
             "name": "OpenStreetMap",
-            "description": " ",
+            "description": "OpenStreetMap (OSM) is a collaborative project to create a free editable map of the world.",
             "url": "http://www.openstreetmap.org/",
-            "license": "Open Database License (ODbL) v1.0",
-            "copyright": "\u00a9 OpenStreetMap contributors"
+            "license": "Open Database License v1.0 (ODbL-1.0)",
+            "copyright": "© OpenStreetMap contributors"
         }
     ],
     "license": {
@@ -1853,20 +1921,26 @@ COMMENT ON TABLE grid.ego_pf_hv_bus IS '{
         "version": "1.0",
         "url": "https://opendatacommons.org/licenses/odbl/1.0/",
         "instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
-        "copyright": "\u00a9 Flensburg University of Applied Sciences, Center for Sustainable Energy Systems"
+        "copyright": "© Flensburg University of Applied Sciences, Center for Sustainable Energy Systems"
     },
     "contributors": [
         {
             "name": "IlkaCu",
-            "email": "",
+            "email": "none",
             "date": "26.04.2017",
             "comment": "Create table"
         },
         {
             "name": "KilianZimmerer",
-            "email": "",
-            "date": "2017-6-27",
+            "email": "none",
+            "date": "2017-06-27",
             "comment": "Update metadata to v1.3"
+        },
+        {
+            "name": "Ludee",
+            "email": "none",
+            "date": "2018-04-26",
+            "comment": "Review and update licenses"
         }
     ],
     "resources": [
@@ -1924,7 +1998,7 @@ COMMENT ON TABLE grid.ego_pf_hv_bus IS '{
 SELECT obj_description('grid.ego_pf_hv_bus' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','result','grid','ego_pf_hv_bus','ego_dp_structure_versioning.sql','hv pf buses');
+SELECT scenario_log('eGo_DP', 'v0.4.0','result','grid','ego_pf_hv_bus','ego_dp_structure_versioning.sql','hv pf buses');
 
 -- powerflow generator 
 /*
@@ -1966,53 +2040,53 @@ ALTER TABLE	grid.ego_pf_hv_generator OWNER TO oeuser;
 COMMENT ON TABLE grid.ego_pf_hv_generator IS '{
     "title": "eGo hv powerflow - generator",
     "description": "Generators relevant for eGo hv powerflow",
-    "language": [ "eng" ],
+    "language": [ "eng", "ger" ],
     "spatial": {
-        "location": "",
+        "location": "none",
         "extend": "Germany",
-        "resolution": ""
+        "resolution": "vektor"
     },
     "temporal": {
-        "reference_date": " ",
-        "start": "",
-        "end": "",
-        "resolution": ""
+        "reference_date": "none",
+        "start": "none",
+        "end": "none",
+        "resolution": "none"
     },
     "sources": [
         {
             "name": "eGo dataprocessing",
-            "description": " ",
+            "description": "open_eGo dataprocessing code",
             "url": "https://github.com/openego/data_processing",
             "license": "GNU Affero General Public License Version 3 (AGPL-3.0)",
-            "copyright": "\u00a9 Reiner Lemoine Institut"
+            "copyright": "eGo dataprocessing © Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems © Europa-Universität Flensburg, Centre for Sustainable Energy Systems © Reiner Lemoine Institut © DLR Institute for Networked Energy Systems"
         },
         {
             "name": "OpenStreetMap",
-            "description": " ",
+            "description": "OpenStreetMap (OSM) is a collaborative project to create a free editable map of the world.",
             "url": "http://www.openstreetmap.org/",
-            "license": "Open Database License (ODbL) v1.0",
-            "copyright": "\u00a9 OpenStreetMap contributors"
+            "license": "Open Database License v1.0 (ODbL-1.0)",
+            "copyright": "© OpenStreetMap contributors"
         },
         {
             "name": "Open Power System Data (OPSD)",
             "description": " ",
             "url": "http://data.open-power-system-data.org/conventional_power_plants/2016-02-08/",
             "license": "MIT Licence",
-            "copyright": "\u00a9 2016 Open Power System Data"
+            "copyright": "© 2016 Open Power System Data"
         },
         {
             "name": "EnergyMap",
-            "description": " ",
+            "description": "none",
             "url": "www.energymap.info",
-            "license": "",
-            "copyright": ""
+            "license": "none",
+            "copyright": "none"
         },
         {
-            "name": "Bundesnetzagentur (BNetzA)",
-            "description": " ",
+            "name": "Kraftwerksliste der Bundesnetzagentur (BNetzA)",
+            "description": "In der Kraftwerksliste der Bundesnetzagentur sind Bestandskraftwerke in Deutschland mit einer elektrischen Netto-Nennleistung von mindestens 10 MW einzeln aufgeführt.",
             "url": "http://www.bundesnetzagentur.de/DE/Sachgebiete/ElektrizitaetundGas/Unternehmen_Institutionen/Versorgungssicherheit/Erzeugungskapazitaeten/Kraftwerksliste/kraftwerksliste-node.html",
-            "license": "",
-            "copyright": ""
+            "license": "Creative Commons Attribution 4.0 (CC-BY-4.0)",
+            "copyright": "© Bundesnetzagentur 2018"
         }
     ],
     "license": {
@@ -2021,20 +2095,26 @@ COMMENT ON TABLE grid.ego_pf_hv_generator IS '{
         "version": "1.0",
         "url": "https://opendatacommons.org/licenses/odbl/1.0/",
         "instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
-        "copyright": "\u00a9 Flensburg University of Applied Sciences, Center for Sustainable Energy Systems"
+        "copyright": "© Flensburg University of Applied Sciences, Center for Sustainable Energy Systems"
     },
     "contributors": [
         {
             "name": "IlkaCu",
-            "email": "",
+            "email": "none",
             "date": "26.04.2017",
             "comment": "Create table"
         },
         {
             "name": "KilianZimmerer",
-            "email": "",
-            "date": "2017-6-27",
+            "email": "none",
+            "date": "2017-06-27",
             "comment": "Update metadata to v1.3"
+        },
+        {
+            "name": "Ludee",
+            "email": "none",
+            "date": "2018-04-26",
+            "comment": "Review and update licenses"
         }
     ],
     "resources": [
@@ -2137,7 +2217,7 @@ COMMENT ON TABLE grid.ego_pf_hv_generator IS '{
 SELECT obj_description('grid.ego_pf_hv_generator' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','result','grid','ego_pf_hv_generator','ego_dp_structure_versioning.sql','hv pf generators');
+SELECT scenario_log('eGo_DP', 'v0.4.0','result','grid','ego_pf_hv_generator','ego_dp_structure_versioning.sql','hv pf generators');
 
 
 -- powerflow generator_pq_set 
@@ -2169,32 +2249,32 @@ ALTER TABLE	grid.ego_pf_hv_generator_pq_set OWNER TO oeuser;
 COMMENT ON TABLE grid.ego_pf_hv_generator_pq_set IS '{
     "title": "eGo hv powerflow - generator time series",
     "description": "Time series of generators relevant for eGo hv powerflow",
-    "language": [ "eng" ],
+    "language": [ "eng", "ger" ],
     "spatial": {
-        "location": "",
+        "location": "none",
         "extend": "Germany",
-        "resolution": ""
+        "resolution": "vektor"
     },
     "temporal": {
-        "reference_date": " ",
-        "start": "",
-        "end": "",
-        "resolution": ""
+        "reference_date": "none",
+        "start": "none",
+        "end": "none",
+        "resolution": "none"
     },
     "sources": [
         {
             "name": "eGo dataprocessing",
-            "description": " ",
+            "description": "open_eGo dataprocessing code",
             "url": "https://github.com/openego/data_processing",
             "license": "GNU Affero General Public License Version 3 (AGPL-3.0)",
-            "copyright": "\u00a9 Europa-Universitaet Flensburg, Center for Sustainable Energy Systems"
+            "copyright": "eGo dataprocessing © Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems © Europa-Universität Flensburg, Centre for Sustainable Energy Systems © Reiner Lemoine Institut © DLR Institute for Networked Energy Systems"
         },
         {
             "name": "oemof feedinlib",
             "description": " ",
             "url": "https://github.com/oemof/feedinlib",
             "license": "GNU Affero General Public License Version 3 (AGPL-3.0)",
-            "copyright": "\u00a9 oemof developing group"
+            "copyright": "© oemof developing group"
         }
     ],
     "license": {
@@ -2203,20 +2283,26 @@ COMMENT ON TABLE grid.ego_pf_hv_generator_pq_set IS '{
         "version": "1.0",
         "url": "https://opendatacommons.org/licenses/odbl/1.0/",
         "instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
-        "copyright": "\u00a9 Europa-Universitaet Flensburg, Center for Sustainable Energy Systems"
+        "copyright": "© Europa-Universitaet Flensburg, Center for Sustainable Energy Systems"
     },
     "contributors": [
         {
             "name": "IlkaCu",
-            "email": "",
+            "email": "none",
             "date": "26.04.2017",
             "comment": "Create table"
         },
         {
             "name": "KilianZimmerer",
-            "email": "",
-            "date": "2017-6-27",
+            "email": "none",
+            "date": "2017-06-27",
             "comment": "Update metadata to v1.3"
+        },
+        {
+            "name": "Ludee",
+            "email": "none",
+            "date": "2018-04-26",
+            "comment": "Review and update licenses"
         }
     ],
     "resources": [
@@ -2274,7 +2360,7 @@ COMMENT ON TABLE grid.ego_pf_hv_generator_pq_set IS '{
 SELECT obj_description('grid.ego_pf_hv_generator_pq_set' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','result','grid','ego_pf_hv_generator_pq_set','ego_dp_structure_versioning.sql','hv pf generator time series');
+SELECT scenario_log('eGo_DP', 'v0.4.0','result','grid','ego_pf_hv_generator_pq_set','ego_dp_structure_versioning.sql','hv pf generator time series');
 
 
 -- powerflow line 
@@ -2318,39 +2404,39 @@ ALTER TABLE	grid.ego_pf_hv_line OWNER TO oeuser;
 COMMENT ON TABLE grid.ego_pf_hv_line IS '{
     "title": "eGo hv powerflow - lines",
     "description": "lines in eGo hv powerflow",
-    "language": [ "eng" ],
+    "language": [ "eng", "ger" ],
     "spatial": {
-        "location": "",
+        "location": "none",
         "extend": "Germany",
-        "resolution": ""
+        "resolution": "vektor"
     },
     "temporal": {
-        "reference_date": " ",
-        "start": "",
-        "end": "",
-        "resolution": ""
+        "reference_date": "none",
+        "start": "none",
+        "end": "none",
+        "resolution": "none"
     },
     "sources": [
         {
             "name": "eGo dataprocessing",
-            "description": " ",
+            "description": "open_eGo dataprocessing code",
             "url": "https://github.com/openego/data_processing",
             "license": "GNU Affero General Public License Version 3 (AGPL-3.0)",
-            "copyright": "\u00a9 Flensburg University of Applied Sciences, Center for Sustainable Energy Systems"
+            "copyright": "eGo dataprocessing © Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems © Europa-Universität Flensburg, Centre for Sustainable Energy Systems © Reiner Lemoine Institut © DLR Institute for Networked Energy Systems"
         },
         {
             "name": "OpenStreetMap",
-            "description": " ",
+            "description": "OpenStreetMap (OSM) is a collaborative project to create a free editable map of the world.",
             "url": "http://www.openstreetmap.org/",
-            "license": "Open Database License (ODbL) v1.0",
-            "copyright": "\u00a9 OpenStreetMap contributors"
+            "license": "Open Database License v1.0 (ODbL-1.0)",
+            "copyright": "© OpenStreetMap contributors"
         },
         {
             "name": "osmTGmod",
             "description": " ",
             "url": "https://github.com/openego/osmTGmod",
             "license": "Apache License 2.0",
-            "copyright": "\u00a9 Wuppertal Institut"
+            "copyright": "© Wuppertal Institut"
         }
     ],
     "license": {
@@ -2364,15 +2450,21 @@ COMMENT ON TABLE grid.ego_pf_hv_line IS '{
     "contributors": [
         {
             "name": "IlkaCu",
-            "email": "",
+            "email": "none",
             "date": "26.04.2017",
             "comment": "Create table"
         },
         {
             "name": "KilianZimmerer",
-            "email": "",
-            "date": "2017-6-27",
+            "email": "none",
+            "date": "2017-06-27",
             "comment": "Update metadata to v1.3"
+        },
+        {
+            "name": "Ludee",
+            "email": "none",
+            "date": "2018-04-26",
+            "comment": "Review and update licenses"
         }
     ],
     "resources": [
@@ -2490,7 +2582,7 @@ COMMENT ON TABLE grid.ego_pf_hv_line IS '{
 SELECT obj_description('grid.ego_pf_hv_line' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','result','grid','ego_pf_hv_line','ego_dp_structure_versioning.sql','hv pf lines');
+SELECT scenario_log('eGo_DP', 'v0.4.0','result','grid','ego_pf_hv_line','ego_dp_structure_versioning.sql','hv pf lines');
 
 
 -- powerflow link 
@@ -2533,32 +2625,32 @@ ALTER TABLE	grid.ego_pf_hv_link OWNER TO oeuser;
 COMMENT ON TABLE grid.ego_pf_hv_link IS '{
     "title": "eGo hv powerflow - links",
     "description": "links in eGo hv powerflow",
-    "language": [ "eng" ],
+    "language": [ "eng", "ger" ],
     "spatial": {
-        "location": "",
+        "location": "none",
         "extend": "Germany",
-        "resolution": ""
+        "resolution": "vektor"
     },
     "temporal": {
-        "reference_date": " ",
-        "start": "",
-        "end": "",
-        "resolution": ""
+        "reference_date": "none",
+        "start": "none",
+        "end": "none",
+        "resolution": "none"
     },
     "sources": [
         {
             "name": "eGo dataprocessing",
-            "description": " ",
+            "description": "open_eGo dataprocessing code",
             "url": "https://github.com/openego/data_processing",
             "license": "GNU Affero General Public License Version 3 (AGPL-3.0)",
-            "copyright": "\u00a9 Flensburg University of Applied Sciences, Center for Sustainable Energy Systems"
+            "copyright": "eGo dataprocessing © Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems © Europa-Universität Flensburg, Centre for Sustainable Energy Systems © Reiner Lemoine Institut © DLR Institute for Networked Energy Systems"
         },
         {
             "name": "OpenStreetMap",
-            "description": " ",
+            "description": "OpenStreetMap (OSM) is a collaborative project to create a free editable map of the world.",
             "url": "http://www.openstreetmap.org/",
-            "license": "Open Database License (ODbL) v1.0",
-            "copyright": "\u00a9 OpenStreetMap contributors"
+            "license": "Open Database License v1.0 (ODbL-1.0)",
+            "copyright": "© OpenStreetMap contributors"
         }
     ],
     "license": {
@@ -2567,14 +2659,20 @@ COMMENT ON TABLE grid.ego_pf_hv_link IS '{
         "version": "1.0",
         "url": "https://opendatacommons.org/licenses/odbl/1.0/",
         "instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
-        "copyright": "\u00a9 Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems"
+        "copyright": "© Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems"
     },
     "contributors": [
         {
             "name": "IlkaCu",
-            "email": "",
+            "email": "none",
             "date": "08.02.2018",
             "comment": "Create table"
+        },
+        {
+            "name": "Ludee",
+            "email": "none",
+            "date": "2018-04-26",
+            "comment": "Review and update licenses"
         }
     ],
     "resources": [
@@ -2667,7 +2765,7 @@ COMMENT ON TABLE grid.ego_pf_hv_link IS '{
 SELECT obj_description('grid.ego_pf_hv_link' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','result','grid','ego_pf_hv_link','ego_dp_structure_versioning.sql','hv pf links');
+SELECT scenario_log('eGo_DP', 'v0.4.0','result','grid','ego_pf_hv_link','ego_dp_structure_versioning.sql','hv pf links');
 
 
 -- powerflow load 
@@ -2697,32 +2795,32 @@ ALTER TABLE	grid.ego_pf_hv_load OWNER TO oeuser;
 COMMENT ON TABLE grid.ego_pf_hv_load IS '{
     "title": "eGo hv powerflow - loads",
     "description": "loads in eGo hv powerflow",
-    "language": [ "eng" ],
+    "language": [ "eng", "ger" ],
     "spatial": {
-        "location": "",
+        "location": "none",
         "extend": "Germany",
-        "resolution": ""
+        "resolution": "vektor"
     },
     "temporal": {
-        "reference_date": " ",
-        "start": "",
-        "end": "",
-        "resolution": ""
+        "reference_date": "none",
+        "start": "none",
+        "end": "none",
+        "resolution": "none"
     },
     "sources": [
         {
             "name": "eGo dataprocessing",
-            "description": " ",
+            "description": "open_eGo dataprocessing code",
             "url": "https://github.com/openego/data_processing",
             "license": "GNU Affero General Public License Version 3 (AGPL-3.0)",
-            "copyright": "\u00a9 Flensburg University of Applied Sciences, Center for Sustainable Energy Systems"
+            "copyright": "eGo dataprocessing © Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems © Europa-Universität Flensburg, Centre for Sustainable Energy Systems © Reiner Lemoine Institut © DLR Institute for Networked Energy Systems"
         },
         {
             "name": "OpenStreetMap",
-            "description": " ",
+            "description": "OpenStreetMap (OSM) is a collaborative project to create a free editable map of the world.",
             "url": "http://www.openstreetmap.org/",
-            "license": "Open Database License (ODbL) v1.0",
-            "copyright": "\u00a9 OpenStreetMap contributors"
+            "license": "Open Database License v1.0 (ODbL-1.0)",
+            "copyright": "© OpenStreetMap contributors"
         },
         {
             "name": "L\u00e4nderarbeitskreis Energiebilanzen",
@@ -2787,20 +2885,26 @@ COMMENT ON TABLE grid.ego_pf_hv_load IS '{
         "version": "1.0",
         "url": "https://opendatacommons.org/licenses/odbl/1.0/",
         "instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
-        "copyright": "\u00a9 Flensburg University of Applied Sciences, Center for Sustainable Energy Systems"
+        "copyright": "© Flensburg University of Applied Sciences, Center for Sustainable Energy Systems"
     },
     "contributors": [
         {
             "name": "IlkaCu",
-            "email": "",
+            "email": "none",
             "date": "26.04.2017",
             "comment": "Create table"
         },
         {
             "name": "KilianZimmerer",
-            "email": "",
-            "date": "2017-6-27",
+            "email": "none",
+            "date": "2017-06-27",
             "comment": "Update metadata to v1.3"
+        },
+        {
+            "name": "Ludee",
+            "email": "none",
+            "date": "2018-04-26",
+            "comment": "Review and update licenses"
         }
     ],
     "resources": [
@@ -2848,7 +2952,7 @@ COMMENT ON TABLE grid.ego_pf_hv_load IS '{
 SELECT obj_description('grid.ego_pf_hv_load' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','result','grid','ego_pf_hv_load','ego_dp_structure_versioning.sql','hv pf loads');
+SELECT scenario_log('eGo_DP', 'v0.4.0','result','grid','ego_pf_hv_load','ego_dp_structure_versioning.sql','hv pf loads');
 
 -- powerflow load_pq_set
 /*
@@ -2877,25 +2981,25 @@ ALTER TABLE	grid.ego_pf_hv_load_pq_set OWNER TO oeuser;
 COMMENT ON TABLE grid.ego_pf_hv_load_pq_set IS '{
     "title": "eGo hv powerflow - loads",
     "description": "loads in eGo hv powerflow",
-    "language": [ "eng" ],
+    "language": [ "eng", "ger" ],
     "spatial": {
-        "location": "",
+        "location": "none",
         "extend": "Germany",
-        "resolution": ""
+        "resolution": "vektor"
     },
     "temporal": {
-        "reference_date": " ",
-        "start": "",
-        "end": "",
-        "resolution": ""
+        "reference_date": "none",
+        "start": "none",
+        "end": "none",
+        "resolution": "none"
     },
     "sources": [
         {
             "name": "eGo dataprocessing",
-            "description": " ",
-            "url": "https://github.com/openego/data_processing/blob/master/dataprocessing/python_scripts/demand_per_mv_grid_district.py",
+            "description": "open_eGo dataprocessing code",
+            "url": "https://github.com/openego/data_processing",
             "license": "GNU Affero General Public License Version 3 (AGPL-3.0)",
-            "copyright": "\u00a9 Reiner Lemoine Institut"
+            "copyright": "eGo dataprocessing © Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems © Europa-Universität Flensburg, Centre for Sustainable Energy Systems © Reiner Lemoine Institut © DLR Institute for Networked Energy Systems"
         }
     ],
     "license": {
@@ -2904,20 +3008,26 @@ COMMENT ON TABLE grid.ego_pf_hv_load_pq_set IS '{
         "version": "1.0",
         "url": "https://opendatacommons.org/licenses/odbl/1.0/",
         "instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
-        "copyright": "\u00a9 Reiner Lemoine Institut"
+        "copyright": "© Flensburg University of Applied Sciences, Center for Sustainable Energy Systems"
     },
     "contributors": [
         {
             "name": "IlkaCu",
-            "email": "",
+            "email": "none",
             "date": "26.04.2017",
             "comment": "Create table"
         },
         {
             "name": "KilianZimmerer",
-            "email": "",
-            "date": "2017-6-27",
+            "email": "none",
+            "date": "2017-06-27",
             "comment": "Update metadata to v1.3"
+        },
+        {
+            "name": "Ludee",
+            "email": "none",
+            "date": "2018-04-26",
+            "comment": "Review and update licenses"
         }
     ],
     "resources": [
@@ -2965,7 +3075,7 @@ COMMENT ON TABLE grid.ego_pf_hv_load_pq_set IS '{
 SELECT obj_description('grid.ego_pf_hv_load_pq_set' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','result','grid','ego_pf_hv_load_pq_set','ego_dp_structure_versioning.sql','hv pf load time series');
+SELECT scenario_log('eGo_DP', 'v0.4.0','result','grid','ego_pf_hv_load_pq_set','ego_dp_structure_versioning.sql','hv pf load time series');
 
 -- powerflow source
 /*
@@ -2993,25 +3103,25 @@ ALTER TABLE	grid.ego_pf_hv_source OWNER TO oeuser;
 COMMENT ON TABLE grid.ego_pf_hv_source IS '{
     "title": "eGo hv powerflow - sources",
     "description": "sources in eGo hv powerflow",
-    "language": [ "eng" ],
+    "language": [ "eng", "ger" ],
     "spatial": {
-        "location": "",
+        "location": "none",
         "extend": "Germany",
-        "resolution": ""
+        "resolution": "vektor"
     },
     "temporal": {
-        "reference_date": " ",
-        "start": "",
-        "end": "",
-        "resolution": ""
+        "reference_date": "none",
+        "start": "none",
+        "end": "none",
+        "resolution": "none"
     },
     "sources": [
         {
             "name": "eGo dataprocessing",
-            "description": " ",
+            "description": "open_eGo dataprocessing code",
             "url": "https://github.com/openego/data_processing",
             "license": "GNU Affero General Public License Version 3 (AGPL-3.0)",
-            "copyright": "\u00a9 Flensburg University of Applied Sciences, Center for Sustainable Energy Systems"
+            "copyright": "eGo dataprocessing © Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems © Europa-Universität Flensburg, Centre for Sustainable Energy Systems © Reiner Lemoine Institut © DLR Institute for Networked Energy Systems"
         }
     ],
     "license": {
@@ -3020,20 +3130,26 @@ COMMENT ON TABLE grid.ego_pf_hv_source IS '{
         "version": "1.0",
         "url": "https://opendatacommons.org/licenses/odbl/1.0/",
         "instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
-        "copyright": "\u00a9 Flensburg University of Applied Sciences, Center for Sustainable Energy Systems"
+        "copyright": "© Flensburg University of Applied Sciences, Center for Sustainable Energy Systems"
     },
     "contributors": [
         {
             "name": "IlkaCu",
-            "email": "",
+            "email": "none",
             "date": "26.04.2017",
             "comment": "Create table"
         },
         {
             "name": "KilianZimmerer",
-            "email": "",
-            "date": "2017-6-27",
+            "email": "none",
+            "date": "2017-06-27",
             "comment": "Update metadata to v1.3"
+        },
+        {
+            "name": "Ludee",
+            "email": "none",
+            "date": "2018-04-26",
+            "comment": "Review and update licenses"
         }
     ],
     "resources": [
@@ -3076,7 +3192,7 @@ COMMENT ON TABLE grid.ego_pf_hv_source IS '{
 SELECT obj_description('grid.ego_pf_hv_source' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','result','grid','ego_pf_hv_source','ego_dp_structure_versioning.sql','hv pf sources');
+SELECT scenario_log('eGo_DP', 'v0.4.0','result','grid','ego_pf_hv_source','ego_dp_structure_versioning.sql','hv pf sources');
 
 -- powerflow storage 
 /*
@@ -3124,39 +3240,39 @@ ALTER TABLE	grid.ego_pf_hv_storage OWNER TO oeuser;
 COMMENT ON TABLE grid.ego_pf_hv_storage IS '{
     "title": "eGo hv powerflow - storage",
     "description": "Storages relevant for eGo hv powerflow",
-    "language": [ "eng" ],
+    "language": [ "eng", "ger" ],
     "spatial": {
-        "location": "",
+        "location": "none",
         "extend": "Germany",
-        "resolution": ""
+        "resolution": "vektor"
     },
     "temporal": {
-        "reference_date": " ",
-        "start": "",
-        "end": "",
-        "resolution": ""
+        "reference_date": "none",
+        "start": "none",
+        "end": "none",
+        "resolution": "none"
     },
     "sources": [
         {
             "name": "eGo dataprocessing",
-            "description": " ",
+            "description": "open_eGo dataprocessing code",
             "url": "https://github.com/openego/data_processing",
             "license": "GNU Affero General Public License Version 3 (AGPL-3.0)",
-            "copyright": "\u00a9 Reiner Lemoine Institut"
+            "copyright": "eGo dataprocessing © Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems © Europa-Universität Flensburg, Centre for Sustainable Energy Systems © Reiner Lemoine Institut © DLR Institute for Networked Energy Systems"
         },
         {
             "name": "OpenStreetMap",
-            "description": " ",
+            "description": "OpenStreetMap (OSM) is a collaborative project to create a free editable map of the world.",
             "url": "http://www.openstreetmap.org/",
-            "license": "Open Database License (ODbL) v1.0",
-            "copyright": "\u00a9 OpenStreetMap contributors"
+            "license": "Open Database License v1.0 (ODbL-1.0)",
+            "copyright": "© OpenStreetMap contributors"
         },
         {
             "name": "Open Power System Data (OPSD)",
             "description": " ",
             "url": "http://data.open-power-system-data.org/conventional_power_plants/2016-02-08/",
             "license": "MIT Licence",
-            "copyright": "\u00a9 2016 Open Power System Data"
+            "copyright": "© 2016 Open Power System Data"
         },
         {
             "name": "Bundesnetzagentur (BNetzA)",
@@ -3172,20 +3288,26 @@ COMMENT ON TABLE grid.ego_pf_hv_storage IS '{
         "version": "1.0",
         "url": "https://opendatacommons.org/licenses/odbl/1.0/",
         "instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
-        "copyright": "\u00a9 Europa-Universitaet Flensburg, Center for Sustainable Energy Systems"
+        "copyright": "© Europa-Universitaet Flensburg, Center for Sustainable Energy Systems"
     },
     "contributors": [
         {
             "name": "IlkaCu",
-            "email": "",
+            "email": "none",
             "date": "26.04.2017",
             "comment": "Create table"
         },
         {
             "name": "KilianZimmerer",
-            "email": "",
-            "date": "2017-6-27",
+            "email": "none",
+            "date": "2017-06-27",
             "comment": "Update metadata to v1.3"
+        },
+        {
+            "name": "Ludee",
+            "email": "none",
+            "date": "2018-04-26",
+            "comment": "Review and update licenses"
         }
     ],
     "resources": [
@@ -3318,7 +3440,7 @@ COMMENT ON TABLE grid.ego_pf_hv_storage IS '{
 SELECT obj_description('grid.ego_pf_hv_storage' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','result','grid','ego_pf_hv_storage','ego_dp_structure_versioning.sql','hv pf storages');
+SELECT scenario_log('eGo_DP', 'v0.4.0','result','grid','ego_pf_hv_storage','ego_dp_structure_versioning.sql','hv pf storages');
 
 -- powerflow storage_pq_set 
 /*
@@ -3351,32 +3473,32 @@ ALTER TABLE	grid.ego_pf_hv_storage_pq_set OWNER TO oeuser;
 COMMENT ON TABLE grid.ego_pf_hv_storage_pq_set IS '{
     "title": "eGo hv powerflow - storage time series",
     "description": "Time series of storages relevant for eGo hv powerflow",
-    "language": [ "eng" ],
+    "language": [ "eng", "ger" ],
     "spatial": {
-        "location": "",
+        "location": "none",
         "extend": "Germany",
-        "resolution": ""
+        "resolution": "vektor"
     },
     "temporal": {
-        "reference_date": " ",
-        "start": "",
-        "end": "",
-        "resolution": ""
+        "reference_date": "none",
+        "start": "none",
+        "end": "none",
+        "resolution": "none"
     },
     "sources": [
         {
             "name": "eGo dataprocessing",
-            "description": " ",
+            "description": "open_eGo dataprocessing code",
             "url": "https://github.com/openego/data_processing",
             "license": "GNU Affero General Public License Version 3 (AGPL-3.0)",
-            "copyright": "\u00a9 Europa-Universitaet Flensburg, Center for Sustainable Energy Systems"
+            "copyright": "eGo dataprocessing © Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems © Europa-Universität Flensburg, Centre for Sustainable Energy Systems © Reiner Lemoine Institut © DLR Institute for Networked Energy Systems"
         },
         {
             "name": "oemof feedinlib",
             "description": " ",
             "url": "https://github.com/oemof/feedinlib",
             "license": "GNU Affero General Public License Version 3 (AGPL-3.0)",
-            "copyright": "\u00a9 oemof developing group"
+            "copyright": "© oemof developing group"
         }
     ],
     "license": {
@@ -3385,20 +3507,26 @@ COMMENT ON TABLE grid.ego_pf_hv_storage_pq_set IS '{
         "version": "1.0",
         "url": "https://opendatacommons.org/licenses/odbl/1.0/",
         "instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
-        "copyright": "\u00a9 Flensburg University of Applied Sciences, Center for Sustainable Energy Systems"
+        "copyright": "© Flensburg University of Applied Sciences, Center for Sustainable Energy Systems"
     },
     "contributors": [
         {
             "name": "IlkaCu",
-            "email": "",
+            "email": "none",
             "date": "26.04.2017",
             "comment": "Create table"
         },
         {
             "name": "KilianZimmerer",
-            "email": "",
-            "date": "2017-6-27",
+            "email": "none",
+            "date": "2017-06-27",
             "comment": "Update metadata to v1.3"
+        },
+        {
+            "name": "Ludee",
+            "email": "none",
+            "date": "2018-04-26",
+            "comment": "Review and update licenses"
         }
     ],
     "resources": [
@@ -3466,7 +3594,7 @@ COMMENT ON TABLE grid.ego_pf_hv_storage_pq_set IS '{
 SELECT obj_description('grid.ego_pf_hv_storage_pq_set' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','result','grid','ego_pf_hv_storage_pq_set','ego_dp_structure_versioning.sql','hv pf storage time series');
+SELECT scenario_log('eGo_DP', 'v0.4.0','result','grid','ego_pf_hv_storage_pq_set','ego_dp_structure_versioning.sql','hv pf storage time series');
 
 -- powerflow temp_resolution 
 /*
@@ -3494,25 +3622,25 @@ ALTER TABLE	grid.ego_pf_hv_temp_resolution OWNER TO oeuser;
 COMMENT ON TABLE grid.ego_pf_hv_temp_resolution IS '{
     "title": "eGo hv powerflow - temp_resolution",
     "description": "Temporal resolution in eGo hv powerflow",
-    "language": [ "eng" ],
+    "language": [ "eng", "ger" ],
     "spatial": {
-        "location": "",
-        "extend": "",
-        "resolution": ""
+        "location": "none",
+        "extend": "Germany",
+        "resolution": "vektor"
     },
     "temporal": {
-        "reference_date": " ",
-        "start": "",
-        "end": "",
-        "resolution": ""
+        "reference_date": "none",
+        "start": "none",
+        "end": "none",
+        "resolution": "none"
     },
     "sources": [
         {
             "name": "eGo dataprocessing",
-            "description": " ",
+            "description": "open_eGo dataprocessing code",
             "url": "https://github.com/openego/data_processing",
             "license": "GNU Affero General Public License Version 3 (AGPL-3.0)",
-            "copyright": "\u00a9 Flensburg University of Applied Sciences, Center for Sustainable Energy Systems"
+            "copyright": "eGo dataprocessing © Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems © Europa-Universität Flensburg, Centre for Sustainable Energy Systems © Reiner Lemoine Institut © DLR Institute for Networked Energy Systems"
         }
     ],
     "license": {
@@ -3521,20 +3649,26 @@ COMMENT ON TABLE grid.ego_pf_hv_temp_resolution IS '{
         "version": "1.0",
         "url": "https://opendatacommons.org/licenses/odbl/1.0/",
         "instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
-        "copyright": "\u00a9 Flensburg University of Applied Sciences, Center for Sustainable Energy Systems"
+        "copyright": "© Flensburg University of Applied Sciences, Center for Sustainable Energy Systems"
     },
     "contributors": [
         {
             "name": "IlkaCu",
-            "email": "",
+            "email": "none",
             "date": "26.04.2017",
             "comment": "Create table"
         },
         {
             "name": "KilianZimmerer",
-            "email": "",
-            "date": "2017-6-27",
+            "email": "none",
+            "date": "2017-06-27",
             "comment": "Update metadata to v1.3"
+        },
+        {
+            "name": "Ludee",
+            "email": "none",
+            "date": "2018-04-26",
+            "comment": "Review and update licenses"
         }
     ],
     "resources": [
@@ -3577,7 +3711,7 @@ COMMENT ON TABLE grid.ego_pf_hv_temp_resolution IS '{
 SELECT obj_description('grid.ego_pf_hv_temp_resolution' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','result','grid','ego_pf_hv_temp_resolution','ego_dp_structure_versioning.sql','hv pf temporal resolution');
+SELECT scenario_log('eGo_DP', 'v0.4.0','result','grid','ego_pf_hv_temp_resolution','ego_dp_structure_versioning.sql','hv pf temporal resolution');
 
 -- powerflow transformer 
 /*
@@ -3618,39 +3752,39 @@ ALTER TABLE	grid.ego_pf_hv_transformer OWNER TO oeuser;
 COMMENT ON TABLE grid.ego_pf_hv_transformer IS '{
     "title": "eGo hv powerflow - transformer",
     "description": "transformer in eGo hv powerflow",
-    "language": [ "eng" ],
+    "language": [ "eng", "ger" ],
     "spatial": {
-        "location": "",
+        "location": "none",
         "extend": "Germany",
-        "resolution": ""
+        "resolution": "vektor"
     },
     "temporal": {
-        "reference_date": " ",
-        "start": "",
-        "end": "",
-        "resolution": ""
+        "reference_date": "none",
+        "start": "none",
+        "end": "none",
+        "resolution": "none"
     },
     "sources": [
         {
             "name": "eGo dataprocessing",
-            "description": " ",
+            "description": "open_eGo dataprocessing code",
             "url": "https://github.com/openego/data_processing",
             "license": "GNU Affero General Public License Version 3 (AGPL-3.0)",
-            "copyright": "\u00a9 Flensburg University of Applied Sciences, Center for Sustainable Energy Systems"
+            "copyright": "eGo dataprocessing © Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems © Europa-Universität Flensburg, Centre for Sustainable Energy Systems © Reiner Lemoine Institut © DLR Institute for Networked Energy Systems"
         },
         {
             "name": "OpenStreetMap",
-            "description": " ",
+            "description": "OpenStreetMap (OSM) is a collaborative project to create a free editable map of the world.",
             "url": "http://www.openstreetmap.org/",
-            "license": "Open Database License (ODbL) v1.0",
-            "copyright": "\u00a9 OpenStreetMap contributors"
+            "license": "Open Database License v1.0 (ODbL-1.0)",
+            "copyright": "© OpenStreetMap contributors"
         },
         {
             "name": "osmTGmod",
             "description": " ",
             "url": "https://github.com/openego/osmTGmod",
             "license": "Apache License 2.0",
-            "copyright": "\u00a9 Wuppertal Institut"
+            "copyright": "© Wuppertal Institut"
         }
     ],
     "license": {
@@ -3664,15 +3798,21 @@ COMMENT ON TABLE grid.ego_pf_hv_transformer IS '{
     "contributors": [
         {
             "name": "IlkaCu",
-            "email": "",
+            "email": "none",
             "date": "26.04.2017",
             "comment": "Create table"
         },
         {
             "name": "KilianZimmerer",
-            "email": "",
-            "date": "2017-6-27",
+            "email": "none",
+            "date": "2017-06-27",
             "comment": "Update metadata to v1.3"
+        },
+        {
+            "name": "Ludee",
+            "email": "none",
+            "date": "2018-04-26",
+            "comment": "Review and update licenses"
         }
     ],
     "resources": [
@@ -3780,7 +3920,7 @@ COMMENT ON TABLE grid.ego_pf_hv_transformer IS '{
 SELECT obj_description('grid.ego_pf_hv_transformer' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','result','grid','ego_pf_hv_transformer','ego_dp_structure_versioning.sql','hv pf transformer');
+SELECT scenario_log('eGo_DP', 'v0.4.0','result','grid','ego_pf_hv_transformer','ego_dp_structure_versioning.sql','hv pf transformer');
 
 -- line expansion costs 
 /*
@@ -3814,55 +3954,61 @@ ALTER TABLE	grid.ego_line_expansion_costs OWNER TO oeuser;
 COMMENT ON TABLE grid.ego_line_expansion_costs IS '{
     "title": "eGo power line expansion costs",
     "description": "Assumption of power line expansion costs for eGo hv powerflow",
-    "language": [ "eng" ],
+    "language": [ "eng", "ger" ],
     "spatial": {
-        "resolution": "",
-        "location": "",
-        "extend": "Germany"
+        "location": "none",
+        "extend": "Germany",
+        "resolution": "vektor"
     },
     "temporal": {
-        "reference_date": " ",
-        "start": "",
-        "end": "",
-        "resolution": ""
+        "reference_date": "none",
+        "start": "none",
+        "end": "none",
+        "resolution": "none"
     },
     "sources": [
         {
-            "url": "https://github.com/openego/data_processing",
-            "copyright": "\\u00a9 ZNES Europ-Universität Flensburg",
             "name": "eGo dataprocessing",
+            "description": "open_eGo dataprocessing code",
+            "url": "https://github.com/openego/data_processing",
             "license": "GNU Affero General Public License Version 3 (AGPL-3.0)",
-            "description": " "
+            "copyright": "eGo dataprocessing © Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems © Europa-Universität Flensburg, Centre for Sustainable Energy Systems © Reiner Lemoine Institut © DLR Institute for Networked Energy Systems"
         },
         {
             "url": "https://www.netzentwicklungsplan.de/sites/default/files/paragraphs-files/kostenschaetzungen_nep_2025_1_entwurf.pdf",
-            "copyright": "\\u00a9 50Hertz Transmission GmbH, Amprion GmbH, TenneT TSO GmbH, TransnetBW GmbH",
+            "copyright": "\© 50Hertz Transmission GmbH, Amprion GmbH, TenneT TSO GmbH, TransnetBW GmbH",
             "name": "Netzentwicklungsplan 2015 erster Entwurf",
             "license": "unknown",
             "description": " "
         },
         {
             "url": "https://shop.dena.de/sortiment/detail/produkt/dena-verteilnetzstudie-ausbau-und-innovationsbedarf-der-stromverteilnetze-in-deutschland-bis-2030/",
-            "copyright": "\\u00a9 Dena",
+            "copyright": "\© Dena",
             "name": "dena-Verteilnetzstudie: Ausbau- und Innovationsbedarf der Stromverteilnetze in Deutschland bis 2030",
             "license": "unknown",
             "description": " "
         }
     ],
-    "license": {
+        "license": {
+        "id": "ODbL-1.0",
         "name": "Open Data Commons Open Database License 1.0",
-        "copyright": "\\u00a9 Europa-Universität, Center for Sustainable Energy Systems",
+        "version": "1.0",
         "url": "https://opendatacommons.org/licenses/odbl/1.0/",
         "instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
-        "version": "1.0",
-        "id": "ODbL-1.0"
+        "copyright": "© Europa-Universität, Center for Sustainable Energy Systems"
     },
     "contributors": [
         {
-            "date": "2018-01-31",
-            "comment": "Create table",
             "name": "wolf_bunke",
-            "email": ""
+            "email": "none",
+            "date": "2018-01-31",
+            "comment": "Create table"
+        },
+        {
+            "name": "Ludee",
+            "email": "none",
+            "date": "2018-04-26",
+            "comment": "Review and update licenses"
         }
     ],
     "resources": [
@@ -3914,48 +4060,10 @@ COMMENT ON TABLE grid.ego_line_expansion_costs IS '{
         }
     ],
     "metadata_version": "1.3"
-}';#
+}';
 
 -- select description
 SELECT obj_description('grid.ego_line_expansion_costs' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','result','grid','ego_line_expansion_costs','ego_dp_structure_versioning.sql','hv pf line expansion costs');
-
---- Add versioning of input
--- supply.ego_renewable_feedin
--- supply.ego_power_class
-/*
-CREATE TABLE supply.ego_renewable_feedin
-(
-  version text NOT NULL,
-  weather_scenario_id integer NOT NULL,
-  w_id integer NOT NULL,
-  source text NOT NULL,
-  weather_year integer NOT NULL,
-  feedin double precision[],
-  CONSTRAINT ego_renewable_feedin_pkey PRIMARY KEY (version, weather_scenario_id, w_id, source, weather_year)
-);
-
-ALTER TABLE supply.ego_renewable_feedin
-  OWNER TO oeuser;
-GRANT ALL ON TABLE supply.ego_renewable_feedin TO oeuser;
-
---
-CREATE TABLE supply.ego_power_class
-(
-  version text NOT NULL,
-  power_class_id integer NOT NULL,
-  lower_limit double precision,
-  upper_limit double precision,
-  wea text,
-  h_hub double precision,
-  d_rotor double precision,
-  CONSTRAINT ego_power_class_pkey PRIMARY KEY (version, power_class_id)
-);
-
-ALTER TABLE supply.ego_power_class
-  OWNER TO oeuser;
-GRANT ALL ON TABLE supply.ego_power_class TO oeuser;
-
-*/
+SELECT scenario_log('eGo_DP', 'v0.4.0','result','grid','ego_line_expansion_costs','ego_dp_structure_versioning.sql','hv pf line expansion costs');

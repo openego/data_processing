@@ -1,5 +1,11 @@
 /*
-In a postprocessing this script adds grid variations to the grid model. 
+In a postprocessing this script adds additional scenarios as grid variations. 
+Therefore, new 'model_draft.ego_grid_pf_hv_extension_'-tables are created for each component. 
+The scenarios represent the extension of lines due to the Netzentwicklungsplan from 2015.
+Scenario 'nep2035_confirmed' contains all new lines and needed transformers which are confirmed by the BNetzA. 
+Scenario 'nep2035_b2' contains as well all other lines planned in the NEP in scenario 2035 B2. 
+Due to the fact that new lines often replace old ones, decommissioning is needed. 
+That's why all scenarios are split up in 'extension_' and 'decommissioning_'.
 
 __copyright__ 	= "Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems"
 __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
