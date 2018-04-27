@@ -407,3 +407,22 @@ INSERT INTO grid.ego_line_expansion_costs
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.4.0','result','grid','ego_line_expansion_costs','ego_dp_versioning.sql','versioning');
+
+
+-- renewable time series
+INSERT INTO  supply.ego_renewable_feedin
+        SELECT	'v0.4.0',
+		*
+	FROM model_draft.ego_renewable_feedin
+
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.4.0','result','supply','ego_renewable_feedin','ego_dp_versioning.sql','versioning');
+
+-- renewable wind parameters
+INSERT INTO  supply.ego_power_class
+        SELECT	'v0.4.0',
+		*
+	FROM model_draft.ego_power_class
+	
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.4.0','result','supply','ego_power_class','ego_dp_versioning.sql','versioning');
