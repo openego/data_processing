@@ -304,6 +304,18 @@ INSERT INTO grid.ego_pf_hv_line
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.4.0','result','grid','ego_pf_hv_line','ego_dp_versioning.sql','versioning');
 
+-- hv pf link
+/* DELETE FROM grid.ego_pf_hv_link
+	WHERE	version = 'v0.4.0'; */
+	
+INSERT INTO grid.ego_pf_hv_link
+	SELECT	'v0.4.0',
+		*
+	FROM	model_draft.ego_grid_pf_hv_link;
+
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.4.0','result','grid','ego_pf_hv_line','ego_dp_versioning.sql','versioning');
+
 
 -- hv pf load
 /* DELETE FROM grid.ego_pf_hv_load
