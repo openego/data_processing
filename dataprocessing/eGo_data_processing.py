@@ -105,13 +105,14 @@ def data_processing():
 #	'ego_dp_powerflow_timeseries_demand.sql',		# Insert demand series into corresponding powerflow table (SQ, NEP2035, eGo100)
 #	'ego_dp_powerflow_lopf_data.sql',			# Set marginal costs for generators and storages
 
+## POST-PROCESSING
+#	'ego_pp_nep2035_grid_variations.sql'			# Create extension_tables and insert NEP-data
 	
     ## VERSIONING
 #   	'ego_dp_versioning.sql',				# Versioning
 #	'ego_dp_versioning_mviews.sql' ,			# Versioning of mviews
 
-	## POST-PROCESSING
-#	'ego_pp_nep2035_grid_variations.sql'			# Create extension_tables and insert NEP-data
+	
 
     
 	## VACUUM FULL
