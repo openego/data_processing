@@ -1,4 +1,4 @@
-/*
+﻿/*
 eGo Data Processing result data versioning
 Copy a version from model_draft to OEP schema
 
@@ -407,6 +407,161 @@ INSERT INTO grid.ego_pf_hv_transformer
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
 SELECT ego_scenario_log('v0.4.0','result','grid','ego_pf_hv_transformer','ego_dp_versioning.sql','versioning');
 
+-- hv pf extension bus
+/* DELETE FROM grid.ego_pf_hv_extension_bus
+	WHERE	version = 'v0.4.0'; */
+	
+INSERT INTO grid.ego_pf_hv_extension_bus
+	SELECT	'v0.4.0',
+		 scn_name,  bus_id,  v_nom,  current_type,  v_mag_pu_min,  v_mag_pu_max,  geom	
+	FROM	model_draft.ego_grid_pf_hv_extension_bus;
+
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.4.0','result','grid','ego_pf_hv_extension_bus','ego_dp_versioning.sql','versioning');
+
+-- hv pf extension generator
+/* DELETE FROM grid.ego_pf_hv_extension_generator
+	WHERE	version = 'v0.4.0'; */
+	
+INSERT INTO grid.ego_pf_hv_extension_generator
+	SELECT	'v0.4.0',
+		*
+	FROM	model_draft.ego_grid_pf_hv_extension_generator;
+
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.4.0','result','grid','ego_pf_hv_extension_generator','ego_dp_versioning.sql','versioning');
+
+
+-- hv pf extension generator_pq_set
+/* DELETE FROM grid.ego_pf_hv_generator_pq_set
+	WHERE	version = 'v0.4.0'; */
+	
+INSERT INTO grid.ego_pf_hv_extension_generator_pq_set
+	SELECT	'v0.4.0',
+		*
+	FROM	model_draft.ego_grid_pf_hv_extension_generator_pq_set;
+
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.4.0','result','grid','ego_pf_hv_extension_generator_pq_set','ego_dp_versioning.sql','versioning');
+
+
+-- hv pf extension line
+/* DELETE FROM grid.ego_pf_hv_extension_line
+	WHERE	version = 'v0.4.0'; */
+	
+INSERT INTO grid.ego_pf_hv_extension_line
+	SELECT	'v0.4.0',
+		 scn_name,  line_id ,  bus0, bus1, x, r, g, b, s_nom, s_nom_extendable, s_nom_min, s_nom_max, capital_cost, length, cables, frequency, terrain_factor, geom, topo, v_nom, project, project_id
+	FROM	model_draft.ego_grid_pf_hv_extension_line;
+
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.4.0','result','grid','ego_pf_hv_extension_line','ego_dp_versioning.sql','versioning');
+
+-- hv pf extension link
+/* DELETE FROM grid.ego_pf_hv_extension_link
+	WHERE	version = 'v0.4.0'; */
+	
+INSERT INTO grid.ego_pf_hv_extension_link
+	SELECT	'v0.4.0',
+		 scn_name, link_id, bus0, bus1, efficiency, p_nom, p_nom_extendable, p_nom_min, p_nom_max, capital_cost, marginal_cost, length, terrain_factor,geom, topo, project, project_id
+	FROM	model_draft.ego_grid_pf_hv_extension_link;
+
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.4.0','result','grid','ego_pf_hv_extension_link','ego_dp_versioning.sql','versioning');
+
+
+-- hv pf extension load
+/* DELETE FROM grid.ego_pf_hv_extension_load
+	WHERE	version = 'v0.4.0'; */
+	
+INSERT INTO grid.ego_pf_hv_extension_load
+	SELECT	'v0.4.0',
+		*
+	FROM	model_draft.ego_grid_pf_hv_extension_load;
+
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.4.0','result','grid','ego_pf_hv_extension_load','ego_dp_versioning.sql','versioning');
+
+
+-- hv pf extension load_pq_set
+/* DELETE FROM grid.ego_pf_hv_extension_load_pq_set
+	WHERE	version = 'v0.4.0'; */
+	
+INSERT INTO grid.ego_pf_hv_extension_load_pq_set
+	SELECT	'v0.4.0',
+		*
+	FROM	model_draft.ego_grid_pf_hv_extension_load_pq_set;
+
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.4.0','result','grid','ego_pf_hv_extension_load_pq_set','ego_dp_versioning.sql','versioning');
+
+
+-- hv pf extension source
+/* DELETE FROM grid.ego_pf_hv_source
+	WHERE	version = 'v0.4.0'; */
+	
+INSERT INTO grid.ego_pf_hv_extension_source
+	SELECT	'v0.4.0',
+		*
+	FROM	model_draft.ego_grid_pf_extension_hv_source;
+
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.4.0','result','grid','ego_pf_hv_extension_source','ego_dp_versioning.sql','versioning');
+
+
+-- hv pf extension storage
+/* DELETE FROM grid.ego_pf_hv_extension_storage
+	WHERE	version = 'v0.4.0'; */
+	
+INSERT INTO grid.ego_pf_hv_extension_storage
+	SELECT	'v0.4.0',
+		*
+	FROM	model_draft.ego_grid_pf_hv_extension_storage;
+
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.4.0','result','grid','ego_pf_hv_extension_storage','ego_dp_versioning.sql','versioning');
+
+
+-- hv pf extension storage_pq_set
+/* DELETE FROM grid.ego_pf_hv_extension_storage_pq_set
+	WHERE	version = 'v0.4.0'; */
+	
+INSERT INTO grid.ego_pf_hv_extension_storage_pq_set
+	SELECT	'v0.4.0',
+		*
+	FROM	model_draft.ego_grid_pf_hv_extension_storage_pq_set;
+
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.4.0','result','grid','ego_pf_hv_extension_storage_pq_set','ego_dp_versioning.sql','versioning');
+
+
+-- hv pf extension temp_resolution
+/* DELETE FROM grid.ego_pf_hv_extension_temp_resolution
+	WHERE	version = 'v0.4.0'; */
+	
+INSERT INTO grid.ego_pf_hv_extension_temp_resolution
+	SELECT	'v0.4.0',
+		*
+	FROM	model_draft.ego_grid_pf_hv_extension_temp_resolution;
+
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.4.0','result','grid','ego_pf_hv_extension_temp_resolution','ego_dp_versioning.sql','versioning');
+
+
+-- hv pf extension transformer
+/* DELETE FROM grid.ego_pf_hv_extension_transformer
+	WHERE	version = 'v0.4.0'; */
+	
+INSERT INTO grid.ego_pf_hv_extension_transformer
+	SELECT	'v0.4.0',
+		  scn_name, trafo_id, bus0,bus1, x, r, g, b, s_nom, s_nom_extendable, s_nom_min, s_nom_max, tap_ratio, phase_shift, capital_cost, geom, topo, project
+	FROM	model_draft.ego_grid_pf_hv_extension_transformer;
+
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT ego_scenario_log('v0.4.0','result','grid','ego_pf_hv_extension_transformer','ego_dp_versioning.sql','versioning');
+
+
+
 -- hv pf line expansion cost
 
 /* DELETE FROM grid.ego_line_expansion_costs
@@ -424,7 +579,7 @@ SELECT ego_scenario_log('v0.4.0','result','grid','ego_line_expansion_costs','ego
 -- renewable time series
 INSERT INTO  supply.ego_renewable_feedin
         SELECT	'v0.4.0',
-		*
+		*s
 	FROM model_draft.ego_renewable_feedin
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
