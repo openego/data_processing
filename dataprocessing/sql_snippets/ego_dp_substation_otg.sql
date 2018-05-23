@@ -23,7 +23,9 @@ ALTER TABLE model_draft.ego_grid_hvmv_substation
 UPDATE model_draft.ego_grid_hvmv_substation
 	SET 	otg_id = grid.otg_ehvhv_bus_data.bus_i
 	FROM 	grid.otg_ehvhv_bus_data
-	WHERE 	(SELECT TRIM(leading 'n' FROM TRIM(leading 'w' FROM model_draft.ego_grid_hvmv_substation.osm_id))::BIGINT)=grid.otg_ehvhv_bus_data.osm_substation_id; 
+	WHERE 	grid.otg_ehvhv_bus_data.base_kv <= 110 AND (SELECT TRIM(leading 'n' FROM TRIM(leading 'w' FROM model_draft.ego_grid_hvmv_substation.osm_id))::BIGINT)=grid.otg_ehvhv_bus_data.osm_substation_id; 
+
+DELETE FROM model_draft.ego_grid_hvmv_substation WHERE otg_id IS NULL; 
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
 SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_grid_hvmv_substation','ego_dp_substation_otg.sql',' ');
@@ -39,7 +41,9 @@ ALTER TABLE model_draft.ego_grid_ehv_substation
 UPDATE model_draft.ego_grid_ehv_substation
 	SET otg_id = grid.otg_ehvhv_bus_data.bus_i
 	FROM grid.otg_ehvhv_bus_data
-	WHERE (SELECT TRIM(leading 'n' FROM TRIM(leading 'w' FROM TRIM(leading 'r' FROM model_draft.ego_grid_ehv_substation.osm_id)))::BIGINT)=grid.otg_ehvhv_bus_data.osm_substation_id; 
+	WHERE grid.otg_ehvhv_bus_data.base_kv > 110 AND(SELECT TRIM(leading 'n' FROM TRIM(leading 'w' FROM TRIM(leading 'r' FROM model_draft.ego_grid_ehv_substation.osm_id)))::BIGINT)=grid.otg_ehvhv_bus_data.osm_substation_id; 
+
+DELETE FROM model_draft.ego_grid_ehv_substation WHERE otg_id IS NULL;
 
 	-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
 SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_grid_ehv_substation','ego_dp_substation_otg.sql',' ');
