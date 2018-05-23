@@ -94,6 +94,7 @@ def data_processing():
 #	'ego_dp_powerflow_osmtgmod_to_pypsa.sql',		# Include data from osmTGmod into EHV/HV powerflow schema
 #	'ego_dp_powerflow_electrical_neighbour.sql',		# Create border crossing lines and buses in neighbouring countries
 #	'ego_dp_powerflow_fix_ehv_subnetworks.sql',		# Fix topological errors in eHV grid
+#	'ego_dp_powerflow_grid_future_scenarios.sql',		# Copy grid to future scenarios
 #	'ego_dp_powerflow_grid_future_scenarios.sql',		# Copy grid to future scenarios  
 #	'ego_dp_powerflow_assignment_otgid.sql',		# assign otg_id to pp lists
 #	'ego_dp_powerflow_assignment_unid.sql',			# create a unified_id over all pp (res and conv)	    
@@ -106,13 +107,14 @@ def data_processing():
 	'ego_dp_powerflow_timeseries_demand.sql',		# Insert demand series into corresponding powerflow table (SQ, NEP2035, eGo100)
 	'ego_dp_powerflow_lopf_data.sql',			# Set marginal costs for generators and storages
 
+## POST-PROCESSING
+#	'ego_pp_nep2035_grid_variations.sql'			# Create extension_tables and insert NEP-data
 	
     ## VERSIONING
 #   	'ego_dp_versioning.sql',				# Versioning
 #	'ego_dp_versioning_mviews.sql' ,			# Versioning of mviews
 
-	## POST-PROCESSING
-#	'ego_pp_nep2035_grid_variations.sql'			# Create extension_tables and insert NEP-data
+	
 
     
 	## VACUUM FULL
