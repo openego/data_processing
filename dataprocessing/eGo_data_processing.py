@@ -44,11 +44,11 @@ def data_processing():
 #    'ego_dp_structure_input_verification.sql',          # Input verification (eGoPP)
 
     ## SUBSTATION
-#    'ego_dp_substation_hvmv.sql',                       # Abstract HVMV Substations of the high voltage level from OSM
-#    'ego_dp_substation_ehv.sql',                        # Abstract EHV Substations of the extra high voltage level from OSM
-#    'ego_dp_substation_otg.sql',                        # Assign osmTGmod-id to HVMV and EHV substations
-#    'ego_dp_substation_hvmv_voronoi.sql',               # HVMV Voronoi cells based on HVMV substations
-#    'ego_dp_substation_ehv_voronoi.sql',                # EHV Voronoi cells based on EHV substations
+#     'ego_dp_substation_hvmv.sql',                       # Abstract HVMV Substations of the high voltage level from OSM
+#     'ego_dp_substation_ehv.sql',                        # Abstract EHV Substations of the extra high voltage level from OSM
+#     'ego_dp_substation_otg.sql',                        # Assign osmTGmod-id to HVMV and EHV substations
+#     'ego_dp_substation_hvmv_voronoi.sql',               # HVMV Voronoi cells based on HVMV substations
+#     'ego_dp_substation_ehv_voronoi.sql',                # EHV Voronoi cells based on EHV substations
 
     ## GRIDDISTRICT
 #    'ego_dp_mv_griddistrict.sql',                       # MV GridDistricts from municipalities and Voronoi cells
@@ -93,18 +93,18 @@ def data_processing():
 #	'ego_dp_powerflow_hv_setup.sql',			# Set schema/tables for EHV/HV powerflow calculations up
 #	'ego_dp_powerflow_osmtgmod_to_pypsa.sql',		# Include data from osmTGmod into EHV/HV powerflow schema
 #	'ego_dp_powerflow_electrical_neighbour.sql',		# Create border crossing lines and buses in neighbouring countries
-	'ego_dp_powerflow_fix_ehv_subnetworks.sql',		# Fix topological errors in eHV grid
-	'ego_dp_powerflow_grid_future_scenarios.sql',		# Copy grid to future scenarios  
- 	'ego_dp_powerflow_assignment_otgid.sql',		# assign otg_id to pp lists
-	'ego_dp_powerflow_assignment_unid.sql',			# create a unified_id over all pp (res and conv)	    
-	'ego_dp_powerflow_create_pp_mview.sql',			# create mviews to display power plants per scenario
+#	'ego_dp_powerflow_fix_ehv_subnetworks.sql',		# Fix topological errors in eHV grid
+#	'ego_dp_powerflow_grid_future_scenarios.sql',		# Copy grid to future scenarios  
+#	'ego_dp_powerflow_assignment_otgid.sql',		# assign otg_id to pp lists
+#	'ego_dp_powerflow_assignment_unid.sql',			# create a unified_id over all pp (res and conv)	    
+#	'ego_dp_powerflow_create_pp_mview.sql',			# create mviews to display power plants per scenario
 	'ego_dp_powerflow_assignment_generator.sql',  		# Assign generators to corresponding substation (SQ, NEP2035, eGo100)
 	'ego_dp_powerflow_assignment_load.sql',        		# Assign loads to their corresponding substation (SQ, NEP2035, eGo100)
 	'ego_dp_powerflow_assignment_storage.sql',		# Assign storages to their corresponding substation (SQ, NEP 2035, eGo 100)
-#	'ego_dp_powerflow_timeseries_generator.sql',		# Transfer renpassG!S results into the corresponding powerflow table
-#	'ego_dp_powerflow_griddistrict_demand.py',		# Demand per MV Griddistrict
-#	'ego_dp_powerflow_timeseries_demand.sql',		# Insert demand series into corresponding powerflow table (SQ, NEP2035, eGo100)
-#	'ego_dp_powerflow_lopf_data.sql',			# Set marginal costs for generators and storages
+	'ego_dp_powerflow_timeseries_generator.sql',		# Transfer renpassG!S results into the corresponding powerflow table
+	'ego_dp_powerflow_griddistrict_demand.py',		# Demand per MV Griddistrict
+	'ego_dp_powerflow_timeseries_demand.sql',		# Insert demand series into corresponding powerflow table (SQ, NEP2035, eGo100)
+	'ego_dp_powerflow_lopf_data.sql',			# Set marginal costs for generators and storages
 
 	
     ## VERSIONING

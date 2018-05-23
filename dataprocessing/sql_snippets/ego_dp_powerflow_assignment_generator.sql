@@ -433,4 +433,4 @@ AS
 			w_sub);
 			
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','model_draft.ego_supply_aggr_weather_mview','ego_dp_powerflow_assignment_generator.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_supply_aggr_weather_mview','ego_dp_powerflow_assignment_generator.sql',' ');
