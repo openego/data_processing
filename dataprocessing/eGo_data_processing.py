@@ -94,8 +94,7 @@ def data_processing():
 #	'ego_dp_powerflow_osmtgmod_to_pypsa.sql',		# Include data from osmTGmod into EHV/HV powerflow schema
 #	'ego_dp_powerflow_electrical_neighbour.sql',		# Create border crossing lines and buses in neighbouring countries
 #	'ego_dp_powerflow_fix_ehv_subnetworks.sql',		# Fix topological errors in eHV grid
-#	'ego_dp_powerflow_grid_future_scenarios.sql',		# Copy grid to future scenarios
-#	'ego_dp_powerflow_grid_future_scenarios.sql',		# Copy grid to future scenarios  
+#	'ego_dp_powerflow_grid_future_scenarios.sql',		# Copy grid to future scenarios 
 #	'ego_dp_powerflow_assignment_otgid.sql',		# assign otg_id to pp lists
 #	'ego_dp_powerflow_assignment_unid.sql',			# create a unified_id over all pp (res and conv)	    
 #	'ego_dp_powerflow_create_pp_mview.sql',			# create mviews to display power plants per scenario
