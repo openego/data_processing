@@ -1,4 +1,4 @@
-
+﻿
 /*
 The electricity grid model extracted from osmTGmod is limited to the German territory. This script adds border crossing 
 lines and corresponding buses and transformers to all neighbouring countries which have a direct electrical connection 
@@ -59,13 +59,7 @@ FROM model_draft.ego_grid_pp_entsoe_bus a
 WHERE country NOT IN ('BE', 'NO', 'DE') AND under_construction = false AND dc = false AND symbol = 'Substation');
 
 
-INSERT INTO model_draft.ego_grid_hv_electrical_neighbours_bus  (bus_id, cntr_id, v_nom, current_type)
-SELECT nextval('model_draft.ego_grid_hv_electrical_neighbours_bus_id'),
-	cntr_id,
-	base_kv,
-	(CASE WHEN frequency = 50 THEN 'AC' ELSE 'DC' END)
-FROM grid.otg_ehvhv_bus_data a
-WHERE cntr_id != 'DE';
+
 
 UPDATE model_draft.ego_grid_hv_electrical_neighbours_bus
 	SET v_nom = (CASE v_nom WHEN 132 THEN 220
@@ -93,6 +87,22 @@ UPDATE model_draft.ego_grid_hv_electrical_neighbours_bus a
 
 DELETE FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE geom IS NULL;
 
+INSERT INTO model_draft.ego_grid_hv_electrical_neighbours_bus  (bus_id, cntr_id, v_nom, current_type, geom)
+SELECT nextval('model_draft.ego_grid_hv_electrical_neighbours_bus_id'),
+	cntr_id,
+	base_kv,
+	'AC',
+	geom
+FROM grid.otg_ehvhv_bus_data a
+WHERE cntr_id != 'DE' AND frequency = 50 ;
+
+UPDATE model_draft.ego_grid_hv_electrical_neighbours_bus
+	SET v_nom = (CASE v_nom WHEN 132 THEN 220
+				WHEN 150 THEN 220
+				WHEN 300 THEN 380
+				WHEN 400 THEN 380
+				ELSE v_nom END);
+				
 INSERT INTO model_draft.ego_grid_hv_electrical_neighbours_bus (bus_id, v_nom, geom, cntr_id)
 SELECT 	DISTINCT ON (cntr_id, base_kv)
 	bus_i,
@@ -235,7 +245,6 @@ UPDATE model_draft.ego_grid_hv_electrical_neighbours_line
 
 
 DELETE FROM model_draft.ego_grid_hv_electrical_neighbours_line WHERE cables IS NULL;
-
 DELETE FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE ((bus_id NOT IN (SELECT bus0 FROM model_draft.ego_grid_hv_electrical_neighbours_line)) AND (bus_id NOT IN (SELECT bus1 FROM model_draft.ego_grid_hv_electrical_neighbours_line)));
 
 			
