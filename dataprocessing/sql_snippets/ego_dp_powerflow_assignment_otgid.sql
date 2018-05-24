@@ -10,6 +10,9 @@ __url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
 __author__ 	= "IlkaCu" 
 */
 
+-- Set column otg_id to NULL 
+UPDATE model_draft.ego_dp_supply_res_powerplant
+	SET otg_id = NULL; 
 
 -- Insert otg_id of bus for res pp 
 UPDATE model_draft.ego_dp_supply_res_powerplant a
@@ -23,6 +26,10 @@ UPDATE model_draft.ego_dp_supply_res_powerplant a
 	WHERE 	a.subst_id = b.subst_id AND voltage_level < 3;
 
 
+-- Set column otg_id to NULL 
+UPDATE model_draft.ego_dp_supply_conv_powerplant
+	SET otg_id = NULL; 
+	
 -- Insert otg_id of bus for conv pp
 UPDATE model_draft.ego_dp_supply_conv_powerplant a
 	SET 	otg_id =b.otg_id 
