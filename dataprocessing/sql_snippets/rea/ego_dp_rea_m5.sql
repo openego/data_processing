@@ -44,15 +44,15 @@ SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_supply_rea_m5
 
 
 -- rea_flag M5
-UPDATE model_draft.ego_dp_supply_res_powerplant AS dea
+UPDATE model_draft.ego_dp_supply_res_powerplant
     SET rea_flag = 'M5_rest'
-    WHERE   (dea.voltage_level = 6 
-            OR dea.voltage_level = 7
-            OR dea.voltage_level IS NULL)
-            AND dea.generation_type = 'solar'
-            AND (dea.flag in ('commissioning','constantly'))
-            OR (dea.voltage_level = 7 AND dea.generation_type = 'wind')
-            AND dea.subst_id IS NOT NULL;
+    WHERE   (voltage_level = 6 
+            OR voltage_level = 7
+            OR voltage_level IS NULL)
+            AND generation_type = 'solar'
+            AND (flag in ('commissioning','constantly'))
+            OR (voltage_level = 7 AND generation_type = 'wind')
+            AND subst_id IS NOT NULL;
 
 
 -- temporary tables for the loop
@@ -109,7 +109,7 @@ SELECT scenario_log('eGo_DP', 'v0.4.0','temp','model_draft','ego_supply_rea_m5_j
 -- loop for grid_district
 DO
 $$
-DECLARE	gd integer;
+DECLARE gd integer;
 BEGIN
     FOR gd IN 1..3608   -- subst_id
     LOOP
@@ -123,7 +123,7 @@ BEGIN
         INSERT INTO model_draft.ego_supply_rea_m5_grid_la_temp
             SELECT  row_number() over (ORDER BY RANDOM())as rea_sorted,
                     la.*
-            FROM    model_draft.ego_lattice_50m_la_mview AS la	-- INPUT LATTICE
+            FROM    model_draft.ego_lattice_50m_la_mview AS la -- INPUT LATTICE
             WHERE   la.subst_id =' || gd || ';
 
         INSERT INTO model_draft.ego_supply_rea_m5_jnt_temp
@@ -138,7 +138,7 @@ BEGIN
             SET rea_geom_new = t2.rea_geom_new,
                 rea_geom_line = t2.rea_geom_line,
                 rea_flag = ''M5''
-            FROM    (SELECT	m.id AS id,
+            FROM    (SELECT m.id AS id,
                     m.rea_geom_line,
                     m.geom AS rea_geom_new
                     FROM    model_draft.ego_supply_rea_m5_jnt_temp AS m
@@ -152,6 +152,105 @@ BEGIN
     END LOOP;
 END;
 $$;
+
+
+-- M5 rest
+DROP MATERIALIZED VIEW IF EXISTS    model_draft.ego_supply_rea_m5_rest_mview CASCADE;
+CREATE MATERIALIZED VIEW            model_draft.ego_supply_rea_m5_rest_mview AS
+    SELECT  id,
+            electrical_capacity,
+            generation_type,
+            generation_subtype,
+            voltage_level,
+            subst_id,
+            ST_TRANSFORM(geom,3035) AS geom,
+            rea_flag
+    FROM    model_draft.ego_dp_supply_res_powerplant
+    WHERE   rea_flag = 'M5_rest';
+
+-- create index GIST (geom)
+CREATE INDEX ego_supply_rea_m5_rest_mview_geom_idx
+    ON model_draft.ego_supply_rea_m5_rest_mview USING gist (geom);
+
+-- grant (oeuser)
+ALTER TABLE model_draft.ego_supply_rea_m5_rest_mview OWNER TO oeuser;  
+
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_supply_rea_m5_rest_mview','ego_dp_rea_m5.sql','Should be 0!');
+
+
+-- Second loop for m5 rest for grid_district
+DO
+$$
+DECLARE gd integer;
+BEGIN
+    FOR gd IN 1..3608   -- subst_id
+    LOOP
+        EXECUTE '
+        INSERT INTO model_draft.ego_supply_rea_m5_dea_temp
+            SELECT  row_number() over (ORDER BY dea.electrical_capacity DESC)as rea_sorted,
+                    dea.*
+            FROM    model_draft.ego_supply_rea_m5_rest_mview AS dea -- REST!!
+            WHERE   dea.subst_id =' || gd || ';
+
+        INSERT INTO model_draft.ego_supply_rea_m5_grid_la_temp
+            SELECT  row_number() over (ORDER BY RANDOM())as rea_sorted,
+                    la.*
+            FROM    model_draft.ego_lattice_50m_la_mview AS la -- INPUT LATTICE
+            WHERE   la.subst_id =' || gd || ';
+
+        INSERT INTO model_draft.ego_supply_rea_m5_jnt_temp
+            SELECT  dea.rea_sorted,
+                    dea.id,
+                    ST_MAKELINE(dea.geom,la.geom) ::geometry(LineString,3035) AS rea_geom_line,
+                    la.geom ::geometry(Point,3035) AS geom  -- NEW LOCATION!
+            FROM    model_draft.ego_supply_rea_m5_dea_temp AS dea
+            INNER JOIN model_draft.ego_supply_rea_m5_grid_la_temp AS la ON (dea.rea_sorted = la.rea_sorted);
+
+        UPDATE model_draft.ego_dp_supply_res_powerplant AS t1
+            SET rea_geom_new = t2.rea_geom_new,
+                rea_geom_line = t2.rea_geom_line,
+                rea_flag = ''M5''
+            FROM    (SELECT m.id AS id,
+                    m.rea_geom_line,
+                    m.geom AS rea_geom_new
+                    FROM    model_draft.ego_supply_rea_m5_jnt_temp AS m
+                    )AS t2
+            WHERE   t1.id = t2.id;
+
+        TRUNCATE TABLE  model_draft.ego_supply_rea_m5_dea_temp, 
+                        model_draft.ego_supply_rea_m5_grid_la_temp, 
+                        model_draft.ego_supply_rea_m5_jnt_temp;
+        ';
+    END LOOP;
+END;
+$$;
+
+
+-- M5 rest
+DROP MATERIALIZED VIEW IF EXISTS    model_draft.ego_supply_rea_m5_rest_2_mview CASCADE;
+CREATE MATERIALIZED VIEW            model_draft.ego_supply_rea_m5_rest_2_mview AS
+    SELECT  id,
+            electrical_capacity,
+            generation_type,
+            generation_subtype,
+            voltage_level,
+            subst_id,
+            geom,
+            rea_flag
+    FROM    model_draft.ego_dp_supply_res_powerplant AS dea
+    WHERE   dea.rea_flag = 'M5_rest';
+
+-- create index GIST (geom)
+CREATE INDEX ego_supply_rea_m5_rest_2_mview_geom_idx
+    ON model_draft.ego_supply_rea_m5_rest_2_mview USING gist (geom);
+
+-- grant (oeuser)
+ALTER TABLE model_draft.ego_supply_rea_m5_rest_2_mview OWNER TO oeuser;  
+
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_supply_rea_m5_rest_2_mview','ego_dp_rea_m5.sql','Should be 0!');
+
 
 -- M5 result
 DROP MATERIALIZED VIEW IF EXISTS    model_draft.ego_supply_rea_m5_mview CASCADE;
@@ -177,31 +276,6 @@ ALTER TABLE model_draft.ego_supply_rea_m5_mview OWNER TO oeuser;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
 SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_supply_rea_m5_mview','ego_dp_rea_m5.sql',' ');
-
-
--- M5 rest
-DROP MATERIALIZED VIEW IF EXISTS    model_draft.ego_supply_rea_m5_rest_mview CASCADE;
-CREATE MATERIALIZED VIEW            model_draft.ego_supply_rea_m5_rest_mview AS
-    SELECT  id,
-            electrical_capacity,
-            generation_type,
-            generation_subtype,
-            voltage_level,
-            subst_id,
-            geom,
-            rea_flag
-    FROM    model_draft.ego_dp_supply_res_powerplant AS dea
-    WHERE   dea.rea_flag = 'M5_rest';
-
--- create index GIST (geom)
-CREATE INDEX ego_supply_rea_m5_rest_mview_geom_idx
-    ON model_draft.ego_supply_rea_m5_rest_mview USING gist (geom);
-
--- grant (oeuser)
-ALTER TABLE model_draft.ego_supply_rea_m5_rest_mview OWNER TO oeuser;  
-
--- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_supply_rea_m5_rest_mview','ego_dp_rea_m5.sql','Should be 0!');
 
 
 -- update la_id from loadarea
