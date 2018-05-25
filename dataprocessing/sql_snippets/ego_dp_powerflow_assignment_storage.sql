@@ -407,7 +407,7 @@ INSERT into model_draft.ego_grid_pf_hv_storage (
 			max(v_nom) over (partition by cntr_id) AS max_v_nom
 			FROM
 			model_draft.ego_grid_hv_electrical_neighbours_bus
-			where id <= 27
+			where central_bus = True
 			) SQ
 		WHERE SQ.v_nom = SQ.max_v_nom
 		) B
@@ -478,7 +478,7 @@ INSERT into model_draft.ego_grid_pf_hv_storage (
 			max(v_nom) over (partition by cntr_id) AS max_v_nom
 			FROM
 			model_draft.ego_grid_hv_electrical_neighbours_bus
-			where id <= 27
+			where central_bus = True
 			) SQ
 		WHERE SQ.v_nom = SQ.max_v_nom
 		) B
@@ -548,7 +548,7 @@ INSERT into model_draft.ego_grid_pf_hv_storage (
 			max(v_nom) over (partition by cntr_id) AS max_v_nom
 			FROM
 			model_draft.ego_grid_hv_electrical_neighbours_bus
-			where id <= 27
+			where central_bus = True
 			) SQ
 		WHERE SQ.v_nom = SQ.max_v_nom
 		) B

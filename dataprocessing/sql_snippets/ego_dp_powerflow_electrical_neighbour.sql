@@ -47,6 +47,8 @@ CREATE TABLE model_draft.ego_grid_hv_electrical_neighbours_bus
   v_mag_pu_max double precision, -- Unit: per unit...
   geom geometry(Point,4326));
 
+ALTER TABLE model_draft.ego_grid_hv_electrical_neighbours_bus
+  OWNER TO oeuser;
 
 
 INSERT INTO model_draft.ego_grid_hv_electrical_neighbours_bus  (bus_id, cntr_id, v_nom, current_type)
@@ -155,8 +157,8 @@ CREATE TABLE model_draft.ego_grid_hv_electrical_neighbours_line
 );
 
 
---ALTER TABLE model_draft.ego_grid_hv_electrical_neighbours_line
-  --OWNER TO oeuser;
+ALTER TABLE model_draft.ego_grid_hv_electrical_neighbours_line
+  OWNER TO oeuser;
 
 
 INSERT INTO model_draft.ego_grid_hv_electrical_neighbours_line (line_id, bus1, v_nom, cntr_id_2, cntr_id_1)
@@ -279,6 +281,10 @@ CREATE TABLE model_draft.ego_grid_hv_electrical_neighbours_transformer
   CONSTRAINT neighbour_transformer_pkey PRIMARY KEY (trafo_id, scn_name)
 );
 
+ALTER TABLE model_draft.ego_grid_hv_electrical_neighbours_transformer
+  OWNER TO oeuser;
+
+
 INSERT INTO model_draft.ego_grid_hv_electrical_neighbours_transformer (trafo_id, bus0, cntr_id, v1, geom_point)
 	(SELECT nextval('model_draft.ego_grid_hv_electrical_neighbours_transformer_id'), bus_id, cntr_id, v_nom, geom FROM model_draft.ego_grid_hv_electrical_neighbours_bus a 
 
@@ -383,6 +389,10 @@ CREATE TABLE model_draft.ego_grid_hv_electrical_neighbours_link
 WITH (
   OIDS=FALSE
 );
+				      
+ALTER TABLE model_draft.ego_grid_hv_electrical_neighbours_link
+  OWNER TO oeuser;
+
 
 /*INSERT INTO model_draft.ego_grid_hv_electrical_neighbours_link (link_id, bus0, cntr_id_1)
 SELECT nextval('model_draft.ego_grid_hv_electrical_neighbours_link_id'), bus_id, cntr_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE current_type = 'DC' AND central_bus = FALSE;
