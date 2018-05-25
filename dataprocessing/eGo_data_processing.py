@@ -62,14 +62,14 @@ def data_processing():
 #    'ego_dp_loadarea_loadmelt.sql',                     # Melt loads from OSM landuse and Census 2011
 #    'ego_dp_loadarea_loadcut_griddistrict.sql',         # Cut Loadarea with MV Griddistrict
 #    'ego_dp_loadarea_loadcut_voronoi.sql',              # Cut Loadarea with MV Voronoi cells
-#   'ego_dp_loadarea_consumption.sql',                  # Allocate consumption to Loadareas
+#    'ego_dp_loadarea_consumption.sql',                  # Allocate consumption to Loadareas
 #    'ego_dp_loadarea_peakload.sql',                     # Peak loads per Loadarea
 #    'ego_dp_loadarea_griddistrict_results.sql',         # Results for MV Griddistrict
 #    'ego_dp_loadarea_statistic.sql',                    # Results and statistics for eGoDP data
 
     ## LOWVOLTAGE
 #    'ego_dp_lv_substation.sql',                         # MVLV Substation (ONT)
-#   'ego_dp_lv_substation_voronoi.sql',                 # MVLV Substation Voronoi
+#    'ego_dp_lv_substation_voronoi.sql',                 # MVLV Substation Voronoi
 #    'ego_dp_lv_loadcut.sql',                             # LV Loadcut
 #    'ego_dp_lv_griddistrict.sql',                       # LV Griddistrict
 #    'ego_dp_lv_consumption_peakload.sql',               # LV Consumption and Peakload
@@ -95,9 +95,9 @@ def data_processing():
 #	'ego_dp_powerflow_electrical_neighbour.sql',		# Create border crossing lines and buses in neighbouring countries
 #	'ego_dp_powerflow_fix_ehv_subnetworks.sql',		# Fix topological errors in eHV grid
 #	'ego_dp_powerflow_grid_future_scenarios.sql',		# Copy grid to future scenarios 
-#	'ego_dp_powerflow_assignment_otgid.sql',		# assign otg_id to pp lists
-#	'ego_dp_powerflow_assignment_unid.sql',			# create a unified_id over all pp (res and conv)	    
-#	'ego_dp_powerflow_create_pp_mview.sql',			# create mviews to display power plants per scenario
+	'ego_dp_powerflow_assignment_otgid.sql',		# assign otg_id to pp lists
+	'ego_dp_powerflow_assignment_unid.sql',			# create a unified_id over all pp (res and conv)	    
+	'ego_dp_powerflow_create_pp_mview.sql',			# create mviews to display power plants per scenario
 	'ego_dp_powerflow_assignment_generator.sql',  		# Assign generators to corresponding substation (SQ, NEP2035, eGo100)
 	'ego_dp_powerflow_assignment_load.sql',        		# Assign loads to their corresponding substation (SQ, NEP2035, eGo100)
 	'ego_dp_powerflow_assignment_storage.sql',		# Assign storages to their corresponding substation (SQ, NEP 2035, eGo 100)
@@ -107,7 +107,7 @@ def data_processing():
 	'ego_dp_powerflow_lopf_data.sql',			# Set marginal costs for generators and storages
 
 ## POST-PROCESSING
-#	'ego_pp_nep2035_grid_variations.sql'			# Create extension_tables and insert NEP-data
+	'ego_pp_nep2035_grid_variations.sql'			# Create extension_tables and insert NEP-data
 	
     ## VERSIONING
 #   	'ego_dp_versioning.sql',				# Versioning
