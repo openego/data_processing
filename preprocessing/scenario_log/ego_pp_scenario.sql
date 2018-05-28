@@ -51,7 +51,8 @@ INSERT INTO model_draft.ego_scenario (model,version,version_name,release,comment
     ('eGo_DP', 'v0.2.11', 'powerflow scenario', 'FALSE', 'save intermediate changes in pf tables', '2017-07-11' ),
     ('eGo_DP', 'v0.3.0', 'release v0.3', 'TRUE', ' ', '2017-07-11' ),
     ('eGo_DP', 'v0.3.0pre1', 'v0.3 backup', 'FALSE', ' ', '2017-10-26' ),
-    ('eGo_DP', 'v0.3.1', 'RTDoku', 'TRUE', 'new scenario log and documentation', '2018-02-21' );
+    ('eGo_DP', 'v0.3.1', 'RTDoku', 'TRUE', 'new scenario log and documentation', '2018-02-21' ),
+    ('eGo_DP', 'v0.4.0', 'tba', 'TRUE', 'tba', '' );
 
 -- metadata
 COMMENT ON TABLE model_draft.ego_scenario IS '{
