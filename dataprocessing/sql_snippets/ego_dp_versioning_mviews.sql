@@ -97,9 +97,9 @@ ALTER MATERIALIZED VIEW supply.ego_dp_conv_powerplant_ego100_mview
     OWNER TO oeuser;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','output','supply','ego_dp_conv_powerplant_sq_mview','ego_dp_versioning_mviews.sql',' ');
-SELECT ego_scenario_log('v0.4.0','output','supply','ego_dp_conv_powerplant_nep2035_mview','ego_dp_versioning_mviews.sql',' ');
-SELECT ego_scenario_log('v0.4.0','output','supply','ego_dp_conv_powerplant_ego100_mview','ego_dp_versioning_mviews.sql',' ');
+SELECT ego_scenario_log('v0.4.0','result','supply','ego_dp_conv_powerplant_sq_mview','ego_dp_versioning_mviews.sql','versioning');
+SELECT ego_scenario_log('v0.4.0','result','supply','ego_dp_conv_powerplant_nep2035_mview','ego_dp_versioning_mviews.sql','versioning');
+SELECT ego_scenario_log('v0.4.0','result','supply','ego_dp_conv_powerplant_ego100_mview','ego_dp_versioning_mviews.sql','versioning');
 
 -- Create View with full dataset per scenario and renewables power plants
 
@@ -243,6 +243,6 @@ ALTER MATERIALIZED VIEW supply.ego_dp_res_powerplant_ego100_mview
     OWNER TO oeuser;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','output','supply','ego_dp_res_powerplant_sq_mview','ego_dp_versioning_mviews.sql',' ');
-SELECT ego_scenario_log('v0.4.0','output','supply','ego_dp_res_powerplant_nep2035_mview','ego_dp_versioning_mviews.sql',' ');
-SELECT ego_scenario_log('v0.4.0','output','supply','ego_dp_res_powerplant_ego100_mview','ego_dp_versioning_mviews.sql',' ');
+SELECT ego_scenario_log('v0.4.0','result','supply','ego_dp_res_powerplant_sq_mview','ego_dp_versioning_mviews.sql','versioning');
+SELECT ego_scenario_log('v0.4.0','result','supply','ego_dp_res_powerplant_nep2035_mview','ego_dp_versioning_mviews.sql','versioning');
+SELECT ego_scenario_log('v0.4.0','result','supply','ego_dp_res_powerplant_ego100_mview','ego_dp_versioning_mviews.sql','versioning');
