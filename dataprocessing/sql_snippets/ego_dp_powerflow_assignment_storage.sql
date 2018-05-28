@@ -5,7 +5,7 @@ considered in open_eGo.
 __copyright__ 	= "Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems"
 __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
 __url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
-__author__ 	= "IlkaCu", "lukasol" 
+__author__ 	= "IlkaCu", "lukasoldi" 
 */
 
 --------------	
@@ -34,7 +34,7 @@ CREATE TABLE model_draft.ego_supply_pf_storage_single
   capital_cost double precision, -- Unit: currency/MW...
   efficiency double precision, -- Unit: per unit...
   soc_initial double precision, -- Unit: MWh...
-  soc_cyclic boolean DEFAULT false, -- Unit: n/a...
+  soc_cyclic boolean DEFAULT true, -- Unit: n/a...
   max_hours double precision, -- Unit: hours...
   efficiency_store double precision, -- Unit: per unit...
   efficiency_dispatch double precision, -- Unit: per unit...
@@ -274,7 +274,7 @@ SELECT
   sum(p_nom),
   FALSE,
   min(p_nom_min),
-  min(p_min_pu_fixed),
+  -1,
   max(p_max_pu_fixed),
   max(sign),
   source,
@@ -282,7 +282,7 @@ SELECT
   0, -- capital_cost 0 since PHP are not extendable 
   1, --  efficiency is set below 
   0, -- soc_initial 
-  false, -- soc_cyclic 
+  true, -- soc_cyclic 
   6, -- max_hours as an average for existing German PHP 
   0.88, -- efficiency_store according to Acatech2015 
   0.89, -- efficiency_dispatch according to Acatech2015 
@@ -325,7 +325,7 @@ SELECT
   p_nom,
   p_nom_extendable,
   p_nom_min,
-  p_min_pu_fixed,
+  -1,
   p_max_pu_fixed,
   sign,
   source,
@@ -333,7 +333,7 @@ SELECT
   0, -- capital_cost 0 since PHP are not extendable 
   1, --  efficiency is set below 
   0, -- soc_initial 
-  false, -- soc_cyclic 
+  true, -- soc_cyclic 
   6, -- max_hours as an average for existing German PHP 
   0.88, -- efficiency_store according to Acatech2015 
   0.89, -- efficiency_dispatch according to Acatech2015 
@@ -392,11 +392,11 @@ INSERT into model_draft.ego_grid_pf_hv_storage (
   0 as capital_cost,
   1 as efficiency,
   0 as soc_inital,
-  false as soc_cyclic,
+  true as soc_cyclic,
   6 as max_hours,
-  A.inflow_conversion_factor[1] as efficiency_store,
-  A.outflow_conversion_factor[1] as efficiency_dispatch,
-  A.capacity_loss[1] as standing_loss
+  0.88 as efficiency_store, -- efficiency_store according to Acatech2015 
+  0.89 as efficiency_dispatch, -- efficiency_dispatch according to Acatech2015 
+  0.00052 as standing_loss -- standing_loss according to Acatech2015
 
 		FROM calc_renpass_gis.renpass_gis_storage A join
 		(
@@ -407,7 +407,7 @@ INSERT into model_draft.ego_grid_pf_hv_storage (
 			max(v_nom) over (partition by cntr_id) AS max_v_nom
 			FROM
 			model_draft.ego_grid_hv_electrical_neighbours_bus
-			where id <= 27
+			where central_bus = True
 			) SQ
 		WHERE SQ.v_nom = SQ.max_v_nom
 		) B
@@ -463,11 +463,11 @@ INSERT into model_draft.ego_grid_pf_hv_storage (
   0 as capital_cost,
   1 as efficiency,
   0 as soc_inital,
-  false as soc_cyclic,
+  true as soc_cyclic,
   6 as max_hours,
-  A.inflow_conversion_factor[1] as efficiency_store,
-  A.outflow_conversion_factor[1] as efficiency_dispatch,
-  A.capacity_loss[1] as standing_loss
+  0.88 as efficiency_store, -- efficiency_store according to Acatech2015 
+  0.89 as efficiency_dispatch, -- efficiency_dispatch according to Acatech2015 
+  0.00052 as standing_loss -- standing_loss according to Acatech2015
 
 		FROM calc_renpass_gis.renpass_gis_storage A join
 		(
@@ -478,7 +478,7 @@ INSERT into model_draft.ego_grid_pf_hv_storage (
 			max(v_nom) over (partition by cntr_id) AS max_v_nom
 			FROM
 			model_draft.ego_grid_hv_electrical_neighbours_bus
-			where id <= 27
+			where central_bus = True
 			) SQ
 		WHERE SQ.v_nom = SQ.max_v_nom
 		) B
@@ -533,11 +533,11 @@ INSERT into model_draft.ego_grid_pf_hv_storage (
   0 as capital_cost,
   1 as efficiency,
   0 as soc_inital,
-  false as soc_cyclic,
+  true as soc_cyclic,
   6 as max_hours,
-  A.inflow_conversion_factor[1] as efficiency_store,
-  A.outflow_conversion_factor[1] as efficiency_dispatch,
-  A.capacity_loss[1] as standing_loss
+  0.88 as efficiency_store, -- efficiency_store according to Acatech2015 
+  0.89 as efficiency_dispatch, -- efficiency_dispatch according to Acatech2015 
+  0.00052 as standing_loss -- standing_loss according to Acatech2015
 
 		FROM calc_renpass_gis.renpass_gis_storage A join
 		(
@@ -548,7 +548,7 @@ INSERT into model_draft.ego_grid_pf_hv_storage (
 			max(v_nom) over (partition by cntr_id) AS max_v_nom
 			FROM
 			model_draft.ego_grid_hv_electrical_neighbours_bus
-			where id <= 27
+			where central_bus = True
 			) SQ
 		WHERE SQ.v_nom = SQ.max_v_nom
 		) B
