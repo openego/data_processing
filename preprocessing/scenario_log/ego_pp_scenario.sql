@@ -27,7 +27,7 @@ CREATE TABLE            model_draft.ego_scenario (
     "release"       boolean,
     "comment"       text,
     "timestamp"     timestamp,
-    CONSTRAINT ego_scenario_pkey PRIMARY KEY (version));
+    CONSTRAINT ego_scenario_pkey PRIMARY KEY (id, version));
 
 -- access rights
 ALTER TABLE model_draft.ego_scenario OWNER TO oeuser;
