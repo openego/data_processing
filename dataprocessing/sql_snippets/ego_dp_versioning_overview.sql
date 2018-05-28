@@ -9,21 +9,67 @@ __author__      = "Ludee"
 */
 
 
--- overview
-/*
-DELETE FROM model_draft.ego_scenario_overview
-WHERE   version = 'v0.4.0';
 
+/*-- overview
+
+-- View all versions
+SELECT  *
+FROM    model_draft.ego_scenario_overview
+ORDER BY name, version, id;
+
+-- Select one version
 SELECT  *
 FROM    model_draft.ego_scenario_overview
 WHERE   version = 'v0.4.0'
 ORDER BY id;
 
-SELECT  *
-FROM    model_draft.ego_scenario_overview
-ORDER BY name, version, id;
+-- Remove version
+DELETE FROM model_draft.ego_scenario_overview
+WHERE   version = 'v0.4.0';
 */
 
+
+-- Loop version
+
+-- versioning tables
+SELECT  schema_name AS schema,
+        table_name AS table,
+        version
+FROM    model_draft.scenario_log
+WHERE   version = 'v0.4.0'
+        AND io = 'result'
+        AND comment = 'versioning'
+GROUP BY schema_name, table_name, version
+ORDER BY min(id)
+
+-- loop
+DO
+$$
+DECLARE
+    row record;
+BEGIN
+    FOR row IN 
+        SELECT  schema_name AS schema,
+                table_name AS table,
+                version
+        FROM    model_draft.scenario_log
+        WHERE   version = 'v0.4.0'
+                AND io = 'result'
+                AND comment = 'versioning'
+        GROUP BY schema_name, table_name, version
+        ORDER BY min(id)
+    LOOP
+        EXECUTE 'INSERT INTO model_draft.ego_scenario_overview (name,version,cnt)
+                SELECT  ' || quote_literal(row.schema || '.' || row.table ) || ', '
+                    || quote_literal(row.version) || ',
+                    count(*) AS cnt
+                FROM    ' || quote_ident(row.schema) || '.' || quote_ident(row.table) || ';';
+    END LOOP;
+END;
+$$
+
+
+/*-- Manual version
 INSERT INTO model_draft.ego_scenario_overview (name,version,cnt)
     SELECT  'grid.ego_dp_ehv_substation' AS name,
             version,
@@ -207,3 +253,4 @@ UNION ALL
     WHERE   version = 'v0.4.0'
     GROUP BY version
 ;
+*/

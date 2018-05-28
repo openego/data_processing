@@ -1401,48 +1401,10 @@ UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
 		)AS t2
 	WHERE  	t1.subst_id = t2.subst_id;
 
--- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_grid_mv_griddistrict','ego_dp_mv_griddistrict.sql',' ');
-
 -- metadata
 COMMENT ON TABLE model_draft.ego_grid_mv_griddistrict IS '{
-	"title": "eGo dataprocessing - MV Grid district",
-	"description": "Catchment area of HVMV substation (Transition point)",
-	"language": [ "eng", "ger" ],
-	"reference_date": " ",
-	"sources": [
-		{"name": "eGo dataprocessing", "description": " ",
-		"url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)"},
-		{"name": "OpenStreetMap", "description": "© OpenStreetMap contributors",
-		"url": "http://www.openstreetmap.org/", "license": "Open Database License (ODbL) v1.0"},
-		{"name": "BKG - Verwaltungsgebiete 1:250.000 (vg250)", "description": "© GeoBasis-DE / BKG 2016 (Daten verändert)",
-		"url": "http://www.geodatenzentrum.de/", "license": "Geodatenzugangsgesetz (GeoZG)"} ],
-	"spatial": [
-		{"extend": "Gemany",
-		"resolution": ""} ],
-	"license": [
-		{"id": "ODbL-1.0",
-		"name": "Open Data Commons Open Database License 1.0",
-		"version": "1.0",
-		"url": "https://opendatacommons.org/licenses/odbl/1.0/",
-		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!"} ],
-	"contributors": [
-		{"name": "Ludee", "email": "",
-		"date": "02.09.2016", "comment": "Create table"},
-		{"name": "Ludee", "email": "",
-		"date": "15.01.2017", "comment": "Update metadata"},
-		{"name": "Ludee", "email": "",
-		"date": "21.03.2017", "comment": "Update metadata to 1.1"} ],
-	"resources": [{
-		"schema": {
-			"fields": [
-				{"name": "version", "description": "version id", "unit": "" },
-				{"name": "subst_id", "description": "unique identifier", "unit": "" },
-				{"name": "subst_sum", "description": "number of substation per MV griddistrict", "unit": "" },
-				{"name": "area_ha", "description": "area in hectar", "unit": "ha" },
-				{"name": "geom_type", "description": "polygon type (polygon, multipolygon)", "unit": "" },
-				{"name": "geom", "description": "geometry", "unit": "" } ]},
-		"meta_version": "1.1"}] }';
+	"comment": "eGoDP - Temporary table",
+	"version": "v0.4.0" }' ;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
 SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_grid_mv_griddistrict','ego_dp_mv_griddistrict.sql',' ');
