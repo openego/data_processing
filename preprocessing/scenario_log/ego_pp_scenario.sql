@@ -52,7 +52,7 @@ INSERT INTO model_draft.ego_scenario (model,version,version_name,release,comment
     ('eGo_DP', 'v0.3.0', 'release v0.3', 'TRUE', ' ', '2017-07-11' ),
     ('eGo_DP', 'v0.3.0pre1', 'v0.3 backup', 'FALSE', ' ', '2017-10-26' ),
     ('eGo_DP', 'v0.3.1', 'RTDoku', 'TRUE', 'new scenario log and documentation', '2018-02-21' ),
-    ('eGo_DP', 'v0.4.0', 'Version 4', 'TRUE', 'none', '2018-04-05' ),
+    ('eGo_DP', 'v0.4.0', 'Debugging', 'FALSE', 'none', '2018-04-05' ),
     ('eGo_DP', 'v0.4.1', 'tba', 'TRUE', 'none', '2018-05-28' );
 
 -- metadata
@@ -61,8 +61,8 @@ COMMENT ON TABLE model_draft.ego_scenario IS '{
     "description": "Version info",
     "language": [ "eng", "ger" ],
     "sources": [
-        {"name": "eGo DataProcessing", "description": "Code", "url": "https://github.com/openego/data_processing", "license": "AGPL-3.0-or-later", "copyright": "eGo DataProcessing © Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems © Europa-Universität Flensburg, Centre for Sustainable Energy Systems © Reiner Lemoine Institut © DLR Institute for Networked Energy Systems"},
-        {"name": "eGo DataProcessing", "description": "Documentation", "url": "http://data-processing.readthedocs.io/en/latest/", "license": "CC-BY-4.0", "copyright": "eGo DataProcessing Documentation © Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems © Europa-Universität Flensburg, Centre for Sustainable Energy Systems © Reiner Lemoine Institut © DLR Institute for Networked Energy Systems"}],
+        {"name": "eGo DataProcessing", "description": "Code", "url": "https://github.com/openego/data_processing", "license": "AGPL-3.0-or-later", "copyright": "eGo DataProcessing Â© Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems Â© Europa-UniversitÃ¤t Flensburg, Centre for Sustainable Energy Systems Â© Reiner Lemoine Institut Â© DLR Institute for Networked Energy Systems"},
+        {"name": "eGo DataProcessing", "description": "Documentation", "url": "http://data-processing.readthedocs.io/en/latest/", "license": "CC-BY-4.0", "copyright": "eGo DataProcessing Documentation Â© Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems Â© Europa-UniversitÃ¤t Flensburg, Centre for Sustainable Energy Systems Â© Reiner Lemoine Institut Â© DLR Institute for Networked Energy Systems"}],
     "spatial": 
         {"location": "none",
         "extent": "none",
@@ -78,7 +78,7 @@ COMMENT ON TABLE model_draft.ego_scenario IS '{
         "version": "1.0",
         "url": "https://creativecommons.org/publicdomain/zero/1.0/legalcode",
         "instruction": "You can: Commercial Use, Private Use, Modify, Distribute; You cannot: Use Trademark, Hold Liable, Use Patent Claims; You must: none!",
-        "copyright": "© Reiner Lemoine Institut"},
+        "copyright": "Â© Reiner Lemoine Institut"},
     "contributors": [
         {"name": "Ludee", "email": "https://github.com/Ludee", "date": "2016-10-01", "comment": "Create table" },
         {"name": "Ludee", "email": "https://github.com/Ludee", "date": "2016-11-16", "comment": "Add metadata" },
