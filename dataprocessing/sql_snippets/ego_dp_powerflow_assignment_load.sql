@@ -130,7 +130,7 @@ UPDATE model_draft.ego_demand_hv_largescaleconsumer a
 
 
 INSERT INTO model_draft.ego_demand_pf_load_single (load_id, bus, e_annual)
-	SELECT un_id, otg_id, (sector_consumption_residential+sector_consumption_retail+sector_consumption_industrial+sector_consumption_agricultural)
+	SELECT un_id, otg_id, sector_consumption_sum
 	FROM model_draft.ego_demand_loadarea; 
 
 -- Add data for large scale consumer to pf_load_single 
