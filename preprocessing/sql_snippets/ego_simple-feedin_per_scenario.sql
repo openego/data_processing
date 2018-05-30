@@ -85,6 +85,9 @@ CREATE TABLE model_draft.ego_neighbours_offshore_point
   CONSTRAINT neighbours_offshore_point_pkey PRIMARY KEY (cntr_id)
 );
 
+ALTER TABLE model_draft.ego_neighbours_offshore_point
+  OWNER TO oeuser;
+
 INSERT INTO model_draft.ego_neighbours_offshore_point (cntr_id, geom)
 VALUES
 ('DK', ST_SetSRID(ST_MakePoint(7.59, 55.6), 4326)),
