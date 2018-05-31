@@ -13,7 +13,7 @@ from sqlalchemy.orm import sessionmaker
 from egoio.db_tables.model_draft import ScenarioLog as orm_scenario_log
 
 
-def write_ego_scenario_log(conn, project, version, io, schema, table,
+def write_scenario_log(conn, project, version, io, schema, table,
                            script, entries=None, comment=None, metadata=None):
     """
     Write entry into scenario log table
@@ -42,7 +42,7 @@ def write_ego_scenario_log(conn, project, version, io, schema, table,
     
     Example
     -------
-    write_ego_scenario_log(conn=conn,
+    write_scenario_log(conn=conn,
                            project='eGoDP'
                            version='v0.3.0',
                            io='output',
