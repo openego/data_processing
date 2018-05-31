@@ -10,7 +10,7 @@ __author__ 	    = "nesnoj, Ludee"
 
 from datetime import datetime
 from sqlalchemy.orm import sessionmaker
-from egoio.db_tables.model_draft import EgoScenarioLog as orm_scenario_log
+from egoio.db_tables.model_draft import ScenarioLog as orm_scenario_log
 
 
 def write_ego_scenario_log(conn, project, version, io, schema, table,
