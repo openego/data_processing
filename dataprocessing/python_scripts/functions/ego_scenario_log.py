@@ -74,7 +74,7 @@ def write_scenario_log(conn, project, version, io, schema, table,
                                  table_name=table,
                                  script_name=script,
                                  entries=entries,
-                                 status=comment,
+                                 comment=comment,
                                  user_name=user,
                                  timestamp=datetime.now(),
                                  meta_data=metadata)
