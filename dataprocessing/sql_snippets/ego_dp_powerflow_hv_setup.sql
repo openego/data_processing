@@ -389,6 +389,7 @@ COMMENT ON TABLE model_draft.ego_grid_pf_hv_bus IS '{
     "metadata_version": "1.3"
 }';
 
+/*
 -- PF HV busmap
 DROP TABLE IF EXISTS 	model_draft.ego_grid_pf_hv_busmap CASCADE;
 CREATE TABLE model_draft.ego_grid_pf_hv_busmap (
@@ -475,6 +476,8 @@ COMMENT ON TABLE model_draft.ego_grid_pf_hv_busmap IS '{
     ],
     "metadata_version": "1.3"
 }';
+
+*/
 
 -- select description
 SELECT obj_description('model_draft.ego_grid_pf_hv_bus' ::regclass) ::json;

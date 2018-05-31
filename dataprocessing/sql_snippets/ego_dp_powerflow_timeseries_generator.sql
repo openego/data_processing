@@ -684,7 +684,7 @@ FROM
 		neighbours.bus_id AS bus_id,
 		weather.gid AS w_id
 		FROM model_draft.ego_grid_hv_electrical_neighbours_bus AS neighbours,
-			coastdat.cosmoclmgrid AS weather
+			climate.cosmoclmgrid AS weather
 		WHERE ST_Intersects(weather.geom, neighbours.geom))
 		AS buses,
 	model_draft.ego_grid_pf_hv_generator AS generators
@@ -785,7 +785,7 @@ FROM
 		neighbours.bus_id AS bus_id,
 		weather.gid AS w_id
 		FROM model_draft.ego_grid_hv_electrical_neighbours_bus AS neighbours,
-			coastdat.cosmoclmgrid AS weather
+			climate.cosmoclmgrid AS weather
 		WHERE ST_Intersects(weather.geom, neighbours.geom))
 		AS buses,
 	model_draft.ego_grid_pf_hv_generator AS generators
@@ -886,7 +886,7 @@ FROM
 		neighbours.bus_id AS bus_id,
 		weather.gid AS w_id
 		FROM model_draft.ego_grid_hv_electrical_neighbours_bus AS neighbours,
-			coastdat.cosmoclmgrid AS weather
+			climate.cosmoclmgrid AS weather
 		WHERE ST_Intersects(weather.geom, neighbours.geom))
 		AS buses,
 	model_draft.ego_grid_pf_hv_generator AS generators
