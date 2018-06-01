@@ -1,4 +1,4 @@
-﻿/*
+/*
 Missing parameters necessary for calculating a linear optimal power flow (LOPF) are added to the existing data. This
 includes marginal costs per technology, which is composed of specific operating cost, fuel costs and CO2 costs 
 according to renpass_gis, NEP 2014 scenario. 
