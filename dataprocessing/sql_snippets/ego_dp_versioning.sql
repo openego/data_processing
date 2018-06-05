@@ -503,7 +503,7 @@ SELECT scenario_log('eGo_DP','v0.4.0','result','grid','ego_pf_hv_extension_load_
 INSERT INTO grid.ego_pf_hv_extension_source
 	SELECT	'v0.4.0',
 		*
-	FROM	model_draft.ego_grid_pf_extension_hv_source;
+	FROM	model_draft.ego_grid_pf_hv_extension_source;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
 SELECT scenario_log('eGo_DP','v0.4.0','result','grid','ego_pf_hv_extension_source','ego_dp_versioning.sql','versioning');
