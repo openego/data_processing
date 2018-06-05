@@ -1,5 +1,8 @@
 /*
-Copy SQ grid to 'NEP 2035' and 'eGo 100' scenario
+The grid model which is used as an input for powerflow calculations and optimization in open_eGo is the same in all 
+three scenarios 'SQ', 'NEP 2035' and 'eGo100'. 
+In the following script the grid model created for the 'SQ' scenario in the previous scripts is duplicated for the remaining
+two future scenarios
 
 __copyright__ 	= "Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems"
 __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
@@ -77,7 +80,7 @@ SELECT 'eGo 100', a.trafo_id, a.bus0, a.bus1, a.x, a.r, a.g, a.b, a.s_nom, a.s_n
 FROM 	model_draft.ego_grid_pf_hv_transformer a 
 WHERE scn_name= 'Status Quo';
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_grid_pf_hv_bus','ego_dp_powerflow_grid_NEP2035.sql',' ');
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_grid_pf_hv_line','ego_dp_powerflow_grid_NEP2035.sql',' ');
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_grid_pf_hv_transformer','ego_dp_powerflow_grid_NEP2035.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_grid_pf_hv_bus','ego_dp_powerflow_grid_future_scenarios.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_grid_pf_hv_line','ego_dp_powerflow_grid_future_scenarios.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_grid_pf_hv_transformer','ego_dp_powerflow_grid_future_scenarios.sql',' ');

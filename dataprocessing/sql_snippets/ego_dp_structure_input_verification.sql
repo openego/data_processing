@@ -1,5 +1,6 @@
 /*
-Check the necessary input tables.
+Input verification (eGoPP)
+Check the necessary input tables from eGo PreProcessing.
 Return version of input tables.
 
 __copyright__   = "Reiner Lemoine Institut"
@@ -8,36 +9,39 @@ __url__         = "https://github.com/openego/data_processing/blob/master/LICENS
 __author__      = "Ludee"
 */
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','check','boundaries','bkg_vg250_1_sta','ego_dp_structure_input_verification.sql','preprocessing verification');
-SELECT ego_scenario_log('v0.3.0','check','boundaries','bkg_vg250_2_lan','ego_dp_structure_input_verification.sql','preprocessing verification');
-SELECT ego_scenario_log('v0.3.0','check','boundaries','bkg_vg250_4_krs','ego_dp_structure_input_verification.sql','preprocessing verification');
-SELECT ego_scenario_log('v0.3.0','check','boundaries','bkg_vg250_6_gem','ego_dp_structure_input_verification.sql','preprocessing verification');
-SELECT ego_scenario_log('v0.3.0','check','openstreetmap','osm_deu_polygon','ego_dp_structure_input_verification.sql','preprocessing verification');
-SELECT ego_scenario_log('v0.3.0','check','openstreetmap','osm_deu_ways','ego_dp_structure_input_verification.sql','preprocessing verification');
-SELECT ego_scenario_log('v0.3.0','check','openstreetmap','osm_deu_nodes','ego_dp_structure_input_verification.sql','preprocessing verification');
-SELECT ego_scenario_log('v0.3.0','check','openstreetmap','osm_deu_line','ego_dp_structure_input_verification.sql','preprocessing verification');
-SELECT ego_scenario_log('v0.3.0','check','society','destatis_zensus_population_per_ha','ego_dp_structure_input_verification.sql','preprocessing verification');
-SELECT ego_scenario_log('v0.3.0','check','economy','destatis_gva_per_district','ego_dp_structure_input_verification.sql','preprocessing verification');
-SELECT ego_scenario_log('v0.3.0','check','demand','ego_demand_federalstate','ego_dp_structure_input_verification.sql','preprocessing verification');
-SELECT ego_scenario_log('v0.3.0','check','supply','vernetzen_wind_potential_area','ego_dp_structure_input_verification.sql','preprocessing verification');
-SELECT ego_scenario_log('v0.3.0','check','model_draft','ego_supply_res_powerplant_sq_mview','ego_dp_structure_input_verification.sql','preprocessing verification');
-SELECT ego_scenario_log('v0.3.0','check','model_draft','ego_supply_conv_powerplant_sq_mview','ego_dp_structure_input_verification.sql','preprocessing verification');
+
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','check','boundaries','bkg_vg250_1_sta','ego_dp_structure_input_verification.sql','preprocessing verification');
+SELECT scenario_log('eGo_DP', 'v0.4.0','check','boundaries','bkg_vg250_2_lan','ego_dp_structure_input_verification.sql','preprocessing verification');
+SELECT scenario_log('eGo_DP', 'v0.4.0','check','boundaries','bkg_vg250_4_krs','ego_dp_structure_input_verification.sql','preprocessing verification');
+SELECT scenario_log('eGo_DP', 'v0.4.0','check','boundaries','bkg_vg250_6_gem','ego_dp_structure_input_verification.sql','preprocessing verification');
+SELECT scenario_log('eGo_DP', 'v0.4.0','check','openstreetmap','osm_deu_polygon','ego_dp_structure_input_verification.sql','preprocessing verification');
+SELECT scenario_log('eGo_DP', 'v0.4.0','check','openstreetmap','osm_deu_ways','ego_dp_structure_input_verification.sql','preprocessing verification');
+SELECT scenario_log('eGo_DP', 'v0.4.0','check','openstreetmap','osm_deu_nodes','ego_dp_structure_input_verification.sql','preprocessing verification');
+SELECT scenario_log('eGo_DP', 'v0.4.0','check','openstreetmap','osm_deu_line','ego_dp_structure_input_verification.sql','preprocessing verification');
+SELECT scenario_log('eGo_DP', 'v0.4.0','check','scenario','ego_slp_parameters','ego_dp_structure_input_verification.sql','preprocessing verification');
+SELECT scenario_log('eGo_DP', 'v0.4.0','check','grid','otg_ehvhv_bus_data','ego_dp_structure_input_verification.sql','preprocessing verification');
+SELECT scenario_log('eGo_DP', 'v0.4.0','check','society','destatis_zensus_population_per_ha','ego_dp_structure_input_verification.sql','preprocessing verification');
+SELECT scenario_log('eGo_DP', 'v0.4.0','check','economy','destatis_gva_per_district','ego_dp_structure_input_verification.sql','preprocessing verification');
+SELECT scenario_log('eGo_DP', 'v0.4.0','check','demand','ego_demand_federalstate','ego_dp_structure_input_verification.sql','preprocessing verification');
+SELECT scenario_log('eGo_DP', 'v0.4.0','check','supply','vernetzen_wind_potential_area','ego_dp_structure_input_verification.sql','preprocessing verification');
+SELECT scenario_log('eGo_DP', 'v0.4.0','check','model_draft','ego_supply_res_powerplant_sq_mview','ego_dp_structure_input_verification.sql','preprocessing verification');
+SELECT scenario_log('eGo_DP', 'v0.4.0','check','model_draft','ego_supply_conv_powerplant_sq_mview','ego_dp_structure_input_verification.sql','preprocessing verification');
 
 /*
 -- input tables
 DROP TABLE IF EXISTS    model_draft.ego_scenario_input CASCADE;
 CREATE TABLE            model_draft.ego_scenario_input (
-    id              serial,
-    version         text,
-    oid             oid,
-    database        varchar,
-    table_schema    varchar,
-    table_name      varchar,
-    path            text,
+    id                      serial,
+    version                 text,
+    oid                     oid,
+    database                varchar,
+    table_schema            varchar,
+    table_name              varchar,
+    path                    text,
     metadata_title          text,
     metadata_reference_date text,
-    metadata                text,
+    meta_data               text,
     CONSTRAINT ego_scenario_input_pkey PRIMARY KEY (id));
 
 -- grant (oeuser)
@@ -46,7 +50,7 @@ ALTER TABLE model_draft.ego_scenario_input OWNER TO oeuser;
 -- metadata template
 COMMENT ON TABLE model_draft.ego_scenario_input IS '{
     "title": "eGoDP input data verification",
-    "description": "Checks input tables and gathers meta infos",
+    "description": "Check input tables and gathers meta infos",
     "language": [ "eng" ],
     "spatial": 
         {"location": "none",
@@ -58,8 +62,7 @@ COMMENT ON TABLE model_draft.ego_scenario_input IS '{
         "end": "none",
         "resolution": "none"},
     "sources": [
-        {"name": "eGo dataprocessing", "description": "", "url": "https://github.com/openego/data_processing", "license": "GNU Affero General Public License Version 3 (AGPL-3.0)", "copyright": "© Reiner Lemoine Institut"},
-        {"name": "", "description": "", "url": "", "license": "", "copyright": ""} ],
+        {"name": "none", "description": "", "url": "", "license": "", "copyright": ""} ],
     "license": 
         {"id":  "ODbL-1.0",
         "name": "Open Data Commons Open Database License 1.0",
@@ -69,6 +72,7 @@ COMMENT ON TABLE model_draft.ego_scenario_input IS '{
         "copyright": "© Reiner Lemoine Institut"},
     "contributors": [
         {"name": "Ludee", "email": "", "date": "2017-10-26", "comment": "Create table and metadata" },
+        {"name": "Ludee", "email": "", "date": "2018-01-08", "comment": "Rename column metadata to meta_data" },
         {"name": "", "email": "", "date": "", "comment": ""} ],
     "resources": [
         {"name": "model_draft.ego_scenario_input",        
@@ -83,19 +87,19 @@ COMMENT ON TABLE model_draft.ego_scenario_input IS '{
             {"name": "path", "description": "Schema.Table", "unit": "none"},
             {"name": "metadata_title", "description": "Title from metadata", "unit": "none"},
             {"name": "metadata_reference_date", "description": "Reference date from metadata", "unit": "none"},
-            {"name": "metadata", "description": "Full metadat", "unit": "none"} ] } ],
+            {"name": "meta_data", "description": "Full metadat", "unit": "none"} ] } ],
     "metadata_version": "1.3"}';
 
 -- select description
 SELECT obj_description('model_draft.test_table' ::regclass) ::json;
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','setup','model_draft','ego_scenario_input','ego_dp_structure_input_verification.sql','preprocessing verification');
+-- scenario log (project, version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','setup','model_draft','ego_scenario_input','ego_dp_structure_input_verification.sql','preprocessing verification');
 */
 
 -- insert version
-INSERT INTO     model_draft.ego_scenario_input(version,oid,database,table_schema,table_name,path,metadata_title,metadata_reference_date,metadata)
-    SELECT  'v0.3.0' AS version,
+INSERT INTO     model_draft.ego_scenario_input(version,oid,database,table_schema,table_name,path,metadata_title,metadata_reference_date,meta_data)
+    SELECT  'v0.4.0' AS version,
             sub.oid,
             sub.database,
             sub.table_schema,
@@ -103,7 +107,7 @@ INSERT INTO     model_draft.ego_scenario_input(version,oid,database,table_schema
             sub.path,
             sub.metadata::json ->>'title' AS metadata_title,
             sub.metadata::json #>>'{temporal,reference_date}' AS metadata_reference_date,
-            sub.metadata
+            sub.metadata AS meta_data
     FROM    (SELECT    st.relid AS oid,
             table_catalog AS database,
             i.table_schema AS table_schema,
@@ -121,6 +125,8 @@ INSERT INTO     model_draft.ego_scenario_input(version,oid,database,table_schema
             (table_schema='openstreetmap' AND table_name='osm_deu_ways') OR 
             (table_schema='openstreetmap' AND table_name='osm_deu_nodes') OR
             (table_schema='openstreetmap' AND table_name='osm_deu_line') OR
+            (table_schema='scenario' AND table_name='ego_slp_parameters') OR
+            (table_schema='grid' AND table_name='otg_ehvhv_bus_data') OR
             (table_schema='society' AND table_name='destatis_zensus_population_per_ha') OR
             (table_schema='economy' AND table_name='destatis_gva_per_district') OR
             (table_schema='demand' AND table_name='ego_demand_federalstate') OR

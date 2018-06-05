@@ -2,6 +2,7 @@
 Skript to allocate decentralized renewable power plants (dea)
 Methods base on technology and voltage level
 Uses different lattice from setup_ego_wpa_per_grid_district.sql
+This script includes a hotfix to fill all empty cells of column rea_geom_new with the original geometry from column geom. 
 
 __copyright__ 	= "Reiner Lemoine Institut"
 __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
@@ -13,8 +14,8 @@ __author__ 	= "Ludee"
 Results
 */ 
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_dp_supply_res_powerplant','ego_dp_rea_results.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','input','model_draft','ego_dp_supply_res_powerplant','ego_dp_rea_results.sql',' ');
 
 -- dea capacity and count per generation types and voltage level
 DROP TABLE IF EXISTS 	model_draft.ego_supply_rea_per_gentype_and_voltlevel CASCADE;
@@ -33,8 +34,8 @@ ALTER TABLE	model_draft.ego_supply_rea_per_gentype_and_voltlevel
 	ADD PRIMARY KEY (id),
 	OWNER TO oeuser;
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_supply_rea_per_gentype_and_voltlevel','ego_dp_rea_results.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_supply_rea_per_gentype_and_voltlevel','ego_dp_rea_results.sql',' ');
 
 	
 /* 
@@ -65,8 +66,8 @@ CREATE INDEX ego_supply_rea_per_mvgd_geom_idx
 ALTER TABLE model_draft.ego_supply_rea_per_mvgd OWNER TO oeuser;  
  */
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_grid_mv_griddistrict','ego_dp_rea_results.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','input','model_draft','ego_grid_mv_griddistrict','ego_dp_rea_results.sql',' ');
 
 UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
 	SET  	dea_cnt = t2.dea_cnt,
@@ -112,8 +113,8 @@ UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
 		)AS t2
 	WHERE  	t1.subst_id = t2.subst_id;
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_grid_mv_griddistrict','ego_dp_rea_results.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_grid_mv_griddistrict','ego_dp_rea_results.sql',' ');
 
 
 -- DEA capacity and count per load area
@@ -151,8 +152,8 @@ FROM	model_draft.ego_supply_rea_per_loadarea AS la,
 	model_draft.ego_grid_mv_griddistrict AS gd;
 */
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_supply_rea_per_loadarea','ego_dp_rea_results.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_supply_rea_per_loadarea','ego_dp_rea_results.sql',' ');
 
 
 -- DEA capacity and count per load area
@@ -222,5 +223,25 @@ ALTER TABLE	model_draft.ego_supply_rea_per_method
 	ADD PRIMARY KEY (name),
 	OWNER TO oeuser;
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_supply_rea_per_method','ego_dp_rea_results.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_supply_rea_per_method','ego_dp_rea_results.sql',' ');
+
+
+-- Hotfix to fill empty rea_geom_new cells in table 
+
+UPDATE model_draft.ego_dp_supply_res_powerplant
+   set rea_geom_new = ST_Transform(geom,3035),
+   comment = comment || 'add original geom to rea_geom_new' 
+Where rea_geom_new is null;
+
+-- Add index on rea_geom_new
+
+DROP INDEX IF EXISTS model_draft.ego_dp_supply_res_powerplant_geom_new_idx;
+
+CREATE INDEX ego_dp_supply_res_powerplant_geom_new_idx
+  ON model_draft.ego_dp_supply_res_powerplant
+  USING gist
+  (rea_geom_new);
+  
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_dp_supply_res_powerplant','ego_dp_rea_results.sql',' ');

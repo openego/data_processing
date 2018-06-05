@@ -1,5 +1,6 @@
 /*
-SQL Script to create mviews diyplaying power plants by scenario.
+This script creates discrete materialized views (mview) for conventional and renewable power plants per scenario,
+resulting in six different mviews for the three main scenarios considered in open_eGo.
 
 __copyright__ = "Europa-Universität Flensburg - ZNES"
 __license__ = "GNU Affero General Public License Version 3 (AGPL-3.0)"
@@ -8,9 +9,11 @@ __author__ = "wolfbunke"
 
 */
 
+
 --------------------------------------------------------------------------------
 -- Part IV 
 --          Create Views by scenario
+--	    Scenarios: eGo100
 --------------------------------------------------------------------------------
 
 -- MView for Status Quo
@@ -40,7 +43,7 @@ CREATE MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_nep2035_mview AS
 ALTER MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_nep2035_mview
     OWNER TO oeuser;
 
--- MView for eGo 100
+-- MView for eGo100
 DROP MATERIALIZED VIEW IF EXISTS  model_draft.ego_supply_conv_powerplant_ego100_mview CASCADE;
 CREATE MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_ego100_mview AS
 	SELECT 
@@ -95,10 +98,10 @@ CREATE MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_ego100_mview AS
 ALTER MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_ego100_mview
     OWNER TO oeuser;
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_supply_conv_powerplant_sq_mview','ego_dp_powerflow_create_pp_mview.sql',' ');
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_supply_conv_powerplant_nep2035_mview','ego_dp_powerflow_create_pp_mview.sql',' ');
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_supply_conv_powerplant_ego100_mview','ego_dp_powerflow_create_pp_mview.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_supply_conv_powerplant_sq_mview','ego_dp_powerflow_create_pp_mview.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_supply_conv_powerplant_nep2035_mview','ego_dp_powerflow_create_pp_mview.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_supply_conv_powerplant_ego100_mview','ego_dp_powerflow_create_pp_mview.sql',' ');
 
 
 --------------------------------------------------------------------------------
@@ -159,6 +162,7 @@ CREATE MATERIALIZED VIEW model_draft.ego_supply_res_powerplant_nep2035_mview AS
 		 ORDER BY id	
 	) sub2
 	Order by id;
+	
 
 ALTER MATERIALIZED VIEW model_draft.ego_supply_res_powerplant_nep2035_mview
     OWNER TO oeuser;
@@ -231,11 +235,12 @@ CREATE MATERIALIZED VIEW model_draft.ego_supply_res_powerplant_ego100_mview AS
 		 ORDER BY id	
 	) sub3
 	Order by id;
+	
 
 ALTER MATERIALIZED VIEW model_draft.ego_supply_res_powerplant_ego100_mview
     OWNER TO oeuser;
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_supply_res_powerplant_sq_mview','ego_dp_powerflow_create_pp_mview.sql',' ');
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_supply_res_powerplant_nep2035_mview','ego_dp_powerflow_create_pp_mview.sql',' ');
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_supply_res_powerplant_ego100_mview','ego_dp_powerflow_create_pp_mview.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_supply_res_powerplant_sq_mview','ego_dp_powerflow_create_pp_mview.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_supply_res_powerplant_nep2035_mview','ego_dp_powerflow_create_pp_mview.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_supply_res_powerplant_ego100_mview','ego_dp_powerflow_create_pp_mview.sql',' ');

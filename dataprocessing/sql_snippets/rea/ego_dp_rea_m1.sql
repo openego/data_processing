@@ -1,21 +1,17 @@
 /*
-Skript to allocate decentralized renewable power plants (dea)
-Methods base on technology and voltage level
-Uses different lattice from setup_ego_wpa_per_grid_district.sql
+M1 biomass and solar to OSM agricultural
+Allocates "biomass" & (renewable) "gas" to OSM agricultural areas.
+The rest could not be allocated, consider in M4.
 
-__copyright__ 	= "Reiner Lemoine Institut"
-__license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
-__url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
-__author__ 	= "Ludee"
+__copyright__   = "Reiner Lemoine Institut"
+__license__     = "GNU Affero General Public License Version 3 (AGPL-3.0)"
+__url__         = "https://github.com/openego/data_processing/blob/master/LICENSE"
+__author__      = "Ludee"
 */
 
-/* 1. M1-1
-Move "biomass" & (renewable) "gas" to OSM agricultural areas.
-The rest could not be allocated, consider in M4.
-*/ 
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_dp_supply_res_powerplant','ego_dp_rea_m1.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','input','model_draft','ego_dp_supply_res_powerplant','ego_dp_rea_m1.sql',' ');
 
 -- MView M1-1
 DROP MATERIALIZED VIEW IF EXISTS 	model_draft.ego_supply_rea_m1_1_a_mview CASCADE;
@@ -42,8 +38,8 @@ CREATE INDEX ego_supply_rea_m1_1_a_mview_geom_idx
 -- grant (oeuser)
 ALTER TABLE model_draft.ego_supply_rea_m1_1_a_mview OWNER TO oeuser;
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_supply_rea_m1_1_a_mview','ego_dp_rea_m1.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','temp','model_draft','ego_supply_rea_m1_1_a_mview','ego_dp_rea_m1.sql',' ');
 
 
 -- rea_flag M1-1
@@ -73,8 +69,8 @@ CREATE TABLE 		model_draft.ego_supply_rea_m1_1_dea_temp (
 CREATE INDEX ego_supply_rea_m1_1_dea_temp_geom_idx
 	ON model_draft.ego_supply_rea_m1_1_dea_temp USING gist (geom);
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_supply_rea_m1_1_dea_temp','ego_dp_rea_m1.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','temp','model_draft','ego_supply_rea_m1_1_dea_temp','ego_dp_rea_m1.sql',' ');
 
 DROP TABLE IF EXISTS 	model_draft.ego_supply_rea_m1_1_osm_temp CASCADE;
 CREATE TABLE 		model_draft.ego_supply_rea_m1_1_osm_temp (
@@ -88,8 +84,8 @@ CREATE TABLE 		model_draft.ego_supply_rea_m1_1_osm_temp (
 CREATE INDEX ego_supply_rea_m1_1_osm_temp_geom_idx
 	ON model_draft.ego_supply_rea_m1_1_osm_temp USING gist (geom);
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_supply_rea_m1_1_osm_temp','ego_dp_rea_m1.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','temp','model_draft','ego_supply_rea_m1_1_osm_temp','ego_dp_rea_m1.sql',' ');
 
 DROP TABLE IF EXISTS 	model_draft.ego_supply_rea_m1_1_jnt_temp CASCADE;
 CREATE TABLE 		model_draft.ego_supply_rea_m1_1_jnt_temp (
@@ -102,11 +98,11 @@ CREATE TABLE 		model_draft.ego_supply_rea_m1_1_jnt_temp (
 CREATE INDEX ego_supply_rea_m1_1_jnt_temp_geom_idx
 	ON model_draft.ego_supply_rea_m1_1_jnt_temp USING gist (geom);
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
--- SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_supply_rea_m1_1_jnt_temp','ego_dp_rea_m1.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+-- SELECT scenario_log('eGo_DP', 'v0.4.0','temp','model_draft','ego_supply_rea_m1_1_jnt_temp','ego_dp_rea_m1.sql',' ');
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_osm_sector_per_griddistrict_4_agricultural','ego_dp_rea_m1.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','input','model_draft','ego_osm_sector_per_griddistrict_4_agricultural','ego_dp_rea_m1.sql',' ');
 
 -- loop for grid_district
 DO
@@ -178,8 +174,8 @@ CREATE INDEX ego_supply_rea_m1_1_mview_rea_geom_new_idx
 -- grant (oeuser)
 ALTER TABLE model_draft.ego_supply_rea_m1_1_mview OWNER TO oeuser;
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_supply_rea_m1_1_mview','ego_dp_rea_m1.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_supply_rea_m1_1_mview','ego_dp_rea_m1.sql',' ');
 
 
 -- M1-1 rest
@@ -203,8 +199,8 @@ CREATE INDEX ego_supply_rea_m1_1_rest_mview_geom_idx
 -- grant (oeuser)
 ALTER TABLE model_draft.ego_supply_rea_m1_1_rest_mview OWNER TO oeuser;
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_supply_rea_m1_1_rest_mview','ego_dp_rea_m1.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_supply_rea_m1_1_rest_mview','ego_dp_rea_m1.sql',' ');
 
 -- Drop temp
 DROP TABLE IF EXISTS 	model_draft.ego_supply_rea_m1_1_dea_temp CASCADE;
@@ -240,8 +236,8 @@ CREATE INDEX ego_supply_rea_m1_2_a_mview_geom_idx
 -- grant (oeuser)
 ALTER TABLE model_draft.ego_supply_rea_m1_2_a_mview OWNER TO oeuser;
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_supply_rea_m1_2_a_mview','ego_dp_rea_m1.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','temp','model_draft','ego_supply_rea_m1_2_a_mview','ego_dp_rea_m1.sql',' ');
 
 
 -- rea_flag M1-2
@@ -269,8 +265,8 @@ CREATE TABLE 		model_draft.ego_supply_rea_m1_2_dea_temp (
 CREATE INDEX ego_supply_rea_m1_2_dea_temp_geom_idx
 	ON model_draft.ego_supply_rea_m1_2_dea_temp USING gist (geom);
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_supply_rea_m1_2_dea_temp','ego_dp_rea_m1.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','temp','model_draft','ego_supply_rea_m1_2_dea_temp','ego_dp_rea_m1.sql',' ');
 
 DROP TABLE IF EXISTS 	model_draft.ego_supply_rea_m1_2_osm_temp ;
 CREATE TABLE 		model_draft.ego_supply_rea_m1_2_osm_temp (
@@ -284,8 +280,8 @@ CREATE TABLE 		model_draft.ego_supply_rea_m1_2_osm_temp (
 CREATE INDEX ego_supply_rea_m1_2_osm_temp_geom_idx
 	ON model_draft.ego_supply_rea_m1_2_osm_temp USING gist (geom);
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_supply_rea_m1_2_osm_temp','ego_dp_rea_m1.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','temp','model_draft','ego_supply_rea_m1_2_osm_temp','ego_dp_rea_m1.sql',' ');
 
 DROP TABLE IF EXISTS 	model_draft.ego_supply_rea_m1_2_jnt_temp CASCADE;
 CREATE TABLE 		model_draft.ego_supply_rea_m1_2_jnt_temp (
@@ -304,8 +300,8 @@ CREATE TABLE 		model_draft.ego_supply_rea_m1_2_jnt_temp (
 CREATE INDEX ego_supply_rea_m1_2_jnt_temp_geom_idx
 	ON model_draft.ego_supply_rea_m1_2_jnt_temp USING gist (geom);
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_supply_rea_m1_2_jnt_temp','ego_dp_rea_m1.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','temp','model_draft','ego_supply_rea_m1_2_jnt_temp','ego_dp_rea_m1.sql',' ');
 
 -- loop for grid_district
 DO
@@ -384,8 +380,8 @@ CREATE INDEX ego_supply_rea_m1_2_mview_rea_geom_new_idx
 GRANT ALL ON TABLE	model_draft.ego_supply_rea_m1_2_mview TO oeuser WITH GRANT OPTION;
 ALTER TABLE		model_draft.ego_supply_rea_m1_2_mview OWNER TO oeuser;
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_supply_rea_m1_2_mview','ego_dp_rea_m1.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_supply_rea_m1_2_mview','ego_dp_rea_m1.sql',' ');
 
 -- M1-2 rest
 DROP MATERIALIZED VIEW IF EXISTS 	model_draft.ego_supply_rea_m1_2_rest_mview CASCADE;
@@ -408,8 +404,8 @@ CREATE INDEX ego_supply_rea_m1_2_rest_mview_geom_idx
 -- grant (oeuser)
 ALTER TABLE model_draft.ego_supply_rea_m1_2_rest_mview OWNER TO oeuser;
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_supply_rea_m1_2_rest_mview','ego_dp_rea_m1.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_supply_rea_m1_2_rest_mview','ego_dp_rea_m1.sql',' ');
 
 
 -- Drop temp

@@ -1,5 +1,5 @@
 ﻿/*
-Setup for renewables power plants list
+Setup for renewables power plants list of raw data of the status quo in Germany.
 
 __copyright__ 	= "Europa-Universität Flensburg, Centre for Sustainable Energy Systems"
 __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
@@ -79,7 +79,7 @@ COMMENT ON TABLE supply.ego_renewable_powerplant IS '{
 		"version": "1.0",
 		"url": "https://opendatacommons.org/licenses/odbl/1.0/",
 		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
-		"copyright": "© Reiner Lemoine Institut"},
+		"copyright": "© ZNES Europa-Universität Flensburg"},
 	"contributors": [
 		{"name": "wolfbunke", "email": "", "date": "2016-06-16", "comment": "Update metadata version 1.3"}
 		],

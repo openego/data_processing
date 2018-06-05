@@ -1,5 +1,8 @@
 /*
-osmTGmod2pyPSA
+`osmTGmod <https://github.com/openego/osmTGmod>`_ provides a model of the German EHV and HV grid based on OpenStreetMap.
+This script extracts `bus <grid.otg_ehvhv_bus_data>`_ and `branch data <grid.otg_ehvhv_branch_data>`_ provided by osmTGmod
+and inserts the grid model into the corresponding powerflow tables.
+Additionally some (electrical) properties for transformers are adjusted or added. 
 
 __copyright__ 	= "Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems"
 __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
@@ -22,8 +25,8 @@ SELECT
   FROM grid.otg_ehvhv_bus_data
   WHERE result_id = 1;
   
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_grid_pf_hv_bus','ego_dp_powerflow_osmtgmod_to_pypsa.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_grid_pf_hv_bus','ego_dp_powerflow_osmtgmod_to_pypsa.sql',' ');
 
 -- BRANCH DATA
 INSERT INTO model_draft.ego_grid_pf_hv_line (line_id, bus0, bus1, x, r, b, s_nom, cables, frequency, geom, topo)
@@ -42,8 +45,8 @@ SELECT
   FROM grid.otg_ehvhv_branch_data
   WHERE result_id = 1 and (link_type = 'line' or link_type = 'cable');
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_grid_pf_hv_line','ego_dp_powerflow_osmtgmod_to_pypsa.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_grid_pf_hv_line','ego_dp_powerflow_osmtgmod_to_pypsa.sql',' ');
 
 -- TRANSFORMER DATA
 INSERT INTO model_draft.ego_grid_pf_hv_transformer (trafo_id, bus0, bus1, x, s_nom, tap_ratio, phase_shift, geom, topo)
@@ -60,8 +63,8 @@ SELECT
   FROM grid.otg_ehvhv_branch_data
   WHERE result_id = 1 and link_type = 'transformer';
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_grid_pf_hv_transformer','ego_dp_powerflow_osmtgmod_to_pypsa.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_grid_pf_hv_transformer','ego_dp_powerflow_osmtgmod_to_pypsa.sql',' ');
 
 -- per unit to absolute values
 

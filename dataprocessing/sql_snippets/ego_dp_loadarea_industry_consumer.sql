@@ -1,34 +1,38 @@
 /*
-osm industry 
+OSM Industry consumer
+Calculate specific electricity consumption per million Euro GVA for each federal state.
+Calculate the electricity consumption for each industry polygon.
+Identify corresponding bus for large scale consumer (lsc) with the help of ehv-voronoi.
 
-__copyright__ 	= "Reiner Lemoine Institut"
-__license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
-__url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
-__author__ 	= "IlkaCu, Ludee"
+__copyright__   = "Reiner Lemoine Institut"
+__license__     = "GNU Affero General Public License Version 3 (AGPL-3.0)"
+__url__         = "https://github.com/openego/data_processing/blob/master/LICENSE"
+__author__      = "IlkaCu, Ludee"
 */
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','input','demand','ego_demand_federalstate','ego_dp_loadarea_industry_consumer.sql',' ');
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','input','economy','destatis_gva_per_district','ego_dp_loadarea_industry_consumer.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','input','demand','ego_demand_federalstate','ego_dp_loadarea_industry_consumer.sql',' ');
+
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','input','economy','destatis_gva_per_district','ego_dp_loadarea_industry_consumer.sql',' ');
 
 -- Calculate specific electricity consumption per million Euro GVA for each federal state
 DROP TABLE IF EXISTS model_draft.ego_demand_per_gva CASCADE;
 CREATE TABLE model_draft.ego_demand_per_gva AS 
-	(SELECT	a.eu_code, 
-		a.federal_states, 
-		a.elec_consumption_industry/b.gva_industry AS elec_consumption_industry, 
-		a.elec_consumption_tertiary_sector/b.gva_tertiary_sector AS elec_consumption_tertiary_sector 
-	FROM  	demand.ego_demand_federalstate a,  -- ego_demand_federalstate
-		economy.destatis_gva_per_district b -- destatis_gva_per_district
-	WHERE a.eu_code = b.eu_code 
-	ORDER BY eu_code ); 
+    (SELECT a.eu_code, 
+            a.federal_states, 
+            a.elec_consumption_industry/b.gva_industry AS elec_consumption_industry, 
+            a.elec_consumption_tertiary_sector/b.gva_tertiary_sector AS elec_consumption_tertiary_sector 
+    FROM    demand.ego_demand_federalstate a,   -- ego_demand_federalstate
+        economy.destatis_gva_per_district b     -- destatis_gva_per_district
+    WHERE a.eu_code = b.eu_code 
+    ORDER BY eu_code ); 
 
 -- PK
 ALTER TABLE model_draft.ego_demand_per_gva
-	ADD PRIMARY KEY (eu_code),
-	OWNER TO oeuser;
+    ADD PRIMARY KEY (eu_code),
+    OWNER TO oeuser;
 
 -- metadata
 COMMENT ON TABLE  model_draft.ego_demand_per_gva IS
@@ -60,7 +64,7 @@ COMMENT ON TABLE  model_draft.ego_demand_per_gva IS
                     "Mail": "mario.kropshofer2@stud.fh-flensburg.de",
                     "Date":  "05.10.2016",
                     "Comment": "..." }, 
-	  	   {"Name": "Ilka Cussmann",
+                {"Name": "Ilka Cussmann",
                     "Mail": "",
                     "Date":  "25.10.2016",
                     "Comment": "Completed json-String" }
@@ -70,8 +74,8 @@ COMMENT ON TABLE  model_draft.ego_demand_per_gva IS
 "Instructions for proper use": ["..."]
 }';
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_demand_per_gva','ego_dp_loadarea_industry_consumer.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_demand_per_gva','ego_dp_loadarea_industry_consumer.sql',' ');
 
 -- electricity consumption per district based on gross value added
 DROP TABLE IF EXISTS 	model_draft.ego_demand_per_district CASCADE;
@@ -226,8 +230,8 @@ CREATE INDEX  	landuse_industry_geom_centre_idx
 
 -- Calculate NUTS
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','input','boundaries','bkg_vg250_4_krs_mview','ego_dp_loadarea_industry_consumer.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','input','boundaries','bkg_vg250_4_krs_mview','ego_dp_loadarea_industry_consumer.sql',' ');
 
 UPDATE 	model_draft.ego_landuse_industry a
 	SET 	nuts = b.nuts
@@ -350,15 +354,15 @@ COMMENT ON TABLE  model_draft.ego_landuse_industry IS
 "Instructions for proper use": ["..."]
 }';
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_landuse_industry','ego_dp_loadarea_industry_consumer.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_landuse_industry','ego_dp_loadarea_industry_consumer.sql',' ');
 
 
 -- Identify large scale consumer
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_supply_conv_powerplant','ego_dp_loadarea_industry_consumer.sql',' ');
-SELECT ego_scenario_log('v0.3.0','input','openstreetmap','osm_deu_polygon_urban_sector_3_industrial_mview','ego_dp_loadarea_industry_consumer.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','input','model_draft','ego_supply_conv_powerplant','ego_dp_loadarea_industry_consumer.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.0','input','openstreetmap','osm_deu_polygon_urban_sector_3_industrial_mview','ego_dp_loadarea_industry_consumer.sql',' ');
 
 DROP TABLE IF EXISTS model_draft.ego_demand_hv_largescaleconsumer CASCADE;
 CREATE TABLE model_draft.ego_demand_hv_largescaleconsumer AS
@@ -470,11 +474,11 @@ CREATE INDEX  	large_scale_consumer_geom_centre_idx
 
 -- Identify corresponding bus for large scale consumer (lsc) with the help of ehv-voronoi
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','input','calc_ego_substation','ego_deu_voronoi_ehv','ego_dp_loadarea_industry_consumer.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','input','calc_ego_substation','ego_deu_voronoi_ehv','ego_dp_loadarea_industry_consumer.sql',' ');
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_grid_hvmv_substation','ego_dp_loadarea_industry_consumer.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','input','model_draft','ego_grid_hvmv_substation','ego_dp_loadarea_industry_consumer.sql',' ');
 
 UPDATE model_draft.ego_demand_hv_largescaleconsumer a
 	SET subst_id = b.subst_id
@@ -553,8 +557,8 @@ COMMENT ON TABLE  model_draft.ego_demand_hv_largescaleconsumer IS
 -- select description
 SELECT obj_description('model_draft.ego_demand_hv_largescaleconsumer' ::regclass) ::json;
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_demand_hv_largescaleconsumer','ego_dp_loadarea_industry_consumer.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_demand_hv_largescaleconsumer','ego_dp_loadarea_industry_consumer.sql',' ');
 			  
 
 /*﻿ 
