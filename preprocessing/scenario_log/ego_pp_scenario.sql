@@ -52,6 +52,7 @@ INSERT INTO model_draft.ego_scenario (model,version,version_name,release,comment
     ('eGo_DP', 'v0.3.0', 'release v0.3', 'TRUE', ' ', '2017-07-11' ),
     ('eGo_DP', 'v0.3.0pre1', 'v0.3 backup', 'FALSE', ' ', '2017-10-26' ),
     ('eGo_DP', 'v0.3.1', 'RTDoku', 'TRUE', 'new scenario log and documentation', '2018-02-21' ),
+    ('eGo_DP', 'v0.3.2', 'postprocessing', 'FALSE', 'data set for 110kV paper', '2018-05-29' ),
     ('eGo_DP', 'v0.4.0', 'Debugging+clean-run', 'TRUE', 'none', '2018-06-05' );
 
 -- metadata
