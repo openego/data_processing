@@ -1,4 +1,4 @@
-﻿/*
+/*
 eGo Data Processing result data versioning
 Copy a version from model_draft to OEP schema
 
@@ -21,7 +21,7 @@ INSERT INTO grid.ego_dp_ehv_substation
 	FROM	model_draft.ego_grid_ehv_substation;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','result','grid','ego_dp_ehv_substation','ego_dp_versioning.sql','versioning');
+SELECT scenario_log('eGo_DP','v0.4.0','result','grid','ego_dp_ehv_substation','ego_dp_versioning.sql','versioning');
 
 
 -- HVMV Substation versioning
@@ -34,7 +34,7 @@ INSERT INTO grid.ego_dp_hvmv_substation
 	FROM	model_draft.ego_grid_hvmv_substation;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','result','grid','ego_dp_hvmv_substation','ego_dp_versioning.sql','versioning');
+SELECT scenario_log('eGo_DP','v0.4.0','result','grid','ego_dp_hvmv_substation','ego_dp_versioning.sql','versioning');
 
 
 -- MVLV Substation versioning
@@ -47,7 +47,7 @@ INSERT INTO grid.ego_dp_mvlv_substation
 	FROM	model_draft.ego_grid_mvlv_substation;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','result','grid','ego_dp_mvlv_substation','ego_dp_versioning.sql','versioning');
+SELECT scenario_log('eGo_DP','v0.4.0','result','grid','ego_dp_mvlv_substation','ego_dp_versioning.sql','versioning');
 
 
 -- CATCHMENT AREA
@@ -62,7 +62,7 @@ INSERT INTO grid.ego_dp_ehv_griddistrict
 	FROM	model_draft.ego_grid_ehv_substation_voronoi;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','result','grid','ego_dp_ehv_griddistrict','ego_dp_versioning.sql','versioning');
+SELECT scenario_log('eGo_DP','v0.4.0','result','grid','ego_dp_ehv_griddistrict','ego_dp_versioning.sql','versioning');
 
 
 -- MV Griddistrict versioning
@@ -75,7 +75,7 @@ INSERT INTO grid.ego_dp_mv_griddistrict
 	FROM	model_draft.ego_grid_mv_griddistrict;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','result','grid','ego_dp_mv_griddistrict','ego_dp_versioning.sql','versioning');
+SELECT scenario_log('eGo_DP','v0.4.0','result','grid','ego_dp_mv_griddistrict','ego_dp_versioning.sql','versioning');
 
 
 -- LV Griddistrict versioning
@@ -128,7 +128,7 @@ INSERT INTO grid.ego_dp_lv_griddistrict
 	FROM	model_draft.ego_grid_lv_griddistrict;
 	
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','result','grid','ego_dp_lv_griddistrict','ego_dp_versioning.sql','versioning');
+SELECT scenario_log('eGo_DP','v0.4.0','result','grid','ego_dp_lv_griddistrict','ego_dp_versioning.sql','versioning');
 
 
 -- LOADAREA
@@ -143,7 +143,7 @@ INSERT INTO demand.ego_dp_loadarea
 	FROM	model_draft.ego_demand_loadarea;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','result','demand','ego_dp_loadarea','ego_dp_versioning.sql','versioning');
+SELECT scenario_log('eGo_DP','v0.4.0','result','demand','ego_dp_loadarea','ego_dp_versioning.sql','versioning');
 
 
 -- GENERATOR
@@ -198,7 +198,7 @@ INSERT INTO supply.ego_dp_conv_powerplant
 	FROM	model_draft.ego_dp_supply_conv_powerplant;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','result','supply','ego_dp_conv_powerplant','ego_dp_versioning.sql','versioning');
+SELECT scenario_log('eGo_DP','v0.4.0','result','supply','ego_dp_conv_powerplant','ego_dp_versioning.sql','versioning');
 
 -- res versioning
 /* DELETE FROM supply.ego_dp_res_powerplant
@@ -249,7 +249,7 @@ INSERT INTO supply.ego_dp_res_powerplant
 	FROM	model_draft.ego_dp_supply_res_powerplant;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','result','supply','ego_dp_res_powerplant','ego_dp_versioning.sql','versioning');
+SELECT scenario_log('eGo_DP','v0.4.0','result','supply','ego_dp_res_powerplant','ego_dp_versioning.sql','versioning');
 
 
 -- POWERFLOW
@@ -264,7 +264,7 @@ INSERT INTO grid.ego_pf_hv_bus
 	FROM	model_draft.ego_grid_pf_hv_bus;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','result','grid','ego_pf_hv_bus','ego_dp_versioning.sql','versioning');
+SELECT scenario_log('eGo_DP','v0.4.0','result','grid','ego_pf_hv_bus','ego_dp_versioning.sql','versioning');
 
 -- hv pf generator
 /* DELETE FROM grid.ego_pf_hv_generator
@@ -276,7 +276,7 @@ INSERT INTO grid.ego_pf_hv_generator
 	FROM	model_draft.ego_grid_pf_hv_generator;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','result','grid','ego_pf_hv_generator','ego_dp_versioning.sql','versioning');
+SELECT scenario_log('eGo_DP','v0.4.0','result','grid','ego_pf_hv_generator','ego_dp_versioning.sql','versioning');
 
 
 -- hv pf generator_pq_set
@@ -289,7 +289,7 @@ INSERT INTO grid.ego_pf_hv_generator_pq_set
 	FROM	model_draft.ego_grid_pf_hv_generator_pq_set;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','result','grid','ego_pf_hv_generator_pq_set','ego_dp_versioning.sql','versioning');
+SELECT scenario_log('eGo_DP','v0.4.0','result','grid','ego_pf_hv_generator_pq_set','ego_dp_versioning.sql','versioning');
 
 
 -- hv pf line
@@ -302,7 +302,7 @@ INSERT INTO grid.ego_pf_hv_line
 	FROM	model_draft.ego_grid_pf_hv_line;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','result','grid','ego_pf_hv_line','ego_dp_versioning.sql','versioning');
+SELECT scenario_log('eGo_DP','v0.4.0','result','grid','ego_pf_hv_line','ego_dp_versioning.sql','versioning');
 
 -- hv pf link
 /* DELETE FROM grid.ego_pf_hv_link
@@ -314,7 +314,7 @@ INSERT INTO grid.ego_pf_hv_link
 	FROM	model_draft.ego_grid_pf_hv_link;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','result','grid','ego_pf_hv_line','ego_dp_versioning.sql','versioning');
+SELECT scenario_log('eGo_DP','v0.4.0','result','grid','ego_pf_hv_line','ego_dp_versioning.sql','versioning');
 
 
 -- hv pf load
@@ -327,7 +327,7 @@ INSERT INTO grid.ego_pf_hv_load
 	FROM	model_draft.ego_grid_pf_hv_load;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','result','grid','ego_pf_hv_load','ego_dp_versioning.sql','versioning');
+SELECT scenario_log('eGo_DP','v0.4.0','result','grid','ego_pf_hv_load','ego_dp_versioning.sql','versioning');
 
 
 -- hv pf load_pq_set
@@ -340,7 +340,7 @@ INSERT INTO grid.ego_pf_hv_load_pq_set
 	FROM	model_draft.ego_grid_pf_hv_load_pq_set;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','result','grid','ego_pf_hv_load_pq_set','ego_dp_versioning.sql','versioning');
+SELECT scenario_log('eGo_DP','v0.4.0','result','grid','ego_pf_hv_load_pq_set','ego_dp_versioning.sql','versioning');
 
 
 -- hv pf source
@@ -353,7 +353,7 @@ INSERT INTO grid.ego_pf_hv_source
 	FROM	model_draft.ego_grid_pf_hv_source;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','result','grid','ego_pf_hv_source','ego_dp_versioning.sql','versioning');
+SELECT scenario_log('eGo_DP','v0.4.0','result','grid','ego_pf_hv_source','ego_dp_versioning.sql','versioning');
 
 
 -- hv pf storage
@@ -366,7 +366,7 @@ INSERT INTO grid.ego_pf_hv_storage
 	FROM	model_draft.ego_grid_pf_hv_storage;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','result','grid','ego_pf_hv_storage','ego_dp_versioning.sql','versioning');
+SELECT scenario_log('eGo_DP','v0.4.0','result','grid','ego_pf_hv_storage','ego_dp_versioning.sql','versioning');
 
 
 -- hv pf storage_pq_set
@@ -379,7 +379,7 @@ INSERT INTO grid.ego_pf_hv_storage_pq_set
 	FROM	model_draft.ego_grid_pf_hv_storage_pq_set;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','result','grid','ego_pf_hv_storage_pq_set','ego_dp_versioning.sql','versioning');
+SELECT scenario_log('eGo_DP','v0.4.0','result','grid','ego_pf_hv_storage_pq_set','ego_dp_versioning.sql','versioning');
 
 
 -- hv pf temp_resolution
@@ -392,7 +392,7 @@ INSERT INTO grid.ego_pf_hv_temp_resolution
 	FROM	model_draft.ego_grid_pf_hv_temp_resolution;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','result','grid','ego_pf_hv_temp_resolution','ego_dp_versioning.sql','versioning');
+SELECT scenario_log('eGo_DP','v0.4.0','result','grid','ego_pf_hv_temp_resolution','ego_dp_versioning.sql','versioning');
 
 
 -- hv pf transformer
@@ -405,7 +405,7 @@ INSERT INTO grid.ego_pf_hv_transformer
 	FROM	model_draft.ego_grid_pf_hv_transformer;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','result','grid','ego_pf_hv_transformer','ego_dp_versioning.sql','versioning');
+SELECT scenario_log('eGo_DP','v0.4.0','result','grid','ego_pf_hv_transformer','ego_dp_versioning.sql','versioning');
 
 -- hv pf extension bus
 /* DELETE FROM grid.ego_pf_hv_extension_bus
@@ -417,7 +417,7 @@ INSERT INTO grid.ego_pf_hv_extension_bus
 	FROM	model_draft.ego_grid_pf_hv_extension_bus;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','result','grid','ego_pf_hv_extension_bus','ego_dp_versioning.sql','versioning');
+SELECT scenario_log('eGo_DP','v0.4.0','result','grid','ego_pf_hv_extension_bus','ego_dp_versioning.sql','versioning');
 
 -- hv pf extension generator
 /* DELETE FROM grid.ego_pf_hv_extension_generator
@@ -429,7 +429,7 @@ INSERT INTO grid.ego_pf_hv_extension_generator
 	FROM	model_draft.ego_grid_pf_hv_extension_generator;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','result','grid','ego_pf_hv_extension_generator','ego_dp_versioning.sql','versioning');
+SELECT scenario_log('eGo_DP','v0.4.0','result','grid','ego_pf_hv_extension_generator','ego_dp_versioning.sql','versioning');
 
 
 -- hv pf extension generator_pq_set
@@ -442,7 +442,7 @@ INSERT INTO grid.ego_pf_hv_extension_generator_pq_set
 	FROM	model_draft.ego_grid_pf_hv_extension_generator_pq_set;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','result','grid','ego_pf_hv_extension_generator_pq_set','ego_dp_versioning.sql','versioning');
+SELECT scenario_log('eGo_DP','v0.4.0','result','grid','ego_pf_hv_extension_generator_pq_set','ego_dp_versioning.sql','versioning');
 
 
 -- hv pf extension line
@@ -455,7 +455,7 @@ INSERT INTO grid.ego_pf_hv_extension_line
 	FROM	model_draft.ego_grid_pf_hv_extension_line;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','result','grid','ego_pf_hv_extension_line','ego_dp_versioning.sql','versioning');
+SELECT scenario_log('eGo_DP','v0.4.0','result','grid','ego_pf_hv_extension_line','ego_dp_versioning.sql','versioning');
 
 -- hv pf extension link
 /* DELETE FROM grid.ego_pf_hv_extension_link
@@ -467,7 +467,7 @@ INSERT INTO grid.ego_pf_hv_extension_link
 	FROM	model_draft.ego_grid_pf_hv_extension_link;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','result','grid','ego_pf_hv_extension_link','ego_dp_versioning.sql','versioning');
+SELECT scenario_log('eGo_DP','v0.4.0','result','grid','ego_pf_hv_extension_link','ego_dp_versioning.sql','versioning');
 
 
 -- hv pf extension load
@@ -480,7 +480,7 @@ INSERT INTO grid.ego_pf_hv_extension_load
 	FROM	model_draft.ego_grid_pf_hv_extension_load;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','result','grid','ego_pf_hv_extension_load','ego_dp_versioning.sql','versioning');
+SELECT scenario_log('eGo_DP','v0.4.0','result','grid','ego_pf_hv_extension_load','ego_dp_versioning.sql','versioning');
 
 
 -- hv pf extension load_pq_set
@@ -493,7 +493,7 @@ INSERT INTO grid.ego_pf_hv_extension_load_pq_set
 	FROM	model_draft.ego_grid_pf_hv_extension_load_pq_set;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','result','grid','ego_pf_hv_extension_load_pq_set','ego_dp_versioning.sql','versioning');
+SELECT scenario_log('eGo_DP','v0.4.0','result','grid','ego_pf_hv_extension_load_pq_set','ego_dp_versioning.sql','versioning');
 
 
 -- hv pf extension source
@@ -506,7 +506,7 @@ INSERT INTO grid.ego_pf_hv_extension_source
 	FROM	model_draft.ego_grid_pf_extension_hv_source;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','result','grid','ego_pf_hv_extension_source','ego_dp_versioning.sql','versioning');
+SELECT scenario_log('eGo_DP','v0.4.0','result','grid','ego_pf_hv_extension_source','ego_dp_versioning.sql','versioning');
 
 
 -- hv pf extension storage
@@ -519,7 +519,7 @@ INSERT INTO grid.ego_pf_hv_extension_storage
 	FROM	model_draft.ego_grid_pf_hv_extension_storage;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','result','grid','ego_pf_hv_extension_storage','ego_dp_versioning.sql','versioning');
+SELECT scenario_log('eGo_DP','v0.4.0','result','grid','ego_pf_hv_extension_storage','ego_dp_versioning.sql','versioning');
 
 
 -- hv pf extension storage_pq_set
@@ -532,7 +532,7 @@ INSERT INTO grid.ego_pf_hv_extension_storage_pq_set
 	FROM	model_draft.ego_grid_pf_hv_extension_storage_pq_set;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','result','grid','ego_pf_hv_extension_storage_pq_set','ego_dp_versioning.sql','versioning');
+SELECT scenario_log('eGo_DP','v0.4.0','result','grid','ego_pf_hv_extension_storage_pq_set','ego_dp_versioning.sql','versioning');
 
 
 -- hv pf extension temp_resolution
@@ -545,7 +545,7 @@ INSERT INTO grid.ego_pf_hv_extension_temp_resolution
 	FROM	model_draft.ego_grid_pf_hv_extension_temp_resolution;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','result','grid','ego_pf_hv_extension_temp_resolution','ego_dp_versioning.sql','versioning');
+SELECT scenario_log('eGo_DP','v0.4.0','result','grid','ego_pf_hv_extension_temp_resolution','ego_dp_versioning.sql','versioning');
 
 
 -- hv pf extension transformer
@@ -558,7 +558,7 @@ INSERT INTO grid.ego_pf_hv_extension_transformer
 	FROM	model_draft.ego_grid_pf_hv_extension_transformer;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','result','grid','ego_pf_hv_extension_transformer','ego_dp_versioning.sql','versioning');
+SELECT scenario_log('eGo_DP','v0.4.0','result','grid','ego_pf_hv_extension_transformer','ego_dp_versioning.sql','versioning');
 
 
 
@@ -573,23 +573,23 @@ INSERT INTO grid.ego_line_expansion_costs
 	FROM	model_draft.ego_grid_line_expansion_costs;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','result','grid','ego_line_expansion_costs','ego_dp_versioning.sql','versioning');
+SELECT scenario_log('eGo_DP','v0.4.0','result','grid','ego_line_expansion_costs','ego_dp_versioning.sql','versioning');
 
 
 -- renewable time series
 INSERT INTO  supply.ego_renewable_feedin
         SELECT	'v0.4.0',
-		*s
-	FROM model_draft.ego_renewable_feedin
+		*
+	FROM model_draft.ego_renewable_feedin; 
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','result','supply','ego_renewable_feedin','ego_dp_versioning.sql','versioning');
+SELECT scenario_log('eGo_DP','v0.4.0','result','supply','ego_renewable_feedin','ego_dp_versioning.sql','versioning');
 
 -- renewable wind parameters
 INSERT INTO  supply.ego_power_class
         SELECT	'v0.4.0',
 		*
-	FROM model_draft.ego_power_class
+	FROM model_draft.ego_power_class;
 	
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.4.0','result','supply','ego_power_class','ego_dp_versioning.sql','versioning');
+SELECT scenario_log('eGo_DP','v0.4.0','result','supply','ego_power_class','ego_dp_versioning.sql','versioning');
