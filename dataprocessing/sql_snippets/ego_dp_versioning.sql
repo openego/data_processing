@@ -579,9 +579,9 @@ SELECT scenario_log('eGo_DP','v0.4.0','result','grid','ego_line_expansion_costs'
 -- renewable time series
 INSERT INTO  supply.ego_renewable_feedin
         SELECT	'v0.4.0',
-		*
+		weather_scenario_id, w_id, source, weather_year, feedin, power_class
 	FROM model_draft.ego_renewable_feedin; 
-
+	
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
 SELECT scenario_log('eGo_DP','v0.4.0','result','supply','ego_renewable_feedin','ego_dp_versioning.sql','versioning');
 
