@@ -1,6 +1,6 @@
 /*
 This scripts updates tables containing `renewable power plants <http://oep.iks.cs.ovgu.de/dataedit/view/model_draft/ego_dp_supply_res_powerplant>`_ and `conventional power plants <http://oep.iks.cs.ovgu.de/dataedit/view/model_draft/ego_dp_supply_conv_powerplant>`_ with information on the otg_id of substations which the generator is assigned to. 
-The otg_id and subst_id of the substations are matched in tables containing information on `HV/MV substations <http://oep.iks.cs.ovgu.de/dataedit/view/model_draft/ego_grid_hvmv_substation>`_ and `EHV substations <http://oep.iks.cs.ovgu.de/dataedit/view/model_draft/ego_grid_ehv_substation>`_.  
+The otg_id and subst_id of the substations are matched in tables containing information on `HV/MV substations <http://oep.iks.cs.ovgu.de/dataedit/view/model_draft/ego_grid_hvmv_substation>`_ and `EHV substations <http://oep.iks.cs.ovgu.de/dataedit/view/model_draft/ego_grid_>`_.  
 
 Additionally the otg_id of offshore wind turbines is updated manually. The geometry of offshore wind power plants is matched with polygons representing a catchment area per relevant offshore grid connection point.  
 
@@ -10,6 +10,9 @@ __url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
 __author__ 	= "IlkaCu" 
 */
 
+-- Set column otg_id to NULL 
+UPDATE model_draft.ego_dp_supply_res_powerplant
+	SET otg_id = NULL; 
 
 -- Insert otg_id of bus for res pp 
 UPDATE model_draft.ego_dp_supply_res_powerplant a
@@ -19,10 +22,14 @@ UPDATE model_draft.ego_dp_supply_res_powerplant a
 	
 UPDATE model_draft.ego_dp_supply_res_powerplant a
 	SET 	otg_id = b.otg_id 
-	FROM 	model_draft.ego_ehv_substation b
+	FROM 	model_draft.ego_grid_ehv_substation b
 	WHERE 	a.subst_id = b.subst_id AND voltage_level < 3;
 
 
+-- Set column otg_id to NULL 
+UPDATE model_draft.ego_dp_supply_conv_powerplant
+	SET otg_id = NULL; 
+	
 -- Insert otg_id of bus for conv pp
 UPDATE model_draft.ego_dp_supply_conv_powerplant a
 	SET 	otg_id =b.otg_id 
@@ -31,7 +38,7 @@ UPDATE model_draft.ego_dp_supply_conv_powerplant a
 	
 UPDATE model_draft.ego_dp_supply_conv_powerplant a
 	SET 	otg_id = b.otg_id 
-	FROM 	model_draft.ego_ehv_substation b
+	FROM 	model_draft.ego_grid_ehv_substation b
 	WHERE 	a.subst_id = b.subst_id AND voltage_level < 3;
 	
 -- Update otg_id of offshore windturbines manually 
@@ -95,7 +102,7 @@ UPDATE model_draft.ego_dp_supply_res_powerplant a
 */
 
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_dp_supply_res_powerplant','ego_dp_powerflow_assignment_otgid.sql',' ');
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_dp_supply_conv_powerplant','ego_dp_powerflow_assignment_otgid.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_dp_supply_res_powerplant','ego_dp_powerflow_assignment_otgid.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_dp_supply_conv_powerplant','ego_dp_powerflow_assignment_otgid.sql',' ');
 

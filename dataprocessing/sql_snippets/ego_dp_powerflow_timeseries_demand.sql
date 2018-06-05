@@ -50,8 +50,8 @@ INSERT INTO model_draft.ego_grid_pf_hv_load_pq_set (scn_name, load_id, temp_id, 
 	AND C.scn_name = 'Status Quo'
 	GROUP BY C.load_id;
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_grid_pf_hv_load_pq_set','ego_dp_powerflow_timeseries_demand.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_grid_pf_hv_load_pq_set','ego_dp_powerflow_timeseries_demand.sql',' ');
 
 
 ---------------
@@ -78,5 +78,5 @@ SELECT 'eGo 100', a.load_id, a.temp_id, a.p_set, a.q_set
 FROM model_draft.ego_grid_pf_hv_load_pq_set a
 WHERE scn_name= 'Status Quo';
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_grid_pf_hv_load_pq_set','ego_dp_powerflow_load_timeseries_NEP2035.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_grid_pf_hv_load_pq_set','ego_dp_powerflow_load_timeseries_NEP2035.sql',' ');

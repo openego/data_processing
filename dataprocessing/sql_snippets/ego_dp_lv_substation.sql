@@ -18,8 +18,8 @@ CREATE TABLE            model_draft.ego_lattice_360m_lv (
     geom    geometry(Polygon,3035),
     CONSTRAINT ego_lattice_360m_lv_pkey PRIMARY KEY (id) );
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_demand_loadarea','ego_dp_lv_substation.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','input','model_draft','ego_demand_loadarea','ego_dp_lv_substation.sql',' ');
 
 -- lattice on the bbox of loadareas
 INSERT INTO model_draft.ego_lattice_360m_lv (geom, la_id)
@@ -57,14 +57,14 @@ ALTER TABLE model_draft.ego_lattice_360m_lv OWNER TO oeuser;
 -- metadata
 COMMENT ON TABLE model_draft.ego_lattice_360m_lv IS '{
     "comment": "eGoDP - Temporary table",
-    "version": "v0.3.0" }';
+    "version": "v0.4.0" }';
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_lattice_360m_lv','ego_dp_lv_substation.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','temp','model_draft','ego_lattice_360m_lv','ego_dp_lv_substation.sql',' ');
 
 
 -- Create MVLV Substation from lattice centroid
-DROP TABLE IF EXISTS    model_draft.ego_grid_mvlv_substation;
+DROP TABLE IF EXISTS    model_draft.ego_grid_mvlv_substation CASCADE;
 CREATE TABLE            model_draft.ego_grid_mvlv_substation (
     mvlv_subst_id   serial NOT NULL,
     la_id           integer,
@@ -113,15 +113,15 @@ ALTER TABLE model_draft.ego_grid_mvlv_substation OWNER TO oeuser;
 -- metadata
 COMMENT ON TABLE model_draft.ego_grid_mvlv_substation IS '{
     "comment": "eGoDP - Temporary table",
-    "version": "v0.3.0" }';
+    "version": "v0.4.0" }';
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_grid_mvlv_substation','ego_dp_lv_substation.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','temp','model_draft','ego_grid_mvlv_substation','ego_dp_lv_substation.sql',' ');
 
 
 -- Lege Buffer um ONT-Standorte und ermittle die Teile der Lastgebiete, die sich nicht innerhalb dieser Buffer befinden
 -- LV Griddistrict rest
-DROP TABLE IF EXISTS    model_draft.ego_grid_lv_loadarea_rest; 
+DROP TABLE IF EXISTS    model_draft.ego_grid_lv_loadarea_rest CASCADE; 
 CREATE TABLE            model_draft.ego_grid_lv_loadarea_rest (
     id          serial NOT NULL,
     la_id       integer,
@@ -163,10 +163,10 @@ UPDATE model_draft.ego_grid_lv_loadarea_rest
 -- metadata
 COMMENT ON TABLE model_draft.ego_grid_lv_loadarea_rest IS '{
     "comment": "eGoDP - Temporary table",
-    "version": "v0.3.0" }';
+    "version": "v0.4.0" }';
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','temp','model_draft','ego_grid_lv_loadarea_rest','ego_dp_lv_substation.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','temp','model_draft','ego_grid_lv_loadarea_rest','ego_dp_lv_substation.sql',' ');
 
 
 -- Bestimme die Mittelpunkte der Gebiete, die noch nicht durch ONT abgedeckt sind, und lege diese Mittelpunkte als ONT-Standorte fest
@@ -176,8 +176,8 @@ INSERT INTO model_draft.ego_grid_mvlv_substation (la_id, geom)
             geom_point ::geometry(POINT,3035) 
     FROM    model_draft.ego_grid_lv_loadarea_rest;
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','input','model_draft','ego_grid_mv_griddistrict','ego_dp_lv_substation.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','input','model_draft','ego_grid_mv_griddistrict','ego_dp_lv_substation.sql',' ');
 
 -- subst_id from MV-griddistrict
 UPDATE model_draft.ego_grid_mvlv_substation AS t1
@@ -195,10 +195,10 @@ UPDATE model_draft.ego_grid_mvlv_substation AS t1
 -- metadata
 COMMENT ON TABLE model_draft.ego_grid_mvlv_substation IS '{
     "comment": "eGoDP - Temporary table",
-    "version": "v0.3.0" }';
+    "version": "v0.4.0" }';
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_grid_mvlv_substation','ego_dp_lv_substation.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_grid_mvlv_substation','ego_dp_lv_substation.sql',' ');
 
 
 -- drop

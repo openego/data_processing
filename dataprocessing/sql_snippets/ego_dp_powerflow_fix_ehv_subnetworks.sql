@@ -1,4 +1,4 @@
-﻿DROP SEQUENCE IF EXISTS model_draft.ego_grid_hv_fix_errors_bus_id CASCADE;
+DROP SEQUENCE IF EXISTS model_draft.ego_grid_hv_fix_errors_bus_id CASCADE;
 CREATE SEQUENCE model_draft.ego_grid_hv_fix_errors_bus_id;
 SELECT setval('model_draft.ego_grid_hv_fix_errors_bus_id', (max(bus_id)+1)) FROM model_draft.ego_grid_pf_hv_bus;
 
@@ -152,7 +152,7 @@ VALUES (nextval('model_draft.ego_grid_hv_fix_errors_line_id'),
 	(SELECT DISTINCT ON (bus_id) bus_id FROM  model_draft.ego_grid_pf_hv_bus WHERE v_nom = 380 AND geom = '0101000020E6100000E1F4899702B52940FA1DD48F97614840'),
 	(SELECT bus_i FROM grid.otg_ehvhv_bus_data WHERE base_kv = 380 AND geom = '0101000020E6100000C000DCEF17B429409E0779BEB3614840'),
 	'0102000020E610000002000000E1F4899702B52940FA1DD48F97614840C000DCEF17B429409E0779BEB3614840',
-	'0105000020E610000001000000010200000002000000E1F4899702B52940FA1DD48F97614840C000DCEF17B429409E0779BEB3614840'
+	'0105000020E610000001000000010200000002000000E1F4899702B52940FA1DD48F97614840C000DCEF17B429409E0779BEB3614840',
 	0.162698660268822,
 	314.15 * 0.0008 * 0.162698660268822,
 	1790,
@@ -280,3 +280,8 @@ VALUES	('Status Quo',
 
 
 DELETE FROM model_draft.ego_grid_pf_hv_transformer WHERE bus1 NOT IN (SELECT bus_id FROM model_draft.ego_grid_pf_hv_bus) OR bus0 NOT IN (SELECT bus_id FROM model_draft.ego_grid_pf_hv_bus);
+
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_grid_pf_hv_bus','ego_dp_powerflow_fix_ehv_subnetworks.sql',' ');     
+SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_grid_pf_hv_line','ego_dp_powerflow_fix_ehv_subnetworks.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_grid_pf_hv_transformer','ego_dp_powerflow_fix_ehv_subnetworks.sql',' ');

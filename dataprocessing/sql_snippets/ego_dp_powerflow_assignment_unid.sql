@@ -44,13 +44,14 @@ CREATE INDEX 	ego_supply_generator_idx
 	ON 	model_draft.ego_supply_generator USING gist (geom);
 
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_supply_generator','ego_dp_powerflow_assignment_unid.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_supply_generator','ego_dp_powerflow_assignment_unid.sql',' ');
 	
 
 -- Update power plant tables and add information on unified id of generators
 
 UPDATE model_draft.ego_dp_supply_res_powerplant SET un_id = NULL; 
+UPDATE model_draft.ego_dp_supply_conv_powerplant SET un_id = NULL; 
 
 -- Update un_id from generators_total  
 UPDATE model_draft.ego_dp_supply_conv_powerplant a
@@ -67,9 +68,9 @@ UPDATE model_draft.ego_dp_supply_res_powerplant a
 
 
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_dp_supply_res_powerplant','ego_dp_powerflow_assignment_unid.sql',' ');
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_dp_supply_conv_powerplant','ego_dp_powerflow_assignment_unid.sql',' ');
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_dp_supply_res_powerplant','ego_dp_powerflow_assignment_unid.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_dp_supply_conv_powerplant','ego_dp_powerflow_assignment_unid.sql',' ');
 
 
 
