@@ -463,7 +463,7 @@ SELECT scenario_log('eGo_DP','v0.4.0','result','grid','ego_pf_hv_extension_line'
 	
 INSERT INTO grid.ego_pf_hv_extension_link
 	SELECT	'v0.4.0',
-		 scn_name, link_id, bus0, bus1, efficiency, p_nom, p_nom_extendable, p_nom_min, p_nom_max, capital_cost, marginal_cost, length, terrain_factor,geom, topo, project, project_id
+		 scn_name, link_id, bus0, bus1, efficiency, marginal_cost, p_nom, p_nom_extendable, p_nom_min, p_nom_max, capital_cost, length, terrain_factor,geom, topo, project, project_id
 	FROM	model_draft.ego_grid_pf_hv_extension_link;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
