@@ -453,7 +453,8 @@ DELETE FROM model_draft.ego_grid_pf_hv_bus WHERE v_nom = 320;
 
 DELETE FROM model_draft.ego_grid_pf_hv_load WHERE load_id in (28405, 28407, 28411, 28412, 28415, 28418, 28419, 28420, 28425);
 DELETE FROM model_draft.ego_grid_pf_hv_load_pq_set WHERE load_id IN (28532, 28536, 28538, 28541, 28544, 28545, 28546, 28548);
-
+*/
+					  
 INSERT INTO model_draft.ego_grid_pf_hv_line (scn_name, line_id, bus0, bus1, x, r, s_nom, topo, geom, length, frequency, cables)
 SELECT  'Status Quo', line_id, bus0, bus1, x, r, s_nom, topo, geom, length, frequency, cables FROM model_draft.ego_grid_hv_electrical_neighbours_line;
 
@@ -464,7 +465,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_bus (scn_name, bus_id, v_nom, geom, curre
 SELECT  'Status Quo',bus_id, v_nom, geom, current_type FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE cntr_id != 'DE' AND central_bus = TRUE OR v_nom = 450 OR geom = '0101000020E6100000AFB9FEB858EC2740621AE148FB474B40';
 
 INSERT INTO model_draft.ego_grid_pf_hv_transformer (scn_name, trafo_id, bus0, bus1, x, s_nom, geom, tap_ratio, phase_shift)
-SELECT 'Status Quo', trafo_id, bus0, bus1, x, s_nom, geom, tap_ratio, phase_shift FROM model_draft.ego_grid_hv_electrical_neighbours_transformer;*/
+SELECT 'Status Quo', trafo_id, bus0, bus1, x, s_nom, geom, tap_ratio, phase_shift FROM model_draft.ego_grid_hv_electrical_neighbours_transformer;
 
 	
 
