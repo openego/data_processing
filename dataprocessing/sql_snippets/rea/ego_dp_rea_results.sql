@@ -15,7 +15,7 @@ Results
 */ 
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.0','input','model_draft','ego_dp_supply_res_powerplant','ego_dp_rea_results.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.1','input','model_draft','ego_dp_supply_res_powerplant','ego_dp_rea_results.sql',' ');
 
 -- dea capacity and count per generation types and voltage level
 DROP TABLE IF EXISTS 	model_draft.ego_supply_rea_per_gentype_and_voltlevel CASCADE;
@@ -35,7 +35,7 @@ ALTER TABLE	model_draft.ego_supply_rea_per_gentype_and_voltlevel
 	OWNER TO oeuser;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_supply_rea_per_gentype_and_voltlevel','ego_dp_rea_results.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.1','output','model_draft','ego_supply_rea_per_gentype_and_voltlevel','ego_dp_rea_results.sql',' ');
 
 	
 /* 
@@ -67,7 +67,7 @@ ALTER TABLE model_draft.ego_supply_rea_per_mvgd OWNER TO oeuser;
  */
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.0','input','model_draft','ego_grid_mv_griddistrict','ego_dp_rea_results.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.1','input','model_draft','ego_grid_mv_griddistrict','ego_dp_rea_results.sql',' ');
 
 UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
 	SET  	dea_cnt = t2.dea_cnt,
@@ -114,7 +114,7 @@ UPDATE 	model_draft.ego_grid_mv_griddistrict AS t1
 	WHERE  	t1.subst_id = t2.subst_id;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_grid_mv_griddistrict','ego_dp_rea_results.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.1','output','model_draft','ego_grid_mv_griddistrict','ego_dp_rea_results.sql',' ');
 
 
 -- DEA capacity and count per load area
@@ -153,7 +153,7 @@ FROM	model_draft.ego_supply_rea_per_loadarea AS la,
 */
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_supply_rea_per_loadarea','ego_dp_rea_results.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.1','output','model_draft','ego_supply_rea_per_loadarea','ego_dp_rea_results.sql',' ');
 
 
 -- DEA capacity and count per load area
@@ -224,7 +224,7 @@ ALTER TABLE	model_draft.ego_supply_rea_per_method
 	OWNER TO oeuser;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_supply_rea_per_method','ego_dp_rea_results.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.1','output','model_draft','ego_supply_rea_per_method','ego_dp_rea_results.sql',' ');
 
 
 -- Hotfix to fill empty rea_geom_new cells in table 
@@ -244,4 +244,4 @@ CREATE INDEX ego_dp_supply_res_powerplant_geom_new_idx
   (rea_geom_new);
   
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_dp_supply_res_powerplant','ego_dp_rea_results.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.1','output','model_draft','ego_dp_supply_res_powerplant','ego_dp_rea_results.sql',' ');

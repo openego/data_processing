@@ -62,7 +62,7 @@ ALTER TABLE model_draft.ego_dp_supply_conv_powerplant
     DROP COLUMN subst_id_NN; 
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.0','input','model_draft','ego_dp_supply_conv_powerplant','ego_dp_substation_id_to_generator.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.1','input','model_draft','ego_dp_supply_conv_powerplant','ego_dp_substation_id_to_generator.sql',' ');
 
 
 ------------------
@@ -89,4 +89,4 @@ UPDATE model_draft.ego_dp_supply_res_powerplant a
 AND voltage_level <= 2; 
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.0','input','model_draft','ego_dp_supply_res_powerplant','ego_dp_substation_id_to_generator.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.1','input','model_draft','ego_dp_supply_res_powerplant','ego_dp_substation_id_to_generator.sql',' ');

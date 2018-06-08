@@ -12,17 +12,17 @@ __author__      = "Ludee"
 
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.0','input','model_draft','ego_demand_hv_largescaleconsumer','ego_dp_loadarea_loads.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.1','input','model_draft','ego_demand_hv_largescaleconsumer','ego_dp_loadarea_loads.sql',' ');
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.0','input','openstreetmap','osm_deu_polygon_urban','ego_dp_loadarea_loads.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.1','input','openstreetmap','osm_deu_polygon_urban','ego_dp_loadarea_loads.sql',' ');
 
 -- exclude large scale consumer
 DELETE FROM openstreetmap.osm_deu_polygon_urban
 	WHERE gid IN (SELECT polygon_id FROM model_draft.ego_demand_hv_largescaleconsumer);
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.0','output','openstreetmap','osm_deu_polygon_urban','ego_dp_loadarea_loads.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.1','output','openstreetmap','osm_deu_polygon_urban','ego_dp_loadarea_loads.sql',' ');
 
 -- sequence
 DROP SEQUENCE IF EXISTS 	model_draft.osm_deu_polygon_urban_buffer100_mview_id CASCADE;
@@ -55,11 +55,11 @@ ALTER MATERIALIZED VIEW	model_draft.osm_deu_polygon_urban_buffer100_mview OWNER 
 -- metadata
 COMMENT ON MATERIALIZED VIEW model_draft.osm_deu_polygon_urban_buffer100_mview IS '{
     "comment": "eGoDP - Temporary table", 
-    "version": "v0.4.0",
+    "version": "v0.4.1",
     "published": "none" }';
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.0','temp','model_draft','osm_deu_polygon_urban_buffer100_mview','ego_dp_loadarea_loads.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.1','temp','model_draft','osm_deu_polygon_urban_buffer100_mview','ego_dp_loadarea_loads.sql',' ');
 
 
 -- unbuffer with 100m
@@ -91,14 +91,14 @@ ALTER TABLE	model_draft.ego_demand_la_osm OWNER TO oeuser;
 -- metadata
 COMMENT ON TABLE model_draft.ego_demand_la_osm IS '{
     "comment": "eGoDP - Temporary table", 
-    "version": "v0.4.0",
+    "version": "v0.4.1",
     "published": "none" }';
 
 -- select description
 SELECT obj_description('model_draft.ego_demand_la_osm' ::regclass) ::json;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.0','ouput','model_draft','ego_demand_la_osm','ego_dp_loadarea_loads.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.1','ouput','model_draft','ego_demand_la_osm','ego_dp_loadarea_loads.sql',' ');
 
 
 -- DROP MATERIALIZED VIEW IF EXISTS model_draft.osm_deu_polygon_urban_buffer100_mview CASCADE;

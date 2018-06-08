@@ -26,7 +26,7 @@ SELECT
   WHERE result_id = 1;
   
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_grid_pf_hv_bus','ego_dp_powerflow_osmtgmod_to_pypsa.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.1','output','model_draft','ego_grid_pf_hv_bus','ego_dp_powerflow_osmtgmod_to_pypsa.sql',' ');
 
 -- BRANCH DATA
 INSERT INTO model_draft.ego_grid_pf_hv_line (line_id, bus0, bus1, x, r, b, s_nom, cables, frequency, geom, topo)
@@ -46,7 +46,7 @@ SELECT
   WHERE result_id = 1 and (link_type = 'line' or link_type = 'cable');
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_grid_pf_hv_line','ego_dp_powerflow_osmtgmod_to_pypsa.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.1','output','model_draft','ego_grid_pf_hv_line','ego_dp_powerflow_osmtgmod_to_pypsa.sql',' ');
 
 -- TRANSFORMER DATA
 INSERT INTO model_draft.ego_grid_pf_hv_transformer (trafo_id, bus0, bus1, x, s_nom, tap_ratio, phase_shift, geom, topo)
@@ -64,7 +64,7 @@ SELECT
   WHERE result_id = 1 and link_type = 'transformer';
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_grid_pf_hv_transformer','ego_dp_powerflow_osmtgmod_to_pypsa.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.1','output','model_draft','ego_grid_pf_hv_transformer','ego_dp_powerflow_osmtgmod_to_pypsa.sql',' ');
 
 -- per unit to absolute values
 
