@@ -15,6 +15,9 @@ __author__      = "IlkaCu"
 -- Conventional power plants
 ------------------
 
+UPDATE model_draft.ego_dp_supply_conv_powerplant 
+    SET    subst_id = NULL; 
+
 -- Identify corresponding bus with the help of grid districts
 UPDATE model_draft.ego_dp_supply_conv_powerplant a
     SET     subst_id = b.subst_id
@@ -66,6 +69,9 @@ SELECT scenario_log('eGo_DP', 'v0.4.0','input','model_draft','ego_dp_supply_conv
 -- Renewable power plants
 ------------------
 
+UPDATE model_draft.ego_dp_supply_res_powerplant
+    SET     subst_id = NULL;                                           
+                                               
 -- Identify corresponding bus with the help of grid districts
 UPDATE model_draft.ego_dp_supply_res_powerplant a
     SET     subst_id = b.subst_id
