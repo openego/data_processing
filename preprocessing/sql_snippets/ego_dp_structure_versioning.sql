@@ -1702,6 +1702,7 @@ CREATE TABLE 		supply.ego_dp_res_powerplant (
 	voltage_level smallint,
 	la_id integer,
 	mvlv_subst_id integer,
+	w_id bigint,
 	rea_sort integer,
 	rea_flag character varying,
 	rea_geom_line geometry(LineString,3035),
