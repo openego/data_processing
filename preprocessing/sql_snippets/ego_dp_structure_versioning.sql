@@ -1551,7 +1551,6 @@ CREATE TABLE supply.ego_dp_conv_powerplant
   scenario text NOT NULL DEFAULT 'none'::text,
   flag text,
   nuts character varying,
-  w_id bigint,
   CONSTRAINT ego_dp_conv_powerplant_pkey PRIMARY KEY (version, scenario, gid)
  );
   
