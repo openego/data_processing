@@ -244,7 +244,8 @@ INSERT INTO supply.ego_dp_res_powerplant
 		preversion, 
 		flag, 
 		scenario, 
-		nuts
+		nuts,
+		w_id
 
 	FROM	model_draft.ego_dp_supply_res_powerplant;
 
