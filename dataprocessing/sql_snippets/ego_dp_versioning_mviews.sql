@@ -84,8 +84,7 @@ CREATE MATERIALIZED VIEW supply.ego_dp_conv_powerplant_ego100_mview AS
 	  la_id,
 	  'eGo 100'::text as scenario,
 	  'constantly'::text as flag,
-	  nuts,
-	  w_id
+	  nuts
 	FROM supply.ego_dp_conv_powerplant
 	WHERE scenario in('NEP 2035')
 	AND fuel = 'pumped_storage'
