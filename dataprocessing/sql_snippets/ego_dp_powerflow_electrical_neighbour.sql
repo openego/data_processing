@@ -439,9 +439,9 @@ UPDATE model_draft.ego_grid_hv_electrical_neighbours_link
 	SET geom = (CASE WHEN geom IS NULL THEN (SELECT ST_Multi(topo)) ELSE geom END)*/
 
 
-/*DELETE FROM model_draft.ego_grid_hv_electrical_neighbours_line a USING model_draft.ego_grid_pf_hv_link b WHERE a.geom = b.geom;
+DELETE FROM model_draft.ego_grid_hv_electrical_neighbours_line a USING model_draft.ego_grid_pf_hv_link b WHERE a.geom = b.geom;
 
-DELETE FROM model_draft.ego_grid_pf_hv_link;
+DELETE FROM model_draft.ego_grid_pf_hv_link WHERE geom IN (SELECT geom FROM model_draft.ego_grid_hv_electrical_neighbours_link);
 
 DELETE FROM model_draft.ego_grid_pf_hv_line WHERE geom IN (SELECT geom FROM model_draft.ego_grid_hv_electrical_neighbours_line);
 
@@ -451,9 +451,9 @@ DELETE FROM model_draft.ego_grid_pf_hv_transformer WHERE geom IN (SELECT geom FR
 
 DELETE FROM model_draft.ego_grid_pf_hv_bus WHERE v_nom = 320;
 
-DELETE FROM model_draft.ego_grid_pf_hv_load WHERE load_id in (28405, 28407, 28411, 28412, 28415, 28418, 28419, 28420, 28425);
-DELETE FROM model_draft.ego_grid_pf_hv_load_pq_set WHERE load_id IN (28532, 28536, 28538, 28541, 28544, 28545, 28546, 28548);
-*/
+--DELETE FROM model_draft.ego_grid_pf_hv_load WHERE load_id in (28405, 28407, 28411, 28412, 28415, 28418, 28419, 28420, 28425);
+--DELETE FROM model_draft.ego_grid_pf_hv_load_pq_set WHERE load_id IN (28532, 28536, 28538, 28541, 28544, 28545, 28546, 28548);
+
 					  
 INSERT INTO model_draft.ego_grid_pf_hv_line (scn_name, line_id, bus0, bus1, x, r, s_nom, topo, geom, length, frequency, cables)
 SELECT  'Status Quo', line_id, bus0, bus1, x, r, s_nom, topo, geom, length, frequency, cables FROM model_draft.ego_grid_hv_electrical_neighbours_line;
