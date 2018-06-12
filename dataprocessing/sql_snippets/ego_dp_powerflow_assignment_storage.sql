@@ -496,7 +496,7 @@ INSERT into model_draft.ego_grid_pf_hv_storage (
 
 CREATE TABLE model_draft.ego_grid_pf_hv_storage_batteries AS
 SELECT * FROM calc_renpass_gis.renpass_gis_storage WHERE substring(calc_renpass_gis.renpass_gis_storage.target,12,21) = 'redox_flow' UNION
-SELECT * FROM calc_renpass_gis.renpass_gis_storage WHERE substring(calc_renpass_gis.renpass_gis_storage.target,12,22) = 'lithium_ion'
+SELECT * FROM calc_renpass_gis.renpass_gis_storage WHERE substring(calc_renpass_gis.renpass_gis_storage.target,12,22) = 'lithium_ion';
 
 INSERT into model_draft.ego_grid_pf_hv_storage (
   scn_name,
@@ -571,7 +571,7 @@ DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_storage_batteries;
 -- hydrogen
 
 CREATE TABLE model_draft.ego_grid_pf_hv_storage_hydrogen AS
-SELECT * FROM calc_renpass_gis.renpass_gis_storage WHERE substring(calc_renpass_gis.renpass_gis_storage.target,12,19) = 'hydrogen' 
+SELECT * FROM calc_renpass_gis.renpass_gis_storage WHERE substring(calc_renpass_gis.renpass_gis_storage.target,12,19) = 'hydrogen';
 
 INSERT into model_draft.ego_grid_pf_hv_storage (
   scn_name,
@@ -647,7 +647,7 @@ DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_storage_hydrogen;
 
 CREATE TABLE model_draft.ego_grid_pf_hv_storage_pumped AS
 SELECT * FROM calc_renpass_gis.renpass_gis_storage WHERE substring(calc_renpass_gis.renpass_gis_storage.target,12,23) = 'pumped_hydro' UNION
-SELECT * FROM calc_renpass_gis.renpass_gis_storage WHERE substring(calc_renpass_gis.renpass_gis_storage.target,12,17) = 'a_caes'
+SELECT * FROM calc_renpass_gis.renpass_gis_storage WHERE substring(calc_renpass_gis.renpass_gis_storage.target,12,17) = 'a_caes';
 
 INSERT into model_draft.ego_grid_pf_hv_storage (
   scn_name,
