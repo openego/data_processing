@@ -350,6 +350,18 @@ DELETE FROM model_draft.ego_grid_pf_hv_storage WHERE storage_id > 200000 AND scn
 -- INSERT params of Storages in model_draft.ego_grid_pf_hv_storage (countries besides Germany)
 -- starting storage_id at 200000
 
+-- Create a new sequence for storage_id of storages located in neighbouring countries
+
+DROP SEQUENCE IF EXISTS model_draft.ego_grid_pf_hv_storage_neighbouring;
+CREATE SEQUENCE model_draft.ego_grid_pf_hv_storage_neighbouring
+  INCREMENT 1;
+  
+SELECT setval('model_draft.ego_grid_pf_hv_storage_neighbouring', (max(storage_id)+200000)) FROM model_draft.ego_grid_pf_hv_storage;
+
+-- grant (oeuser)
+ALTER SEQUENCE model_draft.ego_grid_pf_hv_storage_neighbouring
+OWNER TO oeuser;
+
 -- Status Quo
 
 INSERT into model_draft.ego_grid_pf_hv_storage (
@@ -377,7 +389,7 @@ INSERT into model_draft.ego_grid_pf_hv_storage (
 )
   SELECT
   'Status Quo' as scn_name,
-  row_number() over () + 200000 as storage_id,
+  nextval('model_draft.ego_grid_pf_hv_storage_neighbouring') as storage_id,
   B.bus_id as bus,
   'flexible' AS dispatch,
   'PV' AS control,
@@ -448,7 +460,7 @@ INSERT into model_draft.ego_grid_pf_hv_storage (
 
   SELECT
   'NEP 2035' as scn_name,
-  row_number() over () + 200000 as storage_id,
+  nextval('model_draft.ego_grid_pf_hv_storage_neighbouring') as storage_id,
   B.bus_id as bus,
   'flexible' AS dispatch,
   'PV' AS control,
@@ -523,7 +535,7 @@ INSERT into model_draft.ego_grid_pf_hv_storage (
 )
 SELECT
   'eGo 100' as scn_name,
-  row_number() over () + 200000 as storage_id,
+  nextval('model_draft.ego_grid_pf_hv_storage_neighbouring') as storage_id,
   B.bus_id as bus,
   'flexible' AS dispatch,
   'PV' AS control,
@@ -598,7 +610,7 @@ INSERT into model_draft.ego_grid_pf_hv_storage (
 )
  SELECT
   'eGo 100' as scn_name,
-  row_number() over () + 200000 as storage_id,
+  nextval('model_draft.ego_grid_pf_hv_storage_neighbouring') as storage_id,
   B.bus_id as bus,
   'flexible' AS dispatch,
   'PV' AS control,
@@ -674,7 +686,7 @@ INSERT into model_draft.ego_grid_pf_hv_storage (
 )
   SELECT
   'eGo 100' as scn_name,
-  row_number() over () + 200000 as storage_id,
+  nextval('model_draft.ego_grid_pf_hv_storage_neighbouring') as storage_id,
   B.bus_id as bus,
   'flexible' AS dispatch,
   'PV' AS control,
