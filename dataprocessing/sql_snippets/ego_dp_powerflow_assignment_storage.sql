@@ -426,7 +426,8 @@ INSERT into model_draft.ego_grid_pf_hv_storage (
 	AND A.nominal_value[1] > 0.001
 	AND A.source not LIKE '%%powerline%%'
 	AND A.scenario_id = 43
-	AND A.nominal_capacity IS not NULL;
+Group by bus, p_nom;
+
 
 
 -- NEP 2035
@@ -497,7 +498,7 @@ INSERT into model_draft.ego_grid_pf_hv_storage (
 	AND A.nominal_value[1] > 0.001
 	AND A.source not LIKE '%%powerline%%'
 	AND A.scenario_id = 41
-	AND A.nominal_capacity IS not NULL;
+Group by bus, p_nom;
 
 -- eGo 100
 
@@ -725,8 +726,5 @@ INSERT into model_draft.ego_grid_pf_hv_storage (
 
 DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_storage_pumped;
 
-
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
 SELECT scenario_log('eGo_DP', 'v0.4.1','output','model_draft','ego_grid_pf_hv_storage','ego_dp_powerflow_assignment_storage.sql',' ');
-
-
