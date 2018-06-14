@@ -15,18 +15,18 @@ For Germany, the installed generation capacities of the status quo scenario
 were taken from the power plant list of the Open Power System Data project
 [opsd-conv]_, [opsd-res]_ (State: 01-01-2016).  Whereas the 2035 scenario is
 based on publicly available information and methods of the
- *Netzentwicklungsplan (NEP) Strom 2025, erster Entwurf* [NEP2015]_ .
- Out of several NEP scenarios, the so-called "B1-2035" was chosen;
- it is characterized by a high renewable energy expansion and an increased share
- of natural gas [NEP2015]_. The third scenario pictures a future electrical
- energy system powered to 100% from renewable energy and is mainly based on the
- *100% RES* scenario of the *e-Highway2050 - Modular Development Plan
- of the Pan-European Transmission System 2050* [ehighway2050]_.
- In order to build a 100% energy system in Germany 13\,GW of gas fired power
- plants were removed (see: [christ2017]_ and  [FlEnS]_).
+*Netzentwicklungsplan (NEP) Strom 2025, erster Entwurf* [NEP2015]_ .
+Out of several NEP scenarios, the so-called "B1-2035" was chosen;
+it is characterized by a high renewable energy expansion and an increased share
+of natural gas [NEP2015]_. The third scenario pictures a future electrical
+energy system powered to 100% from renewable energy and is mainly based on the
+*100% RES* scenario of the *e-Highway2050 - Modular Development Plan
+of the Pan-European Transmission System 2050* [ehighway2050]_.
+In order to build a 100% energy system in Germany 13\,GW of gas fired power
+plants were removed (see: [christ2017]_ and  [FlEnS]_).
 
- Table Characterization of scenarios by key parameters shows the scenario specifications and
- significant characteristics of all three scenarios.
+Table Characterization of scenarios by key parameters shows the scenario specifications and 
+significant characteristics of all three scenarios.
 
 
 .. csv-table:: Characterization of scenarios by key parameters
