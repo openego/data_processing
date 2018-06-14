@@ -626,7 +626,7 @@ SELECT
 	AND A.p_nom > 0.001
 Group by bus, p_nom;
 
-DROP TABLE model_draft.ego_grid_pf_hv_storage_batteries_temp; 
+DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_storage_batteries_temp; 
   
 -- hydrogen
 
@@ -750,7 +750,7 @@ SELECT
 	AND A.p_nom > 0.001
 Group by bus, p_nom;
 
-DROP TABLE model_draft.ego_grid_pf_hv_storage_hydrogen_temp; 
+DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_storage_hydrogen_temp; 
 
 -- pumped_hydro
 
@@ -842,7 +842,7 @@ INSERT into model_draft.ego_grid_pf_hv_storage (
   B.bus_id as bus,
   'flexible' AS dispatch,
   'PV' AS control,
-  sum(A.nominal_value[1]) AS p_nom,
+  A.p_nom AS p_nom,
   FALSE as p_nom_extendable,
   0 as p_nom_min,
   -1 as p_min_pu_fixed,
@@ -872,12 +872,9 @@ INSERT into model_draft.ego_grid_pf_hv_storage (
 			) SQ
 		WHERE SQ.v_nom = SQ.max_v_nom
 		) B
-		ON (substring(A.source, 1, 2) = B.cntr_id)
+		ON A.cntr_id = B.cntr_id)
 	WHERE substring(A.source, 1, 2) <> 'DE'
-	AND A.nominal_value IS not NULL
-	AND A.nominal_value[1] > 0.001
-	AND A.source not LIKE '%%powerline%%'
-	AND A.scenario_id = 40
+	AND A.p_nom > 0.001
 	Group by bus, p_nom;
 
 DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_storage_pumped_temp;
