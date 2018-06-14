@@ -51,7 +51,7 @@ cost assumptions for each scenario divided by the different technologies and fue
   :file: scenario/tabel_Characterization_of_scenarios_by_key_parameters.csv
   :delim: ,
   :header-rows: 1
-  :widths: 5, 1, 2, 1, 2, 1, 2
+  :widths: 3, 1, 1, 1, 1, 1, 1
   :stub-columns: 0
 
 
