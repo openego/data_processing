@@ -40,9 +40,6 @@ For the calculation of the *Share of renewable energy in el. consumption* the as
 
 
 
-.. [#assumption-a] Statistic and report values (See: BMWi 2017, sheet 20 year 2014 [BMWi]_, NEP 2025 [NEP2015], own calculation for eGo 100%.
-
-
 Table *Installed generation capacities in GW for Germany and marginal costs for
 conventional generation in 2014€/MWh , divided by scenario and technology/fuel*
 displays the resulting installed electrical capacities in Germany and marginal
@@ -104,3 +101,9 @@ References
      Integration sozial-ökologischer Faktoren in die Energiesystemmodellierung am Beispiel von Entwicklungspfaden für den Windenergieausbau in Deutschland (PhD Thesis). Europa-Universität Flensburg.
 
 .. [BMWi]  text ...
+
+
+Footnotes
+---------
+
+.. [#assumption-a] Statistic and report values (See: BMWi 2017, sheet 20 year 2014 [BMWi]_, NEP 2025 [NEP2015], own calculation for eGo 100%.
