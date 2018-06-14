@@ -79,10 +79,11 @@ Methodology
 References
 ----------
 
-.. [NEP2015] Übertragungsnetzbetreiber Deutschland, Netzentwicklungsplan
-    Strom 2025, Version 2015, 1. Entwurf, 2015. https://www.netzentwicklungsplan.de/sites/default/files/paragraphs-files/NEP_2025_1_Entwurf_Teil1_0_0.pdf
+.. [NEP2015] Übertragungsnetzbetreiber Deutschland. (2015).:
+    *Netzentwicklungsplan Strom 2025*, Version 2015, 1. Entwurf, 2015. https://www.netzentwicklungsplan.de/sites/default/files/paragraphs-files/NEP_2025_1_Entwurf_Teil1_0_0.pdf
 
-.. [coastdat-2] coastDat-2 Hindcast model http://www.coastdat.de/data/index.php.en
+.. [coastdat-2] coastDat-2 (2017).:
+     Hindcast model http://www.coastdat.de/data/index.php.en
 
 .. [FlEnS] Bunke, Wolf-Dieter, Martin Söthe, Marion Wingenbach, and Cord Kaldemeyer. 2018.:
     *“(Fl)ensburg (En)ergy (S)cenarios - open_eGo Scenarios for 2014/2035/2050.”* Open Science Framework. June 13. doi:10.17605/OSF.IO/BPF36.
