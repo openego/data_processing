@@ -51,7 +51,7 @@ cost assumptions for each scenario divided by the different technologies and fue
    :file: scenario/tabel_installed_generation_capacities_in_GW_for_Germany_and_marginal_costs.csv
    :delim: ,
    :header-rows: 1
-   :widths: 3, 1, 1, 1, 1, 1, 1
+   :widths: 6, 1, 1, 1, 1, 1, 1
    :stub-columns: 0
 
 
