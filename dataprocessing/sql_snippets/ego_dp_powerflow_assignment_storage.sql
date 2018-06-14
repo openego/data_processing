@@ -872,7 +872,7 @@ INSERT into model_draft.ego_grid_pf_hv_storage (
 			) SQ
 		WHERE SQ.v_nom = SQ.max_v_nom
 		) B
-		ON A.cntr_id = B.cntr_id)
+		ON A.cntr_id = B.cntr_id
 	WHERE substring(A.source, 1, 2) <> 'DE'
 	AND A.p_nom > 0.001
 	Group by bus, p_nom;
