@@ -25,7 +25,7 @@ of the Pan-European Transmission System 2050* [ehighway2050]_.
 In order to build a 100% energy system in Germany 13\,GW of gas fired power
 plants were removed (see: [christ2017]_ and  [FlEnS]_).
 
-Table Characterization of scenarios by key parameters shows the scenario specifications and
+Table *Characterization of scenarios by key parameters* shows the scenario specifications and
 significant characteristics of all three scenarios.
 
 
@@ -54,7 +54,7 @@ cost assumptions for each scenario divided by the different technologies and fue
   :file: scenario/tabel_Characterization_of_scenarios_by_key_parameters.csv
   :delim: ,
   :header-rows: 1
-  :widths: 6, 1, 1, 1, 1, 1
+  :widths: 5, 1, 2, 1, 2, 1, 2
   :stub-columns: 0
 
 
