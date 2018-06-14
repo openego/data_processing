@@ -12,11 +12,12 @@ open_eGo Scenarios
 
 
 Import Scenario data as CSV
-.. csv-table:: Overview of eGo Scenarios
-   :file: https://raw.githubusercontent.com/openego/....
-   :delim: ;
+
+.. csv-table:: Characterization of scenarios by key parameters
+   :file: scenario/tabel_Characterization_of_scenarios_by_key_parameters.csv
+   :delim: ,
    :header-rows: 1
-   :widths: 5, 1, 1, 5
+   :widths: 6, 1, 1, 1
    :stub-columns: 0
 
 
