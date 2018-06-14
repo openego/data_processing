@@ -52,7 +52,7 @@ cost assumptions for each scenario divided by the different technologies and fue
    :delim: ,
    :header-rows: 1
    :widths: 6, 1, 1, 1, 1, 1, 1
-   :stub-columns: 0
+   :stub-columns: 8
 
 
 The table
