@@ -48,7 +48,7 @@ cost assumptions for each scenario divided by the different technologies and fue
 
 
 .. csv-table::Installed generation capacities in GW for Germany and marginal costs for conventional generation in 2014€/MWh , divided by scenario and technology/fuel.
-  :file: scenario/tabel_Characterization_of_scenarios_by_key_parameters.csv
+  :file: scenario/tabel_installed_generation_capacities_in_GW_for_Germany_and_marginal_costs.csv
   :delim: ,
   :header-rows: 1
   :widths: 3, 1, 1, 1, 1, 1, 1
