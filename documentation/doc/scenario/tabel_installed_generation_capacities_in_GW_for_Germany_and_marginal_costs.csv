@@ -8,7 +8,7 @@ Oil ,"4,5","41,02","0,5","68,86",0, --
 Waste ,"1,7","31,65",0,"39,93",0, --  
 CHP $<$ 10 MW ,0,"23,96","8,2","31,11",0,"31,63"
 Other conventional generation (mixed fuels) ,"2,6","31,65","2,4","39,93",0, -- 
-Total conventional generation,"103,5", ,"64,7", ,0, 
+Total conventional generation,"103,5", ,"64,7", ,0
 Wind onshore , ,"41,3", ,"88,8", ,"98,4",
 Wind offshore, ,"5,6", ,"18,5", ,27
 Photovoltaic, ,"38,5", ,"59,9", ,"97,8"
