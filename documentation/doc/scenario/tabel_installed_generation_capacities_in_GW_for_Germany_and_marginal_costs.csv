@@ -1,20 +1,20 @@
-Technology, ,status quo, ,NEP 2035, ,eGo 100
- , GW , EUR/MWh , GW , EUR/MWh , GW , EUR/MWh
-Nuclear energy ,12,"4,68",0,"5,48",0, --  
-Lignite ,"23,3","10,78","9,1","17,64",0, --  
-Hard coal ,"31,5","14,95",11,"24,79",0, -- 
-Natural gas ,"27,9","32,3","33,5","41,93",0,"56,05"
-Oil ,"4,5","41,02","0,5","68,86",0, --  
-Waste ,"1,7","31,65",0,"39,93",0, --  
-CHP $<$ 10 MW ,0,"23,96","8,2","31,11",0,"31,63"
-Other conventional generation (mixed fuels) ,"2,6","31,65","2,4","39,93",0, -- 
-Total conventional generation,"103,5", ,"64,7", ,0
-Wind onshore , ,"41,3", ,"88,8", ,"98,4",
-Wind offshore, ,"5,6", ,"18,5", ,27
-Photovoltaic, ,"38,5", ,"59,9", ,"97,8"
-Biomass ,  ,"7,2",  ,"8,4",  ,"27,8"
-Hydro power ,  ,"3,9",  ,"4,2",  ,"4,3"
-Other renewable generation ,  ,"1,4",  ,"1,2",  ,"2,2"
-Total renewable generation,  ,"97,9",  ,181,  ,"257,5"
-Pump storage ,"9,3", ,"12,7", ,"12,8", 
-Total generation,"210,7", ,"258,4", ,"270,3", 
+Technology, ,status quo, ,NEP 2035, ,eGo 100,
+ , GW , EUR/MWh , GW , EUR/MWh , GW , EUR/MWh,
+Nuclear energy ,12,"4,68",0,"5,48",0, --  ,
+Lignite ,"23,3","10,78","9,1","17,64",0, --  ,
+Hard coal ,"31,5","14,95",11,"24,79",0, -- ,
+Natural gas ,"27,9","32,3","33,5","41,93",0,"56,05",
+Oil ,"4,5","41,02","0,5","68,86",0, --  ,
+Waste ,"1,7","31,65",0,"39,93",0, --  ,
+CHP $<$ 10 MW ,0,"23,96","8,2","31,11",0,"31,63",
+Other conventional generation (mixed fuels) ,"2,6","31,65","2,4","39,93",0, -- ,
+Total conventional generation,"103,5", ,"64,7", ,0, ,
+Wind onshore , ,"41,3", ,"88,8", ,"98,4", 
+Wind offshore, ,"5,6", ,"18,5", ,27, 
+Photovoltaic, ,"38,5", ,"59,9", ,"97,8", 
+Biomass ,  ,"7,2",  ,"8,4",  ,"27,8",
+Hydro power ,  ,"3,9",  ,"4,2",  ,"4,3",
+Other renewable generation ,  ,"1,4",  ,"1,2",  ,"2,2",
+Total renewable generation,  ,"97,9",  ,181,  ,"257,5",
+Pump storage ,"9,3", ,"12,7", ,"12,8", ,
+Total generation,"210,7", ,"258,4", ,"270,3", ,
