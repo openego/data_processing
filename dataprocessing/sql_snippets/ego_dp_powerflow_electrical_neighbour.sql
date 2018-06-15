@@ -1,4 +1,4 @@
-
+﻿
 /*
 The electricity grid model extracted from osmTGmod is limited to the German territory. This script adds border crossing 
 lines and corresponding buses and transformers to all neighbouring countries which have a direct electrical connection 
@@ -9,8 +9,6 @@ __license__ 	= "GNU Affero General Public License Version 3 (AGPL-3.0)"
 __url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
 __author__ 	= "IlkaCu" 
 */
-
-DELETE FROm model_draft.ego_grid_pf_hv_transformer a  USING  model_draft.ego_grid_pf_hv_bus b WHERE a.bus0 NOT in (SELECT bus_id FROM model_draft.ego_grid_pf_hv_bus ) AND a.scn_name = b.scn_name AND b.scn_name = 'Status Quo'
 
 DROP SEQUENCE IF EXISTS model_draft.ego_grid_hv_electrical_neighbours_bus_id CASCADE;
 CREATE SEQUENCE model_draft.ego_grid_hv_electrical_neighbours_bus_id;
@@ -403,23 +401,19 @@ UPDATE model_draft.ego_grid_hv_electrical_neighbours_link
 UPDATE model_draft.ego_grid_hv_electrical_neighbours_link
 	SET 	geom  = (SELECT  ST_Multi(topo)),
 		efficiency = 0.987*0.974^(length/1000);
-
-
-
-DELETE FROM model_draft.ego_grid_pf_hv_link;
+		
+DELETE FROM model_draft.ego_grid_pf_hv_link WHERE geom IN (SELECT geom FROM model_draft.ego_grid_hv_electrical_neighbours_link);
 
 DELETE FROM model_draft.ego_grid_pf_hv_line WHERE geom IN (SELECT geom FROM model_draft.ego_grid_hv_electrical_neighbours_line);
 
-DELETE FROM model_draft.ego_grid_hv_electrical_neighbours_line a USING model_draft.ego_grid_pf_hv_link b WHERE a.geom = b.geom;
+DELETE FROM model_draft.ego_grid_hv_electrical_neighbours_line a USING model_draft.ego_grid_hv_electrical_neighbours_link b WHERE a.geom = b.geom;
 
 DELETE FROM model_draft.ego_grid_pf_hv_bus a USING model_draft.ego_grid_hv_electrical_neighbours_bus b WHERE a.geom = b.geom AND b.central_bus = TRUE OR a.v_nom = 450 OR a.geom = '0101000020E6100000AFB9FEB858EC2740621AE148FB474B40';
 
-DELETE FROM model_draft.ego_grid_pf_hv_transformer WHERE geom IN (SELECT geom FROM model_draft.ego_grid_hv_electrical_neighbours_transformer) ;
+INSERT INTO model_draft.ego_grid_pf_hv_bus (scn_name, bus_id, v_nom, geom, current_type)
+SELECT  'Status Quo',bus_id, v_nom, geom, current_type FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE cntr_id != 'DE' AND central_bus = TRUE OR v_nom = 450 OR geom = '0101000020E6100000AFB9FEB858EC2740621AE148FB474B40';
 
-DELETE FROM model_draft.ego_grid_pf_hv_bus WHERE v_nom = 320;
-
-DELETE FROM model_draft.ego_grid_pf_hv_load WHERE load_id in (28405, 28407, 28411, 28412, 28415, 28418, 28419, 28420, 28425);
-DELETE FROM model_draft.ego_grid_pf_hv_load_pq_set WHERE load_id IN (28532, 28536, 28538, 28541, 28544, 28545, 28546, 28548);
+DELETE FROM model_draft.ego_grid_pf_hv_transformer WHERE geom IN (SELECT geom FROM model_draft.ego_grid_hv_electrical_neighbours_transformer) OR bus0 NOT IN (SELECT bus_id FROM model_draft.ego_grid_pf_hv_bus WHERE scn_name = 'Status Quo' );
 
 INSERT INTO model_draft.ego_grid_pf_hv_line (scn_name, line_id, bus0, bus1, x, r, s_nom, topo, geom, length, frequency, cables)
 SELECT  'Status Quo', line_id, bus0, bus1, x, r, s_nom, topo, geom, length, frequency, cables FROM model_draft.ego_grid_hv_electrical_neighbours_line;
@@ -427,14 +421,11 @@ SELECT  'Status Quo', line_id, bus0, bus1, x, r, s_nom, topo, geom, length, freq
 INSERT INTO model_draft.ego_grid_pf_hv_link (scn_name, marginal_cost, link_id, bus0, bus1, efficiency, p_nom, topo, geom, length)
 SELECT  'Status Quo', 0.01, link_id, bus0, bus1, efficiency, p_nom, topo, geom, length FROM model_draft.ego_grid_hv_electrical_neighbours_link;
 
-INSERT INTO model_draft.ego_grid_pf_hv_bus (scn_name, bus_id, v_nom, geom, current_type)
-SELECT  'Status Quo',bus_id, v_nom, geom, current_type FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE cntr_id != 'DE' AND central_bus = TRUE OR v_nom = 450 OR geom = '0101000020E6100000AFB9FEB858EC2740621AE148FB474B40';
 
 INSERT INTO model_draft.ego_grid_pf_hv_transformer (scn_name, trafo_id, bus0, bus1, x, s_nom, geom, tap_ratio, phase_shift)
 SELECT 'Status Quo', trafo_id, bus0, bus1, x, s_nom, geom, tap_ratio, phase_shift FROM model_draft.ego_grid_hv_electrical_neighbours_transformer;
 
 	
-
 
 
 
