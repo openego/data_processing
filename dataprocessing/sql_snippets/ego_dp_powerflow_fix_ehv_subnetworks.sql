@@ -161,6 +161,8 @@ VALUES (nextval('model_draft.ego_grid_hv_fix_errors_line_id'),
 
 DELETE FROM model_draft.ego_grid_pf_hv_line WHERE bus0 = (SELECT bus_i FROM grid.otg_ehvhv_bus_data WHERE base_kv = 380 AND osm_name = 'Umspannwerk Pleinting') AND bus1 = (SELECT bus_i FROM grid.otg_ehvhv_bus_data WHERE base_kv = 380 AND osm_name = 'Schwandorf');
 
+DELETE FROM model_draft.ego_grid_pf_hv_line WHERE bus0 = (SELECT bus_i FROM grid.otg_ehvhv_bus_data WHERE base_kv = 380 AND geom = '0101000020E6100000C000DCEF17B429409E0779BEB3614840' ) AND bus1 = (SELECT bus_i FROM grid.otg_ehvhv_bus_data WHERE base_kv = 380 AND geom = '0101000020E61000002F70D819E6B4294094DDFA53EE614840');
+								    
 DELETE FROM model_draft.ego_grid_pf_hv_transformer WHERE bus1 = (SELECT DISTINCT ON (bus_i) bus_i FROM  grid.otg_ehvhv_bus_data WHERE base_kv = 380AND geom = '0101000020E61000002F70D819E6B4294094DDFA53EE614840');
 	
 DELETE FROM model_draft.ego_grid_pf_hv_bus WHERE geom = '0101000020E61000002F70D819E6B4294094DDFA53EE614840' AND v_nom = 380;
