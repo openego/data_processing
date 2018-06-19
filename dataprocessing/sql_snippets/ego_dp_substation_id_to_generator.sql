@@ -86,7 +86,12 @@ UPDATE model_draft.ego_dp_supply_res_powerplant a
     FROM    model_draft.ego_grid_ehv_substation_voronoi b
     WHERE   a.geom && b.geom
         AND ST_Contains(a.geom, b.geom)
-AND voltage_level <= 2; 
+AND voltage_level <= 2;
+            
+/*
+The assignment and reallocation of RES generators which are located outside Germany happens in ego_dp_rea_setup.sql.
+                                            
+*/                                             
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
 SELECT scenario_log('eGo_DP', 'v0.4.1','input','model_draft','ego_dp_supply_res_powerplant','ego_dp_substation_id_to_generator.sql',' ');
