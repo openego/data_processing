@@ -77,7 +77,7 @@ UPDATE model_draft.ego_dp_supply_res_powerplant a
     SET     subst_id = b.subst_id
     FROM    model_draft.ego_grid_mv_griddistrict b
     WHERE   a.geom && ST_TRANSFORM(b.geom,4326)
-        AND ST_Contains(a.geom, ST_TRANSFORM(b.geom,4326))
+        AND ST_Contains(ST_TRANSFORM(b.geom,4326), a.geom)
         AND voltage_level >= 3;  
 
 -- Identify corresponding bus with the help of ehv-Voronoi
@@ -85,7 +85,7 @@ UPDATE model_draft.ego_dp_supply_res_powerplant a
     SET     subst_id = b.subst_id
     FROM    model_draft.ego_grid_ehv_substation_voronoi b
     WHERE   a.geom && b.geom
-        AND ST_Contains(a.geom, b.geom)
+        AND ST_Contains(b.geom, a.geom)
 AND voltage_level <= 2;
             
 /*
