@@ -1,4 +1,4 @@
-﻿
+
 /*
 The electricity grid model extracted from osmTGmod is limited to the German territory. This script adds border crossing 
 lines and corresponding buses and transformers to all neighbouring countries which have a direct electrical connection 
