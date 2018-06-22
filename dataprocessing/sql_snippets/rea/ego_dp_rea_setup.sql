@@ -36,19 +36,6 @@ ALTER TABLE model_draft.ego_dp_supply_res_powerplant
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
 SELECT scenario_log('eGo_DP', 'v0.4.0','input','model_draft','ego_grid_mv_griddistrict','ego_dp_rea_setup.sql',' ');
 
--- subst_id from mv-griddistrict
-UPDATE model_draft.ego_dp_supply_res_powerplant AS t1
-    SET subst_id = t2.subst_id
-    FROM (
-        SELECT  a.id AS id,
-                b.subst_id AS subst_id
-        FROM    model_draft.ego_dp_supply_res_powerplant AS a,
-                model_draft.ego_grid_mv_griddistrict AS b
-        WHERE   b.geom && ST_TRANSFORM(a.geom,3035) AND
-                ST_CONTAINS(b.geom,ST_TRANSFORM(a.geom,3035))
-        ) AS t2
-    WHERE   t1.id = t2.id;
-
 -- rea_flag reset
 UPDATE model_draft.ego_dp_supply_res_powerplant
     SET rea_flag = NULL,
