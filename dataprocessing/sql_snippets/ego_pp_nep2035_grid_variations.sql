@@ -15,6 +15,8 @@ __author__ 	= "ClaraBuettner, IlkaCu"
 
 DROP TABLE IF EXISTS  model_draft.ego_grid_pf_hv_extension_temp_resolution;
 CREATE TABLE model_draft.ego_grid_pf_hv_extension_temp_resolution AS (SELECT * FROM model_draft.ego_grid_pf_hv_temp_resolution);
+ALTER TABLE model_draft.ego_grid_pf_hv_extension_temp_resolution
+  OWNER TO oeuser;
 
 DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_extension_source ;
 CREATE TABLE model_draft.ego_grid_pf_hv_extension_source AS (SELECT * FROM model_draft.ego_grid_pf_hv_source);
