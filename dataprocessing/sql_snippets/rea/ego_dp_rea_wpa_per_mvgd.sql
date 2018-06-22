@@ -19,7 +19,7 @@ CREATE TABLE         	model_draft.ego_supply_wpa (
 CONSTRAINT 	ego_supply_wpa_pkey PRIMARY KEY (id));
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.1','input','supply','vernetzen_wind_potential_area','ego_dp_rea_wpa_per_mvgd.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.2','input','supply','vernetzen_wind_potential_area','ego_dp_rea_wpa_per_mvgd.sql',' ');
 
 -- insert wpa dump
 INSERT INTO     model_draft.ego_supply_wpa (geom)
@@ -36,7 +36,7 @@ CREATE INDEX 	ego_supply_wpa_geom_idx
 ALTER TABLE	model_draft.ego_supply_wpa OWNER TO oeuser;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.1','temp','model_draft','ego_supply_wpa','ego_dp_rea_wpa_per_mvgd.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.2','temp','model_draft','ego_supply_wpa','ego_dp_rea_wpa_per_mvgd.sql',' ');
 */
 
 /* -- validate (geom)
@@ -69,8 +69,8 @@ CREATE TABLE            model_draft.ego_supply_wpa_per_mvgd (
 CONSTRAINT ego_supply_wpa_per_mvgd_pkey PRIMARY KEY (id));
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.1','input','model_draft','ego_grid_mv_griddistrict','ego_dp_rea_wpa_per_mvgd.sql',' ');
-SELECT scenario_log('eGo_DP', 'v0.4.1','input','supply','vernetzen_wind_potential_area','ego_dp_rea_wpa_per_mvgd.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.2','input','model_draft','ego_grid_mv_griddistrict','ego_dp_rea_wpa_per_mvgd.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.2','input','supply','vernetzen_wind_potential_area','ego_dp_rea_wpa_per_mvgd.sql',' ');
 
 -- insert wpa per mv-griddistrict
 WITH    wpa_dump AS (
@@ -112,10 +112,10 @@ ALTER TABLE model_draft.ego_supply_wpa_per_mvgd OWNER TO oeuser;
 -- metadata
 COMMENT ON TABLE model_draft.ego_supply_wpa_per_mvgd IS '{
     "comment": "eGoDP - Temporary table",
-    "version": "v0.4.1" }';
+    "version": "v0.4.2" }';
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.1','output','model_draft','ego_supply_wpa_per_mvgd','ego_dp_rea_wpa_per_mvgd.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.2','output','model_draft','ego_supply_wpa_per_mvgd','ego_dp_rea_wpa_per_mvgd.sql',' ');
 
 
 -- DROP TABLE IF EXISTS model_draft.ego_supply_wpa CASCADE;
