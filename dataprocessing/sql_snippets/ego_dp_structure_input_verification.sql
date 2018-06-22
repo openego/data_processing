@@ -11,22 +11,22 @@ __author__      = "Ludee"
 
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.1','check','boundaries','bkg_vg250_1_sta','ego_dp_structure_input_verification.sql','preprocessing verification');
-SELECT scenario_log('eGo_DP', 'v0.4.1','check','boundaries','bkg_vg250_2_lan','ego_dp_structure_input_verification.sql','preprocessing verification');
-SELECT scenario_log('eGo_DP', 'v0.4.1','check','boundaries','bkg_vg250_4_krs','ego_dp_structure_input_verification.sql','preprocessing verification');
-SELECT scenario_log('eGo_DP', 'v0.4.1','check','boundaries','bkg_vg250_6_gem','ego_dp_structure_input_verification.sql','preprocessing verification');
-SELECT scenario_log('eGo_DP', 'v0.4.1','check','openstreetmap','osm_deu_polygon','ego_dp_structure_input_verification.sql','preprocessing verification');
-SELECT scenario_log('eGo_DP', 'v0.4.1','check','openstreetmap','osm_deu_ways','ego_dp_structure_input_verification.sql','preprocessing verification');
-SELECT scenario_log('eGo_DP', 'v0.4.1','check','openstreetmap','osm_deu_nodes','ego_dp_structure_input_verification.sql','preprocessing verification');
-SELECT scenario_log('eGo_DP', 'v0.4.1','check','openstreetmap','osm_deu_line','ego_dp_structure_input_verification.sql','preprocessing verification');
-SELECT scenario_log('eGo_DP', 'v0.4.1','check','scenario','ego_slp_parameters','ego_dp_structure_input_verification.sql','preprocessing verification');
-SELECT scenario_log('eGo_DP', 'v0.4.1','check','grid','otg_ehvhv_bus_data','ego_dp_structure_input_verification.sql','preprocessing verification');
-SELECT scenario_log('eGo_DP', 'v0.4.1','check','society','destatis_zensus_population_per_ha','ego_dp_structure_input_verification.sql','preprocessing verification');
-SELECT scenario_log('eGo_DP', 'v0.4.1','check','economy','destatis_gva_per_district','ego_dp_structure_input_verification.sql','preprocessing verification');
-SELECT scenario_log('eGo_DP', 'v0.4.1','check','demand','ego_demand_federalstate','ego_dp_structure_input_verification.sql','preprocessing verification');
-SELECT scenario_log('eGo_DP', 'v0.4.1','check','supply','vernetzen_wind_potential_area','ego_dp_structure_input_verification.sql','preprocessing verification');
-SELECT scenario_log('eGo_DP', 'v0.4.1','check','model_draft','ego_supply_res_powerplant_sq_mview','ego_dp_structure_input_verification.sql','preprocessing verification');
-SELECT scenario_log('eGo_DP', 'v0.4.1','check','model_draft','ego_supply_conv_powerplant_sq_mview','ego_dp_structure_input_verification.sql','preprocessing verification');
+SELECT scenario_log('eGo_DP', 'v0.4.2','check','boundaries','bkg_vg250_1_sta','ego_dp_structure_input_verification.sql','preprocessing verification');
+SELECT scenario_log('eGo_DP', 'v0.4.2','check','boundaries','bkg_vg250_2_lan','ego_dp_structure_input_verification.sql','preprocessing verification');
+SELECT scenario_log('eGo_DP', 'v0.4.2','check','boundaries','bkg_vg250_4_krs','ego_dp_structure_input_verification.sql','preprocessing verification');
+SELECT scenario_log('eGo_DP', 'v0.4.2','check','boundaries','bkg_vg250_6_gem','ego_dp_structure_input_verification.sql','preprocessing verification');
+SELECT scenario_log('eGo_DP', 'v0.4.2','check','openstreetmap','osm_deu_polygon','ego_dp_structure_input_verification.sql','preprocessing verification');
+SELECT scenario_log('eGo_DP', 'v0.4.2','check','openstreetmap','osm_deu_ways','ego_dp_structure_input_verification.sql','preprocessing verification');
+SELECT scenario_log('eGo_DP', 'v0.4.2','check','openstreetmap','osm_deu_nodes','ego_dp_structure_input_verification.sql','preprocessing verification');
+SELECT scenario_log('eGo_DP', 'v0.4.2','check','openstreetmap','osm_deu_line','ego_dp_structure_input_verification.sql','preprocessing verification');
+SELECT scenario_log('eGo_DP', 'v0.4.2','check','scenario','ego_slp_parameters','ego_dp_structure_input_verification.sql','preprocessing verification');
+SELECT scenario_log('eGo_DP', 'v0.4.2','check','grid','otg_ehvhv_bus_data','ego_dp_structure_input_verification.sql','preprocessing verification');
+SELECT scenario_log('eGo_DP', 'v0.4.2','check','society','destatis_zensus_population_per_ha','ego_dp_structure_input_verification.sql','preprocessing verification');
+SELECT scenario_log('eGo_DP', 'v0.4.2','check','economy','destatis_gva_per_district','ego_dp_structure_input_verification.sql','preprocessing verification');
+SELECT scenario_log('eGo_DP', 'v0.4.2','check','demand','ego_demand_federalstate','ego_dp_structure_input_verification.sql','preprocessing verification');
+SELECT scenario_log('eGo_DP', 'v0.4.2','check','supply','vernetzen_wind_potential_area','ego_dp_structure_input_verification.sql','preprocessing verification');
+SELECT scenario_log('eGo_DP', 'v0.4.2','check','model_draft','ego_supply_res_powerplant_sq_mview','ego_dp_structure_input_verification.sql','preprocessing verification');
+SELECT scenario_log('eGo_DP', 'v0.4.2','check','model_draft','ego_supply_conv_powerplant_sq_mview','ego_dp_structure_input_verification.sql','preprocessing verification');
 
 /*
 -- input tables
@@ -94,12 +94,12 @@ COMMENT ON TABLE model_draft.ego_scenario_input IS '{
 SELECT obj_description('model_draft.test_table' ::regclass) ::json;
 
 -- scenario log (project, version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.1','setup','model_draft','ego_scenario_input','ego_dp_structure_input_verification.sql','preprocessing verification');
+SELECT scenario_log('eGo_DP', 'v0.4.2','setup','model_draft','ego_scenario_input','ego_dp_structure_input_verification.sql','preprocessing verification');
 */
 
 -- insert version
 INSERT INTO     model_draft.ego_scenario_input(version,oid,database,table_schema,table_name,path,metadata_title,metadata_reference_date,meta_data)
-    SELECT  'v0.4.1' AS version,
+    SELECT  'v0.4.2' AS version,
             sub.oid,
             sub.database,
             sub.table_schema,
