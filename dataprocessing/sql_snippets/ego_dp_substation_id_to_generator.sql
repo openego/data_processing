@@ -23,7 +23,7 @@ UPDATE model_draft.ego_dp_supply_conv_powerplant a
     SET     subst_id = b.subst_id
     FROM    model_draft.ego_grid_mv_griddistrict b
     WHERE   a.geom && ST_TRANSFORM(b.geom,4326)
-        AND ST_Intersects(a.geom, ST_TRANSFORM(b.geom,4326)) 
+        AND ST_Contains(ST_TRANSFORM(b.geom,4326), a.geom,) 
         AND voltage_level >= 3; 
 
 -- Identify corresponding bus with the help of ehv-Voronoi
@@ -31,7 +31,7 @@ UPDATE model_draft.ego_dp_supply_conv_powerplant a
     SET     subst_id = b.subst_id
     FROM    model_draft.ego_grid_ehv_substation_voronoi b
     WHERE   a.geom && b.geom
-        AND ST_Intersects(a.geom, b.geom)
+        AND ST_Contains(b.geom, a.geom)
         AND voltage_level <= 2;
 
 -- Assign conventional pp with voltage_level >=2 located outside of Germany to their closest 110 kV substation
@@ -77,7 +77,7 @@ UPDATE model_draft.ego_dp_supply_res_powerplant a
     SET     subst_id = b.subst_id
     FROM    model_draft.ego_grid_mv_griddistrict b
     WHERE   a.geom && ST_TRANSFORM(b.geom,4326)
-        AND ST_Intersects(a.geom, ST_TRANSFORM(b.geom,4326))
+        AND ST_Contains(ST_TRANSFORM(b.geom,4326), a.geom)
         AND voltage_level >= 3;  
 
 -- Identify corresponding bus with the help of ehv-Voronoi
@@ -85,8 +85,13 @@ UPDATE model_draft.ego_dp_supply_res_powerplant a
     SET     subst_id = b.subst_id
     FROM    model_draft.ego_grid_ehv_substation_voronoi b
     WHERE   a.geom && b.geom
-        AND ST_Intersects(a.geom, b.geom)
-AND voltage_level <= 2; 
+        AND ST_Contains(b.geom, a.geom)
+AND voltage_level <= 2;
+            
+/*
+The assignment and reallocation of RES generators which are located outside Germany happens in ego_dp_rea_setup.sql.
+                                            
+*/                                             
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
 SELECT scenario_log('eGo_DP', 'v0.4.1','input','model_draft','ego_dp_supply_res_powerplant','ego_dp_substation_id_to_generator.sql',' ');

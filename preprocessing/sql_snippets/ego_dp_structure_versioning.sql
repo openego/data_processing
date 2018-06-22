@@ -5803,7 +5803,7 @@ CREATE TABLE grid.ego_line_expansion_costs
   comment text,
   source text,
   capital_costs_pypsa double precision,
-  CONSTRAINT ego_line_expansion_costs_pkey PRIMARY KEY (cost_id)
+  CONSTRAINT ego_line_expansion_costs_pkey PRIMARY KEY (version, cost_id)
 );
 
 --FK
