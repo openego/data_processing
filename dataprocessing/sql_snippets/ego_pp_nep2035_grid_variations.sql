@@ -90,7 +90,7 @@ SELECT setval('model_draft.ego_grid_hv_extension_transformer_id', (max(trafo_id)
 
 DROP SEQUENCE IF EXISTS model_draft.ego_grid_hv_extension_link_id CASCADE;
 CREATE SEQUENCE model_draft.ego_grid_hv_extension_link_id;
-SELECT setval('model_draft.ego_grid_hv_extension_link_id', 1); 
+SELECT setval('model_draft.ego_grid_hv_extension_link_id', (max(link_id)+1)) FROM model_draft.ego_grid_pf_hv_link;
 
 DELETE FROM model_draft.scn_nep2035_b2_line WHERE project = 'P200';
 
