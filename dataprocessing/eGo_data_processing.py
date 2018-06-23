@@ -47,12 +47,12 @@ def data_processing():
 #        'ego_dp_substation_hvmv.sql',                       # Abstract HVMV Substations of the high voltage level from OSM
 #        'ego_dp_substation_ehv.sql',                        # Abstract EHV Substations of the extra high voltage level from OSM
 #        'ego_dp_substation_otg.sql',                        # Assign osmTGmod-id to HVMV and EHV substations
-#        'ego_dp_substation_hvmv_voronoi.sql',               # HVMV Voronoi cells based on HVMV substations
+#       'ego_dp_substation_hvmv_voronoi.sql',               # HVMV Voronoi cells based on HVMV substations
 #        'ego_dp_substation_ehv_voronoi.sql',                # EHV Voronoi cells based on EHV substations
 
     ## GRIDDISTRICT
 #        'ego_dp_mv_griddistrict.sql',                       # MV GridDistricts from municipalities and Voronoi cells
-#        'ego_dp_substation_id_to_generator.sql',            # Assign Substation ID (subst_id) to Generator (Conventional and Renewable)
+        'ego_dp_substation_id_to_generator.sql',            # Assign Substation ID (subst_id) to Generator (Conventional and Renewable)
 
     ## LOADAREA
 #        'ego_dp_loadarea_landuse.sql',                      # OSM landuse sectors
@@ -110,8 +110,8 @@ def data_processing():
 #        'ego_pp_nep2035_grid_variations.sql'			# Create extension_tables and insert NEP-data
 	
     ## VERSIONING
-   	'ego_dp_versioning.sql',				# Versioning
-	'ego_dp_versioning_mviews.sql' ,			# Versioning of mviews
+#   	'ego_dp_versioning.sql',				# Versioning
+#	'ego_dp_versioning_mviews.sql' ,			# Versioning of mviews
 
 	
 
