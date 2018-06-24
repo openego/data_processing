@@ -110,7 +110,7 @@ DO
 $$
 DECLARE	gd integer;
 BEGIN
-	FOR gd IN 1..3608	-- subst_id
+	FOR gd IN 1..3591	-- subst_id
 	LOOP
         EXECUTE '
 		INSERT INTO model_draft.ego_supply_rea_m3_dea_temp

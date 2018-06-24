@@ -12,7 +12,7 @@ __author__      = "Ludee"
 */
 
 
--- number of grid_district -> 3608
+-- number of grid_district -> 3591
 SELECT  COUNT(*)
 FROM    model_draft.ego_grid_mv_griddistrict;
 
