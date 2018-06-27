@@ -45,7 +45,7 @@ CREATE MATERIALIZED VIEW supply.ego_dp_conv_powerplant_ego100_mview AS
 	SELECT 
 	  version,
           preversion,
-	  gid,
+	  id,
 	  bnetza_id,
 	  company,
 	  name,
