@@ -176,7 +176,7 @@ SELECT obj_description('model_draft.ego_dp_supply_conv_powerplant'::regclass)::j
 INSERT INTO model_draft.ego_dp_supply_conv_powerplant
 	SELECT 
 	  'v0.3.0'::text  as preversion,
-	  gid as id,
+	  id,
 	  bnetza_id,
 	  company,
 	  name,
@@ -237,11 +237,11 @@ UPDATE model_draft.ego_dp_supply_conv_powerplant
 -- Correct an invalid geom in the register
 UPDATE model_draft.ego_dp_supply_conv_powerplant
 	SET lat = 48.0261021
-	WHERE gid = 493;
+	WHERE id = 493;
 
 UPDATE  model_draft.ego_dp_supply_conv_powerplant
 	set geom = ST_SetSRID(ST_MakePoint(lon,lat),4326)
-	WHERE gid = 493;
+	WHERE id = 493;
 
 
 -- Update Voltage Level of Power Plants according to allocation table
