@@ -41,45 +41,45 @@ def data_processing():
 
     snippets = [
     ## INPUT DATA CHECK (eGoPP)
-#        'ego_dp_structure_input_verification.sql',          # Input verification (eGoPP)
+        'ego_dp_structure_input_verification.sql',          # Input verification (eGoPP)
 
     ## SUBSTATION
-#        'ego_dp_substation_hvmv.sql',                       # Abstract HVMV Substations of the high voltage level from OSM
-#        'ego_dp_substation_ehv.sql',                        # Abstract EHV Substations of the extra high voltage level from OSM
-#        'ego_dp_substation_otg.sql',                        # Assign osmTGmod-id to HVMV and EHV substations
-#       'ego_dp_substation_hvmv_voronoi.sql',               # HVMV Voronoi cells based on HVMV substations
-#        'ego_dp_substation_ehv_voronoi.sql',                # EHV Voronoi cells based on EHV substations
+        'ego_dp_substation_hvmv.sql',                       # Abstract HVMV Substations of the high voltage level from OSM
+        'ego_dp_substation_ehv.sql',                        # Abstract EHV Substations of the extra high voltage level from OSM
+        'ego_dp_substation_otg.sql',                        # Assign osmTGmod-id to HVMV and EHV substations
+       'ego_dp_substation_hvmv_voronoi.sql',               # HVMV Voronoi cells based on HVMV substations
+        'ego_dp_substation_ehv_voronoi.sql',                # EHV Voronoi cells based on EHV substations
 
     ## GRIDDISTRICT
-#        'ego_dp_mv_griddistrict.sql',                       # MV GridDistricts from municipalities and Voronoi cells
-#        'ego_dp_substation_id_to_generator.sql',            # Assign Substation ID (subst_id) to Generator (Conventional and Renewable)
+        'ego_dp_mv_griddistrict.sql',                       # MV GridDistricts from municipalities and Voronoi cells
+        'ego_dp_substation_id_to_generator.sql',            # Assign Substation ID (subst_id) to Generator (Conventional and Renewable)
 
     ## LOADAREA
-#        'ego_dp_loadarea_landuse.sql',                      # OSM landuse sectors
-#        'ego_dp_loadarea_industry_consumer.sql',            # OSM Industry consumer
-#        'ego_dp_loadarea_loads.sql',                        # OSM Loads from landuse
-#        'ego_dp_loadarea_census.sql',                       # Loads from Census 2011
-#        'ego_dp_loadarea_loadmelt.sql',                     # Melt loads from OSM landuse and Census 2011
-#        'ego_dp_loadarea_loadcut_griddistrict.sql',         # Cut Loadarea with MV Griddistrict
-#        'ego_dp_loadarea_loadcut_voronoi.sql',              # Cut Loadarea with MV Voronoi cells
-#        'ego_dp_loadarea_consumption.sql',                  # Allocate consumption to Loadareas
-#        'ego_dp_loadarea_peakload.sql',                     # Peak loads per Loadarea
-#        'ego_dp_loadarea_griddistrict_results.sql',         # Results for MV Griddistrict
-#        'ego_dp_loadarea_statistic.sql',                    # Results and statistics for eGoDP data
+        'ego_dp_loadarea_landuse.sql',                      # OSM landuse sectors
+        'ego_dp_loadarea_industry_consumer.sql',            # OSM Industry consumer
+        'ego_dp_loadarea_loads.sql',                        # OSM Loads from landuse
+        'ego_dp_loadarea_census.sql',                       # Loads from Census 2011
+        'ego_dp_loadarea_loadmelt.sql',                     # Melt loads from OSM landuse and Census 2011
+        'ego_dp_loadarea_loadcut_griddistrict.sql',         # Cut Loadarea with MV Griddistrict
+        'ego_dp_loadarea_loadcut_voronoi.sql',              # Cut Loadarea with MV Voronoi cells
+        'ego_dp_loadarea_consumption.sql',                  # Allocate consumption to Loadareas
+        'ego_dp_loadarea_peakload.sql',                     # Peak loads per Loadarea
+        'ego_dp_loadarea_griddistrict_results.sql',         # Results for MV Griddistrict
+        'ego_dp_loadarea_statistic.sql',                    # Results and statistics for eGoDP data
 
     ## LOWVOLTAGE
-#        'ego_dp_lv_substation.sql',                         # MVLV Substation (ONT)
-#        'ego_dp_lv_substation_voronoi.sql',                 # MVLV Substation Voronoi
-#        'ego_dp_lv_loadcut.sql',                            # LV Loadcut
-#        'ego_dp_lv_griddistrict.sql',                       # LV Griddistrict
-#        'ego_dp_lv_consumption_peakload.sql',               # LV Consumption and Peakload
+        'ego_dp_lv_substation.sql',                         # MVLV Substation (ONT)
+        'ego_dp_lv_substation_voronoi.sql',                 # MVLV Substation Voronoi
+        'ego_dp_lv_loadcut.sql',                            # LV Loadcut
+        'ego_dp_lv_griddistrict.sql',                       # LV Griddistrict
+        'ego_dp_lv_consumption_peakload.sql',               # LV Consumption and Peakload
 
     ## REA
-#        'rea/ego_dp_lattice_500m.sql',                      # Lattice (point grid) 500m
-#        'rea/ego_dp_lattice_50m.sql',                       # Lattice (point grid) 50m
-#        'rea/ego_dp_rea_wpa_per_mvgd.sql',                  # Wind potential area (WPA)
-#        'rea/ego_dp_rea_lattice_per_area_500m.sql',         # Prepare 500m lattice
-#        'rea/ego_dp_rea_lattice_per_area_50m.sql',          # Prepare 50m lattice
+        'rea/ego_dp_lattice_500m.sql',                      # Lattice (point grid) 500m
+        'rea/ego_dp_lattice_50m.sql',                       # Lattice (point grid) 50m
+        'rea/ego_dp_rea_wpa_per_mvgd.sql',                  # Wind potential area (WPA)
+        'rea/ego_dp_rea_lattice_per_area_500m.sql',         # Prepare 500m lattice
+        'rea/ego_dp_rea_lattice_per_area_50m.sql',          # Prepare 50m lattice
         'rea/ego_dp_rea_setup.sql',                         # Setup tables for REA
         'rea/ego_dp_rea_m1.sql',                            # M1 biomass and solar to OSM agricultural
         'rea/ego_dp_rea_m2.sql',                            # M2 wind farms
@@ -90,28 +90,27 @@ def data_processing():
 
     ## POWERFLOW
 	    
-#	'ego_dp_powerflow_hv_setup.sql',			# Set schema/tables for EHV/HV powerflow calculations up
-#	'ego_dp_powerflow_osmtgmod_to_pypsa.sql',		# Include data from osmTGmod into EHV/HV powerflow schema
-#	'ego_dp_powerflow_electrical_neighbour.sql',		# Create border crossing lines and buses in neighbouring countries
-#	'ego_dp_powerflow_fix_ehv_subnetworks.sql',		# Fix topological errors in eHV grid
-#	'ego_dp_powerflow_grid_future_scenarios.sql',		# Copy grid to future scenarios 
-#	'ego_dp_powerflow_assignment_otgid.sql',		# assign otg_id to pp lists
-#	'ego_dp_powerflow_assignment_unid.sql',			# create a unified_id over all pp (res and conv)	    
-#	'ego_dp_powerflow_create_pp_mview.sql',			# create mviews to display power plants per scenario
-#	'ego_dp_powerflow_assignment_generator.sql',  		# Assign generators to corresponding substation (SQ, NEP2035, eGo100)
-#	'ego_dp_powerflow_assignment_load.sql',        		# Assign loads to their corresponding substation (SQ, NEP2035, eGo100)
-#	'ego_dp_powerflow_assignment_storage.sql',		# Assign storages to their corresponding substation (SQ, NEP 2035, eGo 100)
-#	'ego_dp_powerflow_timeseries_generator.sql',		# Transfer renpassG!S results into the corresponding powerflow table
-#	'ego_dp_powerflow_griddistrict_demand.py',		# Demand per MV Griddistrict
-#	'ego_dp_powerflow_timeseries_demand.sql',		# Insert demand series into corresponding powerflow table (SQ, NEP2035, eGo100)
-#	'ego_dp_powerflow_lopf_data.sql',			# Set marginal costs for generators and storages
-
+	'ego_dp_powerflow_hv_setup.sql',			# Set schema/tables for EHV/HV powerflow calculations up
+	'ego_dp_powerflow_osmtgmod_to_pypsa.sql',		# Include data from osmTGmod into EHV/HV powerflow schema
+	'ego_dp_powerflow_electrical_neighbour.sql',		# Create border crossing lines and buses in neighbouring countries
+	'ego_dp_powerflow_fix_ehv_subnetworks.sql',		# Fix topological errors in eHV grid
+	'ego_dp_powerflow_grid_future_scenarios.sql',		# Copy grid to future scenarios 
+	'ego_dp_powerflow_assignment_otgid.sql',		# assign otg_id to pp lists
+	'ego_dp_powerflow_assignment_unid.sql',			# create a unified_id over all pp (res and conv)	    
+	'ego_dp_powerflow_create_pp_mview.sql',			# create mviews to display power plants per scenario
+	'ego_dp_powerflow_assignment_generator.sql',  		# Assign generators to corresponding substation (SQ, NEP2035, eGo100)
+	'ego_dp_powerflow_assignment_load.sql',        		# Assign loads to their corresponding substation (SQ, NEP2035, eGo100)
+	'ego_dp_powerflow_assignment_storage.sql',		# Assign storages to their corresponding substation (SQ, NEP 2035, eGo 100)
+	'ego_dp_powerflow_timeseries_generator.sql',		# Transfer renpassG!S results into the corresponding powerflow table
+	'ego_dp_powerflow_griddistrict_demand.py',		# Demand per MV Griddistrict
+	'ego_dp_powerflow_timeseries_demand.sql',		# Insert demand series into corresponding powerflow table (SQ, NEP2035, eGo100)
+	'ego_dp_powerflow_lopf_data.sql',			# Set marginal costs for generators and storages
     ## POST-PROCESSING
-#        'ego_pp_nep2035_grid_variations.sql'			# Create extension_tables and insert NEP-data
+        'ego_pp_nep2035_grid_variations.sql'			# Create extension_tables and insert NEP-data
 	
     ## VERSIONING
-#   	'ego_dp_versioning.sql',				# Versioning
-#	'ego_dp_versioning_mviews.sql' ,			# Versioning of mviews
+   	'ego_dp_versioning.sql',				# Versioning
+	'ego_dp_versioning_mviews.sql' ,			# Versioning of mviews
 
 	
 
