@@ -147,7 +147,7 @@ COMMENT ON TABLE supply.ego_dp_conv_powerplant
 		"format": "PostgreSQL",
 		"fields": [
 				{"name": "version", "description": "version number of eGo data processing", "unit": "" },
-				{"name": "gid", "description": "Unique identifier", "unit": "" },
+				{"name": "id", "description": "Unique identifier", "unit": "" },
 				{"name": "bnetza_id", "description": "Bundesnetzagentur unit ID", "unit": " " },			
 				{"name": "company", "description": "Name of company", "unit": " " },				
 				{"name": "name", "description": "name of unit ", "unit": " " },				

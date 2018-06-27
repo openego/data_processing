@@ -15,8 +15,8 @@ __author__      = "jong42, Ludee"
 
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.0','input','model_draft','ego_demand_loadarea','ego_dp_lv_loadcut.sql',' ');
-SELECT scenario_log('eGo_DP', 'v0.4.0','input','model_draft','ego_grid_mvlv_substation_voronoi','ego_dp_lv_loadcut.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.2','input','model_draft','ego_demand_loadarea','ego_dp_lv_loadcut.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.2','input','model_draft','ego_grid_mvlv_substation_voronoi','ego_dp_lv_loadcut.sql',' ');
 
 -- Cut Loadarea with MVLV Substation Voronoi
 DROP TABLE IF EXISTS    model_draft.ego_grid_lv_griddistrict_cut CASCADE;
@@ -64,7 +64,7 @@ UPDATE model_draft.ego_grid_lv_griddistrict_cut AS t1
     WHERE   t1.id = t2.id;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.0','temp','model_draft','ego_grid_lv_griddistrict_cut','ego_dp_lv_loadcut.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.2','temp','model_draft','ego_grid_lv_griddistrict_cut','ego_dp_lv_loadcut.sql',' ');
 
 
 /* -- Validate (geom)
@@ -117,10 +117,10 @@ CREATE INDEX ego_grid_lv_griddistrict_cut_1subst_geom_idx
 -- metadata
 COMMENT ON TABLE model_draft.ego_grid_lv_griddistrict_cut_1subst IS '{
     "comment": "eGoDP - Temporary table",
-    "version": "v0.4.0" }' ;
+    "version": "v0.4.2" }' ;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.0','temp','model_draft','ego_grid_lv_griddistrict_cut_1subst','ego_dp_lv_loadcut.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.2','temp','model_draft','ego_grid_lv_griddistrict_cut_1subst','ego_dp_lv_loadcut.sql',' ');
 
 
 -- Select parts with no LV Substation
@@ -149,10 +149,10 @@ CREATE INDEX ego_grid_lv_griddistrict_cut_0subst_geom_idx
 -- metadata
 COMMENT ON TABLE model_draft.ego_grid_lv_griddistrict_cut_0subst IS '{
     "comment": "eGoDP - Temporary table",
-    "version": "v0.4.0" }' ;
+    "version": "v0.4.2" }' ;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.0','temp','model_draft','ego_grid_lv_griddistrict_cut_0subst','ego_dp_lv_loadcut.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.2','temp','model_draft','ego_grid_lv_griddistrict_cut_0subst','ego_dp_lv_loadcut.sql',' ');
 
 
 -- Select parts with more than one substation
@@ -181,10 +181,10 @@ CREATE INDEX ego_grid_lv_griddistrict_cut_xsubst_geom_idx
 -- metadata
 COMMENT ON TABLE model_draft.ego_grid_lv_griddistrict_cut_xsubst IS '{
     "comment": "eGoDP - Temporary table",
-    "version": "v0.4.0" }' ;
+    "version": "v0.4.2" }' ;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.0','temp','model_draft','ego_grid_lv_griddistrict_cut_xsubst','ego_dp_lv_loadcut.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.2','temp','model_draft','ego_grid_lv_griddistrict_cut_xsubst','ego_dp_lv_loadcut.sql',' ');
 
 
 -- Combine parts with Next Neighbor
@@ -232,10 +232,10 @@ ALTER TABLE model_draft.ego_grid_lv_griddistrict_cut_nn OWNER TO oeuser;
 -- metadata
 COMMENT ON TABLE model_draft.ego_grid_lv_griddistrict_cut_nn IS '{
     "comment": "eGoDP - Temporary table",
-    "version": "v0.4.0" }' ;
+    "version": "v0.4.2" }' ;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.0','temp','model_draft','ego_grid_lv_griddistrict_cut_nn','ego_dp_lv_loadcut.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.2','temp','model_draft','ego_grid_lv_griddistrict_cut_nn','ego_dp_lv_loadcut.sql',' ');
 
 
 -- Collect and union all parts
@@ -303,7 +303,7 @@ UPDATE model_draft.ego_grid_lv_griddistrict_cut_nn_collect AS t1
 -- metadata
 COMMENT ON TABLE model_draft.ego_grid_lv_griddistrict_cut_nn_collect IS '{
     "comment": "eGoDP - Temporary table",
-    "version": "v0.4.0" }' ;
+    "version": "v0.4.2" }' ;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.0','temp','model_draft','ego_grid_lv_griddistrict_cut_nn_collect','ego_dp_lv_loadcut.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.2','temp','model_draft','ego_grid_lv_griddistrict_cut_nn_collect','ego_dp_lv_loadcut.sql',' ');

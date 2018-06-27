@@ -47,7 +47,7 @@ def data_processing():
         'ego_dp_substation_hvmv.sql',                       # Abstract HVMV Substations of the high voltage level from OSM
         'ego_dp_substation_ehv.sql',                        # Abstract EHV Substations of the extra high voltage level from OSM
         'ego_dp_substation_otg.sql',                        # Assign osmTGmod-id to HVMV and EHV substations
-        'ego_dp_substation_hvmv_voronoi.sql',               # HVMV Voronoi cells based on HVMV substations
+       'ego_dp_substation_hvmv_voronoi.sql',               # HVMV Voronoi cells based on HVMV substations
         'ego_dp_substation_ehv_voronoi.sql',                # EHV Voronoi cells based on EHV substations
 
     ## GRIDDISTRICT
@@ -105,7 +105,6 @@ def data_processing():
 	'ego_dp_powerflow_griddistrict_demand.py',		# Demand per MV Griddistrict
 	'ego_dp_powerflow_timeseries_demand.sql',		# Insert demand series into corresponding powerflow table (SQ, NEP2035, eGo100)
 	'ego_dp_powerflow_lopf_data.sql',			# Set marginal costs for generators and storages
-
     ## POST-PROCESSING
         'ego_pp_nep2035_grid_variations.sql'			# Create extension_tables and insert NEP-data
 	

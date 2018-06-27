@@ -15,6 +15,8 @@ __author__ 	= "ClaraBuettner, IlkaCu"
 
 DROP TABLE IF EXISTS  model_draft.ego_grid_pf_hv_extension_temp_resolution;
 CREATE TABLE model_draft.ego_grid_pf_hv_extension_temp_resolution AS (SELECT * FROM model_draft.ego_grid_pf_hv_temp_resolution);
+ALTER TABLE model_draft.ego_grid_pf_hv_extension_temp_resolution
+  OWNER TO oeuser;
 
 DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_extension_source ;
 CREATE TABLE model_draft.ego_grid_pf_hv_extension_source AS (SELECT * FROM model_draft.ego_grid_pf_hv_source);
@@ -88,7 +90,7 @@ SELECT setval('model_draft.ego_grid_hv_extension_transformer_id', (max(trafo_id)
 
 DROP SEQUENCE IF EXISTS model_draft.ego_grid_hv_extension_link_id CASCADE;
 CREATE SEQUENCE model_draft.ego_grid_hv_extension_link_id;
-SELECT setval('model_draft.ego_grid_hv_extension_link_id', 1); 
+SELECT setval('model_draft.ego_grid_hv_extension_link_id', (max(link_id)+1)) FROM model_draft.ego_grid_pf_hv_link;
 
 DELETE FROM model_draft.scn_nep2035_b2_line WHERE project = 'P200';
 
@@ -1456,7 +1458,7 @@ AND bus_id NOT IN (SELECT bus0 FROM model_draft.ego_grid_pf_hv_extension_link WH
 AND bus_id NOT IN (SELECT bus0 FROM model_draft.ego_grid_pf_hv_extension_transformer WHERE scn_name = a.scn_name) AND bus_id NOT IN (SELECT bus1 FROM model_draft.ego_grid_pf_hv_extension_transformer WHERE scn_name = a.scn_name);
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_grid_pf_hv_extension_bus','ego_pp_nep2035_grid_variations.sql',' ');
-SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_grid_pf_hv_extension_line','ego_pp_nep2035_grid_variations.sql',' ');
-SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_grid_pf_hv_extension_link','ego_pp_nep2035_grid_variations.sql',' ');
-SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_grid_pf_hv_extension_transformer','ego_pp_nep2035_grid_variations.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.2','output','model_draft','ego_grid_pf_hv_extension_bus','ego_pp_nep2035_grid_variations.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.2','output','model_draft','ego_grid_pf_hv_extension_line','ego_pp_nep2035_grid_variations.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.2','output','model_draft','ego_grid_pf_hv_extension_link','ego_pp_nep2035_grid_variations.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.2','output','model_draft','ego_grid_pf_hv_extension_transformer','ego_pp_nep2035_grid_variations.sql',' ');

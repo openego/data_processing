@@ -343,12 +343,21 @@ WHERE a.p_nom >= 50 AND a.aggr_id IS NOT NULL;
 
 
 ------------------ NEIGHBOURING COUNTRIES
-DELETE FROM model_draft.ego_grid_pf_hv_storage WHERE storage_id > 200000 AND scn_name = 'Status Quo';
-DELETE FROM model_draft.ego_grid_pf_hv_storage WHERE storage_id > 200000 AND scn_name = 'NEP 2035';
-DELETE FROM model_draft.ego_grid_pf_hv_storage WHERE storage_id > 200000 AND scn_name = 'eGo 100';
 
 -- INSERT params of Storages in model_draft.ego_grid_pf_hv_storage (countries besides Germany)
 -- starting storage_id at 200000
+
+-- Create a new sequence for storage_id of storages located in neighbouring countries
+
+DROP SEQUENCE IF EXISTS model_draft.ego_grid_pf_hv_storage_neighbouring;
+CREATE SEQUENCE model_draft.ego_grid_pf_hv_storage_neighbouring
+  INCREMENT 1;
+  
+SELECT setval('model_draft.ego_grid_pf_hv_storage_neighbouring', (max(storage_id)+200000)) FROM model_draft.ego_grid_pf_hv_storage;
+
+-- grant (oeuser)
+ALTER SEQUENCE model_draft.ego_grid_pf_hv_storage_neighbouring
+OWNER TO oeuser;
 
 -- Status Quo
 
@@ -377,7 +386,7 @@ INSERT into model_draft.ego_grid_pf_hv_storage (
 )
   SELECT
   'Status Quo' as scn_name,
-  row_number() over () + 200000 as storage_id,
+  nextval('model_draft.ego_grid_pf_hv_storage_neighbouring') as storage_id,
   B.bus_id as bus,
   'flexible' AS dispatch,
   'PV' AS control,
@@ -417,7 +426,8 @@ INSERT into model_draft.ego_grid_pf_hv_storage (
 	AND A.nominal_value[1] > 0.001
 	AND A.source not LIKE '%%powerline%%'
 	AND A.scenario_id = 43
-	AND A.nominal_capacity IS not NULL;
+Group by bus, p_nom;
+
 
 
 -- NEP 2035
@@ -448,7 +458,7 @@ INSERT into model_draft.ego_grid_pf_hv_storage (
 
   SELECT
   'NEP 2035' as scn_name,
-  row_number() over () + 200000 as storage_id,
+  nextval('model_draft.ego_grid_pf_hv_storage_neighbouring') as storage_id,
   B.bus_id as bus,
   'flexible' AS dispatch,
   'PV' AS control,
@@ -488,9 +498,69 @@ INSERT into model_draft.ego_grid_pf_hv_storage (
 	AND A.nominal_value[1] > 0.001
 	AND A.source not LIKE '%%powerline%%'
 	AND A.scenario_id = 41
-	AND A.nominal_capacity IS not NULL;
+Group by bus, p_nom;
 
 -- eGo 100
+
+-- batteries
+
+CREATE TABLE model_draft.ego_grid_pf_hv_storage_batteries_temp AS
+SELECT
+ sub. scenario_id ,
+ sub.source ,
+ sum( sub.p_nom) as p_nom,
+ sub.cntr_id
+FROM 
+(
+SELECT
+  scenario_id ,
+  'battery'::text as source ,
+  nominal_value[1] AS p_nom,
+  substring(source, 1, 2)::text as  cntr_id
+FROM
+  calc_renpass_gis.renpass_gis_storage
+WHERE substring(source, 1, 2) <> 'DE'
+AND (substring(target,12,22) = 'lithium_ion'
+Or substring(target,12,21) = 'redox_flow')
+AND nominal_value IS not NULL
+AND nominal_value[1] > 0.001
+AND source not LIKE '%%powerline%%'
+AND scenario_id = 40
+Group by scenario_id, source,nominal_value
+UNION
+SELECT
+  scenario_id ,
+  'battery'::text as source ,
+  nominal_value[1] AS p_nom,
+  'AT' as  cntr_id
+FROM
+  calc_renpass_gis.renpass_gis_storage
+WHERE substring(target, 1, 2) = 'AT'
+AND (substring(target,12,22) = 'lithium_ion'
+Or substring(target,12,21) = 'redox_flow')
+AND nominal_value IS not NULL
+AND nominal_value[1] > 0.001
+AND source not LIKE '%%powerline%%'
+AND scenario_id = 40
+Group by scenario_id, source,nominal_value
+UNION
+SELECT
+  scenario_id ,
+  'battery'::text as source ,
+  nominal_value[1] AS p_nom,
+  'LU' as  cntr_id
+FROM
+  calc_renpass_gis.renpass_gis_storage
+WHERE substring(target, 1, 2) = 'LU'
+AND (substring(target,12,22) = 'lithium_ion'
+Or substring(target,12,21) = 'redox_flow')
+AND nominal_value IS not NULL
+AND nominal_value[1] > 0.001
+AND source not LIKE '%%powerline%%'
+AND scenario_id = 40
+Group by scenario_id, source,nominal_value
+) as sub
+Group by sub.scenario_id, sub.source,sub.cntr_id;
 
 INSERT into model_draft.ego_grid_pf_hv_storage (
   scn_name,
@@ -515,14 +585,264 @@ INSERT into model_draft.ego_grid_pf_hv_storage (
   efficiency_dispatch,
   standing_loss
 )
-
-  SELECT
+SELECT
   'eGo 100' as scn_name,
-  row_number() over () + 200000 as storage_id,
+  nextval('model_draft.ego_grid_pf_hv_storage_neighbouring') as storage_id,
   B.bus_id as bus,
   'flexible' AS dispatch,
   'PV' AS control,
+  A.p_nom,
+  FALSE as p_nom_extendable,
+  0 as p_nom_min,
+  -1 as p_min_pu_fixed,
+  1 as p_max_pu_fixed,
+  1 as sign,
+  19 as source,
+  0 as marginal_cost,
+  0 as capital_cost,
+  1 as efficiency,
+  0 as soc_inital,
+  true as soc_cyclic,
+  6 as max_hours,
+  0.9487 as efficiency_store, -- efficiency_store according to Acatech2015 
+  0.9487 as efficiency_dispatch, -- efficiency_dispatch according to Acatech2015 
+  0.00417 as standing_loss -- standing_loss according to Acatech2015
+
+		FROM  model_draft.ego_grid_pf_hv_storage_batteries_temp A join
+		(
+		SELECT
+		*
+		FROM
+			(SELECT *,
+			max(v_nom) over (partition by cntr_id) AS max_v_nom
+			FROM
+			model_draft.ego_grid_hv_electrical_neighbours_bus
+			where central_bus = True
+			) SQ
+		WHERE SQ.v_nom = SQ.max_v_nom
+		) B
+		ON A.cntr_id = B.cntr_id
+	WHERE substring(A.source, 1, 2) <> 'DE'
+	AND A.p_nom > 0.001
+Group by bus, p_nom;
+
+DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_storage_batteries_temp; 
+  
+-- hydrogen
+
+CREATE TABLE model_draft.ego_grid_pf_hv_storage_hydrogen_temp AS
+SELECT
+ sub. scenario_id ,
+ sub.source ,
+ sum( sub.p_nom) as p_nom,
+ sub.cntr_id
+FROM 
+(
+SELECT
+  scenario_id ,
+  'hydrogen'::text as source ,
   nominal_value[1] AS p_nom,
+  substring(source, 1, 2)::text as  cntr_id
+FROM
+  calc_renpass_gis.renpass_gis_storage
+WHERE substring(source, 1, 2) <> 'DE'
+AND substring(target,12,19) = 'hydrogen'
+AND nominal_value IS not NULL
+AND nominal_value[1] > 0.001
+AND source not LIKE '%%powerline%%'
+AND scenario_id = 40
+Group by scenario_id, source,nominal_value
+UNION
+SELECT
+  scenario_id ,
+  'hydrogen'::text as source ,
+  nominal_value[1] AS p_nom,
+  'AT' as  cntr_id
+FROM
+  calc_renpass_gis.renpass_gis_storage
+WHERE substring(target, 1, 2) = 'AT'
+AND substring(target,12,19) = 'hydrogen'
+AND nominal_value IS not NULL
+AND nominal_value[1] > 0.001
+AND source not LIKE '%%powerline%%'
+AND scenario_id = 40
+Group by scenario_id, source,nominal_value
+UNION
+SELECT
+  scenario_id ,
+  'hydrogen'::text as source ,
+  nominal_value[1] AS p_nom,
+  'LU' as  cntr_id
+FROM
+  calc_renpass_gis.renpass_gis_storage
+WHERE substring(target, 1, 2) = 'LU'
+AND substring(target,12,19) = 'hydrogen'
+AND nominal_value IS not NULL
+AND nominal_value[1] > 0.001
+AND source not LIKE '%%powerline%%'
+AND scenario_id = 40
+Group by scenario_id, source,nominal_value
+) as sub
+Group by sub.scenario_id, sub.source,sub.cntr_id;
+
+
+INSERT into model_draft.ego_grid_pf_hv_storage (
+  scn_name,
+  storage_id,
+  bus,
+  dispatch,
+  control,
+  p_nom,
+  p_nom_extendable,
+  p_nom_min,
+  p_min_pu_fixed,
+  p_max_pu_fixed,
+  sign,
+  source,
+  marginal_cost,
+  capital_cost,
+  efficiency,
+  soc_initial,
+  soc_cyclic,
+  max_hours,
+  efficiency_store,
+  efficiency_dispatch,
+  standing_loss
+)
+SELECT
+  'eGo 100' as scn_name,
+  nextval('model_draft.ego_grid_pf_hv_storage_neighbouring') as storage_id,  
+  B.bus_id as bus,
+  'flexible' AS dispatch,
+  'PV' AS control,
+  A.p_nom,
+  FALSE as p_nom_extendable,
+  0 as p_nom_min,
+  -1 as p_min_pu_fixed,
+  1 as p_max_pu_fixed,
+  1 as sign,
+  18 as source,
+  0 as marginal_cost,
+  0 as capital_cost,
+  1 as efficiency,
+  0 as soc_inital,
+  true as soc_cyclic,
+  168 as max_hours,
+  0.785, -- efficiency according to Acatech2015
+  0.57, -- efficiency according to Acatech2015
+  0.000694 -- standing losses according to Acatech2015
+
+		FROM  model_draft.ego_grid_pf_hv_storage_hydrogen_temp A join
+		(
+		SELECT
+		*
+		FROM
+			(SELECT *,
+			max(v_nom) over (partition by cntr_id) AS max_v_nom
+			FROM
+			model_draft.ego_grid_hv_electrical_neighbours_bus
+			where central_bus = True
+			) SQ
+		WHERE SQ.v_nom = SQ.max_v_nom
+		) B
+		ON A.cntr_id = B.cntr_id
+	WHERE substring(A.source, 1, 2) <> 'DE'
+	AND A.p_nom > 0.001
+Group by bus, p_nom;
+
+DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_storage_hydrogen_temp; 
+
+-- pumped_hydro
+
+
+CREATE TABLE model_draft.ego_grid_pf_hv_storage_pumped_temp AS
+SELECT
+ sub. scenario_id ,
+ sub.source ,
+ sum( sub.p_nom) as p_nom,
+ sub.cntr_id
+FROM 
+(
+SELECT
+  scenario_id ,
+  'pumped'::text as source ,
+  nominal_value[1] AS p_nom,
+  substring(source, 1, 2)::text as  cntr_id
+FROM
+  calc_renpass_gis.renpass_gis_storage
+WHERE substring(source, 1, 2) <> 'DE'
+AND (substring(target,12,23) = 'pumped_hydro'
+Or substring(target,12,17) = 'a_caes')
+AND nominal_value IS not NULL
+AND nominal_value[1] > 0.001
+AND source not LIKE '%%powerline%%'
+AND scenario_id = 40
+Group by scenario_id, source,nominal_value
+UNION
+SELECT
+  scenario_id ,
+  'pumped'::text as source ,
+  nominal_value[1] AS p_nom,
+  'AT' as  cntr_id
+FROM
+  calc_renpass_gis.renpass_gis_storage
+WHERE substring(target, 1, 2) = 'AT'
+AND (substring(target,12,23) = 'pumped_hydro'
+Or substring(target,12,17) = 'a_caes')
+AND nominal_value IS not NULL
+AND nominal_value[1] > 0.001
+AND source not LIKE '%%powerline%%'
+AND scenario_id = 40
+Group by scenario_id, source,nominal_value
+UNION
+SELECT
+  scenario_id ,
+  'pumped'::text as source ,
+  nominal_value[1] AS p_nom,
+  'LU' as  cntr_id
+FROM
+  calc_renpass_gis.renpass_gis_storage
+WHERE substring(target, 1, 2) = 'LU'
+AND (substring(target,12,23) = 'pumped_hydro'
+Or substring(target,12,17) = 'a_caes')
+AND nominal_value IS not NULL
+AND nominal_value[1] > 0.001
+AND source not LIKE '%%powerline%%'
+AND scenario_id = 40
+Group by scenario_id, source,nominal_value
+) as sub
+Group by sub.scenario_id, sub.source,sub.cntr_id;
+
+INSERT into model_draft.ego_grid_pf_hv_storage (
+  scn_name,
+  storage_id,
+  bus,
+  dispatch,
+  control,
+  p_nom,
+  p_nom_extendable,
+  p_nom_min,
+  p_min_pu_fixed,
+  p_max_pu_fixed,
+  sign,
+  source,
+  marginal_cost,
+  capital_cost,
+  efficiency,
+  soc_initial,
+  soc_cyclic,
+  max_hours,
+  efficiency_store,
+  efficiency_dispatch,
+  standing_loss
+)
+  SELECT
+  'eGo 100' as scn_name,
+  nextval('model_draft.ego_grid_pf_hv_storage_neighbouring') as storage_id,
+  B.bus_id as bus,
+  'flexible' AS dispatch,
+  'PV' AS control,
+  A.p_nom AS p_nom,
   FALSE as p_nom_extendable,
   0 as p_nom_min,
   -1 as p_min_pu_fixed,
@@ -539,7 +859,7 @@ INSERT into model_draft.ego_grid_pf_hv_storage (
   0.89 as efficiency_dispatch, -- efficiency_dispatch according to Acatech2015 
   0.00052 as standing_loss -- standing_loss according to Acatech2015
 
-		FROM calc_renpass_gis.renpass_gis_storage A join
+		FROM model_draft.ego_grid_pf_hv_storage_pumped_temp A join
 		(
 		SELECT
 		*
@@ -552,15 +872,12 @@ INSERT into model_draft.ego_grid_pf_hv_storage (
 			) SQ
 		WHERE SQ.v_nom = SQ.max_v_nom
 		) B
-		ON (substring(A.source, 1, 2) = B.cntr_id)
+		ON A.cntr_id = B.cntr_id
 	WHERE substring(A.source, 1, 2) <> 'DE'
-	AND A.nominal_value IS not NULL
-	AND A.nominal_value[1] > 0.001
-	AND A.source not LIKE '%%powerline%%'
-	AND A.scenario_id = 40
-	AND A.nominal_capacity IS not NULL;
+	AND A.p_nom > 0.001
+	Group by bus, p_nom;
+
+DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_storage_pumped_temp;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_grid_pf_hv_storage','ego_dp_powerflow_assignment_storage.sql',' ');
-
-
+SELECT scenario_log('eGo_DP', 'v0.4.2','output','model_draft','ego_grid_pf_hv_storage','ego_dp_powerflow_assignment_storage.sql',' ');
