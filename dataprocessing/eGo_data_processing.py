@@ -52,7 +52,7 @@ def data_processing():
 
     ## GRIDDISTRICT
 #        'ego_dp_mv_griddistrict.sql',                       # MV GridDistricts from municipalities and Voronoi cells
-        'ego_dp_substation_id_to_generator.sql',            # Assign Substation ID (subst_id) to Generator (Conventional and Renewable)
+#        'ego_dp_substation_id_to_generator.sql',            # Assign Substation ID (subst_id) to Generator (Conventional and Renewable)
 
     ## LOADAREA
 #        'ego_dp_loadarea_landuse.sql',                      # OSM landuse sectors
@@ -80,13 +80,13 @@ def data_processing():
 #        'rea/ego_dp_rea_wpa_per_mvgd.sql',                  # Wind potential area (WPA)
 #        'rea/ego_dp_rea_lattice_per_area_500m.sql',         # Prepare 500m lattice
 #        'rea/ego_dp_rea_lattice_per_area_50m.sql',          # Prepare 50m lattice
-#        'rea/ego_dp_rea_setup.sql',                         # Setup tables for REA
-#        'rea/ego_dp_rea_m1.sql',                            # M1 biomass and solar to OSM agricultural
-#        'rea/ego_dp_rea_m2.sql',                            # M2 wind farms
-#        'rea/ego_dp_rea_m3.sql',                            # M3 wind turbines to WPA
-#        'rea/ego_dp_rea_m4.sql',                            # M4 other and rest
-#        'rea/ego_dp_rea_m5.sql',                            # M5 LV to Loadarea
-#        'rea/ego_dp_rea_results.sql',                       # Results and statistics
+        'rea/ego_dp_rea_setup.sql',                         # Setup tables for REA
+        'rea/ego_dp_rea_m1.sql',                            # M1 biomass and solar to OSM agricultural
+        'rea/ego_dp_rea_m2.sql',                            # M2 wind farms
+        'rea/ego_dp_rea_m3.sql',                            # M3 wind turbines to WPA
+        'rea/ego_dp_rea_m4.sql',                            # M4 other and rest
+        'rea/ego_dp_rea_m5.sql',                            # M5 LV to Loadarea
+        'rea/ego_dp_rea_results.sql',                       # Results and statistics
 
     ## POWERFLOW
 	    
