@@ -35,6 +35,17 @@ FROM 	model_draft.ego_grid_pf_hv_line a
 WHERE 	scn_name= 'Status Quo'; 
 
 
+-- Include all links from SQ scenario in the NEP 2035 scenario
+
+DELETE FROM model_draft.ego_grid_pf_hv_link WHERE scn_name = 'NEP 2035'; 
+
+INSERT INTO 	model_draft.ego_grid_pf_hv_link
+SELECT 'NEP 2035', a.link_id, a.bus0, a.bus1, a.efficiency, a.marginal_cost, a.p_nom, a.p_nom_extendable, 
+        a.p_nom_min, a.p_nom_max, a.capital_cost, a.length, a.terrain_factor, a.geom, a.topo
+FROM 	model_draft.ego_grid_pf_hv_link a 
+WHERE 	scn_name= 'Status Quo';
+
+
 -- Include transformers from Status Quo into new scenario 'NEP 2035'
 
 DELETE FROM model_draft.ego_grid_pf_hv_transformer WHERE scn_name = 'NEP 2035'; 
@@ -69,6 +80,16 @@ SELECT 'eGo 100', a.line_id, a.bus0, a.bus1, a.x, a.r, a.g, a.b, a.s_nom, a.s_no
 FROM 	model_draft.ego_grid_pf_hv_line a 
 WHERE 	scn_name= 'Status Quo'; 
 
+-- Include all links from SQ scenario in the eGo 100 scenario
+
+DELETE FROM model_draft.ego_grid_pf_hv_link WHERE scn_name = 'eGo 100'; 
+
+INSERT INTO 	model_draft.ego_grid_pf_hv_link
+SELECT 'eGo 100', a.link_id, a.bus0, a.bus1, a.efficiency, a.marginal_cost, a.p_nom, a.p_nom_extendable, 
+        a.p_nom_min, a.p_nom_max, a.capital_cost, a.length, a.terrain_factor, a.geom, a.topo
+FROM 	model_draft.ego_grid_pf_hv_link a 
+WHERE 	scn_name= 'Status Quo';
+
 
 -- Include transformers from Status Quo into new scenario 'eGo 100'
 
@@ -81,6 +102,6 @@ FROM 	model_draft.ego_grid_pf_hv_transformer a
 WHERE scn_name= 'Status Quo';
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_grid_pf_hv_bus','ego_dp_powerflow_grid_future_scenarios.sql',' ');
-SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_grid_pf_hv_line','ego_dp_powerflow_grid_future_scenarios.sql',' ');
-SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_grid_pf_hv_transformer','ego_dp_powerflow_grid_future_scenarios.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.2','output','model_draft','ego_grid_pf_hv_bus','ego_dp_powerflow_grid_future_scenarios.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.2','output','model_draft','ego_grid_pf_hv_line','ego_dp_powerflow_grid_future_scenarios.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.2','output','model_draft','ego_grid_pf_hv_transformer','ego_dp_powerflow_grid_future_scenarios.sql',' ');
