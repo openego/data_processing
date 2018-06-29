@@ -12,7 +12,7 @@ __author__ = "wolfbunke"
 COMMENT ON TABLE supply.ego_dp_res_powerplant
   IS '{
 	"title": "Renewable power plants in Germany by Scenario",
-	"description": "Liste of renewable power plants in Germany by Scenario status quo, NEP 2035 and 2050 of the eGo project",
+	"description": "Liste of renewable power plants in Germany by Scenario status quo, NEP 2035 and eGo100 Scenario of the eGo project",
 	"language": [ "eng", "ger" ],
 	"spatial": 
 		{"location": "Germany",
@@ -30,16 +30,22 @@ COMMENT ON TABLE supply.ego_dp_res_powerplant
 		"license": "GNU Affero General Public License Version 3 (AGPL-3.0)", 
 		"copyright": "© ZNES Europa-Universität Flensburg"},
 		
-		{"name": "EnergyMap.info ", 
-		"description": "Data provider how collects and clean TSO and DSO data of Germany", 
-		"url": "http://www.energymap.info/download.html", 
-		"license": "unknown ", 
-		"copyright": "Deutsche Gesellschaft für Sonnenenergie e.V."},
+		{"name": "Renewable power plants from netztransparenz.de provided by the four TSOs of Germany", 
+		"description": "Original Data Anlagenstammdaten from the four german TSOs", 
+		"url": "https://www.netztransparenz.de/EEG/Anlagenstammdaten", 
+		"license": "Open Database License (ODbL) v1.0", 
+		"copyright": "50Hertz Transmission GmbH,  Amprion GmbH, TransnetBW GmbH, TenneT TSO GmbH"},
+		
+		{"name": "Open-Power-System-Data Renewable power plants DE", 
+		"description": "Open Power System Data. 2018. Data Package Renewable power plants. Version 2018-03-08. Data provider how collects and clean TSO, DSO data and other energy data of Germany and Europe", 
+		"url": "https://data.open-power-system-data.org/renewable_power_plants/2018-03-08/", 
+		"license": "Open Database License (ODbL) v1.0", 
+		"copyright": "Open-Power-System-Data, Europa-Universität Flensburg"},
 		
 		{"name": "Bundesnetzagentur (BNetzA)", 
-		"description": "The Federal Network Agency for Electricity, Gas, Telecommunications, Posts and Railway Data is in Germany data provider of power plant", 
+		"description": "The Federal Network Agency for Electricity, Gas, Telecommunications, Posts and Railway Data is in Germany data provider of power plant.", 
 		"url": "https://www.bundesnetzagentur.de/DE/Sachgebiete/ElektrizitaetundGas/Unternehmen_Institutionen/ErneuerbareEnergien/Anlagenregister/Anlagenregister_Veroeffentlichung/Anlagenregister_Veroeffentlichungen_node.html", 
-		"license": "Creative Commons Namensnennung-Keine Bearbeitung 3.0 Deutschland Lizenz", 
+		"license": "Deutschland – Namensnennung – Version 2.0", 
 		"copyright": "© Bundesnetzagentur für Elektrizität, Gas, Telekommunikation, Post und Eisenbahnen; Pressestelle"}
 	        ],
 	"license": 
@@ -97,6 +103,7 @@ COMMENT ON TABLE supply.ego_dp_res_powerplant
 				{"name": "flag", "description": "Flag of scenario changes of an power plant unit (repowering, decommission or commissioning).", "unit": "" },
 				{"name": "nuts", "description": "NUTS ID", "unit": "" } ] } ],		
 	"metadata_version": "1.3"}';
+	
 -- select description
 SELECT obj_description('supply.ego_dp_res_powerplant'::regclass)::json;	
 
@@ -104,7 +111,7 @@ SELECT obj_description('supply.ego_dp_res_powerplant'::regclass)::json;
 COMMENT ON TABLE supply.ego_dp_conv_powerplant
   IS '{
 	"title": "eGo Conventional power plants in Germany by Scenario",
-	"description": "This dataset contains an augmented and corrected power plant list based on the power plant list provided by the OPSD (BNetzA and UBA) and NEP Kraftwerksliste 2015 for the scenario B1-2035 and the ZNES scenario eGo 100 in 2050.",
+	"description": "This dataset contains an augmented and corrected power plant list based on the power plant list provided by the OPSD (BNetzA and UBA) and NEP Kraftwerksliste 2015 for the scenario B1-2035 and the ZNES scenario eGo 100 of the open_eGo project.",
 	"language": [ "eng", "ger" ],
 	"spatial": 
 		{"location": "Germany",
@@ -122,11 +129,18 @@ COMMENT ON TABLE supply.ego_dp_conv_powerplant
 		"license": "GNU Affero General Public License Version 3 (AGPL-3.0)", 
 		"copyright": "© ZNES Europa-Universität Flensburg"},
 		
-		{"name": "Open Power System Data (OPSD)",
-                "url":  "http://data.open-power-system-data.org/conventional_power_plants/2016-02-08/",
-                "license": "Creative Commons Attribution 4.0 International", 
-		"copyright": "© Open Power System Data. 2017"}, 
-
+		{"name": "Conventional power plants DE", 
+		"description": "Open Power System Data. 2018. Data Package Conventional power plants. Version 2018-02-27. Data provider how collects and clean TSO, DSO data and other energy data of Germany and Europe", 
+		"url": "https://data.open-power-system-data.org/conventional_power_plants/2018-02-27/", 
+		"license": "", 
+		"copyright": "© Open-Power-System-Data, TU Berlin"},
+		
+		{"name": "Kraftwerke in Deutschland 100MW", 
+		"description": "Open Power System Data. 2018. Data Package Renewable power plants. Version 2018-03-08. Data provider how collects and clean TSO, DSO data and other energy data of Germany and Europe", 
+		"url": "https://www.umweltbundesamt.de/dokument/datenbank-kraftwerke-in-deutschland", 
+		"license": "unknown", 
+		"copyright": "© Umweltbundesamt (UBA)"},
+			 
 		{"name": "Bundesnetzagentur (BNetzA)", 
 		"description": "The Federal Network Agency for Electricity, Gas, Telecommunications, Posts and Railway Data is in Germany data provider of power plant", 
 		"url": "https://www.bundesnetzagentur.de/DE/Sachgebiete/ElektrizitaetundGas/Unternehmen_Institutionen/ErneuerbareEnergien/Anlagenregister/Anlagenregister_Veroeffentlichung/Anlagenregister_Veroeffentlichungen_node.html", 
@@ -147,7 +161,7 @@ COMMENT ON TABLE supply.ego_dp_conv_powerplant
 		"format": "PostgreSQL",
 		"fields": [
 				{"name": "version", "description": "version number of eGo data processing", "unit": "" },
-				{"name": "gid", "description": "Unique identifier", "unit": "" },
+				{"name": "id", "description": "Unique identifier", "unit": "" },
 				{"name": "bnetza_id", "description": "Bundesnetzagentur unit ID", "unit": " " },			
 				{"name": "company", "description": "Name of company", "unit": " " },				
 				{"name": "name", "description": "name of unit ", "unit": " " },				
@@ -189,6 +203,7 @@ COMMENT ON TABLE supply.ego_dp_conv_powerplant
 				{"name": "flag", "description": "Flag of scenario changes of an power plant unit (repowering, decommission or commissioning).", "unit": "" },
 				{"name": "nuts", "description": "NUTS ID", "unit": ""} ] } ],
 		"meta_version": "1.3" }';
+
 
 -- select description
 SELECT obj_description('supply.ego_dp_conv_powerplant'::regclass)::json;
