@@ -84,7 +84,7 @@ COMMENT ON TABLE  supply.ego_conventional_powerplant IS
 		{"name": "Kraftwerke in Deutschland 100MW", 
 		"description": "Open Power System Data. 2018. Data Package Renewable power plants. Version 2018-03-08. Data provider how collects and clean TSO, DSO data and other energy data of Germany and Europe", 
 		"url": "https://www.umweltbundesamt.de/dokument/datenbank-kraftwerke-in-deutschland", 
-		"license": "unknown", 
+		"license": "in clarification processes", 
 		"copyright": "© Umweltbundesamt (UBA)"},
 			 
 		{"name": "Kraftwerksliste der Bundesnetzagentur (BNetzA)", 
