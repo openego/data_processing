@@ -102,7 +102,7 @@ COMMENT ON TABLE model_draft.ego_dp_supply_conv_powerplant
 		{"name": "Conventional power plants DE", 
 		"description": "Open Power System Data. 2018. Data Package Conventional power plants. Version 2018-02-27. Data provider how collects and clean TSO, DSO data and other energy data of Germany and Europe", 
 		"url": "https://data.open-power-system-data.org/conventional_power_plants/2018-02-27/", 
-		"license": "", 
+		"license": "MIT", 
 		"copyright": "© Open-Power-System-Data, TU Berlin"},
 		
 		{"name": "Kraftwerke in Deutschland 100MW", 
@@ -111,9 +111,9 @@ COMMENT ON TABLE model_draft.ego_dp_supply_conv_powerplant
 		"license": "unknown", 
 		"copyright": "© Umweltbundesamt (UBA)"},
 			 
-		{"name": "Bundesnetzagentur (BNetzA)", 
+		{"name": "Kraftwerksliste der Bundesnetzagentur (BNetzA)", 
 		"description": "The Federal Network Agency for Electricity, Gas, Telecommunications, Posts and Railway Data is in Germany data provider of power plant", 
-		"url": "https://www.bundesnetzagentur.de/DE/Sachgebiete/ElektrizitaetundGas/Unternehmen_Institutionen/ErneuerbareEnergien/Anlagenregister/Anlagenregister_Veroeffentlichung/Anlagenregister_Veroeffentlichungen_node.html", 
+		"url": "https://www.bundesnetzagentur.de/DE/Sachgebiete/ElektrizitaetundGas/Unternehmen_Institutionen/Versorgungssicherheit/Erzeugungskapazitaeten/Kraftwerksliste/kraftwerksliste-node.html", 
 		"license": "Creative Commons Namensnennung-Keine Bearbeitung 3.0 Deutschland Lizenz", 
 		"copyright": "© Bundesnetzagentur für Elektrizität, Gas, Telekommunikation, Post und Eisenbahnen; Pressestelle"}
 		 ],

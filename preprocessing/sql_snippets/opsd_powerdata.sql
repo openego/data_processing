@@ -56,7 +56,7 @@ CREATE TABLE supply.ego_conventional_powerplant
 
 COMMENT ON TABLE  supply.ego_conventional_powerplant IS
 '{
-	"title": "eGo Conventional power plants in Germany",
+    "title": "eGo Conventional power plants in Germany",
 	"description": "This dataset contains an augmented and corrected power plant list based on the power plant list provided by the BNetzA and UBA.",
 	"language": [ "eng", "ger" ],
 	"spatial": 
@@ -64,29 +64,42 @@ COMMENT ON TABLE  supply.ego_conventional_powerplant IS
 		"extent": "europe",
 		"resolution": "100 m"},
 	"temporal": 
-		{"reference_date": "2016-02-08",
+		{"reference_date": "2016-01-01",
 		"start": "1900-01-01",
-		"end": "2015-12-31",
+		"end": "2049-12-31",
 		"resolution": ""},
 	"sources": [
-		{"name": "Open Power System Data (OPSD)",
-                "url":  "http://data.open-power-system-data.org/conventional_power_plants/2016-02-08/",
-                "license": "Creative Commons Attribution 4.0 International", 
-		"copyright": "© Open Power System Data. 2017"}, 
-
-		{"name": "Bundesnetzagentur (BNetzA)", 
+		{"name": "eGo data processing", 
+		"description": "Scripts with allocate Geometry by OpenStreetMap Objects or create future scenarios by high resolution geo-allocation", 
+		"url": "https://github.com/openego/data_processing", 
+		"license": "GNU Affero General Public License Version 3 (AGPL-3.0)", 
+		"copyright": "© ZNES Europa-Universität Flensburg"},
+		
+		{"name": "Conventional power plants DE", 
+		"description": "Open Power System Data. 2018. Data Package Conventional power plants. Version 2018-02-27. Data provider how collects and clean TSO, DSO data and other energy data of Germany and Europe", 
+		"url": "https://data.open-power-system-data.org/conventional_power_plants/2018-02-27/", 
+		"license": "MIT", 
+		"copyright": "© Open-Power-System-Data, TU Berlin"},
+		
+		{"name": "Kraftwerke in Deutschland 100MW", 
+		"description": "Open Power System Data. 2018. Data Package Renewable power plants. Version 2018-03-08. Data provider how collects and clean TSO, DSO data and other energy data of Germany and Europe", 
+		"url": "https://www.umweltbundesamt.de/dokument/datenbank-kraftwerke-in-deutschland", 
+		"license": "unknown", 
+		"copyright": "© Umweltbundesamt (UBA)"},
+			 
+		{"name": "Kraftwerksliste der Bundesnetzagentur (BNetzA)", 
 		"description": "The Federal Network Agency for Electricity, Gas, Telecommunications, Posts and Railway Data is in Germany data provider of power plant", 
-		"url": "https://www.bundesnetzagentur.de/DE/Sachgebiete/ElektrizitaetundGas/Unternehmen_Institutionen/ErneuerbareEnergien/Anlagenregister/Anlagenregister_Veroeffentlichung/Anlagenregister_Veroeffentlichungen_node.html", 
+		"url": "https://www.bundesnetzagentur.de/DE/Sachgebiete/ElektrizitaetundGas/Unternehmen_Institutionen/Versorgungssicherheit/Erzeugungskapazitaeten/Kraftwerksliste/kraftwerksliste-node.html", 
 		"license": "Creative Commons Namensnennung-Keine Bearbeitung 3.0 Deutschland Lizenz", 
 		"copyright": "© Bundesnetzagentur für Elektrizität, Gas, Telekommunikation, Post und Eisenbahnen; Pressestelle"}
 		 ],
-	"license": [
+	"license": 
 		{"id": "ODbL-1.0",
 		"name": "Open Data Commons Open Database License 1.0",
 		"version": "1.0",
 		"url": "https://opendatacommons.org/licenses/odbl/1.0/",
 		"instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
-		"copyright": "© ZNES Europa-Universität Flensburg"} ],
+		"copyright": "© ZNES Europa-Universität Flensburg"},
 	"contributors": [
 		{"name": "wolfbunke", "email": " ", "date": "01.06.2017", "comment": "Create and restructure scripts and table"}],
 	"resources": [

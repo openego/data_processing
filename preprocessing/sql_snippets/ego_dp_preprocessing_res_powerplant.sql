@@ -99,19 +99,26 @@ COMMENT ON TABLE model_draft.ego_dp_supply_res_powerplant IS '{
 		"description": "Original Data Anlagenstammdaten from the four german TSOs", 
 		"url": "https://www.netztransparenz.de/EEG/Anlagenstammdaten", 
 		"license": "Open Database License (ODbL) v1.0", 
-		"copyright": "50Hertz Transmission GmbH,  Amprion GmbH, TransnetBW GmbH, TenneT TSO GmbH"},
+		"copyright": "© 50Hertz Transmission GmbH,  Amprion GmbH, TransnetBW GmbH, TenneT TSO GmbH"},
 		
 		{"name": "Open-Power-System-Data Renewable power plants DE", 
 		"description": "Open Power System Data. 2018. Data Package Renewable power plants. Version 2018-03-08. Data provider how collects and clean TSO, DSO data and other energy data of Germany and Europe", 
 		"url": "https://data.open-power-system-data.org/renewable_power_plants/2018-03-08/", 
-		"license": "Open Database License (ODbL) v1.0", 
-		"copyright": "Open-Power-System-Data, Europa-Universität Flensburg"},
+		"license": "MIT", 
+		"copyright": "© Open-Power-System-Data, Europa-Universität Flensburg"},
 		
-		{"name": "Bundesnetzagentur (BNetzA)", 
+		{"name": "EEG-Anlagenstammdaten (außer PV-Gebäudeanlagen), Bundesnetzagentur (BNetzA)", 
 		"description": "The Federal Network Agency for Electricity, Gas, Telecommunications, Posts and Railway Data is in Germany data provider of power plant.", 
-		"url": "https://www.bundesnetzagentur.de/DE/Sachgebiete/ElektrizitaetundGas/Unternehmen_Institutionen/ErneuerbareEnergien/Anlagenregister/Anlagenregister_Veroeffentlichung/Anlagenregister_Veroeffentlichungen_node.html", 
+		"url": "https://www.bundesnetzagentur.de/DE/Sachgebiete/ElektrizitaetundGas/Unternehmen_Institutionen/ErneuerbareEnergien/ZahlenDatenInformationen/EEG_Registerdaten/EEG_Registerdaten_node.html", 
+		"license": "Deutschland – Namensnennung – Version 2.0", 
+		"copyright": "© Bundesnetzagentur für Elektrizität, Gas, Telekommunikation, Post und Eisenbahnen; Pressestelle"},
+		
+		{"name": "PV-Datenmeldungen (außer PV-Freiflächenanlagen), Bundesnetzagentur (BNetzA)", 
+		"description": "The Federal Network Agency for Electricity, Gas, Telecommunications, Posts and Railway Data is in Germany data provider of power plant.", 
+		"url": "https://www.bundesnetzagentur.de/DE/Sachgebiete/ElektrizitaetundGas/Unternehmen_Institutionen/ErneuerbareEnergien/ZahlenDatenInformationen/EEG_Registerdaten/EEG_Registerdaten_node.html", 
 		"license": "Deutschland – Namensnennung – Version 2.0", 
 		"copyright": "© Bundesnetzagentur für Elektrizität, Gas, Telekommunikation, Post und Eisenbahnen; Pressestelle"}
+
 	        ],
 	"license": 
 		{"id": "ODbL-1.0",

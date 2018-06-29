@@ -39,8 +39,8 @@ COMMENT ON TABLE supply.ego_dp_res_powerplant
 		{"name": "Open-Power-System-Data Renewable power plants DE", 
 		"description": "Open Power System Data. 2018. Data Package Renewable power plants. Version 2018-03-08. Data provider how collects and clean TSO, DSO data and other energy data of Germany and Europe", 
 		"url": "https://data.open-power-system-data.org/renewable_power_plants/2018-03-08/", 
-		"license": "Open Database License (ODbL) v1.0", 
-		"copyright": "Open-Power-System-Data, Europa-Universität Flensburg"},
+		"license": "MIT", 
+		"copyright": "© Open-Power-System-Data, Europa-Universität Flensburg"},
 		
 		{"name": "Bundesnetzagentur (BNetzA)", 
 		"description": "The Federal Network Agency for Electricity, Gas, Telecommunications, Posts and Railway Data is in Germany data provider of power plant.", 
@@ -132,7 +132,7 @@ COMMENT ON TABLE supply.ego_dp_conv_powerplant
 		{"name": "Conventional power plants DE", 
 		"description": "Open Power System Data. 2018. Data Package Conventional power plants. Version 2018-02-27. Data provider how collects and clean TSO, DSO data and other energy data of Germany and Europe", 
 		"url": "https://data.open-power-system-data.org/conventional_power_plants/2018-02-27/", 
-		"license": "", 
+		"license": "MIT", 
 		"copyright": "© Open-Power-System-Data, TU Berlin"},
 		
 		{"name": "Kraftwerke in Deutschland 100MW", 
