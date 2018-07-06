@@ -47,7 +47,7 @@ CREATE TABLE model_draft.ego_grid_hv_electrical_neighbours_bus
   geom geometry(Point,4326));
 
 ALTER TABLE model_draft.ego_grid_hv_electrical_neighbours_bus
-  OWNER TO clara;
+  OWNER TO oeuser;
 
 
 INSERT INTO model_draft.ego_grid_hv_electrical_neighbours_bus  (bus_id, cntr_id, v_nom, current_type)
@@ -120,6 +120,7 @@ SET 	bus_id = (SELECT DISTINCT ON (bus_i) bus_i FROM grid.otg_ehvhv_bus_data WHE
 	geom = '0101000020E6100000A444C3ABCE9A254079A450D5E2F24A40'		
 WHERE cntr_id = 'SE' AND geom = '0101000020E61000004C93AD8960072A40DBBD816ED4B14B40';
 
+--- Update voltage level of DC-buses to Denmark
 UPDATE model_draft.ego_grid_hv_electrical_neighbours_bus
 SET v_nom = 400
 WHERE (cntr_id = 'DK' AND geom ='0101000020E6100000AFB9FEB858EC2740621AE148FB474B40') OR (geom = '0101000020E610000060BB9D50CA422840B5CD3AA107124B40') AND v_nom = 380;
@@ -167,7 +168,7 @@ CREATE TABLE model_draft.ego_grid_hv_electrical_neighbours_line
 );
 
 ALTER TABLE model_draft.ego_grid_hv_electrical_neighbours_line
-  OWNER TO clara;
+  OWNER TO oeuser;
 
 
 INSERT INTO model_draft.ego_grid_hv_electrical_neighbours_line (line_id, bus1, v_nom, cntr_id_2, cntr_id_1)
@@ -216,6 +217,8 @@ SET	cables = (SELECT  sum(b.cables) FROM model_draft.ego_grid_pf_hv_line b  WHER
 	AND (SELECT DISTINCT ON (geom) geom FROM model_draft.ego_grid_pf_hv_bus WHERE bus_id = b.bus0) NOT IN (SELECT geom FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE central_bus = TRUE))
 WHERE a.cntr_id_2 = 'DE' AND cables is null ;
 
+
+
 --- Set bus0 to central bus of country 1			
 UPDATE model_draft.ego_grid_hv_electrical_neighbours_line a
 SET bus0 = (SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus b WHERE a.cntr_id_1 = b.cntr_id AND a.v_nom = b.v_nom AND central_bus = TRUE);
@@ -231,6 +234,22 @@ SET 	topo = (SELECT ST_MakeLine((SELECT geom FROM model_draft.ego_grid_hv_electr
 	frequency = 50,
 	length = (SELECT  ST_Length((SELECT ST_MakeLine((SELECT geom FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE bus_id = bus0), (SELECT geom FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE bus_id = bus1))), true))/1000,
 	geom = (SELECT (ST_Multi(ST_MakeLine((SELECT geom FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE bus_id = bus0), (SELECT geom FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE bus_id = bus1)))));
+
+--- Update s_nom and cables when grid topology leads to over- or underestimation
+UPDATE model_draft.ego_grid_hv_electrical_neighbours_line a
+SET	cables = 9,
+	s_nom = 1590
+WHERE geom = '0105000020E6100000010000000102000000020000008219DE771A512C40E266B10F27CB4740F0D23C36B8E32A4052572D9F9B374840' AND s_nom = 550;
+
+UPDATE model_draft.ego_grid_hv_electrical_neighbours_line a
+SET	cables = 6,
+	s_nom = 520
+WHERE geom = '0105000020E6100000010000000102000000020000008219DE771A512C40E266B10F27CB4740E5D308A293662840C0907AF42BD24740' AND s_nom = 800;
+
+UPDATE model_draft.ego_grid_hv_electrical_neighbours_line a
+SET	cables = 12,
+	s_nom = 1040
+WHERE geom = '0105000020E6100000010000000102000000020000008219DE771A512C40E266B10F27CB4740565DD1F764672840609099B0A2D14740' AND cables = 15;
 
 --- Set electrical parameters to standard-values of transmission lines
 UPDATE model_draft.ego_grid_hv_electrical_neighbours_line
@@ -278,7 +297,7 @@ CREATE TABLE model_draft.ego_grid_hv_electrical_neighbours_transformer
   CONSTRAINT neighbour_transformer_pkey PRIMARY KEY (trafo_id, scn_name)
 );
 ALTER TABLE model_draft.ego_grid_hv_electrical_neighbours_transformer
-  OWNER TO clara;
+  OWNER TO oeuser;
 
 --- Insert transformers to connect central buses
 INSERT INTO model_draft.ego_grid_hv_electrical_neighbours_transformer (trafo_id, bus0, cntr_id, v1, geom_point)
@@ -414,7 +433,7 @@ WITH (
 );
 
 ALTER TABLE model_draft.ego_grid_hv_electrical_neighbours_link
-  OWNER TO clara;
+  OWNER TO oeuser;
 
 --- Insert border-crossing and foregin DC-links 
 INSERT INTO model_draft.ego_grid_hv_electrical_neighbours_link (link_id, bus0, bus1, p_nom, length)
@@ -441,6 +460,25 @@ VALUES 	(nextval('model_draft.ego_grid_hv_electrical_neighbours_link_id'),
 	(SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE cntr_id = 'DK' AND central_bus = TRUE AND v_nom = 400),
 	600,--- source: Kontek - ABB
 	115);--- source: Kontek - ABB
+	
+/* To avoid DC-subnetworks from buses only connected via DC-link set only one link between Bentwisch HGÜ and center of Denmark 
+delete: lines from Bentwisch HGÜ to border of DK, buses connecting them; Update last lines to copy only the ones that are needed
+undo instertig --- Insert links from Bentwisch HGÜ to DK (they will replace lines); insert DC.buses (between Bentwisch and HGÜ)
+do: keep 400kV bus in Bentwisch HGÜ and update upper lines to :
+
+(nextval('model_draft.ego_grid_hv_electrical_neighbours_link_id'),
+	(SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE cntr_id = 'DK' AND central_bus = TRUE AND v_nom = 400),
+	(SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE geom = '0101000020E610000032A490CBF66D2840DBDB2B66D70C4B40' AND v_nom = 400),
+	600, --- source: Kontek - ABB
+	170),--- source: Kontek - ABB
+	
+(nextval('model_draft.ego_grid_hv_electrical_neighbours_link_id'),
+	(SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE geom = '0101000020E610000032A490CBF66D2840DBDB2B66D70C4B40' AND v_nom = 400),
+	(SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE cntr_id = 'DK' AND central_bus = TRUE AND v_nom = 400),
+	600,--- source: Kontek - ABB
+	115);--- source: Kontek - ABB
+
+*/
 
 UPDATE model_draft.ego_grid_hv_electrical_neighbours_link
 SET 	topo = (SELECT ST_MakeLine((SELECT geom FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE bus_id = bus0), (SELECT geom FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE bus_id = bus1 AND scn_name = 'Status Quo')));
