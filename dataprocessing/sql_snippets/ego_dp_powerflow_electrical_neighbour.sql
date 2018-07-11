@@ -251,6 +251,16 @@ SET	cables = 12,
 	s_nom = 1040
 WHERE geom = '0105000020E6100000010000000102000000020000008219DE771A512C40E266B10F27CB4740565DD1F764672840609099B0A2D14740' AND cables = 15;
 
+--- Adjust capacity of underground cables between Sweden and Denmark 
+UPDATE model_draft.ego_grid_hv_electrical_neighbours_line a
+SET	s_nom = 925
+WHERE cntr_id_1 = 'DK' AND cntr_id_2 = 'SE' AND v_nom = 380;
+
+UPDATE model_draft.ego_grid_hv_electrical_neighbours_line a
+SET	s_nom = 550
+WHERE cntr_id_1 = 'DK' AND cntr_id_2 = 'SE' AND v_nom = 220;
+
+
 --- Set electrical parameters to standard-values of transmission lines
 UPDATE model_draft.ego_grid_hv_electrical_neighbours_line
 SET 	x = 	(CASE 	WHEN v_nom = 110 THEN 0.31415 *1.2 / (cables/3) * length
