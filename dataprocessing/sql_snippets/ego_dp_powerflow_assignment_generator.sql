@@ -1,4 +1,4 @@
-/*
+﻿/*
 Generators which were assigned to a specific substation prior to this script need to be transformed to a data structure
 suitable for powerflow calculation with tool developed and used in the open_eGo project. The following script transforms 
 data from the powerplant mviews and adds some parameters according to the characteristics of the generators. 
@@ -413,7 +413,7 @@ UPDATE model_draft.ego_grid_pf_hv_generator
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
 SELECT scenario_log('eGo_DP', 'v0.4.2','output','model_draft','ego_grid_pf_hv_generator','ego_dp_powerflow_assignment_generator.sql',' ');
 
-CREATE MATERIALIZED VIEW model_draft.ego_supply_aggr_weather_mview 
+CREATE TABLE model_draft.ego_supply_aggr_weather
 AS 
 (WITH w_sub AS (
  SELECT DISTINCT
@@ -432,7 +432,7 @@ AS
 			FROM
 			w_sub);
 															 
-ALTER MATERIALIZED VIEW VIEW model_draft.ego_supply_aggr_weather_mview OWNER TO oeuser; 															
+ALTER TABLE model_draft.ego_supply_aggr_weather OWNER TO oeuser; 															
 			
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.2','output','model_draft','ego_supply_aggr_weather_mview','ego_dp_powerflow_assignment_generator.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.2','output','model_draft','ego_supply_aggr_weather','ego_dp_powerflow_assignment_generator.sql',' ');
