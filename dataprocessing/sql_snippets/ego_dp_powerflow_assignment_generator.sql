@@ -431,6 +431,8 @@ AS
 		ROW_NUMBER () OVER (ORDER BY aggr_id) as row_number
 			FROM
 			w_sub);
+															 
+ALTER MATERIALIZED VIEW VIEW model_draft.ego_supply_aggr_weather_mview OWNER TO oeuser; 															
 			
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
 SELECT scenario_log('eGo_DP', 'v0.4.2','output','model_draft','ego_supply_aggr_weather_mview','ego_dp_powerflow_assignment_generator.sql',' ');
