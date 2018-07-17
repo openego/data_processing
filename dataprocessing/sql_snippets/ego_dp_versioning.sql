@@ -594,3 +594,13 @@ INSERT INTO  supply.ego_power_class
 	
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
 SELECT scenario_log('eGo_DP','v0.4.2','result','supply','ego_power_class','ego_dp_versioning.sql','versioning');
+
+-- subset of generator single to match aggr_id and w_id 
+INSERT INTO  supply.ego_aggr_weather
+        SELECT	'v0.4.2',
+		*
+	FROM model_draft.ego_supply_aggr_weather;
+	
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP','v0.4.2','result','supply','ego_aggr_weather','ego_dp_versioning.sql','versioning');
+
