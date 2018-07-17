@@ -5936,6 +5936,7 @@ SELECT obj_description('grid.ego_line_expansion_costs' ::regclass) ::json;
 SELECT scenario_log('eGo_DP', 'v0.4.0','result','grid','ego_line_expansion_costs','ego_dp_structure_versioning.sql','hv pf line expansion costs');
 
 -- generator single subset 
+DROP TABLE IF EXISTS supply.ego_aggr_weather;  
 
 CREATE TABLE supply.ego_aggr_weather
 (
@@ -5945,7 +5946,7 @@ CREATE TABLE supply.ego_aggr_weather
   scn_name character varying,
   bus bigint,
   row_number bigint,
-  CONSTRAINT ego_aggr_weather_pkey PRIMARY KEY (version, aggr_id, w_id)
+  CONSTRAINT ego_aggr_weather_pkey PRIMARY KEY (version, row_number)
 );
 ALTER TABLE supply.ego_aggr_weather
   OWNER TO oeuser;
