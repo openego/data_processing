@@ -368,30 +368,30 @@ INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, tabl
    SELECT 
    'v0.4.2',
    'Status Quo',
-   'generator time series with more than 8760 entries',
+   'generator time series with more or less than 8760 entries',
    'model_draft.ego_grid_pf_hv_generator_pq_set',
    count(*) FROM model_draft.ego_grid_pf_hv_generator_pq_set 
-       WHERE array_length(p_set, 1) > 8760 AND scn_name = 'Status Quo';
+       WHERE array_length(p_set, 1) != 8760 AND scn_name = 'Status Quo';
 
 
 INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, table_name, count)
    SELECT 
    'v0.4.2',
    'NEP 2035',
-   'generator time series with more than 8760 entries',
+   'generator time series with more or less than 8760 entries',
    'model_draft.ego_grid_pf_hv_generator_pq_set',
    count(*) FROM model_draft.ego_grid_pf_hv_generator_pq_set 
-       WHERE array_length(p_set, 1) > 8760 AND scn_name = 'NEP 2035';
+       WHERE array_length(p_set, 1) != 8760 AND scn_name = 'NEP 2035';
 
 
 INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, table_name, count)
    SELECT 
    'v0.4.2',
    'eGo 100',
-   'generator time series with more than 8760 entries',
+   'generator time series with more or less than 8760 entries',
    'model_draft.ego_grid_pf_hv_generator_pq_set',
    count(*) FROM model_draft.ego_grid_pf_hv_generator_pq_set 
-       WHERE array_length(p_set, 1) > 8760 AND scn_name = 'eGo 100';
+       WHERE array_length(p_set, 1) != 8760 AND scn_name = 'eGo 100';
 
 
 -- Is the control set for all generators complete? 
