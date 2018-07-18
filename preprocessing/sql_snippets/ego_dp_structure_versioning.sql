@@ -6033,3 +6033,103 @@ COMMENT ON TABLE supply.ego_aggr_weather IS '{
     ],
     "metadata_version": "1.3"
 }';
+
+-- data check for pf data 
+DROP TABLE IF EXISTS grid.ego_pf_hv_data_check;
+
+CREATE TABLE grid.ego_pf_hv_data_check
+(
+  test_id integer NOT NULL,
+  version character varying NOT NULL,
+  scn_name character varying NOT NULL,
+  test character varying NOT NULL,
+  table_name character varying,
+  count integer,
+  CONSTRAINT hv_grid_data_check_pkey PRIMARY KEY (version, test_id)
+);
+
+ALTER TABLE grid.ego_pf_hv_data_check
+  OWNER TO oeuser;
+  
+ -- metadata
+
+COMMENT ON TABLE grid.ego_pf_hv_data_check IS '{
+    "title": "eGo pf data check",
+    "description": "A plausibility check for powerflow data",
+    "language": [ "eng" ],
+    "spatial": {
+        "location": "none",
+        "extend": "none",
+        "resolution": "none"
+    },
+    "temporal": {
+        "reference_date": "none",
+        "start": "none",
+        "end": "none",
+        "resolution": "none"
+    },
+    "sources": [
+        {
+            "name": "eGo dataprocessing",
+            "description": "open_eGo dataprocessing code",
+            "url": "https://github.com/openego/data_processing",
+            "license": "GNU Affero General Public License Version 3 (AGPL-3.0)",
+            "copyright": "eGo dataprocessing © Flensburg University of Applied Sciences, Centre for Sustainable Energy Systems © Europa-Universität Flensburg, Centre for Sustainable Energy Systems © Reiner Lemoine Institut © DLR Institute for Networked Energy Systems"
+        }
+    ],
+        "license": {
+        "id": "ODbL-1.0",
+        "name": "Open Data Commons Open Database License 1.0",
+        "version": "1.0",
+        "url": "https://opendatacommons.org/licenses/odbl/1.0/",
+        "instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
+        "copyright": "© Flensburg University of Applied Sciences, Center for Sustainable Energy Systems"
+    },
+    "contributors": [
+        {
+            "name": "ilka_cussmann",
+            "email": "ilka.cussmann@hs-flensburg.de",
+            "date": "2018-07-18",
+            "comment": "Create table"
+        }
+    ],
+    "resources": [
+        {
+            "fields": [
+                {
+                    "name": "test_id",
+                    "description": "unique ID for the specific test",
+                    "unit": ""
+                },
+		{
+                    "name": "version",
+                    "unit": "",
+                    "description": "version number"
+                },
+                {
+                    "name": "scn_name",
+                    "unit": "",
+                    "description": "scenario name"
+                },
+                {
+                    "name": "test",
+                    "unit": " ",
+                    "description": "description of executed test"
+                },
+                {
+                    "name": "table_name",
+                    "unit": "",
+                    "description": "name of tested table"
+                },
+		{
+                    "name": "count",
+                    "unit": "",
+                    "description": "number of buggy entries"
+                }
+            ],
+            "name": "grid.ego_pf_hv_data_check",
+            "format": "sql"
+        }
+    ],
+    "metadata_version": "1.3"
+}';
