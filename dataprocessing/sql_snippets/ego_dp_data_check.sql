@@ -22,6 +22,15 @@ CREATE TABLE 		model_draft.ego_grid_pf_hv_data_check (
 
 ALTER TABLE 		model_draft.ego_grid_pf_hv_data_check
      owner to oeuser;  
+						
+-- metadata
+COMMENT ON TABLE model_draft.ego_grid_pf_hv_data_check IS '{
+    "comment": "eGoDP - Temporary table", 
+    "version": "v0.4.2",
+    "published": "none" }';
+
+-- select description
+SELECT obj_description('model_draft.ego_demand_la_zensus' ::regclass) ::json;
 
 
 -------------------
@@ -651,3 +660,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, tabl
 -- Are generators and generator time series assigned to all electrical neighbours? 
 
 -- Are loads and load time series assigned to all electrical neighbours? 
+	     
+
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_DP', 'v0.4.2','output','model_draft','ego_grid_pf_hv_data_check','ego_dp_data_check.sql',' ');
