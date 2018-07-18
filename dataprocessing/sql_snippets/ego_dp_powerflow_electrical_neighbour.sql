@@ -121,17 +121,21 @@ SET 	bus_id = (SELECT DISTINCT ON (bus_i) bus_i FROM grid.otg_ehvhv_bus_data WHE
 WHERE cntr_id = 'SE' AND geom = '0101000020E61000004C93AD8960072A40DBBD816ED4B14B40';
 
 --- Update voltage level of DC-buses to Denmark
-UPDATE model_draft.ego_grid_hv_electrical_neighbours_bus
+/*UPDATE model_draft.ego_grid_hv_electrical_neighbours_bus
 SET v_nom = 400
 WHERE (cntr_id = 'DK' AND geom ='0101000020E6100000AFB9FEB858EC2740621AE148FB474B40') OR (geom = '0101000020E610000060BB9D50CA422840B5CD3AA107124B40') AND v_nom = 380;
+*/
 
+DELETE FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE (cntr_id = 'DK' AND geom ='0101000020E6100000AFB9FEB858EC2740621AE148FB474B40')
+ OR (geom = '0101000020E610000060BB9D50CA422840B5CD3AA107124B40') AND v_nom = 380;
+ 
 --- Insert buses for DC-lines
 INSERT INTO model_draft.ego_grid_hv_electrical_neighbours_bus (bus_id, v_nom, geom, cntr_id, central_bus)
 VALUES	(nextval('model_draft.ego_grid_hv_electrical_neighbours_bus_id'), 450, '0101000020E6100000A444C3ABCE9A254079A450D5E2F24A40', 'SE', FALSE), 
 	(nextval('model_draft.ego_grid_hv_electrical_neighbours_bus_id'), 450, '0101000020E6100000781E63B01D002E40A292E70A7AB74E40', 'SE', TRUE),
 	(nextval('model_draft.ego_grid_hv_electrical_neighbours_bus_id'), 400, '0101000020E6100000A01CB9F93CB22240376BAAA0021E4C40', 'DK', TRUE), --- Center of DK
-	(nextval('model_draft.ego_grid_hv_electrical_neighbours_bus_id'), 400, '0101000020E610000032A490CBF66D2840DBDB2B66D70C4B40', 'DE', FALSE), --- Bentwisch HGÜ
-	(nextval('model_draft.ego_grid_hv_electrical_neighbours_bus_id'), 400, '0101000020E610000060BB9D50CA422840B5CD3AA107124B40', 'DE', FALSE); --- between Bentwisch and DK
+	(nextval('model_draft.ego_grid_hv_electrical_neighbours_bus_id'), 400, '0101000020E610000032A490CBF66D2840DBDB2B66D70C4B40', 'DE', FALSE); --- Bentwisch HGÜ
+	---(nextval('model_draft.ego_grid_hv_electrical_neighbours_bus_id'), 400, '0101000020E610000060BB9D50CA422840B5CD3AA107124B40', 'DE', FALSE); --- between Bentwisch and DK
 
 DELETE FROM model_draft.ego_grid_hv_electrical_neighbours_bus a USING model_draft.ego_grid_hv_electrical_neighbours_bus b  WHERE a.cntr_id = b.cntr_id AND a.geom = b.geom AND a.v_nom = b.v_nom AND a.ctid > b.ctid OR a.cntr_id IS NULL OR a.v_nom IS NULL;
 
@@ -457,88 +461,44 @@ VALUES 	(nextval('model_draft.ego_grid_hv_electrical_neighbours_link_id'),
 	(SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE cntr_id = 'SE' AND central_bus = FALSE AND v_nom = 450),
 	(SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE cntr_id = 'SE' AND central_bus = TRUE AND v_nom = 450),
 	600,
-	262),
+	262);
 
-	(nextval('model_draft.ego_grid_hv_electrical_neighbours_link_id'),
-	(SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE cntr_id = 'DK' AND central_bus = TRUE AND v_nom = 400),
-	(SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE cntr_id = 'DK' AND central_bus = FALSE AND v_nom = 400),
-	600, --- source: Kontek - ABB
-	115),--- source: Kontek - ABB
-
-	(nextval('model_draft.ego_grid_hv_electrical_neighbours_link_id'),
-	(SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE cntr_id = 'DK' AND central_bus = FALSE AND v_nom = 400),
-	(SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE cntr_id = 'DK' AND central_bus = TRUE AND v_nom = 400),
-	600,--- source: Kontek - ABB
-	115);--- source: Kontek - ABB
-	
-/* To avoid DC-subnetworks from buses only connected via DC-link set only one link between Bentwisch HGÜ and center of Denmark 
-delete: lines from Bentwisch HGÜ to border of DK, buses connecting them; Update last lines to copy only the ones that are needed
-undo instertig --- Insert links from Bentwisch HGÜ to DK (they will replace lines); insert DC.buses (between Bentwisch and HGÜ)
-do: keep 400kV bus in Bentwisch HGÜ and update upper lines to :
-
-(nextval('model_draft.ego_grid_hv_electrical_neighbours_link_id'),
+INSERT INTO model_draft.ego_grid_hv_electrical_neighbours_link (link_id, bus0, bus1, p_nom, length, geom)
+VALUES	(nextval('model_draft.ego_grid_hv_electrical_neighbours_link_id'),
 	(SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE cntr_id = 'DK' AND central_bus = TRUE AND v_nom = 400),
 	(SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE geom = '0101000020E610000032A490CBF66D2840DBDB2B66D70C4B40' AND v_nom = 400),
 	600, --- source: Kontek - ABB
-	170),--- source: Kontek - ABB
+	170, --- source: Kontek - ABB
+	(SELECT ST_Union((SELECT  ST_Multi(ST_MakeLine('0101000020E6100000AFB9FEB858EC2740621AE148FB474B40', '0101000020E6100000A01CB9F93CB22240376BAAA0021E4C40'))),
+	ST_Union('0105000020E610000001000000010200000002000000AFB9FEB858EC2740621AE148FB474B4060BB9D50CA422840B5CD3AA107124B40',
+	(SELECT geom FROM grid.otg_ehvhv_branch_data WHERE topo = '0102000020E61000000200000032A490CBF66D2840DBDB2B66D70C4B4060BB9D50CA422840B5CD3AA107124B40' AND branch_voltage = 380000)))
+	)),
 	
-(nextval('model_draft.ego_grid_hv_electrical_neighbours_link_id'),
+	(nextval('model_draft.ego_grid_hv_electrical_neighbours_link_id'),
 	(SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE geom = '0101000020E610000032A490CBF66D2840DBDB2B66D70C4B40' AND v_nom = 400),
 	(SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE cntr_id = 'DK' AND central_bus = TRUE AND v_nom = 400),
 	600,--- source: Kontek - ABB
-	115);--- source: Kontek - ABB
-
-*/
-
+	170,--- source: Kontek - ABB
+	(SELECT ST_Union((SELECT  ST_Multi(ST_MakeLine('0101000020E6100000AFB9FEB858EC2740621AE148FB474B40', '0101000020E6100000A01CB9F93CB22240376BAAA0021E4C40'))),
+	ST_Union('0105000020E610000001000000010200000002000000AFB9FEB858EC2740621AE148FB474B4060BB9D50CA422840B5CD3AA107124B40',
+	(SELECT geom FROM grid.otg_ehvhv_branch_data WHERE topo = '0102000020E61000000200000032A490CBF66D2840DBDB2B66D70C4B4060BB9D50CA422840B5CD3AA107124B40' AND branch_voltage = 380000)))
+	));
+	
 UPDATE model_draft.ego_grid_hv_electrical_neighbours_link
-SET 	topo = (SELECT ST_MakeLine((SELECT geom FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE bus_id = bus0), (SELECT geom FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE bus_id = bus1 AND scn_name = 'Status Quo')));
-
-UPDATE model_draft.ego_grid_hv_electrical_neighbours_link
-SET 	geom  = (SELECT  ST_Multi(topo)),
+SET 	topo = (SELECT ST_MakeLine((SELECT geom FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE bus_id = bus0), (SELECT geom FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE bus_id = bus1 AND scn_name = 'Status Quo'))),
 	efficiency = 0.987*0.974^(length/1000);
 	
---- Insert links from Bentwisch HGÜ to DK (they will replace lines) 
-INSERT INTO model_draft.ego_grid_hv_electrical_neighbours_link (link_id, bus0, bus1, p_nom, length, geom, topo, efficiency)
-VALUES	(nextval('model_draft.ego_grid_hv_electrical_neighbours_link_id'),
-	(SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE v_nom = 400 AND cntr_id = 'DK' AND central_bus = FALSE),
-	(SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE v_nom = 400 AND geom = '0101000020E610000060BB9D50CA422840B5CD3AA107124B40'),
-	600,
-	48.12,
-	('0105000020E610000001000000010200000002000000AFB9FEB858EC2740621AE148FB474B4060BB9D50CA422840B5CD3AA107124B40'),
-	(SELECT topo FROM grid.otg_ehvhv_branch_data  WHERE geom ='0105000020E610000001000000010200000002000000AFB9FEB858EC2740621AE148FB474B4060BB9D50CA422840B5CD3AA107124B40'),
-	0.987*0.974^(48.12/1000)),
-	
-	(nextval('model_draft.ego_grid_hv_electrical_neighbours_link_id'),
-	(SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE v_nom = 400 AND geom = '0101000020E610000060BB9D50CA422840B5CD3AA107124B40'),
-	(SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE v_nom = 400 AND cntr_id = 'DK' AND central_bus = FALSE),
-	600,
-	48.12,
-	('0105000020E610000001000000010200000002000000AFB9FEB858EC2740621AE148FB474B4060BB9D50CA422840B5CD3AA107124B40'),
-	(SELECT topo FROM grid.otg_ehvhv_branch_data WHERE geom ='0105000020E610000001000000010200000002000000AFB9FEB858EC2740621AE148FB474B4060BB9D50CA422840B5CD3AA107124B40'),
-	0.987*0.974^(48.12/1000)),
-	
-	(nextval('model_draft.ego_grid_hv_electrical_neighbours_link_id'),
-	(SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE v_nom = 400 AND geom = '0101000020E610000060BB9D50CA422840B5CD3AA107124B40'),
-	(SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE v_nom = 400 AND geom = '0101000020E610000032A490CBF66D2840DBDB2B66D70C4B40'),
-	600,
-	7.46,
-	(SELECT geom FROM grid.otg_ehvhv_branch_data WHERE topo = '0102000020E61000000200000032A490CBF66D2840DBDB2B66D70C4B4060BB9D50CA422840B5CD3AA107124B40' AND branch_voltage = 380000), 
-	'0102000020E61000000200000032A490CBF66D2840DBDB2B66D70C4B4060BB9D50CA422840B5CD3AA107124B40',
-	0.987*0.974^(7.46/1000)),
-	
-	(nextval('model_draft.ego_grid_hv_electrical_neighbours_link_id'),
-	(SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE v_nom = 400 AND geom = '0101000020E610000032A490CBF66D2840DBDB2B66D70C4B40'),
-	(SELECT bus_id FROM model_draft.ego_grid_hv_electrical_neighbours_bus WHERE v_nom = 400 AND geom = '0101000020E610000060BB9D50CA422840B5CD3AA107124B40'),
-	600,
-	7.46,
-	(SELECT geom FROM grid.otg_ehvhv_branch_data WHERE topo = '0102000020E61000000200000032A490CBF66D2840DBDB2B66D70C4B4060BB9D50CA422840B5CD3AA107124B40'  AND branch_voltage = 380000), 
-	'0102000020E61000000200000032A490CBF66D2840DBDB2B66D70C4B4060BB9D50CA422840B5CD3AA107124B40',
-	0.987*0.974^(7.46/1000));
+UPDATE model_draft.ego_grid_hv_electrical_neighbours_link
+SET 	geom  = (SELECT  ST_Multi(topo))
+WHERE geom IS NULL;
 
 		
 DELETE FROM model_draft.ego_grid_pf_hv_link WHERE geom IN (SELECT geom FROM model_draft.ego_grid_hv_electrical_neighbours_link);
 
-DELETE FROM model_draft.ego_grid_pf_hv_line WHERE geom IN (SELECT geom FROM model_draft.ego_grid_hv_electrical_neighbours_link);
+--- Delete lines from Bentwisch HGÜ to Denmark that have been replaced with link
+DELETE FROM model_draft.ego_grid_pf_hv_line WHERE geom IN (SELECT geom FROM model_draft.ego_grid_hv_electrical_neighbours_link) OR
+geom IN ('0105000020E610000001000000010200000002000000AFB9FEB858EC2740621AE148FB474B4060BB9D50CA422840B5CD3AA107124B40',
+	(SELECT geom FROM grid.otg_ehvhv_branch_data WHERE topo = '0102000020E61000000200000032A490CBF66D2840DBDB2B66D70C4B4060BB9D50CA422840B5CD3AA107124B40' AND branch_voltage = 380000));
 
 DELETE FROM model_draft.ego_grid_pf_hv_line WHERE geom IN (SELECT geom FROM model_draft.ego_grid_hv_electrical_neighbours_line);
 
