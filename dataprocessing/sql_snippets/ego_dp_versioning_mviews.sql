@@ -19,7 +19,7 @@ CREATE MATERIALIZED VIEW supply.ego_dp_conv_powerplant_sq_mview AS
     AND (shutdown IS NULL or shutdown >= 2015)
     AND capacity > 0 
     AND preversion = 'v0.3.0'
-    AND version = 'v0.4.2';
+    AND version = 'v0.4.4';
 
 ALTER MATERIALIZED VIEW supply.ego_dp_conv_powerplant_sq_mview
     OWNER TO oeuser; 
@@ -34,7 +34,7 @@ CREATE MATERIALIZED VIEW supply.ego_dp_conv_powerplant_nep2035_mview AS
     AND   fuel not in ('hydro', 'run_of_river', 'reservoir')
     AND   (shutdown IS NULL or shutdown >= 2034)
     AND   preversion = 'v0.3.0'
-    AND version = 'v0.4.2';
+    AND version = 'v0.4.4';
 
 ALTER MATERIALIZED VIEW supply.ego_dp_conv_powerplant_nep2035_mview
     OWNER TO oeuser;
@@ -91,15 +91,15 @@ CREATE MATERIALIZED VIEW supply.ego_dp_conv_powerplant_ego100_mview AS
 	AND capacity > 0
 	AND (shutdown IS NULL or shutdown >= 2049)
 	AND preversion = 'v0.3.0'
-	AND version = 'v0.4.2';
+	AND version = 'v0.4.4';
 
 ALTER MATERIALIZED VIEW supply.ego_dp_conv_powerplant_ego100_mview
     OWNER TO oeuser;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP','v0.4.2','result','supply','ego_dp_conv_powerplant_sq_mview','ego_dp_versioning_mviews.sql','versioning');
-SELECT scenario_log('eGo_DP','v0.4.2','result','supply','ego_dp_conv_powerplant_nep2035_mview','ego_dp_versioning_mviews.sql','versioning');
-SELECT scenario_log('eGo_DP','v0.4.2','result','supply','ego_dp_conv_powerplant_ego100_mview','ego_dp_versioning_mviews.sql','versioning');
+SELECT scenario_log('eGo_DP','v0.4.4','result','supply','ego_dp_conv_powerplant_sq_mview','ego_dp_versioning_mviews.sql','versioning');
+SELECT scenario_log('eGo_DP','v0.4.4','result','supply','ego_dp_conv_powerplant_nep2035_mview','ego_dp_versioning_mviews.sql','versioning');
+SELECT scenario_log('eGo_DP','v0.4.4','result','supply','ego_dp_conv_powerplant_ego100_mview','ego_dp_versioning_mviews.sql','versioning');
 
 -- Create View with full dataset per scenario and renewables power plants
 
@@ -111,7 +111,7 @@ CREATE MATERIALIZED VIEW supply.ego_dp_res_powerplant_sq_mview AS
     WHERE scenario =  'Status Quo'
     AND electrical_capacity > 0
     AND preversion = 'v0.3.0'
-    AND version = 'v0.4.2';
+    AND version = 'v0.4.4';
 
 ALTER MATERIALIZED VIEW supply.ego_dp_res_powerplant_sq_mview
     OWNER TO oeuser;
@@ -129,13 +129,13 @@ CREATE MATERIALIZED VIEW supply.ego_dp_res_powerplant_nep2035_mview AS
 			WHERE id not in (
 			SELECT id
 			FROM supply.ego_dp_res_powerplant
-			WHERE version = 'v0.4.2'
+			WHERE version = 'v0.4.4'
 			Group BY id
 			HAVING count(*) > 1
 			Order by id)
 		 AND scenario = 'Status Quo'
 		 And preversion = 'v0.3.0'
-		 AND version = 'v0.4.2'
+		 AND version = 'v0.4.4'
 		 AND electrical_capacity > 0
 		 ORDER BY id	
 		 ) as sub
@@ -151,12 +151,12 @@ CREATE MATERIALIZED VIEW supply.ego_dp_res_powerplant_nep2035_mview AS
 			SELECT id
 			FROM supply.ego_dp_res_powerplant
 			WHERE scenario in ('NEP 2035')
-			AND version = 'v0.4.2'
+			AND version = 'v0.4.4'
 			Group BY id
 			Order by id)
 		 AND scenario in ('NEP 2035')
 		 And preversion = 'v0.3.0'
-		 AND version = 'v0.4.2'
+		 AND version = 'v0.4.4'
 		 AND electrical_capacity > 0
 		 ORDER BY id	
 	) sub2
@@ -178,13 +178,13 @@ CREATE MATERIALIZED VIEW supply.ego_dp_res_powerplant_ego100_mview AS
 			WHERE id not in (
 			SELECT id
 			FROM supply.ego_dp_res_powerplant
-			WHERE version = 'v0.4.2'
+			WHERE version = 'v0.4.4'
 			Group BY id
 			HAVING count(*) > 1
 			Order by id)
 		 AND scenario = 'Status Quo'
 		 AND preversion = 'v0.3.0'
-		 AND version = 'v0.4.2'
+		 AND version = 'v0.4.4'
 		 AND electrical_capacity > 0
 		 AND generation_type in ('solar','wind')
 		 AND generation_subtype not in ('wind_offshore')
@@ -203,13 +203,13 @@ CREATE MATERIALIZED VIEW supply.ego_dp_res_powerplant_ego100_mview AS
 			FROM supply.ego_dp_res_powerplant
 			WHERE scenario in ('eGo 100')
 			AND generation_type not in ('gas')
-			AND version = 'v0.4.2'
+			AND version = 'v0.4.4'
 			AND flag in ('commissioning', 'repowering')
 			Group BY id
 			Order by id)
 		 AND scenario in ('eGo 100')
 		 And preversion = 'v0.3.0'
-		 AND version = 'v0.4.2'
+		 AND version = 'v0.4.4'
 		 AND electrical_capacity > 0
 		 ORDER BY id	
 	) sub2
@@ -225,7 +225,7 @@ CREATE MATERIALIZED VIEW supply.ego_dp_res_powerplant_ego100_mview AS
 			SELECT id
 			FROM supply.ego_dp_res_powerplant
 			WHERE scenario in ('NEP 2035')
-			AND version = 'v0.4.2'
+			AND version = 'v0.4.4'
 			AND generation_type not in ('biomass','gas','reservoir','run_of_river')
 			AND flag in ('commissioning', 'repowering')
 			AND generation_subtype not in ('wind_offshore')
@@ -233,7 +233,7 @@ CREATE MATERIALIZED VIEW supply.ego_dp_res_powerplant_ego100_mview AS
 			Order by id)
 		 AND scenario in ('NEP 2035')
 		 And preversion = 'v0.3.0'
-		 AND version = 'v0.4.2'
+		 AND version = 'v0.4.4'
 		 AND electrical_capacity > 0
 		 ORDER BY id	
 	) sub3
@@ -243,6 +243,6 @@ ALTER MATERIALIZED VIEW supply.ego_dp_res_powerplant_ego100_mview
     OWNER TO oeuser;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP','v0.4.2','result','supply','ego_dp_res_powerplant_sq_mview','ego_dp_versioning_mviews.sql','versioning');
-SELECT scenario_log('eGo_DP','v0.4.2','result','supply','ego_dp_res_powerplant_nep2035_mview','ego_dp_versioning_mviews.sql','versioning');
-SELECT scenario_log('eGo_DP','v0.4.2','result','supply','ego_dp_res_powerplant_ego100_mview','ego_dp_versioning_mviews.sql','versioning');
+SELECT scenario_log('eGo_DP','v0.4.4','result','supply','ego_dp_res_powerplant_sq_mview','ego_dp_versioning_mviews.sql','versioning');
+SELECT scenario_log('eGo_DP','v0.4.4','result','supply','ego_dp_res_powerplant_nep2035_mview','ego_dp_versioning_mviews.sql','versioning');
+SELECT scenario_log('eGo_DP','v0.4.4','result','supply','ego_dp_res_powerplant_ego100_mview','ego_dp_versioning_mviews.sql','versioning');

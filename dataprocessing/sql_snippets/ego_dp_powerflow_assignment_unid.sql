@@ -45,7 +45,7 @@ CREATE INDEX 	ego_supply_generator_idx
 
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.2','output','model_draft','ego_supply_generator','ego_dp_powerflow_assignment_unid.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.4','output','model_draft','ego_supply_generator','ego_dp_powerflow_assignment_unid.sql',' ');
 	
 
 -- Update power plant tables and add information on unified id of generators
@@ -69,8 +69,8 @@ UPDATE model_draft.ego_dp_supply_res_powerplant a
 
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.2','output','model_draft','ego_dp_supply_res_powerplant','ego_dp_powerflow_assignment_unid.sql',' ');
-SELECT scenario_log('eGo_DP', 'v0.4.2','output','model_draft','ego_dp_supply_conv_powerplant','ego_dp_powerflow_assignment_unid.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.4','output','model_draft','ego_dp_supply_res_powerplant','ego_dp_powerflow_assignment_unid.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.4','output','model_draft','ego_dp_supply_conv_powerplant','ego_dp_powerflow_assignment_unid.sql',' ');
 
 
 

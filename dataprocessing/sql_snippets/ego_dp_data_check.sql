@@ -26,7 +26,7 @@ ALTER TABLE 		model_draft.ego_grid_pf_hv_data_check
 -- metadata
 COMMENT ON TABLE model_draft.ego_grid_pf_hv_data_check IS '{
     "comment": "eGoDP - Temporary table", 
-    "version": "v0.4.2",
+    "version": "v0.4.4",
     "published": "none" }';
 
 -- select description
@@ -43,7 +43,7 @@ SELECT obj_description('model_draft.ego_demand_la_zensus' ::regclass) ::json;
 
 INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, table_name, count)
    SELECT 
-   'v0.4.2',
+   'v0.4.4',
    'Status Quo',
    'lines with undefined buses',
    'model_draft.ego_grid_pf_hv_line',
@@ -54,7 +54,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, tabl
 
 INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, table_name, count)
    SELECT 
-   'v0.4.2',
+   'v0.4.4',
    'NEP 2035',
    'lines with undefined buses',
    'model_draft.ego_grid_pf_hv_line',
@@ -66,7 +66,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, tabl
 
 INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, table_name, count)
    SELECT 
-   'v0.4.2',
+   'v0.4.4',
    'eGo 100',
    'lines with undefined buses',
    'model_draft.ego_grid_pf_hv_line',
@@ -79,7 +79,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, tabl
 
 INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, table_name, count)
    SELECT 
-   'v0.4.2',
+   'v0.4.4',
    'Status Quo',
    'lines with NULL values for buses',
    'model_draft.ego_grid_pf_hv_line',
@@ -90,7 +90,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, tabl
 
 INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, table_name, count)
    SELECT 
-   'v0.4.2',
+   'v0.4.4',
    'NEP 2035',
    'lines with NULL values for buses',
    'model_draft.ego_grid_pf_hv_line',
@@ -101,7 +101,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, tabl
 
 INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, table_name, count)
    SELECT 
-   'v0.4.2',
+   'v0.4.4',
    'eGo 100',
    'lines with NULL values for buses',
    'model_draft.ego_grid_pf_hv_line',
@@ -117,7 +117,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, tabl
 
 INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, table_name, count)
    SELECT 
-   'v0.4.2',
+   'v0.4.4',
    'Status Quo',
    'transformers with undefined buses',
    'model_draft.ego_grid_pf_hv_transformer',
@@ -128,7 +128,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, tabl
 
 INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, table_name, count)
    SELECT 
-   'v0.4.2',
+   'v0.4.4',
    'NEP 2035',
    'transformers with undefined buses',
    'model_draft.ego_grid_pf_hv_transformer',
@@ -140,7 +140,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, tabl
 
 INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, table_name, count)
    SELECT 
-   'v0.4.2',
+   'v0.4.4',
    'eGo 100',
    'transformers with undefined buses',
    'model_draft.ego_grid_pf_hv_transformer',
@@ -154,7 +154,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, tabl
 
 INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, table_name, count)
    SELECT 
-   'v0.4.2',
+   'v0.4.4',
    'Status Quo',
    'transformers with NULL values for buses'
    'model_draft.ego_grid_pf_hv_transformer',,
@@ -165,7 +165,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, tabl
 
 INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, table_name, count)
    SELECT 
-   'v0.4.2',
+   'v0.4.4',
    'NEP 2035',
    'transformers with NULL values for buses',
    'model_draft.ego_grid_pf_hv_transformer',
@@ -176,7 +176,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, tabl
 
 INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, table_name, count)
    SELECT 
-   'v0.4.2',
+   'v0.4.4',
    'eGo 100',
    'transformers with NULL values for buses',
    'model_draft.ego_grid_pf_hv_transformer',
@@ -190,7 +190,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, tabl
 
 INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, table_name, count)
    SELECT 
-   'v0.4.2',
+   'v0.4.4',
    'Status Quo',
    'EHV substation as 110 kV bus', 
    'model_draft.ego_grid_pf_hv_bus',
@@ -201,7 +201,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, tabl
 
 INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, table_name, count)
    SELECT 
-   'v0.4.2',
+   'v0.4.4',
    'NEP 2035',
    'EHV substation as 110 kV bus', 
    'model_draft.ego_grid_pf_hv_bus',
@@ -212,7 +212,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, tabl
 
 INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, table_name, count)
    SELECT 
-   'v0.4.2',
+   'v0.4.4',
    'eGo 100',
    'EHV substation as 110 kV bus', 
    'model_draft.ego_grid_pf_hv_bus',
@@ -229,7 +229,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, tabl
 
 INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, table_name, count)
    SELECT 
-   'v0.4.2',
+   'v0.4.4',
    'Status Quo',
    'generators without defined buses',
    'model_draft.ego_grid_pf_hv_generator',
@@ -240,7 +240,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, tabl
 
 INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, table_name, count)
    SELECT 
-   'v0.4.2',
+   'v0.4.4',
    'NEP 2035',
    'generators without defined buses',
    'model_draft.ego_grid_pf_hv_generator',
@@ -252,7 +252,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, tabl
 
 INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, table_name, count)
    SELECT 
-   'v0.4.2',
+   'v0.4.4',
    'eGo 100',
    'generators without defined buses',
    'model_draft.ego_grid_pf_hv_generator',
@@ -266,7 +266,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, tabl
 
 INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, table_name, count)
    SELECT 
-   'v0.4.2',
+   'v0.4.4',
    'Status Quo',
    'pf_generator_single without defined buses',
    'model_draft.ego_supply_pf_generator_single',
@@ -277,7 +277,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, tabl
 
 INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, table_name, count)
    SELECT 
-   'v0.4.2',
+   'v0.4.4',
    'NEP 2035',
    'pf_generator_single without defined buses',
    'model_draft.ego_supply_pf_generator_single',
@@ -287,7 +287,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, tabl
 
 INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, table_name, count)
    SELECT 
-   'v0.4.2',
+   'v0.4.4',
    'eGo 100',
    'pf_generator_single without defined buses',
    'model_draft.ego_supply_pf_generator_single',
@@ -299,7 +299,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, tabl
 
 INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, table_name, count)
    SELECT 
-   'v0.4.2',
+   'v0.4.4',
    'Status Quo',
    'generators (source != 14, 15, 10) without time series',
    'model_draft.ego_grid_pf_hv_generator',
@@ -311,7 +311,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, tabl
 
 INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, table_name, count)
    SELECT 
-   'v0.4.2',
+   'v0.4.4',
    'NEP 2035',
    'generators (source != 14, 15, 10) without time series',
    'model_draft.ego_grid_pf_hv_generator',
@@ -322,7 +322,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, tabl
 
 INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, table_name, count)
    SELECT 
-   'v0.4.2',
+   'v0.4.4',
    'eGo 100',
    'generators (source != 14, 15, 10) without time series',
    'model_draft.ego_grid_pf_hv_generator',
@@ -336,7 +336,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, tabl
 
 INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, table_name, count)
    SELECT 
-   'v0.4.2',
+   'v0.4.4',
    'Status Quo',
    'time series without defined generators',
    'model_draft.ego_grid_pf_hv_generator_pq_set',
@@ -349,7 +349,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, tabl
 
 INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, table_name, count)
    SELECT 
-   'v0.4.2',
+   'v0.4.4',
    'NEP 2035',
    'time series without defined generators',
    'model_draft.ego_grid_pf_hv_generator_pq_set',
@@ -361,7 +361,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, tabl
 
 INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, table_name, count)
    SELECT 
-   'v0.4.2',
+   'v0.4.4',
    'eGo 100',
    'time series without defined generators',
    'model_draft.ego_grid_pf_hv_generator_pq_set',
@@ -374,7 +374,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, tabl
 
 INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, table_name, count)
    SELECT 
-   'v0.4.2',
+   'v0.4.4',
    'Status Quo',
    'generator time series with more or less than 8760 entries',
    'model_draft.ego_grid_pf_hv_generator_pq_set',
@@ -384,7 +384,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, tabl
 
 INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, table_name, count)
    SELECT 
-   'v0.4.2',
+   'v0.4.4',
    'NEP 2035',
    'generator time series with more or less than 8760 entries',
    'model_draft.ego_grid_pf_hv_generator_pq_set',
@@ -394,7 +394,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, tabl
 
 INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, table_name, count)
    SELECT 
-   'v0.4.2',
+   'v0.4.4',
    'eGo 100',
    'generator time series with more or less than 8760 entries',
    'model_draft.ego_grid_pf_hv_generator_pq_set',
@@ -406,7 +406,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, tabl
 
 INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, table_name, count)
    SELECT 
-   'v0.4.2',
+   'v0.4.4',
    'Status Quo',
    'generator control incomplete',
    'model_draft.ego_grid_pf_hv_generator',
@@ -415,7 +415,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, tabl
 
 INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, table_name, count)
    SELECT 
-   'v0.4.2',
+   'v0.4.4',
    'NEP 2035',
    'generator control incomplete',
    'model_draft.ego_grid_pf_hv_generator',
@@ -424,7 +424,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, tabl
 
 INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, table_name, count)
    SELECT 
-   'v0.4.2',
+   'v0.4.4',
    'eGo 100',
    'generator control incomplete',
    'model_draft.ego_grid_pf_hv_generator',
@@ -434,7 +434,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, tabl
 
 INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, table_name, count)
    SELECT 
-   'v0.4.2',
+   'v0.4.4',
    'all',
    'generator control incomplete',
    'model_draft.ego_grid_pf_hv_generator',
@@ -446,7 +446,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, tabl
 
 INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, table_name, count)
    SELECT 
-   'v0.4.2',
+   'v0.4.4',
    'Status Quo',
    'generator source incomplete',
    'model_draft.ego_grid_pf_hv_generator',
@@ -455,7 +455,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, tabl
 
 INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, table_name, count)
    SELECT 
-   'v0.4.2',
+   'v0.4.4',
    'NEP 2035',
    'generator source incomplete',
    'model_draft.ego_grid_pf_hv_generator',
@@ -464,7 +464,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, tabl
 
 INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, table_name, count)
    SELECT 
-   'v0.4.2',
+   'v0.4.4',
    'eGo 100',
    'generator source incomplete',
    'model_draft.ego_grid_pf_hv_generator',
@@ -480,7 +480,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, tabl
 
 INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, table_name, count)
    SELECT 
-   'v0.4.2',
+   'v0.4.4',
    'Status Quo',
    'loads without defined buses',
    'model_draft.ego_grid_pf_hv_load',
@@ -491,7 +491,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, tabl
 
 INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, table_name, count)
    SELECT 
-   'v0.4.2',
+   'v0.4.4',
    'NEP 2035',
    'loads without defined buses',
    'model_draft.ego_grid_pf_hv_load',
@@ -503,7 +503,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, tabl
 
 INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, table_name, count)
    SELECT 
-   'v0.4.2',
+   'v0.4.4',
    'eGo 100',
    'loads without defined buses',
    'model_draft.ego_grid_pf_hv_load',
@@ -517,7 +517,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, tabl
 
 INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, table_name, count)
    SELECT 
-   'v0.4.2',
+   'v0.4.4',
    'Status Quo',
    'loads without time series',
    'model_draft.ego_grid_pf_hv_load',
@@ -528,7 +528,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, tabl
 
 INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, table_name, count)
    SELECT 
-   'v0.4.2',
+   'v0.4.4',
    'NEP 2035',
    'loads without time series',
    'model_draft.ego_grid_pf_hv_load',
@@ -539,7 +539,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, tabl
 
 INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, table_name, count)
    SELECT 
-   'v0.4.2',
+   'v0.4.4',
    'eGo 100',
    'loads without time series',
    'model_draft.ego_grid_pf_hv_load',
@@ -552,7 +552,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, tabl
 
 INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, table_name, count)
    SELECT 
-   'v0.4.2',
+   'v0.4.4',
    'Status Quo',
    'time series without defined loads',
    'model_draft.ego_grid_pf_hv_load_pq_set',
@@ -565,7 +565,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, tabl
 
 INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, table_name, count)
    SELECT 
-   'v0.4.2',
+   'v0.4.4',
    'NEP 2035',
    'time series without defined loads',
    'model_draft.ego_grid_pf_hv_load_pq_set',
@@ -577,7 +577,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, tabl
 
 INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, table_name, count)
    SELECT 
-   'v0.4.2',
+   'v0.4.4',
    'eGo 100',
    'time series without defined loads',
    'model_draft.ego_grid_pf_hv_load_pq_set',
@@ -590,7 +590,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, tabl
 
 INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, table_name, count)
    SELECT 
-   'v0.4.2',
+   'v0.4.4',
    'Status Quo',
    'load time series with more than 8760 entries',
    'model_draft.ego_grid_pf_hv_load_pq_set',
@@ -600,7 +600,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, tabl
 
 INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, table_name, count)
    SELECT 
-   'v0.4.2',
+   'v0.4.4',
    'NEP 2035',
    'load time series with more than 8760 entries',
    'model_draft.ego_grid_pf_hv_load_pq_set',
@@ -610,7 +610,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, tabl
 
 INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, table_name, count)
    SELECT 
-   'v0.4.2',
+   'v0.4.4',
    'eGo 100',
    'load time series with more than 8760 entries',
    'model_draft.ego_grid_pf_hv_load_pq_set',
@@ -625,7 +625,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, tabl
 
 INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, table_name, count)
    SELECT 
-   'v0.4.2',
+   'v0.4.4',
    'all',
    'generators without rea_geom_new',
    'model_draft.ego_dp_supply_res_powerplant',
@@ -641,7 +641,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, tabl
 
 INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, table_name, count)
    SELECT 
-   'v0.4.2',
+   'v0.4.4',
    'all',
    'mv grid districts without generators', 
    'model_draft.ego_grid_mv_griddistrict', 
@@ -663,4 +663,4 @@ INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, tabl
 	     
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.2','output','model_draft','ego_grid_pf_hv_data_check','ego_dp_data_check.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.4','output','model_draft','ego_grid_pf_hv_data_check','ego_dp_data_check.sql',' ');

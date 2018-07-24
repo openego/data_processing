@@ -9,10 +9,10 @@ __author__      = "IlkaCu, Ludee"
 
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.2','input','model_draft','ego_demand_per_district','ego_dp_loadarea_consumption.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.4','input','model_draft','ego_demand_per_district','ego_dp_loadarea_consumption.sql',' ');
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.2','input','model_draft','ego_demand_loadarea','ego_dp_loadarea_consumption.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.4','input','model_draft','ego_demand_loadarea','ego_dp_loadarea_consumption.sql',' ');
 
 -- landuse area per district 
 ALTER TABLE model_draft.ego_demand_per_district
@@ -99,7 +99,7 @@ UPDATE model_draft.ego_demand_loadarea a
 
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.2','input','demand','ego_demand_federalstate','ego_dp_loadarea_consumption.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.4','input','demand','ego_demand_federalstate','ego_dp_loadarea_consumption.sql',' ');
 
 -- sector consumption of residential per loadarea
 UPDATE model_draft.ego_demand_loadarea a
@@ -203,4 +203,4 @@ COMMENT ON TABLE  model_draft.ego_demand_loadarea IS
 SELECT obj_description('model_draft.ego_demand_loadarea' ::regclass) ::json;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.2','output','model_draft','ego_demand_loadarea','ego_dp_loadarea_consumption.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.4','output','model_draft','ego_demand_loadarea','ego_dp_loadarea_consumption.sql',' ');

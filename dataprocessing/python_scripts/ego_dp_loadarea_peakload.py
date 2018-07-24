@@ -128,7 +128,7 @@ if __name__ == '__main__':
                                       columns=columns)
 
     write_ego_scenario_log(conn=conn,
-                           version='v0.4.0',
+                           version='v0.4.4',
                            io='input',
                            schema='model_draft',
                            table=table,
@@ -276,7 +276,7 @@ if __name__ == '__main__':
     metadata.submit_comment(conn, json_str, schema, target_table)
 
     write_ego_scenario_log(conn=conn,
-                           version='v0.4.0',
+                           version='v0.4.4',
                            io='output',
                            schema='model_draft',
                            table=target_table,
