@@ -18,8 +18,9 @@ CREATE MATERIALIZED VIEW supply.ego_dp_conv_powerplant_sq_mview AS
     WHERE scenario = 'Status Quo'
     AND (shutdown IS NULL or shutdown >= 2015)
     AND capacity > 0 
-    --AND preversion = 'v0.3.0'
+    -- AND preversion = 'v0.3.0'
     --AND version = 'v0.4.4';
+
 
 ALTER MATERIALIZED VIEW supply.ego_dp_conv_powerplant_sq_mview
     OWNER TO oeuser; 
@@ -35,6 +36,7 @@ CREATE MATERIALIZED VIEW supply.ego_dp_conv_powerplant_nep2035_mview AS
     AND   (shutdown IS NULL or shutdown >= 2034)
     --AND   preversion = 'v0.3.0'
     --AND version = 'v0.4.4';
+
 
 ALTER MATERIALIZED VIEW supply.ego_dp_conv_powerplant_nep2035_mview
     OWNER TO oeuser;
@@ -93,6 +95,7 @@ CREATE MATERIALIZED VIEW supply.ego_dp_conv_powerplant_ego100_mview AS
 	--AND preversion = 'v0.3.0'
 	--AND version = 'v0.4.4';
 
+
 ALTER MATERIALIZED VIEW supply.ego_dp_conv_powerplant_ego100_mview
     OWNER TO oeuser;
 
@@ -112,6 +115,7 @@ CREATE MATERIALIZED VIEW supply.ego_dp_res_powerplant_sq_mview AS
     AND electrical_capacity > 0
     --AND preversion = 'v0.3.0'
     --AND version = 'v0.4.4';
+
 
 ALTER MATERIALIZED VIEW supply.ego_dp_res_powerplant_sq_mview
     OWNER TO oeuser;
@@ -136,6 +140,7 @@ CREATE MATERIALIZED VIEW supply.ego_dp_res_powerplant_nep2035_mview AS
 		 AND scenario = 'Status Quo'
 		 --And preversion = 'v0.3.0'
 		 --AND version = 'v0.4.4'
+
 		 AND electrical_capacity > 0
 		 ORDER BY id	
 		 ) as sub
@@ -155,7 +160,7 @@ CREATE MATERIALIZED VIEW supply.ego_dp_res_powerplant_nep2035_mview AS
 			Group BY id
 			Order by id)
 		 AND scenario in ('NEP 2035')
-		-- And preversion = 'v0.3.0'
+		 --And preversion = 'v0.3.0'
 		-- AND version = 'v0.4.4'
 		 AND electrical_capacity > 0
 		 ORDER BY id	
