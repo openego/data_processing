@@ -37,7 +37,7 @@ INSERT INTO model_draft.ego_supply_generator (re_id, geom)
 INSERT INTO model_draft.ego_supply_generator (conv_id, geom) 
 	SELECT 	id, geom
 	FROM 	model_draft.ego_dp_supply_conv_powerplant
-	WHERE eeg NOT LIKE 'yes'; -- Duplicates that already occur in the eeg-list are ignored 
+	WHERE eeg IS NULL OR eeg = 'no'; -- Duplicates that already occur in the eeg-list are ignored 
 
 -- index GIST (geom)
 CREATE INDEX 	ego_supply_generator_idx
