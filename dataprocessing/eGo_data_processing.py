@@ -105,6 +105,7 @@ def data_processing():
 	'ego_dp_powerflow_griddistrict_demand.py',		# Demand per MV Griddistrict
 	'ego_dp_powerflow_timeseries_demand.sql',		# Insert demand series into corresponding powerflow table (SQ, NEP2035, eGo100)
 	'ego_dp_powerflow_lopf_data.sql',			# Set marginal costs for generators and storages
+	'ego_dp_data_check.sql',				# Check powerflow data for plausibility
     ## POST-PROCESSING
         'ego_pp_nep2035_grid_variations.sql'			# Create extension_tables and insert NEP-data
 	

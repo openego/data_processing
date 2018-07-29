@@ -61,7 +61,7 @@ ALTER TABLE model_draft.ego_grid_lv_griddistrict OWNER TO oeuser;
 -- metadata
 COMMENT ON TABLE model_draft.ego_grid_lv_griddistrict IS '{
     "comment": "eGoDP - Temporary table",
-    "version": "v0.4.2" }' ;
+    "version": "v0.4.4" }' ;
 
 -- insert
 INSERT INTO model_draft.ego_grid_lv_griddistrict (id,mvlv_subst_id,subst_id,la_id,nn,geom)
@@ -71,7 +71,7 @@ INSERT INTO model_draft.ego_grid_lv_griddistrict (id,mvlv_subst_id,subst_id,la_i
 
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.2','input','model_draft','ego_grid_mvlv_substation','ego_dp_lv_griddistrict.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.4','input','model_draft','ego_grid_mvlv_substation','ego_dp_lv_griddistrict.sql',' ');
 
 -- mvlv substation count
 UPDATE model_draft.ego_grid_lv_griddistrict AS t1
@@ -99,7 +99,7 @@ UPDATE model_draft.ego_grid_lv_griddistrict AS t1
 
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.2','input','society','destatis_zensus_population_per_ha_mview','ego_dp_lv_griddistrict.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.4','input','society','destatis_zensus_population_per_ha_mview','ego_dp_lv_griddistrict.sql',' ');
 
 -- zensus 2011 population
 UPDATE model_draft.ego_grid_lv_griddistrict AS t1
@@ -137,10 +137,10 @@ ALTER TABLE model_draft.ego_osm_sector_per_lvgd_1_residential OWNER TO oeuser;
 -- metadata
 COMMENT ON TABLE model_draft.ego_osm_sector_per_lvgd_1_residential IS '{
     "comment": "eGoDP - Temporary table",
-    "version": "v0.4.2" }' ;
+    "version": "v0.4.4" }' ;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.2','input','model_draft','ego_osm_sector_per_griddistrict_1_residential','ego_dp_lv_griddistrict.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.4','input','model_draft','ego_osm_sector_per_griddistrict_1_residential','ego_dp_lv_griddistrict.sql',' ');
 
 -- intersect sector with mv-griddistrict
 INSERT INTO model_draft.ego_osm_sector_per_lvgd_1_residential (geom)
@@ -172,7 +172,7 @@ UPDATE model_draft.ego_grid_lv_griddistrict AS t1
     WHERE   t1.id = t2.id;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.2','output','model_draft','ego_osm_sector_per_lvgd_1_residential','ego_dp_lv_griddistrict.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.4','output','model_draft','ego_osm_sector_per_lvgd_1_residential','ego_dp_lv_griddistrict.sql',' ');
 
 
 
@@ -193,10 +193,10 @@ ALTER TABLE	model_draft.ego_osm_sector_per_lvgd_2_retail OWNER TO oeuser;
 -- metadata
 COMMENT ON TABLE model_draft.ego_osm_sector_per_lvgd_2_retail IS '{
     "comment": "eGoDP - Temporary table",
-    "version": "v0.4.2" }' ;
+    "version": "v0.4.4" }' ;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.2','input','model_draft','ego_osm_sector_per_griddistrict_2_retail','ego_dp_lv_griddistrict.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.4','input','model_draft','ego_osm_sector_per_griddistrict_2_retail','ego_dp_lv_griddistrict.sql',' ');
 
 -- intersect sector with mv-griddistrict
 INSERT INTO     model_draft.ego_osm_sector_per_lvgd_2_retail (geom)
@@ -226,7 +226,7 @@ UPDATE 	model_draft.ego_grid_lv_griddistrict AS t1
     WHERE  	t1.id = t2.id;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.2','output','model_draft','ego_osm_sector_per_lvgd_2_retail','ego_dp_lv_griddistrict.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.4','output','model_draft','ego_osm_sector_per_lvgd_2_retail','ego_dp_lv_griddistrict.sql',' ');
 
 
 -- 3. Industrial sector
@@ -246,10 +246,10 @@ ALTER TABLE	model_draft.ego_osm_sector_per_lvgd_3_industrial OWNER TO oeuser;
 -- metadata
 COMMENT ON TABLE model_draft.ego_osm_sector_per_lvgd_3_industrial IS '{
     "comment": "eGoDP - Temporary table",
-    "version": "v0.4.2" }' ;
+    "version": "v0.4.4" }' ;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.2','input','model_draft','ego_osm_sector_per_griddistrict_3_industrial','ego_dp_lv_griddistrict.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.4','input','model_draft','ego_osm_sector_per_griddistrict_3_industrial','ego_dp_lv_griddistrict.sql',' ');
 
 -- intersect sector with mv-griddistrict
 INSERT INTO     model_draft.ego_osm_sector_per_lvgd_3_industrial (geom)
@@ -279,7 +279,7 @@ UPDATE 	model_draft.ego_grid_lv_griddistrict AS t1
     WHERE  	t1.id = t2.id;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.2','output','model_draft','ego_osm_sector_per_lvgd_3_industrial','ego_dp_lv_griddistrict.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.4','output','model_draft','ego_osm_sector_per_lvgd_3_industrial','ego_dp_lv_griddistrict.sql',' ');
 
 
 
@@ -300,10 +300,10 @@ ALTER TABLE	model_draft.ego_osm_sector_per_lvgd_4_agricultural OWNER TO oeuser;
 -- metadata
 COMMENT ON TABLE model_draft.ego_osm_sector_per_lvgd_4_agricultural IS '{
     "comment": "eGoDP - Temporary table",
-    "version": "v0.4.2" }' ;
+    "version": "v0.4.4" }' ;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.2','input','model_draft','ego_osm_sector_per_griddistrict_4_agricultural','ego_dp_lv_griddistrict.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.4','input','model_draft','ego_osm_sector_per_griddistrict_4_agricultural','ego_dp_lv_griddistrict.sql',' ');
 
 -- intersect sector with mv-griddistrict
 INSERT INTO     model_draft.ego_osm_sector_per_lvgd_4_agricultural (geom)
@@ -333,7 +333,7 @@ UPDATE 	model_draft.ego_grid_lv_griddistrict AS t1
     WHERE  	t1.id = t2.id;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.2','output','model_draft','ego_osm_sector_per_lvgd_4_agricultural','ego_dp_lv_griddistrict.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.4','output','model_draft','ego_osm_sector_per_lvgd_4_agricultural','ego_dp_lv_griddistrict.sql',' ');
 
 
 -- sector stats
@@ -360,7 +360,7 @@ SELECT scenario_log('eGo_DP', 'v0.4.2','output','model_draft','ego_osm_sector_pe
     WHERE   t1.id = t2.id;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.2','output','model_draft','ego_grid_lv_griddistrict','ego_dp_lv_griddistrict.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.4','output','model_draft','ego_grid_lv_griddistrict','ego_dp_lv_griddistrict.sql',' ');
 
 
 /* 

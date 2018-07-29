@@ -65,7 +65,7 @@ def demand_per_mv_grid_district():
     annual_demand_df = annual_demand_df.loc[~pd.isnull(annual_demand_df.index)]
 
     write_scenario_log(conn=conn,
-                           version='v0.4.2',
+                           version='v0.4.4',
                            project='eGoDP',
                            io='input',
                            schema='model_draft',
@@ -80,7 +80,7 @@ def demand_per_mv_grid_district():
         index_col='polygon_id')
 
     write_scenario_log(conn=conn,
-                           version='v0.4.2',
+                           version='v0.4.4',
                            project='eGoDP',
                            io='input',
                            schema='model_draft',
@@ -188,7 +188,7 @@ def demand_per_mv_grid_district():
     metadata.submit_comment(conn, json_str, schema, target_table)
 
     write_scenario_log(conn=conn,
-                           version='v0.4.2',
+                           version='v0.4.4',
                            project='eGoDP',
                            io='output',
                            schema=schema,
