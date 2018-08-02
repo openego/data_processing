@@ -1,4 +1,4 @@
-﻿DROP SEQUENCE IF EXISTS model_draft.ego_grid_hv_fix_errors_bus_id CASCADE;
+DROP SEQUENCE IF EXISTS model_draft.ego_grid_hv_fix_errors_bus_id CASCADE;
 CREATE SEQUENCE model_draft.ego_grid_hv_fix_errors_bus_id;
 SELECT setval('model_draft.ego_grid_hv_fix_errors_bus_id', (max(bus_id)+1)) FROM model_draft.ego_grid_pf_hv_bus;
 
