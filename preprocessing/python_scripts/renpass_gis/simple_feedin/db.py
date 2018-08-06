@@ -22,7 +22,7 @@ __url__ = "https://github.com/openego/data_processing/blob/master/LICENSE"
 __author__ = "s3pp"
 
 
-from sqlalchemy import MetaData, create_engine
+from sqlalchemy import Column, MetaData, create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.automap import automap_base
 from geoalchemy2 import Geometry, shape  # Geometry type used by SQLA
@@ -130,6 +130,7 @@ conn = dbconnect(section=section, cfg=config)
 
 # instantiate container object MetaData
 meta = MetaData()
+meta.bind=conn
 meta_definition(meta=meta, conn=conn)
 
 # map classes, automap does not gather all classes
@@ -137,6 +138,12 @@ Base = automap_base(metadata=meta)
 
 # map other classes; TODO: classes are locals of func
 #Located, Scheduled, Typified = other_classes()
+
+meta.reflect(bind=conn, schema='model_draft')
+class Grid(Base):
+    __tablename__ = 'model_draft.openfredgrid'
+    __table_args__ = ({'autoload': True},)
+
 
 Base.prepare()
 
