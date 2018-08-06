@@ -501,6 +501,7 @@ def main():
 
     print('Calculating feedins...')
 
+    pd.set_option("mode.chained_assignment", None)
     for coastdat_id, type_of_generation, geom in ofr.points:
 
         try:
