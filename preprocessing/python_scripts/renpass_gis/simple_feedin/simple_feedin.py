@@ -307,9 +307,9 @@ def get_power_classes(capacity):
 
 def get_plant_per_class(windgenerator, power_classes):
     """
-    Calculates the most used plant per power class. If a turbine is not available
-    in windlib, the second, third,.. most used turbine is taken until one is
-    available in windlib.
+    Calculates the most used plant per power class. If a turbine is not
+    available in windlib, the second, third,.. most used turbine is taken until
+    one is available in windlib.
 
     Parameters
     ----------
