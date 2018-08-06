@@ -501,10 +501,10 @@ def main():
 
     print('Calculating feedins...')
 
-    for coastdat_id, type_of_generation, geom in points:
+    for coastdat_id, type_of_generation, geom in ofr.points:
 
         try:
-            weather = coastdat.get_weather(conn, geom, weather_year)
+            weather = ofr.get_weather(conn, geom, weather_year)
         except IndexError:
             print('Geometry cannot be handled: %s, %s' % (geom.x, geom.y))
             continue
