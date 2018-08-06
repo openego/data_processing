@@ -505,8 +505,9 @@ def main():
 
         try:
             weather = ofr.get_weather(conn, geom, weather_year)
-        except IndexError:
+        except IndexError as e:
             print('Geometry cannot be handled: %s, %s' % (geom.x, geom.y))
+            raise e
             continue
 
         if type_of_generation == 'wind_offshore':
