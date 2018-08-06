@@ -17,7 +17,7 @@ from feedinlib import powerplants as plants
 from oemof.db import coastdat
 from sqlalchemy.ext.declarative import declarative_base
 
-points = db.Points
+#points = db.Points
 conn = db.conn
 session = db.session
 meta = MetaData()
@@ -478,11 +478,11 @@ def wind_dict(row):
 
 
 def main():
-    windgenerator = collect_energymap_data()
-    capacity = collect_ego_turbines()
-    power_classes = get_power_classes(capacity)
-    selected_plants = get_plant_per_class(windgenerator, power_classes)
-    power_class_to_db(power_classes, selected_plants)
+    #windgenerator = collect_energymap_data()
+    #capacity = collect_ego_turbines()
+    #power_classes = get_power_classes(capacity)
+    #selected_plants = get_plant_per_class(windgenerator, power_classes)
+    #power_class_to_db(power_classes, selected_plants)
 
     cfg = db.readcfg(config)
     temp = {}
@@ -511,12 +511,14 @@ def main():
 
         elif type_of_generation == 'wind_onshore':
             power_class = 1
+            """
             for index, row in selected_plants.iterrows():
                 plant = wind_dict(row)
                 feedin = correction_onshore * plants.WindPowerPlant(**plant).\
                     feedin(weather=weather, installed_capacity=1)
                 temp[(coastdat_id, type_of_generation, power_class)] = feedin.values
                 power_class += 1
+            """
 
         elif type_of_generation == 'solar':
             feedin = correction_solar * powerplants[type_of_generation].\

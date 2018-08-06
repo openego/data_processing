@@ -81,10 +81,10 @@ def dbconnect(section, cfg):
 def meta_definition(meta, conn):
     """ Populates SQLAlchemy Meta object
     """
-    meta.reflect(bind=conn, schema='coastdat')
-    meta.reflect(bind=conn, schema='model_draft',
-                 only=['ego_weather_measurement_point'])
-        
+    #meta.reflect(bind=conn, schema='coastdat')
+    #meta.reflect(bind=conn, schema='model_draft',
+    #             only=['ego_weather_measurement_point'])
+
     #meta.reflect(bind=conn, schema='public',
     #             only=['weather_measurement_point'])  # table with given/ own defined points
 
@@ -136,23 +136,19 @@ meta_definition(meta=meta, conn=conn)
 Base = automap_base(metadata=meta)
 
 # map other classes; TODO: classes are locals of func
-Located, Scheduled, Typified = other_classes()
+#Located, Scheduled, Typified = other_classes()
 
 Base.prepare()
 
 # simplify class names
-Datatype, Projection, Spatial, Timeseries, Year, Point=\
-    Base.classes.datatype, Base.classes.projection, Base.classes.spatial,\
-    Base.classes.timeseries, Base.classes.year,\
-    Base.classes.ego_weather_measurement_point
-   # Base.classes.weather_measurement_point
+#Point = Base.classes.ego_weather_measurement_point
 
 session = sessionmaker(bind=conn)()
 
 print('Retrieve data...')
-query = session.query(Point.coastdat_id, Point.type_of_generation, Point.geom)
-Points =  [(coastdat_id, type_of_generation, shape.to_shape(geom))
-           for coastdat_id, type_of_generation, geom in query.all()]
+#query = session.query(Point.coastdat_id, Point.type_of_generation, Point.geom)
+#Points =  [(coastdat_id, type_of_generation, shape.to_shape(geom))
+#           for coastdat_id, type_of_generation, geom in query.all()]
 
 print('Done!')
 
