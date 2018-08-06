@@ -155,3 +155,4 @@ Points =  [(coastdat_id, type_of_generation, shape.to_shape(geom))
            for coastdat_id, type_of_generation, geom in query.all()]
 
 print('Done!')
+
