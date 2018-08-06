@@ -32,8 +32,8 @@ config = 'config.ini'
 correction_offshore = 0.83
 correction_solar = 0.8
 correction_onshore = 0.6
-weather_year = 2011
-weather_scenario_id = 1
+weather_year = 2015
+weather_scenario_id = 2
 
 def asnumber(x):
     """ Tries to convert a string to a numeric format
