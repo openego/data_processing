@@ -555,7 +555,7 @@ def main():
 
     df = pd.DataFrame(temp)
     df_to_renewable_feedin(df, weather_year, weather_scenario_id)
-    print('Done!')
+    print('\nDone!')
 
 
 if __name__ == '__main__':
