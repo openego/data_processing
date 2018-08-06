@@ -525,6 +525,17 @@ def main():
                 temp[(coastdat_id, type_of_generation, power_class)] = feedin.values
                 power_class += 1
             """
+            power_class = 0
+            feedin = (
+                    correction_onshore *
+                    plants
+                    .WindPowerPlant(
+                        **{
+                         "h_hub": 129.0,
+                         "d_rotor": 104.0,
+                         "wind_conv_type": "ENERCON E 101 3000"})
+                    .feedin(weather=weather, installed_capacity=1))
+            temp[(coastdat_id, type_of_generation, power_class)] = feedin.values
 
         elif type_of_generation == 'solar':
             feedin = correction_solar * powerplants[type_of_generation].\
