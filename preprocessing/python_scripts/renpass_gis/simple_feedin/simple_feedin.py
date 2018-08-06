@@ -5,17 +5,23 @@ Created on Wed Mar 14 14:30:54 2018
 __author__ = "MarlonSchlemminger, s3pp"
 """
 
-import pandas as pd
-import db
-from sqlalchemy import (MetaData, and_, or_, Column, Text, text, Integer, Float, ARRAY)
-from sqlalchemy.ext.automap import automap_base
 from operator import itemgetter
-from functions import C_choice_of_windgenerator
 import pkg_resources
 import re
+import sys
+
+from sqlalchemy import (MetaData, and_, or_, Column, Text, text, Integer, Float, ARRAY)
+from sqlalchemy.ext.automap import automap_base
+from sqlalchemy.ext.declarative import declarative_base
+import pandas as pd
+
 from feedinlib import powerplants as plants
 from oemof.db import coastdat
-from sqlalchemy.ext.declarative import declarative_base
+
+from functions import C_choice_of_windgenerator
+import db
+import ofr
+
 
 #points = db.Points
 conn = db.conn
