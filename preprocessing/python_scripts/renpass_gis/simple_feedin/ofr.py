@@ -43,7 +43,7 @@ bounds = {
         'zlvl':[(list(b.values)[0], list(b.values)[1]) for b in mean.time_bnds]}
 print('Done.')
 
-print('Gnerating IDs.')
+print('Generating IDs.')
 IDs = {gridpoint: ID for (ID, gridpoint) in zip(count(1300000), grid.values())}
 print('Done.')
 
