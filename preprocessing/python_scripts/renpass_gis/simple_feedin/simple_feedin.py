@@ -199,7 +199,7 @@ def df_to_renewable_feedin(df, weather_year, weather_scenario_id):
         power_class = Column(Integer(), primary_key=True)
         feedin = Column(ARRAY(Float))
 
-    conn.execute(text("DROP TABLE IF EXISTS model_draft.ego_renewable_feedin CASCADE"))
+#    conn.execute(text("DROP TABLE IF EXISTS model_draft.ego_renewable_feedin CASCADE"))
 
 #    try:
 #        Ego_renewable_feedin.__table__.drop(conn)
