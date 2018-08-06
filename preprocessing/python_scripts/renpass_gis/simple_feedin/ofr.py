@@ -1,10 +1,15 @@
 from itertools import count
+import sys
 
+from geoalchemy2 import WKTElement as WKT
+import geoalchemy2.shape as ga2s
 import pandas as pd
 import shapely.geometry as sg
 import xarray as xr
 
 import feedinlib.weather as fw
+
+import db
 
 
 mean = xr.open_mfdataset('./hourly-mean*.nc')
@@ -47,6 +52,20 @@ print('Generating IDs.')
 IDs = {gridpoint: ID for (ID, gridpoint) in zip(count(1300000), grid.values())}
 print('Done.')
 
+
+print('Writing grid to database.')
+for i,p in enumerate(piits):
+    if db.session.query(db.Grid).get(IDs[p[1]]) is None:
+        entry = db.Grid(
+                gid=IDs[p[1]],
+                geom=ga2s.from_shape(
+                    sg.MultiPolygon([p[0].buffer(1e-11)]),
+                    4326))
+        db.session.add(entry)
+    sys.stdout.write("{:7}/{}\r".format(i+1, len(piits)))
+db.session.commit()
+db.session.flush()
+print('\nDone.')
 
 def resample(dataarray, bounds):
     series = dataarray.to_series()
