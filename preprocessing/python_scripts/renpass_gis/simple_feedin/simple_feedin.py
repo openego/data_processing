@@ -501,6 +501,8 @@ def main():
 
     print('Calculating feedins...')
 
+    count = 0
+    goal = 3 * len(ofr.piits)
     pd.set_option("mode.chained_assignment", None)
     for coastdat_id, type_of_generation, geom in ofr.points:
 
@@ -547,6 +549,8 @@ def main():
         else:
             continue
 
+        count += 1
+        sys.stdout.write("{:7}/{}\r".format(count, goal))
         #temp[(coastdat_id, type_of_generation)] = feedin.values
 
     df = pd.DataFrame(temp)
