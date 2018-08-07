@@ -16,7 +16,15 @@ You need:
     `plpgsql`, `postgis` and `postgis_topology`. The tables should have
     the same structure as `model_draft.ego_renewable_feedin` and
     `climate.cosmoclm` in the OEDB. You need write privileges for these
-    tables.
+    tables.  
+    There are also some other tables with power plant data for different
+    power classes, but I don't know which ones these are exactly, so you
+    have to figure that out for yourself. If you just want to generate
+    feedin time series for a single, hardcoded onshore wind power plant,
+    revert the commit `Use power classes from db` and change the wind
+    turbine parameters directly in `simple_feedin.py`, somewhere around
+    line 541.
+
   * A configuration file located at `'~/.open_eGo/config.ini'`
     specifying how to connect to the database via these fields:
 
@@ -42,6 +50,7 @@ You need:
   * The Python dependencies. Use `pip install -r requirements.txt` to
     install them. Use the `requirements.txt` file that resides in the
     same folder as this `README.md`.
+
 
 ## Running the script
 

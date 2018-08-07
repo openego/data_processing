@@ -484,10 +484,14 @@ def wind_dict(row):
 
 
 def main():
-    #windgenerator = collect_energymap_data()
-    #capacity = collect_ego_turbines()
-    #power_classes = get_power_classes(capacity)
-    #selected_plants = get_plant_per_class(windgenerator, power_classes)
+    print("Getting energymap data.")
+    windgenerator = collect_energymap_data()
+    print("Collecting ego turbines.")
+    capacity = collect_ego_turbines()
+    print("Getting power classes.")
+    power_classes = get_power_classes(capacity)
+    print("Getting plants for the power classes.")
+    selected_plants = get_plant_per_class(windgenerator, power_classes)
     #power_class_to_db(power_classes, selected_plants)
 
     cfg = db.readcfg(config)
@@ -521,7 +525,6 @@ def main():
 
         elif type_of_generation == 'wind_onshore':
             power_class = 1
-            """
             for index, row in selected_plants.iterrows():
                 plant = wind_dict(row)
                 feedin = correction_onshore * plants.WindPowerPlant(**plant).\
@@ -539,6 +542,7 @@ def main():
                          "d_rotor": 104.0,
                          "wind_conv_type": "ENERCON E 101 3000"})
                     .feedin(weather=weather, installed_capacity=1))
+            """
             temp[(coastdat_id, type_of_generation, power_class)] = feedin.values
 
         elif type_of_generation == 'solar':
