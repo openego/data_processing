@@ -156,8 +156,8 @@ INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, tabl
    SELECT 
    'v0.4.4',
    'Status Quo',
-   'transformers with NULL values for buses'
-   'model_draft.ego_grid_pf_hv_transformer',,
+   'transformers with NULL values for buses',
+   'model_draft.ego_grid_pf_hv_transformer',
    count(*) FROM model_draft.ego_grid_pf_hv_transformer 
       WHERE scn_name = 'Status Quo' AND 
        (bus0 IS NULL OR 
@@ -272,7 +272,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, tabl
    'model_draft.ego_supply_pf_generator_single',
    count(*) FROM model_draft.ego_supply_pf_generator_single
        WHERE scn_name = 'Status Quo' AND 
-       otg_id IS NULL; 
+       bus IS NULL; 
 
 
 INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, table_name, count)
@@ -283,7 +283,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, tabl
    'model_draft.ego_supply_pf_generator_single',
    count(*) FROM model_draft.ego_supply_pf_generator_single
        WHERE scn_name = 'NEP 2035' AND 
-       otg_id IS NULL; 
+       bus IS NULL; 
 
 INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, table_name, count)
    SELECT 
@@ -293,7 +293,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, tabl
    'model_draft.ego_supply_pf_generator_single',
    count(*) FROM model_draft.ego_supply_pf_generator_single
        WHERE scn_name = 'eGo 100' AND 
-       otg_id IS NULL; 
+       bus IS NULL; 
 
 -- Do all generators which are not 'reservoir', 'geothermal' or 'other_non_renewable' have defined timeseries in all three scenarios? 
 
@@ -629,7 +629,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_data_check (version, scn_name, test, tabl
    'all',
    'generators without rea_geom_new',
    'model_draft.ego_dp_supply_res_powerplant',
-   count(*) FROM model_draft_ego_dp_supply_res_powerplant
+   count(*) FROM model_draft.ego_dp_supply_res_powerplant
     	WHERE rea_geom_new IS NULL; 
 
 

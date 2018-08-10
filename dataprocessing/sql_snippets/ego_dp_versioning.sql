@@ -606,9 +606,9 @@ SELECT scenario_log('eGo_DP','v0.4.4','result','supply','ego_aggr_weather','ego_
 
 -- pf data check 
 
-INSERT INTO grid.ego_pf_hv_data_check
-        SELECT * 
-	FROM model_draft.ego_grid_pf_hv_data_check; 
+--INSERT INTO grid.ego_pf_hv_data_check
+--        SELECT * 
+--	FROM model_draft.ego_grid_pf_hv_data_check; 
 	
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP','v0.4.4','result','grid','ego_pf_hv_data_check','ego_dp_versioning.sql','versioning');
+--SELECT scenario_log('eGo_DP','v0.4.4','result','grid','ego_pf_hv_data_check','ego_dp_versioning.sql','versioning');
