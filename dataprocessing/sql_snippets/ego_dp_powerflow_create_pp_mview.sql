@@ -99,9 +99,9 @@ ALTER MATERIALIZED VIEW model_draft.ego_supply_conv_powerplant_ego100_mview
     OWNER TO oeuser;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.4','output','model_draft','ego_supply_conv_powerplant_sq_mview','ego_dp_powerflow_create_pp_mview.sql',' ');
-SELECT scenario_log('eGo_DP', 'v0.4.4','output','model_draft','ego_supply_conv_powerplant_nep2035_mview','ego_dp_powerflow_create_pp_mview.sql',' ');
-SELECT scenario_log('eGo_DP', 'v0.4.4','output','model_draft','ego_supply_conv_powerplant_ego100_mview','ego_dp_powerflow_create_pp_mview.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.5','output','model_draft','ego_supply_conv_powerplant_sq_mview','ego_dp_powerflow_create_pp_mview.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.5','output','model_draft','ego_supply_conv_powerplant_nep2035_mview','ego_dp_powerflow_create_pp_mview.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.5','output','model_draft','ego_supply_conv_powerplant_ego100_mview','ego_dp_powerflow_create_pp_mview.sql',' ');
 
 
 --------------------------------------------------------------------------------
@@ -241,6 +241,6 @@ ALTER MATERIALIZED VIEW model_draft.ego_supply_res_powerplant_ego100_mview
     OWNER TO oeuser;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.4','output','model_draft','ego_supply_res_powerplant_sq_mview','ego_dp_powerflow_create_pp_mview.sql',' ');
-SELECT scenario_log('eGo_DP', 'v0.4.4','output','model_draft','ego_supply_res_powerplant_nep2035_mview','ego_dp_powerflow_create_pp_mview.sql',' ');
-SELECT scenario_log('eGo_DP', 'v0.4.4','output','model_draft','ego_supply_res_powerplant_ego100_mview','ego_dp_powerflow_create_pp_mview.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.5','output','model_draft','ego_supply_res_powerplant_sq_mview','ego_dp_powerflow_create_pp_mview.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.5','output','model_draft','ego_supply_res_powerplant_nep2035_mview','ego_dp_powerflow_create_pp_mview.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.5','output','model_draft','ego_supply_res_powerplant_ego100_mview','ego_dp_powerflow_create_pp_mview.sql',' ');
