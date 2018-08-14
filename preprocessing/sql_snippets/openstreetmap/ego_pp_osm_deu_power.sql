@@ -8,7 +8,8 @@ __author__      = "Christian-rli; Ludee"
 */
 
 
--- metadata
+-- Imported from GeoJSON with QGIS 
+-- metadata (Invalid, please correct!)
 COMMENT ON TABLE sandbox.ego_pp_osm_deu_power_point IS '{
     "title": "Openstreetmap generator=source",
     "description": "extracted from Openstreetmap via overpass-turbo",
@@ -35,9 +36,6 @@ COMMENT ON TABLE sandbox.ego_pp_osm_deu_power_point IS '{
     "metadata_version": "1.3"}';
 
 
-
-
-
 -- Filter OSM powerplants
 DROP MATERIALIZED VIEW IF EXISTS    sandbox.ego_pp_osm_deu_power_point_mview CASCADE;
 CREATE MATERIALIZED VIEW            sandbox.ego_pp_osm_deu_power_point_mview AS
@@ -61,17 +59,14 @@ CREATE INDEX ego_pp_osm_deu_power_point_mview_geom_idx
 -- grant (oeuser)
 ALTER TABLE sandbox.ego_pp_osm_deu_power_point_mview OWNER TO oeuser;
 
-
-
 -- metadata
 COMMENT ON MATERIALIZED VIEW sandbox.ego_pp_osm_deu_power_point_mview IS '{
     "comment": "eGoPP - REA OSM - Temporary Table",
-    "version": "v0.4.2" }' ;
-
-
+    "version": "v0.1" }' ;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
--- SELECT scenario_log('eGo_PP_REAOSM', 'v0.4.2','output','sandbox','ego_pp_osm_deu_power_point_mview','ego_pp_osm_deu_power.sql',' ');
+SELECT scenario_log('eGo_PP_REAOSM', 'v0.1','input','sandbox','ego_pp_osm_deu_power_point','ego_pp_osm_deu_power.sql',' ');
+SELECT scenario_log('eGo_PP_REAOSM', 'v0.1','output','sandbox','ego_pp_osm_deu_power_point_mview','ego_pp_osm_deu_power.sql',' ');
 
 
 -- Allocate to REA methods
@@ -80,12 +75,11 @@ DROP TABLE IF EXISTS    sandbox.ego_pp_osm_deu_power_point_reaosm CASCADE;
 CREATE TABLE            sandbox.ego_pp_osm_deu_power_point_reaosm (
     osm_id          bigint,
     rea_method      character varying,
-    mvgd_id         integer,
+    subst_id        integer,
     la_id           integer,
     geom            geometry(Point,3035),
     CONSTRAINT      ego_pp_osm_deu_power_point_reaosm_pkey  PRIMARY KEY (osm_id)
     );
-
 
 -- index GIST (geom)
 CREATE INDEX ego_pp_osm_deu_power_point_reaosm_geom_idx
@@ -95,16 +89,13 @@ CREATE INDEX ego_pp_osm_deu_power_point_reaosm_geom_idx
 -- grant (oeuser)
 ALTER TABLE sandbox.ego_pp_osm_deu_power_point_reaosm OWNER TO oeuser;
 
-
-/*
 -- metadata
-COMMENT ON TABLE model_draft.ego_pp_osm_deu_power_point_reaosm IS '{
+COMMENT ON TABLE sandbox.ego_pp_osm_deu_power_point_reaosm IS '{
     "comment": "eGoPP - REA OSM - Temporary Table",
-    "version": "v0.4.2" }' ;
-*/
+    "version": "v0.1" }' ;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
--- SELECT scenario_log('eGo_PP_REAOSM', 'v0.4.2','output','sandbox','ego_pp_osm_deu_power_point_reaosm','ego_pp_osm_deu_power.sql',' ');
+SELECT scenario_log('eGo_PP_REAOSM', 'v0.1','setup','sandbox','ego_pp_osm_deu_power_point_reaosm','ego_pp_osm_deu_power.sql',' ');
 
 
 -- insert M1
@@ -134,35 +125,151 @@ INSERT INTO sandbox.ego_pp_osm_deu_power_point_reaosm (osm_id, rea_method, geom)
     WHERE   generator_source = 'solar'
     ORDER BY osm_id;
 
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_PP_REAOSM', 'v0.1','output','sandbox','ego_pp_osm_deu_power_point_reaosm','ego_pp_osm_deu_power.sql',' ');
 
-/*
--- insert M3
-INSERT INTO sandbox.ego_pp_osm_deu_power_point_reaosm (osm_id, rea_method, geom)
-    SELECT  osm_id,
-            'M1',
-            geom
-    FROM    sandbox.ego_pp_osm_deu_power_point_mview
-    WHERE   
-    ORDER BY osm_id;
 
--- insert M4
-INSERT INTO sandbox.ego_pp_osm_deu_power_point_reaosm (osm_id, rea_method, geom)
-    SELECT  osm_id,
-            'M1',
-            geom
-    FROM    sandbox.ego_pp_osm_deu_power_point_mview
-    WHERE   
-    ORDER BY osm_id;
+-- eGo Grid District
+SELECT  version
+FROM    grid.ego_dp_mv_griddistrict
+GROUP BY version
+ORDER BY version;
 
--- insert M5
-INSERT INTO sandbox.ego_pp_osm_deu_power_point_reaosm (osm_id, rea_method, geom)
-    SELECT  osm_id,
-            'M1',
-            geom
-    FROM    sandbox.ego_pp_osm_deu_power_point_mview
-    WHERE   
-    ORDER BY osm_id;
-*/
+
+-- eGoDP Grid District
+DROP MATERIALIZED VIEW IF EXISTS    grid.ego_dp_mv_griddistrict_v0_4_3_mview CASCADE;
+CREATE MATERIALIZED VIEW            grid.ego_dp_mv_griddistrict_v0_4_3_mview AS
+    SELECT  *
+    FROM    grid.ego_dp_mv_griddistrict
+    WHERE   version = 'v0.4.3';
+
+-- index (id)
+CREATE UNIQUE INDEX ego_dp_mv_griddistrict_v0_4_3_mview_idx
+    ON grid.ego_dp_mv_griddistrict_v0_4_3_mview (subst_id);
+
+-- index GIST (geom)
+CREATE INDEX ego_dp_mv_griddistrict_v0_4_3_mview_geom_idx
+    ON      grid.ego_dp_mv_griddistrict_v0_4_3_mview
+    USING   GIST (geom);
+
+-- grant (oeuser)
+ALTER TABLE grid.ego_dp_mv_griddistrict_v0_4_3_mview OWNER TO oeuser;
+
+-- metadata
+COMMENT ON MATERIALIZED VIEW grid.ego_dp_mv_griddistrict_v0_4_3_mview IS '{
+    "comment": "eGoPP - REA OSM - Temporary Table",
+    "version": "v0.1" }' ;
+
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_PP_REAOSM', 'v0.1','input','grid','ego_dp_mv_griddistrict','ego_pp_osm_deu_power.sql',' ');
+SELECT scenario_log('eGo_PP_REAOSM', 'v0.1','output','grid','ego_dp_mv_griddistrict_v0_4_3_mview','ego_pp_osm_deu_power.sql',' ');
+
+
+-- update subst_id from eGo mv_grid_district
+UPDATE sandbox.ego_pp_osm_deu_power_point_reaosm AS t1
+    SET subst_id = t2.subst_id
+    FROM (
+        SELECT  b.osm_id AS osm_id,
+                a.subst_id AS subst_id
+        FROM    grid.ego_dp_mv_griddistrict_v0_4_3_mview AS a,
+                sandbox.ego_pp_osm_deu_power_point_reaosm AS b
+                
+        WHERE   a.geom && b.geom AND
+                ST_CONTAINS(a.geom,b.geom)
+        ) AS t2
+    WHERE   t1.osm_id = t2.osm_id;
+
+
+
+-- eGoDP Loadarea
+SELECT  version
+FROM    demand.ego_dp_loadarea
+GROUP BY version
+ORDER BY version;
+
+
+-- Filter Loadarea
+DROP MATERIALIZED VIEW IF EXISTS    demand.ego_dp_loadarea_v0_4_3_mview CASCADE;
+CREATE MATERIALIZED VIEW            demand.ego_dp_loadarea_v0_4_3_mview AS
+    SELECT  *
+    FROM    demand.ego_dp_loadarea
+    WHERE   version = 'v0.4.3';
+
+-- index (id)
+CREATE UNIQUE INDEX ego_dp_loadarea_v0_4_3_mview_idx
+    ON demand.ego_dp_loadarea_v0_4_3_mview (id);
+
+-- index GIST (geom)
+CREATE INDEX ego_dp_loadarea_v0_4_3_mview_geom_idx
+    ON      demand.ego_dp_loadarea_v0_4_3_mview
+    USING   GIST (geom);
+
+-- grant (oeuser)
+ALTER TABLE demand.ego_dp_loadarea_v0_4_3_mview OWNER TO oeuser;
+
+-- metadata
+COMMENT ON MATERIALIZED VIEW demand.ego_dp_loadarea_v0_4_3_mview IS '{
+    "comment": "eGoPP - REA OSM - Temporary Table",
+    "version": "v0.1" }' ;
+
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_PP_REAOSM', 'v0.1','input','demand','ego_dp_loadarea','ego_pp_osm_deu_power.sql',' ');
+SELECT scenario_log('eGo_PP_REAOSM', 'v0.1','output','demand','ego_dp_loadarea_v0_4_3_mview','ego_pp_osm_deu_power.sql',' ');
+
+
+-- update subst_id from eGo mv_grid_district
+UPDATE sandbox.ego_pp_osm_deu_power_point_reaosm AS t1
+    SET la_id = t2.la_id
+    FROM (
+        SELECT  b.osm_id AS osm_id,
+                a.id AS la_id
+        FROM    demand.ego_dp_loadarea_v0_4_3_mview AS a,
+                sandbox.ego_pp_osm_deu_power_point_reaosm AS b
+                
+        WHERE   a.geom && b.geom AND
+                ST_CONTAINS(a.geom,b.geom)
+        ) AS t2
+    WHERE   t1.osm_id = t2.osm_id;
+
+
+
+-- eGoDP RES Powerplant
+SELECT  version, scenario
+FROM    supply.ego_dp_res_powerplant
+GROUP BY version, scenario
+ORDER BY version;
+
+
+-- Filter RES Powerplant
+DROP TABLE IF EXISTS    sandbox.ego_dp_res_powerplant_reaosm CASCADE;
+CREATE TABLE            sandbox.ego_dp_res_powerplant_reaosm AS
+    SELECT  *
+    FROM    supply.ego_dp_res_powerplant
+    WHERE   version = 'v0.4.3'
+            AND scenario = 'Status Quo';
+
+-- PK (id)
+ALTER TABLE sandbox.ego_dp_res_powerplant_reaosm ADD PRIMARY KEY (id);
+
+-- index GIST (geom)
+CREATE INDEX ego_dp_res_powerplant_reaosm_geom_idx
+    ON      sandbox.ego_dp_res_powerplant_reaosm
+    USING   GIST (geom);
+
+-- grant (oeuser)
+ALTER TABLE sandbox.ego_dp_res_powerplant_reaosm OWNER TO oeuser;
+
+-- metadata
+COMMENT ON TABLE sandbox.ego_dp_res_powerplant_reaosm IS '{
+    "comment": "eGoPP - REA OSM - Temporary Table",
+    "version": "v0.1" }' ;
+
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_PP_REAOSM', 'v0.1','input','supply','ego_dp_res_powerplant','ego_pp_osm_deu_power.sql',' ');
+SELECT scenario_log('eGo_PP_REAOSM', 'v0.1','output','sandbox','ego_dp_res_powerplant_reaosm','ego_pp_osm_deu_power.sql',' ');
+
+
+
 
 
 -- extract wind from oedb osm
@@ -186,7 +293,7 @@ ALTER TABLE openstreetmap.osm_deu_point_wind_mview OWNER TO oeuser;
 -- metadata
 COMMENT ON MATERIALIZED VIEW openstreetmap.osm_deu_point_wind_mview IS '{
     "comment": "eGoPP - REA OSM - Temporary Table",
-    "version": "v0.4.2" }' ;
+    "version": "v0.1" }' ;
 
 
 -- extract biomass from oedb osm
@@ -211,7 +318,7 @@ ALTER TABLE openstreetmap.osm_deu_point_biogas_mview OWNER TO oeuser;
 -- metadata
 COMMENT ON MATERIALIZED VIEW openstreetmap.osm_deu_point_biogas_mview IS '{
     "comment": "eGoPP - REA OSM - Temporary Table",
-    "version": "v0.4.2" }' ;
+    "version": "v0.1" }' ;
 
 
 -- extract solar from oedb osm
@@ -235,4 +342,4 @@ ALTER TABLE openstreetmap.osm_deu_point_solar_mview OWNER TO oeuser;
 -- metadata
 COMMENT ON MATERIALIZED VIEW openstreetmap.osm_deu_point_solar_mview IS '{
     "comment": "eGoPP - REA OSM - Temporary Table",
-    "version": "v0.4.2" }' ;
+    "version": "v0.1" }' ;
