@@ -65,3 +65,39 @@ INSERT INTO sandbox.ego_pp_osm_deu_power_point_reaosm (osm_id, rea_method, geom)
     FROM    sandbox.ego_pp_osm_deu_power_point_mview
     WHERE   
     ORDER BY osm_id;
+
+-- insert M2
+INSERT INTO sandbox.ego_pp_osm_deu_power_point_reaosm (osm_id, rea_method, geom)
+    SELECT  osm_id,
+            'M1',
+            geom
+    FROM    sandbox.ego_pp_osm_deu_power_point_mview
+    WHERE   
+    ORDER BY osm_id;
+
+-- insert M3
+INSERT INTO sandbox.ego_pp_osm_deu_power_point_reaosm (osm_id, rea_method, geom)
+    SELECT  osm_id,
+            'M1',
+            geom
+    FROM    sandbox.ego_pp_osm_deu_power_point_mview
+    WHERE   
+    ORDER BY osm_id;
+
+-- insert M4
+INSERT INTO sandbox.ego_pp_osm_deu_power_point_reaosm (osm_id, rea_method, geom)
+    SELECT  osm_id,
+            'M1',
+            geom
+    FROM    sandbox.ego_pp_osm_deu_power_point_mview
+    WHERE   
+    ORDER BY osm_id;
+
+-- insert M5
+INSERT INTO sandbox.ego_pp_osm_deu_power_point_reaosm (osm_id, rea_method, geom)
+    SELECT  osm_id,
+            'M1',
+            geom
+    FROM    sandbox.ego_pp_osm_deu_power_point_mview
+    WHERE   
+    ORDER BY osm_id;
