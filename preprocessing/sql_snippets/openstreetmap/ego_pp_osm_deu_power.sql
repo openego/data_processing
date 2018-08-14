@@ -154,3 +154,51 @@ INSERT INTO sandbox.ego_pp_osm_deu_power_point_reaosm (osm_id, rea_method, geom)
     WHERE   
     ORDER BY osm_id;
 */
+
+
+-- extract solar from oedb osm
+DROP MATERIALIZED VIEW IF EXISTS    openstreetmap.osm_deu_point_solar_mview CASCADE;
+CREATE MATERIALIZED VIEW            openstreetmap.osm_deu_point_solar_mview AS 
+    SELECT  osm_id,
+            gid,
+            tags,
+            ST_TRANSFORM(geom, 3035) ::geometry(Point,3035) AS geom
+    FROM    openstreetmap.osm_deu_point
+    WHERE   tags @> '"generator:source"=>"solar"' ::hstore;
+
+-- index GIST (geom)
+CREATE INDEX osm_deu_point_solar_mview_geom_idx
+    ON      openstreetmap.osm_deu_point_solar_mview
+    USING   GIST (geom);
+
+-- grant (oeuser)
+ALTER TABLE openstreetmap.osm_deu_point_solar_mview OWNER TO oeuser;
+
+-- metadata
+COMMENT ON MATERIALIZED VIEW openstreetmap.osm_deu_point_solar_mview IS '{
+    "comment": "eGoPP - REA OSM - Temporary Table",
+    "version": "v0.4.2" }' ;
+
+
+-- extract wind from oedb osm
+DROP MATERIALIZED VIEW IF EXISTS    openstreetmap.osm_deu_point_wind_mview CASCADE;
+CREATE MATERIALIZED VIEW            openstreetmap.osm_deu_point_wind_mview AS 
+    SELECT  osm_id,
+            gid,
+            tags,
+            ST_TRANSFORM(geom, 3035) ::geometry(Point,3035) AS geom
+    FROM    openstreetmap.osm_deu_point
+    WHERE   tags @> '"generator:source"=>"wind"'::hstore;
+
+-- index GIST (geom)
+CREATE INDEX osm_deu_point_wind_mview_geom_idx
+    ON      openstreetmap.osm_deu_point_wind_mview
+    USING   GIST (geom);
+
+-- grant (oeuser)
+ALTER TABLE openstreetmap.osm_deu_point_wind_mview OWNER TO oeuser;
+
+-- metadata
+COMMENT ON MATERIALIZED VIEW openstreetmap.osm_deu_point_wind_mview IS '{
+    "comment": "eGoPP - REA OSM - Temporary Table",
+    "version": "v0.4.2" }' ;
