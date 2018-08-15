@@ -48,6 +48,45 @@ SELECT scenario_log('eGo_REAOSM','v0.1','input','sandbox','ego_pp_osm_deu_power_
 SELECT scenario_log('eGo_REAOSM','v0.1','output','sandbox','ego_pp_osm_deu_power_point_mview','ego_pp_osm_deu_power.sql',' ');
 
 
+-- buffer with 25m for polygons around biomass in new table
+DROP TABLE IF EXISTS	sandbox.ego_pp_osm_deu_power_polygon_buff25_biomass CASCADE;
+CREATE TABLE		sandbox.ego_pp_osm_deu_power_polygon_buff25_biomass(
+	id SERIAL,
+	geom geometry(Point,3035),
+	CONSTRAINT ego_pp_osm_deu_power_polygon_buff25_biomass_pkey PRIMARY KEY (id));
+
+-- insert buffer
+INSERT INTO	sandbox.ego_pp_osm_deu_power_polygon_buff25_biomass(geom)
+	SELECT	ST_CENTROID(
+			(ST_DUMP(ST_MULTI(ST_UNION(
+			ST_BUFFER(geom, 25)
+		)))).geom) ::geometry(Point,3035) AS geom
+	FROM	sandbox.ego_pp_osm_deu_power_polygon
+	WHERE	"generator:source" = 'biogas' OR 
+		"generator:source" = 'biomass' OR
+		"generator:source" = 'biofuel' OR
+		"generator:source" = 'waste';
+
+-- index GIST (geom)
+CREATE INDEX ego_pp_osm_deu_power_polygon_buff25_biomass_geom_idx
+    ON sandbox.ego_pp_osm_deu_power_polygon_buff25_biomass USING GIST (geom);
+    
+-- grant (oeuser)
+ALTER TABLE model_draft.ego_demand_load_collect_buffer100 OWNER TO oeuser;
+
+-- metadata
+COMMENT ON TABLE sandbox.ego_pp_osm_deu_power_polygon_buff25_biomass IS '{
+    "comment": "eGoDP - Temporary table", 
+    "version": "v0.4.2",
+    "published": "none" }';
+
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_REAOSM','v0.1','input','sandbox','ego_pp_osm_deu_power_polygon','ego_pp_osm_deu_power.sql',' ');
+SELECT scenario_log('eGo_REAOSM','v0.1','output','sandbox','ego_pp_osm_deu_power_polygon_buff25_biomass','ego_pp_osm_deu_power.sql',' ');
+
+
+
+
 -- Allocate to REA methods
 -- CREATE Placeholder table
 DROP TABLE IF EXISTS    sandbox.ego_pp_osm_deu_power_point_reaosm CASCADE;
@@ -85,6 +124,14 @@ INSERT INTO sandbox.ego_pp_osm_deu_power_point_reaosm (osm_id, rea_method, geom)
     FROM    sandbox.ego_pp_osm_deu_power_point_mview
     WHERE   generator_source = 'biogas' OR generator_source = 'biomass'
     ORDER BY osm_id;
+
+-- insert M1*
+INSERT INTO sandbox.ego_pp_osm_deu_power_point_reaosm (osm_id, rea_method, geom)
+    SELECT  id,
+            'M1',
+            geom
+    FROM    sandbox.ego_pp_osm_deu_power_polygon_buff25_biomass
+    ORDER BY id;
 
 -- insert M2
 INSERT INTO sandbox.ego_pp_osm_deu_power_point_reaosm (osm_id, rea_method, geom)
