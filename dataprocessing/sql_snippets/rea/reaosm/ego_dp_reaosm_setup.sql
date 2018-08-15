@@ -1,4 +1,4 @@
-﻿/*
+/*
 OpenStreetMap power extracts
 
 __copyright__   = "Reiner Lemoine Institut"
