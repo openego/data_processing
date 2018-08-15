@@ -136,7 +136,7 @@ BEGIN
                     id,
                     subst_id,
                     geom
-            FROM    sandbox.ego_osm_sector_per_griddistrict_4_agricultural_mview
+            FROM    sandbox.ego_osm_sector_per_griddistrict_4_agricultural
             WHERE   subst_id =' || gd || ';
 
         INSERT INTO sandbox.ego_reaosm_m1_1_jnt_temp
