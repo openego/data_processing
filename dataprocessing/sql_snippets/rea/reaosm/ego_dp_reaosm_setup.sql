@@ -315,34 +315,47 @@ SELECT scenario_log('eGo_REAOSM','v0.1','output','sandbox','ego_dp_res_powerplan
 
 
 -- eGoDP OSM Farmyards
-DROP MATERIALIZED VIEW IF EXISTS    sandbox.ego_osm_sector_per_griddistrict_4_agricultural_mview CASCADE;
-CREATE MATERIALIZED VIEW            sandbox.ego_osm_sector_per_griddistrict_4_agricultural_mview AS
+DROP TABLE IF EXISTS    sandbox.ego_osm_sector_per_griddistrict_4_agricultural CASCADE;
+CREATE TABLE            sandbox.ego_osm_sector_per_griddistrict_4_agricultural AS
     SELECT  id,
             subst_id,
             area_ha,
             ST_CENTROID(geom) ::geometry(Point,3035) AS geom
     FROM    model_draft.ego_osm_sector_per_griddistrict_4_agricultural;
 
--- index (id)
-CREATE UNIQUE INDEX ego_osm_sector_per_griddistrict_4_agricultural_mview_idx
-    ON sandbox.ego_osm_sector_per_griddistrict_4_agricultural_mview (id);
+-- PK (id)
+ALTER TABLE sandbox.ego_osm_sector_per_griddistrict_4_agricultural ADD PRIMARY KEY (id);
 
 -- index GIST (geom)
-CREATE INDEX ego_osm_sector_per_griddistrict_4_agricultural_mview_geom_idx
-    ON      sandbox.ego_osm_sector_per_griddistrict_4_agricultural_mview
+CREATE INDEX ego_osm_sector_per_griddistrict_4_agricultural_geom_idx
+    ON      sandbox.ego_osm_sector_per_griddistrict_4_agricultural
     USING   GIST (geom);
 
 -- grant (oeuser)
-ALTER TABLE sandbox.ego_osm_sector_per_griddistrict_4_agricultural_mview OWNER TO oeuser;
+ALTER TABLE sandbox.ego_osm_sector_per_griddistrict_4_agricultural OWNER TO oeuser;
 
 -- metadata
-COMMENT ON MATERIALIZED VIEW sandbox.ego_osm_sector_per_griddistrict_4_agricultural_mview IS '{
+COMMENT ON TABLE sandbox.ego_osm_sector_per_griddistrict_4_agricultural IS '{
     "comment": "eGo - REAOSM - Temporary Table",
     "version": "v0.1" }' ;
 
+-- update subst_id from eGo mv_grid_district
+UPDATE sandbox.ego_osm_sector_per_griddistrict_4_agricultural AS t1
+    SET subst_id = t2.subst_id
+    FROM (
+        SELECT  b.id AS id,
+                a.subst_id AS subst_id
+        FROM    grid.ego_dp_mv_griddistrict_v0_4_3_mview AS a,
+                sandbox.ego_osm_sector_per_griddistrict_4_agricultural AS b
+                
+        WHERE   a.geom && b.geom AND
+                ST_CONTAINS(a.geom,b.geom)
+        ) AS t2
+    WHERE   t1.id = t2.id;
+
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
 SELECT scenario_log('eGo_REAOSM','v0.1','input','model_draft','ego_osm_sector_per_griddistrict_4_agricultural','ego_pp_osm_deu_power.sql',' ');
-SELECT scenario_log('eGo_REAOSM','v0.1','output','sandbox','ego_osm_sector_per_griddistrict_4_agricultural_mview','ego_pp_osm_deu_power.sql',' ');
+SELECT scenario_log('eGo_REAOSM','v0.1','output','sandbox','ego_osm_sector_per_griddistrict_4_agricultural','ego_pp_osm_deu_power.sql',' ');
 
 
 
