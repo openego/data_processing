@@ -65,8 +65,8 @@ COMMENT ON MATERIALIZED VIEW sandbox.ego_pp_osm_deu_power_point_mview IS '{
     "version": "v0.1" }' ;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_PP_REAOSM', 'v0.1','input','sandbox','ego_pp_osm_deu_power_point','ego_pp_osm_deu_power.sql',' ');
-SELECT scenario_log('eGo_PP_REAOSM', 'v0.1','output','sandbox','ego_pp_osm_deu_power_point_mview','ego_pp_osm_deu_power.sql',' ');
+SELECT scenario_log('eGo_REAOSM','v0.1','input','sandbox','ego_pp_osm_deu_power_point','ego_pp_osm_deu_power.sql',' ');
+SELECT scenario_log('eGo_REAOSM','v0.1','output','sandbox','ego_pp_osm_deu_power_point_mview','ego_pp_osm_deu_power.sql',' ');
 
 
 -- Allocate to REA methods
@@ -95,7 +95,7 @@ COMMENT ON TABLE sandbox.ego_pp_osm_deu_power_point_reaosm IS '{
     "version": "v0.1" }' ;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_PP_REAOSM', 'v0.1','setup','sandbox','ego_pp_osm_deu_power_point_reaosm','ego_pp_osm_deu_power.sql',' ');
+SELECT scenario_log('eGo_REAOSM','v0.1','setup','sandbox','ego_pp_osm_deu_power_point_reaosm','ego_pp_osm_deu_power.sql',' ');
 
 
 -- insert M1
@@ -126,7 +126,7 @@ INSERT INTO sandbox.ego_pp_osm_deu_power_point_reaosm (osm_id, rea_method, geom)
     ORDER BY osm_id;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_PP_REAOSM', 'v0.1','output','sandbox','ego_pp_osm_deu_power_point_reaosm','ego_pp_osm_deu_power.sql',' ');
+SELECT scenario_log('eGo_REAOSM','v0.1','output','sandbox','ego_pp_osm_deu_power_point_reaosm','ego_pp_osm_deu_power.sql',' ');
 
 
 -- eGo Grid District
@@ -161,8 +161,8 @@ COMMENT ON MATERIALIZED VIEW grid.ego_dp_mv_griddistrict_v0_4_3_mview IS '{
     "version": "v0.1" }' ;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_PP_REAOSM', 'v0.1','input','grid','ego_dp_mv_griddistrict','ego_pp_osm_deu_power.sql',' ');
-SELECT scenario_log('eGo_PP_REAOSM', 'v0.1','output','grid','ego_dp_mv_griddistrict_v0_4_3_mview','ego_pp_osm_deu_power.sql',' ');
+SELECT scenario_log('eGo_REAOSM','v0.1','input','grid','ego_dp_mv_griddistrict','ego_pp_osm_deu_power.sql',' ');
+SELECT scenario_log('eGo_REAOSM','v0.1','output','grid','ego_dp_mv_griddistrict_v0_4_3_mview','ego_pp_osm_deu_power.sql',' ');
 
 
 -- update subst_id from eGo mv_grid_district
@@ -213,8 +213,8 @@ COMMENT ON MATERIALIZED VIEW demand.ego_dp_loadarea_v0_4_3_mview IS '{
     "version": "v0.1" }' ;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_PP_REAOSM', 'v0.1','input','demand','ego_dp_loadarea','ego_pp_osm_deu_power.sql',' ');
-SELECT scenario_log('eGo_PP_REAOSM', 'v0.1','output','demand','ego_dp_loadarea_v0_4_3_mview','ego_pp_osm_deu_power.sql',' ');
+SELECT scenario_log('eGo_REAOSM','v0.1','input','demand','ego_dp_loadarea','ego_pp_osm_deu_power.sql',' ');
+SELECT scenario_log('eGo_REAOSM','v0.1','output','demand','ego_dp_loadarea_v0_4_3_mview','ego_pp_osm_deu_power.sql',' ');
 
 
 -- update subst_id from eGo mv_grid_district
@@ -225,7 +225,6 @@ UPDATE sandbox.ego_pp_osm_deu_power_point_reaosm AS t1
                 a.id AS la_id
         FROM    demand.ego_dp_loadarea_v0_4_3_mview AS a,
                 sandbox.ego_pp_osm_deu_power_point_reaosm AS b
-                
         WHERE   a.geom && b.geom AND
                 ST_CONTAINS(a.geom,b.geom)
         ) AS t2
@@ -251,10 +250,30 @@ CREATE TABLE            sandbox.ego_dp_res_powerplant_reaosm AS
 -- PK (id)
 ALTER TABLE sandbox.ego_dp_res_powerplant_reaosm ADD PRIMARY KEY (id);
 
+ALTER TABLE sandbox.ego_dp_res_powerplant_reaosm
+    DROP COLUMN IF EXISTS   reaosm_sort CASCADE,
+    ADD COLUMN              reaosm_sort integer,
+    DROP COLUMN IF EXISTS   reaosm_flag CASCADE,
+    ADD COLUMN              reaosm_flag character varying,
+    DROP COLUMN IF EXISTS   reaosm_geom_line CASCADE,
+    ADD COLUMN              reaosm_geom_line geometry(LineString,3035),
+    DROP COLUMN IF EXISTS   reaosm_geom_new CASCADE,
+    ADD COLUMN              reaosm_geom_new geometry(Point,3035);
+
 -- index GIST (geom)
 CREATE INDEX ego_dp_res_powerplant_reaosm_geom_idx
     ON      sandbox.ego_dp_res_powerplant_reaosm
     USING   GIST (geom);
+
+-- index GIST (rea_geom_new)
+CREATE INDEX ego_dp_res_powerplant_reaosm_rea_geom_new_idx
+    ON      sandbox.ego_dp_res_powerplant_reaosm
+    USING   GIST (rea_geom_new);
+
+-- index GIST (reaosm_geom_new)
+CREATE INDEX ego_dp_res_powerplant_reaosm_reaosm_geom_new_idx
+    ON      sandbox.ego_dp_res_powerplant_reaosm
+    USING   GIST (reaosm_geom_new);
 
 -- grant (oeuser)
 ALTER TABLE sandbox.ego_dp_res_powerplant_reaosm OWNER TO oeuser;
@@ -264,9 +283,11 @@ COMMENT ON TABLE sandbox.ego_dp_res_powerplant_reaosm IS '{
     "comment": "eGoPP - REA OSM - Temporary Table",
     "version": "v0.1" }' ;
 
+
+
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_PP_REAOSM', 'v0.1','input','supply','ego_dp_res_powerplant','ego_pp_osm_deu_power.sql',' ');
-SELECT scenario_log('eGo_PP_REAOSM', 'v0.1','output','sandbox','ego_dp_res_powerplant_reaosm','ego_pp_osm_deu_power.sql',' ');
+SELECT scenario_log('eGo_REAOSM','v0.1','input','supply','ego_dp_res_powerplant','ego_pp_osm_deu_power.sql',' ');
+SELECT scenario_log('eGo_REAOSM','v0.1','output','sandbox','ego_dp_res_powerplant_reaosm','ego_pp_osm_deu_power.sql',' ');
 
 
 
