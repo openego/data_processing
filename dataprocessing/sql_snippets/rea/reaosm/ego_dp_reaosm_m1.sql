@@ -134,8 +134,8 @@ BEGIN
                             + row_number() over (ORDER BY area_ha DESC) AS reaosm_sort,
                     id,
                     subst_id,
-                    ST_CENTROID(geom) ::geometry(Point,3035)
-            FROM    model_draft.ego_osm_sector_per_griddistrict_4_agricultural
+                    geom
+            FROM    sandbox.ego_osm_sector_per_griddistrict_4_agricultural_mview
             WHERE   subst_id =' || gd || ';
 
         INSERT INTO sandbox.ego_reaosm_m1_1_jnt_temp

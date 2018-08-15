@@ -283,11 +283,40 @@ COMMENT ON TABLE sandbox.ego_dp_res_powerplant_reaosm IS '{
     "comment": "eGoPP - REA OSM - Temporary Table",
     "version": "v0.1" }' ;
 
-
-
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
 SELECT scenario_log('eGo_REAOSM','v0.1','input','supply','ego_dp_res_powerplant','ego_pp_osm_deu_power.sql',' ');
 SELECT scenario_log('eGo_REAOSM','v0.1','output','sandbox','ego_dp_res_powerplant_reaosm','ego_pp_osm_deu_power.sql',' ');
+
+
+-- eGoDP OSM Farmyards
+DROP MATERIALIZED VIEW IF EXISTS    sandbox.ego_osm_sector_per_griddistrict_4_agricultural_mview CASCADE;
+CREATE MATERIALIZED VIEW            sandbox.ego_osm_sector_per_griddistrict_4_agricultural_mview AS
+    SELECT  id,
+            subst_id,
+            area_ha,
+            ST_CENTROID(geom) ::geometry(Point,3035) AS geom
+    FROM    model_draft.ego_osm_sector_per_griddistrict_4_agricultural;
+
+-- index (id)
+CREATE UNIQUE INDEX ego_osm_sector_per_griddistrict_4_agricultural_mview_idx
+    ON sandbox.ego_osm_sector_per_griddistrict_4_agricultural_mview (id);
+
+-- index GIST (geom)
+CREATE INDEX ego_osm_sector_per_griddistrict_4_agricultural_mview_geom_idx
+    ON      sandbox.ego_osm_sector_per_griddistrict_4_agricultural_mview
+    USING   GIST (geom);
+
+-- grant (oeuser)
+ALTER TABLE sandbox.ego_osm_sector_per_griddistrict_4_agricultural_mview OWNER TO oeuser;
+
+-- metadata
+COMMENT ON MATERIALIZED VIEW sandbox.ego_osm_sector_per_griddistrict_4_agricultural_mview IS '{
+    "comment": "eGoPP - REA OSM - Temporary Table",
+    "version": "v0.1" }' ;
+
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_REAOSM','v0.1','input','model_draft','ego_osm_sector_per_griddistrict_4_agricultural','ego_pp_osm_deu_power.sql',' ');
+SELECT scenario_log('eGo_REAOSM','v0.1','output','sandbox','ego_osm_sector_per_griddistrict_4_agricultural_mview','ego_pp_osm_deu_power.sql',' ');
 
 
 
