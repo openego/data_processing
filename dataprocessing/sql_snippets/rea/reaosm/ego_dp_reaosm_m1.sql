@@ -113,19 +113,30 @@ BEGIN
     LOOP
         EXECUTE '
         INSERT INTO sandbox.ego_reaosm_m1_1_dea_temp
-            SELECT  row_number() over (ORDER BY electrical_capacity DESC)as reaosm_sort,
+            SELECT  row_number() over (ORDER BY electrical_capacity DESC) AS reaosm_sort,
                     *
             FROM    sandbox.ego_reaosm_m1_1_a_mview
             WHERE   subst_id =' || gd || ';
 
         INSERT INTO sandbox.ego_reaosm_m1_1_osm_temp
-            SELECT  row_number() over (ORDER BY osm_id DESC)as reaosm_sort,
+            SELECT  row_number() over (ORDER BY osm_id DESC) AS reaosm_sort,
                     osm_id,
                     subst_id,
                     geom
             FROM    sandbox.ego_pp_osm_deu_power_point_reaosm
             WHERE   rea_method = ''M1''
                     AND subst_id =' || gd || ';
+
+        INSERT INTO sandbox.ego_reaosm_m1_1_osm_temp
+            SELECT  COALESCE((
+                        SELECT  MAX(reaosm_sort) 
+                        FROM    sandbox.ego_reaosm_m1_1_osm_temp), ''0'') 
+                            + row_number() over (ORDER BY area_ha DESC) AS reaosm_sort,
+                    id,
+                    subst_id,
+                    ST_CENTROID(geom) ::geometry(Point,3035)
+            FROM    model_draft.ego_osm_sector_per_griddistrict_4_agricultural
+            WHERE   subst_id =' || gd || ';
 
         INSERT INTO sandbox.ego_reaosm_m1_1_jnt_temp
             SELECT  dea.reaosm_sort,
@@ -179,33 +190,34 @@ ALTER TABLE sandbox.ego_reaosm_m1_1_mview OWNER TO oeuser;
 
 
 -- M1-1 rest
-DROP MATERIALIZED VIEW IF EXISTS 	model_draft.ego_supply_rea_m1_1_rest_mview CASCADE;
-CREATE MATERIALIZED VIEW 		model_draft.ego_supply_rea_m1_1_rest_mview AS
-	SELECT 	id,
-		electrical_capacity,
-		generation_type,
-		generation_subtype,
-		voltage_level,
-		subst_id,
-		geom,
-		rea_flag
-	FROM	sandbox.ego_dp_res_powerplant_reaosm AS dea
-	WHERE	dea.rea_flag = 'M1-1_rest';
+DROP MATERIALIZED VIEW IF EXISTS    sandbox.ego_reaosm_m1_1_rest_mview CASCADE;
+CREATE MATERIALIZED VIEW            sandbox.ego_reaosm_m1_1_rest_mview AS
+    SELECT  id,
+            electrical_capacity,
+            generation_type,
+            generation_subtype,
+            voltage_level,
+            subst_id,
+            geom,
+            rea_flag
+    FROM    sandbox.ego_dp_res_powerplant_reaosm AS dea
+    WHERE   dea.rea_flag = 'M1-1_rest';
 
 -- create index GIST (geom)
-CREATE INDEX ego_supply_rea_m1_1_rest_mview_geom_idx
-	ON model_draft.ego_supply_rea_m1_1_rest_mview USING gist (geom);
+CREATE INDEX ego_reaosm_m1_1_rest_mview_geom_idx
+    ON sandbox.ego_reaosm_m1_1_rest_mview USING gist (geom);
 
 -- grant (oeuser)
-ALTER TABLE model_draft.ego_supply_rea_m1_1_rest_mview OWNER TO oeuser;
+ALTER TABLE sandbox.ego_reaosm_m1_1_rest_mview OWNER TO oeuser;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_REAOSM','v0.1','output','model_draft','ego_supply_rea_m1_1_rest_mview','ego_dp_reaosm_m1.sql',' ');
+--SELECT scenario_log('eGo_REAOSM','v0.1','output','sandbox','ego_reaosm_m1_1_rest_mview','ego_dp_reaosm_m1.sql',' ');
+
 
 -- Drop temp
-DROP TABLE IF EXISTS 	sandbox.ego_reaosm_m1_1_dea_temp CASCADE;
-DROP TABLE IF EXISTS 	sandbox.ego_reaosm_m1_1_osm_temp CASCADE;
-DROP TABLE IF EXISTS 	sandbox.ego_reaosm_m1_1_jnt_temp CASCADE;
+DROP TABLE IF EXISTS    sandbox.ego_reaosm_m1_1_dea_temp CASCADE;
+DROP TABLE IF EXISTS    sandbox.ego_reaosm_m1_1_osm_temp CASCADE;
+DROP TABLE IF EXISTS    sandbox.ego_reaosm_m1_1_jnt_temp CASCADE;
 
 
 /* 2. M1-2
