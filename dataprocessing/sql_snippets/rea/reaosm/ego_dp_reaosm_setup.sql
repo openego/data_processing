@@ -9,31 +9,10 @@ __author__      = "Christian-rli; Ludee"
 
 
 -- Imported from GeoJSON with QGIS 
--- metadata (Invalid, please correct!)
+-- metadata
 COMMENT ON TABLE sandbox.ego_pp_osm_deu_power_point IS '{
-    "title": "Openstreetmap generator=source",
-    "description": "extracted from Openstreetmap via overpass-turbo",
-    "language": [ "en" ],
-    "spatial": 
-        {"location": "germany",
-        "extent": "europe",
-        },
-    "temporal": 
-        {"reference_date": "2018-08-13",
-        },
-    "sources": [
-        {"name": "OpenStreetMap", "description": "A collaborative project to create a free editable map of the world", "url": "https://www.openstreetmap.org/", "license": "ODbL-1.0", "copyright": "© OpenStreetMap contributors"} ],
-    "license": 
-        {"id": "ODbL-1.0",
-        "name": "Open Data Commons Open Database License 1.0",
-        "version": "1.0",
-        "url": "https://opendatacommons.org/licenses/odbl/1.0/",
-        "instruction": "You are free: To Share, To Create, To Adapt; As long as you: Attribute, Share-Alike, Keep open!",
-        "copyright": "© Reiner Lemoine Institut"},
-    "contributors": [
-        {"name": "OpenStreetMap Contributors", date": "2018-08-13"},
-],
-    "metadata_version": "1.3"}';
+    "comment": "eGo - REAOSM - Temporary Table",
+    "version": "v0.1" }' ;
 
 
 -- Filter OSM powerplants
@@ -61,7 +40,7 @@ ALTER TABLE sandbox.ego_pp_osm_deu_power_point_mview OWNER TO oeuser;
 
 -- metadata
 COMMENT ON MATERIALIZED VIEW sandbox.ego_pp_osm_deu_power_point_mview IS '{
-    "comment": "eGoPP - REA OSM - Temporary Table",
+    "comment": "eGo - REAOSM - Temporary Table",
     "version": "v0.1" }' ;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
@@ -91,7 +70,7 @@ ALTER TABLE sandbox.ego_pp_osm_deu_power_point_reaosm OWNER TO oeuser;
 
 -- metadata
 COMMENT ON TABLE sandbox.ego_pp_osm_deu_power_point_reaosm IS '{
-    "comment": "eGoPP - REA OSM - Temporary Table",
+    "comment": "eGo - REAOSM - Temporary Table",
     "version": "v0.1" }' ;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
@@ -157,7 +136,7 @@ ALTER TABLE grid.ego_dp_mv_griddistrict_v0_4_3_mview OWNER TO oeuser;
 
 -- metadata
 COMMENT ON MATERIALIZED VIEW grid.ego_dp_mv_griddistrict_v0_4_3_mview IS '{
-    "comment": "eGoPP - REA OSM - Temporary Table",
+    "comment": "eGo - REAOSM - Temporary Table",
     "version": "v0.1" }' ;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
@@ -209,7 +188,7 @@ ALTER TABLE demand.ego_dp_loadarea_v0_4_3_mview OWNER TO oeuser;
 
 -- metadata
 COMMENT ON MATERIALIZED VIEW demand.ego_dp_loadarea_v0_4_3_mview IS '{
-    "comment": "eGoPP - REA OSM - Temporary Table",
+    "comment": "eGo - REAOSM - Temporary Table",
     "version": "v0.1" }' ;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
@@ -280,7 +259,7 @@ ALTER TABLE sandbox.ego_dp_res_powerplant_reaosm OWNER TO oeuser;
 
 -- metadata
 COMMENT ON TABLE sandbox.ego_dp_res_powerplant_reaosm IS '{
-    "comment": "eGoPP - REA OSM - Temporary Table",
+    "comment": "eGo - REAOSM - Temporary Table",
     "version": "v0.1" }' ;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
@@ -311,7 +290,7 @@ ALTER TABLE sandbox.ego_osm_sector_per_griddistrict_4_agricultural_mview OWNER T
 
 -- metadata
 COMMENT ON MATERIALIZED VIEW sandbox.ego_osm_sector_per_griddistrict_4_agricultural_mview IS '{
-    "comment": "eGoPP - REA OSM - Temporary Table",
+    "comment": "eGo - REAOSM - Temporary Table",
     "version": "v0.1" }' ;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
@@ -342,7 +321,7 @@ ALTER TABLE openstreetmap.osm_deu_point_wind_mview OWNER TO oeuser;
 
 -- metadata
 COMMENT ON MATERIALIZED VIEW openstreetmap.osm_deu_point_wind_mview IS '{
-    "comment": "eGoPP - REA OSM - Temporary Table",
+    "comment": "eGo - REAOSM - Temporary Table",
     "version": "v0.1" }' ;
 
 
@@ -367,7 +346,7 @@ ALTER TABLE openstreetmap.osm_deu_point_biogas_mview OWNER TO oeuser;
 
 -- metadata
 COMMENT ON MATERIALIZED VIEW openstreetmap.osm_deu_point_biogas_mview IS '{
-    "comment": "eGoPP - REA OSM - Temporary Table",
+    "comment": "eGo - REAOSM - Temporary Table",
     "version": "v0.1" }' ;
 
 
@@ -391,5 +370,5 @@ ALTER TABLE openstreetmap.osm_deu_point_solar_mview OWNER TO oeuser;
 
 -- metadata
 COMMENT ON MATERIALIZED VIEW openstreetmap.osm_deu_point_solar_mview IS '{
-    "comment": "eGoPP - REA OSM - Temporary Table",
+    "comment": "eGo - REAOSM - Temporary Table",
     "version": "v0.1" }' ;

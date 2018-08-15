@@ -9,11 +9,6 @@ __url__         = "https://github.com/openego/data_processing/blob/master/LICENS
 __author__      = "Ludee, Christian-rli"
 */
 
--- check
-SELECT  generation_type, generation_subtype, count(*)
-FROM    sandbox.ego_reaosm_m1_1_a_mview
-GROUP BY generation_type, generation_subtype
-ORDER BY generation_type, generation_subtype;
 
 -- MView M1-1
 DROP MATERIALIZED VIEW IF EXISTS    sandbox.ego_reaosm_m1_1_a_mview CASCADE;
@@ -42,6 +37,12 @@ ALTER TABLE sandbox.ego_reaosm_m1_1_a_mview OWNER TO oeuser;
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
 SELECT scenario_log('eGo_PP_REAOSM','v0.1','input','sandbox','ego_dp_res_powerplant_reaosm','ego_dp_reaosm_m1.sql',' ');
 SELECT scenario_log('eGo_REAOSM','v0.1','temp','sandbox','ego_reaosm_m1_1_a_mview','ego_dp_reaosm_m1.sql',' ');
+
+-- check
+SELECT  generation_type, generation_subtype, count(*)
+FROM    sandbox.ego_reaosm_m1_1_a_mview
+GROUP BY generation_type, generation_subtype
+ORDER BY generation_type, generation_subtype;
 
 
 -- reaosm_flag M1-1
@@ -224,7 +225,7 @@ DROP TABLE IF EXISTS    sandbox.ego_reaosm_m1_1_jnt_temp CASCADE;
 Move "solar roof mounted" with "4" to OSM agricultural areas.
 The rest could not be allocated, consider in M4.
 */
-
+/*
 -- MView M1-2
 DROP MATERIALIZED VIEW IF EXISTS 	model_draft.ego_supply_rea_m1_2_a_mview CASCADE;
 CREATE MATERIALIZED VIEW 		model_draft.ego_supply_rea_m1_2_a_mview AS
@@ -427,3 +428,4 @@ DROP TABLE IF EXISTS 	model_draft.ego_supply_rea_m1_2_jnt_temp CASCADE;
 
 --DROP MATERIALIZED VIEW IF EXISTS 	model_draft.ego_reaosm_m1_1_a_mview CASCADE;
 DROP MATERIALIZED VIEW IF EXISTS 	model_draft.ego_supply_rea_m1_2_a_mview CASCADE;
+*/
