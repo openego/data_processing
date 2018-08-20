@@ -11,11 +11,8 @@ __author__ 	= "IlkaCu"
 */
 
 -- Set column otg_id to NULL 
-ALTER TABLE model_draft.ego_dp_supply_res_powerplant
-	DROP COLUMN otg_id; 
-	
-ALTER TABLE model_draft.ego_dp_supply_res_powerplant
-	ADD COLUMN otg_id; 
+UPDATE model_draft.ego_dp_supply_res_powerplant
+	SET otg_id = NULL; 
 
 -- Insert otg_id of bus for res pp 
 UPDATE model_draft.ego_dp_supply_res_powerplant a
@@ -30,11 +27,8 @@ UPDATE model_draft.ego_dp_supply_res_powerplant a
 
 
 -- Set column otg_id to NULL 
-ALTER TABLE model_draft.ego_dp_supply_conv_powerplant
-	DROP COLUMN otg_id; 
-	
-ALTER TABLE model_draft.ego_dp_supply_conv_powerplant
-	ADD COLUMN otg_id;
+UPDATE model_draft.ego_dp_supply_conv_powerplant
+	SET otg_id = NULL; 
 	
 -- Insert otg_id of bus for conv pp
 UPDATE model_draft.ego_dp_supply_conv_powerplant a
