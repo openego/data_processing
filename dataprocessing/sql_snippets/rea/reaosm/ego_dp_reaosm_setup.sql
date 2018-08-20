@@ -55,7 +55,7 @@ CREATE TABLE		sandbox.ego_pp_osm_deu_power_polygon_buff25_biomass(
 	geom geometry(Point,3035),
 	CONSTRAINT ego_pp_osm_deu_power_polygon_buff25_biomass_pkey PRIMARY KEY (id));
 
--- insert buffer
+-- insert buffer and create centroid
 INSERT INTO	sandbox.ego_pp_osm_deu_power_polygon_buff25_biomass(geom)
 	SELECT	ST_CENTROID(
 			(ST_DUMP(ST_MULTI(ST_UNION(
@@ -148,7 +148,7 @@ INSERT INTO sandbox.ego_pp_osm_deu_power_point_reaosm (osm_id, rea_method, geom)
             'M5',
             geom
     FROM    sandbox.ego_pp_osm_deu_power_point_mview
-    WHERE   generator_source = 'solar'
+    WHERE   generator_source = 'solar' OR generator_source = 'photovoltaic'
     ORDER BY osm_id;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
