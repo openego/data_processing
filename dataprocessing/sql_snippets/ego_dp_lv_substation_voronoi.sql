@@ -10,8 +10,8 @@ __author__      = "Ludee, jong42"
 
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.4','input','model_draft','ego_grid_mvlv_substation','ego_dp_lv_substation_voronoi.sql',' ');
-SELECT scenario_log('eGo_DP', 'v0.4.4','input','model_draft','ego_grid_hvmv_substation_dummy','ego_dp_lv_substation_voronoi.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.5','input','model_draft','ego_grid_mvlv_substation','ego_dp_lv_substation_voronoi.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.5','input','model_draft','ego_grid_hvmv_substation_dummy','ego_dp_lv_substation_voronoi.sql',' ');
 
 -- add Dummy points to substations (18 Points)
 ALTER TABLE model_draft.ego_grid_mvlv_substation
@@ -45,7 +45,7 @@ ALTER TABLE model_draft.ego_grid_mvlv_substation_voronoi OWNER TO oeuser;
 -- metadata
 COMMENT ON TABLE model_draft.ego_grid_mvlv_substation_voronoi IS '{
     "comment": "eGoDP - Temporary table",
-    "version": "v0.4.4" }';
+    "version": "v0.4.5" }';
 
 -- loop over MV Griddistrict
 DO
@@ -123,4 +123,4 @@ $$;
 DELETE FROM model_draft.ego_grid_mvlv_substation WHERE is_dummy = TRUE;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.4','temp','model_draft','ego_grid_mvlv_substation_voronoi','ego_dp_lv_substation_voronoi.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.5','temp','model_draft','ego_grid_mvlv_substation_voronoi','ego_dp_lv_substation_voronoi.sql',' ');

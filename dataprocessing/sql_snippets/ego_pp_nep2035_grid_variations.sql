@@ -1459,7 +1459,7 @@ AND bus_id NOT IN (SELECT bus0 FROM model_draft.ego_grid_pf_hv_extension_link WH
 AND bus_id NOT IN (SELECT bus0 FROM model_draft.ego_grid_pf_hv_extension_transformer WHERE scn_name = a.scn_name) AND bus_id NOT IN (SELECT bus1 FROM model_draft.ego_grid_pf_hv_extension_transformer WHERE scn_name = a.scn_name);
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.4','output','model_draft','ego_grid_pf_hv_extension_bus','ego_pp_nep2035_grid_variations.sql',' ');
-SELECT scenario_log('eGo_DP', 'v0.4.4','output','model_draft','ego_grid_pf_hv_extension_line','ego_pp_nep2035_grid_variations.sql',' ');
-SELECT scenario_log('eGo_DP', 'v0.4.4','output','model_draft','ego_grid_pf_hv_extension_link','ego_pp_nep2035_grid_variations.sql',' ');
-SELECT scenario_log('eGo_DP', 'v0.4.4','output','model_draft','ego_grid_pf_hv_extension_transformer','ego_pp_nep2035_grid_variations.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.5','output','model_draft','ego_grid_pf_hv_extension_bus','ego_pp_nep2035_grid_variations.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.5','output','model_draft','ego_grid_pf_hv_extension_line','ego_pp_nep2035_grid_variations.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.5','output','model_draft','ego_grid_pf_hv_extension_link','ego_pp_nep2035_grid_variations.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.5','output','model_draft','ego_grid_pf_hv_extension_transformer','ego_pp_nep2035_grid_variations.sql',' ');
