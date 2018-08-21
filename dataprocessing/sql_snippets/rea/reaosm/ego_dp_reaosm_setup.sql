@@ -4,7 +4,7 @@ OpenStreetMap power extracts
 __copyright__   = "Reiner Lemoine Institut"
 __license__     = "GNU Affero General Public License Version 3 (AGPL-3.0)"
 __url__         = "https://github.com/openego/data_processing/blob/master/LICENSE"
-__author__      = "Christian-rli; Ludee"
+__author__      = "christian-rli; Ludee"
 */
 
 
@@ -136,7 +136,7 @@ INSERT INTO sandbox.ego_pp_osm_deu_power_point_reaosm (osm_id, rea_method, geom)
 -- insert M2
 INSERT INTO sandbox.ego_pp_osm_deu_power_point_reaosm (osm_id, rea_method, geom)
     SELECT  osm_id,
-            'M2',
+            'M3',
             geom
     FROM    sandbox.ego_pp_osm_deu_power_point_mview
     WHERE   generator_source = 'wind'
