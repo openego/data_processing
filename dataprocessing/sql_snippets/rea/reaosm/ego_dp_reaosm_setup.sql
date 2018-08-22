@@ -77,7 +77,7 @@ ALTER TABLE model_draft.ego_demand_load_collect_buffer100 OWNER TO oeuser;
 -- metadata
 COMMENT ON TABLE sandbox.ego_pp_osm_deu_power_polygon_buff25_biomass IS '{
     "comment": "eGoDP - Temporary table", 
-    "version": "v0.4.2",
+    "version": "v0.4.5",
     "published": "none" }';
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
@@ -163,32 +163,32 @@ ORDER BY version;
 
 
 -- eGoDP Grid District
-DROP MATERIALIZED VIEW IF EXISTS    grid.ego_dp_mv_griddistrict_v0_4_3_mview CASCADE;
-CREATE MATERIALIZED VIEW            grid.ego_dp_mv_griddistrict_v0_4_3_mview AS
+DROP MATERIALIZED VIEW IF EXISTS    grid.ego_dp_mv_griddistrict_v0_4_5_mview CASCADE;
+CREATE MATERIALIZED VIEW            grid.ego_dp_mv_griddistrict_v0_4_5_mview AS
     SELECT  *
     FROM    grid.ego_dp_mv_griddistrict
-    WHERE   version = 'v0.4.3';
+    WHERE   version = 'v0.4.5';
 
 -- index (id)
-CREATE UNIQUE INDEX ego_dp_mv_griddistrict_v0_4_3_mview_idx
-    ON grid.ego_dp_mv_griddistrict_v0_4_3_mview (subst_id);
+CREATE UNIQUE INDEX ego_dp_mv_griddistrict_v0_4_5_mview_idx
+    ON grid.ego_dp_mv_griddistrict_v0_4_5_mview (subst_id);
 
 -- index GIST (geom)
-CREATE INDEX ego_dp_mv_griddistrict_v0_4_3_mview_geom_idx
-    ON      grid.ego_dp_mv_griddistrict_v0_4_3_mview
+CREATE INDEX ego_dp_mv_griddistrict_v0_4_5_mview_geom_idx
+    ON      grid.ego_dp_mv_griddistrict_v0_4_5_mview
     USING   GIST (geom);
 
 -- grant (oeuser)
-ALTER TABLE grid.ego_dp_mv_griddistrict_v0_4_3_mview OWNER TO oeuser;
+ALTER TABLE grid.ego_dp_mv_griddistrict_v0_4_5_mview OWNER TO oeuser;
 
 -- metadata
-COMMENT ON MATERIALIZED VIEW grid.ego_dp_mv_griddistrict_v0_4_3_mview IS '{
+COMMENT ON MATERIALIZED VIEW grid.ego_dp_mv_griddistrict_v0_4_5_mview IS '{
     "comment": "eGo - REAOSM - Temporary Table",
     "version": "v0.1" }' ;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
 SELECT scenario_log('eGo_REAOSM','v0.1','input','grid','ego_dp_mv_griddistrict','ego_pp_osm_deu_power.sql',' ');
-SELECT scenario_log('eGo_REAOSM','v0.1','output','grid','ego_dp_mv_griddistrict_v0_4_3_mview','ego_pp_osm_deu_power.sql',' ');
+SELECT scenario_log('eGo_REAOSM','v0.1','output','grid','ego_dp_mv_griddistrict_v0_4_5_mview','ego_pp_osm_deu_power.sql',' ');
 
 
 -- update subst_id from eGo mv_grid_district
@@ -197,7 +197,7 @@ UPDATE sandbox.ego_pp_osm_deu_power_point_reaosm AS t1
     FROM (
         SELECT  b.osm_id AS osm_id,
                 a.subst_id AS subst_id
-        FROM    grid.ego_dp_mv_griddistrict_v0_4_3_mview AS a,
+        FROM    grid.ego_dp_mv_griddistrict_v0_4_5_mview AS a,
                 sandbox.ego_pp_osm_deu_power_point_reaosm AS b
                 
         WHERE   a.geom && b.geom AND
@@ -215,32 +215,32 @@ ORDER BY version;
 
 
 -- Filter Loadarea
-DROP MATERIALIZED VIEW IF EXISTS    demand.ego_dp_loadarea_v0_4_3_mview CASCADE;
-CREATE MATERIALIZED VIEW            demand.ego_dp_loadarea_v0_4_3_mview AS
+DROP MATERIALIZED VIEW IF EXISTS    demand.ego_dp_loadarea_v0_4_5_mview CASCADE;
+CREATE MATERIALIZED VIEW            demand.ego_dp_loadarea_v0_4_5_mview AS
     SELECT  *
     FROM    demand.ego_dp_loadarea
-    WHERE   version = 'v0.4.3';
+    WHERE   version = 'v0.4.5';
 
 -- index (id)
-CREATE UNIQUE INDEX ego_dp_loadarea_v0_4_3_mview_idx
-    ON demand.ego_dp_loadarea_v0_4_3_mview (id);
+CREATE UNIQUE INDEX ego_dp_loadarea_v0_4_5_mview_idx
+    ON demand.ego_dp_loadarea_v0_4_5_mview (id);
 
 -- index GIST (geom)
-CREATE INDEX ego_dp_loadarea_v0_4_3_mview_geom_idx
-    ON      demand.ego_dp_loadarea_v0_4_3_mview
+CREATE INDEX ego_dp_loadarea_v0_4_5_mview_geom_idx
+    ON      demand.ego_dp_loadarea_v0_4_5_mview
     USING   GIST (geom);
 
 -- grant (oeuser)
-ALTER TABLE demand.ego_dp_loadarea_v0_4_3_mview OWNER TO oeuser;
+ALTER TABLE demand.ego_dp_loadarea_v0_4_5_mview OWNER TO oeuser;
 
 -- metadata
-COMMENT ON MATERIALIZED VIEW demand.ego_dp_loadarea_v0_4_3_mview IS '{
+COMMENT ON MATERIALIZED VIEW demand.ego_dp_loadarea_v0_4_5_mview IS '{
     "comment": "eGo - REAOSM - Temporary Table",
     "version": "v0.1" }' ;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
 SELECT scenario_log('eGo_REAOSM','v0.1','input','demand','ego_dp_loadarea','ego_pp_osm_deu_power.sql',' ');
-SELECT scenario_log('eGo_REAOSM','v0.1','output','demand','ego_dp_loadarea_v0_4_3_mview','ego_pp_osm_deu_power.sql',' ');
+SELECT scenario_log('eGo_REAOSM','v0.1','output','demand','ego_dp_loadarea_v0_4_5_mview','ego_pp_osm_deu_power.sql',' ');
 
 
 -- update subst_id from eGo mv_grid_district
@@ -249,7 +249,7 @@ UPDATE sandbox.ego_pp_osm_deu_power_point_reaosm AS t1
     FROM (
         SELECT  b.osm_id AS osm_id,
                 a.id AS la_id
-        FROM    demand.ego_dp_loadarea_v0_4_3_mview AS a,
+        FROM    demand.ego_dp_loadarea_v0_4_5_mview AS a,
                 sandbox.ego_pp_osm_deu_power_point_reaosm AS b
         WHERE   a.geom && b.geom AND
                 ST_CONTAINS(a.geom,b.geom)
@@ -270,7 +270,7 @@ DROP TABLE IF EXISTS    sandbox.ego_dp_res_powerplant_reaosm CASCADE;
 CREATE TABLE            sandbox.ego_dp_res_powerplant_reaosm AS
     SELECT  *
     FROM    supply.ego_dp_res_powerplant
-    WHERE   version = 'v0.4.3'
+    WHERE   version = 'v0.4.5'
             AND scenario = 'Status Quo';
 
 -- PK (id)
@@ -345,7 +345,7 @@ UPDATE sandbox.ego_osm_sector_per_griddistrict_4_agricultural AS t1
     FROM (
         SELECT  b.id AS id,
                 a.subst_id AS subst_id
-        FROM    grid.ego_dp_mv_griddistrict_v0_4_3_mview AS a,
+        FROM    grid.ego_dp_mv_griddistrict_v0_4_5_mview AS a,
                 sandbox.ego_osm_sector_per_griddistrict_4_agricultural AS b
                 
         WHERE   a.geom && b.geom AND
