@@ -184,7 +184,7 @@ COMMENT ON TABLE  model_draft.ego_supply_pf_generator_single IS
 SELECT obj_description('model_draft.ego_supply_pf_generator_single' ::regclass) ::json;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.2','output','model_draft','ego_supply_pf_generator_single','ego_dp_powerflow_assignment_generator.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.5','output','model_draft','ego_supply_pf_generator_single','ego_dp_powerflow_assignment_generator.sql',' ');
 
 
 
@@ -192,7 +192,7 @@ SELECT scenario_log('eGo_DP', 'v0.4.2','output','model_draft','ego_supply_pf_gen
 -- Insert generator data into powerflow schema, that contains all generators seperately 
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.2','input','model_draft','ego_grid_pf_hv_source','ego_dp_powerflow_assignment_generator.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.5','input','model_draft','ego_grid_pf_hv_source','ego_dp_powerflow_assignment_generator.sql',' ');
 
 UPDATE model_draft.ego_supply_pf_generator_single a
 	SET source_name = wind.generation_subtype
@@ -235,7 +235,7 @@ UPDATE model_draft.ego_supply_pf_generator_single a
 
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.2','input','climate','cosmoclmgrid','ego_dp_powerflow_assignment_generator.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.5','input','climate','cosmoclmgrid','ego_dp_powerflow_assignment_generator.sql',' ');
 
 
 -- Identify climate point IDs for each renewables generator
@@ -411,9 +411,11 @@ UPDATE model_draft.ego_grid_pf_hv_generator
 
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.2','output','model_draft','ego_grid_pf_hv_generator','ego_dp_powerflow_assignment_generator.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.5','output','model_draft','ego_grid_pf_hv_generator','ego_dp_powerflow_assignment_generator.sql',' ');
 
-CREATE MATERIALIZED VIEW model_draft.ego_supply_aggr_weather_mview 
+DROP TABLE IF EXISTS model_draft.ego_supply_aggr_weather CASCADE;
+
+CREATE TABLE model_draft.ego_supply_aggr_weather
 AS 
 (WITH w_sub AS (
  SELECT DISTINCT
@@ -431,6 +433,8 @@ AS
 		ROW_NUMBER () OVER (ORDER BY aggr_id) as row_number
 			FROM
 			w_sub);
+															 
+ALTER TABLE model_draft.ego_supply_aggr_weather OWNER TO oeuser; 															
 			
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.2','output','model_draft','ego_supply_aggr_weather_mview','ego_dp_powerflow_assignment_generator.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.5','output','model_draft','ego_supply_aggr_weather','ego_dp_powerflow_assignment_generator.sql',' ');

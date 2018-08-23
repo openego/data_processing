@@ -111,7 +111,7 @@ SELECT 	nextval('model_draft.ego_grid_hv_fix_errors_transformer_id'),
 	(SELECT DISTINCT ON (bus_id) bus_id FROM model_draft.ego_grid_pf_hv_bus WHERE v_nom = 220 AND geom = '0101000020E6100000D38040358C8525403935408972F44A40'),
 	(SELECT DISTINCT ON (bus_id) bus_id FROM model_draft.ego_grid_pf_hv_bus WHERE v_nom = 380 AND geom = '0101000020E6100000D38040358C8525403935408972F44A40'),
 	600,
-	9.68,
+	0.0002,
 	0,
 	1,
 	'0102000020E610000002000000D38040358C8525403935408972F44A40D38040358C8525403935408972F44A40',
@@ -298,6 +298,6 @@ VALUES	('Status Quo',
 DELETE FROM model_draft.ego_grid_pf_hv_transformer WHERE bus1 NOT IN (SELECT bus_id FROM model_draft.ego_grid_pf_hv_bus) OR bus0 NOT IN (SELECT bus_id FROM model_draft.ego_grid_pf_hv_bus);
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.2','output','model_draft','ego_grid_pf_hv_bus','ego_dp_powerflow_fix_ehv_subnetworks.sql',' ');     
-SELECT scenario_log('eGo_DP', 'v0.4.2','output','model_draft','ego_grid_pf_hv_line','ego_dp_powerflow_fix_ehv_subnetworks.sql',' ');
-SELECT scenario_log('eGo_DP', 'v0.4.2','output','model_draft','ego_grid_pf_hv_transformer','ego_dp_powerflow_fix_ehv_subnetworks.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.5','output','model_draft','ego_grid_pf_hv_bus','ego_dp_powerflow_fix_ehv_subnetworks.sql',' ');     
+SELECT scenario_log('eGo_DP', 'v0.4.5','output','model_draft','ego_grid_pf_hv_line','ego_dp_powerflow_fix_ehv_subnetworks.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.5','output','model_draft','ego_grid_pf_hv_transformer','ego_dp_powerflow_fix_ehv_subnetworks.sql',' ');

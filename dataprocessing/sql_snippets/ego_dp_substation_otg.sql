@@ -10,9 +10,9 @@ __author__      = "lukasol, C. Matke"
 
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.2','input','grid','otg_ehvhv_bus_data','ego_dp_substation_otg.sql',' ');
-SELECT scenario_log('eGo_DP', 'v0.4.2','input','model_draft','ego_grid_hvmv_substation','ego_dp_substation_otg.sql',' ');
-SELECT scenario_log('eGo_DP', 'v0.4.2','input','model_draft','ego_grid_ehv_substation','ego_dp_substation_otg.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.5','input','grid','otg_ehvhv_bus_data','ego_dp_substation_otg.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.5','input','model_draft','ego_grid_hvmv_substation','ego_dp_substation_otg.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.5','input','model_draft','ego_grid_ehv_substation','ego_dp_substation_otg.sql',' ');
 
 
 -- update model_draft.ego_grid_hvmv_substation table with new column of respective osmtgmod bus_i
@@ -28,7 +28,7 @@ UPDATE model_draft.ego_grid_hvmv_substation
 DELETE FROM model_draft.ego_grid_hvmv_substation WHERE otg_id IS NULL; 
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.2','output','model_draft','ego_grid_hvmv_substation','ego_dp_substation_otg.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.5','output','model_draft','ego_grid_hvmv_substation','ego_dp_substation_otg.sql',' ');
 
 
 -- do the same with model_draft.ego_grid_ehv_substation
@@ -46,4 +46,4 @@ UPDATE model_draft.ego_grid_ehv_substation
 DELETE FROM model_draft.ego_grid_ehv_substation WHERE otg_id IS NULL;
 
 	-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.2','output','model_draft','ego_grid_ehv_substation','ego_dp_substation_otg.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.5','output','model_draft','ego_grid_ehv_substation','ego_dp_substation_otg.sql',' ');
