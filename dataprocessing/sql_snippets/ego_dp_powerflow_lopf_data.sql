@@ -1,4 +1,4 @@
-﻿/*
+/*
 Missing parameters necessary for calculating a linear optimal power flow (LOPF) are added to the existing data. This
 includes marginal costs per technology, which is composed of specific operating cost, fuel costs and CO2 costs 
 according to renpass_gis, NEP 2014 scenario. 
@@ -71,7 +71,7 @@ where scn_name = 'eGo 100';
 
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.2','output','model_draft','ego_grid_pf_hv_generator','ego_dp_powerflow_lopf_data.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.5','output','model_draft','ego_grid_pf_hv_generator','ego_dp_powerflow_lopf_data.sql',' ');
 
 -- set p_max_pu
 
@@ -418,7 +418,7 @@ WHERE model_draft.ego_grid_hvmv_substation.subst_id IN (
 				AND ST_CONTAINS(salt.geom,model_draft.ego_grid_hvmv_substation.point));
 				
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.2','output','model_draft','ego_grid_pf_hv_storage','ego_dp_powerflow_lopf_data.sql',' ');				
+SELECT scenario_log('eGo_DP', 'v0.4.5','output','model_draft','ego_grid_pf_hv_storage','ego_dp_powerflow_lopf_data.sql',' ');				
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.2','output','model_draft','ego_grid_pf_hv_generator_pq_set','ego_dp_powerflow_lopf_data.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.5','output','model_draft','ego_grid_pf_hv_generator_pq_set','ego_dp_powerflow_lopf_data.sql',' ');

@@ -1,4 +1,4 @@
-﻿DROP SEQUENCE IF EXISTS model_draft.ego_grid_hv_fix_errors_bus_id CASCADE;
+DROP SEQUENCE IF EXISTS model_draft.ego_grid_hv_fix_errors_bus_id CASCADE;
 CREATE SEQUENCE model_draft.ego_grid_hv_fix_errors_bus_id;
 SELECT setval('model_draft.ego_grid_hv_fix_errors_bus_id', (max(bus_id)+1)) FROM model_draft.ego_grid_pf_hv_bus;
 
@@ -298,6 +298,6 @@ VALUES	('Status Quo',
 DELETE FROM model_draft.ego_grid_pf_hv_transformer WHERE bus1 NOT IN (SELECT bus_id FROM model_draft.ego_grid_pf_hv_bus) OR bus0 NOT IN (SELECT bus_id FROM model_draft.ego_grid_pf_hv_bus);
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.2','output','model_draft','ego_grid_pf_hv_bus','ego_dp_powerflow_fix_ehv_subnetworks.sql',' ');     
-SELECT scenario_log('eGo_DP', 'v0.4.2','output','model_draft','ego_grid_pf_hv_line','ego_dp_powerflow_fix_ehv_subnetworks.sql',' ');
-SELECT scenario_log('eGo_DP', 'v0.4.2','output','model_draft','ego_grid_pf_hv_transformer','ego_dp_powerflow_fix_ehv_subnetworks.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.5','output','model_draft','ego_grid_pf_hv_bus','ego_dp_powerflow_fix_ehv_subnetworks.sql',' ');     
+SELECT scenario_log('eGo_DP', 'v0.4.5','output','model_draft','ego_grid_pf_hv_line','ego_dp_powerflow_fix_ehv_subnetworks.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.5','output','model_draft','ego_grid_pf_hv_transformer','ego_dp_powerflow_fix_ehv_subnetworks.sql',' ');
