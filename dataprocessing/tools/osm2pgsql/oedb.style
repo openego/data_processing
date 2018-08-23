@@ -27,7 +27,7 @@
 # nocolumn - Override the above and don't create a column for the tag, but do
 # include objects with this tag
 #
-# phstore - Same as polygon,nocolumn for backward compatibility
+# phstore - Same as polygon for backward compatibility
 #
 # delete - Drop this tag completely and don't create a column for it. This also
 # prevents the tag from being added to hstore columns
@@ -81,85 +81,87 @@
 # end up in the tags hstore column regardless of the style file.
 
 # OsmType  Tag          DataType     Flags
-node,way   access       text         linear,nocolumn
-node,way   addr:housename      text  linear,nocolumn
-node,way   addr:housenumber    text  linear,nocolumn
-node,way   addr:interpolation  text  linear,nocolumn
-node,way   admin_level  text         linear,nocolumn
-node,way   aerialway    text         linear,nocolumn
-node,way   aeroway      text         polygon,nocolumn
-node,way   amenity      text         polygon,nocolumn
-node,way   area         text         polygon,nocolumn # hard coded support for area=1/yes => polygon is in osm2pgsql
-node,way   barrier      text         linear,nocolumn
-node,way   bicycle      text         linear,nocolumn
-node,way   brand        text         linear,nocolumn
-node,way   bridge       text         linear,nocolumn
-node,way   boundary     text         linear,nocolumn
-node,way   building     text         polygon,nocolumn
-node       capital      text         linear,nocolumn
-node,way   construction text         linear,nocolumn
-node,way   covered      text         linear,nocolumn
-node,way   culvert      text         linear,nocolumn
-node,way   cutting      text         linear,nocolumn
-node,way   denomination text         linear,nocolumn
-node,way   disused      text         linear,nocolumn
-node       ele          text         linear,nocolumn
-node,way   embankment   text         linear,nocolumn
-node,way   foot         text         linear,nocolumn
-node,way   generator:source    text  linear,nocolumn
-node,way   harbour      text         polygon,nocolumn
-node,way   highway      text         linear,nocolumn
-node,way   historic     text         polygon,nocolumn
-node,way   horse        text         linear,nocolumn
-node,way   intermittent text         linear,nocolumn
-node,way   junction     text         linear,nocolumn
-node,way   landuse      text         polygon,nocolumn
-node,way   layer        text         linear,nocolumn
-node,way   leisure      text         polygon,nocolumn
-node,way   lock         text         linear,nocolumn
-node,way   man_made     text         polygon,nocolumn
-node,way   military     text         polygon,nocolumn
-node,way   motorcar     text         linear,nocolumn
-node,way   name         text         linear,nocolumn
-node,way   natural      text         polygon,nocolumn  # natural=coastline tags are discarded by a hard coded rule in osm2pgsql
-node,way   office       text         polygon,nocolumn
-node,way   oneway       text         linear,nocolumn
-node,way   operator     text         linear,nocolumn
-node,way   place        text         polygon,nocolumn
-node,way   population   text         linear,nocolumn
-node,way   power        text         polygon,nocolumn
-node,way   power_source text         linear,nocolumn
-node,way   public_transport text     polygon,nocolumn
-node,way   railway      text         linear,nocolumn
-node,way   ref          text         linear,nocolumn
-node,way   religion     text         linear,nocolumn
-node,way   route        text         linear,nocolumn
-node,way   service      text         linear,nocolumn
-node,way   shop         text         polygon,nocolumn
-node,way   sport        text         polygon,nocolumn
-node,way   surface      text         linear,nocolumn
-node,way   toll         text         linear,nocolumn
-node,way   tourism      text         polygon,nocolumn
-node,way   tower:type   text         linear,nocolumn
-way        tracktype    text         linear,nocolumn
-node,way   tunnel       text         linear,nocolumn
-node,way   water        text         polygon,nocolumn
-node,way   waterway     text         polygon,nocolumn
-node,way   wetland      text         polygon,nocolumn
-node,way   width        text         linear,nocolumn
-node,way   wood         text         linear,nocolumn
+node,way   access       text         linear
+node,way   addr:housename      text  linear
+node,way   addr:housenumber    text  linear
+node,way   addr:interpolation  text  linear
+node,way   admin_level  text         linear
+node,way   aerialway    text         linear
+node,way   aeroway      text         polygon
+node,way   amenity      text         polygon
+node,way   area         text         polygon # hard coded support for area=1/yes => polygon is in osm2pgsql
+node,way   barrier      text         linear
+node,way   bicycle      text         linear
+node,way   brand        text         linear
+node,way   bridge       text         linear
+node,way   boundary     text         linear
+node,way   building     text         polygon
+node       capital      text         linear
+node,way   construction text         linear
+node,way   covered      text         linear
+node,way   culvert      text         linear
+node,way   cutting      text         linear
+node,way   denomination text         linear
+node,way   disused      text         linear
+node       ele          text         linear
+node,way   embankment   text         linear
+node,way   foot         text         linear
+node,way   generator:source    text  linear
+node,way   harbour      text         polygon
+node,way   highway      text         linear
+node,way   historic     text         polygon
+node,way   horse        text         linear
+node,way   intermittent text         linear
+node,way   junction     text         linear
+node,way   landuse      text         polygon
+node,way   layer        text         linear
+node,way   leisure      text         polygon
+node,way   line         text         linear # added manually
+node,way   lock         text         linear
+node,way   man_made     text         polygon
+node,way   military     text         polygon
+node,way   motorcar     text         linear
+node,way   name         text         linear
+node,way   natural      text         polygon  # natural=coastline tags are discarded by a hard coded rule in osm2pgsql
+node,way   office       text         polygon
+node,way   oneway       text         linear
+node,way   operator     text         linear
+node,way   place        text         polygon
+node,way   population   text         linear
+node,way   power        text         polygon
+node,way   power_source text         linear
+node,way   public_transport text     polygon
+node,way   railway      text         linear
+node,way   ref          text         linear
+node,way   religion     text         linear
+node,way   route        text         linear
+node,way   service      text         linear
+node,way   sidewalk     text         linear
+node,way   shop         text         polygon
+node,way   sport        text         polygon
+node,way   surface      text         linear
+node,way   toll         text         linear
+node,way   tourism      text         polygon
+node,way   tower:type   text         linear
+way        tracktype    text         linear
+node,way   tunnel       text         linear
+node,way   water        text         polygon
+node,way   waterway     text         polygon
+node,way   wetland      text         polygon
+node,way   width        text         linear
+node,way   wood         text         linear
 node,way   z_order      int4         linear # This is calculated during import
 way        way_area     real         linear # This is calculated during import
 
 # Area tags
 # We don't make columns for these tags, but objects with them are areas.
 # Mainly for use with hstore
-way         abandoned:aeroway       text    polygon,nocolumn
-way         abandoned:amenity       text    polygon,nocolumn
-way         abandoned:building      text    polygon,nocolumn
-way         abandoned:landuse       text    polygon,nocolumn
-way         abandoned:power         text    polygon,nocolumn
-way         area:highway            text    polygon,nocolumn
+way         abandoned:aeroway       text    polygon
+way         abandoned:amenity       text    polygon
+way         abandoned:building      text    polygon
+way         abandoned:landuse       text    polygon
+way         abandoned:power         text    polygon
+way         area:highway            text    polygon
 
 # Deleted tags
 # These are tags that are generally regarded as useless for most rendering.

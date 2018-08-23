@@ -1,4 +1,4 @@
-﻿/*
+/*
 eGo Data Processing result data versioning
 Copy a version of mvies from model_draft to OEP schema
 
@@ -21,7 +21,6 @@ CREATE MATERIALIZED VIEW supply.ego_dp_conv_powerplant_sq_mview AS
     AND preversion = 'v0.3.0';
     --AND version in ('v0.4.4','v0.4.5');
 
-
 ALTER MATERIALIZED VIEW supply.ego_dp_conv_powerplant_sq_mview
     OWNER TO oeuser; 
 
@@ -33,11 +32,9 @@ CREATE MATERIALIZED VIEW supply.ego_dp_conv_powerplant_nep2035_mview AS
     WHERE scenario = 'NEP 2035'
     AND   capacity > 0 
     AND   fuel not in ('hydro', 'run_of_river', 'reservoir')
-
     AND   (shutdown IS NULL or shutdown >= 2034)
     AND   preversion = 'v0.3.0';
     AND version in ('v0.4.4','v0.4.5');
-
 
 ALTER MATERIALIZED VIEW supply.ego_dp_conv_powerplant_nep2035_mview
     OWNER TO oeuser;
@@ -115,7 +112,6 @@ CREATE MATERIALIZED VIEW supply.ego_dp_res_powerplant_sq_mview AS
     AND electrical_capacity > 0
     AND preversion = 'v0.3.0';
     --AND version in ('v0.4.2','v0.4.4','v0.4.5');
-
 
 ALTER MATERIALIZED VIEW supply.ego_dp_res_powerplant_sq_mview
     OWNER TO oeuser;
