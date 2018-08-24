@@ -110,6 +110,7 @@ DO
 $$
 DECLARE gd integer;
 BEGIN
+--    FOR gd IN 1..3591   -- subst_id
     FOR gd IN 1..3591   -- subst_id
     LOOP
         EXECUTE '
@@ -200,9 +201,9 @@ CREATE MATERIALIZED VIEW            sandbox.ego_reaosm_m1_1_rest_mview AS
             voltage_level,
             subst_id,
             geom,
-            rea_flag
+            reaosm_flag
     FROM    sandbox.ego_dp_res_powerplant_reaosm AS dea
-    WHERE   dea.rea_flag = 'M1-1_rest';
+    WHERE   dea.reaosm_flag = 'M1-1_rest';
 
 -- create index GIST (geom)
 CREATE INDEX ego_reaosm_m1_1_rest_mview_geom_idx

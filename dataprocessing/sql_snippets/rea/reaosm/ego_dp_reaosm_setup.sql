@@ -136,7 +136,7 @@ INSERT INTO sandbox.ego_pp_osm_deu_power_point_reaosm (osm_id, rea_method, geom)
 -- insert M2
 INSERT INTO sandbox.ego_pp_osm_deu_power_point_reaosm (osm_id, rea_method, geom)
     SELECT  osm_id,
-            'M3',
+            'M3b',
             geom
     FROM    sandbox.ego_pp_osm_deu_power_point_mview
     WHERE   generator_source = 'wind'
@@ -358,6 +358,44 @@ SELECT scenario_log('eGo_REAOSM','v0.1','input','model_draft','ego_osm_sector_pe
 SELECT scenario_log('eGo_REAOSM','v0.1','output','sandbox','ego_osm_sector_per_griddistrict_4_agricultural','ego_pp_osm_deu_power.sql',' ');
 
 
+-- eGoDP OSM Farmyards
+DROP TABLE IF EXISTS    sandbox.ego_osm_sector_per_griddistrict_4_wpa CASCADE;
+CREATE TABLE            sandbox.ego_osm_sector_per_griddistrict_4_wpa AS
+    SELECT  id,
+            subst_id,
+            area_type,
+            ST_CENTROID(geom) ::geometry(Point,3035) AS geom
+    FROM    model_draft.ego_lattice_500m_wpa_mview;
+
+-- PK (id)
+ALTER TABLE sandbox.ego_osm_sector_per_griddistrict_4_wpa ADD PRIMARY KEY (id);
+
+-- index GIST (geom)
+CREATE INDEX ego_osm_sector_per_griddistrict_4_wpa_geom_idx
+    ON      sandbox.ego_osm_sector_per_griddistrict_4_wpa
+    USING   GIST (geom);
+
+-- grant (oeuser)
+ALTER TABLE sandbox.ego_osm_sector_per_griddistrict_4_wpa OWNER TO oeuser;
+
+-- metadata
+COMMENT ON TABLE sandbox.ego_osm_sector_per_griddistrict_4_wpa IS '{
+    "comment": "eGo - REAOSM - Temporary Table",
+    "version": "v0.1" }' ;
+
+-- update subst_id from eGo mv_grid_district
+UPDATE sandbox.ego_osm_sector_per_griddistrict_4_wpa AS t1
+    SET subst_id = t2.subst_id
+    FROM (
+        SELECT  b.id AS id,
+                a.subst_id AS subst_id
+        FROM    grid.ego_dp_mv_griddistrict_v0_4_5_mview AS a,
+                sandbox.ego_osm_sector_per_griddistrict_4_wpa AS b
+                
+        WHERE   a.geom && b.geom AND
+                ST_CONTAINS(a.geom,b.geom)
+        ) AS t2
+    WHERE   t1.id = t2.id;
 
 
 
