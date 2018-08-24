@@ -22,7 +22,6 @@ Welcome to Data processing documentation of open_eGo
    scenario
 
    whatsnew
-   data_references
 
 
 
