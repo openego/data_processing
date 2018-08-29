@@ -1,0 +1,88 @@
+Reallocation of Renewable Energy power stations to locations derived from OpenStreetMap
+
+SQL-Snippets in this folder reallocate Renewable Energy power plants. Power plant information is taken from 'supply.ego_dp_res_powerplant'. A local copy of this table is stored in 'sandbox.ego_dp_res_powerplant_reaosm'. Newly calculatued locations, as well as lines from old to new locations are stored as new geometry columns ('reaosm_geom_new' and reaosm_geom_line) to this table. Method 1 (M1) reallocates biomass power plants and Method 3b (M3b) reallocates wind power plants. M3b replaces M2 and M3. Potential cluster information is not incorporated and all wind power plants are included in one method. 
+
+-----------------------------
+SETUP ego_dp_reaosm_setup.sql
+-----------------------------
+
+The setup.sql-file creates the described local copy of the power plant information and adds the two extra columns for new geometries.  
+
+Additionally it creates a materialized view ('sandbox.ego_pp_osm_deu_power_point_mview') of OpenStreetMap point data. OSM-Powerplant-Points are taken from the table 'sandbox.ego_pp_osm_deu_power_point', which contains a direct upload of OpenStreetMap-data with all nodes that are tagged with the key "power:generator". These points are filtered for biomass ("M1") and wind ("M3b") and tagged accordingly in column 'rea_method'. 
+
+Subsequently, both the points in the power plant table and the osm-mview are mapped to the grid districts they are contained in.
+
+Overview of tables and sources described in text above:
+
+- Power Plant Information
+    - data from: supply.ego_dp_res_powerplant
+    - data into: sandbox.ego_dp_res_powerplant_reaosm
+    - extra columns: reaosm_geom_line, reaosm_geom_new, rea_method
+- generator:source - Points from OSM
+    - locations of biomass and wind power plants are used as primary location for remapping
+    - data from sandbox.ego_pp_osm_deu_power_point
+    - data into sandbox.ego_pp_osm_deu_power_point_mview
+
+- grid district information of version 0.4.5
+    - data from: grid.ego_dp_mv_griddistrict
+    - data into: grid.ego_dp_mv_griddistrict_v0_4_5_mview
+
+An analogous process is carried out for: 
+- agricultural districts from OSM 
+    - centroids of these areas are used as secondary location for remapped biomass power plants 
+    - data from: model_draft.ego_osm_sector_per_griddistrict_4_agricultural 
+    - data into: sandbox.ego_osm_sector_per_griddistrict_4_agricultural
+- biomass areas from OSM
+    - centroids of buffered areas are used as primary location for remapped biomass power
+    - data from: sandbox.ego_pp_osm_deu_power_polygon (direct upload of OSM-Data)
+    - data interim table: sandbox.ego_pp_osm_deu_power_polygon_buff25_biomass
+    - data into: sandbox.ego_pp_osm_deu_power_point_reaosm
+ plants 
+- wind potential areas  
+    - points in a raster with a distance of 500m on wind potential areas are used as secondary location for remapped wind power
+    - data from: model_draft.ego_lattice_500m_wpa_mview
+    - data into: sandbox.ego_osm_sector_per_griddistrict_4_wpa
+
+
+-------------------------
+M1 (ego_dp_reaosm_m1.sql)
+-------------------------
+
+M1 reallocates biomass powerplants first to points derived from OSM in 'ego_pp_osm_deu_power_point_reaosm' and in case they run out, additional plants are mapped to agricultural districts from 'ego_osm_sector_per_griddistrict_4_agricultural'. 
+
+An initial MView ('sandbox.ego_reaosm_m1_1_a_mview') with all biomass power stations is created from 'sandbox.ego_dp_res_powerplant_reaosm'. 
+
+Prior to the reallocation process a 'M1-1_rest'-flag is set in sandbox.ego_dp_res_powerplant_reaosm in the colum reaosm-flag. All elements that still carry this flag after the reallocating process make up the rest that could not be reallocated. 
+
+Temporary tables (sandbox.ego_reaosm_m1_1_dea_temp, sandbox.ego_reaosm_m1_1_osm_temp, sandbox.ego_reaosm_m1_1_jnt_temp) that are needed for a loop through all grid districts are created. The loop iterates through all grid districts by ID. Contained power plants are first mapped to OSM-Points and subsequently to agricultural districts (ordered by area size). The new locations and way geometries from old locations are stored in the temporary tables and finally written to sandbox.ego_dp_res_powerplant_reaosm. For all reallocated  plants the 'M1-1_rest'-flag is replaced by a 'M1-1'.
+
+A materialized view (sandbox.ego_reaosm_m1_1_rest_mview) is created that shows the rest (not reallocated points flagged 'M1-1_rest').   
+
+All temporary tables are dropped.
+
+
+-------------------------
+M3b (ego_dp_reaosm_m3b.sql)
+-------------------------
+
+M3b reallocates wind powerplants first to points derived from OSM in 'ego_pp_osm_deu_power_point_reaosm' and in case they run out, additional plants are mapped to wind potential areas from 'sandbox.ego_osm_sector_per_griddistrict_4_wpa'. 
+
+An initial MView ('sandbox.ego_reaosm_m3b_a_mview') with all wind power stations is created from 'sandbox.ego_dp_res_powerplant_reaosm'. 
+
+Prior to the reallocation process a 'M3b_rest'-flag is set in sandbox.ego_dp_res_powerplant_reaosm in the colum reaosm-flag. All elements that still carry this flag after the reallocating process make up the rest that could not be reallocated. 
+
+Temporary tables (sandbox.ego_reaosm_m3b_dea_temp, sandbox.ego_reaosm_m3b_osm_temp, sandbox.ego_reaosm_m3b_jnt_temp) that are needed for a loop through all grid districts are created. The loop iterates through all grid districts by ID. Contained power plants are first mapped to OSM-Points and subsequently to wind potential areas (since an order is prescribed but no preference emerges, the order is chosen to be descending by ID). The new locations and way geometries from old locations are stored in the temporary tables and finally written to sandbox.ego_dp_res_powerplant_reaosm. For all reallocated  plants the 'M3b_rest'-flag is replaced by a 'M3b'.
+
+
+A materialized view ('sandbox.sandbox.ego_reaosm_m3b_mview') is created that shows all reallocated points and another mview ('sandbox.ego_reaosm_m3b_rest_mview') shows the rest (not reallocated points flagged 'M3b_rest'). 
+
+All temporaray tables are dropped
+
+
+
+
+
+
+
+
+
