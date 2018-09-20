@@ -14,6 +14,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.automap import automap_base
 import configparser as cp
 import os.path as path
+import oedialect
 
 # read configuration file
 FILENAME = 'config.ini'
@@ -29,7 +30,7 @@ conn = create_engine(
         password=cfg.get(section, 'password'),
         host=cfg.get(section, 'host'),
         port=cfg.get(section, 'port'),
-        db=cfg.get(section, 'db')))
+        db=cfg.get(section, 'database')))
 
 print("Connected to database.")
 
