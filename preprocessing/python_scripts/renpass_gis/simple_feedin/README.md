@@ -59,6 +59,6 @@ Before running the script, make sure to edit a few lines in
 import. You can also change `weather_scenario_id = 2` to a more obscure
 number of which only you know what it means. ;) Now you are ready to
 run the script via `python PATH/TO/simple_feedin.py`. The NetCDF files
-should be the same directory in which you start the Python
+should be in the same directory in which you start the Python
 Interpreter. Be sure to use Python 3.
 
