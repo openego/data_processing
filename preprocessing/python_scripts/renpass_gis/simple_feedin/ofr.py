@@ -4,6 +4,7 @@ import sys
 from geoalchemy2 import WKTElement as WKT
 import geoalchemy2.shape as ga2s
 import pandas as pd
+import pytess
 import shapely.geometry as sg
 import xarray as xr
 
@@ -46,6 +47,13 @@ bounds = {
         # zlevel time_bnds don't have a unit attribute so they are messed up.
         # hackishly/forcefully using mean ones for this.
         'zlvl':[(list(b.values)[0], list(b.values)[1]) for b in mean.time_bnds]}
+print('Done.')
+
+print('Generating Voronoi diagramm.')
+cells = dict(
+        (pair[0], sg.Polygon(pair[1]))
+        for pair in pytess.voronoi(point for point in grid.keys())
+        if pair[0] is not None)
 print('Done.')
 
 print('Generating IDs.')
