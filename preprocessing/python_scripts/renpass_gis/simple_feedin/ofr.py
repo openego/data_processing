@@ -60,16 +60,23 @@ print('Generating IDs.')
 IDs = {gridpoint: ID for (ID, gridpoint) in zip(count(1300000), grid.values())}
 print('Done.')
 
+# Shortcut function to obtain a storable geometry from an entry in `piits`.
+def geometry(piit):
+    result = ga2s.from_shape(
+            sg.MultiPolygon([sg.Polygon(cells[(piit[0].x, piit[0].y)])]),
+            4326)
+    return result
 
 print('Writing grid to database.')
 for i,p in enumerate(piits):
-    if db.session.query(db.Grid).get(IDs[p[1]]) is None:
+    entry = db.session.query(db.Grid).get(IDs[p[1]])
+    if entry is None:
         entry = db.Grid(
                 gid=IDs[p[1]],
-                geom=ga2s.from_shape(
-                    sg.MultiPolygon([p[0].buffer(1e-11)]),
-                    4326))
+                geom=geometry(p))
         db.session.add(entry)
+    else:
+        entry.geom = geometry(p)
     sys.stdout.write("{:7}/{}\r".format(i+1, len(piits)))
 db.session.commit()
 db.session.flush()

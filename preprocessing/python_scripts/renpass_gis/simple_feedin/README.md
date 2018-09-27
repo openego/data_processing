@@ -62,3 +62,9 @@ run the script via `python PATH/TO/simple_feedin.py`. The NetCDF files
 should be in the same directory in which you start the Python
 Interpreter. Be sure to use Python 3.
 
+## IMPORTANT DISCLAIMER!
+
+The geometries representing the grid will be written under IDs starting at
+1300000. So make sure that you don't have any other grid data stored under
+these IDs, as this would mean that this data gets overwritten by the script.
+
