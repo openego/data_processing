@@ -1,4 +1,4 @@
-/*
+﻿/*
 In a postprocessing this script adds additional scenarios as grid variations. 
 Therefore, new 'model_draft.ego_grid_pf_hv_extension_'-tables are created for each component. 
 The scenarios represent the extension of lines due to the Netzentwicklungsplan from 2015.
@@ -269,10 +269,10 @@ INSERT INTO model_draft.ego_grid_pf_hv_extension_line (line_id, geom, project, p
 	FROM grid.bnetza_vorhaben_enlag a WHERE technik = 'AC' AND vorhabennummer NOT IN (10, 17, 20, 21, 7, 9); 
 
 UPDATE model_draft.ego_grid_pf_hv_extension_line 
-	SET 	bus0 = (CASE	WHEN project = 'EnLAG' AND project_id = 15 AND segment = 5 THEN (SELECT DISTINCT ON (bus_id) bus_id FROM model_draft.ego_grid_pf_hv_extension_bus WHERE geom = '0101000020E610000074B51EFDB6441C40CD0D1EEC4E4C4940' )
-				WHEN project = 'EnLAG' AND project_id = 19 AND segment = 6 THEN (SELECT DISTINCT ON (bus_id) bus_id FROM model_draft.ego_grid_pf_hv_extension_bus WHERE geom = '0101000020E61000005B50E484FEC21F4015BFC8E4906C4940') ELSE bus0 END),
-		bus1 = (CASE	WHEN project = 'EnLAG' AND project_id = 15 AND segment = 4 THEN (SELECT DISTINCT ON (bus_id) bus_id FROM model_draft.ego_grid_pf_hv_extension_bus WHERE geom = '0101000020E610000074B51EFDB6441C40CD0D1EEC4E4C4940' )
-				WHEN project = 'EnLAG' AND project_id = 19 AND segment = 4 THEN (SELECT DISTINCT ON (bus_id) bus_id FROM model_draft.ego_grid_pf_hv_extension_bus WHERE geom = '0101000020E61000005B50E484FEC21F4015BFC8E4906C4940') ELSE bus1 END);
+	SET 	bus0 = (CASE	WHEN project = 'EnLAG' AND project_id = 15 AND segment = 5 THEN (SELECT DISTINCT ON (bus_id) bus_id FROM model_draft.ego_grid_pf_hv_extension_bus WHERE geom = '0101000020E610000072B51EFDB6441C40CD0D1EEC4E4C4940' )
+				WHEN project = 'EnLAG' AND project_id = 19 AND segment = 6 THEN (SELECT DISTINCT ON (bus_id) bus_id FROM model_draft.ego_grid_pf_hv_extension_bus WHERE geom = '0101000020E61000005950E484FEC21F4015BFC8E4906C4940') ELSE bus0 END),
+		bus1 = (CASE	WHEN project = 'EnLAG' AND project_id = 15 AND segment = 4 THEN (SELECT DISTINCT ON (bus_id) bus_id FROM model_draft.ego_grid_pf_hv_extension_bus WHERE geom = '0101000020E610000072B51EFDB6441C40CD0D1EEC4E4C4940' )
+				WHEN project = 'EnLAG' AND project_id = 19 AND segment = 4 THEN (SELECT DISTINCT ON (bus_id) bus_id FROM model_draft.ego_grid_pf_hv_extension_bus WHERE geom = '0101000020E61000005950E484FEC21F4015BFC8E4906C4940') ELSE bus1 END);
 
 --- Set number of systems in respect to NEP and data from ÜNB ---
 UPDATE model_draft.ego_grid_pf_hv_extension_line a
@@ -455,8 +455,8 @@ UPDATE model_draft.ego_grid_pf_hv_extension_link a
 --- Delete unused buses to avoid subnetworks ---
 DELETE FROM model_draft.ego_grid_pf_hv_extension_bus a WHERE bus_id NOT IN (SELECT bus0 FROM model_draft.ego_grid_pf_hv_extension_line WHERE scn_name = a.scn_name)
 AND bus_id NOT IN (SELECT bus1 FROM model_draft.ego_grid_pf_hv_extension_line WHERE scn_name = a.scn_name)
-AND bus_id NOT IN (SELECT bus0 FROM model_draft.ego_grid_pf_hv_extension_link WHERE scn_name = a.scn_name) AND bus_id NOT IN (SELECT bus1 FROM model_draft.ego_grid_pf_hv_extension_link WHERE scn_name = a.scn_name)
-AND bus_id NOT IN (SELECT bus0 FROM model_draft.ego_grid_pf_hv_extension_transformer WHERE scn_name = a.scn_name) AND bus_id NOT IN (SELECT bus1 FROM model_draft.ego_grid_pf_hv_extension_transformer WHERE scn_name = a.scn_name);
+AND bus_id NOT IN (SELECT bus0 FROM model_draft.ego_grid_pf_hv_extension_link WHERE scn_name = a.scn_name) AND bus_id NOT IN (SELECT bus1 FROM model_draft.ego_grid_pf_hv_extension_link WHERE scn_name = a.scn_name);
+--AND bus_id NOT IN (SELECT bus0 FROM model_draft.ego_grid_pf_hv_extension_transformer WHERE scn_name = a.scn_name) AND bus_id NOT IN (SELECT bus1 FROM model_draft.ego_grid_pf_hv_extension_transformer WHERE scn_name = a.scn_name);
 
 
 -- Table: model_draft.ego_grid_pf_hv_extension_transformer
@@ -705,7 +705,7 @@ INSERT into model_draft.ego_grid_pf_hv_extension_generator
 			(SELECT *
 			
 			FROM
-			model_draft.ego_grid_pf_hv_extension_bus
+			 model_draft.ego_grid_pf_hv_extension_bus
 			where bus_name = 'center BE'
 			AND scn_name = 'extension_BE_NO_NEP 2035'
 			) SQ
@@ -747,7 +747,7 @@ INSERT into model_draft.ego_grid_pf_hv_extension_generator
 		FROM
 			(SELECT *
 			FROM
-			model_draft.ego_grid_pf_hv_extension_bus
+			 model_draft.ego_grid_pf_hv_extension_bus
 			where bus_name = 'center BE' 
 			AND scn_name = 'extension_BE_NO_NEP 2035'
 			) SQ
@@ -789,7 +789,7 @@ INSERT into model_draft.ego_grid_pf_hv_extension_generator
 			(SELECT *
 			
 			FROM
-			model_draft.ego_grid_pf_hv_extension_bus
+			 model_draft.ego_grid_pf_hv_extension_bus
 			where bus_name = 'center NO'
 			AND scn_name = 'extension_BE_NO_NEP 2035'
 			) SQ
@@ -831,7 +831,7 @@ INSERT into model_draft.ego_grid_pf_hv_extension_generator
 		FROM
 			(SELECT *
 			FROM
-			model_draft.ego_grid_pf_hv_extension_bus
+			 model_draft.ego_grid_pf_hv_extension_bus
 			where bus_name = 'center NO' 
 			AND scn_name = 'extension_BE_NO_NEP 2035'
 			) SQ
@@ -891,7 +891,7 @@ CREATE MATERIALIZED VIEW calc_renpass_gis.extension_translate_to_pf AS
 			WHEN A.source =  13 THEN  'wind'
 		END AS renpass_gis_source
 			FROM model_draft.ego_grid_pf_hv_extension_generator A join
-			model_draft.ego_grid_pf_hv_extension_bus B
+			 model_draft.ego_grid_pf_hv_extension_bus B
 			ON (A.bus = B.bus_id)
 		WHERE A.generator_id > 210000
 		AND A.scn_name = 'extension_BE_NO_NEP 2035'
@@ -916,7 +916,7 @@ INSERT into model_draft.ego_grid_pf_hv_extension_generator_pq_set (scn_name, gen
 		A.datetime,
 		A.val AS val
 			FROM calc_renpass_gis.extension_translate_to_pf A join
-			model_draft.ego_grid_pf_hv_extension_generator B
+			 model_draft.ego_grid_pf_hv_extension_generator B
 			USING (generator_id)
 		) SQ
 	GROUP BY generator_id;
@@ -957,7 +957,6 @@ FROM (
 GROUP BY T2.generator_id
 ) T3 WHERE T3.generator_id = Y.generator_id;
 
-
 -- Insert decommisioning lines from input table model_draft.scn_nep2035_b2_line ---
 INSERT INTO model_draft.ego_grid_pf_hv_extension_line (scn_name, line_id, s_nom, topo, geom,bus0, bus1, v_nom, project, project_id )
 	SELECT	DISTINCT ON (line_id)
@@ -972,7 +971,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_extension_line (scn_name, line_id, s_nom,
 		THEN 380 WHEN a.s_nom = 3580 THEN 380 WHEN a.s_nom = 925 THEN 380 WHEN a.s_nom =  1850 THEN 380 END),
 		project,
 		project_id
-	FROM model_draft.scn_nep2035_b2_line a, model_draft.ego_grid_pf_hv_line b WHERE a.scn_name = 'decommissioning_nep2035_confirmed' AND b.scn_name = 'Status Quo' AND a.geom = b.geom AND a.s_nom = b.s_nom;
+	FROM model_draft.scn_nep2035_b2_line a, model_draft.ego_grid_pf_hv_line b WHERE a.scn_name = 'decommissioning_NEP' AND b.scn_name = 'Status Quo' AND a.geom = b.geom AND a.s_nom = b.s_nom;
 
 --- When not all systems will be decommissioned delete from table ---
 DELETE FROM model_draft.ego_grid_pf_hv_extension_line a USING model_draft.ego_grid_pf_hv_extension_line b, model_draft.ego_grid_pf_hv_extension_line c 
@@ -1143,7 +1142,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_extension_bus (scn_name, bus_id, v_nom, g
 	FROM model_draft.ego_grid_pf_hv_bus WHERE geom IN ('0101000020E6100000781E63B01D002E40A292E70A7AB74E40') AND v_nom = 380;
 
 
---- Update parameter of lines, length multiplied with mean rellation from length of geom to length of topo in existing network ---
+--- Update parameter of lines, length multiplied with mean relation from length of geom to length of topo in existing network ---
 UPDATE model_draft.ego_grid_pf_hv_extension_line a
 SET	topo = ST_MakeLine((SELECT DISTINCT ON (geom) geom FROM model_draft.ego_grid_pf_hv_extension_bus b WHERE a.bus0 = b.bus_id AND a.scn_name = b.scn_name ), (SELECT DISTINCT ON (geom) geom FROM model_draft.ego_grid_pf_hv_extension_bus b WHERE a.bus1 = b.bus_id AND a.scn_name = b.scn_name )),
 	geom = ST_Multi(ST_MakeLine((SELECT DISTINCT ON (geom) geom FROM model_draft.ego_grid_pf_hv_extension_bus b WHERE a.bus0 = b.bus_id AND a.scn_name = b.scn_name ), (SELECT DISTINCT ON (geom) geom FROM model_draft.ego_grid_pf_hv_extension_bus b WHERE a.bus1 = b.bus_id AND a.scn_name = b.scn_name ))),
@@ -1353,10 +1352,11 @@ SET capital_cost = (CASE WHEN project_id IN(1,3,4,5,30) THEN ((SELECT capital_co
 			WHEN project_id  IN (29,33) THEN ((SELECT capital_costs_pypsa FROM model_draft.ego_grid_line_expansion_costs WHERE cost_id = 5 ) * length) 
 			ELSE capital_cost END);
 			
---- Set s_nom_min and s_nom_max fpr lines, when lines are decommisioned, s_nom_min is s_nom of decommissioned line ---
+--- Set s_nom_min and s_nom_max for lines, when lines are decommisioned, s_nom_min is s_nom of decommissioned line ---
 UPDATE model_draft.ego_grid_pf_hv_extension_line a
-SET 	s_nom_min = (CASE WHEN EXISTS (SELECT * FROM model_draft.ego_grid_pf_hv_extension_line b WHERE b.scn_name = 'decommissioning_nep2035_confirmed' AND a.project = b.project AND a.project_id = b.project_id) AND a.nova IN ('Netzverstärkung: Stromkreisauflage/Umbeseilung', 'Netzverstärkung: Neubau in bestehender Trasse' )
-		THEN (SELECT MAX(s_nom) FROM model_draft.ego_grid_pf_hv_extension_line b WHERE b.scn_name  = 'decommissioning_nep2035_confirmed' AND a.project = b.project AND a.project_id = b.project_id)
+SET 	s_nom_min = (CASE WHEN EXISTS (SELECT * FROM model_draft.ego_grid_pf_hv_extension_line b WHERE 
+b.scn_name = 'decommissioning_nep2035_confirmed' AND a.project = b.project AND a.project_id = b.project_id) AND a.nova IN ('Netzverstärkung: Stromkreisauflage/Umbeseilung', 'Netzverstärkung: Neubau in bestehender Trasse' )
+		THEN (SELECT MIN(s_nom) FROM model_draft.ego_grid_pf_hv_extension_line b WHERE b.scn_name  = 'decommissioning_nep2035_confirmed' AND a.project = b.project AND a.project_id = b.project_id)
 		ELSE 0 END),
 	s_nom_max = s_nom
 WHERE scn_name = 'extension_nep2035_confirmed';
