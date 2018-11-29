@@ -1,4 +1,4 @@
-﻿/*
+/*
 Missing parameters necessary for calculating a linear optimal power flow (LOPF) are added to the existing data. This
 includes marginal costs per technology, which is composed of specific operating cost, fuel costs and CO2 costs 
 according to renpass_gis, NEP 2014 scenario. 
@@ -71,7 +71,7 @@ where scn_name = 'eGo 100';
 
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_grid_pf_hv_generator','ego_dp_powerflow_lopf_data.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.5','output','model_draft','ego_grid_pf_hv_generator','ego_dp_powerflow_lopf_data.sql',' ');
 
 -- set p_max_pu
 
@@ -144,7 +144,7 @@ SELECT
   229357, -- set according to Acatech2015 for Lithium-Ion. Annual cost method based on investment costs per MW. Must be reduced to size of snapshots if extendable storage shall be used.
   1, -- efficiency is set below 
   0, -- initial storage level is 0
-  false, -- cyclic state of charge is false
+  true, -- cyclic state of charge is true
   6, -- set to 6, to represent daily storage operation  
   0.9247, -- efficiency according to Acatech2015
   0.9247, -- efficiency according to Acatech2015
@@ -194,7 +194,7 @@ SELECT
   65822, -- set according to Acatech2015 for Lithium-Ion (base year is 2023, not 2035!). Annual cost method based on investment costs per MW. Must be reduced to size of snapshots if extendable storage shall be used.
   1, -- efficiency is set below
   0, -- initial storage level is 0
-  false, -- cyclic state of charge is false
+  true, -- cyclic state of charge is true
   6, -- set to 6, to represent daily storage operation  
   0.9327, -- efficiency according to Acatech2015
   0.9327, -- efficiency according to Acatech2015
@@ -244,8 +244,8 @@ SELECT
   0.01, -- marginal costs are set low in order to dispatch after RES and before conv. PP
   44546, -- set according to Acatech2015 for Lithium-Ion (base year is 2023, not 2035!). Annual cost method based on investment costs per MW. Must be reduced to size of snapshots if extendable storage shall be used.
   1, -- efficiency is set below
- 0, -- initial storage level is 0
-  false, -- cyclic state of charge is false
+  0, -- initial storage level is 0
+  true, -- cyclic state of charge is true
   6, -- set to 6, to represent daily storage operation  
   0.9487, -- efficiency according to Acatech2015
   0.9487, -- efficiency according to Acatech2015
@@ -295,7 +295,7 @@ SELECT
   94776, -- set according to Acatech2015 for Hydrogen. Annual cost method based on investment costs per MW. Is reduced to size of snapshots if extendable storage shall be used.
   1, -- efficiency is set below
   0, -- initial storage level is 0
-  false, -- cyclic state of charge is false
+  true, -- cyclic state of charge is true
   168, -- set to 168, to represent weekly storage operation  
   0.675, -- efficiency according to Acatech2015
   0.375, -- efficiency according to Acatech2015
@@ -350,7 +350,7 @@ SELECT
   65402, -- set according to Acatech2015 for Hydrogen (reference year is 2023). Annual cost method based on investment costs per MW. Is reduced to size of snapshots if extendable storage shall be used.
   1, -- efficiency is set below
   0, -- initial storage level is 0
-  false, -- cyclic state of charge is false
+  true, -- cyclic state of charge is true
   168, -- set to 168, to represent weekly storage operation  
   0.725, -- efficiency according to Acatech2015
   0.425, -- efficiency according to Acatech2015
@@ -405,7 +405,7 @@ SELECT
   47777, -- set according to Acatech2015 for Hydrogen (reference year is 2023). Annual cost method based on investment costs per MW. Is reduced to size of snapshots if extendable storage shall be used.
   1, -- efficiency is set below
   0, -- initial storage level is 0
-  false, -- cyclic state of charge is false
+  true, -- cyclic state of charge is true
   168, -- set to 168, to represent weekly storage operation  
   0.785, -- efficiency according to Acatech2015
   0.57, -- efficiency according to Acatech2015
@@ -418,7 +418,7 @@ WHERE model_draft.ego_grid_hvmv_substation.subst_id IN (
 				AND ST_CONTAINS(salt.geom,model_draft.ego_grid_hvmv_substation.point));
 				
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_grid_pf_hv_storage','ego_dp_powerflow_lopf_data.sql',' ');				
+SELECT scenario_log('eGo_DP', 'v0.4.5','output','model_draft','ego_grid_pf_hv_storage','ego_dp_powerflow_lopf_data.sql',' ');				
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_grid_pf_hv_generator_pq_set','ego_dp_powerflow_lopf_data.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.5','output','model_draft','ego_grid_pf_hv_generator_pq_set','ego_dp_powerflow_lopf_data.sql',' ');

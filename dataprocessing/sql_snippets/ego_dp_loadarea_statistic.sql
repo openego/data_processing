@@ -12,13 +12,13 @@ __author__      = "Ludee"
 */
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.0','input','model_draft','ego_grid_hvmv_substation','ego_dp_loadarea_statistic.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.5','input','model_draft','ego_grid_hvmv_substation','ego_dp_loadarea_statistic.sql',' ');
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.0','input','model_draft','ego_grid_mv_griddistrict','ego_dp_loadarea_statistic.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.5','input','model_draft','ego_grid_mv_griddistrict','ego_dp_loadarea_statistic.sql',' ');
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.0','input','model_draft','ego_demand_loadarea','ego_dp_loadarea_statistic.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.5','input','model_draft','ego_demand_loadarea','ego_dp_loadarea_statistic.sql',' ');
 
 /*
 -- Results and statistics for substation, Loadarea, MV Griddistricts and Consumption
@@ -37,7 +37,7 @@ CREATE TABLE            model_draft.ego_data_processing_results (
 
 INSERT INTO model_draft.ego_data_processing_results (version,schema_name,table_name,description,result,unit,timestamp)
     -- Count SUB
-    SELECT  'v0.4.0',
+    SELECT  'v0.4.5',
             'model_draft',
             'ego_grid_hvmv_substation',
             'Number of substations',
@@ -48,7 +48,7 @@ INSERT INTO model_draft.ego_data_processing_results (version,schema_name,table_n
     UNION ALL
     
     -- Count MVGD
-    SELECT  'v0.4.0',
+    SELECT  'v0.4.5',
             'model_draft',
             'ego_grid_mv_griddistrict',
             'Number of grid districts',
@@ -59,7 +59,7 @@ INSERT INTO model_draft.ego_data_processing_results (version,schema_name,table_n
     UNION ALL
     
     -- Area vg250.gem
-    SELECT  'v0.4.0',
+    SELECT  'v0.4.5',
             'boundaries',
             'bkg_vg250_6_gem',
             'Gemeinde area',
@@ -70,7 +70,7 @@ INSERT INTO model_draft.ego_data_processing_results (version,schema_name,table_n
     UNION ALL
     
     -- Area vg250.gem_clean
-    SELECT  'v0.4.0',
+    SELECT  'v0.4.5',
             'model_draft',
             'ego_boundaries_bkg_vg250_6_gem_clean',
             'Processed gemeinde area',
@@ -81,7 +81,7 @@ INSERT INTO model_draft.ego_data_processing_results (version,schema_name,table_n
     UNION ALL
     
     -- Area GD
-    SELECT  'v0.4.0',
+    SELECT  'v0.4.5',
             'model_draft',
             'ego_grid_mv_griddistrict',
             'Grid District area',
@@ -92,7 +92,7 @@ INSERT INTO model_draft.ego_data_processing_results (version,schema_name,table_n
     UNION ALL
     
     -- Min area GD calc
-    SELECT  'v0.4.0',
+    SELECT  'v0.4.5',
             'model_draft',
             'ego_grid_mv_griddistrict',
             'Minmal GD area calculated',
@@ -103,7 +103,7 @@ INSERT INTO model_draft.ego_data_processing_results (version,schema_name,table_n
     UNION ALL
     
     -- Min area GD area
-    SELECT  'v0.4.0',
+    SELECT  'v0.4.5',
             'model_draft',
             'ego_grid_mv_griddistrict',
             'Minmal GD area from table',
@@ -114,7 +114,7 @@ INSERT INTO model_draft.ego_data_processing_results (version,schema_name,table_n
     UNION ALL
     
     -- Max area GD
-    SELECT  'v0.4.0',
+    SELECT  'v0.4.5',
             'model_draft',
             'ego_grid_mv_griddistrict',
             'Maximal GD area',
@@ -125,7 +125,7 @@ INSERT INTO model_draft.ego_data_processing_results (version,schema_name,table_n
     UNION ALL
     
     -- Count LA
-    SELECT  'v0.4.0',
+    SELECT  'v0.4.5',
             'model_draft',
             'ego_demand_loadarea',
             'Number of Load Areas',
@@ -136,7 +136,7 @@ INSERT INTO model_draft.ego_data_processing_results (version,schema_name,table_n
     UNION ALL
     
     -- Area LA
-    SELECT  'v0.4.0',
+    SELECT  'v0.4.5',
             'model_draft',
             'ego_demand_loadarea',
             'Load Areas area',
@@ -147,7 +147,7 @@ INSERT INTO model_draft.ego_data_processing_results (version,schema_name,table_n
     UNION ALL
     
     -- Min area LA
-    SELECT  'v0.4.0',
+    SELECT  'v0.4.5',
             'model_draft',
             'ego_demand_loadarea',
             'Minmal LA area',
@@ -158,7 +158,7 @@ INSERT INTO model_draft.ego_data_processing_results (version,schema_name,table_n
     UNION ALL
     
     -- Max area LA
-    SELECT  'v0.4.0',
+    SELECT  'v0.4.5',
             'model_draft',
             'ego_demand_loadarea',
             'Maximal LA area',
@@ -173,10 +173,10 @@ ALTER TABLE model_draft.ego_data_processing_results OWNER TO oeuser;
 -- metadata
 COMMENT ON TABLE model_draft.ego_data_processing_results IS '{ 
     "comment": "eGoDP - Temporary table", 
-    "version": "v0.4.0" }';
+    "version": "v0.4.5" }';
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_data_processing_results','ego_dp_loadarea_statistic.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.5','output','model_draft','ego_data_processing_results','ego_dp_loadarea_statistic.sql',' ');
 
 
 
@@ -419,7 +419,7 @@ UPDATE model_draft.ego_grid_mv_griddistrict AS t1
     SET consumption_per_area = consumption *1000000 / area_ha;
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_grid_mv_griddistrict','ego_dp_loadarea_statistic.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.5','output','model_draft','ego_grid_mv_griddistrict','ego_dp_loadarea_statistic.sql',' ');
 
 /*
 -- test
@@ -476,10 +476,10 @@ ALTER TABLE boundaries.bkg_vg250_statistics_mview OWNER TO oeuser;
 -- metadata
 COMMENT ON MATERIALIZED VIEW boundaries.bkg_vg250_statistics_mview IS '{
     "comment": "eGoDP - Temporary table",
-    "version": "v0.4.0" }';
+    "version": "v0.4.5" }';
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.0','output','boundaries','bkg_vg250_statistics_mview','ego_dp_loadarea_statistic.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.5','output','boundaries','bkg_vg250_statistics_mview','ego_dp_loadarea_statistic.sql',' ');
 
 
 -- drid district

@@ -15,6 +15,8 @@ __author__ 	= "ClaraBuettner, IlkaCu"
 
 DROP TABLE IF EXISTS  model_draft.ego_grid_pf_hv_extension_temp_resolution;
 CREATE TABLE model_draft.ego_grid_pf_hv_extension_temp_resolution AS (SELECT * FROM model_draft.ego_grid_pf_hv_temp_resolution);
+ALTER TABLE model_draft.ego_grid_pf_hv_extension_temp_resolution
+  OWNER TO oeuser;
 
 DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_extension_source ;
 CREATE TABLE model_draft.ego_grid_pf_hv_extension_source AS (SELECT * FROM model_draft.ego_grid_pf_hv_source);
@@ -88,7 +90,7 @@ SELECT setval('model_draft.ego_grid_hv_extension_transformer_id', (max(trafo_id)
 
 DROP SEQUENCE IF EXISTS model_draft.ego_grid_hv_extension_link_id CASCADE;
 CREATE SEQUENCE model_draft.ego_grid_hv_extension_link_id;
-SELECT setval('model_draft.ego_grid_hv_extension_link_id', 1); 
+SELECT setval('model_draft.ego_grid_hv_extension_link_id', (max(link_id)+1)) FROM model_draft.ego_grid_pf_hv_link;
 
 DELETE FROM model_draft.scn_nep2035_b2_line WHERE project = 'P200';
 
@@ -536,7 +538,7 @@ SET 	s_min = (CASE 	WHEN s0 < s1 	THEN s0
 
 --- Set s_nom in respect to s_min and trafos in existing network --- 			
 UPDATE model_draft.ego_grid_pf_hv_extension_transformer 
-SET 	s_nom = (CASE 	WHEN s_min <= 600  THEN 600
+SET 	s_nom = (CASE	WHEN s_min <= 600  THEN 600
 			WHEN s_min > 600  AND s_min <= 1200 THEN 1200
 			WHEN s_min > 1200 AND s_min <= 1600 THEN 1600
 			WHEN s_min > 1600 AND s_min <= 2100 THEN 2100
@@ -546,9 +548,9 @@ SET 	s_nom = (CASE 	WHEN s_min <= 600  THEN 600
 			WHEN s_min > 6000 AND s_min <= 7200 THEN 7200
 			WHEN s_min > 7200 AND s_min <= 8000 THEN 8000
 			WHEN s_min > 8000 AND s_min <= 9000 THEN 9000
-			WHEN s_min > 9000 AND s_min <= 10800 THEN 10800
-			WHEN s_min > 10800 --AND s_min <= 12000
-			 THEN 12000
+			WHEN s_min > 9000 AND s_min <= 13000 THEN 13000
+			WHEN s_min > 13000 AND s_min <= 20000 THEN 20000
+			WHEN s_min > 20000 AND s_min <= 33000 THEN 33000
 			END);
 
 --- Set capital costs for trafos ---			
@@ -1034,7 +1036,7 @@ SET 	s_min = (CASE 	WHEN s0 < s1 	THEN s0
 
 			
 UPDATE model_draft.ego_grid_pf_hv_extension_transformer 
-SET 	s_nom = (CASE 	WHEN s_min <= 600  THEN 600
+SET 	s_nom = (CASE	WHEN s_min <= 600  THEN 600
 			WHEN s_min > 600  AND s_min <= 1200 THEN 1200
 			WHEN s_min > 1200 AND s_min <= 1600 THEN 1600
 			WHEN s_min > 1600 AND s_min <= 2100 THEN 2100
@@ -1044,24 +1046,24 @@ SET 	s_nom = (CASE 	WHEN s_min <= 600  THEN 600
 			WHEN s_min > 6000 AND s_min <= 7200 THEN 7200
 			WHEN s_min > 7200 AND s_min <= 8000 THEN 8000
 			WHEN s_min > 8000 AND s_min <= 9000 THEN 9000
-			WHEN s_min > 9000 AND s_min <= 10800 THEN 10800
-			WHEN s_min > 10800 --AND s_min <= 12000
-			 THEN 12000
+			WHEN s_min > 9000 AND s_min <= 13000 THEN 13000
+			WHEN s_min > 13000 AND s_min <= 20000 THEN 20000
+			WHEN s_min > 20000 AND s_min <= 33000 THEN 33000
 			END);
-
-UPDATE model_draft.ego_grid_pf_hv_extension_transformer 
-SET 	x = (CASE s_nom WHEN 1200 THEN 4.84
-			WHEN 4800 THEN 1.21
-			WHEN 2100 THEN 9.62667148
-			WHEN 1600 THEN 3.63
-			WHEN 600 THEN 9.68
-			WHEN 6000 THEN 3.249
-			WHEN 7200 THEN 2.80777136
-			WHEN 2600 THEN 2.23384392
-			WHEN 8000 THEN 2.43675
-			WHEN 9000 THEN 2.166
-			WHEN 10800 THEN 0.00002
-			WHEN 12000 THEN 0.00002
+UPDATE model_draft.ego_grid_pf_hv_extension_transformer
+SET 	x = (CASE s_nom WHEN 1200 THEN 0.0001
+			WHEN 4800 THEN 0.000025
+			WHEN 2100 THEN 0.00006667
+			WHEN 1600 THEN 0.000075000000000000000000
+			WHEN 600 THEN 0.00020000000000000000
+			WHEN 6000 THEN 0.000022500000000000000000
+			WHEN 7200 THEN 0.000019444400000000000000
+			WHEN 2600 THEN 0.000046153800000000000000
+			WHEN 8000 THEN 0.000016875000000000000000
+			WHEN 9000 THEN 0.000015000000000000000000
+			WHEN 13000 THEN 0.000010384600000000000000
+			WHEN 20000 THEN 0.000006750000000000000000
+			WHEN 33000 THEN 0.000004090910000000000000
 			END),
 	tap_ratio = 1,
 	phase_shift = 0;
@@ -1257,7 +1259,7 @@ SET	geom = ST_Multi(topo),
 WHERE scn_name = 'extension_nep2035_b2';		
 
 UPDATE model_draft.ego_grid_pf_hv_extension_transformer 
-SET 	s_nom = (CASE 	WHEN s_min <= 600  THEN 600
+SET 	s_nom = (CASE	WHEN s_min <= 600  THEN 600
 			WHEN s_min > 600  AND s_min <= 1200 THEN 1200
 			WHEN s_min > 1200 AND s_min <= 1600 THEN 1600
 			WHEN s_min > 1600 AND s_min <= 2100 THEN 2100
@@ -1267,25 +1269,26 @@ SET 	s_nom = (CASE 	WHEN s_min <= 600  THEN 600
 			WHEN s_min > 6000 AND s_min <= 7200 THEN 7200
 			WHEN s_min > 7200 AND s_min <= 8000 THEN 8000
 			WHEN s_min > 8000 AND s_min <= 9000 THEN 9000
-			WHEN s_min > 9000 AND s_min <= 10800 THEN 10800
-			WHEN s_min > 10800 --AND s_min <= 12000
-			 THEN 12000
+			WHEN s_min > 9000 AND s_min <= 13000 THEN 13000
+			WHEN s_min > 13000 AND s_min <= 20000 THEN 20000
+			WHEN s_min > 20000 AND s_min <= 33000 THEN 33000
 			END)
 WHERE scn_name = 'extension_nep2035_b2';
 
-UPDATE model_draft.ego_grid_pf_hv_extension_transformer 
-SET 	x = (CASE s_nom WHEN 1200 THEN 4.84
-			WHEN 4800 THEN 1.21
-			WHEN 2100 THEN 9.62667148
-			WHEN 1600 THEN 3.63
-			WHEN 600 THEN 9.68
-			WHEN 6000 THEN 3.249
-			WHEN 7200 THEN 2.80777136
-			WHEN 2600 THEN 2.23384392
-			WHEN 8000 THEN 2.43675
-			WHEN 9000 THEN 2.166
-			WHEN 10800 THEN 0.00002
-			WHEN 12000 THEN 0.00002
+UPDATE model_draft.ego_grid_pf_hv_extension_transformer
+SET 	x = (CASE s_nom WHEN 1200 THEN 0.0001
+			WHEN 4800 THEN 0.000025
+			WHEN 2100 THEN 0.00006667
+			WHEN 1600 THEN 0.000075000000000000000000
+			WHEN 600 THEN 0.00020000000000000000
+			WHEN 6000 THEN 0.000022500000000000000000
+			WHEN 7200 THEN 0.000019444400000000000000
+			WHEN 2600 THEN 0.000046153800000000000000
+			WHEN 8000 THEN 0.000016875000000000000000
+			WHEN 9000 THEN 0.000015000000000000000000
+			WHEN 13000 THEN 0.000010384600000000000000
+			WHEN 20000 THEN 0.000006750000000000000000
+			WHEN 33000 THEN 0.000004090910000000000000
 			END),
 	tap_ratio = 1,
 	phase_shift = 0
@@ -1456,7 +1459,7 @@ AND bus_id NOT IN (SELECT bus0 FROM model_draft.ego_grid_pf_hv_extension_link WH
 AND bus_id NOT IN (SELECT bus0 FROM model_draft.ego_grid_pf_hv_extension_transformer WHERE scn_name = a.scn_name) AND bus_id NOT IN (SELECT bus1 FROM model_draft.ego_grid_pf_hv_extension_transformer WHERE scn_name = a.scn_name);
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_grid_pf_hv_extension_bus','ego_pp_nep2035_grid_variations.sql',' ');
-SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_grid_pf_hv_extension_line','ego_pp_nep2035_grid_variations.sql',' ');
-SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_grid_pf_hv_extension_link','ego_pp_nep2035_grid_variations.sql',' ');
-SELECT scenario_log('eGo_DP', 'v0.4.0','output','model_draft','ego_grid_pf_hv_extension_transformer','ego_pp_nep2035_grid_variations.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.5','output','model_draft','ego_grid_pf_hv_extension_bus','ego_pp_nep2035_grid_variations.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.5','output','model_draft','ego_grid_pf_hv_extension_line','ego_pp_nep2035_grid_variations.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.5','output','model_draft','ego_grid_pf_hv_extension_link','ego_pp_nep2035_grid_variations.sql',' ');
+SELECT scenario_log('eGo_DP', 'v0.4.5','output','model_draft','ego_grid_pf_hv_extension_transformer','ego_pp_nep2035_grid_variations.sql',' ');

@@ -21,7 +21,7 @@ from workalendar.europe import Germany
 from datetime import time as settime
 from math import sqrt
 from dataprocessing.tools import io, metadata
-from dataprocessing.python_scripts.functions.ego_scenario_log import write_ego_scenario_log
+from dataprocessing.python_scripts.functions.ego_scenario_log import write_scenario_log
 
 
 def demand_per_mv_grid_district():
@@ -64,12 +64,13 @@ def demand_per_mv_grid_district():
         query_demand.statement, session.bind, index_col='otg_id').fillna(0)
     annual_demand_df = annual_demand_df.loc[~pd.isnull(annual_demand_df.index)]
 
-    write_ego_scenario_log(conn=conn,
-                           version='v0.4.0',
+    write_scenario_log(conn=conn,
+                           version='v0.4.5',
+                           project='eGoDP',
                            io='input',
                            schema='model_draft',
                            table=orm_loads.__tablename__,
-                           script='demand_per_mv_grid_district.py',
+                           script='ego_dp_powerflow_griddistrict_demand.py',
                            entries=len(annual_demand_df))
 
     large_scale_industrial = pd.read_sql_table(
@@ -78,12 +79,13 @@ def demand_per_mv_grid_district():
         schema,
         index_col='polygon_id')
 
-    write_ego_scenario_log(conn=conn,
-                           version='v0.4.0',
+    write_scenario_log(conn=conn,
+                           version='v0.4.5',
+                           project='eGoDP',
                            io='input',
                            schema='model_draft',
                            table='ego_demand_hv_largescaleconsumer',
-                           script='demand_per_mv_grid_district.py',
+                           script='ego_dp_powerflow_griddistrict_demand.py',
                            entries=len(large_scale_industrial))
 
 
@@ -185,12 +187,13 @@ def demand_per_mv_grid_district():
 
     metadata.submit_comment(conn, json_str, schema, target_table)
 
-    write_ego_scenario_log(conn=conn,
-                           version='v0.4.0',
+    write_scenario_log(conn=conn,
+                           version='v0.4.5',
+                           project='eGoDP',
                            io='output',
                            schema=schema,
                            table=target_table,
-                           script='demand_per_mv_grid_district.py',
+                           script='ego_dp_powerflow_griddistrict_demand.py',
                            entries=len(annual_demand_df))
 
     conn.close()
