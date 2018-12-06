@@ -24,6 +24,15 @@ CREATE MATERIALIZED VIEW supply.ego_dp_conv_powerplant_sq_mview AS
 ALTER MATERIALIZED VIEW supply.ego_dp_conv_powerplant_sq_mview
     OWNER TO oeuser; 
 
+-- index (id)
+CREATE UNIQUE INDEX ego_dp_conv_powerplant_sq_mview_idx
+    ON supply.ego_dp_conv_powerplant_sq_mview (version,id);
+
+-- index GIST (geom)
+CREATE INDEX ego_dp_conv_powerplant_sq_mview_geom_idx
+	ON	supply.ego_dp_conv_powerplant_sq_mview USING GIST (geom);
+
+
 -- MView for NEP 2035
 DROP MATERIALIZED VIEW IF EXISTS supply.ego_dp_conv_powerplant_nep2035_mview CASCADE;
 CREATE MATERIALIZED VIEW supply.ego_dp_conv_powerplant_nep2035_mview AS
@@ -115,6 +124,15 @@ CREATE MATERIALIZED VIEW supply.ego_dp_res_powerplant_sq_mview AS
 
 ALTER MATERIALIZED VIEW supply.ego_dp_res_powerplant_sq_mview
     OWNER TO oeuser;
+
+-- index (id)
+CREATE UNIQUE INDEX ego_dp_res_powerplant_sq_mview_idx
+    ON supply.ego_dp_res_powerplant_sq_mview (version,id);
+
+-- index GIST (geom)
+CREATE INDEX ego_dp_res_powerplant_sq_mview_geom_idx
+	ON	supply.ego_dp_res_powerplant_sq_mview USING GIST (geom);
+
 
 -- MView for NEP 2035
 DROP MATERIALIZED VIEW IF EXISTS supply.ego_dp_res_powerplant_nep2035_mview CASCADE;
