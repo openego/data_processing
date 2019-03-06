@@ -1,4 +1,4 @@
-/*
+﻿/*
 In a postprocessing this script adds additional scenarios as grid variations. 
 Therefore, new 'model_draft.ego_grid_pf_hv_extension_'-tables are created for each component. 
 The scenarios represent the extension of lines due to the Netzentwicklungsplan from 2015.
@@ -269,10 +269,10 @@ INSERT INTO model_draft.ego_grid_pf_hv_extension_line (line_id, geom, project, p
 	FROM grid.bnetza_vorhaben_enlag a WHERE technik = 'AC' AND vorhabennummer NOT IN (10, 17, 20, 21, 7, 9); 
 
 UPDATE model_draft.ego_grid_pf_hv_extension_line 
-	SET 	bus0 = (CASE	WHEN project = 'EnLAG' AND project_id = 15 AND segment = 5 THEN (SELECT DISTINCT ON (bus_id) bus_id FROM model_draft.ego_grid_pf_hv_extension_bus WHERE geom = '0101000020E610000074B51EFDB6441C40CD0D1EEC4E4C4940' )
-				WHEN project = 'EnLAG' AND project_id = 19 AND segment = 6 THEN (SELECT DISTINCT ON (bus_id) bus_id FROM model_draft.ego_grid_pf_hv_extension_bus WHERE geom = '0101000020E61000005B50E484FEC21F4015BFC8E4906C4940') ELSE bus0 END),
-		bus1 = (CASE	WHEN project = 'EnLAG' AND project_id = 15 AND segment = 4 THEN (SELECT DISTINCT ON (bus_id) bus_id FROM model_draft.ego_grid_pf_hv_extension_bus WHERE geom = '0101000020E610000074B51EFDB6441C40CD0D1EEC4E4C4940' )
-				WHEN project = 'EnLAG' AND project_id = 19 AND segment = 4 THEN (SELECT DISTINCT ON (bus_id) bus_id FROM model_draft.ego_grid_pf_hv_extension_bus WHERE geom = '0101000020E61000005B50E484FEC21F4015BFC8E4906C4940') ELSE bus1 END);
+	SET 	bus0 = (CASE	WHEN project = 'EnLAG' AND project_id = 15 AND segment = 5 THEN (SELECT DISTINCT ON (bus_id) bus_id FROM model_draft.ego_grid_pf_hv_extension_bus WHERE geom = '0101000020E610000072B51EFDB6441C40CD0D1EEC4E4C4940' )
+				WHEN project = 'EnLAG' AND project_id = 19 AND segment = 6 THEN (SELECT DISTINCT ON (bus_id) bus_id FROM model_draft.ego_grid_pf_hv_extension_bus WHERE geom = '0101000020E61000005950E484FEC21F4015BFC8E4906C4940') ELSE bus0 END),
+		bus1 = (CASE	WHEN project = 'EnLAG' AND project_id = 15 AND segment = 4 THEN (SELECT DISTINCT ON (bus_id) bus_id FROM model_draft.ego_grid_pf_hv_extension_bus WHERE geom = '0101000020E610000072B51EFDB6441C40CD0D1EEC4E4C4940' )
+				WHEN project = 'EnLAG' AND project_id = 19 AND segment = 4 THEN (SELECT DISTINCT ON (bus_id) bus_id FROM model_draft.ego_grid_pf_hv_extension_bus WHERE geom = '0101000020E61000005950E484FEC21F4015BFC8E4906C4940') ELSE bus1 END);
 
 --- Set number of systems in respect to NEP and data from ÜNB ---
 UPDATE model_draft.ego_grid_pf_hv_extension_line a
@@ -455,8 +455,8 @@ UPDATE model_draft.ego_grid_pf_hv_extension_link a
 --- Delete unused buses to avoid subnetworks ---
 DELETE FROM model_draft.ego_grid_pf_hv_extension_bus a WHERE bus_id NOT IN (SELECT bus0 FROM model_draft.ego_grid_pf_hv_extension_line WHERE scn_name = a.scn_name)
 AND bus_id NOT IN (SELECT bus1 FROM model_draft.ego_grid_pf_hv_extension_line WHERE scn_name = a.scn_name)
-AND bus_id NOT IN (SELECT bus0 FROM model_draft.ego_grid_pf_hv_extension_link WHERE scn_name = a.scn_name) AND bus_id NOT IN (SELECT bus1 FROM model_draft.ego_grid_pf_hv_extension_link WHERE scn_name = a.scn_name)
-AND bus_id NOT IN (SELECT bus0 FROM model_draft.ego_grid_pf_hv_extension_transformer WHERE scn_name = a.scn_name) AND bus_id NOT IN (SELECT bus1 FROM model_draft.ego_grid_pf_hv_extension_transformer WHERE scn_name = a.scn_name);
+AND bus_id NOT IN (SELECT bus0 FROM model_draft.ego_grid_pf_hv_extension_link WHERE scn_name = a.scn_name) AND bus_id NOT IN (SELECT bus1 FROM model_draft.ego_grid_pf_hv_extension_link WHERE scn_name = a.scn_name);
+--AND bus_id NOT IN (SELECT bus0 FROM model_draft.ego_grid_pf_hv_extension_transformer WHERE scn_name = a.scn_name) AND bus_id NOT IN (SELECT bus1 FROM model_draft.ego_grid_pf_hv_extension_transformer WHERE scn_name = a.scn_name);
 
 
 -- Table: model_draft.ego_grid_pf_hv_extension_transformer
@@ -560,404 +560,6 @@ SET	capital_cost = 14166,
 	s_nom_max = s_nom
 WHERE (v1 = 220 AND v0=380) OR (v0 = 220 AND v1=380);
 				
-
---- Delete unsued buses ---
-DELETE FROM model_draft.ego_grid_pf_hv_extension_bus WHERE bus_id NOT IN (SELECT bus0 FROM model_draft.ego_grid_pf_hv_extension_line) AND bus_id NOT IN (SELECT bus1 FROM model_draft.ego_grid_pf_hv_extension_line)
-AND bus_id NOT IN (SELECT bus0 FROM model_draft.ego_grid_pf_hv_extension_link) AND bus_id NOT IN (SELECT bus1 FROM model_draft.ego_grid_pf_hv_extension_link)
-AND bus_id NOT IN (SELECT bus0 FROM model_draft.ego_grid_pf_hv_extension_transformer) AND bus_id NOT IN (SELECT bus1 FROM model_draft.ego_grid_pf_hv_extension_transformer);
-
-
--- Table: model_draft.ego_grid_pf_hv_extension_load
-DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_extension_load CASCADE;
-
-CREATE TABLE model_draft.ego_grid_pf_hv_extension_load
-(
-  scn_name character varying NOT NULL DEFAULT 'BE and NO'::character varying,
-  load_id bigint NOT NULL,
-  bus bigint,
-  sign double precision DEFAULT (-1),
-  e_annual double precision,
-  CONSTRAINT ext_load_data_pkey PRIMARY KEY (load_id, scn_name)
-)
-WITH (
-  OIDS=FALSE
-);
-ALTER TABLE model_draft.ego_grid_pf_hv_extension_load
-  OWNER TO oeuser;
-
---- Insert loads to the middle of belgium and norway
-INSERT INTO model_draft.ego_grid_pf_hv_extension_load (scn_name, load_id, bus, sign)
-VALUES 	('extension_BE_NO_NEP 2035', 1000000, (SELECT bus_id FROM model_draft.ego_grid_pf_hv_extension_bus WHERE geom = '0101000020E61000003851291763E8114098865E2D305B4940' AND scn_name = 'extension_BE_NO_NEP 2035'), '-1'),
-	('extension_BE_NO_NEP 2035', 1000001, (SELECT bus_id FROM model_draft.ego_grid_pf_hv_extension_bus WHERE geom = '0101000020E6100000351DBC74686A24405536F7CC1CFC4E40' AND scn_name = 'extension_BE_NO_NEP 2035'), '-1');
-	
-
--- Table: model_draft.ego_grid_pf_hv_extension_load_pq_set
-DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_extension_load_pq_set CASCADE;
-
-CREATE TABLE model_draft.ego_grid_pf_hv_extension_load_pq_set
-(
-  scn_name character varying NOT NULL DEFAULT 'Status Quo'::character varying,
-  load_id bigint NOT NULL,
-  temp_id integer NOT NULL,
-  p_set double precision[],
-  q_set double precision[],
-  CONSTRAINT extension_load_pq_set_pkey PRIMARY KEY (load_id, temp_id, scn_name),
-  CONSTRAINT extension_load_pq_set_temp_fkey FOREIGN KEY (temp_id)
-      REFERENCES model_draft.ego_grid_pf_hv_temp_resolution (temp_id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION
-)
-WITH (
-  OIDS=FALSE
-);
-ALTER TABLE model_draft.ego_grid_pf_hv_extension_load_pq_set
-  OWNER TO oeuser;
-
---- Insert load timeseries from opsd_hourly_timeseries ---
-INSERT INTO model_draft.ego_grid_pf_hv_extension_load_pq_set (scn_name, load_id, temp_id, p_set, q_set)
-VALUES('extension_BE_NO_NEP 2035' ,
-	1000000 ,
-	1,
-	(SELECT (array_agg (SQ.load_be ORDER BY SQ.timestamp))	
-	FROM model_draft.opsd_hourly_timeseries SQ
-	WHERE timestamp BETWEEN '2011-01-01 00:00:00' AND '2011-12-31 23:00:00'
-	 ),
-	(SELECT (array_agg (0 *SQ.load_be ORDER BY SQ.timestamp))	
-	FROM model_draft.opsd_hourly_timeseries SQ
-	WHERE timestamp BETWEEN '2011-01-01 00:00:00' AND '2011-12-31 23:00:00'
-	 )),
-
-	('extension_BE_NO_NEP 2035' ,
-	1000001 ,
-	1,
-	(SELECT (array_agg (SQ.load_no ORDER BY SQ.timestamp))	
-	FROM model_draft.opsd_hourly_timeseries SQ
-	WHERE timestamp BETWEEN '2011-01-01 00:00:00' AND '2011-12-31 23:00:00'
-	 ),
-	 (SELECT (array_agg (0*SQ.load_no ORDER BY SQ.timestamp))	
-	FROM model_draft.opsd_hourly_timeseries SQ
-	WHERE timestamp BETWEEN '2011-01-01 00:00:00' AND '2011-12-31 23:00:00'
-	 ));
-
-
--- Table: model_draft.ego_grid_pf_hv_extension_generator
-DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_extension_generator CASCADE;
-
-CREATE TABLE model_draft.ego_grid_pf_hv_extension_generator
-(
-  scn_name character varying NOT NULL DEFAULT 'Status Quo'::character varying,
-  generator_id bigint NOT NULL,
-  bus bigint,
-  dispatch text DEFAULT 'flexible'::text,
-  control text DEFAULT 'PQ'::text,
-  p_nom double precision DEFAULT 0,
-  p_nom_extendable boolean DEFAULT false,
-  p_nom_min double precision DEFAULT 0,
-  p_nom_max double precision,
-  p_min_pu_fixed double precision DEFAULT 0,
-  p_max_pu_fixed double precision DEFAULT 1,
-  sign double precision DEFAULT 1,
-  source bigint,
-  marginal_cost double precision,
-  capital_cost double precision,
-  efficiency double precision,
-  CONSTRAINT generator_data_source_fkey FOREIGN KEY (source)
-      REFERENCES model_draft.ego_grid_pf_hv_source (source_id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION
-)
-WITH (
-  OIDS=FALSE
-);
-ALTER TABLE model_draft.ego_grid_pf_hv_extension_generator
-  OWNER TO oeuser;
-
--- INSERT params of LinearTransformers in model_draft.ego_grid_pf_hv_generator (countries besides Germany)
--- starting generator_id at 200000, bus_id for neighbouring countries > 2800000 atm
--- BE_NO_NEP 2035
-INSERT into model_draft.ego_grid_pf_hv_extension_generator
-
-	SELECT
-	'extension_BE_NO_NEP 2035' AS scn_name,
-	row_number() over () + 210000 AS generator_id,
-	B.bus_id AS bus,
-	'flexible' AS dispatch,
-	'PV' AS control,
-	nominal_value[1] AS p_nom,
-	FALSE AS p_nom_extendable,
-	NULL AS p_nom_max,
-	0 AS p_nom_min,
-	0 AS p_min_pu_fixed,
-	1 AS p_max_pu_fixed,
-	1 AS sign,
-	CASE
-		WHEN source LIKE '%%gas%%' THEN 1
-		when source LIKE '%%lignite%%' THEN 2
-		when source LIKE '%%mixed_fuels%%' THEN 3
-		when source LIKE '%%oil%%' THEN 4
-		when source LIKE '%%uranium%%' THEN 5
-		when source LIKE '%%biomass%%' THEN 6
-		when source LIKE '%%hard_coal%%' THEN 8
-	END AS source
-		FROM calc_renpass_gis.renpass_gis_linear_transformer A join
-		(
-		SELECT
-		*
-		FROM
-			(SELECT *
-			
-			FROM
-			model_draft.ego_grid_pf_hv_extension_bus
-			where bus_name = 'center BE'
-			AND scn_name = 'extension_BE_NO_NEP 2035'
-			) SQ
-		
-		) B
-		ON (substring(A.source, 1, 2) = 'BE')
-	WHERE A.nominal_value IS not NULL
-	AND A.nominal_value[1] > 0.001
-	AND A.source not LIKE '%%powerline%%'
-	AND A.scenario_id = 44;
-
-
--- INSERT params of Source in model_draft.ego_grid_pf_hv_generator (BE and NO)
--- BE_NO_NEP 2035
-INSERT into model_draft.ego_grid_pf_hv_extension_generator
-
-	SELECT
-	'extension_BE_NO_NEP 2035' AS scn_name,
-	row_number() over () + (SELECT max(generator_id) FROM model_draft.ego_grid_pf_hv_extension_generator) AS generator_id,
-	B.bus_id AS bus,
-	'variable' AS dispatch,
-	'PV' AS control,
-	nominal_value[1] AS p_nom,
-	FALSE AS p_nom_extendable,
-	NULL AS p_nom_max,
-	0 AS p_nom_min,
-	0 AS p_min_pu_fixed,
-	1 AS p_max_pu_fixed,
-	1 AS sign,
-	CASE
-		WHEN source LIKE '%%run_of_river%%' THEN 9
-		WHEN source LIKE '%%solar%%' THEN 12
-		WHEN source LIKE '%%wind%%' THEN 13
-        END AS source
-		FROM calc_renpass_gis.renpass_gis_source A join
-		(
-		SELECT
-		*
-		FROM
-			(SELECT *
-			FROM
-			model_draft.ego_grid_pf_hv_extension_bus
-			where bus_name = 'center BE' 
-			AND scn_name = 'extension_BE_NO_NEP 2035'
-			) SQ
-			) B
-		ON (substring(A.source, 1, 2) = 'BE')
-	WHERE A.nominal_value[1] > 0.001
-	AND A.scenario_id = 44;
-
-
-	INSERT into model_draft.ego_grid_pf_hv_extension_generator
-
-	SELECT
-	'extension_BE_NO_NEP 2035' AS scn_name,
-	row_number() over () + 220000 AS generator_id,
-	B.bus_id AS bus,
-	'flexible' AS dispatch,
-	'PV' AS control,
-	nominal_value[1] AS p_nom,
-	FALSE AS p_nom_extendable,
-	NULL AS p_nom_max,
-	0 AS p_nom_min,
-	0 AS p_min_pu_fixed,
-	1 AS p_max_pu_fixed,
-	1 AS sign,
-	CASE
-		WHEN source LIKE '%%gas%%' THEN 1
-		when source LIKE '%%lignite%%' THEN 2
-		when source LIKE '%%mixed_fuels%%' THEN 3
-		when source LIKE '%%oil%%' THEN 4
-		when source LIKE '%%uranium%%' THEN 5
-		when source LIKE '%%biomass%%' THEN 6
-		when source LIKE '%%hard_coal%%' THEN 8
-	END AS source
-		FROM calc_renpass_gis.renpass_gis_linear_transformer A join
-		(
-		SELECT
-		*
-		FROM
-			(SELECT *
-			
-			FROM
-			model_draft.ego_grid_pf_hv_extension_bus
-			where bus_name = 'center NO'
-			AND scn_name = 'extension_BE_NO_NEP 2035'
-			) SQ
-		
-		) B
-		ON (substring(A.source, 1, 2) = 'NO')
-	WHERE A.nominal_value IS not NULL
-	AND A.nominal_value[1] > 0.001
-	AND A.source not LIKE '%%powerline%%'
-	AND A.scenario_id = 44;
-
-
--- INSERT params of Source in model_draft.ego_grid_pf_hv_generator (BE and NO)
--- BE_NO_NEP 2035
-INSERT into model_draft.ego_grid_pf_hv_extension_generator
-
-	SELECT
-	'extension_BE_NO_NEP 2035' AS scn_name,
-	row_number() over () + (SELECT max(generator_id) FROM model_draft.ego_grid_pf_hv_extension_generator) AS generator_id,
-	B.bus_id AS bus,
-	'variable' AS dispatch,
-	'PV' AS control,
-	nominal_value[1] AS p_nom,
-	FALSE AS p_nom_extendable,
-	NULL AS p_nom_max,
-	0 AS p_nom_min,
-	0 AS p_min_pu_fixed,
-	1 AS p_max_pu_fixed,
-	1 AS sign,
-	CASE
-		WHEN source LIKE '%%run_of_river%%' THEN 9
-		WHEN source LIKE '%%solar%%' THEN 12
-		WHEN source LIKE '%%wind%%' THEN 13
-        END AS source
-		FROM calc_renpass_gis.renpass_gis_source A join
-		(
-		SELECT
-		*
-		FROM
-			(SELECT *
-			FROM
-			model_draft.ego_grid_pf_hv_extension_bus
-			where bus_name = 'center NO' 
-			AND scn_name = 'extension_BE_NO_NEP 2035'
-			) SQ
-			) B
-		ON (substring(A.source, 1, 2) = 'NO')
-	WHERE A.nominal_value[1] > 0.001
-	AND A.scenario_id = 44;
-
-UPDATE model_draft.ego_grid_pf_hv_extension_generator 
-SET p_nom_min = 0,
-p_nom_max = NULL;
-
--- Copy timeseries data
--- Table: model_draft.ego_grid_pf_hv_extension_generator_pq_set
-
-DROP TABLE IF EXISTS model_draft.ego_grid_pf_hv_extension_generator_pq_set CASCADE;
-
-CREATE TABLE model_draft.ego_grid_pf_hv_extension_generator_pq_set
-(
-  scn_name character varying NOT NULL DEFAULT 'Status Quo'::character varying,
-  generator_id bigint NOT NULL,
-  temp_id integer NOT NULL,
-  p_set double precision[],
-  q_set double precision[],
-  p_min_pu double precision[],
-  p_max_pu double precision[],
-  CONSTRAINT generator_pq_set_temp_fkey FOREIGN KEY (temp_id)
-      REFERENCES model_draft.ego_grid_pf_hv_temp_resolution (temp_id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION
-)
-WITH (
-  OIDS=FALSE
-);
-ALTER TABLE model_draft.ego_grid_pf_hv_extension_generator_pq_set
-  OWNER TO oeuser;
-
--- BE_NO_NEP 2035
-Drop MATERIALIZED VIEW IF EXISTS calc_renpass_gis.extension_translate_to_pf;
-
-CREATE MATERIALIZED VIEW calc_renpass_gis.extension_translate_to_pf AS
-	SELECT
-	SQ.generator_id,
-	C.datetime,
-	C.val
-	FROM
-		(SELECT *,
-		CASE
-			WHEN A.source =  1  THEN  'gas'
-			WHEN A.source =  2  THEN  'lignite'
-			WHEN A.source =  3  THEN  'mixed_fuels'
-			WHEN A.source =  4  THEN  'oil'
-			WHEN A.source =  5  THEN  'uranium'
-			WHEN A.source =  6  THEN  'biomass'
-			WHEN A.source =  8  THEN  'hard_coal'
-			WHEN A.source =  9  THEN  'run_of_river'
-			WHEN A.source =  12 THEN  'solar'
-			WHEN A.source =  13 THEN  'wind'
-		END AS renpass_gis_source
-			FROM model_draft.ego_grid_pf_hv_extension_generator A join
-			model_draft.ego_grid_pf_hv_extension_bus B
-			ON (A.bus = B.bus_id)
-		WHERE A.generator_id > 210000
-		AND A.scn_name = 'extension_BE_NO_NEP 2035'
-		) SQ,
-		calc_renpass_gis.renpass_gis_results C
-	WHERE
-	(C.obj_label LIKE '%%' || SQ.renpass_gis_source || '%%')
-	AND C.scenario_id = 44
-	AND C.type = 'to_bus';
-
--- Make an array, INSERT into generator_pq_set
-INSERT into model_draft.ego_grid_pf_hv_extension_generator_pq_set (scn_name, generator_id, temp_id, p_set)
-
-	SELECT 'extension_BE_NO_NEP 2035' AS scn_name,
-	SQ.generator_id,
-	1 AS temp_id,
-	array_agg(SQ.val ORDER BY SQ.datetime) AS p_set
-		FROM
-		(
-		SELECT
-		A.generator_id,
-		A.datetime,
-		A.val AS val
-			FROM calc_renpass_gis.extension_translate_to_pf A join
-			model_draft.ego_grid_pf_hv_extension_generator B
-			USING (generator_id)
-		) SQ
-	GROUP BY generator_id;
-
-
-UPDATE model_draft.ego_grid_pf_hv_extension_generator
-SET marginal_cost =        -- operating costs + fuel costs + CO2 crt cost
-(
-CASE source                 -- source / renpass_gis NEP 2014
-when 1 THEN (39.9344 + 2.0) -- gas / gas
-when 2 THEN (13.2412 + 4.4)  -- lignite / lignite
-when 3 THEN (16.9297 + 23.0) -- waste / waste
-when 4 THEN (67.3643 + 1.5) -- oil / oil
-when 5 THEN (4.9781 + 0.5)  -- uranium / uranium
-when 6 THEN (27.5112 + 3.9) -- biomass / biomass
-when 7 THEN (39.9344 + 2.0) -- eeg_gas / gas
-when 8 THEN (20.7914 + 4.0) -- coal / hard_coal
-ELSE 0                      -- run_of_river/reservoir/pumped_storage/solar/wind/geothermal/other_non_renewable
-END)
-WHERE scn_name = 'extension_BE_NO_NEP 2035';
-
-UPDATE model_draft.ego_grid_pf_hv_extension_generator_pq_set Y
-SET p_max_pu = T3.p_max_pu
-FROM (
-	SELECT T2.generator_id, array_agg(T2.p_max_pu ORDER BY rn) as p_max_pu
-	FROM (
-		SELECT T1.*, row_number() over() AS rn -- row number introduced to keep array order
-		FROM (
-			SELECT
-			B.generator_id,
-			A.p_nom ,
-			unnest(B.p_set) / A.p_nom AS p_max_pu
-			FROM model_draft.ego_grid_pf_hv_extension_generator A
-			JOIN model_draft.ego_grid_pf_hv_extension_generator_pq_set B USING (generator_id)
-			WHERE A.dispatch = 'variable'
-		) AS T1
-	) AS T2
-GROUP BY T2.generator_id
-) T3 WHERE T3.generator_id = Y.generator_id;
-
-
 -- Insert decommisioning lines from input table model_draft.scn_nep2035_b2_line ---
 INSERT INTO model_draft.ego_grid_pf_hv_extension_line (scn_name, line_id, s_nom, topo, geom,bus0, bus1, v_nom, project, project_id )
 	SELECT	DISTINCT ON (line_id)
@@ -972,7 +574,13 @@ INSERT INTO model_draft.ego_grid_pf_hv_extension_line (scn_name, line_id, s_nom,
 		THEN 380 WHEN a.s_nom = 3580 THEN 380 WHEN a.s_nom = 925 THEN 380 WHEN a.s_nom =  1850 THEN 380 END),
 		project,
 		project_id
-	FROM model_draft.scn_nep2035_b2_line a, model_draft.ego_grid_pf_hv_line b WHERE a.scn_name = 'decommissioning_nep2035_confirmed' AND b.scn_name = 'Status Quo' AND a.geom = b.geom AND a.s_nom = b.s_nom;
+	FROM model_draft.scn_nep2035_b2_line a, model_draft.ego_grid_pf_hv_line b WHERE a.scn_name = 'decommissioning_NEP' AND b.scn_name = 'Status Quo' AND a.geom = b.geom AND a.s_nom = b.s_nom;
+
+
+--- Delete unsued buses ---
+DELETE FROM model_draft.ego_grid_pf_hv_extension_bus WHERE bus_id NOT IN (SELECT bus0 FROM model_draft.ego_grid_pf_hv_extension_line) AND bus_id NOT IN (SELECT bus1 FROM model_draft.ego_grid_pf_hv_extension_line)
+AND bus_id NOT IN (SELECT bus0 FROM model_draft.ego_grid_pf_hv_extension_link) AND bus_id NOT IN (SELECT bus1 FROM model_draft.ego_grid_pf_hv_extension_link)
+AND bus_id NOT IN (SELECT bus0 FROM model_draft.ego_grid_pf_hv_extension_transformer) AND bus_id NOT IN (SELECT bus1 FROM model_draft.ego_grid_pf_hv_extension_transformer);
 
 --- When not all systems will be decommissioned delete from table ---
 DELETE FROM model_draft.ego_grid_pf_hv_extension_line a USING model_draft.ego_grid_pf_hv_extension_line b, model_draft.ego_grid_pf_hv_extension_line c 
@@ -1143,7 +751,7 @@ INSERT INTO model_draft.ego_grid_pf_hv_extension_bus (scn_name, bus_id, v_nom, g
 	FROM model_draft.ego_grid_pf_hv_bus WHERE geom IN ('0101000020E6100000781E63B01D002E40A292E70A7AB74E40') AND v_nom = 380;
 
 
---- Update parameter of lines, length multiplied with mean rellation from length of geom to length of topo in existing network ---
+--- Update parameter of lines, length multiplied with mean relation from length of geom to length of topo in existing network ---
 UPDATE model_draft.ego_grid_pf_hv_extension_line a
 SET	topo = ST_MakeLine((SELECT DISTINCT ON (geom) geom FROM model_draft.ego_grid_pf_hv_extension_bus b WHERE a.bus0 = b.bus_id AND a.scn_name = b.scn_name ), (SELECT DISTINCT ON (geom) geom FROM model_draft.ego_grid_pf_hv_extension_bus b WHERE a.bus1 = b.bus_id AND a.scn_name = b.scn_name )),
 	geom = ST_Multi(ST_MakeLine((SELECT DISTINCT ON (geom) geom FROM model_draft.ego_grid_pf_hv_extension_bus b WHERE a.bus0 = b.bus_id AND a.scn_name = b.scn_name ), (SELECT DISTINCT ON (geom) geom FROM model_draft.ego_grid_pf_hv_extension_bus b WHERE a.bus1 = b.bus_id AND a.scn_name = b.scn_name ))),
@@ -1353,10 +961,11 @@ SET capital_cost = (CASE WHEN project_id IN(1,3,4,5,30) THEN ((SELECT capital_co
 			WHEN project_id  IN (29,33) THEN ((SELECT capital_costs_pypsa FROM model_draft.ego_grid_line_expansion_costs WHERE cost_id = 5 ) * length) 
 			ELSE capital_cost END);
 			
---- Set s_nom_min and s_nom_max fpr lines, when lines are decommisioned, s_nom_min is s_nom of decommissioned line ---
+--- Set s_nom_min and s_nom_max for lines, when lines are decommisioned, s_nom_min is s_nom of decommissioned line ---
 UPDATE model_draft.ego_grid_pf_hv_extension_line a
-SET 	s_nom_min = (CASE WHEN EXISTS (SELECT * FROM model_draft.ego_grid_pf_hv_extension_line b WHERE b.scn_name = 'decommissioning_nep2035_confirmed' AND a.project = b.project AND a.project_id = b.project_id) AND a.nova IN ('Netzverstärkung: Stromkreisauflage/Umbeseilung', 'Netzverstärkung: Neubau in bestehender Trasse' )
-		THEN (SELECT MAX(s_nom) FROM model_draft.ego_grid_pf_hv_extension_line b WHERE b.scn_name  = 'decommissioning_nep2035_confirmed' AND a.project = b.project AND a.project_id = b.project_id)
+SET 	s_nom_min = (CASE WHEN EXISTS (SELECT * FROM model_draft.ego_grid_pf_hv_extension_line b WHERE 
+b.scn_name = 'decommissioning_nep2035_confirmed' AND a.project = b.project AND a.project_id = b.project_id) AND a.nova IN ('Netzverstärkung: Stromkreisauflage/Umbeseilung', 'Netzverstärkung: Neubau in bestehender Trasse' )
+		THEN (SELECT MIN(s_nom) FROM model_draft.ego_grid_pf_hv_extension_line b WHERE b.scn_name  = 'decommissioning_nep2035_confirmed' AND a.project = b.project AND a.project_id = b.project_id)
 		ELSE 0 END),
 	s_nom_max = s_nom
 WHERE scn_name = 'extension_nep2035_confirmed';
@@ -1397,7 +1006,7 @@ SELECT 'extension_nep2035_b2',
 	topo
 FROM model_draft.ego_grid_pf_hv_extension_line WHERE scn_name = 'extension_nep2035_confirmed';
 
-INSERT INTO model_draft.ego_grid_pf_hv_extension_line (scn_name, line_id, project, bus0, bus1, x,s_nom , capital_cost, length,cables,frequency ,terrain_factor,  geom ,topo )
+INSERT INTO model_draft.ego_grid_pf_hv_extension_line (scn_name, line_id, project, bus0, bus1, x,s_nom , capital_cost, length,cables,frequency ,terrain_factor,  geom ,topo, v_nom, project_id )
 SELECT 'decommissioning_nep2035_b2',
 	line_id, 
 	project,
@@ -1411,7 +1020,9 @@ SELECT 'decommissioning_nep2035_b2',
 	frequency ,
 	terrain_factor, 
 	geom, 
-	topo 
+	topo,
+	v_nom,
+	project_id
 FROM model_draft.ego_grid_pf_hv_extension_line WHERE scn_name = 'decommissioning_nep2035_confirmed';
 
 INSERT INTO model_draft.ego_grid_pf_hv_extension_link (scn_name, link_id, bus0, bus1, efficiency, p_nom, p_nom_min, p_nom_max, capital_cost, marginal_cost, length, terrain_factor, geom, topo)
@@ -1448,6 +1059,52 @@ SELECT 'extension_nep2035_b2',
 	s_nom_max
 FROM model_draft.ego_grid_pf_hv_extension_transformer WHERE scn_name = 'extension_nep2035_confirmed';
 
+INSERT INTO model_draft.ego_grid_pf_hv_extension_bus
+SELECT 'extension_BE_NO_eGo 100',
+	bus_id,
+	v_nom,
+	current_type,
+	v_mag_pu_min,
+	v_mag_pu_max,
+	geom,
+	project,
+	bus_name
+FROM model_draft.ego_grid_pf_hv_extension_bus WHERE scn_name = 'extension_BE_NO_NEP 2035';
+
+INSERT INTO model_draft.ego_grid_pf_hv_extension_link (scn_name, link_id, bus0, bus1, efficiency, p_nom, p_nom_min, p_nom_max, capital_cost, marginal_cost, length, terrain_factor, geom, topo)
+SELECT 'extension_BE_NO_eGo 100',
+	link_id, 
+	bus0, 
+	bus1, 
+	efficiency, 
+	p_nom, 
+	p_nom_min,
+	p_nom_max,
+	capital_cost, 
+	marginal_cost, 
+	length, 
+	terrain_factor, 
+	geom, 
+	topo 
+FROM model_draft.ego_grid_pf_hv_extension_link WHERE scn_name = 'extension_BE_NO_NEP 2035';
+
+INSERT INTO model_draft.ego_grid_pf_hv_extension_transformer (scn_name, trafo_id, project, bus0, bus1, x, s_nom, tap_ratio, phase_shift, capital_cost, geom, topo, s_nom_min, s_nom_max)
+SELECT 'extension_BE_NO_eGo 100',
+	trafo_id, 
+	project,
+	bus0, 
+	bus1, 
+	x, 
+	s_nom, 
+	tap_ratio, 
+	phase_shift, 
+	capital_cost, 
+	geom, 
+	topo,
+	s_nom_min,
+	s_nom_max
+FROM model_draft.ego_grid_pf_hv_extension_transformer WHERE scn_name = 'extension_BE_NO_NEP 2035';
+
 
 UPDATE model_draft.ego_grid_pf_hv_extension_bus
 SET current_type = 'AC';
@@ -1458,8 +1115,9 @@ AND bus_id NOT IN (SELECT bus1 FROM model_draft.ego_grid_pf_hv_extension_line WH
 AND bus_id NOT IN (SELECT bus0 FROM model_draft.ego_grid_pf_hv_extension_link WHERE scn_name = a.scn_name) AND bus_id NOT IN (SELECT bus1 FROM model_draft.ego_grid_pf_hv_extension_link WHERE scn_name = a.scn_name)
 AND bus_id NOT IN (SELECT bus0 FROM model_draft.ego_grid_pf_hv_extension_transformer WHERE scn_name = a.scn_name) AND bus_id NOT IN (SELECT bus1 FROM model_draft.ego_grid_pf_hv_extension_transformer WHERE scn_name = a.scn_name);
 
--- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+/*-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
 SELECT scenario_log('eGo_DP', 'v0.4.5','output','model_draft','ego_grid_pf_hv_extension_bus','ego_pp_nep2035_grid_variations.sql',' ');
 SELECT scenario_log('eGo_DP', 'v0.4.5','output','model_draft','ego_grid_pf_hv_extension_line','ego_pp_nep2035_grid_variations.sql',' ');
 SELECT scenario_log('eGo_DP', 'v0.4.5','output','model_draft','ego_grid_pf_hv_extension_link','ego_pp_nep2035_grid_variations.sql',' ');
 SELECT scenario_log('eGo_DP', 'v0.4.5','output','model_draft','ego_grid_pf_hv_extension_transformer','ego_pp_nep2035_grid_variations.sql',' ');
+*/
