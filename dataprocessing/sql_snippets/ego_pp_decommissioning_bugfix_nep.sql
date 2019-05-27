@@ -8,7 +8,7 @@ SELECT
 'decommissioning_bugfix_nep',
 13,
 otg_id, 
-SUM(electrical_capacity),
+SUM(electrical_capacity)/1000,
 (SELECT b.generator_id FROM model_draft.ego_grid_pf_hv_generator b
 			WHERE b.source = 13 AND  b.scn_name = 'NEP 2035' AND otg_id=b.bus AND b.p_nom = (
 				SELECT MAX(b.p_nom) FROM model_draft.ego_grid_pf_hv_generator b
@@ -50,11 +50,11 @@ SELECT
 'decommissioning_bugfix_nep',
 12,
 otg_id, 
-SUM(electrical_capacity),
+SUM(electrical_capacity)/1000,
 (SELECT b.generator_id FROM model_draft.ego_grid_pf_hv_generator b
-			WHERE b.source = 9 AND  b.scn_name = 'NEP 2035' AND otg_id=b.bus AND b.p_nom = (
+			WHERE b.source = 12 AND  b.scn_name = 'NEP 2035' AND otg_id=b.bus AND b.p_nom = (
 				SELECT MAX(b.p_nom) FROM model_draft.ego_grid_pf_hv_generator b
-				WHERE b.source = 9 AND  b.scn_name = 'NEP 2035' AND otg_id=b.bus))
+				WHERE b.source = 12 AND  b.scn_name = 'NEP 2035' AND otg_id=b.bus))
 FROM 
 
 (SELECT  electrical_capacity, otg_id
