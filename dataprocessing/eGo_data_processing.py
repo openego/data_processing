@@ -108,7 +108,8 @@ def data_processing():
 	'ego_dp_data_check.sql',				# Check powerflow data for plausibility
     ## POST-PROCESSING
         'ego_pp_nep2035_grid_variations.sql'			# Create extension_tables and insert NEP-data
-	
+	'ego_pp_extension_wind_offshore.sql'			# Bugfix v0.4.5: Insert missing wind offshore capacitys to extension tables
+	'ego_pp_decommissioning_bugfix_nep.sql'			# Bugfix v0.4.5: Create decommissioning scenario including to high extension (pv, wind on) in NEP2035 
     ## VERSIONING
    	'ego_dp_versioning.sql',				# Versioning
 #	'ego_dp_versioning_mviews.sql' ,			# Versioning of mviews
