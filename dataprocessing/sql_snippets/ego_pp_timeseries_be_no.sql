@@ -243,7 +243,7 @@ FROM
 		(SELECT
 		neighbours.bus_id AS bus_id,
 		weather.gid AS w_id
-		FROM (SELECT * FROM model_draft.ego_grid_pf_hv_extension_bus WHERE bus_name IN ('center BE', 'center NO')) AS neighbours,
+		FROM (SELECT * FROM model_draft.ego_grid_pf_hv_extension_bus WHERE bus_name IN ('center BE', 'center NO') AND scn_name = 'extension_BE_NO_NEP 2035') AS neighbours,
 			climate.cosmoclmgrid AS weather
 		WHERE ST_Intersects(weather.geom, neighbours.geom))
 		AS buses,
@@ -256,6 +256,7 @@ FROM
 WHERE A.w_id = B.w_id
 AND A.source = B.source;
 
+DELETE FROM model_draft.ego_grid_pf_hv_extension_generator_pq_set WHERE scn_name =  'extension_BE_NO_NEP 2035';
 
 INSERT INTO model_draft.ego_grid_pf_hv_extension_generator_pq_set  (scn_name, temp_id, p_max_pu, generator_id)
 
@@ -335,7 +336,7 @@ VALUES 	('extension_BE_NO_eGo 100', 1000000, (SELECT bus_id FROM model_draft.ego
 
 INSERT INTO model_draft.ego_grid_pf_hv_extension_load_pq_set (scn_name, load_id, temp_id, p_set, q_set)
 SELECT 'extension_BE_NO_eGo 100' , load_id, temp_id, p_set, q_set
-FROM model_draft.ego_grid_pf_hv_extension_load_pq_set WHERE scn_name = 'extension_BE_NO_NEP 2035'
+FROM model_draft.ego_grid_pf_hv_extension_load_pq_set WHERE scn_name = 'extension_BE_NO_NEP 2035';
 
 	 
 -- INSERT generator capacities
@@ -343,63 +344,67 @@ FROM model_draft.ego_grid_pf_hv_extension_load_pq_set WHERE scn_name = 'extensio
 -- BE_NO_NEP 2035
 -- Source: eHighway 2050
 ---Description: 100% RES scenario
-
+DELETE FROM model_draft.ego_grid_pf_hv_extension_generator WHERE scn_name = 'extension_BE_NO_eGo 100';
 INSERT INTO model_draft.ego_grid_pf_hv_extension_generator (scn_name, generator_id, bus, p_nom, source)
 VALUES('extension_BE_NO_eGo 100',
 	nextval('model_draft.ego_grid_hv_extension_generator_id'), 
-	(SELECT bus_id FROM model_draft.ego_grid_pf_hv_extension_bus WHERE bus_name='center BE'),
+	(SELECT bus_id FROM model_draft.ego_grid_pf_hv_extension_bus WHERE bus_name='center BE' AND scn_name = 'extension_BE_NO_eGo 100'),
 	4750,
 	6),
 	('extension_BE_NO_eGo 100',
 	nextval('model_draft.ego_grid_hv_extension_generator_id'), 
-	(SELECT bus_id FROM model_draft.ego_grid_pf_hv_extension_bus WHERE bus_name='center BE'),
+	(SELECT bus_id FROM model_draft.ego_grid_pf_hv_extension_bus WHERE bus_name='center BE' AND scn_name = 'extension_BE_NO_eGo 100'),
 	2500,
 	1),
 	('extension_BE_NO_eGo 100',
 	nextval('model_draft.ego_grid_hv_extension_generator_id'), 
-	(SELECT bus_id FROM model_draft.ego_grid_pf_hv_extension_bus WHERE bus_name='center BE'),
+	(SELECT bus_id FROM model_draft.ego_grid_pf_hv_extension_bus WHERE bus_name='center BE' AND scn_name = 'extension_BE_NO_eGo 100'),
 	10903,
 	13),
 	('extension_BE_NO_eGo 100',
 	nextval('model_draft.ego_grid_hv_extension_generator_id'), 
-	(SELECT bus_id FROM model_draft.ego_grid_pf_hv_extension_bus WHERE bus_name='center BE'),
+	(SELECT bus_id FROM model_draft.ego_grid_pf_hv_extension_bus WHERE bus_name='center BE' AND scn_name = 'extension_BE_NO_eGo 100'),
 	3000,
 	17),
 	('extension_BE_NO_eGo 100',
 	nextval('model_draft.ego_grid_hv_extension_generator_id'), 
-	(SELECT bus_id FROM model_draft.ego_grid_pf_hv_extension_bus WHERE bus_name='center BE'),
+	(SELECT bus_id FROM model_draft.ego_grid_pf_hv_extension_bus WHERE bus_name='center BE' AND scn_name = 'extension_BE_NO_eGo 100'),
 	24087,
 	12),
 	('extension_BE_NO_eGo 100',
 	nextval('model_draft.ego_grid_hv_extension_generator_id'), 
-	(SELECT bus_id FROM model_draft.ego_grid_pf_hv_extension_bus WHERE bus_name='center BE'),
+	(SELECT bus_id FROM model_draft.ego_grid_pf_hv_extension_bus WHERE bus_name='center BE' AND scn_name = 'extension_BE_NO_eGo 100'),
 	332,
 	9),
 	('extension_BE_NO_eGo 100',
 	nextval('model_draft.ego_grid_hv_extension_generator_id'), 
-	(SELECT bus_id FROM model_draft.ego_grid_pf_hv_extension_bus WHERE bus_name='center NO'),
+	(SELECT bus_id FROM model_draft.ego_grid_pf_hv_extension_bus WHERE bus_name='center NO' AND scn_name = 'extension_BE_NO_eGo 100'),
 	3000,
 	17),
 	('extension_BE_NO_eGo 100',
 	nextval('model_draft.ego_grid_hv_extension_generator_id'), 
-	(SELECT bus_id FROM model_draft.ego_grid_pf_hv_extension_bus WHERE bus_name='center NO'),
+	(SELECT bus_id FROM model_draft.ego_grid_pf_hv_extension_bus WHERE bus_name='center NO' AND scn_name = 'extension_BE_NO_eGo 100'),
 	12175,
 	13),
 	('extension_BE_NO_eGo 100',
 	nextval('model_draft.ego_grid_hv_extension_generator_id'), 
-	(SELECT bus_id FROM model_draft.ego_grid_pf_hv_extension_bus WHERE bus_name='center NO'),
+	(SELECT bus_id FROM model_draft.ego_grid_pf_hv_extension_bus WHERE bus_name='center NO' AND scn_name = 'extension_BE_NO_eGo 100'),
 	5364,
 	12),
 	('extension_BE_NO_eGo 100',
 	nextval('model_draft.ego_grid_hv_extension_generator_id'), 
-	(SELECT bus_id FROM model_draft.ego_grid_pf_hv_extension_bus WHERE bus_name='center NO'),
+	(SELECT bus_id FROM model_draft.ego_grid_pf_hv_extension_bus WHERE bus_name='center NO' AND scn_name = 'extension_BE_NO_eGo 100'),
 	28414,
 	9),
 	('extension_BE_NO_eGo 100',
 	nextval('model_draft.ego_grid_hv_extension_generator_id'), 
-	(SELECT bus_id FROM model_draft.ego_grid_pf_hv_extension_bus WHERE bus_name='center NO'),
+	(SELECT bus_id FROM model_draft.ego_grid_pf_hv_extension_bus WHERE bus_name='center NO' AND scn_name = 'extension_BE_NO_eGo 100'),
 	42473,
 	10);
+
+UPDATE model_draft.ego_grid_pf_hv_extension_generator
+SET p_min_pu_fixed = 0.65
+WHERE source = 9;
 
 UPDATE model_draft.ego_grid_pf_hv_extension_generator
 SET dispatch='flexible' 
@@ -452,40 +457,91 @@ FROM
 		(SELECT
 		neighbours.bus_id AS bus_id,
 		weather.gid AS w_id
-		FROM (SELECT * FROM model_draft.ego_grid_pf_hv_extension_bus WHERE bus_name IN ('center BE', 'center NO')) AS neighbours,
+		FROM (SELECT * FROM model_draft.ego_grid_pf_hv_extension_bus WHERE bus_name IN ('center BE', 'center NO')  AND scn_name = 'extension_BE_NO_eGo 100') AS neighbours,
 			climate.cosmoclmgrid AS weather
 		WHERE ST_Intersects(weather.geom, neighbours.geom))
 		AS buses,
 	model_draft.ego_grid_pf_hv_extension_generator AS generators
 	WHERE generators.bus = buses.bus_id
 	AND generators.source IN (12, 13)
-	AND generators.generator_id > 210000
 	AND generators.scn_name = 'extension_BE_NO_eGo 100'
 	) AS A
 WHERE A.w_id = B.w_id
 AND A.source = B.source;
 
+DELETE FROM model_draft.ego_grid_pf_hv_extension_generator_pq_set WHERE scn_name = 'extension_BE_NO_eGo 100';
 
 INSERT INTO model_draft.ego_grid_pf_hv_extension_generator_pq_set  (scn_name, temp_id, p_max_pu, generator_id)
-
 SELECT 'extension_BE_NO_eGo 100',1, feedin.feedin, feedin.generator_id
 FROM model_draft.extension_ren_feedin_foreign AS feedin, model_draft.ego_grid_pf_hv_extension_generator AS A
+WHERE A.generator_id = feedin.generator_id;
+
+
+DROP MATERIALIZED VIEW IF EXISTS model_draft.extension_offshore_feedin_foreign;
+CREATE MATERIALIZED VIEW model_draft.extension_offshore_feedin_foreign AS
+SELECT
+generator_id, scn_name, feedin
+FROM
+	(SELECT generator_id,
+	bus,
+	scn_name
+	FROM model_draft.ego_grid_pf_hv_extension_generator
+	WHERE generator_id > 210000 
+	AND source = 17
+	AND scn_name='extension_BE_NO_eGo 100') 
+	AS gen
+		JOIN 
+		(SELECT bus_id, 
+		RIGHT(bus_name,2) AS cntr_id
+		FROM model_draft.ego_grid_pf_hv_extension_bus WHERE bus_name IN ('center NO', 'center BE') AND scn_name='extension_BE_NO_eGo 100')
+		AS enb 
+		ON (enb.bus_id = gen.bus)
+			JOIN 
+			(SELECT cntr_id,
+			coastdat_id 
+			FROM model_draft.ego_neighbours_offshore_point)
+			AS nop 
+			ON (nop.cntr_id = enb.cntr_id)
+				JOIN 
+				(SELECT w_id,
+				feedin 
+				FROM model_draft.ego_renewable_feedin)
+				AS erf 
+				ON (erf.w_id = nop.coastdat_id);
+
+
+INSERT INTO model_draft.ego_grid_pf_hv_extension_generator_pq_set  (scn_name, temp_id, p_max_pu, generator_id)
+SELECT 'extension_BE_NO_eGo 100',1, feedin.feedin, feedin.generator_id 
+FROM model_draft.extension_offshore_feedin_foreign AS feedin, model_draft.ego_grid_pf_hv_extension_generator AS A
 WHERE A.generator_id = feedin.generator_id;
 
 UPDATE model_draft.ego_grid_pf_hv_extension_generator_pq_set
 SET p_set = p_max_pu;
 
 
+DELETE FROM model_draft.ego_grid_pf_hv_extension_storage WHERE scn_name = 'extension_BE_NO_eGo 100';
 -- Insert storage capacitys in Belgium and Norway
 INSERT into model_draft.ego_grid_pf_hv_extension_storage (scn_name, storage_id, bus, dispatch, control, p_nom,
   sign, source, marginal_cost, capital_cost, efficiency, soc_initial, soc_cyclic, max_hours, efficiency_store, efficiency_dispatch, standing_loss)
   
 VALUES('extension_BE_NO_eGo 100',nextval('model_draft.ego_grid_hv_extension_storage_id'),
-  (SELECT bus_id FROM model_draft.ego_grid_pf_hv_extension_bus WHERE bus_name = 'center NO'),
+  (SELECT bus_id FROM model_draft.ego_grid_pf_hv_extension_bus WHERE bus_name = 'center NO' AND scn_name = 'extension_BE_NO_eGo 100'),
   'flexible','PV',17291,1,11,0,0,1,0,true,6,0.88,0.89,0.00052), ---PSP Norway
 
   ('extension_BE_NO_eGo 100',nextval('model_draft.ego_grid_hv_extension_storage_id'),
-  (SELECT bus_id FROM model_draft.ego_grid_pf_hv_extension_bus WHERE bus_name = 'center BE'),
-  'flexible','PV',2308,1,11,0,0,1,0,true,6,0.88,0.89,0.00052); -- PSP Belgium
+  (SELECT bus_id FROM model_draft.ego_grid_pf_hv_extension_bus WHERE bus_name = 'center BE' AND scn_name = 'extension_BE_NO_eGo 100'),
+  'flexible','PV',2308,1,11,0,0,1,0,true,6,0.88,0.89,0.00052), -- PSP Belgium
 
+  ('extension_BE_NO_eGo 100',nextval('model_draft.ego_grid_hv_extension_storage_id'),
+  (SELECT bus_id FROM model_draft.ego_grid_pf_hv_extension_bus WHERE bus_name = 'center BE' AND scn_name = 'extension_BE_NO_eGo 100'),
+  'flexible','PV', 1807.41,1,18,0,0,1,0,true,168,0.785,0.57,0.000694), -- Hydro Belgium
+
+  ('extension_BE_NO_eGo 100',nextval('model_draft.ego_grid_hv_extension_storage_id'),
+  (SELECT bus_id FROM model_draft.ego_grid_pf_hv_extension_bus WHERE bus_name = 'center NO' AND scn_name = 'extension_BE_NO_eGo 100'),
+  'flexible','PV', 0.08,1,19,0,0,1,0,true,6,0.9487,0.9487,0.000417), -- Battery Norway
+
+  ('extension_BE_NO_eGo 100',nextval('model_draft.ego_grid_hv_extension_storage_id'),
+  (SELECT bus_id FROM model_draft.ego_grid_pf_hv_extension_bus WHERE bus_name = 'center BE' AND scn_name = 'extension_BE_NO_eGo 100'),
+  'flexible','PV',328.29 ,1,19,0,0,1,0,true,6,0.9487,0.9487,0.000417); -- Battery Beligum
+  
   

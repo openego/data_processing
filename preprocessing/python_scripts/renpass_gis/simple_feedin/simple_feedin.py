@@ -526,12 +526,13 @@ def main():
         else:
             continue
 
-        #temp[(coastdat_id, type_of_generation)] = feedin.values
+        temp[(coastdat_id, type_of_generation)] = feedin.values
 
     df = pd.DataFrame(temp)
-    df_to_renewable_feedin(df, weather_year, weather_scenario_id)
+   # df_to_renewable_feedin(df, weather_year, weather_scenario_id)
     print('Done!')
+    return df
 
 
 if __name__ == '__main__':
-    main()
+    df = main()
