@@ -1,0 +1,18 @@
+version: '3'
+services:
+  data_processing_db:
+    image: postgres:11-postgis
+    container_name: data_processing
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: Dockerfile.postgis
+    ports:
+    - "127.0.0.1:54321:5432"
+    environment:
+      POSTGRES_DB: dp
+      POSTGRES_USER: oeuser
+      POSTGRES_PASSWORD: egon
+    volumes:
+    - $HOME/docker/volumes/postgres:/var/lib/postgresql/data
+    - ./utilities/entrypoints:/docker-entrypoint-initdb.d/

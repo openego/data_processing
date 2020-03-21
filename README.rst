@@ -51,3 +51,20 @@ Run
  ~$ ego_data_processing
  ```    
 
+Local database with docker
+==========================
+
+You need to have `docker-compose` installed.
+
+### Spin up database with docker
+
+```
+docker-compose up -d --build
+```
+
+### Database credentials
+
+| database | dp |
+| port | 54321 |
+| user | oeuser |
+| password | egon |
