@@ -1,4 +1,4 @@
-﻿/*
+/*
 Preprocess OpenStreetMap tables after import in public schema with osm2pgsql
 Basic operations: 
 0. grant
@@ -15,37 +15,16 @@ __url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
 __author__ 	= "Ludee"
 */
 
+CREATE SCHEMA IF NOT EXISTS openstreetmap;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','input','public','osm_deu_line','ego_pp_osm_deu_import.sql','verification');
-SELECT ego_scenario_log('v0.2.10','input','public','osm_deu_nodes','ego_pp_osm_deu_import.sql','verification');
-SELECT ego_scenario_log('v0.2.10','input','public','osm_deu_point','ego_pp_osm_deu_import.sql','verification');
-SELECT ego_scenario_log('v0.2.10','input','public','osm_deu_polygon','ego_pp_osm_deu_import.sql','verification');
-SELECT ego_scenario_log('v0.2.10','input','public','osm_deu_rels','ego_pp_osm_deu_import.sql','verification');
-SELECT ego_scenario_log('v0.2.10','input','public','osm_deu_roads','ego_pp_osm_deu_import.sql','verification');
-SELECT ego_scenario_log('v0.2.10','input','public','osm_deu_ways','ego_pp_osm_deu_import.sql','verification');
+SELECT scenario_log('eGo_PP','PP1','input','public','osm_deu_line','ego_pp_osm_deu_import.sql','verification');
+SELECT scenario_log('eGo_PP','PP1','input','public','osm_deu_point','ego_pp_osm_deu_import.sql','verification');
+SELECT scenario_log('eGo_PP','PP1','input','public','osm_deu_polygon','ego_pp_osm_deu_import.sql','verification');
+SELECT scenario_log('eGo_PP','PP1','input','public','osm_deu_rels','ego_pp_osm_deu_import.sql','verification');
+SELECT scenario_log('eGo_PP','PP1','input','public','osm_deu_roads','ego_pp_osm_deu_import.sql','verification');
+SELECT scenario_log('eGo_PP','PP1','input','public','osm_deu_ways','ego_pp_osm_deu_import.sql','verification');
 
-/*
--- Tests for the loops
--- Select all tables with OSM in public
-SELECT     *
-FROM     information_schema.tables
-WHERE     table_schema = 'public'
-    AND table_name LIKE 'osm_deu_%';
-
--- Select all tables with OSM in public
-SELECT     * 
-FROM     pg_tables
-WHERE     schemaname='public'
-    AND tablename LIKE 'osm_deu_%';
-
--- Select all indexes with OSM in public
-SELECT     * 
-FROM     pg_indexes
-WHERE     schemaname='public'
-    AND tablename LIKE 'osm_deu_%'
-    AND indexname LIKE '%_pkey';
-*/ 
 
 -- 0. grant oeuser
 DO
@@ -53,13 +32,12 @@ $$
 DECLARE
     row record;
 BEGIN
-    FOR row IN SELECT tablename FROM pg_tables WHERE schemaname = 'public' AND tablename LIKE 'osm_deu_%'
+    FOR row IN SELECT tablename FROM pg_tables WHERE schemaname = 'public' AND tablename LIKE 'osm_deu_%%'
     LOOP
         EXECUTE 'ALTER TABLE public.' || quote_ident(row.tablename) || ' OWNER TO oeuser;';
     END LOOP;
 END;
 $$;
-
 
 -- 1. remove wrong index
 -- 1.1 remove all wrong 'pkey' (_line, _point, _polygon, _roads)
@@ -70,11 +48,11 @@ DECLARE
 BEGIN
     FOR row IN SELECT indexname FROM pg_indexes 
     WHERE (schemaname='public' 
-    AND indexname LIKE '%_pkey')
-    AND (tablename LIKE '%_line'
-    OR tablename LIKE '%_point'
-    OR tablename LIKE '%_polygon'
-    OR tablename LIKE '%_roads')
+    AND indexname LIKE '%%_pkey')
+    AND (tablename LIKE '%%_line'
+    OR tablename LIKE '%%_point'
+    OR tablename LIKE '%%_polygon'
+    OR tablename LIKE '%%_roads')
     LOOP
         EXECUTE 'DROP INDEX public.' || quote_ident(row.indexname) || ';';
     END LOOP;
@@ -89,12 +67,13 @@ DECLARE
 BEGIN
     FOR row IN SELECT indexname FROM pg_indexes 
     WHERE (schemaname='public' 
-    AND indexname LIKE '%_index')
+    AND indexname LIKE '%%_index')
     LOOP
         EXECUTE 'DROP INDEX public.' || quote_ident(row.indexname) || ';';
     END LOOP;
 END;
 $$;
+
 
 -- 2. add column 'gid' serial
 -- 3. add primary keys
@@ -106,10 +85,10 @@ DECLARE
 BEGIN
     FOR row IN SELECT tablename FROM pg_tables 
     WHERE schemaname='public' 
-    AND (tablename LIKE '%_line'
-    OR tablename LIKE '%_point'
-    OR tablename LIKE '%_polygon'
-    OR tablename LIKE '%_roads')
+    AND (tablename LIKE '%%_line'
+    OR tablename LIKE '%%_point'
+    OR tablename LIKE '%%_polygon'
+    OR tablename LIKE '%%_roads')
     LOOP
         EXECUTE 'ALTER TABLE public.' || quote_ident(row.tablename) || ' ADD gid SERIAL;';
         EXECUTE 'ALTER TABLE public.' || quote_ident(row.tablename) || ' ADD PRIMARY KEY (gid);';
@@ -147,10 +126,10 @@ DECLARE
 BEGIN
     FOR row IN SELECT tablename FROM pg_tables 
     WHERE schemaname='public' 
-    AND (tablename LIKE '%_line'
-    OR tablename LIKE '%_point'
-    OR tablename LIKE '%_polygon'
-    OR tablename LIKE '%_roads')
+    AND (tablename LIKE '%%_line'
+    OR tablename LIKE '%%_point'
+    OR tablename LIKE '%%_polygon'
+    OR tablename LIKE '%%_roads')
     LOOP
         EXECUTE 'CREATE INDEX ' || quote_ident(row.tablename) || '_geom_idx ON public.' || quote_ident(row.tablename) || ' USING gist (geom);';
     END LOOP;
@@ -165,10 +144,10 @@ DECLARE
 BEGIN
     FOR row IN SELECT tablename FROM pg_tables 
     WHERE schemaname='public' 
-    AND (tablename LIKE '%_line'
-    OR tablename LIKE '%_point'
-    OR tablename LIKE '%_polygon'
-    OR tablename LIKE '%_roads')
+    AND (tablename LIKE '%%_line'
+    OR tablename LIKE '%%_point'
+    OR tablename LIKE '%%_polygon'
+    OR tablename LIKE '%%_roads')
     LOOP
         EXECUTE 'CREATE INDEX ' || quote_ident(row.tablename) || '_tags_idx ON public.' || quote_ident(row.tablename) || ' USING GIN (tags);';
     END LOOP;
@@ -183,7 +162,7 @@ $$
 DECLARE
     row record;
 BEGIN
-    FOR row IN SELECT tablename FROM pg_tables WHERE schemaname = 'public' AND tablename LIKE 'osm_deu_%'
+    FOR row IN SELECT tablename FROM pg_tables WHERE schemaname = 'public' AND tablename LIKE 'osm_deu_%%'
     LOOP
         EXECUTE 'ALTER TABLE public.' || quote_ident(row.tablename) || ' SET SCHEMA openstreetmap;';
     END LOOP;
@@ -191,10 +170,10 @@ END;
 $$;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','preprocessing','openstreetmap','osm_deu_line','ego_pp_osm_deu_import.sql','setup osm tables');
-SELECT ego_scenario_log('v0.2.10','preprocessing','openstreetmap','osm_deu_nodes','ego_pp_osm_deu_import.sql','setup osm tables');
-SELECT ego_scenario_log('v0.2.10','preprocessing','openstreetmap','osm_deu_point','ego_pp_osm_deu_import.sql','setup osm tables');
-SELECT ego_scenario_log('v0.2.10','preprocessing','openstreetmap','osm_deu_polygon','ego_pp_osm_deu_import.sql','setup osm tables');
-SELECT ego_scenario_log('v0.2.10','preprocessing','openstreetmap','osm_deu_rels','ego_pp_osm_deu_import.sql','setup osm tables');
-SELECT ego_scenario_log('v0.2.10','preprocessing','openstreetmap','osm_deu_roads','ego_pp_osm_deu_import.sql','setup osm tables');
-SELECT ego_scenario_log('v0.2.10','preprocessing','openstreetmap','osm_deu_ways','ego_pp_osm_deu_import.sql','setup osm tables');
+SELECT scenario_log('eGo_PP','PP1','preprocessing','openstreetmap','osm_deu_line','ego_pp_osm_deu_import.sql','setup osm tables');
+SELECT scenario_log('eGo_PP','PP1','preprocessing','openstreetmap','osm_deu_nodes','ego_pp_osm_deu_import.sql','setup osm tables');
+SELECT scenario_log('eGo_PP','PP1','preprocessing','openstreetmap','osm_deu_point','ego_pp_osm_deu_import.sql','setup osm tables');
+SELECT scenario_log('eGo_PP','PP1','preprocessing','openstreetmap','osm_deu_polygon','ego_pp_osm_deu_import.sql','setup osm tables');
+SELECT scenario_log('eGo_PP','PP1','preprocessing','openstreetmap','osm_deu_rels','ego_pp_osm_deu_import.sql','setup osm tables');
+SELECT scenario_log('eGo_PP','PP1','preprocessing','openstreetmap','osm_deu_roads','ego_pp_osm_deu_import.sql','setup osm tables');
+SELECT scenario_log('eGo_PP','PP1','preprocessing','openstreetmap','osm_deu_ways','ego_pp_osm_deu_import.sql','setup osm tables');
