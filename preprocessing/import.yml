@@ -1,16 +1,21 @@
 scenario_log:
-  - script: function_scenario_log.sql
-    language: SQL
-  - script: ego_pp_scenario.sql
-    language: SQL
-  - script: ego_pp_scenario_log.sql
-    language: SQL
+  scripts:
+    - script: function_scenario_log.sql
+      language: SQL
+    - script: ego_pp_scenario.sql
+      language: SQL
+    - script: ego_pp_scenario_log.sql
+      language: SQL
 openstreetmap:
-  - script: osm2oedb.sh
-    language: bash
-  - script: ego_pp_osm_deu_import.sql
-    language: SQL
-  - script: ego_pp_osm_line_street_mview.sql
-    language: SQL
-  - script: ego_pp_osm_polygon_building_mview.sql
-    language: SQL
+  required_data:
+    - url: https://download.geofabrik.de/europe/germany/bremen-latest.osm.pbf
+      filename: bremen-latest.osm.pbf
+  scripts:
+    - script: osm2oedb.sh
+      language: bash
+    - script: ego_pp_osm_deu_import.sql
+      language: SQL
+    - script: ego_pp_osm_line_street_mview.sql
+      language: SQL
+    - script: ego_pp_osm_polygon_building_mview.sql
+      language: SQL

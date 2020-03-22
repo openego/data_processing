@@ -25,25 +25,50 @@ from dataprocessing.tools import io
 from egoio.tools import db
 from sqlalchemy import create_engine
 import yaml
+from urllib.request import urlretrieve
 
+# Configure logging
+logger = logging.getLogger('EEEE')
+logger.setLevel(logging.INFO)
+ch = logging.StreamHandler()
+ch.setLevel(logging.INFO)
+formatter = logging.Formatter('%(asctime)s %(message)s',
+                              datefmt='%Y-%m-%d %I:%M:%S')
+ch.setFormatter(formatter)
+logger.addHandler(ch)
 
 SCENARIOLOG = True
+DOWNLOADDIR = os.path.join(os.path.expanduser("~"), ".egon-pre-processing-cached/")
+
+
+def create_data_dir(dir=DOWNLOADDIR):
+    """
+    Parameters
+    ----------
+    dir: str
+        Define alternative dir for chached data
+    """
+
+    os.makedirs(dir, exist_ok=True)
+    logger.info('Cached data directory {} created (or already existed).'.format(dir))
+
+
+def download_data(url, filename):
+
+    file = os.path.join(DOWNLOADDIR, filename)
+
+    if not os.path.isfile(file):
+        urlretrieve(url, file)
 
 
 def preprocessing():
-    # Configure logging
-    logger = logging.getLogger('EEEE')
-    logger.setLevel(logging.INFO)
-    ch = logging.StreamHandler()
-    ch.setLevel(logging.INFO)
-    formatter = logging.Formatter('%(asctime)s %(message)s',
-                                  datefmt='%Y-%m-%d %I:%M:%S')
-    ch.setFormatter(formatter)
-    logger.addHandler(ch)
 
     # get current time and inform about start
     total_time = time.time()
     logger.info('ego preprocessing started...')
+
+    # create directory for cached downloaded data
+    create_data_dir()
 
     # list of sql- and python-snippets that process the data in correct order
     script_dir = os.path.abspath(
@@ -60,9 +85,12 @@ def preprocessing():
     engine_local = create_engine('postgresql+psycopg2://oeuser:egon@localhost:54321/dp')
     conn = engine_local.connect()
 
-    # iterate over list of sql- and python-snippets and execute them
+    # iterate over data sets
     for key, dataset in datasets.items():
-        for script in dataset:
+        for download in dataset.get("required_data", []):
+            download_data(download["url"], download["filename"])
+
+        for script in dataset.get("scripts", []):
 
             # timing and logging
             snippet_time = time.time()
@@ -78,7 +106,7 @@ def preprocessing():
                 # execute desired sql snippet
                 conn.execution_options(autocommit=True).execute(snippet_str)
             elif script["language"] == 'python':
-                filename = os.path.join(script_dir, snippet)
+                filename = os.path.join(script_dir, key, script["script"])
                 script_str = open(filename, "rb").read()
 
                 # execute desired sql snippet
