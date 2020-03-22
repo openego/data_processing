@@ -10,3 +10,7 @@ openstreetmap:
     language: bash
   - script: ego_pp_osm_deu_import.sql
     language: SQL
+  - script: ego_pp_osm_line_street_mview.sql
+    language: SQL
+  - script: ego_pp_osm_polygon_building_mview.sql
+    language: SQL

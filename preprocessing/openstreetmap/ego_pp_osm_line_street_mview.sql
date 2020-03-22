@@ -9,7 +9,7 @@ __author__ 	= "jong42, Ludee"
 
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','input','openstreetmap','osm_deu_line','ego_pp_osm_line_street_mview.sql','');
+SELECT scenario_log('eGo_PP','PP1','input','openstreetmap','osm_deu_line','ego_pp_osm_line_street_mview.sql','setup osm tables');
 
 -- street
 DROP MATERIALIZED VIEW IF EXISTS	openstreetmap.osm_deu_line_street_mview;
@@ -84,4 +84,4 @@ COMMENT ON MATERIALIZED VIEW openstreetmap.osm_deu_line_street_mview IS '{
 	"metadata_version": "1.3"}';
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','output','openstreetmap','osm_deu_line_street_mview','ego_pp_osm_line_street_mview.sql','Streets');
+SELECT scenario_log('eGo_PP','PP1','output','openstreetmap','osm_deu_line_street_mview','ego_pp_osm_line_street_mview.sql','setup osm tables');
