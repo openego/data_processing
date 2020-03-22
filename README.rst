@@ -68,3 +68,13 @@ docker-compose up -d --build
 | port | 54321 |
 | user | oeuser |
 | password | egon |
+
+
+Usage
+=====
+
+
+Pre-processing
+**************
+
+Execute `eGo_import_and_preprocessing.py` for starting pre-processing from scratch doing data import and a pre-processing of imported tables.

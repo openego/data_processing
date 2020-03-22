@@ -18,8 +18,9 @@ setup(
         'workalendar',
         'oemof.db',
         'demandlib',
-        'ego.io >=0.0.1rc4, <= 0.0.2',
-        'geoalchemy2'
+        'egoio >= 0.4.7',
+        'geoalchemy2',
+        "pyyaml"
     ],
     extras_require={
         'docs': [

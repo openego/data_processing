@@ -1,0 +1,3 @@
+openstreetmap:
+  - script: osm2oedb.sh
+    language: bash
