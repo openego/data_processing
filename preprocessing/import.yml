@@ -1,3 +1,10 @@
+scenario_log:
+  - script: 01_function_scenario_log.sql
+    language: SQL
+  - script: 02_ego_pp_scenario.sql
+    language: SQL
+  - script: 03_ego_pp_scenario_log.sql
+    language: SQL
 openstreetmap:
   - script: osm2oedb.sh
     language: bash

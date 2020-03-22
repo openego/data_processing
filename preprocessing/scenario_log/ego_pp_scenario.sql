@@ -18,11 +18,12 @@ __author__      = "Ludee"
 
 
 -- scenario list
+CREATE SCHEMA IF NOT EXISTS model_draft;
 DROP TABLE IF EXISTS    model_draft.ego_scenario CASCADE;
 CREATE TABLE            model_draft.ego_scenario (
     id              serial,
     model           text,
-    version         text,
+    version         text UNIQUE,
     version_name    text,
     "release"       boolean,
     "comment"       text,
@@ -99,5 +100,3 @@ COMMENT ON TABLE model_draft.ego_scenario IS '{
             {"name": "timestamp", "description": "timestamp (Berlin)", "unit": "none" } ] } ],
     "metadata_version": "1.3"}';
 
--- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_PP','PP1','setup','model_draft','ego_scenario','ego_pp_scenario.sql','Update scenario list');
