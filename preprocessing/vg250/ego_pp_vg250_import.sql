@@ -1,4 +1,4 @@
-﻿/*
+/*
 Import vg250 tables
 
 __copyright__ 	= "Reiner Lemoine Institut"
@@ -51,7 +51,7 @@ $$
 DECLARE
 	vg250 record;
 BEGIN
-    FOR vg250 IN SELECT tablename FROM pg_tables WHERE schemaname = 'boundaries' AND tablename LIKE 'vg250_sta%'
+    FOR vg250 IN SELECT tablename FROM pg_tables WHERE schemaname = 'boundaries' AND tablename LIKE 'vg250_sta%%'
     LOOP
         EXECUTE E'INSERT INTO boundaries.bkg_vg250_1_sta
 		SELECT 	to_date(SUBSTRING(' || quote_literal(vg250.tablename) || E', 11), \'YYYY-MM-DD\'),
@@ -106,7 +106,7 @@ $$
 DECLARE
 	vg250 record;
 BEGIN
-    FOR vg250 IN SELECT tablename FROM pg_tables WHERE schemaname = 'boundaries' AND tablename LIKE 'vg250_lan%'
+    FOR vg250 IN SELECT tablename FROM pg_tables WHERE schemaname = 'boundaries' AND tablename LIKE 'vg250_lan%%'
     LOOP
         EXECUTE E'INSERT INTO boundaries.bkg_vg250_2_lan
 		SELECT 	to_date(SUBSTRING(' || quote_literal(vg250.tablename) || E', 11), \'YYYY-MM-DD\'),
@@ -161,7 +161,7 @@ $$
 DECLARE
 	vg250 record;
 BEGIN
-    FOR vg250 IN SELECT tablename FROM pg_tables WHERE schemaname = 'boundaries' AND tablename LIKE 'vg250_rbz%'
+    FOR vg250 IN SELECT tablename FROM pg_tables WHERE schemaname = 'boundaries' AND tablename LIKE 'vg250_rbz%%'
     LOOP
         EXECUTE E'INSERT INTO boundaries.bkg_vg250_3_rbz
 		SELECT 	to_date(SUBSTRING(' || quote_literal(vg250.tablename) || E', 11), \'YYYY-MM-DD\'),
@@ -216,7 +216,7 @@ $$
 DECLARE
 	vg250 record;
 BEGIN
-    FOR vg250 IN SELECT tablename FROM pg_tables WHERE schemaname = 'boundaries' AND tablename LIKE 'vg250_krs%'
+    FOR vg250 IN SELECT tablename FROM pg_tables WHERE schemaname = 'boundaries' AND tablename LIKE 'vg250_krs%%'
     LOOP
         EXECUTE E'INSERT INTO boundaries.bkg_vg250_4_krs
 		SELECT 	to_date(SUBSTRING(' || quote_literal(vg250.tablename) || E', 11), \'YYYY-MM-DD\'),
@@ -271,7 +271,7 @@ $$
 DECLARE
 	vg250 record;
 BEGIN
-    FOR vg250 IN SELECT tablename FROM pg_tables WHERE schemaname = 'boundaries' AND tablename LIKE 'vg250_vwg%'
+    FOR vg250 IN SELECT tablename FROM pg_tables WHERE schemaname = 'boundaries' AND tablename LIKE 'vg250_vwg%%'
     LOOP
         EXECUTE E'INSERT INTO boundaries.bkg_vg250_5_vwg
 		SELECT 	to_date(SUBSTRING(' || quote_literal(vg250.tablename) || E', 11), \'YYYY-MM-DD\'),
@@ -326,7 +326,7 @@ $$
 DECLARE
 	vg250 record;
 BEGIN
-    FOR vg250 IN SELECT tablename FROM pg_tables WHERE schemaname = 'boundaries' AND tablename LIKE 'vg250_gem%'
+    FOR vg250 IN SELECT tablename FROM pg_tables WHERE schemaname = 'boundaries' AND tablename LIKE 'vg250_gem%%'
     LOOP
         EXECUTE E'INSERT INTO boundaries.bkg_vg250_6_gem
 		SELECT 	to_date(SUBSTRING(' || quote_literal(vg250.tablename) || E', 11), \'YYYY-MM-DD\'),
@@ -340,12 +340,12 @@ $$;
 
 /*
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','preprocessing','boundaries','bkg_vg250_1_sta','ego_pp_vg250_import.sql','setup vg250 tables');
-SELECT ego_scenario_log('v0.2.10','preprocessing','boundaries','bkg_vg250_2_lan','ego_pp_vg250_import.sql','setup vg250 tables');
-SELECT ego_scenario_log('v0.2.10','preprocessing','boundaries','bkg_vg250_3_rbz','ego_pp_vg250_import.sql','setup vg250 tables');
-SELECT ego_scenario_log('v0.2.10','preprocessing','boundaries','bkg_vg250_4_krs','ego_pp_vg250_import.sql','setup vg250 tables');
-SELECT ego_scenario_log('v0.2.10','preprocessing','boundaries','bkg_vg250_5_vwg','ego_pp_vg250_import.sql','setup vg250 tables');
-SELECT ego_scenario_log('v0.2.10','preprocessing','boundaries','bkg_vg250_6_gem','ego_pp_vg250_import.sql','setup vg250 tables');
+SELECT scenario_log('eGo_PP','PP1','preprocessing','boundaries','bkg_vg250_1_sta','ego_pp_vg250_import.sql','setup vg250 tables');
+SELECT scenario_log('eGo_PP','PP1','preprocessing','boundaries','bkg_vg250_2_lan','ego_pp_vg250_import.sql','setup vg250 tables');
+SELECT scenario_log('eGo_PP','PP1','preprocessing','boundaries','bkg_vg250_3_rbz','ego_pp_vg250_import.sql','setup vg250 tables');
+SELECT scenario_log('eGo_PP','PP1','preprocessing','boundaries','bkg_vg250_4_krs','ego_pp_vg250_import.sql','setup vg250 tables');
+SELECT scenario_log('eGo_PP','PP1','preprocessing','boundaries','bkg_vg250_5_vwg','ego_pp_vg250_import.sql','setup vg250 tables');
+SELECT scenario_log('eGo_PP','PP1','preprocessing','boundaries','bkg_vg250_6_gem','ego_pp_vg250_import.sql','setup vg250 tables');
 */
 
 -- drop tables
@@ -354,7 +354,7 @@ $$
 DECLARE
 	vg250 record;
 BEGIN
-    FOR vg250 IN SELECT tablename FROM pg_tables WHERE schemaname = 'boundaries' AND tablename LIKE 'vg250_%'
+    FOR vg250 IN SELECT tablename FROM pg_tables WHERE schemaname = 'boundaries' AND tablename LIKE 'vg250_%%'
     LOOP
         EXECUTE E'DROP TABLE IF EXISTS  boundaries.' || quote_ident(vg250.tablename) || ' ;';
     END LOOP;

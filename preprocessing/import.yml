@@ -1,21 +1,37 @@
-scenario_log:
-  scripts:
-    - script: function_scenario_log.sql
-      language: SQL
-    - script: ego_pp_scenario.sql
-      language: SQL
-    - script: ego_pp_scenario_log.sql
-      language: SQL
-openstreetmap:
+#scenario_log:
+#  scripts:
+#    - script: function_scenario_log.sql
+#      language: SQL
+#    - script: ego_pp_scenario.sql
+#      language: SQL
+#    - script: ego_pp_scenario_log.sql
+#      language: SQL
+#openstreetmap:
+#  required_data:
+#    - url: https://download.geofabrik.de/europe/germany/bremen-latest.osm.pbf
+#      filename: bremen-latest.osm.pbf
+#  scripts:
+#    - script: osm2oedb.sh
+#      language: bash
+#    - script: ego_pp_osm_deu_import.sql
+#      language: SQL
+#    - script: ego_pp_osm_line_street_mview.sql
+#      language: SQL
+#    - script: ego_pp_osm_polygon_building_mview.sql
+#      language: SQL
+vg250:
   required_data:
-    - url: https://download.geofabrik.de/europe/germany/bremen-latest.osm.pbf
-      filename: bremen-latest.osm.pbf
+    - url: https://daten.gdz.bkg.bund.de/produkte/vg/vg250_ebenen_0101/aktuell/vg250_01-01.gk3.shape.ebenen.zip
+      filename: vg250_01-01.gk3.shape.ebenen.zip
   scripts:
-    - script: osm2oedb.sh
-      language: bash
-    - script: ego_pp_osm_deu_import.sql
+    - script: create_boundaries_schema.sql
       language: SQL
-    - script: ego_pp_osm_line_street_mview.sql
+#    - script: preprocessing.vg250.import_vg250::import_vg250
+#      language: python
+#      filename: vg250_01-01.gk3.shape.ebenen.zip
+#    - script: ego_pp_vg250_import.sql
+#      language: SQL
+    - script: ego_pp_vg250_metadata.sql
       language: SQL
-    - script: ego_pp_osm_polygon_building_mview.sql
+    - script: ego_pp_vg250_mview.sql
       language: SQL

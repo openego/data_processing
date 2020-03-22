@@ -455,9 +455,9 @@ COMMENT ON TABLE boundaries.bkg_vg250_6_gem IS '{
 
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','output','boundaries','bkg_vg250_1_sta','ego_pp_vg250_metadata.sql','');
-SELECT ego_scenario_log('v0.2.10','output','boundaries','bkg_vg250_2_lan','ego_pp_vg250_metadata.sql','');
-SELECT ego_scenario_log('v0.2.10','output','boundaries','bkg_vg250_3_rbz','ego_pp_vg250_metadata.sql','');
-SELECT ego_scenario_log('v0.2.10','output','boundaries','bkg_vg250_4_krs','ego_pp_vg250_metadata.sql','');
-SELECT ego_scenario_log('v0.2.10','output','boundaries','bkg_vg250_5_vwg','ego_pp_vg250_metadata.sql','');
-SELECT ego_scenario_log('v0.2.10','output','boundaries','bkg_vg250_6_gem','ego_pp_vg250_metadata.sql','');
+SELECT scenario_log('eGo_PP','PP1','output','boundaries','bkg_vg250_1_sta','ego_pp_vg250_metadata.sql','');
+SELECT scenario_log('eGo_PP','PP1','output','boundaries','bkg_vg250_2_lan','ego_pp_vg250_metadata.sql','');
+SELECT scenario_log('eGo_PP','PP1','output','boundaries','bkg_vg250_3_rbz','ego_pp_vg250_metadata.sql','');
+SELECT scenario_log('eGo_PP','PP1','output','boundaries','bkg_vg250_4_krs','ego_pp_vg250_metadata.sql','');
+SELECT scenario_log('eGo_PP','PP1','output','boundaries','bkg_vg250_5_vwg','ego_pp_vg250_metadata.sql','');
+SELECT scenario_log('eGo_PP','PP1','output','boundaries','bkg_vg250_6_gem','ego_pp_vg250_metadata.sql','');

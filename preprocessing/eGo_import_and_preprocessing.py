@@ -26,6 +26,7 @@ from egoio.tools import db
 from sqlalchemy import create_engine
 import yaml
 from urllib.request import urlretrieve
+import importlib
 
 # Configure logging
 logger = logging.getLogger('EEEE')
@@ -39,6 +40,14 @@ logger.addHandler(ch)
 
 SCENARIOLOG = True
 DOWNLOADDIR = os.path.join(os.path.expanduser("~"), ".egon-pre-processing-cached/")
+
+db_info = {
+    "host": "localhost",
+    "port": 54321,
+    "user": "oeuser",
+    "password": "egon",
+    "database": "dp"
+}
 
 
 def create_data_dir(dir=DOWNLOADDIR):
@@ -82,7 +91,8 @@ def preprocessing():
 
     # get database connection
     conn_oedb = db.connection(readonly=True).connect()
-    engine_local = create_engine('postgresql+psycopg2://oeuser:egon@localhost:54321/dp')
+    # engine_local = create_engine('postgresql+psycopg2://oeuser:egon@localhost:54321/dp')
+    engine_local = create_engine('postgresql+psycopg2://{user}:{password}@{host}:{port}/{database}'.format(**db_info))
     conn = engine_local.connect()
 
     # iterate over data sets
@@ -106,11 +116,17 @@ def preprocessing():
                 # execute desired sql snippet
                 conn.execution_options(autocommit=True).execute(snippet_str)
             elif script["language"] == 'python':
-                filename = os.path.join(script_dir, key, script["script"])
-                script_str = open(filename, "rb").read()
+                if len(script["script"].split("::")) > 1:
+                    module, func = script["script"].split("::")
+                    mod = importlib.import_module(module)
+                    func_to_call = getattr(mod, func)
+                    func_to_call(script["filename"], DOWNLOADDIR, db_info=db_info)
+                else:
+                    filename = os.path.join(script_dir, key, script["script"])
+                    script_str = open(filename, "rb").read()
 
-                # execute desired sql snippet
-                exec(compile(script_str, filename, 'exec'))
+                    # execute desired sql snippet
+                    exec(compile(script_str, filename, 'exec'))
             elif script["language"] == 'bash':
                 filename = os.path.join(script_dir, key, script["script"])
                 script_str = open(filename, "rb").read()
