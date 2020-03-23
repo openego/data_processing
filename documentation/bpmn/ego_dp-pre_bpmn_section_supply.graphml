@@ -31,22 +31,22 @@
           </y:NodeLabel>
           <y:StyleProperties>
             <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.line.color" value="#000000"/>
+            <y:Property name="y.view.tabular.TableNodePainter.ALTERNATE_ROW_STYLE">
+              <y:SimpleStyle fillColor="#474A4340" lineColor="#000000" lineType="line" lineWidth="1.0"/>
+            </y:Property>
             <y:Property name="y.view.tabular.TableNodePainter.ALTERNATE_COLUMN_SELECTION_STYLE">
               <y:SimpleStyle fillColor="#474A4380" lineColor="#000000" lineType="line" lineWidth="3.0"/>
             </y:Property>
             <y:Property name="y.view.tabular.TableNodePainter.ALTERNATE_ROW_SELECTION_STYLE">
               <y:SimpleStyle fillColor="#474A4380" lineColor="#000000" lineType="line" lineWidth="3.0"/>
             </y:Property>
-            <y:Property class="java.awt.Color" name="POOL_LANE_COLOR_MAIN" value="#ffffffbf"/>
-            <y:Property class="com.yworks.yfiles.bpmn.view.BPMNTypeEnum" name="com.yworks.bpmn.type" value="POOL_TYPE_LANE"/>
-            <y:Property name="y.view.tabular.TableNodePainter.ALTERNATE_ROW_STYLE">
-              <y:SimpleStyle fillColor="#474A4340" lineColor="#000000" lineType="line" lineWidth="1.0"/>
-            </y:Property>
             <y:Property class="java.awt.Color" name="POOL_LANE_COLOR_ALTERNATING" value="#ffffffbf"/>
+            <y:Property class="java.awt.Color" name="POOL_LANE_COLOR_MAIN" value="#ffffffbf"/>
             <y:Property name="POOL_HEADER_COLOR_MAIN"/>
             <y:Property class="java.lang.String" name="POOL_LANE_STYLE" value="LANE_STYLE_COLUMNS"/>
             <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill2" value="#d4d4d4cc"/>
             <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill" value="#ffffffe6"/>
+            <y:Property class="com.yworks.yfiles.bpmn.view.BPMNTypeEnum" name="com.yworks.bpmn.type" value="POOL_TYPE_LANE"/>
             <y:Property name="y.view.tabular.TableNodePainter.ALTERNATE_COLUMN_STYLE">
               <y:SimpleStyle fillColor="#474A4340" lineColor="#000000" lineType="line" lineWidth="1.0"/>
             </y:Property>
@@ -76,7 +76,7 @@
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Activity.withShadow">
               <y:Geometry height="75.0" width="276.98947368421045" x="256.06844148805976" y="647.8585526315791"/>
-              <y:Fill color="#FFFFFFE6" color2="#00CCFF" transparent="false"/>
+              <y:Fill color="#FFFFFFE6" color2="#339966" transparent="false"/>
               <y:BorderStyle color="#123EA2" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="31.9375" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="267.53125" x="4.729111842105226" xml:space="preserve" y="21.53125">preprocessing/python_scripts/
 renpass_gis/simple_feedin/simple_feedin.py</y:NodeLabel>
@@ -216,10 +216,10 @@ renpass_gis/simple_feedin/simple_feedin.py</y:NodeLabel>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="267.390625" x="-116.1953125" xml:space="preserve" y="59.0">model_draft.ego_dp_supply_res_powerplant<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="-0.5" nodeRatioX="0.0" nodeRatioY="0.5" offsetX="0.0" offsetY="4.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
               <y:StyleProperties>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.line.color" value="#000000"/>
+                <y:Property class="com.yworks.yfiles.bpmn.view.DataObjectTypeEnum" name="com.yworks.bpmn.dataObjectType" value="DATA_OBJECT_TYPE_OUTPUT"/>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill2" value="#d4d4d4cc"/>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill" value="#ffffffe6"/>
                 <y:Property class="com.yworks.yfiles.bpmn.view.BPMNTypeEnum" name="com.yworks.bpmn.type" value="ARTIFACT_TYPE_DATA_OBJECT"/>
-                <y:Property class="com.yworks.yfiles.bpmn.view.DataObjectTypeEnum" name="com.yworks.bpmn.dataObjectType" value="DATA_OBJECT_TYPE_OUTPUT"/>
               </y:StyleProperties>
             </y:GenericNode>
           </data>
@@ -250,10 +250,10 @@ renpass_gis/simple_feedin/simple_feedin.py</y:NodeLabel>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="246.15625" x="-105.578125" xml:space="preserve" y="-21.96875">model_draft.ego_supply_res_powerplant<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.5" nodeRatioX="0.0" nodeRatioY="-0.5" offsetX="0.0" offsetY="-4.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
               <y:StyleProperties>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.line.color" value="#000000"/>
+                <y:Property class="com.yworks.yfiles.bpmn.view.DataObjectTypeEnum" name="com.yworks.bpmn.dataObjectType" value="DATA_OBJECT_TYPE_INPUT"/>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill2" value="#d4d4d4cc"/>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill" value="#ffffffe6"/>
                 <y:Property class="com.yworks.yfiles.bpmn.view.BPMNTypeEnum" name="com.yworks.bpmn.type" value="ARTIFACT_TYPE_DATA_OBJECT"/>
-                <y:Property class="com.yworks.yfiles.bpmn.view.DataObjectTypeEnum" name="com.yworks.bpmn.dataObjectType" value="DATA_OBJECT_TYPE_INPUT"/>
               </y:StyleProperties>
             </y:GenericNode>
           </data>
@@ -286,10 +286,10 @@ renpass_gis/simple_feedin/simple_feedin.py</y:NodeLabel>
 model_draft.ego_supply_conv_nep2035_temp<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="-0.5" nodeRatioX="0.0" nodeRatioY="0.5" offsetX="0.0" offsetY="4.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
               <y:StyleProperties>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.line.color" value="#000000"/>
+                <y:Property class="com.yworks.yfiles.bpmn.view.DataObjectTypeEnum" name="com.yworks.bpmn.dataObjectType" value="DATA_OBJECT_TYPE_OUTPUT"/>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill2" value="#d4d4d4cc"/>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill" value="#ffffffe6"/>
                 <y:Property class="com.yworks.yfiles.bpmn.view.BPMNTypeEnum" name="com.yworks.bpmn.type" value="ARTIFACT_TYPE_DATA_OBJECT"/>
-                <y:Property class="com.yworks.yfiles.bpmn.view.DataObjectTypeEnum" name="com.yworks.bpmn.dataObjectType" value="DATA_OBJECT_TYPE_OUTPUT"/>
               </y:StyleProperties>
             </y:GenericNode>
           </data>
@@ -320,10 +320,10 @@ model_draft.ego_supply_conv_nep2035_temp<y:LabelModel><y:SmartNodeLabelModel dis
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="256.234375" x="-110.6171875" xml:space="preserve" y="-21.96875">model_draft.ego_supply_conv_powerplant<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.5" nodeRatioX="0.0" nodeRatioY="-0.5" offsetX="0.0" offsetY="-4.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
               <y:StyleProperties>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.line.color" value="#000000"/>
+                <y:Property class="com.yworks.yfiles.bpmn.view.DataObjectTypeEnum" name="com.yworks.bpmn.dataObjectType" value="DATA_OBJECT_TYPE_INPUT"/>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill2" value="#d4d4d4cc"/>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill" value="#ffffffe6"/>
                 <y:Property class="com.yworks.yfiles.bpmn.view.BPMNTypeEnum" name="com.yworks.bpmn.type" value="ARTIFACT_TYPE_DATA_OBJECT"/>
-                <y:Property class="com.yworks.yfiles.bpmn.view.DataObjectTypeEnum" name="com.yworks.bpmn.dataObjectType" value="DATA_OBJECT_TYPE_INPUT"/>
               </y:StyleProperties>
             </y:GenericNode>
           </data>
@@ -334,7 +334,7 @@ model_draft.ego_supply_conv_nep2035_temp<y:LabelModel><y:SmartNodeLabelModel dis
               <y:Geometry height="75.0" width="276.98947368421045" x="1414.917674410059" y="647.8585526315791"/>
               <y:Fill color="#FFFFFFE6" color2="#038E0359" transparent="false"/>
               <y:BorderStyle color="#123EA2" type="line" width="1.0"/>
-              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="196.3515625" x="40.31895559210534" xml:space="preserve" y="28.515625">ego_dp_res_rea_by_scenario.sql</y:NodeLabel>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="196.3515625" x="40.31895559210511" xml:space="preserve" y="28.515625">ego_dp_res_rea_by_scenario.sql</y:NodeLabel>
               <y:StyleProperties>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.line.color" value="#000000"/>
                 <y:Property class="com.yworks.yfiles.bpmn.view.TaskTypeEnum" name="com.yworks.bpmn.taskType" value="TASK_TYPE_SCRIPT"/>
@@ -356,10 +356,10 @@ model_draft.ego_supply_conv_nep2035_temp<y:LabelModel><y:SmartNodeLabelModel dis
 <y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="-0.5" nodeRatioX="0.0" nodeRatioY="0.5" offsetX="0.0" offsetY="4.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
               <y:StyleProperties>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.line.color" value="#000000"/>
+                <y:Property class="com.yworks.yfiles.bpmn.view.DataObjectTypeEnum" name="com.yworks.bpmn.dataObjectType" value="DATA_OBJECT_TYPE_OUTPUT"/>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill2" value="#d4d4d4cc"/>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill" value="#ffffffe6"/>
                 <y:Property class="com.yworks.yfiles.bpmn.view.BPMNTypeEnum" name="com.yworks.bpmn.type" value="ARTIFACT_TYPE_DATA_OBJECT"/>
-                <y:Property class="com.yworks.yfiles.bpmn.view.DataObjectTypeEnum" name="com.yworks.bpmn.dataObjectType" value="DATA_OBJECT_TYPE_OUTPUT"/>
               </y:StyleProperties>
             </y:GenericNode>
           </data>
@@ -393,10 +393,10 @@ model_draft.ego_supply_scenario_capacities
 boundaries.bkg_vg250_6_gem_rs_mview<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.5" nodeRatioX="0.0" nodeRatioY="-0.5" offsetX="0.0" offsetY="-4.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
               <y:StyleProperties>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.line.color" value="#000000"/>
+                <y:Property class="com.yworks.yfiles.bpmn.view.DataObjectTypeEnum" name="com.yworks.bpmn.dataObjectType" value="DATA_OBJECT_TYPE_INPUT"/>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill2" value="#d4d4d4cc"/>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill" value="#ffffffe6"/>
                 <y:Property class="com.yworks.yfiles.bpmn.view.BPMNTypeEnum" name="com.yworks.bpmn.type" value="ARTIFACT_TYPE_DATA_OBJECT"/>
-                <y:Property class="com.yworks.yfiles.bpmn.view.DataObjectTypeEnum" name="com.yworks.bpmn.dataObjectType" value="DATA_OBJECT_TYPE_INPUT"/>
               </y:StyleProperties>
             </y:GenericNode>
           </data>
@@ -407,7 +407,7 @@ boundaries.bkg_vg250_6_gem_rs_mview<y:LabelModel><y:SmartNodeLabelModel distance
               <y:Geometry height="75.0" width="315.83157894736837" x="1758.8429508164534" y="647.8585526315791"/>
               <y:Fill color="#FFFFFFE6" color2="#038E0359" transparent="false"/>
               <y:BorderStyle color="#123EA2" type="line" width="1.0"/>
-              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="294.2734375" x="10.779070723684072" xml:space="preserve" y="28.515625">ego_dp_preprocessing_res_powerplant_2035.sql</y:NodeLabel>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="294.2734375" x="10.779070723684299" xml:space="preserve" y="28.515625">ego_dp_preprocessing_res_powerplant_2035.sql</y:NodeLabel>
               <y:StyleProperties>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.line.color" value="#000000"/>
                 <y:Property class="com.yworks.yfiles.bpmn.view.TaskTypeEnum" name="com.yworks.bpmn.taskType" value="TASK_TYPE_SCRIPT"/>
@@ -429,10 +429,10 @@ boundaries.bkg_vg250_6_gem_rs_mview<y:LabelModel><y:SmartNodeLabelModel distance
 <y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="-0.5" nodeRatioX="0.0" nodeRatioY="0.5" offsetX="0.0" offsetY="4.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
               <y:StyleProperties>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.line.color" value="#000000"/>
+                <y:Property class="com.yworks.yfiles.bpmn.view.DataObjectTypeEnum" name="com.yworks.bpmn.dataObjectType" value="DATA_OBJECT_TYPE_OUTPUT"/>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill2" value="#d4d4d4cc"/>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill" value="#ffffffe6"/>
                 <y:Property class="com.yworks.yfiles.bpmn.view.BPMNTypeEnum" name="com.yworks.bpmn.type" value="ARTIFACT_TYPE_DATA_OBJECT"/>
-                <y:Property class="com.yworks.yfiles.bpmn.view.DataObjectTypeEnum" name="com.yworks.bpmn.dataObjectType" value="DATA_OBJECT_TYPE_OUTPUT"/>
               </y:StyleProperties>
             </y:GenericNode>
           </data>
@@ -464,10 +464,10 @@ boundaries.bkg_vg250_6_gem_rs_mview<y:LabelModel><y:SmartNodeLabelModel distance
 <y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.5" nodeRatioX="0.0" nodeRatioY="-0.5" offsetX="0.0" offsetY="-4.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
               <y:StyleProperties>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.line.color" value="#000000"/>
+                <y:Property class="com.yworks.yfiles.bpmn.view.DataObjectTypeEnum" name="com.yworks.bpmn.dataObjectType" value="DATA_OBJECT_TYPE_INPUT"/>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill2" value="#d4d4d4cc"/>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill" value="#ffffffe6"/>
                 <y:Property class="com.yworks.yfiles.bpmn.view.BPMNTypeEnum" name="com.yworks.bpmn.type" value="ARTIFACT_TYPE_DATA_OBJECT"/>
-                <y:Property class="com.yworks.yfiles.bpmn.view.DataObjectTypeEnum" name="com.yworks.bpmn.dataObjectType" value="DATA_OBJECT_TYPE_INPUT"/>
               </y:StyleProperties>
             </y:GenericNode>
           </data>
@@ -500,10 +500,10 @@ boundaries.bkg_vg250_6_gem_rs_mview<y:LabelModel><y:SmartNodeLabelModel distance
 <y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="-0.5" nodeRatioX="0.0" nodeRatioY="0.5" offsetX="0.0" offsetY="4.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
               <y:StyleProperties>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.line.color" value="#000000"/>
+                <y:Property class="com.yworks.yfiles.bpmn.view.DataObjectTypeEnum" name="com.yworks.bpmn.dataObjectType" value="DATA_OBJECT_TYPE_OUTPUT"/>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill2" value="#d4d4d4cc"/>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill" value="#ffffffe6"/>
                 <y:Property class="com.yworks.yfiles.bpmn.view.BPMNTypeEnum" name="com.yworks.bpmn.type" value="ARTIFACT_TYPE_DATA_OBJECT"/>
-                <y:Property class="com.yworks.yfiles.bpmn.view.DataObjectTypeEnum" name="com.yworks.bpmn.dataObjectType" value="DATA_OBJECT_TYPE_OUTPUT"/>
               </y:StyleProperties>
             </y:GenericNode>
           </data>
@@ -514,7 +514,7 @@ boundaries.bkg_vg250_6_gem_rs_mview<y:LabelModel><y:SmartNodeLabelModel distance
               <y:Geometry height="30.0" width="230.0" x="2197.720115807514" y="752.8585526315791"/>
               <y:Fill color="#FFFF99" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
-              <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="10" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="27.28125" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="185.953125" x="22.023437500000227" xml:space="preserve" y="1.359375">Open Database License (ODbL) v1.0
+              <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="10" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="27.28125" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="185.953125" x="22.0234375" xml:space="preserve" y="1.359375">Open Database License (ODbL) v1.0
 © OpenStreetMap contributors<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
               <y:StyleProperties>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.line.color" value="#000000"/>
@@ -535,10 +535,10 @@ boundaries.bkg_vg250_6_gem_rs_mview<y:LabelModel><y:SmartNodeLabelModel distance
 <y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.5" nodeRatioX="0.0" nodeRatioY="-0.5" offsetX="0.0" offsetY="-4.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
               <y:StyleProperties>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.line.color" value="#000000"/>
+                <y:Property class="com.yworks.yfiles.bpmn.view.DataObjectTypeEnum" name="com.yworks.bpmn.dataObjectType" value="DATA_OBJECT_TYPE_INPUT"/>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill2" value="#d4d4d4cc"/>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill" value="#ffffffe6"/>
                 <y:Property class="com.yworks.yfiles.bpmn.view.BPMNTypeEnum" name="com.yworks.bpmn.type" value="ARTIFACT_TYPE_DATA_OBJECT"/>
-                <y:Property class="com.yworks.yfiles.bpmn.view.DataObjectTypeEnum" name="com.yworks.bpmn.dataObjectType" value="DATA_OBJECT_TYPE_INPUT"/>
               </y:StyleProperties>
             </y:GenericNode>
           </data>
@@ -571,10 +571,10 @@ boundaries.bkg_vg250_6_gem_rs_mview<y:LabelModel><y:SmartNodeLabelModel distance
 <y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="-0.5" nodeRatioX="0.0" nodeRatioY="0.5" offsetX="0.0" offsetY="4.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
               <y:StyleProperties>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.line.color" value="#000000"/>
+                <y:Property class="com.yworks.yfiles.bpmn.view.DataObjectTypeEnum" name="com.yworks.bpmn.dataObjectType" value="DATA_OBJECT_TYPE_OUTPUT"/>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill2" value="#d4d4d4cc"/>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill" value="#ffffffe6"/>
                 <y:Property class="com.yworks.yfiles.bpmn.view.BPMNTypeEnum" name="com.yworks.bpmn.type" value="ARTIFACT_TYPE_DATA_OBJECT"/>
-                <y:Property class="com.yworks.yfiles.bpmn.view.DataObjectTypeEnum" name="com.yworks.bpmn.dataObjectType" value="DATA_OBJECT_TYPE_OUTPUT"/>
               </y:StyleProperties>
             </y:GenericNode>
           </data>
@@ -606,10 +606,10 @@ boundaries.bkg_vg250_6_gem_rs_mview<y:LabelModel><y:SmartNodeLabelModel distance
 <y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.5" nodeRatioX="0.0" nodeRatioY="-0.5" offsetX="0.0" offsetY="-4.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
               <y:StyleProperties>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.line.color" value="#000000"/>
+                <y:Property class="com.yworks.yfiles.bpmn.view.DataObjectTypeEnum" name="com.yworks.bpmn.dataObjectType" value="DATA_OBJECT_TYPE_INPUT"/>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill2" value="#d4d4d4cc"/>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill" value="#ffffffe6"/>
                 <y:Property class="com.yworks.yfiles.bpmn.view.BPMNTypeEnum" name="com.yworks.bpmn.type" value="ARTIFACT_TYPE_DATA_OBJECT"/>
-                <y:Property class="com.yworks.yfiles.bpmn.view.DataObjectTypeEnum" name="com.yworks.bpmn.dataObjectType" value="DATA_OBJECT_TYPE_INPUT"/>
               </y:StyleProperties>
             </y:GenericNode>
           </data>
@@ -643,10 +643,10 @@ model_draft.ego_dp_supply_res_powerplant
 <y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="-0.5" nodeRatioX="0.0" nodeRatioY="0.5" offsetX="0.0" offsetY="4.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
               <y:StyleProperties>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.line.color" value="#000000"/>
+                <y:Property class="com.yworks.yfiles.bpmn.view.DataObjectTypeEnum" name="com.yworks.bpmn.dataObjectType" value="DATA_OBJECT_TYPE_OUTPUT"/>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill2" value="#d4d4d4cc"/>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill" value="#ffffffe6"/>
                 <y:Property class="com.yworks.yfiles.bpmn.view.BPMNTypeEnum" name="com.yworks.bpmn.type" value="ARTIFACT_TYPE_DATA_OBJECT"/>
-                <y:Property class="com.yworks.yfiles.bpmn.view.DataObjectTypeEnum" name="com.yworks.bpmn.dataObjectType" value="DATA_OBJECT_TYPE_OUTPUT"/>
               </y:StyleProperties>
             </y:GenericNode>
           </data>
@@ -680,10 +680,10 @@ coastdat.cosmoclmgrid
 <y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.5" nodeRatioX="0.0" nodeRatioY="-0.5" offsetX="0.0" offsetY="-4.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
               <y:StyleProperties>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.line.color" value="#000000"/>
+                <y:Property class="com.yworks.yfiles.bpmn.view.DataObjectTypeEnum" name="com.yworks.bpmn.dataObjectType" value="DATA_OBJECT_TYPE_INPUT"/>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill2" value="#d4d4d4cc"/>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill" value="#ffffffe6"/>
                 <y:Property class="com.yworks.yfiles.bpmn.view.BPMNTypeEnum" name="com.yworks.bpmn.type" value="ARTIFACT_TYPE_DATA_OBJECT"/>
-                <y:Property class="com.yworks.yfiles.bpmn.view.DataObjectTypeEnum" name="com.yworks.bpmn.dataObjectType" value="DATA_OBJECT_TYPE_INPUT"/>
               </y:StyleProperties>
             </y:GenericNode>
           </data>
@@ -727,7 +727,6 @@ coastdat.cosmoclmgrid
       </data>
     </edge>
     <edge id="n0::e3" source="n0::n0" target="n0::n6">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -738,7 +737,6 @@ coastdat.cosmoclmgrid
       </data>
     </edge>
     <edge id="n0::e4" source="n0::n6" target="n0::n7">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -749,7 +747,6 @@ coastdat.cosmoclmgrid
       </data>
     </edge>
     <edge id="n0::e5" source="n0::n9" target="n0::n6">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -760,7 +757,6 @@ coastdat.cosmoclmgrid
       </data>
     </edge>
     <edge id="n0::e6" source="n0::n10" target="n0::n11">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -771,7 +767,6 @@ coastdat.cosmoclmgrid
       </data>
     </edge>
     <edge id="n0::e7" source="n0::n13" target="n0::n10">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -782,7 +777,6 @@ coastdat.cosmoclmgrid
       </data>
     </edge>
     <edge id="n0::e8" source="n0::n14" target="n0::n15">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -793,7 +787,6 @@ coastdat.cosmoclmgrid
       </data>
     </edge>
     <edge id="n0::e9" source="n0::n17" target="n0::n14">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -804,7 +797,6 @@ coastdat.cosmoclmgrid
       </data>
     </edge>
     <edge id="n0::e10" source="n0::n18" target="n0::n19">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -815,7 +807,6 @@ coastdat.cosmoclmgrid
       </data>
     </edge>
     <edge id="n0::e11" source="n0::n21" target="n0::n18">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -826,7 +817,6 @@ coastdat.cosmoclmgrid
       </data>
     </edge>
     <edge id="n0::e12" source="n0::n22" target="n0::n23">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -837,7 +827,6 @@ coastdat.cosmoclmgrid
       </data>
     </edge>
     <edge id="n0::e13" source="n0::n25" target="n0::n22">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -848,7 +837,6 @@ coastdat.cosmoclmgrid
       </data>
     </edge>
     <edge id="n0::e14" source="n0::n26" target="n0::n27">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -859,7 +847,6 @@ coastdat.cosmoclmgrid
       </data>
     </edge>
     <edge id="n0::e15" source="n0::n29" target="n0::n26">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -870,7 +857,6 @@ coastdat.cosmoclmgrid
       </data>
     </edge>
     <edge id="n0::e16" source="n0::n30" target="n0::n31">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -881,7 +867,6 @@ coastdat.cosmoclmgrid
       </data>
     </edge>
     <edge id="n0::e17" source="n0::n33" target="n0::n30">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -892,7 +877,6 @@ coastdat.cosmoclmgrid
       </data>
     </edge>
     <edge id="n0::e18" source="n0::n6" target="n0::n10">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -903,7 +887,6 @@ coastdat.cosmoclmgrid
       </data>
     </edge>
     <edge id="n0::e19" source="n0::n10" target="n0::n14">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -914,7 +897,6 @@ coastdat.cosmoclmgrid
       </data>
     </edge>
     <edge id="n0::e20" source="n0::n14" target="n0::n18">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -925,7 +907,6 @@ coastdat.cosmoclmgrid
       </data>
     </edge>
     <edge id="n0::e21" source="n0::n18" target="n0::n22">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -936,7 +917,6 @@ coastdat.cosmoclmgrid
       </data>
     </edge>
     <edge id="n0::e22" source="n0::n22" target="n0::n26">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -947,7 +927,6 @@ coastdat.cosmoclmgrid
       </data>
     </edge>
     <edge id="n0::e23" source="n0::n26" target="n0::n30">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -958,7 +937,6 @@ coastdat.cosmoclmgrid
       </data>
     </edge>
     <edge id="n0::e24" source="n0::n30" target="n0::n4">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
