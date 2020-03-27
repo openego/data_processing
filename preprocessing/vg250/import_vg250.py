@@ -8,6 +8,7 @@ def certain_file_types(directory, extension):
 
 
 def import_vg250(file, path, db_info, year=2019):
+    FNULL = open(os.devnull, 'w')
 
     zip = zipfile.ZipFile(os.path.join(path, file))
     zip.extractall(path=path)
@@ -24,4 +25,4 @@ def import_vg250(file, path, db_info, year=2019):
         cmd_pgql = ' | psql -h {host} -d {database} -U {user} -p {port}'.format(**db_info)
         cmd = cmd_shp + cmd_pgql
 
-        subprocess.run(cmd, shell=True, env={"PGPASSWORD": "egon"})
+        subprocess.run(cmd, shell=True, env={"PGPASSWORD": "egon"}, stdout=FNULL)
