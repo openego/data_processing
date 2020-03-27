@@ -12,13 +12,10 @@ openstreetmap:
     - url: https://download.geofabrik.de/europe/germany-latest.osm.pbf
       filename: deu-latest.osm.pbf
   scripts:
-#    - script: osm2oedb.sh
-#      language: bash
-#    - script: "export PGPASSWORD=egon"
-#      language: bash
-    - script: "export PGPASSWORD=egon\n osm2pgsql --create --slim --hstor6e-all --number-processes 4 --cache 4096 -H localhost -P 54321 -d dp -U oeuser -p osm_deu -S oedb.style  /home/guido/.egon-pre-processing-cached/"
-      language: bash
+    - script: preprocessing.openstreetmap.import_osm::osm2postgres
+      language: python
       filename: deu-latest.osm.pbf
+      db: info
     - script: ego_pp_osm_deu_import.sql
       language: SQL
     - script: ego_pp_osm_line_street_mview.sql

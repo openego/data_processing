@@ -99,7 +99,7 @@ def preprocessing():
     # iterate over data sets
     for key, dataset in datasets.items():
         for download in dataset.get("required_data", []):
-            logger.info("Downloading '{}' ...".format(script["required_data"]))
+            logger.info("Downloading '{}' ...".format(download["filename"]))
             snippet_time = time.time()
             download_data(download["url"], download["filename"])
             logger.info('...successfully done in {:.2f} seconds.'.format(
