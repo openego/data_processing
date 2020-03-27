@@ -40,6 +40,7 @@ logger.addHandler(ch)
 
 SCENARIOLOG = True
 DOWNLOADDIR = os.path.join(os.path.expanduser("~"), ".egon-pre-processing-cached/")
+FNULL = open(os.devnull, 'w')
 
 db_info = {
     "host": "localhost",
@@ -98,7 +99,11 @@ def preprocessing():
     # iterate over data sets
     for key, dataset in datasets.items():
         for download in dataset.get("required_data", []):
+            logger.info("Downloading '{}' ...".format(script["required_data"]))
+            snippet_time = time.time()
             download_data(download["url"], download["filename"])
+            logger.info('...successfully done in {:.2f} seconds.'.format(
+                time.time() - snippet_time))
 
         for script in dataset.get("scripts", []):
 
@@ -118,9 +123,19 @@ def preprocessing():
             elif script["language"] == 'python':
                 if len(script["script"].split("::")) > 1:
                     module, func = script["script"].split("::")
+
+                    args = script.get("args", {})
+
+                    if script["db"] == "info":
+                        db_details = db_info
+                    elif script["db"] == "conn":
+                        db_details = engine_local
+                    else:
+                        ""
+
                     mod = importlib.import_module(module)
                     func_to_call = getattr(mod, func)
-                    func_to_call(script["filename"], DOWNLOADDIR, db_info=db_info)
+                    func_to_call(script["filename"], DOWNLOADDIR, db_details, **args)
                 else:
                     filename = os.path.join(script_dir, key, script["script"])
                     script_str = open(filename, "rb").read()
@@ -129,12 +144,18 @@ def preprocessing():
                     exec(compile(script_str, filename, 'exec'))
             elif script["language"] == 'bash':
                 filename = os.path.join(script_dir, key, script["script"])
-                script_str = open(filename, "rb").read()
+                script_str = script["script"]
+
+                if "filename" in script:
+                    script_str += script["filename"]
 
                 # execute desired bash script
-                rc = subprocess.call(script_str,
-                                     cwd= os.path.join(script_dir, key),
-                                     shell=True)
+                # rc (script_str)
+                subprocess.run(script_str,
+                               shell=True,
+                               env={"PGPASSWORD": "egon"},
+                               stdout=FNULL,
+                               cwd= os.path.join(script_dir, key))
             else:
                 raise NameError('{} is neither a python nor a sql script (at least it '
                                 'has not the right extension). Please add an extension '

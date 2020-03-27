@@ -47,8 +47,7 @@ COMMENT ON MATERIALIZED VIEW society.destatis_zensus_population_per_ha_mview IS 
     "published": "none" }';
 
 -- scenario log (project,version,io,schema_name,table_name,script_name,comment)
-SELECT scenario_log('eGo_PP','PP1','output','society','destatis_zensus_population_per_ha_mview','ego_pp_destatis_zensus_insidevg250.sql','none');
-
+SELECT scenario_log('eGo_PP','PP1','preprocessing','society','destatis_zensus_population_per_ha_mview','ego_pp_destatis_zensus_insidevg250.sql','none');
 
 -- zensus points inside Germany (vg250)
 DROP TABLE IF EXISTS    model_draft.destatis_zensus_population_per_ha_inside CASCADE;

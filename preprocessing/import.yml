@@ -8,16 +8,38 @@ scenario_log:
       language: SQL
 openstreetmap:
   required_data:
-    - url: https://download.geofabrik.de/europe/germany/bremen-latest.osm.pbf
-      filename: bremen-latest.osm.pbf
+#    - url: https://download.geofabrik.de/europe/germany/bremen-latest.osm.pbf
+    - url: https://download.geofabrik.de/europe/germany-latest.osm.pbf
+      filename: deu-latest.osm.pbf
   scripts:
-    - script: osm2oedb.sh
+#    - script: osm2oedb.sh
+#      language: bash
+#    - script: "export PGPASSWORD=egon"
+#      language: bash
+    - script: "export PGPASSWORD=egon\n osm2pgsql --create --slim --hstor6e-all --number-processes 4 --cache 4096 -H localhost -P 54321 -d dp -U oeuser -p osm_deu -S oedb.style  /home/guido/.egon-pre-processing-cached/"
       language: bash
+      filename: deu-latest.osm.pbf
     - script: ego_pp_osm_deu_import.sql
       language: SQL
     - script: ego_pp_osm_line_street_mview.sql
       language: SQL
     - script: ego_pp_osm_polygon_building_mview.sql
+      language: SQL
+zensus:
+  required_data:
+    - url: https://next.rl-institut.de/s/Asoxps5oWGkGrZi/download
+      filename: Zensus_Bevoelkerung_100m-Gitter.zip
+  scripts:
+    - script: preprocessing.zensus.destatis_zensus_import_csv::import_zensus2011
+      language: python
+      filename: Zensus_Bevoelkerung_100m-Gitter.zip
+      db: conn
+      args:
+        table: zensus_2011_pop_per_ha
+        schema: tmp_destatis
+    - script: destatis_zensus_raw_import.sql
+      language: SQL
+    - script: ego_pp_destatis_zensus_import.sql
       language: SQL
 vg250:
   required_data:
@@ -29,9 +51,18 @@ vg250:
     - script: preprocessing.vg250.import_vg250::import_vg250
       language: python
       filename: vg250_01-01.gk3.shape.ebenen.zip
+      db: info
     - script: ego_pp_vg250_import.sql
       language: SQL
     - script: ego_pp_vg250_metadata.sql
       language: SQL
     - script: ego_pp_vg250_mview.sql
+      language: SQL
+    - script: ego_dp_structure_boundaries_vg250.sql
+      language: SQL
+zensus_vg250:
+  scripts:
+    - script: ego_pp_destatis_zensus_insidevg250.sql
+      language: SQL
+    - script: ego_pp_destatis_zensus_metadata.sql
       language: SQL

@@ -7,6 +7,7 @@ __url__ 	= "https://github.com/openego/data_processing/blob/master/LICENSE"
 __author__ 	= "Ludee"
 */
 
+CREATE SCHEMA IF NOT EXISTS society;
 
 -- zensus
 CREATE TABLE society.destatis_zensus_population_per_ha (
@@ -64,8 +65,10 @@ CREATE INDEX destatis_zensus_population_per_ha_geom_point_idx
 -- insert data
 INSERT INTO society.destatis_zensus_population_per_ha
 	SELECT	pnt.gid,pnt.grid_id,pnt.x_mp,pnt.y_mp,pnt.population,pnt.geom AS geom_point,poly.geom
-	FROM	orig_destatis.zensus_population_per_ha AS pnt 
-		JOIN orig_destatis.zensus_population_per_ha_grid AS poly ON (pnt.gid=poly.gid);
+	FROM	tmp_destatis.zensus_population_per_ha AS pnt 
+		JOIN tmp_destatis.zensus_population_per_ha_grid AS poly ON (pnt.gid=poly.gid);
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','preprocessing','society','destatis_zensus_population_per_ha','ego_pp_destatis_zensus_import.sql','setup zensus table');
+SELECT scenario_log('eGo_PP','PP1','preprocessing','society','destatis_zensus_population_per_ha','ego_pp_destatis_zensus_import.sql','setup zensus table');
+
+DROP SCHEMA tmp_destatis CASCADE;
