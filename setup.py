@@ -20,7 +20,8 @@ setup(
         'demandlib',
         'egoio >= 0.4.7',
         'geoalchemy2',
-        "pyyaml"
+        "pyyaml",
+        "geopandas"
     ],
     extras_require={
         'docs': [

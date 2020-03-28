@@ -63,3 +63,18 @@ zensus_vg250:
       language: SQL
     - script: ego_pp_destatis_zensus_metadata.sql
       language: SQL
+supply:
+  required_data:
+    - url: https://next.rl-institut.de/s/TsjxR5P2Q6Z8Y7X/download
+      filename: vernetzen_wind_potential_areas.zip
+  scripts:
+    - script: preprocessing.supply.import_vernetzen_wind_potential_areas::import_vernetzen_wind_potential_areas
+      language: python
+      filename: vernetzen_wind_potential_areas.zip
+      db: conn
+      args:
+        schema: "supply"
+        table: "vernetzen_wind_potential_area"
+    - script: vernetzen_wind_potential_area_v1.3.sql
+      language: SQL
+
