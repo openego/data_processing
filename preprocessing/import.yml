@@ -77,4 +77,8 @@ supply:
         table: "vernetzen_wind_potential_area"
     - script: vernetzen_wind_potential_area_v1.3.sql
       language: SQL
+slp:
+  scripts:
+    - script: ego_pre_slp_parameters.sql
+      language: SQL
 
