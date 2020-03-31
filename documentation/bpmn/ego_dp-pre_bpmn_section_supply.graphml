@@ -17,11 +17,11 @@
     <node id="n0" yfiles.foldertype="group">
       <data key="d6">
         <y:TableNode configuration="com.yworks.bpmn.Pool">
-          <y:Geometry height="784.8484966825212" width="3587.3506357702636" x="-137.43762191378175" y="313.1644736842106"/>
+          <y:Geometry height="832.0735032191276" width="5096.663198322622" x="-1254.1517111836965" y="189.91332609782944"/>
           <y:Fill color="#3265FF7F" color2="#D4D4D4CC" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="3.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" borderDistance="0.0" fontFamily="Dialog" fontSize="36" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="45.90625" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="l" rotationAngle="270.0" textColor="#000000" verticalTextPosition="bottom" visible="true" width="574.357421875" x="0.0" xml:space="preserve" y="105.24553740376064">eGo Pre-Processing - supply</y:NodeLabel>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="35" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" hasText="false" height="4.0" horizontalTextPosition="center" iconTextGap="4" modelName="custom" rotationAngle="270.0" textColor="#000000" verticalTextPosition="bottom" visible="true" width="4.0" x="53.0" y="402.5863577162607">
+          <y:NodeLabel alignment="center" autoSizePolicy="content" borderDistance="0.0" fontFamily="Dialog" fontSize="36" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="45.90625" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="l" rotationAngle="270.0" textColor="#000000" verticalTextPosition="bottom" visible="true" width="574.357421875" x="0.0" xml:space="preserve" y="128.8580406720638">eGo Pre-Processing - supply</y:NodeLabel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="35" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" hasText="false" height="4.0" horizontalTextPosition="center" iconTextGap="4" modelName="custom" rotationAngle="270.0" textColor="#000000" verticalTextPosition="bottom" visible="true" width="4.0" x="53.0" y="426.1988609845639">
             <y:LabelModel>
               <y:RowNodeLabelModel offset="3.0"/>
             </y:LabelModel>
@@ -53,18 +53,18 @@
           </y:StyleProperties>
           <y:State autoResize="true" closed="false" closedHeight="80.0" closedWidth="100.0"/>
           <y:Insets bottom="0" bottomF="0.0" left="0" leftF="0.0" right="0" rightF="0.0" top="0" topF="0.0"/>
-          <y:BorderInsets bottom="204" bottomF="203.61117808101983" left="209" leftF="208.50606340184152" right="34" rightF="34.23273026315837" top="148" topF="148.31907894736838"/>
+          <y:BorderInsets bottom="204" bottomF="204.22840090629757" left="111" leftF="110.56854961832073" right="871" rightF="871.2419923496727" top="110" topF="110.36508230834437"/>
           <y:Table autoResizeTable="true" defaultColumnWidth="360.0" defaultMinimumColumnWidth="30.0" defaultMinimumRowHeight="30.0" defaultRowHeight="107.0">
             <y:DefaultColumnInsets bottom="3.0" left="3.0" right="3.0" top="20.0"/>
             <y:DefaultRowInsets bottom="3.0" left="20.0" right="3.0" top="3.0"/>
             <y:Insets bottom="0.0" left="50.0" right="0.0" top="0.0"/>
             <y:Columns>
-              <y:Column id="column_0" minimumWidth="30.0" width="3513.6709482702636">
+              <y:Column id="column_0" minimumWidth="30.0" width="5022.983510822622">
                 <y:Insets bottom="3.0" left="3.0" right="3.0" top="20.0"/>
               </y:Column>
             </y:Columns>
             <y:Rows>
-              <y:Row height="769.1727154325214" id="row_0" minimumHeight="30.0">
+              <y:Row height="816.3977219691278" id="row_0" minimumHeight="30.0">
                 <y:Insets bottom="3.0" left="20.0" right="3.0" top="3.0"/>
               </y:Row>
             </y:Rows>
@@ -75,7 +75,7 @@
         <node id="n0::n0">
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Activity.withShadow">
-              <y:Geometry height="75.0" width="276.98947368421045" x="256.06844148805976" y="647.8585526315791"/>
+              <y:Geometry height="75.0" width="276.98947368421045" x="592.5814185872963" y="524.6074050451979"/>
               <y:Fill color="#FFFFFFE6" color2="#339966" transparent="false"/>
               <y:BorderStyle color="#123EA2" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="31.9375" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="267.53125" x="4.729111842105226" xml:space="preserve" y="21.53125">preprocessing/python_scripts/
@@ -94,10 +94,11 @@ renpass_gis/simple_feedin/simple_feedin.py</y:NodeLabel>
         <node id="n0::n1">
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
-              <y:Geometry height="55.0" width="35.0" x="377.063178330165" y="813.2666856165403"/>
+              <y:Geometry height="55.0" width="35.0" x="713.5761554294015" y="690.0155380301591"/>
               <y:Fill color="#FFFFFF" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
-              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="214.708984375" x="-89.8544921875" xml:space="preserve" y="59.0">model_draft.ego_renewable_feedin<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="-0.5" nodeRatioX="0.0" nodeRatioY="0.5" offsetX="0.0" offsetY="4.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="31.9375" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="214.708984375" x="-89.8544921875" xml:space="preserve" y="59.0">model_draft.ego_renewable_feedin
+model_draft.ego_power_class<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="-0.5" nodeRatioX="0.0" nodeRatioY="0.5" offsetX="0.0" offsetY="4.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
               <y:StyleProperties>
                 <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.line.color" value="#000000"/>
                 <y:Property class="com.yworks.yfiles.bpmn.view.DataObjectTypeEnum" name="com.yworks.bpmn.dataObjectType" value="DATA_OBJECT_TYPE_OUTPUT"/>
@@ -110,24 +111,8 @@ renpass_gis/simple_feedin/simple_feedin.py</y:NodeLabel>
         </node>
         <node id="n0::n2">
           <data key="d6">
-            <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
-              <y:Geometry height="30.0" width="80.0" x="416.06844148805976" y="570.358552631579"/>
-              <y:Fill color="#FFFFFFE6" transparent="false"/>
-              <y:BorderStyle color="#000000" type="line" width="1.0"/>
-              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="10.369140625" x="34.8154296875" xml:space="preserve" y="6.015625">?<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
-              <y:StyleProperties>
-                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.line.color" value="#000000"/>
-                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill2" value="#d4d4d4cc"/>
-                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill" value="#ffffffe6"/>
-                <y:Property class="com.yworks.yfiles.bpmn.view.BPMNTypeEnum" name="com.yworks.bpmn.type" value="ARTIFACT_TYPE_ANNOTATION"/>
-              </y:StyleProperties>
-            </y:GenericNode>
-          </data>
-        </node>
-        <node id="n0::n3">
-          <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Event.withShadow">
-              <y:Geometry height="30.0" width="30.0" x="141.06844148805976" y="670.3585526315791"/>
+              <y:Geometry height="30.0" width="30.0" x="-1073.5831615653758" y="547.1074050451979"/>
               <y:Fill color="#FFFFFFE6" color2="#D4D4D4CC" transparent="false"/>
               <y:BorderStyle color="#27AE27" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" hasText="false" height="4.0" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="4.0" x="13.0" y="34.0">
@@ -148,10 +133,10 @@ renpass_gis/simple_feedin/simple_feedin.py</y:NodeLabel>
             </y:GenericNode>
           </data>
         </node>
-        <node id="n0::n4">
+        <node id="n0::n3">
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Event.withShadow">
-              <y:Geometry height="30.0" width="30.0" x="3382.6802835933236" y="670.3585526315791"/>
+              <y:Geometry height="30.0" width="30.0" x="2938.269494789253" y="547.1074050451979"/>
               <y:Fill color="#FFFFFFE6" color2="#D4D4D4CC" transparent="false"/>
               <y:BorderStyle color="#B11F1F" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" hasText="false" height="4.0" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="4.0" x="13.0" y="34.0">
@@ -172,166 +157,10 @@ renpass_gis/simple_feedin/simple_feedin.py</y:NodeLabel>
             </y:GenericNode>
           </data>
         </node>
-        <node id="n0::n5">
-          <data key="d6">
-            <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
-              <y:Geometry height="30.0" width="230.0" x="279.563178330165" y="762.779605263158"/>
-              <y:Fill color="#FFFF99" transparent="false"/>
-              <y:BorderStyle color="#000000" type="line" width="1.0"/>
-              <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="10" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="27.28125" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="185.953125" x="22.0234375" xml:space="preserve" y="1.359375">Open Database License (ODbL) v1.0
-© OpenStreetMap contributors<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
-              <y:StyleProperties>
-                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.line.color" value="#000000"/>
-                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill2" value="#d4d4d4cc"/>
-                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill" value="#ffffffe6"/>
-                <y:Property class="com.yworks.yfiles.bpmn.view.BPMNTypeEnum" name="com.yworks.bpmn.type" value="ARTIFACT_TYPE_ANNOTATION"/>
-              </y:StyleProperties>
-            </y:GenericNode>
-          </data>
-        </node>
-        <node id="n0::n6">
+        <node id="n0::n4">
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Activity.withShadow">
-              <y:Geometry height="75.0" width="276.98947368421045" x="648.0756283121248" y="647.8585526315791"/>
-              <y:Fill color="#FFFFFFE6" color2="#038E0359" transparent="false"/>
-              <y:BorderStyle color="#123EA2" type="line" width="1.0"/>
-              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="257.734375" x="9.627549342105226" xml:space="preserve" y="28.515625">ego_dp_preprocessing_res_powerplant.sql</y:NodeLabel>
-              <y:StyleProperties>
-                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.line.color" value="#000000"/>
-                <y:Property class="com.yworks.yfiles.bpmn.view.TaskTypeEnum" name="com.yworks.bpmn.taskType" value="TASK_TYPE_SCRIPT"/>
-                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill2" value="#d4d4d4cc"/>
-                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill" value="#ffffffe6"/>
-                <y:Property class="com.yworks.yfiles.bpmn.view.BPMNTypeEnum" name="com.yworks.bpmn.type" value="ACTIVITY_TYPE"/>
-                <y:Property class="com.yworks.yfiles.bpmn.view.ActivityTypeEnum" name="com.yworks.bpmn.activityType" value="ACTIVITY_TYPE_TASK"/>
-              </y:StyleProperties>
-            </y:GenericNode>
-          </data>
-        </node>
-        <node id="n0::n7">
-          <data key="d6">
-            <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
-              <y:Geometry height="55.0" width="35.0" x="769.07036515423" y="800.4642922857118"/>
-              <y:Fill color="#FFFFFF" transparent="false"/>
-              <y:BorderStyle color="#000000" type="line" width="1.0"/>
-              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="267.390625" x="-116.1953125" xml:space="preserve" y="59.0">model_draft.ego_dp_supply_res_powerplant<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="-0.5" nodeRatioX="0.0" nodeRatioY="0.5" offsetX="0.0" offsetY="4.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
-              <y:StyleProperties>
-                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.line.color" value="#000000"/>
-                <y:Property class="com.yworks.yfiles.bpmn.view.DataObjectTypeEnum" name="com.yworks.bpmn.dataObjectType" value="DATA_OBJECT_TYPE_OUTPUT"/>
-                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill2" value="#d4d4d4cc"/>
-                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill" value="#ffffffe6"/>
-                <y:Property class="com.yworks.yfiles.bpmn.view.BPMNTypeEnum" name="com.yworks.bpmn.type" value="ARTIFACT_TYPE_DATA_OBJECT"/>
-              </y:StyleProperties>
-            </y:GenericNode>
-          </data>
-        </node>
-        <node id="n0::n8">
-          <data key="d6">
-            <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
-              <y:Geometry height="30.0" width="230.0" x="671.57036515423" y="752.8585526315791"/>
-              <y:Fill color="#FFFF99" transparent="false"/>
-              <y:BorderStyle color="#000000" type="line" width="1.0"/>
-              <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="10" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="27.28125" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="185.953125" x="22.0234375" xml:space="preserve" y="1.359375">Open Database License (ODbL) v1.0
-© OpenStreetMap contributors<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
-              <y:StyleProperties>
-                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.line.color" value="#000000"/>
-                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill2" value="#d4d4d4cc"/>
-                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill" value="#ffffffe6"/>
-                <y:Property class="com.yworks.yfiles.bpmn.view.BPMNTypeEnum" name="com.yworks.bpmn.type" value="ARTIFACT_TYPE_ANNOTATION"/>
-              </y:StyleProperties>
-            </y:GenericNode>
-          </data>
-        </node>
-        <node id="n0::n9">
-          <data key="d6">
-            <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
-              <y:Geometry height="55.0" width="35.0" x="769.07036515423" y="545.358552631579"/>
-              <y:Fill color="#FFFFFFE6" transparent="false"/>
-              <y:BorderStyle color="#000000" type="line" width="1.0"/>
-              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="246.15625" x="-105.578125" xml:space="preserve" y="-21.96875">model_draft.ego_supply_res_powerplant<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.5" nodeRatioX="0.0" nodeRatioY="-0.5" offsetX="0.0" offsetY="-4.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
-              <y:StyleProperties>
-                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.line.color" value="#000000"/>
-                <y:Property class="com.yworks.yfiles.bpmn.view.DataObjectTypeEnum" name="com.yworks.bpmn.dataObjectType" value="DATA_OBJECT_TYPE_INPUT"/>
-                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill2" value="#d4d4d4cc"/>
-                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill" value="#ffffffe6"/>
-                <y:Property class="com.yworks.yfiles.bpmn.view.BPMNTypeEnum" name="com.yworks.bpmn.type" value="ARTIFACT_TYPE_DATA_OBJECT"/>
-              </y:StyleProperties>
-            </y:GenericNode>
-          </data>
-        </node>
-        <node id="n0::n10">
-          <data key="d6">
-            <y:GenericNode configuration="com.yworks.bpmn.Activity.withShadow">
-              <y:Geometry height="75.0" width="276.98947368421045" x="1031.4966513610918" y="647.8585526315791"/>
-              <y:Fill color="#FFFFFFE6" color2="#038E0359" transparent="false"/>
-              <y:BorderStyle color="#123EA2" type="line" width="1.0"/>
-              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="267.8125" x="4.588486842105112" xml:space="preserve" y="28.515625">ego_dp_preprocessing_conv_powerplant.sql</y:NodeLabel>
-              <y:StyleProperties>
-                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.line.color" value="#000000"/>
-                <y:Property class="com.yworks.yfiles.bpmn.view.TaskTypeEnum" name="com.yworks.bpmn.taskType" value="TASK_TYPE_SCRIPT"/>
-                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill2" value="#d4d4d4cc"/>
-                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill" value="#ffffffe6"/>
-                <y:Property class="com.yworks.yfiles.bpmn.view.BPMNTypeEnum" name="com.yworks.bpmn.type" value="ACTIVITY_TYPE"/>
-                <y:Property class="com.yworks.yfiles.bpmn.view.ActivityTypeEnum" name="com.yworks.bpmn.activityType" value="ACTIVITY_TYPE_TASK"/>
-              </y:StyleProperties>
-            </y:GenericNode>
-          </data>
-        </node>
-        <node id="n0::n11">
-          <data key="d6">
-            <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
-              <y:Geometry height="55.0" width="35.0" x="1152.491388203197" y="800.4642922857118"/>
-              <y:Fill color="#FFFFFF" transparent="false"/>
-              <y:BorderStyle color="#000000" type="line" width="1.0"/>
-              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="31.9375" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="279.068359375" x="-122.0341796875" xml:space="preserve" y="59.0">model_draft.ego_dp_supply_conv_powerplant
-model_draft.ego_supply_conv_nep2035_temp<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="-0.5" nodeRatioX="0.0" nodeRatioY="0.5" offsetX="0.0" offsetY="4.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
-              <y:StyleProperties>
-                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.line.color" value="#000000"/>
-                <y:Property class="com.yworks.yfiles.bpmn.view.DataObjectTypeEnum" name="com.yworks.bpmn.dataObjectType" value="DATA_OBJECT_TYPE_OUTPUT"/>
-                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill2" value="#d4d4d4cc"/>
-                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill" value="#ffffffe6"/>
-                <y:Property class="com.yworks.yfiles.bpmn.view.BPMNTypeEnum" name="com.yworks.bpmn.type" value="ARTIFACT_TYPE_DATA_OBJECT"/>
-              </y:StyleProperties>
-            </y:GenericNode>
-          </data>
-        </node>
-        <node id="n0::n12">
-          <data key="d6">
-            <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
-              <y:Geometry height="30.0" width="230.0" x="1054.991388203197" y="752.8585526315791"/>
-              <y:Fill color="#FFFF99" transparent="false"/>
-              <y:BorderStyle color="#000000" type="line" width="1.0"/>
-              <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="10" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="27.28125" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="185.953125" x="22.0234375" xml:space="preserve" y="1.359375">Open Database License (ODbL) v1.0
-© OpenStreetMap contributors<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
-              <y:StyleProperties>
-                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.line.color" value="#000000"/>
-                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill2" value="#d4d4d4cc"/>
-                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill" value="#ffffffe6"/>
-                <y:Property class="com.yworks.yfiles.bpmn.view.BPMNTypeEnum" name="com.yworks.bpmn.type" value="ARTIFACT_TYPE_ANNOTATION"/>
-              </y:StyleProperties>
-            </y:GenericNode>
-          </data>
-        </node>
-        <node id="n0::n13">
-          <data key="d6">
-            <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
-              <y:Geometry height="55.0" width="35.0" x="1152.491388203197" y="545.358552631579"/>
-              <y:Fill color="#FFFFFFE6" transparent="false"/>
-              <y:BorderStyle color="#000000" type="line" width="1.0"/>
-              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="256.234375" x="-110.6171875" xml:space="preserve" y="-21.96875">model_draft.ego_supply_conv_powerplant<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.5" nodeRatioX="0.0" nodeRatioY="-0.5" offsetX="0.0" offsetY="-4.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
-              <y:StyleProperties>
-                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.line.color" value="#000000"/>
-                <y:Property class="com.yworks.yfiles.bpmn.view.DataObjectTypeEnum" name="com.yworks.bpmn.dataObjectType" value="DATA_OBJECT_TYPE_INPUT"/>
-                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill2" value="#d4d4d4cc"/>
-                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill" value="#ffffffe6"/>
-                <y:Property class="com.yworks.yfiles.bpmn.view.BPMNTypeEnum" name="com.yworks.bpmn.type" value="ARTIFACT_TYPE_DATA_OBJECT"/>
-              </y:StyleProperties>
-            </y:GenericNode>
-          </data>
-        </node>
-        <node id="n0::n14">
-          <data key="d6">
-            <y:GenericNode configuration="com.yworks.bpmn.Activity.withShadow">
-              <y:Geometry height="75.0" width="276.98947368421045" x="1414.917674410059" y="647.8585526315791"/>
+              <y:Geometry height="75.0" width="276.98947368421045" x="970.5068856059877" y="524.6074050451979"/>
               <y:Fill color="#FFFFFFE6" color2="#038E0359" transparent="false"/>
               <y:BorderStyle color="#123EA2" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="196.3515625" x="40.31895559210511" xml:space="preserve" y="28.515625">ego_dp_res_rea_by_scenario.sql</y:NodeLabel>
@@ -346,10 +175,10 @@ model_draft.ego_supply_conv_nep2035_temp<y:LabelModel><y:SmartNodeLabelModel dis
             </y:GenericNode>
           </data>
         </node>
-        <node id="n0::n15">
+        <node id="n0::n5">
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
-              <y:Geometry height="55.0" width="35.0" x="1535.912411252164" y="800.4642922857118"/>
+              <y:Geometry height="55.0" width="35.0" x="1091.5016224480926" y="677.2131446993307"/>
               <y:Fill color="#FFFFFF" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="267.390625" x="-116.1953125" xml:space="preserve" y="59.0">model_draft.ego_dp_supply_res_powerplant
@@ -364,27 +193,10 @@ model_draft.ego_supply_conv_nep2035_temp<y:LabelModel><y:SmartNodeLabelModel dis
             </y:GenericNode>
           </data>
         </node>
-        <node id="n0::n16">
+        <node id="n0::n6">
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
-              <y:Geometry height="30.0" width="230.0" x="1438.412411252164" y="752.8585526315791"/>
-              <y:Fill color="#FFFF99" transparent="false"/>
-              <y:BorderStyle color="#000000" type="line" width="1.0"/>
-              <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="10" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="27.28125" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="185.953125" x="22.0234375" xml:space="preserve" y="1.359375">Open Database License (ODbL) v1.0
-© OpenStreetMap contributors<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
-              <y:StyleProperties>
-                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.line.color" value="#000000"/>
-                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill2" value="#d4d4d4cc"/>
-                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill" value="#ffffffe6"/>
-                <y:Property class="com.yworks.yfiles.bpmn.view.BPMNTypeEnum" name="com.yworks.bpmn.type" value="ARTIFACT_TYPE_ANNOTATION"/>
-              </y:StyleProperties>
-            </y:GenericNode>
-          </data>
-        </node>
-        <node id="n0::n17">
-          <data key="d6">
-            <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
-              <y:Geometry height="55.0" width="35.0" x="1535.912411252164" y="545.358552631579"/>
+              <y:Geometry height="55.0" width="35.0" x="1091.5016224480926" y="422.1074050451978"/>
               <y:Fill color="#FFFFFFE6" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="59.875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="271.2109375" x="-118.10546875" xml:space="preserve" y="-63.875">model_draft.ego_dp_supply_res_powerplant
@@ -401,10 +213,10 @@ boundaries.bkg_vg250_6_gem_rs_mview<y:LabelModel><y:SmartNodeLabelModel distance
             </y:GenericNode>
           </data>
         </node>
-        <node id="n0::n18">
+        <node id="n0::n7">
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Activity.withShadow">
-              <y:Geometry height="75.0" width="315.83157894736837" x="1758.8429508164534" y="647.8585526315791"/>
+              <y:Geometry height="75.0" width="315.83157894736837" x="1314.4321620123824" y="524.6074050451979"/>
               <y:Fill color="#FFFFFFE6" color2="#038E0359" transparent="false"/>
               <y:BorderStyle color="#123EA2" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="294.2734375" x="10.779070723684299" xml:space="preserve" y="28.515625">ego_dp_preprocessing_res_powerplant_2035.sql</y:NodeLabel>
@@ -419,10 +231,10 @@ boundaries.bkg_vg250_6_gem_rs_mview<y:LabelModel><y:SmartNodeLabelModel distance
             </y:GenericNode>
           </data>
         </node>
-        <node id="n0::n19">
+        <node id="n0::n8">
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
-              <y:Geometry height="55.0" width="35.0" x="1899.2587402901374" y="800.4642922857118"/>
+              <y:Geometry height="55.0" width="35.0" x="1454.847951486066" y="677.2131446993307"/>
               <y:Fill color="#FFFFFF" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="267.390625" x="-116.1953125" xml:space="preserve" y="59.0">model_draft.ego_dp_supply_res_powerplant
@@ -437,27 +249,10 @@ boundaries.bkg_vg250_6_gem_rs_mview<y:LabelModel><y:SmartNodeLabelModel distance
             </y:GenericNode>
           </data>
         </node>
-        <node id="n0::n20">
+        <node id="n0::n9">
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
-              <y:Geometry height="30.0" width="230.0" x="1782.3376876585585" y="752.8585526315791"/>
-              <y:Fill color="#FFFF99" transparent="false"/>
-              <y:BorderStyle color="#000000" type="line" width="1.0"/>
-              <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="10" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="27.28125" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="185.953125" x="22.0234375" xml:space="preserve" y="1.359375">Open Database License (ODbL) v1.0
-© OpenStreetMap contributors<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
-              <y:StyleProperties>
-                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.line.color" value="#000000"/>
-                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill2" value="#d4d4d4cc"/>
-                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill" value="#ffffffe6"/>
-                <y:Property class="com.yworks.yfiles.bpmn.view.BPMNTypeEnum" name="com.yworks.bpmn.type" value="ARTIFACT_TYPE_ANNOTATION"/>
-              </y:StyleProperties>
-            </y:GenericNode>
-          </data>
-        </node>
-        <node id="n0::n21">
-          <data key="d6">
-            <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
-              <y:Geometry height="55.0" width="35.0" x="1899.2587402901374" y="545.358552631579"/>
+              <y:Geometry height="55.0" width="35.0" x="1454.847951486066" y="422.1074050451978"/>
               <y:Fill color="#FFFFFFE6" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="267.390625" x="-116.1953125" xml:space="preserve" y="-21.96875">model_draft.ego_dp_supply_res_powerplant
@@ -472,10 +267,10 @@ boundaries.bkg_vg250_6_gem_rs_mview<y:LabelModel><y:SmartNodeLabelModel distance
             </y:GenericNode>
           </data>
         </node>
-        <node id="n0::n22">
+        <node id="n0::n10">
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Activity.withShadow">
-              <y:Geometry height="75.0" width="315.83157894736837" x="2154.8043263338295" y="647.8585526315791"/>
+              <y:Geometry height="75.0" width="315.83157894736837" x="1710.3935375297583" y="524.6074050451979"/>
               <y:Fill color="#FFFFFFE6" color2="#038E0359" transparent="false"/>
               <y:BorderStyle color="#123EA2" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="304.3515625" x="5.740008223684072" xml:space="preserve" y="28.515625">ego_dp_preprocessing_conv_powerplant_2035.sql</y:NodeLabel>
@@ -490,10 +285,10 @@ boundaries.bkg_vg250_6_gem_rs_mview<y:LabelModel><y:SmartNodeLabelModel distance
             </y:GenericNode>
           </data>
         </node>
-        <node id="n0::n23">
+        <node id="n0::n11">
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
-              <y:Geometry height="55.0" width="35.0" x="2295.220115807514" y="800.4642922857118"/>
+              <y:Geometry height="55.0" width="35.0" x="1850.8093270034428" y="677.2131446993307"/>
               <y:Fill color="#FFFFFF" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="314.0078125" x="-139.50390625" xml:space="preserve" y="59.0">model_draft.ego_dp_supply_conv_powerplant_2035
@@ -508,27 +303,10 @@ boundaries.bkg_vg250_6_gem_rs_mview<y:LabelModel><y:SmartNodeLabelModel distance
             </y:GenericNode>
           </data>
         </node>
-        <node id="n0::n24">
+        <node id="n0::n12">
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
-              <y:Geometry height="30.0" width="230.0" x="2197.720115807514" y="752.8585526315791"/>
-              <y:Fill color="#FFFF99" transparent="false"/>
-              <y:BorderStyle color="#000000" type="line" width="1.0"/>
-              <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="10" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="27.28125" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="185.953125" x="22.0234375" xml:space="preserve" y="1.359375">Open Database License (ODbL) v1.0
-© OpenStreetMap contributors<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
-              <y:StyleProperties>
-                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.line.color" value="#000000"/>
-                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill2" value="#d4d4d4cc"/>
-                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill" value="#ffffffe6"/>
-                <y:Property class="com.yworks.yfiles.bpmn.view.BPMNTypeEnum" name="com.yworks.bpmn.type" value="ARTIFACT_TYPE_ANNOTATION"/>
-              </y:StyleProperties>
-            </y:GenericNode>
-          </data>
-        </node>
-        <node id="n0::n25">
-          <data key="d6">
-            <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
-              <y:Geometry height="55.0" width="35.0" x="2295.220115807514" y="545.358552631579"/>
+              <y:Geometry height="55.0" width="35.0" x="1850.8093270034428" y="422.1074050451978"/>
               <y:Fill color="#FFFFFFE6" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="277.46875" x="-121.234375" xml:space="preserve" y="-21.96875">model_draft.ego_dp_supply_conv_powerplant
@@ -543,10 +321,10 @@ boundaries.bkg_vg250_6_gem_rs_mview<y:LabelModel><y:SmartNodeLabelModel distance
             </y:GenericNode>
           </data>
         </node>
-        <node id="n0::n26">
+        <node id="n0::n13">
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Activity.withShadow">
-              <y:Geometry height="75.0" width="315.83157894736837" x="2528.6415178218895" y="647.8585526315791"/>
+              <y:Geometry height="75.0" width="315.83157894736837" x="2084.2307290178182" y="524.6074050451979"/>
               <y:Fill color="#FFFFFFE6" color2="#038E0359" transparent="false"/>
               <y:BorderStyle color="#123EA2" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="180.759765625" x="67.53590666118407" xml:space="preserve" y="28.515625">ego_dp_conv_by_scenario.sql</y:NodeLabel>
@@ -561,10 +339,10 @@ boundaries.bkg_vg250_6_gem_rs_mview<y:LabelModel><y:SmartNodeLabelModel distance
             </y:GenericNode>
           </data>
         </node>
-        <node id="n0::n27">
+        <node id="n0::n14">
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
-              <y:Geometry height="55.0" width="35.0" x="2669.057307295574" y="800.4642922857118"/>
+              <y:Geometry height="55.0" width="35.0" x="2224.646518491503" y="677.2131446993307"/>
               <y:Fill color="#FFFFFF" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="277.46875" x="-121.234375" xml:space="preserve" y="59.0">model_draft.ego_dp_supply_conv_powerplant
@@ -579,27 +357,10 @@ boundaries.bkg_vg250_6_gem_rs_mview<y:LabelModel><y:SmartNodeLabelModel distance
             </y:GenericNode>
           </data>
         </node>
-        <node id="n0::n28">
+        <node id="n0::n15">
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
-              <y:Geometry height="30.0" width="230.0" x="2571.557307295574" y="752.8585526315791"/>
-              <y:Fill color="#FFFF99" transparent="false"/>
-              <y:BorderStyle color="#000000" type="line" width="1.0"/>
-              <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="10" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="27.28125" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="185.953125" x="22.0234375" xml:space="preserve" y="1.359375">Open Database License (ODbL) v1.0
-© OpenStreetMap contributors<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
-              <y:StyleProperties>
-                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.line.color" value="#000000"/>
-                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill2" value="#d4d4d4cc"/>
-                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill" value="#ffffffe6"/>
-                <y:Property class="com.yworks.yfiles.bpmn.view.BPMNTypeEnum" name="com.yworks.bpmn.type" value="ARTIFACT_TYPE_ANNOTATION"/>
-              </y:StyleProperties>
-            </y:GenericNode>
-          </data>
-        </node>
-        <node id="n0::n29">
-          <data key="d6">
-            <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
-              <y:Geometry height="55.0" width="35.0" x="2669.057307295574" y="545.358552631579"/>
+              <y:Geometry height="55.0" width="35.0" x="2224.646518491503" y="422.1074050451978"/>
               <y:Fill color="#FFFFFFE6" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="277.46875" x="-121.234375" xml:space="preserve" y="-21.96875">model_draft.ego_dp_supply_conv_powerplant
@@ -614,10 +375,10 @@ boundaries.bkg_vg250_6_gem_rs_mview<y:LabelModel><y:SmartNodeLabelModel distance
             </y:GenericNode>
           </data>
         </node>
-        <node id="n0::n30">
+        <node id="n0::n16">
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Activity.withShadow">
-              <y:Geometry height="75.0" width="243.07368421052638" x="2920.602362867334" y="647.8585526315791"/>
+              <y:Geometry height="75.0" width="243.07368421052638" x="2476.1915740632626" y="524.6074050451979"/>
               <y:Fill color="#FFFFFFE6" color2="#038E0359" transparent="false"/>
               <y:BorderStyle color="#123EA2" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="225.203125" x="8.935279605263077" xml:space="preserve" y="28.515625">ego_dp_supply_add_coastdat_gid.sql</y:NodeLabel>
@@ -632,10 +393,10 @@ boundaries.bkg_vg250_6_gem_rs_mview<y:LabelModel><y:SmartNodeLabelModel distance
             </y:GenericNode>
           </data>
         </node>
-        <node id="n0::n31">
+        <node id="n0::n17">
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
-              <y:Geometry height="55.0" width="35.0" x="3024.6392049725973" y="800.4642922857118"/>
+              <y:Geometry height="55.0" width="35.0" x="2580.228416168526" y="677.2131446993307"/>
               <y:Fill color="#FFFFFF" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="31.9375" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="277.46875" x="-121.234375" xml:space="preserve" y="59.0">model_draft.ego_dp_supply_conv_powerplant
@@ -651,27 +412,10 @@ model_draft.ego_dp_supply_res_powerplant
             </y:GenericNode>
           </data>
         </node>
-        <node id="n0::n32">
+        <node id="n0::n18">
           <data key="d6">
             <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
-              <y:Geometry height="30.0" width="230.0" x="2927.1392049725973" y="752.8585526315791"/>
-              <y:Fill color="#FFFF99" transparent="false"/>
-              <y:BorderStyle color="#000000" type="line" width="1.0"/>
-              <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="10" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="27.28125" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="185.953125" x="22.0234375" xml:space="preserve" y="1.359375">Open Database License (ODbL) v1.0
-© OpenStreetMap contributors<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
-              <y:StyleProperties>
-                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.line.color" value="#000000"/>
-                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill2" value="#d4d4d4cc"/>
-                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill" value="#ffffffe6"/>
-                <y:Property class="com.yworks.yfiles.bpmn.view.BPMNTypeEnum" name="com.yworks.bpmn.type" value="ARTIFACT_TYPE_ANNOTATION"/>
-              </y:StyleProperties>
-            </y:GenericNode>
-          </data>
-        </node>
-        <node id="n0::n33">
-          <data key="d6">
-            <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
-              <y:Geometry height="55.0" width="35.0" x="3024.6392049725973" y="545.358552631579"/>
+              <y:Geometry height="55.0" width="35.0" x="2580.228416168526" y="422.1074050451978"/>
               <y:Fill color="#FFFFFFE6" transparent="false"/>
               <y:BorderStyle color="#000000" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="45.90625" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="277.46875" x="-121.234375" xml:space="preserve" y="-49.90625">model_draft.ego_dp_supply_conv_powerplant
@@ -688,21 +432,292 @@ coastdat.cosmoclmgrid
             </y:GenericNode>
           </data>
         </node>
+        <node id="n0::n19">
+          <data key="d6">
+            <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
+              <y:Geometry height="55.0" width="35.0" x="713.5761554294014" y="422.1074050451978"/>
+              <y:Fill color="#FFFFFFE6" transparent="false"/>
+              <y:BorderStyle color="#000000" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="45.90625" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#FF0000" verticalTextPosition="bottom" visible="true" width="391.955078125" x="-178.4775390625" xml:space="preserve" y="-49.90625">model_draft.ego_supply_res_powerplant
+model_draft.ego_supply_renewable_bnetza_full_attribute
+model_draft.bnetza_eeganlagenstammdaten_wind_classification<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.5" nodeRatioX="0.0" nodeRatioY="-0.5" offsetX="0.0" offsetY="-4.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
+              <y:StyleProperties>
+                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.line.color" value="#000000"/>
+                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill2" value="#d4d4d4cc"/>
+                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill" value="#ffffffe6"/>
+                <y:Property class="com.yworks.yfiles.bpmn.view.BPMNTypeEnum" name="com.yworks.bpmn.type" value="ARTIFACT_TYPE_DATA_OBJECT"/>
+                <y:Property class="com.yworks.yfiles.bpmn.view.DataObjectTypeEnum" name="com.yworks.bpmn.dataObjectType" value="DATA_OBJECT_TYPE_INPUT"/>
+              </y:StyleProperties>
+            </y:GenericNode>
+          </data>
+        </node>
+        <node id="n0::n20">
+          <data key="d6">
+            <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
+              <y:Geometry height="55.0" width="35.0" x="-921.7552506150114" y="320.2784084061738"/>
+              <y:Fill color="#993300" transparent="false"/>
+              <y:BorderStyle color="#000000" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#FF0000" verticalTextPosition="bottom" visible="true" width="186.33203125" x="-75.666015625" xml:space="preserve" y="59.0">OPSD beta Version of 2015/16<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="-0.5" nodeRatioX="0.0" nodeRatioY="0.5" offsetX="0.0" offsetY="4.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
+              <y:StyleProperties>
+                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.line.color" value="#000000"/>
+                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill2" value="#d4d4d4cc"/>
+                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill" value="#ffffffe6"/>
+                <y:Property class="com.yworks.yfiles.bpmn.view.BPMNTypeEnum" name="com.yworks.bpmn.type" value="ARTIFACT_TYPE_DATA_OBJECT"/>
+                <y:Property class="com.yworks.yfiles.bpmn.view.DataObjectTypeEnum" name="com.yworks.bpmn.dataObjectType" value="DATA_OBJECT_TYPE_INPUT"/>
+              </y:StyleProperties>
+            </y:GenericNode>
+          </data>
+        </node>
+        <node id="n0::n21">
+          <data key="d6">
+            <y:GenericNode configuration="com.yworks.bpmn.Activity.withShadow">
+              <y:Geometry height="75.0" width="277.36641221374043" x="-702.5371229238584" y="524.6074050451979"/>
+              <y:Fill color="#FFFFFFE6" color2="#038E0359" transparent="false"/>
+              <y:BorderStyle color="#123EA2" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="267.8125" x="4.776956106870216" xml:space="preserve" y="28.515625">ego_dp_preprocessing_conv_powerplant.sql</y:NodeLabel>
+              <y:StyleProperties>
+                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.line.color" value="#000000"/>
+                <y:Property class="com.yworks.yfiles.bpmn.view.TaskTypeEnum" name="com.yworks.bpmn.taskType" value="TASK_TYPE_SCRIPT"/>
+                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill2" value="#d4d4d4cc"/>
+                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill" value="#ffffffe6"/>
+                <y:Property class="com.yworks.yfiles.bpmn.view.ActivityTypeEnum" name="com.yworks.bpmn.activityType" value="ACTIVITY_TYPE_TASK"/>
+                <y:Property class="com.yworks.yfiles.bpmn.view.BPMNTypeEnum" name="com.yworks.bpmn.type" value="ACTIVITY_TYPE"/>
+              </y:StyleProperties>
+            </y:GenericNode>
+          </data>
+        </node>
+        <node id="n0::n22">
+          <data key="d6">
+            <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
+              <y:Geometry height="55.0" width="35.0" x="-581.3539168169883" y="723.8209284106593"/>
+              <y:Fill color="#FFFFFF" transparent="false"/>
+              <y:BorderStyle color="#000000" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="31.9375" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="279.068359375" x="-122.0341796875" xml:space="preserve" y="59.0">model_draft.ego_dp_supply_conv_powerplant
+model_draft.ego_supply_conv_nep2035_temp<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="-0.5" nodeRatioX="0.0" nodeRatioY="0.5" offsetX="0.0" offsetY="4.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
+              <y:StyleProperties>
+                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.line.color" value="#000000"/>
+                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill2" value="#d4d4d4cc"/>
+                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill" value="#ffffffe6"/>
+                <y:Property class="com.yworks.yfiles.bpmn.view.BPMNTypeEnum" name="com.yworks.bpmn.type" value="ARTIFACT_TYPE_DATA_OBJECT"/>
+                <y:Property class="com.yworks.yfiles.bpmn.view.DataObjectTypeEnum" name="com.yworks.bpmn.dataObjectType" value="DATA_OBJECT_TYPE_OUTPUT"/>
+              </y:StyleProperties>
+            </y:GenericNode>
+          </data>
+        </node>
+        <node id="n0::n23">
+          <data key="d6">
+            <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
+              <y:Geometry height="55.0" width="35.0" x="-581.3539168169883" y="320.2784084061738"/>
+              <y:Fill color="#FFFFFF" transparent="false"/>
+              <y:BorderStyle color="#000000" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#FF0000" verticalTextPosition="bottom" visible="true" width="277.46875" x="-121.234375" xml:space="preserve" y="59.0">model_draft.ego_dp_supply_conv_powerplant<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="-0.5" nodeRatioX="0.0" nodeRatioY="0.5" offsetX="0.0" offsetY="4.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
+              <y:StyleProperties>
+                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.line.color" value="#000000"/>
+                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill2" value="#d4d4d4cc"/>
+                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill" value="#ffffffe6"/>
+                <y:Property class="com.yworks.yfiles.bpmn.view.BPMNTypeEnum" name="com.yworks.bpmn.type" value="ARTIFACT_TYPE_DATA_OBJECT"/>
+                <y:Property class="com.yworks.yfiles.bpmn.view.DataObjectTypeEnum" name="com.yworks.bpmn.dataObjectType" value="DATA_OBJECT_TYPE_OUTPUT"/>
+              </y:StyleProperties>
+            </y:GenericNode>
+          </data>
+        </node>
+        <node id="n0::n24">
+          <data key="d6">
+            <y:GenericNode configuration="com.yworks.bpmn.Activity.withShadow">
+              <y:Geometry height="75.0" width="200.36641221374043" x="-1004.4384567218815" y="524.6074050451979"/>
+              <y:Fill color="#FFFFFFE6" color2="#038E0359" transparent="false"/>
+              <y:BorderStyle color="#123EA2" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#FF0000" verticalTextPosition="bottom" visible="true" width="123.96484375" x="38.200784231870216" xml:space="preserve" y="28.515625">opsd_powerdata.sql</y:NodeLabel>
+              <y:StyleProperties>
+                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.line.color" value="#000000"/>
+                <y:Property class="com.yworks.yfiles.bpmn.view.TaskTypeEnum" name="com.yworks.bpmn.taskType" value="TASK_TYPE_SCRIPT"/>
+                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill2" value="#d4d4d4cc"/>
+                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill" value="#ffffffe6"/>
+                <y:Property class="com.yworks.yfiles.bpmn.view.ActivityTypeEnum" name="com.yworks.bpmn.activityType" value="ACTIVITY_TYPE_TASK"/>
+                <y:Property class="com.yworks.yfiles.bpmn.view.BPMNTypeEnum" name="com.yworks.bpmn.type" value="ACTIVITY_TYPE"/>
+              </y:StyleProperties>
+            </y:GenericNode>
+          </data>
+        </node>
+        <node id="n0::n25">
+          <data key="d6">
+            <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
+              <y:Geometry height="55.0" width="35.0" x="-921.7552506150114" y="723.8209284106593"/>
+              <y:Fill color="#FFFFFF" transparent="false"/>
+              <y:BorderStyle color="#000000" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="226.697265625" x="-95.8486328125" xml:space="preserve" y="59.0">supply.ego_conventional_powerplant<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="-0.5" nodeRatioX="0.0" nodeRatioY="0.5" offsetX="0.0" offsetY="4.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
+              <y:StyleProperties>
+                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.line.color" value="#000000"/>
+                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill2" value="#d4d4d4cc"/>
+                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill" value="#ffffffe6"/>
+                <y:Property class="com.yworks.yfiles.bpmn.view.BPMNTypeEnum" name="com.yworks.bpmn.type" value="ARTIFACT_TYPE_DATA_OBJECT"/>
+                <y:Property class="com.yworks.yfiles.bpmn.view.DataObjectTypeEnum" name="com.yworks.bpmn.dataObjectType" value="DATA_OBJECT_TYPE_OUTPUT"/>
+              </y:StyleProperties>
+            </y:GenericNode>
+          </data>
+        </node>
+        <node id="n0::n26">
+          <data key="d6">
+            <y:GenericNode configuration="com.yworks.bpmn.Activity.withShadow">
+              <y:Geometry height="75.0" width="313.93962526023597" x="-355.44696331247735" y="524.6074050451979"/>
+              <y:Fill color="#FFFFFFE6" color2="#038E0359" transparent="false"/>
+              <y:BorderStyle color="#123EA2" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="307.333984375" x="3.3028204426179855" xml:space="preserve" y="28.515625">supply_ego_renewable_power_plants_germany.sql</y:NodeLabel>
+              <y:StyleProperties>
+                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.line.color" value="#000000"/>
+                <y:Property class="com.yworks.yfiles.bpmn.view.TaskTypeEnum" name="com.yworks.bpmn.taskType" value="TASK_TYPE_SCRIPT"/>
+                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill2" value="#d4d4d4cc"/>
+                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill" value="#ffffffe6"/>
+                <y:Property class="com.yworks.yfiles.bpmn.view.ActivityTypeEnum" name="com.yworks.bpmn.activityType" value="ACTIVITY_TYPE_TASK"/>
+                <y:Property class="com.yworks.yfiles.bpmn.view.BPMNTypeEnum" name="com.yworks.bpmn.type" value="ACTIVITY_TYPE"/>
+              </y:StyleProperties>
+            </y:GenericNode>
+          </data>
+        </node>
+        <node id="n0::n27">
+          <data key="d6">
+            <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
+              <y:Geometry height="55.0" width="35.0" x="-215.97715068235937" y="723.8209284106593"/>
+              <y:Fill color="#FFFFFF" transparent="false"/>
+              <y:BorderStyle color="#000000" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="212.1953125" x="-88.59765625" xml:space="preserve" y="59.0">supply.ego_renewable_powerplant<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="-0.5" nodeRatioX="0.0" nodeRatioY="0.5" offsetX="0.0" offsetY="4.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
+              <y:StyleProperties>
+                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.line.color" value="#000000"/>
+                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill2" value="#d4d4d4cc"/>
+                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill" value="#ffffffe6"/>
+                <y:Property class="com.yworks.yfiles.bpmn.view.BPMNTypeEnum" name="com.yworks.bpmn.type" value="ARTIFACT_TYPE_DATA_OBJECT"/>
+                <y:Property class="com.yworks.yfiles.bpmn.view.DataObjectTypeEnum" name="com.yworks.bpmn.dataObjectType" value="DATA_OBJECT_TYPE_OUTPUT"/>
+              </y:StyleProperties>
+            </y:GenericNode>
+          </data>
+        </node>
+        <node id="n0::n28">
+          <data key="d6">
+            <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
+              <y:Geometry height="55.0" width="35.0" x="-215.97715068235937" y="332.1586702709015"/>
+              <y:Fill color="#993300" transparent="false"/>
+              <y:BorderStyle color="#000000" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="31.9375" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#FF0000" verticalTextPosition="bottom" visible="true" width="72.68359375" x="-18.841796875" xml:space="preserve" y="59.0">energymap
+BNetzA<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="-0.5" nodeRatioX="0.0" nodeRatioY="0.5" offsetX="0.0" offsetY="4.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
+              <y:StyleProperties>
+                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.line.color" value="#000000"/>
+                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill2" value="#d4d4d4cc"/>
+                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill" value="#ffffffe6"/>
+                <y:Property class="com.yworks.yfiles.bpmn.view.BPMNTypeEnum" name="com.yworks.bpmn.type" value="ARTIFACT_TYPE_DATA_OBJECT"/>
+                <y:Property class="com.yworks.yfiles.bpmn.view.DataObjectTypeEnum" name="com.yworks.bpmn.dataObjectType" value="DATA_OBJECT_TYPE_INPUT"/>
+              </y:StyleProperties>
+            </y:GenericNode>
+          </data>
+        </node>
+        <node id="n0::n29">
+          <data key="d6">
+            <y:GenericNode configuration="com.yworks.bpmn.Activity.withShadow">
+              <y:Geometry height="75.0" width="277.36641221374043" x="285.21500637355587" y="524.6074050451979"/>
+              <y:Fill color="#FFFFFFE6" color2="#038E0359" transparent="false"/>
+              <y:BorderStyle color="#123EA2" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="257.734375" x="9.816018606870216" xml:space="preserve" y="28.515625">ego_dp_preprocessing_res_powerplant.sql</y:NodeLabel>
+              <y:StyleProperties>
+                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.line.color" value="#000000"/>
+                <y:Property class="com.yworks.yfiles.bpmn.view.TaskTypeEnum" name="com.yworks.bpmn.taskType" value="TASK_TYPE_SCRIPT"/>
+                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill2" value="#d4d4d4cc"/>
+                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill" value="#ffffffe6"/>
+                <y:Property class="com.yworks.yfiles.bpmn.view.ActivityTypeEnum" name="com.yworks.bpmn.activityType" value="ACTIVITY_TYPE_TASK"/>
+                <y:Property class="com.yworks.yfiles.bpmn.view.BPMNTypeEnum" name="com.yworks.bpmn.type" value="ACTIVITY_TYPE"/>
+              </y:StyleProperties>
+            </y:GenericNode>
+          </data>
+        </node>
+        <node id="n0::n30">
+          <data key="d6">
+            <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
+              <y:Geometry height="55.0" width="35.0" x="406.39821248042597" y="723.8209284106593"/>
+              <y:Fill color="#FFFFFF" transparent="false"/>
+              <y:BorderStyle color="#000000" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="267.390625" x="-116.1953125" xml:space="preserve" y="59.0">model_draft.ego_dp_supply_res_powerplant
+<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="-0.5" nodeRatioX="0.0" nodeRatioY="0.5" offsetX="0.0" offsetY="4.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
+              <y:StyleProperties>
+                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.line.color" value="#000000"/>
+                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill2" value="#d4d4d4cc"/>
+                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill" value="#ffffffe6"/>
+                <y:Property class="com.yworks.yfiles.bpmn.view.BPMNTypeEnum" name="com.yworks.bpmn.type" value="ARTIFACT_TYPE_DATA_OBJECT"/>
+                <y:Property class="com.yworks.yfiles.bpmn.view.DataObjectTypeEnum" name="com.yworks.bpmn.dataObjectType" value="DATA_OBJECT_TYPE_OUTPUT"/>
+              </y:StyleProperties>
+            </y:GenericNode>
+          </data>
+        </node>
+        <node id="n0::n31">
+          <data key="d6">
+            <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
+              <y:Geometry height="55.0" width="35.0" x="406.39821248042597" y="320.2784084061738"/>
+              <y:Fill color="#FFFFFF" transparent="false"/>
+              <y:BorderStyle color="#000000" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="246.15625" x="-105.578125" xml:space="preserve" y="59.0">model_draft.ego_supply_res_powerplant<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="-0.5" nodeRatioX="0.0" nodeRatioY="0.5" offsetX="0.0" offsetY="4.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
+              <y:StyleProperties>
+                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.line.color" value="#000000"/>
+                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill2" value="#d4d4d4cc"/>
+                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill" value="#ffffffe6"/>
+                <y:Property class="com.yworks.yfiles.bpmn.view.BPMNTypeEnum" name="com.yworks.bpmn.type" value="ARTIFACT_TYPE_DATA_OBJECT"/>
+                <y:Property class="com.yworks.yfiles.bpmn.view.DataObjectTypeEnum" name="com.yworks.bpmn.dataObjectType" value="DATA_OBJECT_TYPE_OUTPUT"/>
+              </y:StyleProperties>
+            </y:GenericNode>
+          </data>
+        </node>
+        <node id="n0::n32">
+          <data key="d6">
+            <y:GenericNode configuration="com.yworks.bpmn.Activity.withShadow">
+              <y:Geometry height="75.0" width="200.36641221374043" x="26.99266194775862" y="524.6074050451979"/>
+              <y:Fill color="#FFFFFFE6" color2="#038E0359" transparent="false"/>
+              <y:BorderStyle color="#123EA2" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#FF0000" verticalTextPosition="bottom" visible="true" width="10.369140625" x="94.99863579437022" xml:space="preserve" y="28.515625">?</y:NodeLabel>
+              <y:StyleProperties>
+                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.line.color" value="#000000"/>
+                <y:Property class="com.yworks.yfiles.bpmn.view.TaskTypeEnum" name="com.yworks.bpmn.taskType" value="TASK_TYPE_SCRIPT"/>
+                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill2" value="#d4d4d4cc"/>
+                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill" value="#ffffffe6"/>
+                <y:Property class="com.yworks.yfiles.bpmn.view.ActivityTypeEnum" name="com.yworks.bpmn.activityType" value="ACTIVITY_TYPE_TASK"/>
+                <y:Property class="com.yworks.yfiles.bpmn.view.BPMNTypeEnum" name="com.yworks.bpmn.type" value="ACTIVITY_TYPE"/>
+              </y:StyleProperties>
+            </y:GenericNode>
+          </data>
+        </node>
+        <node id="n0::n33">
+          <data key="d6">
+            <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
+              <y:Geometry height="55.0" width="35.0" x="109.67586805462872" y="723.8209284106593"/>
+              <y:Fill color="#FFFFFF" transparent="false"/>
+              <y:BorderStyle color="#000000" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="246.15625" x="-105.578125" xml:space="preserve" y="59.0">model_draft.ego_supply_res_powerplant
+<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="-0.5" nodeRatioX="0.0" nodeRatioY="0.5" offsetX="0.0" offsetY="4.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
+              <y:StyleProperties>
+                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.line.color" value="#000000"/>
+                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill2" value="#d4d4d4cc"/>
+                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill" value="#ffffffe6"/>
+                <y:Property class="com.yworks.yfiles.bpmn.view.BPMNTypeEnum" name="com.yworks.bpmn.type" value="ARTIFACT_TYPE_DATA_OBJECT"/>
+                <y:Property class="com.yworks.yfiles.bpmn.view.DataObjectTypeEnum" name="com.yworks.bpmn.dataObjectType" value="DATA_OBJECT_TYPE_OUTPUT"/>
+              </y:StyleProperties>
+            </y:GenericNode>
+          </data>
+        </node>
+        <node id="n0::n34">
+          <data key="d6">
+            <y:GenericNode configuration="com.yworks.bpmn.Artifact.withShadow">
+              <y:Geometry height="55.0" width="35.0" x="109.67586805462872" y="320.27840840617387"/>
+              <y:Fill color="#FFFFFF" transparent="false"/>
+              <y:BorderStyle color="#000000" type="line" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#FF0000" verticalTextPosition="bottom" visible="true" width="212.1953125" x="-88.59765625" xml:space="preserve" y="59.0">supply.ego_renewable_powerplant<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="-0.5" nodeRatioX="0.0" nodeRatioY="0.5" offsetX="0.0" offsetY="4.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
+              <y:StyleProperties>
+                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.line.color" value="#000000"/>
+                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill2" value="#d4d4d4cc"/>
+                <y:Property class="java.awt.Color" name="com.yworks.bpmn.icon.fill" value="#ffffffe6"/>
+                <y:Property class="com.yworks.yfiles.bpmn.view.BPMNTypeEnum" name="com.yworks.bpmn.type" value="ARTIFACT_TYPE_DATA_OBJECT"/>
+                <y:Property class="com.yworks.yfiles.bpmn.view.DataObjectTypeEnum" name="com.yworks.bpmn.dataObjectType" value="DATA_OBJECT_TYPE_OUTPUT"/>
+              </y:StyleProperties>
+            </y:GenericNode>
+          </data>
+        </node>
       </graph>
     </node>
-    <edge id="n0::e0" source="n0::n0" target="n0::n2">
-      <data key="d10">
-        <y:GenericEdge configuration="com.yworks.bpmn.Connection">
-          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
-          <y:LineStyle color="#000000" type="dotted" width="2.0"/>
-          <y:Arrows source="none" target="none"/>
-          <y:StyleProperties>
-            <y:Property class="com.yworks.yfiles.bpmn.view.BPMNTypeEnum" name="com.yworks.bpmn.type" value="CONNECTION_TYPE_ASSOCIATION"/>
-          </y:StyleProperties>
-        </y:GenericEdge>
-      </data>
-    </edge>
-    <edge id="n0::e1" source="n0::n0" target="n0::n1">
+    <edge id="n0::e0" source="n0::n0" target="n0::n1">
       <data key="d10">
         <y:GenericEdge configuration="com.yworks.bpmn.Connection">
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -714,19 +729,107 @@ coastdat.cosmoclmgrid
         </y:GenericEdge>
       </data>
     </edge>
-    <edge id="n0::e2" source="n0::n3" target="n0::n0">
+    <edge id="n0::e1" source="n0::n4" target="n0::n5">
       <data key="d10">
-        <y:GenericEdge configuration="com.yworks.bpmn.Connection">
+        <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
-          <y:LineStyle color="#000000" type="line" width="2.0"/>
-          <y:Arrows source="none" target="delta"/>
-          <y:StyleProperties>
-            <y:Property class="com.yworks.yfiles.bpmn.view.BPMNTypeEnum" name="com.yworks.bpmn.type" value="CONNECTION_TYPE_SEQUENCE_FLOW"/>
-          </y:StyleProperties>
-        </y:GenericEdge>
+          <y:LineStyle color="#000000" type="dashed_dotted" width="3.0"/>
+          <y:Arrows source="none" target="plain"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n0::e3" source="n0::n0" target="n0::n6">
+    <edge id="n0::e2" source="n0::n6" target="n0::n4">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="dashed_dotted" width="3.0"/>
+          <y:Arrows source="none" target="plain"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="n0::e3" source="n0::n7" target="n0::n8">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="dashed_dotted" width="3.0"/>
+          <y:Arrows source="none" target="plain"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="n0::e4" source="n0::n9" target="n0::n7">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="dashed_dotted" width="3.0"/>
+          <y:Arrows source="none" target="plain"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="n0::e5" source="n0::n10" target="n0::n11">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="dashed_dotted" width="3.0"/>
+          <y:Arrows source="none" target="plain"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="n0::e6" source="n0::n12" target="n0::n10">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="dashed_dotted" width="3.0"/>
+          <y:Arrows source="none" target="plain"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="n0::e7" source="n0::n13" target="n0::n14">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="dashed_dotted" width="3.0"/>
+          <y:Arrows source="none" target="plain"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="n0::e8" source="n0::n15" target="n0::n13">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="dashed_dotted" width="3.0"/>
+          <y:Arrows source="none" target="plain"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="n0::e9" source="n0::n16" target="n0::n17">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="dashed_dotted" width="3.0"/>
+          <y:Arrows source="none" target="plain"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="n0::e10" source="n0::n18" target="n0::n16">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="dashed_dotted" width="3.0"/>
+          <y:Arrows source="none" target="plain"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="n0::e11" source="n0::n4" target="n0::n7">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -736,147 +839,7 @@ coastdat.cosmoclmgrid
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n0::e4" source="n0::n6" target="n0::n7">
-      <data key="d10">
-        <y:PolyLineEdge>
-          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
-          <y:LineStyle color="#000000" type="dashed_dotted" width="3.0"/>
-          <y:Arrows source="none" target="plain"/>
-          <y:BendStyle smoothed="false"/>
-        </y:PolyLineEdge>
-      </data>
-    </edge>
-    <edge id="n0::e5" source="n0::n9" target="n0::n6">
-      <data key="d10">
-        <y:PolyLineEdge>
-          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
-          <y:LineStyle color="#000000" type="dashed_dotted" width="3.0"/>
-          <y:Arrows source="none" target="plain"/>
-          <y:BendStyle smoothed="false"/>
-        </y:PolyLineEdge>
-      </data>
-    </edge>
-    <edge id="n0::e6" source="n0::n10" target="n0::n11">
-      <data key="d10">
-        <y:PolyLineEdge>
-          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
-          <y:LineStyle color="#000000" type="dashed_dotted" width="3.0"/>
-          <y:Arrows source="none" target="plain"/>
-          <y:BendStyle smoothed="false"/>
-        </y:PolyLineEdge>
-      </data>
-    </edge>
-    <edge id="n0::e7" source="n0::n13" target="n0::n10">
-      <data key="d10">
-        <y:PolyLineEdge>
-          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
-          <y:LineStyle color="#000000" type="dashed_dotted" width="3.0"/>
-          <y:Arrows source="none" target="plain"/>
-          <y:BendStyle smoothed="false"/>
-        </y:PolyLineEdge>
-      </data>
-    </edge>
-    <edge id="n0::e8" source="n0::n14" target="n0::n15">
-      <data key="d10">
-        <y:PolyLineEdge>
-          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
-          <y:LineStyle color="#000000" type="dashed_dotted" width="3.0"/>
-          <y:Arrows source="none" target="plain"/>
-          <y:BendStyle smoothed="false"/>
-        </y:PolyLineEdge>
-      </data>
-    </edge>
-    <edge id="n0::e9" source="n0::n17" target="n0::n14">
-      <data key="d10">
-        <y:PolyLineEdge>
-          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
-          <y:LineStyle color="#000000" type="dashed_dotted" width="3.0"/>
-          <y:Arrows source="none" target="plain"/>
-          <y:BendStyle smoothed="false"/>
-        </y:PolyLineEdge>
-      </data>
-    </edge>
-    <edge id="n0::e10" source="n0::n18" target="n0::n19">
-      <data key="d10">
-        <y:PolyLineEdge>
-          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
-          <y:LineStyle color="#000000" type="dashed_dotted" width="3.0"/>
-          <y:Arrows source="none" target="plain"/>
-          <y:BendStyle smoothed="false"/>
-        </y:PolyLineEdge>
-      </data>
-    </edge>
-    <edge id="n0::e11" source="n0::n21" target="n0::n18">
-      <data key="d10">
-        <y:PolyLineEdge>
-          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
-          <y:LineStyle color="#000000" type="dashed_dotted" width="3.0"/>
-          <y:Arrows source="none" target="plain"/>
-          <y:BendStyle smoothed="false"/>
-        </y:PolyLineEdge>
-      </data>
-    </edge>
-    <edge id="n0::e12" source="n0::n22" target="n0::n23">
-      <data key="d10">
-        <y:PolyLineEdge>
-          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
-          <y:LineStyle color="#000000" type="dashed_dotted" width="3.0"/>
-          <y:Arrows source="none" target="plain"/>
-          <y:BendStyle smoothed="false"/>
-        </y:PolyLineEdge>
-      </data>
-    </edge>
-    <edge id="n0::e13" source="n0::n25" target="n0::n22">
-      <data key="d10">
-        <y:PolyLineEdge>
-          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
-          <y:LineStyle color="#000000" type="dashed_dotted" width="3.0"/>
-          <y:Arrows source="none" target="plain"/>
-          <y:BendStyle smoothed="false"/>
-        </y:PolyLineEdge>
-      </data>
-    </edge>
-    <edge id="n0::e14" source="n0::n26" target="n0::n27">
-      <data key="d10">
-        <y:PolyLineEdge>
-          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
-          <y:LineStyle color="#000000" type="dashed_dotted" width="3.0"/>
-          <y:Arrows source="none" target="plain"/>
-          <y:BendStyle smoothed="false"/>
-        </y:PolyLineEdge>
-      </data>
-    </edge>
-    <edge id="n0::e15" source="n0::n29" target="n0::n26">
-      <data key="d10">
-        <y:PolyLineEdge>
-          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
-          <y:LineStyle color="#000000" type="dashed_dotted" width="3.0"/>
-          <y:Arrows source="none" target="plain"/>
-          <y:BendStyle smoothed="false"/>
-        </y:PolyLineEdge>
-      </data>
-    </edge>
-    <edge id="n0::e16" source="n0::n30" target="n0::n31">
-      <data key="d10">
-        <y:PolyLineEdge>
-          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
-          <y:LineStyle color="#000000" type="dashed_dotted" width="3.0"/>
-          <y:Arrows source="none" target="plain"/>
-          <y:BendStyle smoothed="false"/>
-        </y:PolyLineEdge>
-      </data>
-    </edge>
-    <edge id="n0::e17" source="n0::n33" target="n0::n30">
-      <data key="d10">
-        <y:PolyLineEdge>
-          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
-          <y:LineStyle color="#000000" type="dashed_dotted" width="3.0"/>
-          <y:Arrows source="none" target="plain"/>
-          <y:BendStyle smoothed="false"/>
-        </y:PolyLineEdge>
-      </data>
-    </edge>
-    <edge id="n0::e18" source="n0::n6" target="n0::n10">
+    <edge id="n0::e12" source="n0::n7" target="n0::n10">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -886,7 +849,7 @@ coastdat.cosmoclmgrid
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n0::e19" source="n0::n10" target="n0::n14">
+    <edge id="n0::e13" source="n0::n10" target="n0::n13">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -896,7 +859,7 @@ coastdat.cosmoclmgrid
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n0::e20" source="n0::n14" target="n0::n18">
+    <edge id="n0::e14" source="n0::n13" target="n0::n16">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -906,7 +869,7 @@ coastdat.cosmoclmgrid
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n0::e21" source="n0::n18" target="n0::n22">
+    <edge id="n0::e15" source="n0::n16" target="n0::n3">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -916,32 +879,178 @@ coastdat.cosmoclmgrid
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n0::e22" source="n0::n22" target="n0::n26">
+    <edge id="n0::e16" source="n0::n19" target="n0::n0">
+      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
-          <y:LineStyle color="#000000" type="line" width="3.0"/>
-          <y:Arrows source="none" target="delta"/>
+          <y:LineStyle color="#000000" type="dashed_dotted" width="3.0"/>
+          <y:Arrows source="none" target="concave"/>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n0::e23" source="n0::n26" target="n0::n30">
+    <edge id="n0::e17" source="n0::n21" target="n0::n22">
+      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
-          <y:LineStyle color="#000000" type="line" width="3.0"/>
-          <y:Arrows source="none" target="delta"/>
+          <y:LineStyle color="#000000" type="dashed_dotted" width="2.0"/>
+          <y:Arrows source="none" target="concave"/>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="n0::e24" source="n0::n30" target="n0::n4">
+    <edge id="n0::e18" source="n0::n23" target="n0::n21">
+      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
-          <y:LineStyle color="#000000" type="line" width="3.0"/>
-          <y:Arrows source="none" target="delta"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="standard"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="n0::e19" source="n0::n20" target="n0::n24">
+      <data key="d9"/>
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="dashed_dotted" width="2.0"/>
+          <y:Arrows source="none" target="concave"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="n0::e20" source="n0::n24" target="n0::n25">
+      <data key="d9"/>
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="dashed_dotted" width="2.0"/>
+          <y:Arrows source="none" target="concave"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="n0::e21" source="n0::n24" target="n0::n21">
+      <data key="d9"/>
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="standard"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="n0::e22" source="n0::n25" target="n0::n23">
+      <data key="d9"/>
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#FF0000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="standard"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="n0::e23" source="n0::n26" target="n0::n27">
+      <data key="d9"/>
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="dashed_dotted" width="2.0"/>
+          <y:Arrows source="none" target="concave"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="n0::e24" source="n0::n28" target="n0::n26">
+      <data key="d9"/>
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="dashed_dotted" width="2.0"/>
+          <y:Arrows source="none" target="concave"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="n0::e25" source="n0::n29" target="n0::n30">
+      <data key="d9"/>
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="dashed_dotted" width="2.0"/>
+          <y:Arrows source="none" target="concave"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="n0::e26" source="n0::n31" target="n0::n29">
+      <data key="d9"/>
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="dashed_dotted" width="2.0"/>
+          <y:Arrows source="none" target="concave"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="n0::e27" source="n0::n32" target="n0::n33">
+      <data key="d9"/>
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="dashed_dotted" width="2.0"/>
+          <y:Arrows source="none" target="concave"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="n0::e28" source="n0::n34" target="n0::n32">
+      <data key="d9"/>
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="standard"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="n0::e29" source="n0::n33" target="n0::n31">
+      <data key="d9"/>
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="standard"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="n0::e30" source="n0::n27" target="n0::n34">
+      <data key="d9"/>
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#FF0000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="standard"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="n0::e31" source="n0::n30" target="n0::n19">
+      <data key="d9"/>
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="standard"/>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
