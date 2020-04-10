@@ -63,6 +63,18 @@ zensus_vg250:
       language: SQL
     - script: ego_pp_destatis_zensus_metadata.sql
       language: SQL
+cosmoclmgrid:
+  required_data:
+    - url: https://next.rl-institut.de/s/jX5ci9kimgjdXAM/download
+      filename: cosmoclmgrid.zip
+  scripts:
+    - script: preprocessing.cosmoclmgrid.import_cosmoclmgrid::import_cosmoclmgrid
+      language: python
+      filename: cosmoclmgrid.zip
+      db: conn
+      args:
+        schema: "cliamte"
+        table: "cosmoclmgrid"
 supply:
   required_data:
     - url: https://next.rl-institut.de/s/TsjxR5P2Q6Z8Y7X/download
