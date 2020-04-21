@@ -73,7 +73,7 @@ cosmoclmgrid:
       filename: cosmoclmgrid.zip
       db: conn
       args:
-        schema: "cliamte"
+        schema: "climate"
         table: "cosmoclmgrid"
 supply:
   required_data:
