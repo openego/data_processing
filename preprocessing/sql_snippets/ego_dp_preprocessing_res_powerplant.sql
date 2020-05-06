@@ -195,21 +195,22 @@ Insert into model_draft.ego_dp_supply_res_powerplant
 	  source || ' ego_dp' as source,
 	  comment || ' geom changes by rea' as comment ,
 	  ST_Transform(geom,3035) as geom,                                      
-	  subst_id,
-	  otg_id,
-	  un_id,
-	  voltage_level,
-	  la_id,
-	  mvlv_subst_id,
-	  rea_sort,
-	  rea_flag,
+	  NULL as subst_id,
+	  NULL as otg_id,
+	  NULL as un_id,
+	  NULL as voltage_level,
+	  NULL as la_id,
+	  NULL as mvlv_subst_id,
+	  NULL as rea_sort,
+	  NULL as rea_flag,
 	  NULL as rea_geom_line,
 	  Null as rea_geom_new,
 	  'Status Quo'::text as scenario,
 	  'constantly'::text as flag,
-	  Null as nuts
+	  NULL as nuts, 
+	  NULL as w-id
 	FROM 
-	  model_draft.ego_supply_res_powerplant
+	  supply.ego_renewable_powerplant
 	 WHERE geom is not NULL;
 
 
