@@ -176,7 +176,7 @@ SELECT obj_description('model_draft.ego_dp_supply_conv_powerplant'::regclass)::j
 INSERT INTO model_draft.ego_dp_supply_conv_powerplant
 	SELECT 
 	  'v0.3.0'::text  as preversion,
-	  id,
+	  gid,
 	  bnetza_id,
 	  company,
 	  name,
@@ -208,10 +208,10 @@ INSERT INTO model_draft.ego_dp_supply_conv_powerplant
 	  lon,
 	  comment,
 	  geom,
-	  voltage_level,
-	  subst_id,
-	  otg_id,
-	  un_id,
+	  NULL as voltage_level,
+	  NULL as subst_id,
+	  NULL as otg_id,
+	  NULL as un_id,
 	  NULL::int as la_id,
 	  'Status Quo'::text as scenario,
 	  NULL::text as flag,
