@@ -19,10 +19,11 @@ def zipdir(path, ziph):
 
 def oedbtable2shp(table_query, filename, crs, geometry_col, index_col):
 
-    shp_dir = os.path.join(DOWNLOADDIR, filename.replace(".shp", ""))
+    file_basename = os.path.basename(os.path.splitext(filename)[0])
+    shp_dir = os.path.join(DOWNLOADDIR, file_basename)
     os.makedirs(shp_dir, exist_ok=True)
     shp_filename = os.path.join(shp_dir, filename)
-    zip_filename = os.path.join(DOWNLOADDIR, filename.replace(".shp", ".zip"))
+    zip_filename = os.path.join(DOWNLOADDIR, file_basename + ".zip")
 
     engine_oedb = db.connection(readonly=True)
     session = sessionmaker(bind=engine_oedb)()
@@ -31,12 +32,15 @@ def oedbtable2shp(table_query, filename, crs, geometry_col, index_col):
                                  session.bind,
                                  index_col=index_col)
 
-    table_df[geometry_col] = table_df[geometry_col].apply(wkt.loads)
-    table_gdf = gdp.GeoDataFrame(table_df,
-                                 geometry=geometry_col,
-                                 crs=crs)
+    if geometry_col:
+        table_df[geometry_col] = table_df[geometry_col].apply(wkt.loads)
+        table_gdf = gdp.GeoDataFrame(table_df,
+                                     geometry=geometry_col,
+                                     crs=crs)
 
-    table_gdf.to_file(shp_filename)
+        table_gdf.to_file(shp_filename)
+    else:
+        table_df.to_csv(shp_filename)
 
     zf = zipfile.ZipFile(
         zip_filename,
