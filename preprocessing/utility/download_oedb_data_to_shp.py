@@ -5,19 +5,10 @@ import geopandas as gdp
 from shapely import wkt
 import zipfile
 import os
+from preprocessing.utility.utils import DOWNLOADDIR, zipdir
 
 
-DOWNLOADDIR = os.path.join(os.path.expanduser("~"), ".egon-pre-processing-cached/")
-
-
-def zipdir(path, ziph):
-    # ziph is zipfile handle
-    for root, dirs, files in os.walk(path):
-        for file in files:
-            ziph.write(os.path.join(root, file), arcname=file)
-
-
-def oedbtable2shp(table_query, filename, crs, geometry_col, index_col):
+def oedbtable2shp(table_query, filename, crs, geometry_col, index_col, zip_it=True):
 
     file_basename = os.path.basename(os.path.splitext(filename)[0])
     shp_dir = os.path.join(DOWNLOADDIR, file_basename)
@@ -42,9 +33,10 @@ def oedbtable2shp(table_query, filename, crs, geometry_col, index_col):
     else:
         table_df.to_csv(shp_filename)
 
-    zf = zipfile.ZipFile(
-        zip_filename,
-        mode='w',
-        compression=zipfile.ZIP_DEFLATED)
-    zipdir(shp_dir, zf)
-    zf.close()
+    if zip_it:
+        zf = zipfile.ZipFile(
+            zip_filename,
+            mode='w',
+            compression=zipfile.ZIP_DEFLATED)
+        zipdir(shp_dir, zf)
+        zf.close()
