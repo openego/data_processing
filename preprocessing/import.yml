@@ -93,4 +93,14 @@ slp:
   scripts:
     - script: ego_pre_slp_parameters.sql
       language: SQL
-
+osmtgmod:
+  required_data:
+    - url: https://next.rl-institut.de/s/zb4yWoxHpKACw7Q/download
+      filename: otg_ehvhv_data.zip
+  scripts:
+    - script: preprocessing.osmtgmod.import_osmtgmod::import_osmtgmod
+      language: python
+      filename: otg_ehvhv_data.zip
+      db: conn
+      args:
+        schema: "grid"
