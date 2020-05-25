@@ -88,7 +88,7 @@ def preprocessing():
      'ego_pre_voltage_level.sql',
      'ego_pre_slp_parameters.sql'
     ]
-    datasets = yaml.load(open("import.yml"))#, Loader=Loader)
+    datasets = yaml.load(open("import.yml"), Loader=yaml.SafeLoader)
 
     # get database connection
     conn_oedb = db.connection(readonly=True).connect()
