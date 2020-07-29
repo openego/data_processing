@@ -153,6 +153,40 @@ node,way   wood         text         linear
 node,way   z_order      int4         linear # This is calculated during import
 way        way_area     real         linear # This is calculated during import
 
+########### NEW TAGS ADDED FOR USAGE IN THE EGON PROJECT #############
+# General
+node,way building:levels text linear
+node,way height text polygon
+# Heat
+node,way place:city text polygon
+node,way place:town text polygon
+node,way place:village text polygon
+node,way place:hamlet text polygon
+node,way industrial:heating_station text polygon
+node,way utility:heating text polygon
+node,way man_made:pipeline text linear
+
+# E-Mobility 
+node amenity:charging_station text linear
+node amenity:parking text polygon
+node,way parking text polygon
+node,way building:parking text polygon
+node amenity:fuel text polygon
+node,way shop:supermarket text polygon
+node,way shop:department_store text polygon
+node,way shop:wholesale text polygon
+node,way shop:mall text polygon
+node,way highway:rest_area text polygon
+
+# Gas
+# man_made:pipeline was already imported above
+
+# Electrical flexibilisation technologies 
+node man_made:works text linear
+node substation:minor_distribution text linear
+
+########################################################
+
 # Area tags
 # We don't make columns for these tags, but objects with them are areas.
 # Mainly for use with hstore
