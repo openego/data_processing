@@ -48,29 +48,47 @@ GRANT ALL ON TABLE supply.ego_renewable_powerplant TO oeuser;
 
 -- set metadata
 COMMENT ON TABLE supply.ego_renewable_powerplant IS '{
-	"title": "Renewable power plants in Germany",
-	"description": "This table contains a list of renewable energy power plants in Germany. This data join two sources: energymap.info, a data platform of the ''Deutsche Gesellschaft für Sonnenenergie e.V.'' and Bundesnetzagentur, the regularor together. ",
-	"language": [ "eng", "ger"],
+    "title": "Renewable power plants in Germany",
+	"description": "Liste of renewable power plants in Germany for the open_eGo project",
+	"language": [ "eng", "ger" ],
 	"spatial": 
 		{"location": "Germany",
-		"extent": "europe",
+		"extent": "Europe",
 		"resolution": "100 m"},
 	"temporal": 
 		{"reference_date": "2016-01-01",
 		"start": "1900-01-01",
-		"end": "2015-12-31",
+		"end": "2049-12-31",
 		"resolution": ""},
 	"sources": [
-		{"name": "EnergyMap.info ", 
-		"description": "Data provider how collects and clean TSO and DSO data of Germany", 
-		"url": "http://www.energymap.info/download.html", 
-		"license": "unknown ", 
-		"copyright": "Deutsche Gesellschaft für Sonnenenergie e.V."},
+		{"name": "eGo data processing", 
+		"description": "Scripts with allocate Geometry by OpenStreetMap Objects or create future scenarios by high resolution geo-allocation", 
+		"url": "https://github.com/openego/data_processing", 
+		"license": "GNU Affero General Public License Version 3 (AGPL-3.0)", 
+		"copyright": "© ZNES Europa-Universität Flensburg"},
 		
-		{"name": "Bundesnetzagentur (BNetzA)", 
-		"description": "The Federal Network Agency for Electricity, Gas, Telecommunications, Posts and Railway Data is in Germany data provider of power plant", 
-		"url": "https://www.bundesnetzagentur.de/DE/Sachgebiete/ElektrizitaetundGas/Unternehmen_Institutionen/ErneuerbareEnergien/Anlagenregister/Anlagenregister_Veroeffentlichung/Anlagenregister_Veroeffentlichungen_node.html", 
-		"license": "Creative Commons Namensnennung-Keine Bearbeitung 3.0 Deutschland Lizenz", 
+		{"name": "Renewable power plants from netztransparenz.de provided by the four TSOs of Germany", 
+		"description": "Original Data Anlagenstammdaten from the four german TSOs", 
+		"url": "https://www.netztransparenz.de/EEG/Anlagenstammdaten", 
+		"license": "Open Database License (ODbL) v1.0", 
+		"copyright": "© 50Hertz Transmission GmbH,  Amprion GmbH, TransnetBW GmbH, TenneT TSO GmbH"},
+		
+		{"name": "Open-Power-System-Data Renewable power plants DE", 
+		"description": "Open Power System Data. 2018. Data Package Renewable power plants. Version 2018-03-08. Data provider how collects and clean TSO, DSO data and other energy data of Germany and Europe", 
+		"url": "https://data.open-power-system-data.org/renewable_power_plants/2018-03-08/", 
+		"license": "MIT", 
+		"copyright": "© Open-Power-System-Data, Europa-Universität Flensburg"},
+		
+		{"name": "EEG-Anlagenstammdaten (außer PV-Gebäudeanlagen), Bundesnetzagentur (BNetzA)", 
+		"description": "The Federal Network Agency for Electricity, Gas, Telecommunications, Posts and Railway Data is in Germany data provider of power plant.", 
+		"url": "https://www.bundesnetzagentur.de/DE/Sachgebiete/ElektrizitaetundGas/Unternehmen_Institutionen/ErneuerbareEnergien/ZahlenDatenInformationen/EEG_Registerdaten/EEG_Registerdaten_node.html", 
+		"license": "Deutschland – Namensnennung – Version 2.0", 
+		"copyright": "© Bundesnetzagentur für Elektrizität, Gas, Telekommunikation, Post und Eisenbahnen; Pressestelle"},
+		
+		{"name": "PV-Datenmeldungen (außer PV-Freiflächenanlagen), Bundesnetzagentur (BNetzA)", 
+		"description": "The Federal Network Agency for Electricity, Gas, Telecommunications, Posts and Railway Data is in Germany data provider of power plant.", 
+		"url": "https://www.bundesnetzagentur.de/DE/Sachgebiete/ElektrizitaetundGas/Unternehmen_Institutionen/ErneuerbareEnergien/ZahlenDatenInformationen/EEG_Registerdaten/EEG_Registerdaten_node.html", 
+		"license": "Deutschland – Namensnennung – Version 2.0", 
 		"copyright": "© Bundesnetzagentur für Elektrizität, Gas, Telekommunikation, Post und Eisenbahnen; Pressestelle"}
 	        ],
 	"license": 
