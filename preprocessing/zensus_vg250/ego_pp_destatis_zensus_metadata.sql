@@ -58,4 +58,4 @@ COMMENT ON TABLE society.destatis_zensus_population_per_ha IS '{
 	"metadata_version": "1.3"}';
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','preprocessing','society','destatis_zensus_population_per_ha','ego_pp_destatis_zensus_import.sql','metadata');
+SELECT scenario_log('eGo_PP','PP1','preprocessing','society','destatis_zensus_population_per_ha','ego_pp_destatis_zensus_import.sql','metadata');

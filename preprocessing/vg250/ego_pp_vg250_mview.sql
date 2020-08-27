@@ -1,4 +1,4 @@
-﻿-- Create MView with NUTS IDs
+-- Create MView with NUTS IDs
 
 CREATE MATERIALIZED VIEW boundaries.bkg_vg250_2_lan_nuts_view AS 
  SELECT lan.ags_0,

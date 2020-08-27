@@ -24,7 +24,6 @@ GROUP BY version
 ORDER BY version;
 */
 
-/* 
 -- scenario log table
 DROP TABLE IF EXISTS    model_draft.scenario_log CASCADE;
 CREATE TABLE            model_draft.scenario_log (
@@ -36,7 +35,7 @@ CREATE TABLE            model_draft.scenario_log (
     table_name  text,
     script_name text,
     entries     integer,
-    status      text,
+    comment      text,
     user_name   text,
     "timestamp" timestamp,
     meta_data   text,
@@ -49,7 +48,6 @@ ALTER TABLE model_draft.scenario_log
 
 -- access rights
 ALTER TABLE model_draft.scenario_log OWNER TO oeuser; 
-*/
 
 -- metadata
 COMMENT ON TABLE model_draft.scenario_log IS '{

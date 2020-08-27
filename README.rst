@@ -51,3 +51,44 @@ Run
  ~$ ego_data_processing
  ```    
 
+Local database with docker
+==========================
+
+You need to have `docker-compose` installed. And some more tools, see requirements_system.txt.
+
+### Spin up database with docker
+
+```
+docker-compose up -d --build
+```
+
+### Database credentials
+
+| database | dp |
+| port | 54321 |
+| user | oeuser |
+| password | egon |
+
+
+Usage
+=====
+
+
+Pre-processing
+**************
+
+Execute `eGo_import_and_preprocessing.py` for starting pre-processing from scratch doing data import and a pre-processing of imported tables.
+
+Once completed, export required schemas to SQL dump
+
+_You might have to install `postgresql-client-11` from additional source to have a compatible client with the v11 dockered PostgreSQL database._
+
+```
+ /usr/lib/postgresql/11/bin/pg_dump -d dp -U oeuser -p 54321 -h localhost -Fc -n model_draft -n openstreetmap -n boundaries -n society > `date -I`_eGo_data_pre-processing_bremen.backup
+```
+
+Import a dump by
+
+```
+/usr/lib/postgresql/11/bin/pg_restore -d dp -U oeuser -p 54321 -h localhost 2020-03-28_eGo_data_pre-processing_deu.backup
+```

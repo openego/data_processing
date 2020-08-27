@@ -1,4 +1,4 @@
-﻿/*
+/*
 Extracted OSM buildings from polygon
 
 __copyright__ 	= "Reiner Lemoine Institut"
@@ -9,7 +9,7 @@ __author__ 	= "Ludee"
 
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','input','openstreetmap','osm_deu_polygon','ego_pp_osm_polygon_building_mview.sql','');
+SELECT scenario_log('eGo_PP','PP1','input','openstreetmap','osm_deu_polygon','ego_pp_osm_polygon_building_mview.sql','setup osm tables');
 
 -- building
 DROP MATERIALIZED VIEW IF EXISTS	openstreetmap.osm_deu_polygon_building_mview;
@@ -78,4 +78,4 @@ COMMENT ON MATERIALIZED VIEW openstreetmap.osm_deu_polygon_building_mview IS '{
 	"metadata_version": "1.3"}';
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.10','output','openstreetmap','osm_deu_polygon_building_mview','ego_pp_osm_polygon_building_mview.sql','');
+SELECT scenario_log('eGo_PP','PP1','output','openstreetmap','osm_deu_polygon_building_mview','ego_pp_osm_polygon_building_mview.sql','setup osm tables');

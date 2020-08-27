@@ -1,0 +1,106 @@
+scenario_log:
+  scripts:
+    - script: function_scenario_log.sql
+      language: SQL
+    - script: ego_pp_scenario.sql
+      language: SQL
+    - script: ego_pp_scenario_log.sql
+      language: SQL
+openstreetmap:
+  required_data:
+#    - url: https://download.geofabrik.de/europe/germany/bremen-latest.osm.pbf
+    - url: https://download.geofabrik.de/europe/germany-latest.osm.pbf
+      filename: deu-latest.osm.pbf
+  scripts:
+    - script: preprocessing.openstreetmap.import_osm::osm2postgres
+      language: python
+      filename: deu-latest.osm.pbf
+      db: info
+    - script: ego_pp_osm_deu_import.sql
+      language: SQL
+    - script: ego_pp_osm_line_street_mview.sql
+      language: SQL
+    - script: ego_pp_osm_polygon_building_mview.sql
+      language: SQL
+zensus:
+  required_data:
+    - url: https://next.rl-institut.de/s/Asoxps5oWGkGrZi/download
+      filename: Zensus_Bevoelkerung_100m-Gitter.zip
+  scripts:
+    - script: preprocessing.zensus.destatis_zensus_import_csv::import_zensus2011
+      language: python
+      filename: Zensus_Bevoelkerung_100m-Gitter.zip
+      db: conn
+      args:
+        table: zensus_2011_pop_per_ha
+        schema: tmp_destatis
+    - script: destatis_zensus_raw_import.sql
+      language: SQL
+    - script: ego_pp_destatis_zensus_import.sql
+      language: SQL
+vg250:
+  required_data:
+    - url: https://daten.gdz.bkg.bund.de/produkte/vg/vg250_ebenen_0101/aktuell/vg250_01-01.gk3.shape.ebenen.zip
+      filename: vg250_01-01.gk3.shape.ebenen.zip
+  scripts:
+    - script: create_boundaries_schema.sql
+      language: SQL
+    - script: preprocessing.vg250.import_vg250::import_vg250
+      language: python
+      filename: vg250_01-01.gk3.shape.ebenen.zip
+      db: info
+    - script: ego_pp_vg250_import.sql
+      language: SQL
+    - script: ego_pp_vg250_metadata.sql
+      language: SQL
+    - script: ego_pp_vg250_mview.sql
+      language: SQL
+    - script: ego_dp_structure_boundaries_vg250.sql
+      language: SQL
+zensus_vg250:
+  scripts:
+    - script: ego_pp_destatis_zensus_insidevg250.sql
+      language: SQL
+    - script: ego_pp_destatis_zensus_metadata.sql
+      language: SQL
+cosmoclmgrid:
+  required_data:
+    - url: https://next.rl-institut.de/s/jX5ci9kimgjdXAM/download
+      filename: cosmoclmgrid.zip
+  scripts:
+    - script: preprocessing.cosmoclmgrid.import_cosmoclmgrid::import_cosmoclmgrid
+      language: python
+      filename: cosmoclmgrid.zip
+      db: conn
+      args:
+        schema: "climate"
+        table: "cosmoclmgrid"
+supply:
+  required_data:
+    - url: https://next.rl-institut.de/s/TsjxR5P2Q6Z8Y7X/download
+      filename: vernetzen_wind_potential_areas.zip
+  scripts:
+    - script: preprocessing.supply.import_vernetzen_wind_potential_areas::import_vernetzen_wind_potential_areas
+      language: python
+      filename: vernetzen_wind_potential_areas.zip
+      db: conn
+      args:
+        schema: "supply"
+        table: "vernetzen_wind_potential_area"
+    - script: vernetzen_wind_potential_area_v1.3.sql
+      language: SQL
+slp:
+  scripts:
+    - script: ego_pre_slp_parameters.sql
+      language: SQL
+osmtgmod:
+  required_data:
+    - url: https://next.rl-institut.de/s/zb4yWoxHpKACw7Q/download
+      filename: otg_ehvhv_data.zip
+  scripts:
+    - script: preprocessing.osmtgmod.import_osmtgmod::import_osmtgmod
+      language: python
+      filename: otg_ehvhv_data.zip
+      db: conn
+      args:
+        schema: "grid"

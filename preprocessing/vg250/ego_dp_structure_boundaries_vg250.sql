@@ -14,24 +14,24 @@ __author__ = "Ludee"
 -- 1. Nationalstaat (sta) - country (cntry)
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','input','boundaries','bkg_vg250_1_sta','ego_dp_structure_boundaries_vg250.sql',' ');
+SELECT scenario_log('eGo_PP','PP1','input','boundaries','bkg_vg250_1_sta','ego_dp_structure_boundaries_vg250.sql',' ');
 
 -- 1. country - mview with tiny buffer because of intersection (in official data)
 DROP MATERIALIZED VIEW IF EXISTS	boundaries.bkg_vg250_1_sta_mview CASCADE;
 CREATE MATERIALIZED VIEW		boundaries.bkg_vg250_1_sta_mview AS
 	SELECT	vg.reference_date ::text,
-		vg.id ::integer,
+		vg.gid ::integer,
 		vg.bez ::text,
 		vg.gf ::double precision,
 		ST_AREA(ST_TRANSFORM(vg.geom, 3035)) / 10000 ::double precision AS area_ha,
 		ST_MULTI(ST_BUFFER(ST_TRANSFORM(vg.geom,3035),-0.001)) ::geometry(MultiPolygon,3035) AS geom
 	FROM	boundaries.bkg_vg250_1_sta AS vg
 	WHERE	vg.reference_date = '2016-01-01'
-	ORDER BY vg.id;
+	ORDER BY vg.gid;
 
 -- index (id)
-CREATE UNIQUE INDEX  	bkg_vg250_1_sta_mview_id_idx
-		ON	boundaries.bkg_vg250_1_sta_mview (id);
+CREATE UNIQUE INDEX  	bkg_vg250_1_sta_mview_gid_idx
+		ON	boundaries.bkg_vg250_1_sta_mview (gid);
 
 -- index GIST (geom)
 CREATE INDEX  	bkg_vg250_1_sta_mview_geom_idx
@@ -112,18 +112,18 @@ COMMENT ON MATERIALIZED VIEW boundaries.bkg_vg250_1_sta_mview IS '{
 SELECT obj_description('boundaries.bkg_vg250_1_sta_mview' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','boundaries','bkg_vg250_1_sta_mview','ego_dp_structure_boundaries_vg250.sql',' ');
+SELECT scenario_log('eGo_PP','PP1','output','boundaries','bkg_vg250_1_sta_mview','ego_dp_structure_boundaries_vg250.sql',' ');
 
 
 -- 1. country - error geom
 DROP MATERIALIZED VIEW IF EXISTS	boundaries.bkg_vg250_1_sta_error_geom_mview CASCADE;
 CREATE MATERIALIZED VIEW		boundaries.bkg_vg250_1_sta_error_geom_mview AS 
-	SELECT	sub.id AS id,
+	SELECT	sub.gid AS gid,
 		sub.error AS error,
 		sub.error_reason AS error_reason,
 		ST_SETSRID(location(ST_IsValidDetail(sub.geom)),3035) ::geometry(Point,3035) AS geom
 	FROM	(
-		SELECT	source.id AS id,				-- PK
+		SELECT	source.gid AS gid,				-- PK
 			ST_IsValid(source.geom) AS error,
 			reason(ST_IsValidDetail(source.geom)) AS error_reason,
 			source.geom AS geom
@@ -132,9 +132,9 @@ CREATE MATERIALIZED VIEW		boundaries.bkg_vg250_1_sta_error_geom_mview AS
 		) AS sub
 	WHERE	sub.error = FALSE;
 
--- index (id)
-CREATE UNIQUE INDEX  	bkg_vg250_1_sta_error_geom_mview_id_idx
-		ON	boundaries.bkg_vg250_1_sta_error_geom_mview (id);
+-- index (gid)
+CREATE UNIQUE INDEX  	bkg_vg250_1_sta_error_geom_mview_gid_idx
+		ON	boundaries.bkg_vg250_1_sta_error_geom_mview (gid);
 
 -- index GIST (geom)
 CREATE INDEX  	bkg_vg250_1_sta_error_geom_mview_geom_idx
@@ -157,7 +157,7 @@ COMMENT ON MATERIALIZED VIEW boundaries.bkg_vg250_1_sta_error_geom_mview IS '{
 	"Extend": "Germany; Nationalstaat (sta) - country (cntry)" }],
     "Description": ["Errors in country border"],
     "Column":[
-        {"Name": "id", "Description": "Unique identifier", "Unit": " " },
+        {"Name": "gid", "Description": "Unique identifier", "Unit": " " },
         {"Name": "error", "Description": "Error", "Unit": " " },
 	{"Name": "error_reason", "Description": "Error reason", "Unit": " " },
 	{"Name": "geom", "Description": "Geometry", "Unit": " " } ],
@@ -177,14 +177,14 @@ COMMENT ON MATERIALIZED VIEW boundaries.bkg_vg250_1_sta_error_geom_mview IS '{
 SELECT obj_description('boundaries.bkg_vg250_1_sta_error_geom_mview' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','boundaries','bkg_vg250_1_sta_error_geom_mview','ego_dp_structure_boundaries_vg250.sql',' ');
+SELECT scenario_log('eGo_PP','PP1','output','boundaries','bkg_vg250_1_sta_error_geom_mview','ego_dp_structure_boundaries_vg250.sql',' ');
 
 
 -- 1. country - union
 DROP MATERIALIZED VIEW IF EXISTS	boundaries.bkg_vg250_1_sta_union_mview CASCADE;
 CREATE MATERIALIZED VIEW		boundaries.bkg_vg250_1_sta_union_mview AS
 	SELECT	'2016-01-01' ::text AS reference_date,
-		'1' ::integer AS id,
+		'1' ::integer AS gid,
 		'Bundesrepublik' ::text AS bez,
 		ST_AREA(un.geom) / 10000 ::double precision AS area_ha,
 		un.geom ::geometry(MultiPolygon,3035) AS geom
@@ -193,9 +193,9 @@ CREATE MATERIALIZED VIEW		boundaries.bkg_vg250_1_sta_union_mview AS
 		WHERE	vg.bez = 'Bundesrepublik' AND reference_date = '2016-01-01'
 		) AS un;
 
--- index (id)
-CREATE UNIQUE INDEX  	bkg_vg250_1_sta_union_mview_id_idx
-		ON	boundaries.bkg_vg250_1_sta_union_mview (id);
+-- index (gid)
+CREATE UNIQUE INDEX  	bkg_vg250_1_sta_union_mview_gid_idx
+		ON	boundaries.bkg_vg250_1_sta_union_mview (gid);
 
 -- index GIST (geom)
 CREATE INDEX  	bkg_vg250_1_sta_union_mview_geom_idx
@@ -219,7 +219,7 @@ COMMENT ON MATERIALIZED VIEW boundaries.bkg_vg250_1_sta_union_mview IS '{
     "Description": ["Geometry union"],
     "Column":[
         {"Name": "reference_date", "Description": "Reference Year", "Unit": " " },
-        {"Name": "id", "Description": "Unique identifier", "Unit": " " },
+        {"Name": "gid", "Description": "Unique identifier", "Unit": " " },
         {"Name": "bez", "Description": "Bezeichnung der Verwaltungseinheit", "Unit": " " },
 	{"Name": "area_ha", "Description": "Area in ha", "Unit": "ha" },
 	{"Name": "geom", "Description": "Geometry", "Unit": " " } ],
@@ -239,14 +239,14 @@ COMMENT ON MATERIALIZED VIEW boundaries.bkg_vg250_1_sta_union_mview IS '{
 SELECT obj_description('boundaries.bkg_vg250_1_sta_union_mview' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','boundaries','bkg_vg250_1_sta_union_mview','ego_dp_structure_boundaries_vg250.sql',' ');
+SELECT scenario_log('eGo_PP','PP1','output','boundaries','bkg_vg250_1_sta_union_mview','ego_dp_structure_boundaries_vg250.sql',' ');
 
 
 -- 1. state borders - bounding box
 DROP MATERIALIZED VIEW IF EXISTS	boundaries.bkg_vg250_1_sta_bbox_mview CASCADE;
 CREATE MATERIALIZED VIEW		boundaries.bkg_vg250_1_sta_bbox_mview AS
 	SELECT	'2016-01-01' ::text AS reference_date,
-		'1' ::integer AS id,
+		'1' ::integer AS gid,
 		'Bundesrepublik' ::text AS bez,
 		ST_AREA(un.geom) / 10000 ::double precision AS area_ha,
 		un.geom ::geometry(Polygon,3035) AS geom
@@ -254,9 +254,9 @@ CREATE MATERIALIZED VIEW		boundaries.bkg_vg250_1_sta_bbox_mview AS
 		FROM	boundaries.bkg_vg250_1_sta_union_mview AS vg
 		) AS un;
 
--- index (id)
-CREATE UNIQUE INDEX  	bkg_vg250_1_sta_bbox_mview_id_idx
-		ON	boundaries.bkg_vg250_1_sta_bbox_mview (id);
+-- index (gid)
+CREATE UNIQUE INDEX  	bkg_vg250_1_sta_bbox_mview_gid_idx
+		ON	boundaries.bkg_vg250_1_sta_bbox_mview (gid);
 
 -- index GIST (geom)
 CREATE INDEX  	bkg_vg250_1_sta_bbox_mview_geom_idx
@@ -280,7 +280,7 @@ COMMENT ON MATERIALIZED VIEW boundaries.bkg_vg250_1_sta_bbox_mview IS '{
     "Description": ["Geometry bounding box"],
     "Column":[
         {"Name": "reference_date", "Description": "Reference Year", "Unit": " " },
-        {"Name": "id", "Description": "Unique identifier", "Unit": " " },
+        {"Name": "gid", "Description": "Unique identifier", "Unit": " " },
         {"Name": "bez", "Description": "Bezeichnung der Verwaltungseinheit", "Unit": " " },
 	{"Name": "area_ha", "Description": "Area in ha", "Unit": "ha" },
 	{"Name": "geom", "Description": "Geometry", "Unit": " " } ],
@@ -300,13 +300,13 @@ COMMENT ON MATERIALIZED VIEW boundaries.bkg_vg250_1_sta_bbox_mview IS '{
 SELECT obj_description('boundaries.bkg_vg250_1_sta_bbox_mview' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','boundaries','bkg_vg250_1_sta_bbox_mview','ego_dp_structure_boundaries_vg250.sql',' ');
+SELECT scenario_log('eGo_PP','PP1','output','boundaries','bkg_vg250_1_sta_bbox_mview','ego_dp_structure_boundaries_vg250.sql',' ');
 
 	
 -- 2. Bundesland (lan) - federal state (fst)
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','input','boundaries','bkg_vg250_2_lan','ego_dp_structure_boundaries_vg250.sql',' ');
+SELECT scenario_log('eGo_PP','PP1','input','boundaries','bkg_vg250_2_lan','ego_dp_structure_boundaries_vg250.sql',' ');
 
 -- 2. federal state - mview with tiny buffer because of intersection (in official data)
 DROP MATERIALIZED VIEW IF EXISTS	boundaries.bkg_vg250_2_lan_mview CASCADE;
@@ -324,7 +324,7 @@ CREATE MATERIALIZED VIEW		boundaries.bkg_vg250_2_lan_mview AS
 	GROUP BY lan.ags_0,lan.gen
 	ORDER BY lan.ags_0;
 
--- index (id)
+-- index (gid)
 CREATE UNIQUE INDEX  	bkg_vg250_2_lan_mview_ags_0_idx
 		ON	boundaries.bkg_vg250_2_lan_mview (ags_0);
 
@@ -370,13 +370,13 @@ COMMENT ON MATERIALIZED VIEW boundaries.bkg_vg250_2_lan_mview IS '{
 SELECT obj_description('boundaries.bkg_vg250_2_lan_mview' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','boundaries','bkg_vg250_2_lan_mview','ego_dp_structure_boundaries_vg250.sql',' ');
+SELECT scenario_log('eGo_PP','PP1','output','boundaries','bkg_vg250_2_lan_mview','ego_dp_structure_boundaries_vg250.sql',' ');
 
 
 -- 4. Landkreis (krs) - district (dist)
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','input','boundaries','bkg_vg250_4_krs','ego_dp_structure_boundaries_vg250.sql',' ');
+SELECT scenario_log('eGo_PP','PP1','input','boundaries','bkg_vg250_4_krs','ego_dp_structure_boundaries_vg250.sql',' ');
 
 -- 4. district - mview 
 DROP MATERIALIZED VIEW IF EXISTS	boundaries.bkg_vg250_4_krs_mview CASCADE;
@@ -394,7 +394,7 @@ CREATE MATERIALIZED VIEW		boundaries.bkg_vg250_4_krs_mview AS
 	WHERE	vg.reference_date = '2016-01-01'
 	ORDER BY vg.id;
 
--- index (id)
+-- index (gid)
 CREATE UNIQUE INDEX  	bkg_vg250_4_krs_mview_id_idx
 		ON	boundaries.bkg_vg250_4_krs_mview (id);
 
@@ -444,12 +444,11 @@ COMMENT ON MATERIALIZED VIEW boundaries.bkg_vg250_4_krs_mview IS '{
 SELECT obj_description('boundaries.bkg_vg250_4_krs_mview' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','boundaries','bkg_vg250_4_krs_mview','ego_dp_structure_boundaries_vg250.sql',' ');
+SELECT scenario_log('eGo_PP','PP1','output','boundaries','bkg_vg250_4_krs_mview','ego_dp_structure_boundaries_vg250.sql',' ');
 
 
 -- 6. Gemeinde (gem) - municipality (mun)
 
-/* 
 -- census data per municipality
 DROP TABLE IF EXISTS	society.destatis_zensus_population_per_bkg_vg250_6_gem;
 CREATE TABLE		society.destatis_zensus_population_per_bkg_vg250_6_gem (
@@ -468,8 +467,40 @@ INSERT INTO society.destatis_zensus_population_per_bkg_vg250_6_gem (reference_da
 	FROM	boundaries.bkg_vg250_6_gem AS vg
 	ORDER BY vg.id;
 
--- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','input','society','destatis_zensus_population_per_ha_mview','ego_dp_structure_boundaries_vg250.sql',' ');
+
+-- zensus points with population (includes zensus points outside borders vg250)
+DROP MATERIALIZED VIEW IF EXISTS    society.destatis_zensus_population_per_ha_mview CASCADE;
+CREATE MATERIALIZED VIEW            society.destatis_zensus_population_per_ha_mview AS
+    SELECT  a.gid,
+            a.population,
+            a.geom_point,
+            a.geom
+    FROM    society.destatis_zensus_population_per_ha AS a
+    WHERE   a.population >= 0
+    ORDER BY a.gid;
+
+-- index
+CREATE UNIQUE INDEX destatis_zensus_population_per_ha_mview_gid_idx
+    ON society.destatis_zensus_population_per_ha_mview (gid);
+
+CREATE INDEX destatis_zensus_population_per_ha_mview_geom_point_idx
+    ON society.destatis_zensus_population_per_ha_mview USING GIST (geom_point);
+
+CREATE INDEX destatis_zensus_population_per_ha_mview_geom_idx
+    ON society.destatis_zensus_population_per_ha_mview USING GIST (geom);
+
+-- access rights
+ALTER TABLE society.destatis_zensus_population_per_ha_mview OWNER TO oeuser;
+
+-- metadata
+COMMENT ON MATERIALIZED VIEW society.destatis_zensus_population_per_ha_mview IS '{
+    "comment": "eGoPP - Temporary table",
+    "version": "PP1",
+    "published": "none" }';
+
+-- scenario log (project,version,io,schema_name,table_name,script_name,comment)
+SELECT scenario_log('eGo_PP','PP1','preprocessing','society','destatis_zensus_population_per_ha_mview','ego_pp_destatis_zensus_insidevg250.sql','none');
+
 
 -- zensus 2011 population
 UPDATE 	society.destatis_zensus_population_per_bkg_vg250_6_gem AS t1
@@ -501,10 +532,10 @@ UPDATE 	society.destatis_zensus_population_per_bkg_vg250_6_gem AS ce
 UPDATE 	society.destatis_zensus_population_per_bkg_vg250_6_gem AS ce
 	SET	census_density = '0'
 	WHERE	census_density IS NULL;
- */
+
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','input','boundaries','bkg_vg250_6_gem','ego_dp_structure_boundaries_vg250.sql',' ');
+SELECT scenario_log('eGo_PP','PP1','input','boundaries','bkg_vg250_6_gem','ego_dp_structure_boundaries_vg250.sql',' ');
 
 -- 6. municipality - mview
 DROP MATERIALIZED VIEW IF EXISTS	boundaries.bkg_vg250_6_gem_mview CASCADE;
@@ -578,7 +609,7 @@ COMMENT ON MATERIALIZED VIEW boundaries.bkg_vg250_6_gem_mview IS '{
 SELECT obj_description('boundaries.bkg_vg250_6_gem_mview' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','boundaries','bkg_vg250_6_gem_mview','ego_dp_structure_boundaries_vg250.sql',' ');
+SELECT scenario_log('eGo_PP','PP1','output','boundaries','bkg_vg250_6_gem_mview','ego_dp_structure_boundaries_vg250.sql',' ');
 
 
 -- 6. municipality - error geom
@@ -643,7 +674,7 @@ COMMENT ON MATERIALIZED VIEW boundaries.bkg_vg250_6_gem_error_geom_mview IS '{
 SELECT obj_description('boundaries.bkg_vg250_6_gem_error_geom_mview' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','boundaries','bkg_vg250_6_gem_error_geom_mview','ego_dp_structure_boundaries_vg250.sql',' ');
+SELECT scenario_log('eGo_PP','PP1','output','boundaries','bkg_vg250_6_gem_error_geom_mview','ego_dp_structure_boundaries_vg250.sql',' ');
 
 
 -- 6. municipality - dump
@@ -723,7 +754,7 @@ COMMENT ON MATERIALIZED VIEW boundaries.bkg_vg250_6_gem_dump_mview IS '{
 SELECT obj_description('boundaries.bkg_vg250_6_gem_dump_mview' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','boundaries','bkg_vg250_6_gem_dump_mview','ego_dp_structure_boundaries_vg250.sql',' ');
+SELECT scenario_log('eGo_PP','PP1','output','boundaries','bkg_vg250_6_gem_dump_mview','ego_dp_structure_boundaries_vg250.sql',' ');
 
 
 -- ego
@@ -840,7 +871,7 @@ COMMENT ON MATERIALIZED VIEW model_draft.ego_boundaries_bkg_vg250_6_gem_hole_mvi
 SELECT obj_description('model_draft.ego_boundaries_bkg_vg250_6_gem_hole_mview' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_boundaries_bkg_vg250_6_gem_hole_mview','ego_dp_structure_boundaries_vg250.sql',' ');
+SELECT scenario_log('eGo_PP','PP1','output','model_draft','ego_boundaries_bkg_vg250_6_gem_hole_mview','ego_dp_structure_boundaries_vg250.sql',' ');
 
 
 -- update holes
@@ -903,7 +934,7 @@ COMMENT ON TABLE model_draft.ego_boundaries_bkg_vg250_6_gem_clean IS '{
 SELECT obj_description('model_draft.ego_boundaries_bkg_vg250_6_gem_clean' ::regclass) ::json;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','model_draft','ego_boundaries_bkg_vg250_6_gem_clean','ego_dp_structure_boundaries_vg250.sql',' ');
+SELECT scenario_log('eGo_PP','PP1','output','model_draft','ego_boundaries_bkg_vg250_6_gem_clean','ego_dp_structure_boundaries_vg250.sql',' ');
 
 
 -- validation
@@ -947,4 +978,4 @@ COMMENT ON VIEW boundaries.bkg_vg250_statistics_view IS '{
 	"version": "v0.3.0" }' ;
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.3.0','output','boundaries','bkg_vg250_statistics_view','ego_dp_structure_boundaries_vg250.sql',' ');
+SELECT scenario_log('eGo_PP','PP1','output','boundaries','bkg_vg250_statistics_view','ego_dp_structure_boundaries_vg250.sql',' ');

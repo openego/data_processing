@@ -10,6 +10,7 @@ __author__ 	= "gplssm"
 */
 
 -- create empty parameters table
+CREATE SCHEMA IF NOT EXISTS scenario;
 DROP TABLE IF EXISTS	scenario.ego_slp_parameters CASCADE;
 CREATE TABLE 		scenario.ego_slp_parameters (
 	parameter 	text,
@@ -72,4 +73,4 @@ SELECT obj_description('scenario.ego_slp_parameters' ::regclass) ::json;
 
 
 -- ego scenario log (version,io,schema_name,table_name,script_name,comment)
-SELECT ego_scenario_log('v0.2.8','input','scenario','ego_slp_parameters','ego_slp_parameters.sql','Create SLP parameter table');
+SELECT scenario_log('eGo_PP','PP1','input','scenario','ego_slp_parameters','ego_slp_parameters.sql','Create SLP parameter table');

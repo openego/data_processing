@@ -18,6 +18,8 @@ setup(
         'workalendar',
         'oemof.db',
         'demandlib',
+        "pyyaml",
+        "geopandas"
         'egoio @ git+https://github.com/openego/ego.io.git@features/use-one-Base-definition',
         'oedialect @ git+https://github.com/OpenEnergyPlatform/oedialect.git@4957e63ca46a976e35eecf84036466cb624e6bfe',
         'geoalchemy2 < 0.7.0',
