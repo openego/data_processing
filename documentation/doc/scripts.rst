@@ -2,25 +2,9 @@
 Data processing scripts
 =======================
 
-
-Data processing
-===============
-
-SQL-Scripts
------------
-
-.. toctree::
-   :maxdepth: 1
-   :titlesonly:
-
-   Dataprocessing <dataprocessing/modules>
-
-
-Python-Scripts
---------------
-
-[use sphinx doc strings]
-
+The preparation of data in organized into :ref:`Preprocessing` and :ref:`Data processing`.
+Scripts contained in the :ref:`Preprocessing` include import of raw and basic preparation for later use in scripts of
+:ref:`Data processing`.
 
 Preprocessing
 =============
@@ -118,14 +102,15 @@ Move resulting data to versioned schemas of the database.
 
 
 
-SQL-Scripts
------------
+Additional information on SQL-Scripts
+=====================================
 
 .. toctree::
    :maxdepth: 1
    :titlesonly:
 
    Dataprocessing <dataprocessing/modules>
+   Preprocessing <preprocessing/modules>
 
 
 
