@@ -58,6 +58,7 @@ extensions = [
     'sphinxcontrib.httpdomain',  # for restfull API
     'sphinxcontrib.autohttp.flask',
     'sphinx.ext.extlinks',  # enables external links with a key
+    'sphinx.ext.autosectionlabel'
 ]
 
 # Napoleon settings
