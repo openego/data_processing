@@ -17,7 +17,7 @@
     <node id="n0" yfiles.foldertype="group">
       <data key="d6">
         <y:TableNode configuration="com.yworks.bpmn.Pool">
-          <y:Geometry height="712.2068110659811" width="1699.5957015597362" x="-83.80275349272927" y="104.55921052631584"/>
+          <y:Geometry height="712.2068110659811" width="1285.3161316672633" x="55.523411381822726" y="104.55921052631584"/>
           <y:Fill color="#3265FF7F" color2="#D4D4D4CC" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" borderDistance="0.0" fontFamily="Dialog" fontSize="36" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="45.90625" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="l" rotationAngle="270.0" textColor="#000000" verticalTextPosition="bottom" visible="true" width="692.728515625" x="0.0" xml:space="preserve" y="9.739147720490564">eGo Pre-Processing - scenario_log</y:NodeLabel>
@@ -53,13 +53,13 @@
           </y:StyleProperties>
           <y:State autoResize="true" closed="false" closedHeight="80.0" closedWidth="100.0"/>
           <y:Insets bottom="0" bottomF="0.0" left="0" leftF="0.0" right="0" rightF="0.0" top="0" topF="0.0"/>
-          <y:BorderInsets bottom="167" bottomF="166.88913860733578" left="174" leftF="174.3613265597363" right="292" rightF="292.2343749999998" top="194" topF="194.44078947368416"/>
+          <y:BorderInsets bottom="167" bottomF="166.88913860733578" left="35" leftF="35.03516168518432" right="17" rightF="17.280969982079114" top="194" topF="194.44078947368416"/>
           <y:Table autoResizeTable="true" defaultColumnWidth="360.0" defaultMinimumColumnWidth="30.0" defaultMinimumRowHeight="30.0" defaultRowHeight="107.0">
             <y:DefaultColumnInsets bottom="3.0" left="3.0" right="3.0" top="20.0"/>
             <y:DefaultRowInsets bottom="3.0" left="20.0" right="3.0" top="3.0"/>
             <y:Insets bottom="0.0" left="50.0" right="0.0" top="0.0"/>
             <y:Columns>
-              <y:Column id="column_0" minimumWidth="30.0" width="1625.9160140597362">
+              <y:Column id="column_0" minimumWidth="30.0" width="1211.6364441672633">
                 <y:Insets bottom="3.0" left="3.0" right="3.0" top="20.0"/>
               </y:Column>
             </y:Columns>
