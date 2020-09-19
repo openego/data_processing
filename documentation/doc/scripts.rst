@@ -9,13 +9,93 @@ Scripts contained in the :ref:`Preprocessing` include import of raw and basic pr
 Preprocessing
 =============
 
-SQL-Scripts
------------
-.. toctree::
-   :maxdepth: 1
-   :titlesonly:
+Overview on pre-processing scripts that import data and do basic preparation.
+Data pre-processing steps partially depend on each other which is shown in the following figure.
 
-   Preprocessing <preprocessing/modules>
+.. image:: images/ego_dp-pre_bpmn_sections.png
+   :width: 80%
+
+Scenario log
+------------
+
+Prepare logging of data processing: create logging table and respective function that logs changes made to tables.
+
+.. image:: images/ego_dp-pre_bpmn_section_scenario-log.png
+   :width: 80%
+
+RenpassG!S
+----------
+
+Using repassG!S for creating time series of renewable power plants feedin.
+
+.. image:: images/ego_dp-pre_bpmn_section_renpassGIS.png
+   :width: 80%
+
+COSMO-CLM grid
+--------------
+
+Import spatial data grid for COSMO-CLM climate data.
+
+.. image:: images/ego_dp-pre_bpmn_section_cosmoclmgrid.png
+   :width: 70%
+
+Zensus
+------
+
+Import Zensus data.
+
+.. image:: images/ego_dp-pre_bpmn_section_zensus.png
+
+Import data for administrative boundaries from VG250 data set.
+
+.. image:: images/ego_dp-pre_bpmn_section_bkg-vg250.png
+
+OpenStreetMap
+-------------
+
+Import OpenStreetMap (OSM) data from Geofabrik data dumps.
+
+.. image:: images/ego_dp-pre_bpmn_section_openstreetmap.png
+
+Standard load profile
+---------------------
+
+Insert standard load profile (SLP) parameters to database table.
+
+.. image:: images/ego_dp-pre_bpmn_section_slp.png
+   :width: 60%
+
+Wind potential areas
+--------------------
+
+Import wind potential area data from VerNETZen project.
+
+.. image:: images/ego_dp-pre_bpmn_section_wind_potential_areas.png
+   :width: 90%
+
+
+Demand at federal states
+------------------------
+
+Insert annual demand data at federal state level for different energy use sectors and disaggregate further.
+
+.. image:: images/ego_dp-pre_bpmn_section_demand_federalstate.png
+   :width: 80%
+
+osmTGmod
+--------
+
+EHV and HV level grid obtained from OSM with osmTGmod.
+
+.. image:: images/ego_dp-pre_bpmn_section_osmtgmod.png
+   :width: 60%
+
+Power plant data
+----------------
+
+Basic preparation of power plant data.
+
+.. image:: images/ego_dp-pre_bpmn_section_supply.png
 
 
 Data processing
