@@ -1,13 +1,11 @@
 ===============
-Getting Started
+The open_eGo data processing
 ===============
 
-
-Overview
-********
-
-- How to install
-- How to run the dataprocessing package
+This package contains the scripts of the data processing for the research project
+`open_eGo <https://openegoproject.wordpress.com>`_.
+More information about the project in :ref:`Open_eGo the project`.
+An overview on data processing steps is given in :ref:`Data processing scripts`.
 
 Installation
 ============
@@ -15,7 +13,7 @@ Installation
 Installation of latest release
 
 ```
-(sudo) pip3 install dataprocessing
+pip install dataprocessing
 ```
 
 Installation (of developer version) via pip on linux systems as follows
@@ -30,14 +28,14 @@ On Windows
 ***********
 
 1. __Problem__: Installation of required package shapely fails. __Solution__: Install pre-build
- wheel from [here](http://www.lfd.uci.edu/~gohlke/pythonlibs/#shapely)
+ wheel from `here <http://www.lfd.uci.edu/~gohlke/pythonlibs/#shapely>`_.
 
 
 Run
 ====
 
- You can run data processing by calling command-line script
+You can run data processing by calling command-line script
 
- ```
- ~$ ego_data_processing
- ```    
+```
+~$ ego_data_processing
+```
