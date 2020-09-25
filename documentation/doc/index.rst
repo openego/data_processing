@@ -7,8 +7,17 @@ Welcome to Data processing documentation of open_eGo
    :scale: 100%
 
 
-[Add text here]
+This package contains the scripts of the data processing for the research project
+`open_eGo <https://openegoproject.wordpress.com>`_.
+The data processing creates data required for grid model generators (`osmTGmod <https://github.com/openego/osmTGmod>`_
+and `ding0 <https://github.com/openego/ding0>`_) and grid planning calculations conducted with
+`eTraGo <https://github.com/openego/eTraGo>`_ and `eDisGo <https://github.com/openego/eDisGo>`_.
 
+
+More information about the project can be found in :ref:`Open_eGo the project` and on the
+`project website <https://openegoproject.wordpress.com>`_.
+See :ref:`Getting started` for instructions on installation and execution.
+An overview on data processing steps is given in :ref:`Data processing scripts`.
 
 
 .. toctree::

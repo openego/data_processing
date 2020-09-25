@@ -2,10 +2,7 @@
 The open_eGo data processing
 ===============
 
-This package contains the scripts of the data processing for the research project
-`open_eGo <https://openegoproject.wordpress.com>`_.
-More information about the project in :ref:`Open_eGo the project`.
-An overview on data processing steps is given in :ref:`Data processing scripts`.
+
 
 Installation
 ============
