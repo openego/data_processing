@@ -48,16 +48,17 @@ extensions = [
     'sphinx.ext.intersphinx',
     'sphinx.ext.todo',
     'sphinx.ext.coverage',
-    'sphinx.ext.imgmath' ,
+    'sphinx.ext.imgmath',
     'sphinx.ext.viewcode',
-#    'sphinx.ext.autosummary',
-#    'sphinxcontrib.napoleon',#enable Napoleon interpreter of docstrings Sphinx v<=1.2
-    'sphinx.ext.napoleon', #enable Napoleon Sphinx v>1.3
-#    'sphinx_paramlinks',#to have links to the types of the parameters of the functions
-     'numpydoc',
-     'sphinxcontrib.httpdomain',   # for restfull API
-     'sphinxcontrib.autohttp.flask',
-     'sphinx.ext.extlinks' # enables external links with a key
+    #    'sphinx.ext.autosummary',
+    #    'sphinxcontrib.napoleon',#enable Napoleon interpreter of docstrings Sphinx v<=1.2
+    'sphinx.ext.napoleon',  # enable Napoleon Sphinx v>1.3
+    #    'sphinx_paramlinks',#to have links to the types of the parameters of the functions
+    'numpydoc',
+    'sphinxcontrib.httpdomain',  # for restfull API
+    'sphinxcontrib.autohttp.flask',
+    'sphinx.ext.extlinks',  # enables external links with a key
+    'sphinx.ext.autosectionlabel'
 ]
 
 # Napoleon settings
@@ -235,7 +236,7 @@ html_theme = 'sphinx_rtd_theme'
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-# html_static_path = ['_static']
+html_static_path = ['_static']
 
 # Add any extra paths that contain custom files (such as robots.txt or
 # .htaccess) here, relative to this directory. These files are copied
@@ -299,6 +300,11 @@ html_theme = 'sphinx_rtd_theme'
 
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'eGodoc'
+
+# Customize layout with CSS
+html_css_files = [
+    'custom.css',
+]
 
 # -- Options for LaTeX output ---------------------------------------------
 
